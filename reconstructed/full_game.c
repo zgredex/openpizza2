@@ -12,6 +12,7 @@
 #include "ai/ai_state.h"
 #include "render/render_state.h"
 #include "operations/branch_operations.h"
+#include "advertising/value_state.h"
 #include "assets/assets.h"
 #include "ui_render/ui_render.h"
 #include "screen/screen_render.h"
@@ -530,6 +531,18 @@ int main(void) {
     assert(branch_collect_unprofitable(unprofitable_input, 4,
                                        unprofitable_result, 4) == 1);
     assert(unprofitable_result[0].branch_id == 3);
+    ValueApproachState advertising;
+    value_state_init(&advertising, 50.0);
+    assert(value_approach(&advertising, 10.0, 55.0));
+    assert(advertising.value == 55.0);
+    advertising.dirty = 0;
+    value_state_decay_hour(&advertising);
+    assert(advertising.value == 51.0);
+    assert(game_adjusted_value(10, 50, 5, false, 0, false, -1, 100, 0, 0) ==
+           65);
+    assert(game_adjusted_value(10, 50, 5, true, 1, false, -1, 100, 0, 0) ==
+           97);
+
 
 
     uint8_t frame[4 * 4 * 4];

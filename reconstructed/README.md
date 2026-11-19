@@ -50,6 +50,9 @@ Current batches:
   `extracted/pictures/pe_freies_spiel.tga` with the Berlin scenario fields,
   and the London briefing page over
   `extracted/pictures/pe_missionsbriefing_lon.tga` with wrapped body text.
+- `advertising/` — `Value_Approach`, hourly value decay and
+  `Game_GetAdjustedValue` customer-radius conversion, with the original
+  positive/negative target and clamp rules.
 - `operations/` — branch period accounting (sale revenue, ingredient cost,
   payroll, rent, advertising, profit, period close) plus the hourly path:
   1/24 wage and advertising shares, 0.4%/hour negative-cash interest, opening

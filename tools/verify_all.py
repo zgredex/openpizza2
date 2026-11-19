@@ -1210,6 +1210,7 @@ def check_reconstructed_c():
           and "personnel state reconstruction: OK" in output
           and "render state reconstruction: OK" in output
           and "branch operations reconstruction: OK" in output
+          and "advertising value reconstruction: OK" in output
           and "SPR/FNT asset reconstruction: OK" in output
           and "UI render reconstruction: OK" in output
           and "screen render reconstruction: OK" in output
@@ -1231,8 +1232,8 @@ def check_reconstructed_c():
                    "briefing, free-play setup, statistics view, branch-list "
                    "window, branch-details page, branch-offer page, personnel "
                    "overview, personnel record, statistics balance, branch-"
-                   "balance statistics, iso-map/branch interior render and "
-                   "hourly branch economy included")
+                   "balance statistics, advertising value approach, iso-map/"
+                   "branch interior render and hourly branch economy included")
         if ok else output[-1200:],
     }
 
