@@ -36,6 +36,50 @@ static uint32_t random_low(uint32_t low, uint32_t high) {
     return low;
 }
 
+static bool load_spr_asset(const char *path, uint8_t **pixels,
+                           RgbaSprite *sprite) {
+    size_t length = 0;
+    uint8_t *data = NULL;
+    FILE *file = fopen(path, "rb");
+    if (file == NULL) {
+        return false;
+    }
+    fseek(file, 0, SEEK_END);
+    long size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+    if (size > 0) {
+        data = malloc((size_t)size);
+        if (data != NULL) {
+            length = fread(data, 1, (size_t)size, file);
+        }
+    }
+    fclose(file);
+    if (data == NULL || length < 0x21) {
+        free(data);
+        return false;
+    }
+    uint16_t width = (uint16_t)(data[7] | (data[8] << 8));
+    uint16_t height = (uint16_t)(data[9] | (data[10] << 8));
+    size_t capacity = (size_t)width * height * 4;
+    uint8_t *decoded = malloc(capacity);
+    if (decoded == NULL) {
+        free(data);
+        return false;
+    }
+    SpriteAsset asset;
+    bool ok = spr_decode(data, length, &asset, decoded, capacity);
+    free(data);
+    if (!ok) {
+        free(decoded);
+        return false;
+    }
+    sprite->width = asset.width;
+    sprite->height = asset.height;
+    sprite->pixels = decoded;
+    *pixels = decoded;
+    return true;
+}
+
 int main(void) {
     MenuState menu;
     menu_state_init(&menu);
@@ -210,6 +254,53 @@ int main(void) {
         }
         assert(text_ink);
     }
+
+    uint8_t *bl_panel_pixels = NULL;
+    uint8_t *bl_table_pixels = NULL;
+    uint8_t *bl_separator_pixels = NULL;
+    uint8_t *bl_branch_pixels = NULL;
+    uint8_t *bl_warehouse_pixels = NULL;
+    RgbaSprite bl_panel;
+    RgbaSprite bl_table;
+    RgbaSprite bl_separator;
+    RgbaSprite bl_branch_icon;
+    RgbaSprite bl_warehouse_icon;
+    assert(load_spr_asset("../extracted/sprites/submenue.spr", &bl_panel_pixels,
+                          &bl_panel));
+    assert(load_spr_asset("../extracted/sprites/tab01xxx.spr", &bl_table_pixels,
+                          &bl_table));
+    assert(load_spr_asset("../extracted/sprites/trennzeile.spr",
+                          &bl_separator_pixels, &bl_separator));
+    assert(load_spr_asset("../extracted/sprites/skfiliale_00.spr",
+                          &bl_branch_pixels, &bl_branch_icon));
+    assert(load_spr_asset("../extracted/sprites/sklager_00.spr",
+                          &bl_warehouse_pixels, &bl_warehouse_icon));
+    const BranchListEntry bl_entries[2] = {
+        {city.branches[0].tile_index, city.branches[0].rent, false},
+        {7, 0, true},
+    };
+    const BranchListData bl_data = {
+        .city = "London",
+        .entries = bl_entries,
+        .entry_count = 2,
+        .selected = 0,
+    };
+    uint8_t *bl_frame = malloc(800 * 600 * 4);
+    assert(bl_frame != NULL);
+    RenderSurface bl_surface;
+    assert(render_surface_init(&bl_surface, bl_frame, 800 * 600 * 4, 800, 600));
+    assert(screen_render_branch_list(&bl_surface, &bl_panel, &bl_table,
+                                     &bl_separator, &bl_branch_icon,
+                                     &bl_warehouse_icon, font_data, font_size,
+                                     &font_info, &bl_data));
+    size_t bl_panel_offset = ((size_t)218 * 800 + 561) * 4;
+    assert(memcmp(bl_frame + bl_panel_offset, bl_panel.pixels, 4) == 0);
+    free(bl_frame);
+    free(bl_panel_pixels);
+    free(bl_table_pixels);
+    free(bl_separator_pixels);
+    free(bl_branch_pixels);
+    free(bl_warehouse_pixels);
 
     size_t stats_tga_length = 0;
     uint8_t *stats_tga = NULL;

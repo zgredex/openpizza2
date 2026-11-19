@@ -461,3 +461,93 @@ bool screen_render_statistics(RenderSurface *surface, const uint8_t *tga_data,
                title_color);
     return true;
 }
+
+bool screen_render_branch_list(RenderSurface *surface, const RgbaSprite *panel,
+                               const RgbaSprite *table,
+                               const RgbaSprite *separator,
+                               const RgbaSprite *branch_icon,
+                               const RgbaSprite *warehouse_icon,
+                               const uint8_t *font_data, size_t font_size,
+                               const FntInfo *font,
+                               const BranchListData *data) {
+    if (surface == NULL || font == NULL || data == NULL) {
+        return false;
+    }
+    const uint8_t background[4] = {22, 26, 34, 255};
+    render_clear(surface, background);
+    const int32_t window_x = 561;
+    const int32_t window_y = 218;
+    if (panel != NULL && !render_blit(surface, panel, window_x, window_y)) {
+        return false;
+    }
+    const uint8_t title_color[4] = {120, 20, 20, 255};
+    const uint8_t label_color[4] = {40, 28, 20, 255};
+    const uint8_t value_color[4] = {20, 20, 90, 255};
+    draw_label(surface, font_data, font_size, font, window_x + 44, window_y + 5,
+               "Rent buildings", title_color);
+    if (data->city != NULL) {
+        draw_label(surface, font_data, font_size, font, window_x + 44,
+                   window_y + 24, data->city, value_color);
+    }
+
+    if (branch_icon != NULL) {
+        render_blit(surface, branch_icon, window_x + 99, window_y + 126);
+    }
+    if (warehouse_icon != NULL) {
+        render_blit(surface, warehouse_icon, window_x + 141, window_y + 126);
+    }
+    draw_label(surface, font_data, font_size, font, window_x + 49,
+               window_y + 126, "Branch", label_color);
+    draw_label(surface, font_data, font_size, font, window_x + 180,
+               window_y + 126, "Stocks", label_color);
+    draw_label(surface, font_data, font_size, font, window_x + 49,
+               window_y + 149, "Mittel", value_color);
+    draw_label(surface, font_data, font_size, font, window_x + 180,
+               window_y + 149, "Mittel", value_color);
+    draw_label(surface, font_data, font_size, font, window_x + 51,
+               window_y + 169, "Lease a branch to extend your chain.",
+               label_color);
+
+    if (separator != NULL) {
+        render_blit(surface, separator, window_x + 39, window_y + 297);
+    }
+    draw_label(surface, font_data, font_size, font, window_x + 49,
+               window_y + 253, "Rent per quarter", label_color);
+    char value_text[64];
+    uint32_t rent = data->entry_count > 0 ? data->entries[0].rent : 0;
+    snprintf(value_text, sizeof(value_text), "%u", rent);
+    draw_label(surface, font_data, font_size, font, window_x + 167,
+               window_y + 253, value_text, value_color);
+
+    draw_label(surface, font_data, font_size, font, window_x + 44,
+               window_y + 274, "Choose branch", label_color);
+    const uint8_t lease_idle[4] = {140, 180, 140, 220};
+    const uint8_t lease_active[4] = {130, 230, 130, 235};
+    blend_rect(surface, window_x + 142, window_y + 272, 84, 26,
+               data->selected >= 0 ? lease_active : lease_idle);
+    draw_label(surface, font_data, font_size, font, window_x + 158,
+               window_y + 276, "Lease", label_color);
+
+    if (table != NULL) {
+        render_blit(surface, table, window_x + 47, window_y + 314);
+    }
+    const int32_t row_y[2] = {window_y + 316, window_y + 340};
+    for (size_t index = 0; index < data->entry_count && index < 2; index++) {
+        if ((int)index == data->selected) {
+            blend_rect(surface, window_x + 48, row_y[index] - 1, 179, 20,
+                       (const uint8_t[4]){255, 225, 120, 150});
+        }
+        snprintf(value_text, sizeof(value_text), "%s %u",
+                 data->entries[index].warehouse ? "Warehouse" : "Branch",
+                 data->entries[index].tile_index);
+        draw_label(surface, font_data, font_size, font, window_x + 52,
+                   row_y[index], value_text, value_color);
+        snprintf(value_text, sizeof(value_text), "%u",
+                 data->entries[index].rent);
+        draw_label(surface, font_data, font_size, font, window_x + 160,
+                   row_y[index], value_text, value_color);
+    }
+    draw_label(surface, font_data, font_size, font, window_x + 44,
+               window_y + 303, "Persons in area of influence", label_color);
+    return true;
+}

@@ -52,6 +52,30 @@ bool screen_render_statistics(RenderSurface *surface, const uint8_t *tga_data,
                               const char *date, uint8_t *decode_buffer,
                               size_t decode_capacity);
 
+typedef struct BranchListEntry {
+    uint32_t tile_index;
+    uint32_t rent;
+    bool warehouse;
+} BranchListEntry;
+
+typedef struct BranchListData {
+    const char *city;
+    const BranchListEntry *entries;
+    size_t entry_count;
+    int selected;
+} BranchListData;
+
+/* Composes Screen_BranchList (0x42D560): the 239x382 SUBMENUE window at
+ * (561,218), table, separators, branch/warehouse icons and the branch rows. */
+bool screen_render_branch_list(RenderSurface *surface, const RgbaSprite *panel,
+                               const RgbaSprite *table,
+                               const RgbaSprite *separator,
+                               const RgbaSprite *branch_icon,
+                               const RgbaSprite *warehouse_icon,
+                               const uint8_t *font_data, size_t font_size,
+                               const FntInfo *font,
+                               const BranchListData *data);
+
 typedef struct FreePlayScenario {
     const char *city;
     const char *map;
