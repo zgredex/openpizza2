@@ -306,6 +306,51 @@ int main(void) {
 
     tga_data = NULL;
     tga_size = 0;
+    tga_file = fopen("../extracted/pictures/pe_freies_spiel.tga", "rb");
+    if (tga_file != NULL) {
+        fseek(tga_file, 0, SEEK_END);
+        long freeplay_length = ftell(tga_file);
+        fseek(tga_file, 0, SEEK_SET);
+        if (freeplay_length > 0) {
+            tga_data = malloc((size_t)freeplay_length);
+            if (tga_data != NULL) {
+                tga_size = fread(tga_data, 1, (size_t)freeplay_length, tga_file);
+            }
+        }
+        fclose(tga_file);
+    }
+    if (tga_data != NULL && font_size > 0) {
+        size_t freeplay_frame_size = 800 * 600 * 4;
+        uint8_t *freeplay_frame = malloc(freeplay_frame_size);
+        uint8_t *freeplay_decoded = malloc(freeplay_frame_size);
+        assert(freeplay_frame != NULL);
+        assert(freeplay_decoded != NULL);
+        RenderSurface freeplay_surface;
+        assert(render_surface_init(&freeplay_surface, freeplay_frame,
+                                   freeplay_frame_size, 800, 600));
+        FreePlayScenario freeplay = {
+            .city = "Berlin",
+            .map = "Ber.iso",
+            .player_name = "Ada",
+            .enterprise_name = "Ada Pizza",
+            .population = 250,
+            .game_length = 11,
+            .difficulty = 9,
+            .starting_capital = 22000,
+            .opponents = {-1, -1, -1},
+            .selected_button = 1,
+        };
+        assert(screen_render_free_play(
+            &freeplay_surface, tga_data, tga_size, font_data, font_size,
+            &font_info, &freeplay, freeplay_decoded, freeplay_frame_size));
+        assert(memcmp(freeplay_frame, freeplay_decoded, freeplay_frame_size) != 0);
+        free(freeplay_decoded);
+        free(freeplay_frame);
+        free(tga_data);
+    }
+
+    tga_data = NULL;
+    tga_size = 0;
     tga_file = fopen("../extracted/pictures/pe_missionsbriefing_lon.tga", "rb");
     if (tga_file != NULL) {
         fseek(tga_file, 0, SEEK_END);

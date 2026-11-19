@@ -46,7 +46,9 @@ Current batches:
   RGBA frame and draws the reconstructed main-menu rows and status line with
   the shipped Times font. Also composes the character-select page over
   `extracted/pictures/pe_charakterauswahl.tga` at the documented control
-  positions and the London briefing page over
+  positions, the free-play setup page over
+  `extracted/pictures/pe_freies_spiel.tga` with the Berlin scenario fields,
+  and the London briefing page over
   `extracted/pictures/pe_missionsbriefing_lon.tga` with wrapped body text.
 - `operations/` — branch period accounting: sale revenue, ingredient cost,
   payroll, rent, advertising, profit and period close.

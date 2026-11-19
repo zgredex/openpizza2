@@ -1228,7 +1228,8 @@ def check_reconstructed_c():
                    "container, options/autosave, statistics, AI, recipes, "
                    "personnel, render, operations, SPR/FNT assets and UI "
                    "composition, startscreen menu, character-select, London "
-                   "briefing and iso-map/branch interior render included")
+                   "briefing, free-play setup and iso-map/branch interior render "
+                   "included")
         if ok else output[-1200:],
     }
 

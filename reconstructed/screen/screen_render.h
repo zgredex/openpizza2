@@ -41,6 +41,28 @@ bool screen_render_character_select(RenderSurface *surface,
                                     uint8_t *decode_buffer,
                                     size_t decode_capacity);
 
+typedef struct FreePlayScenario {
+    const char *city;
+    const char *map;
+    const char *player_name;
+    const char *enterprise_name;
+    uint32_t population;
+    uint32_t game_length;
+    uint32_t difficulty;
+    uint32_t starting_capital;
+    int32_t opponents[3];
+    int selected_button; /* 0 = To main menu, 1 = Start game, -1 = none */
+} FreePlayScenario;
+
+/* Composes the free-play setup page over the shipped pe_freies_spiel.tga using
+ * the control positions from FreePlaySetup_InitWindow (0x4CBCD0) and
+ * Screen_FreePlaySetup (0x472DA0). */
+bool screen_render_free_play(RenderSurface *surface, const uint8_t *tga_data,
+                             size_t tga_size, const uint8_t *font_data,
+                             size_t font_size, const FntInfo *font,
+                             const FreePlayScenario *scenario,
+                             uint8_t *decode_buffer, size_t decode_capacity);
+
 /* Draws the London briefing page over the shipped briefing TGA. Returns the
  * number of wrapped body lines drawn, or -1 on failure. */
 int screen_render_briefing(RenderSurface *surface, const uint8_t *tga_data,

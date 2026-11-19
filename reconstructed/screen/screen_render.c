@@ -276,3 +276,105 @@ bool screen_render_character_select(RenderSurface *surface,
                label_color);
     return true;
 }
+
+bool screen_render_free_play(RenderSurface *surface, const uint8_t *tga_data,
+                             size_t tga_size, const uint8_t *font_data,
+                             size_t font_size, const FntInfo *font,
+                             const FreePlayScenario *scenario,
+                             uint8_t *decode_buffer, size_t decode_capacity) {
+    if (scenario == NULL || font == NULL) {
+        return false;
+    }
+    if (!screen_render_background(surface, tga_data, tga_size, decode_buffer,
+                                  decode_capacity)) {
+        return false;
+    }
+    const uint8_t title_color[4] = {120, 20, 20, 255};
+    const uint8_t label_color[4] = {40, 28, 20, 255};
+    const uint8_t value_color[4] = {20, 20, 90, 255};
+    char value_text[64];
+
+    draw_label(surface, font_data, font_size, font, 13, 5,
+               "Select player character", title_color);
+    draw_label(surface, font_data, font_size, font, 608, 5, "Enterprises:",
+               title_color);
+    if (scenario->city != NULL) {
+        draw_label(surface, font_data, font_size, font, 608, 30, scenario->city,
+                   value_color);
+    }
+    if (scenario->map != NULL) {
+        draw_label(surface, font_data, font_size, font, 608, 52, scenario->map,
+                   value_color);
+    }
+
+    draw_label(surface, font_data, font_size, font, 124, 44, "Player's name:",
+               label_color);
+    if (scenario->player_name != NULL) {
+        draw_label(surface, font_data, font_size, font, 240, 44,
+                   scenario->player_name, value_color);
+    }
+    draw_label(surface, font_data, font_size, font, 124, 72, "Enterprise name:",
+               label_color);
+    if (scenario->enterprise_name != NULL) {
+        draw_label(surface, font_data, font_size, font, 240, 72,
+                   scenario->enterprise_name, value_color);
+    }
+
+    draw_label(surface, font_data, font_size, font, 195, 425, "Population",
+               label_color);
+    snprintf(value_text, sizeof(value_text), "%u", scenario->population);
+    draw_label(surface, font_data, font_size, font, 195, 478,
+               "100 town inhabitants", value_color);
+    draw_label(surface, font_data, font_size, font, 330, 478, value_text,
+               value_color);
+
+    draw_label(surface, font_data, font_size, font, 385, 425, "Time limit",
+               label_color);
+    snprintf(value_text, sizeof(value_text), "%u", scenario->game_length);
+    draw_label(surface, font_data, font_size, font, 385, 478, "Endless",
+               value_color);
+    draw_label(surface, font_data, font_size, font, 465, 478, value_text,
+               value_color);
+
+    draw_label(surface, font_data, font_size, font, 609, 425,
+               "Level of difficulty", label_color);
+    snprintf(value_text, sizeof(value_text), "%u", scenario->difficulty);
+    draw_label(surface, font_data, font_size, font, 609, 478, "Very easy",
+               value_color);
+    draw_label(surface, font_data, font_size, font, 700, 478, value_text,
+               value_color);
+
+    draw_label(surface, font_data, font_size, font, 366, 47, "Initial capital",
+               label_color);
+    snprintf(value_text, sizeof(value_text), "%u", scenario->starting_capital);
+    draw_label(surface, font_data, font_size, font, 498, 47, value_text,
+               value_color);
+    draw_label(surface, font_data, font_size, font, 366, 67, "Characteristics",
+               label_color);
+
+    static const int32_t opponent_y[3] = {104, 164, 224};
+    for (int index = 0; index < 3; index++) {
+        snprintf(value_text, sizeof(value_text), "Opponent %d", index + 1);
+        draw_label(surface, font_data, font_size, font, 124, opponent_y[index],
+                   value_text, label_color);
+        draw_label(surface, font_data, font_size, font,
+                   scenario->opponents[index] < 0 ? 498 : 240,
+                   opponent_y[index],
+                   scenario->opponents[index] < 0 ? "None" : "Active",
+                   value_color);
+    }
+
+    const uint8_t back_idle[4] = {180, 170, 150, 210};
+    const uint8_t back_active[4] = {255, 215, 110, 230};
+    const uint8_t start_idle[4] = {140, 180, 140, 210};
+    const uint8_t start_active[4] = {130, 230, 130, 235};
+    blend_rect(surface, 595, 509, 204, 38,
+               scenario->selected_button == 0 ? back_active : back_idle);
+    blend_rect(surface, 595, 550, 204, 38,
+               scenario->selected_button == 1 ? start_active : start_idle);
+    draw_label(surface, font_data, font_size, font, 640, 517, "To main menu",
+               label_color);
+    draw_label(surface, font_data, font_size, font, 650, 558, "Start game",
+               label_color);
+    return true;
+}
