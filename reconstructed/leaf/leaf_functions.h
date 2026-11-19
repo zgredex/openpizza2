@@ -674,6 +674,13 @@ void ui_set_layout_params(uint8_t *window, int32_t first, int32_t second);
 void ui_set_event_callback(uint8_t *window, int32_t callback);
 void ui_set_window_proc(uint8_t *window, int32_t callback);
 
+/* Remaining simple UI state helpers. */
+const uint8_t *ui_get_theme(const uint8_t *window);
+void ui_set_menu_toggle(uint8_t *window, int32_t value);
+void ui_clear_field230(uint8_t *window, int32_t value);
+void ui_clear_scroll_drag(uint8_t *window);
+uint8_t ui_get_first_enabled_index(const uint8_t *font);
+
 /* Game_GetActiveScreenOrFallback (0x482910). */
 int32_t game_get_active_screen_or_fallback(const uint8_t *game);
 

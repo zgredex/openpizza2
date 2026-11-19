@@ -3358,3 +3358,42 @@ void ui_set_window_proc(uint8_t *window, int32_t callback) {
         write_i32(window + 0x8304, callback);
     }
 }
+
+const uint8_t *ui_get_theme(const uint8_t *window) {
+    return window == NULL ? NULL : window + 0x288;
+}
+
+void ui_set_menu_toggle(uint8_t *window, int32_t value) {
+    if (window == NULL) {
+        return;
+    }
+    write_i32(window + 0x234, 1);
+    write_i32(window + 8, value);
+}
+
+void ui_clear_field230(uint8_t *window, int32_t value) {
+    if (window != NULL && read_i32(window + 0x230) == value) {
+        write_i32(window + 0x230, 0);
+    }
+}
+
+void ui_clear_scroll_drag(uint8_t *window) {
+    if (window == NULL) {
+        return;
+    }
+    write_i32(window + 0x8338, 0);
+    write_i32(window + 0x833c, 0);
+    write_i32(window + 0x8348, 0);
+}
+
+uint8_t ui_get_first_enabled_index(const uint8_t *font) {
+    if (font == NULL) {
+        return 0;
+    }
+    for (int32_t index = 0; index < 0xe0; index++) {
+        if (read_i32(font + 0x460 + (size_t)index * 4) != 0) {
+            return font[0x1c0 + (size_t)index];
+        }
+    }
+    return 0;
+}

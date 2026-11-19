@@ -2094,6 +2094,35 @@ static void test_window_ui_helpers(void) {
     assert(read_i32_at(window, 0x8304) == 24);
 }
 
+static void test_ui_state_helpers(void) {
+    uint8_t window[0x8400] = {0};
+    assert(ui_get_theme(window) == window + 0x288);
+    assert(ui_get_theme(NULL) == NULL);
+    ui_set_menu_toggle(window, 7);
+    assert(read_i32_at(window, 0x234) == 1);
+    assert(read_i32_at(window, 8) == 7);
+    write_i32_at(window, 0x230, 42);
+    ui_clear_field230(window, 41);
+    assert(read_i32_at(window, 0x230) == 42);
+    ui_clear_field230(window, 42);
+    assert(read_i32_at(window, 0x230) == 0);
+    write_i32_at(window, 0x8338, 1);
+    write_i32_at(window, 0x833c, 2);
+    write_i32_at(window, 0x8348, 3);
+    ui_clear_scroll_drag(window);
+    assert(read_i32_at(window, 0x8338) == 0);
+    assert(read_i32_at(window, 0x833c) == 0);
+    assert(read_i32_at(window, 0x8348) == 0);
+
+    uint8_t font[0x600] = {0};
+    write_i32_at(font, 0x460 + 5 * 4, 1);
+    font[0x1c0 + 5] = 9;
+    assert(ui_get_first_enabled_index(font) == 9);
+    assert(ui_get_first_enabled_index(NULL) == 0);
+    write_i32_at(font, 0x460 + 5 * 4, 0);
+    assert(ui_get_first_enabled_index(font) == 0);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -2139,6 +2168,7 @@ int main(void) {
     test_reference_list_window();
     test_hover_mission_animation();
     test_window_ui_helpers();
+    test_ui_state_helpers();
     puts("leaf function reconstruction: OK");
     return 0;
 }
