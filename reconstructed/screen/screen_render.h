@@ -8,6 +8,7 @@
 #include "../assets/assets.h"
 #include "../menu/menu_state.h"
 #include "../render/render_state.h"
+#include "../statistics/statistics_state.h"
 
 /*
  * Map/UI screen composition: decode a shipped TGA background into the RGBA
@@ -40,6 +41,16 @@ bool screen_render_character_select(RenderSurface *surface,
                                     const FntInfo *font, const CharacterScreenData *data,
                                     uint8_t *decode_buffer,
                                     size_t decode_capacity);
+
+/* Composes the statistics view over the shipped bg003.tga clipboard, using
+ * the city/date positions from StatisticsView_CreateWindow (0x443520) and the
+ * CompanyOverview fields filled by Stats_Report_FillCompanyOverview (0x4DECF0). */
+bool screen_render_statistics(RenderSurface *surface, const uint8_t *tga_data,
+                              size_t tga_size, const uint8_t *font_data,
+                              size_t font_size, const FntInfo *font,
+                              const StatisticsState *state, const char *city,
+                              const char *date, uint8_t *decode_buffer,
+                              size_t decode_capacity);
 
 typedef struct FreePlayScenario {
     const char *city;

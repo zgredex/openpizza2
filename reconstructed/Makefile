@@ -35,8 +35,8 @@ MENU_SRC = menu/menu_state.c menu/test_menu_state.c
 MENU_HDR = menu/menu_state.h
 MENU_BIN = $(BUILD)/test_menu_state
 
-SCREEN_SRC = screen/screen_render.c screen/test_screen_render.c ui_render/ui_render.c assets/assets.c render/render_state.c menu/menu_state.c
-SCREEN_HDR = screen/screen_render.h ui_render/ui_render.h assets/assets.h render/render_state.h menu/menu_state.h
+SCREEN_SRC = screen/screen_render.c screen/test_screen_render.c ui_render/ui_render.c assets/assets.c render/render_state.c menu/menu_state.c statistics/statistics_state.c
+SCREEN_HDR = screen/screen_render.h ui_render/ui_render.h assets/assets.h render/render_state.h menu/menu_state.h statistics/statistics_state.h
 SCREEN_BIN = $(BUILD)/test_screen_render
 
 UI_RENDER_SRC = ui_render/ui_render.c ui_render/test_ui_render.c assets/assets.c render/render_state.c

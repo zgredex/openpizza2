@@ -378,3 +378,86 @@ bool screen_render_free_play(RenderSurface *surface, const uint8_t *tga_data,
                label_color);
     return true;
 }
+
+bool screen_render_statistics(RenderSurface *surface, const uint8_t *tga_data,
+                              size_t tga_size, const uint8_t *font_data,
+                              size_t font_size, const FntInfo *font,
+                              const StatisticsState *state, const char *city,
+                              const char *date, uint8_t *decode_buffer,
+                              size_t decode_capacity) {
+    if (state == NULL || font == NULL) {
+        return false;
+    }
+    if (!screen_render_background(surface, tga_data, tga_size, decode_buffer,
+                                  decode_capacity)) {
+        return false;
+    }
+    const uint8_t title_color[4] = {120, 20, 20, 255};
+    const uint8_t label_color[4] = {40, 28, 20, 255};
+    const uint8_t value_color[4] = {20, 20, 90, 255};
+    char value_text[96];
+
+    if (city != NULL) {
+        draw_label(surface, font_data, font_size, font, 640, 4, city,
+                   title_color);
+    }
+    if (date != NULL) {
+        draw_label(surface, font_data, font_size, font, 10, 568, date,
+                   label_color);
+    }
+    draw_label(surface, font_data, font_size, font, 30, 22, "Statistics",
+               title_color);
+    draw_label(surface, font_data, font_size, font, 30, 56, "Company overview",
+               title_color);
+
+    const CompanyOverview *overview = &state->overview;
+    snprintf(value_text, sizeof(value_text), "Owned buildings: %d  value %d",
+             overview->owned_buildings, overview->owned_value);
+    draw_label(surface, font_data, font_size, font, 50, 92, value_text,
+               value_color);
+    snprintf(value_text, sizeof(value_text), "Rented buildings: %d  value %d",
+             overview->rented_buildings, overview->rented_value);
+    draw_label(surface, font_data, font_size, font, 50, 120, value_text,
+               value_color);
+    snprintf(value_text, sizeof(value_text), "Warehouses: %d", overview->warehouses);
+    draw_label(surface, font_data, font_size, font, 50, 148, value_text,
+               value_color);
+    snprintf(value_text, sizeof(value_text), "Company value: %d",
+             overview->company_value);
+    draw_label(surface, font_data, font_size, font, 50, 176, value_text,
+               value_color);
+    snprintf(value_text, sizeof(value_text), "Market share: %d.%02d%%",
+             overview->share_x100 / 100, overview->share_x100 % 100);
+    draw_label(surface, font_data, font_size, font, 50, 204, value_text,
+               value_color);
+    snprintf(value_text, sizeof(value_text), "Rank: %d.%03d",
+             overview->rank_x1000 / 1000, overview->rank_x1000 % 1000);
+    draw_label(surface, font_data, font_size, font, 50, 232, value_text,
+               value_color);
+    snprintf(value_text, sizeof(value_text), "Player C20: %d  field 60: %d",
+             overview->player_c20, overview->player_field60);
+    draw_label(surface, font_data, font_size, font, 50, 260, value_text,
+               label_color);
+    snprintf(value_text, sizeof(value_text), "HQ: %d  total branch profit: %d",
+             overview->hq_count, statistics_total_branch_profit(state));
+    draw_label(surface, font_data, font_size, font, 50, 288, value_text,
+               value_color);
+
+    draw_label(surface, font_data, font_size, font, 30, 332, "Branches",
+               title_color);
+    int32_t y = 364;
+    for (int index = 0; index < state->branch_count; index++) {
+        const BranchBalanceEntry *entry = &state->branches[index];
+        snprintf(value_text, sizeof(value_text),
+                 "Branch %u  revenue %d  costs %d  profit %d", entry->branch_id,
+                 entry->revenue, entry->costs, entry->profit);
+        draw_label(surface, font_data, font_size, font, 50, y, value_text,
+                   value_color);
+        y += 28;
+    }
+    snprintf(value_text, sizeof(value_text), "Total profit: %d",
+             statistics_total_branch_profit(state));
+    draw_label(surface, font_data, font_size, font, 50, y + 12, value_text,
+               title_color);
+    return true;
+}

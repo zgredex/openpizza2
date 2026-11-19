@@ -211,6 +211,42 @@ int main(void) {
         assert(text_ink);
     }
 
+    size_t stats_tga_length = 0;
+    uint8_t *stats_tga = NULL;
+    FILE *stats_tga_file = fopen("../extracted/pictures/bg003.tga", "rb");
+    if (stats_tga_file != NULL) {
+        fseek(stats_tga_file, 0, SEEK_END);
+        long stats_tga_size = ftell(stats_tga_file);
+        fseek(stats_tga_file, 0, SEEK_SET);
+        if (stats_tga_size > 0) {
+            stats_tga = malloc((size_t)stats_tga_size);
+            if (stats_tga != NULL) {
+                stats_tga_length = fread(stats_tga, 1, (size_t)stats_tga_size,
+                                         stats_tga_file);
+            }
+        }
+        fclose(stats_tga_file);
+    }
+    if (stats_tga != NULL && font_size > 0) {
+        size_t stats_frame_size = 800 * 600 * 4;
+        uint8_t *stats_frame = malloc(stats_frame_size);
+        uint8_t *stats_decoded = malloc(stats_frame_size);
+        assert(stats_frame != NULL);
+        assert(stats_decoded != NULL);
+        RenderSurface stats_surface;
+        assert(render_surface_init(&stats_surface, stats_frame, stats_frame_size,
+                                   800, 600));
+        assert(screen_render_statistics(&stats_surface, stats_tga,
+                                        stats_tga_length, font_data, font_size,
+                                        &font_info, &stats, "London",
+                                        "17.32.2003", stats_decoded,
+                                        stats_frame_size));
+        assert(memcmp(stats_frame, stats_decoded, stats_frame_size) != 0);
+        free(stats_decoded);
+        free(stats_frame);
+        free(stats_tga);
+    }
+
     size_t tga_size = 0;
     uint8_t *tga_data = NULL;
     FILE *tga_file = fopen("../extracted/pictures/pe_startscreen.tga", "rb");
