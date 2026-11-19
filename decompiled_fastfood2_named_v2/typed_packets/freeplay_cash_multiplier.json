@@ -71,56 +71,86 @@
         {
           "offset": "0x04",
           "width": 4,
-          "name": "field_04",
-          "evidence": "0x4CBEBD copy; 0x405220 AI reset; UI range -6..6 (still unresolved)"
+          "name": "characteristic_adjust",
+          "evidence": "free-play UI 'Characteristics:' value (0x44D/0x455 labels, 0x452/0x45A values), range -6..+6 at 0x4CC973/0x4CC9C4; Game_InitScenario 0x4821B4 loads [profile+0x38-0x34]=profile+0x04, then 0x4821D9..0x482327 applies abs(value) random +/-1 adjustments to Player +0x3C..+0x50, each clamped to -3..3; sign is negative when the field is negative; applied to AI players only"
         },
         {
           "offset": "0x08",
-          "width": 20,
-          "name": "field_08_1c",
-          "evidence": "0x4C7B65 copies six character attributes from 0x57DD48; 0x482144..0x482187 copies them into Player +0x3C..+0x50"
+          "width": 4,
+          "name": "buyer",
+          "evidence": "CharacterSelect label 'Buyer' at 0x411 and value at 0x418; SubStartMenu 0x4C7B65 copies 0x57DD48.. to profile+0x08..+0x1C; Game_InitScenario 0x482144..0x482187 copies to Player +0x3C..+0x50; CompanyOverview 0x4BD750 shows 'Character values:' Base/Extra/Total at 0x2338..0x234D"
+        },
+        {
+          "offset": "0x0C",
+          "width": 4,
+          "name": "gangsters",
+          "evidence": "CharacterSelect label 'Gangsters' at 0x412 and value at 0x419; same copy/display path as Buyer"
+        },
+        {
+          "offset": "0x10",
+          "width": 4,
+          "name": "specialist",
+          "evidence": "CharacterSelect label 'Specialist' at 0x413 and value at 0x41A; same copy/display path as Buyer"
+        },
+        {
+          "offset": "0x14",
+          "width": 4,
+          "name": "politicians",
+          "evidence": "CharacterSelect label 'Politicians' at 0x414 and value at 0x41B; same copy/display path as Buyer"
+        },
+        {
+          "offset": "0x18",
+          "width": 4,
+          "name": "seller",
+          "evidence": "CharacterSelect label 'Seller' at 0x415 and value at 0x41C; same copy/display path as Buyer"
+        },
+        {
+          "offset": "0x1C",
+          "width": 4,
+          "name": "guard",
+          "evidence": "CharacterSelect label 'Guard' at 0x416 and value at 0x41D; same copy/display path as Buyer"
         },
         {
           "offset": "0x20",
           "width": 4,
           "name": "gender",
-          "evidence": "0x4051B5 Random_RangeFast(0,1); 0x4822E5 writes Character +0x24; IDMap_GetRandomName call at 0x40523D uses it; UI_DrawOverlaySprites 0x54B770 param_2==0 selects HEAD_M/AUGEN_M/HAARE_M/MUND_M lists, else the _F lists; SubStartMenu 0x4C7B9D copies the character-select gender into 0x57B938 which FreePlaySetup copies here"
+          "evidence": "0x4051B5 Random_RangeFast(0,1); 0x40523D IDMap_GetRandomName; 0x4822E5 writes Character +0x24; UI_DrawOverlaySprites 0x54B770 param_2==0 selects male sprite lists"
         },
         {
           "offset": "0x24",
           "width": 4,
           "name": "hair",
-          "evidence": "0x4051CC Random_RangeFast(0,0x58557C-1); 0x58557C is min(HAARE_M list count at +0x88, HAARE_F at +0xA4) from EmployeeAvatar_Construct 0x54B460; 0x4822EB writes Character +0x28; UI_DrawOverlaySprites param_5 selects +0x74/+0x90"
+          "evidence": "0x4051CC range 0x58557C-1; 0x58557C = min(HAARE_M +0x88, HAARE_F +0xA4); 0x4822EB Character +0x28; UI param_5 selects +0x74/+0x90"
         },
         {
           "offset": "0x28",
           "width": 4,
           "name": "eyes",
-          "evidence": "0x4051DE Random_RangeFast(0,0x585580-1); 0x585580 is min(AUGEN_M +0x50, AUGEN_F +0x6C); 0x4822F4 writes Character +0x2C; UI_DrawOverlaySprites param_4 selects +0x3C/+0x58"
+          "evidence": "0x4051DE range 0x585580-1; 0x585580 = min(AUGEN_M +0x50, AUGEN_F +0x6C); 0x4822F4 Character +0x2C; UI param_4 selects +0x3C/+0x58"
         },
         {
           "offset": "0x2C",
           "width": 4,
           "name": "mouth",
-          "evidence": "0x4051E9 Random_RangeFast(0,0x585584-1); 0x585584 is min(MUND_M +0xC0, MUND_F +0xDC); 0x4822FD writes Character +0x30; UI_DrawOverlaySprites param_6 selects +0xAC/+0xC8"
+          "evidence": "0x4051E9 range 0x585584-1; 0x585584 = min(MUND_M +0xC0, MUND_F +0xDC); 0x4822FD Character +0x30; UI param_6 selects +0xAC/+0xC8"
         },
         {
           "offset": "0x30",
           "width": 4,
           "name": "head",
-          "evidence": "0x405206 Random_RangeFast(0,0x585588-1); 0x585588 is min(HEAD_M +0x18, HEAD_F +0x34); 0x482306 writes Character +0x34; UI_DrawOverlaySprites param_3 selects +0x04/+0x20"
+          "evidence": "0x405206 range 0x585588-1; 0x585588 = min(HEAD_M +0x18, HEAD_F +0x34); 0x482306 Character +0x34; UI param_3 selects +0x04/+0x20"
         },
         {
           "offset": "0x34",
           "width": 4,
           "name": "logo",
-          "evidence": "0x405209 reads shuffled permutation 0x57B76C and stores here; 0x482029/0x48202C writes Company +0x1E0; 0x4A28F0 formats LOGOS__%d.spr with this +1; 0x4C7B7C copies the selected logo into profile 0"
+          "evidence": "0x405209 reads shuffled permutation 0x57B76C; 0x482029/0x48202C writes Company +0x1E0; 0x4A28F0 formats LOGOS__%d.spr with this +1; 0x4C7B7C copies the selected logo"
         },
         {
           "offset": "0x38",
           "width": 4,
           "name": "color",
-          "evidence": "0x40520C reads shuffled permutation 0x57C25C and stores here; 0x48200C/0x48201C indexes the 8-entry color table 0x563874 and writes Company +0x1DC; UI uses it in SetTextColor; 0x4C7B81 copies the selected color into profile 0"
+          "evidence": "0x40520C reads shuffled permutation 0x57C25C; 0x48200C/0x48201C indexes the 8-entry color table 0x563874 and writes Company +0x1DC; SetTextColor consumes it; 0x4C7B81 copies the selected color"
         },
         {
           "offset": "0x3C",
@@ -257,6 +287,13 @@
     "static_asserts": [
       "sizeof(FreePlayProfile) == 0xC0",
       "offsetof(FreePlayProfile, cash_multiplier) == 0x00",
+      "offsetof(FreePlayProfile, characteristic_adjust) == 0x04",
+      "offsetof(FreePlayProfile, buyer) == 0x08",
+      "offsetof(FreePlayProfile, gangsters) == 0x0C",
+      "offsetof(FreePlayProfile, specialist) == 0x10",
+      "offsetof(FreePlayProfile, politicians) == 0x14",
+      "offsetof(FreePlayProfile, seller) == 0x18",
+      "offsetof(FreePlayProfile, guard) == 0x1C",
       "offsetof(FreePlayProfile, gender) == 0x20",
       "offsetof(FreePlayProfile, hair) == 0x24",
       "offsetof(FreePlayProfile, eyes) == 0x28",
@@ -273,7 +310,6 @@
       "offsetof(FreePlayCharacterAppearance, head) == 0x34"
     ],
     "unknown_fields_remain_offset_named": [
-      "unknown_04[0x38]",
       "unknown_40[0x80]"
     ]
   },
@@ -335,6 +371,8 @@
     "gender_argument": "IDMap_GetRandomName at 0x4050E0 uses profile+0x20; UI_DrawOverlaySprites 0x54B770 selects male on param_2==0",
     "character_copy": "Game_InitScenario 0x4822E5..0x48230C writes profile +0x20..+0x30 into Character +0x24..+0x34",
     "ui_record_mapping": "UI_ComposeOverlayWindowFromRecord 0x54BB00 passes record +0x24 gender, +0x34 head, +0x2C eyes, +0x28 hair, +0x30 mouth",
-    "logo_and_color": "profile +0x34 and +0x38 come from shuffled 0..7 permutations 0x57B76C/0x57C25C; Game_InitScenario 0x48200C..0x48202C writes Company +0x1DC/+0x1E0; LOGOS__%d.spr and SetTextColor consume them"
+    "logo_and_color": "profile +0x34 and +0x38 come from shuffled 0..7 permutations 0x57B76C/0x57C25C; Game_InitScenario 0x48200C..0x48202C writes Company +0x1DC/+0x1E0; LOGOS__%d.spr and SetTextColor consume them",
+    "characteristics": "free-play UI labels 'Initial capital:' and 'Characteristics:' for each player; +0x00 is the capital percentage, +0x04 is the characteristic adjustment. Game_InitScenario 0x4821B4..0x482327 applies abs(+0x04) random +/-1 changes to the six Player character values (+0x3C..+0x50), each kept within -3..3; negative +0x04 applies -1, positive applies +1. AI players only.",
+    "character_values": "CharacterSelect labels Buyer/Gangsters/Specialist/Politicians/Seller/Guard at controls 0x411..0x416, values at 0x418..0x41D; SubStartMenu 0x4C7B65 copies 0x57DD48.. to profile +0x08..+0x1C; Game_InitScenario 0x482144..0x482187 copies to Player +0x3C..+0x50; CompanyOverview 0x4BD750 renders 'Character values:' with Base/Extra/Total columns at 0x2332..0x234D."
   }
 }

@@ -7,6 +7,13 @@
 static void test_layout(void) {
     assert(sizeof(FreePlayProfile) == 0xC0);
     assert(offsetof(FreePlayProfile, cash_multiplier) == 0x00);
+    assert(offsetof(FreePlayProfile, characteristic_adjust) == 0x04);
+    assert(offsetof(FreePlayProfile, buyer) == 0x08);
+    assert(offsetof(FreePlayProfile, gangsters) == 0x0C);
+    assert(offsetof(FreePlayProfile, specialist) == 0x10);
+    assert(offsetof(FreePlayProfile, politicians) == 0x14);
+    assert(offsetof(FreePlayProfile, seller) == 0x18);
+    assert(offsetof(FreePlayProfile, guard) == 0x1C);
     assert(offsetof(FreePlayProfile, gender) == 0x20);
     assert(offsetof(FreePlayProfile, hair) == 0x24);
     assert(offsetof(FreePlayProfile, eyes) == 0x28);
@@ -40,8 +47,13 @@ static void test_defaults_and_accessors(void) {
     freeplay_profile_apply_defaults(&profile);
     assert(profile.cash_multiplier == 100);
     assert(profile.active == 1);
-    assert(profile.unknown_04[0] == 0xAA);
-    assert(profile.unknown_04[0x1B] == 0xAA);
+    assert(profile.characteristic_adjust == (int32_t)0xAAAAAAAAu);
+    assert(profile.buyer == (int32_t)0xAAAAAAAAu);
+    assert(profile.gangsters == (int32_t)0xAAAAAAAAu);
+    assert(profile.specialist == (int32_t)0xAAAAAAAAu);
+    assert(profile.politicians == (int32_t)0xAAAAAAAAu);
+    assert(profile.seller == (int32_t)0xAAAAAAAAu);
+    assert(profile.guard == (int32_t)0xAAAAAAAAu);
     assert(profile.gender == (int32_t)0xAAAAAAAAu);
     assert(profile.hair == (int32_t)0xAAAAAAAAu);
     assert(profile.eyes == (int32_t)0xAAAAAAAAu);
@@ -74,6 +86,24 @@ static void test_defaults_and_accessors(void) {
     assert(!freeplay_profile_is_active(&profiles[3]));
 }
 
+static void test_characteristic_adjustment(void) {
+    int32_t value = 0;
+    assert(freeplay_adjust_characteristic(&value, 1));
+    assert(value == 1);
+    assert(freeplay_adjust_characteristic(&value, 1));
+    assert(value == 2);
+    assert(freeplay_adjust_characteristic(&value, 1));
+    assert(value == 3);
+    assert(!freeplay_adjust_characteristic(&value, 1));
+    assert(value == 3);
+    assert(freeplay_adjust_characteristic(&value, -1));
+    assert(value == 2);
+    value = -3;
+    assert(!freeplay_adjust_characteristic(&value, -1));
+    assert(value == -3);
+    assert(!freeplay_adjust_characteristic(NULL, 1));
+}
+
 static void test_appearance_copy(void) {
     FreePlayProfile profile;
     memset(&profile, 0, sizeof(profile));
@@ -100,6 +130,7 @@ int main(void) {
     test_layout();
     test_starting_cash();
     test_defaults_and_accessors();
+    test_characteristic_adjustment();
     test_appearance_copy();
     puts("free-play profile reconstruction: OK");
     return 0;

@@ -40,8 +40,13 @@ The six profiles start at `0x57BCD8` with stride `0xC0`.
 | Offset | Width | Name | Evidence |
 |---|---:|---|---|
 | `0x00` | 4 | `cash_multiplier` | `0x48203D` direct read; `0x482089` indexed read; `0x481F01` default 100; UI range 70..990 |
-| `0x04` | 4 | `field_04` | `0x4CBEBD` copy; `0x405220` AI reset; UI range -6..6 |
-| `0x08` | 20 | `field_08_1c` | `0x4C7B65` copies six character attributes from `0x57DD48`; `0x482144..0x482187` copies them into Player `+0x3C..+0x50` |
+| `0x04` | 4 | `characteristic_adjust` | free-play UI "Characteristics:" value; range -6..+6; `0x4821B4..0x482327` applies abs(value) random ±1 changes to AI Player `+0x3C..+0x50`, clamped -3..3 |
+| `0x08` | 4 | `buyer` | CharacterSelect label at `0x411`, value at `0x418`; copied by `0x4C7B65`; Player `+0x3C`; CompanyOverview "Character values:" |
+| `0x0C` | 4 | `gangsters` | CharacterSelect label at `0x412`, value at `0x419`; Player `+0x40` |
+| `0x10` | 4 | `specialist` | CharacterSelect label at `0x413`, value at `0x41A`; Player `+0x44` |
+| `0x14` | 4 | `politicians` | CharacterSelect label at `0x414`, value at `0x41B`; Player `+0x48` |
+| `0x18` | 4 | `seller` | CharacterSelect label at `0x415`, value at `0x41C`; Player `+0x4C` |
+| `0x1C` | 4 | `guard` | CharacterSelect label at `0x416`, value at `0x41D`; Player `+0x50` |
 | `0x20` | 4 | `gender` | `0x4051B5` `Random_RangeFast(0,1)`; `0x40523D` `IDMap_GetRandomName`; `0x4822E5` writes Character `+0x24`; `UI_DrawOverlaySprites` `param_2==0` selects male sprite lists |
 | `0x24` | 4 | `hair` | `0x4051CC` range `0x58557C-1`; `0x58557C` = min(HAARE_M `+0x88`, HAARE_F `+0xA4`); `0x4822EB` Character `+0x28`; UI `param_5` selects `+0x74/+0x90` |
 | `0x28` | 4 | `eyes` | `0x4051DE` range `0x585580-1`; `0x585580` = min(AUGEN_M `+0x50`, AUGEN_F `+0x6C`); `0x4822F4` Character `+0x2C`; UI `param_4` selects `+0x3C/+0x58` |
@@ -66,6 +71,33 @@ _Static_assert(FREEPLAY_PROFILE_COUNT == 6, ...);
 
 No save/load pair was found for this array; the packet keeps that as an open
 question rather than assuming session-only state.
+
+### Characteristic adjustment and character values
+
+`+0x04` is the free-play "Characteristics:" value.  The UI clamps it to
+`-6..+6` at `0x4CC973/0x4CC9C4`.  During scenario setup
+(`0x4821B4..0x482327`) the game:
+
+1. Loads it with `mov eax,[ecx-0x34]` where `ecx = profile+0x38`.
+2. Uses the sign to choose `+1` or `-1`.
+3. Repeats `abs(value)` times: picks a random character value `0..5`, adds the
+   sign, and accepts the change only while the result stays inside `-3..3`.
+4. Applies this only to AI players; the human player calls `Player_AIState_Init`.
+
+The six base character values are named directly by the CharacterSelect screen:
+
+| Profile offset | CharacterSelect label | Value control | Player offset |
+|---|---|---|---:|---|
+| `+0x08` | Buyer | `0x418` | `+0x3C` |
+| `+0x0C` | Gangsters | `0x419` | `+0x40` |
+| `+0x10` | Specialist | `0x41A` | `+0x44` |
+| `+0x14` | Politicians | `0x41B` | `+0x48` |
+| `+0x18` | Seller | `0x41C` | `+0x4C` |
+| `+0x1C` | Guard | `0x41D` | `+0x50` |
+
+The CompanyOverview page renders them as "Character values:" with Base, Extra
+and Total columns (`0x2332..0x234D`); `CompanyOverview_FillTotals` adds
+Player `+0x54..+0x68` (extra) to `+0x3C..+0x50` (base).
 
 ### Field semantics proof
 

@@ -84,6 +84,13 @@ def main() -> int:
         0x4C7B7C: "a3 0c bd 57 00",    # logo -> profile+0x34
         0x4C7B81: "89 0d 10 bd 57 00",  # color -> profile+0x38
         0x4C7B9D: "a3 38 b9 57 00",    # gender -> settings 0x57B938
+        0x4821B4: "8b 41 cc",          # profile+0x04 (characteristic adjust)
+        0x482144: "8b 48 d0",          # profile+0x08 -> Player+0x3C
+        0x482153: "8b 48 d4",          # profile+0x0C -> Player+0x40
+        0x482160: "8b 48 d8",          # profile+0x10 -> Player+0x44
+        0x48216D: "8b 48 dc",          # profile+0x14 -> Player+0x48
+        0x48217A: "8b 48 e0",          # profile+0x18 -> Player+0x4C
+        0x482187: "8b 40 e4",          # profile+0x1C -> Player+0x50
     }
     for address, expected_bytes in expected.items():
         actual = bytes_at(image, address, len(expected_bytes.split()))
@@ -165,6 +172,13 @@ def main() -> int:
     header = open(HEADER, encoding="utf-8").read()
     for needle in ("sizeof(FreePlayProfile) == FREEPLAY_PROFILE_STRIDE",
                    "offsetof(FreePlayProfile, cash_multiplier)",
+                   "offsetof(FreePlayProfile, characteristic_adjust)",
+                   "offsetof(FreePlayProfile, buyer)",
+                   "offsetof(FreePlayProfile, gangsters)",
+                   "offsetof(FreePlayProfile, specialist)",
+                   "offsetof(FreePlayProfile, politicians)",
+                   "offsetof(FreePlayProfile, seller)",
+                   "offsetof(FreePlayProfile, guard)",
                    "offsetof(FreePlayProfile, gender)",
                    "offsetof(FreePlayProfile, hair)",
                    "offsetof(FreePlayProfile, eyes)",
@@ -181,14 +195,20 @@ def main() -> int:
             failures.append(f"header missing static assert: {needle}")
     for needle in ("freeplay_compute_starting_cash",
                    "freeplay_profile_apply_defaults",
+                   "freeplay_adjust_characteristic",
                    "freeplay_profile_copy_appearance"):
         if needle not in header:
             failures.append(f"header missing declaration: {needle}")
 
     expected_fields = {
         "0x00": "cash_multiplier",
-        "0x04": "field_04",
-        "0x08": "field_08_1c",
+        "0x04": "characteristic_adjust",
+        "0x08": "buyer",
+        "0x0C": "gangsters",
+        "0x10": "specialist",
+        "0x14": "politicians",
+        "0x18": "seller",
+        "0x1C": "guard",
         "0x20": "gender",
         "0x24": "hair",
         "0x28": "eyes",
@@ -209,7 +229,7 @@ def main() -> int:
         return 1
     print(
         "Free-play cash multiplier evidence: 3 multiplier sites, "
-        "22 profile sites, 8 appearance/logo/color fields, fixture 11/11")
+        "22 profile sites, 15 mapped profile fields, fixture 11/11")
     return 0
 
 

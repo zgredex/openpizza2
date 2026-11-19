@@ -27,6 +27,18 @@ bool freeplay_profile_is_active(const FreePlayProfile *profile) {
     return profile != NULL && profile->active != 0;
 }
 
+bool freeplay_adjust_characteristic(int32_t *value, int32_t delta) {
+    if (value == NULL) {
+        return false;
+    }
+    int32_t next = *value + delta;
+    if (next < 4 && next > -4) {
+        *value = next;
+        return true;
+    }
+    return false;
+}
+
 void freeplay_profile_copy_appearance(const FreePlayProfile *profile,
                                       FreePlayCharacterAppearance *character) {
     if (profile == NULL || character == NULL) {

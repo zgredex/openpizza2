@@ -11,22 +11,34 @@
  * - FreePlaySetup_InitWindow copies six 0xC0-stride records from the parallel
  *   settings arrays 0x57B97C/0x57B994/0x57B9AC (0x4CBEB7..0x4CBED1).
  * - Game_InitScenario indexes the array with player_index * 0xC0
- *   (0x482083/0x482089) and reads +0x00 and +0x3C.
+ *   (0x482083/0x482089) and reads +0x00, +0x04 and +0x3C.
  * - Game_InitScenario applies the default writes +0x00 = 100 and +0x3C = 1
  *   (0x481EFE/0x481F01).
+ * - CharacterSelect labels +0x08..+0x1C as Buyer, Gangsters, Specialist,
+ *   Politicians, Seller and Guard; SubStartMenu copies them into the profile
+ *   and Game_InitScenario copies them into Player +0x3C..+0x50.
+ * - UI_ComposeOverlayWindowFromRecord and UI_DrawOverlaySprites prove the
+ *   gender/head/eyes/hair/mouth order at +0x20..+0x30.
+ * - Game_InitScenario maps +0x34 to the company logo (LOGOS__%d.spr) and
+ *   +0x38 through the color table to the company text color.
  *
- * Field names stay offset-based until a save/load pair or broader reader set
- * proves a semantic name.  No save/load path for this array was found.
+ * Only +0x40..+0xBF remains offset-named.  No save/load path was found.
  */
 typedef struct FreePlayProfile {
-    int32_t cash_multiplier;    /* +0x00, percent (100 = unchanged) */
-    uint8_t unknown_04[0x1C];   /* +0x04..+0x1F */
-    int32_t gender;             /* +0x20, 0 = male, 1 = female */
-    int32_t hair;               /* +0x24, 0..hair_count-1 */
-    int32_t eyes;               /* +0x28, 0..eye_count-1 */
-    int32_t mouth;              /* +0x2C, 0..mouth_count-1 */
-    int32_t head;               /* +0x30, 0..head_count-1 */
-    int32_t logo;               /* +0x34, LOGOS__01..08 index 0..7 */
+    int32_t cash_multiplier;        /* +0x00, percent (100 = unchanged) */
+    int32_t characteristic_adjust;  /* +0x04, -6..+6 AI adjustment points */
+    int32_t buyer;                  /* +0x08, character value */
+    int32_t gangsters;              /* +0x0C */
+    int32_t specialist;             /* +0x10 */
+    int32_t politicians;            /* +0x14 */
+    int32_t seller;                 /* +0x18 */
+    int32_t guard;                  /* +0x1C */
+    int32_t gender;                 /* +0x20, 0 = male, 1 = female */
+    int32_t hair;                   /* +0x24, 0..hair_count-1 */
+    int32_t eyes;                   /* +0x28, 0..eye_count-1 */
+    int32_t mouth;                  /* +0x2C, 0..mouth_count-1 */
+    int32_t head;                   /* +0x30, 0..head_count-1 */
+    int32_t logo;                   /* +0x34, LOGOS__01..08 index 0..7 */
     int32_t color;              /* +0x38, color-table index 0..7 */
     int32_t active;             /* +0x3C */
     uint8_t unknown_40[0x80];   /* +0x40..+0xBF */
@@ -49,6 +61,13 @@ enum {
     FREEPLAY_PROFILE_COUNT = 6,
     FREEPLAY_PROFILE_STRIDE = 0xC0,
     FREEPLAY_PROFILE_CASH_OFFSET = 0x00,
+    FREEPLAY_PROFILE_ADJUST_OFFSET = 0x04,
+    FREEPLAY_PROFILE_BUYER_OFFSET = 0x08,
+    FREEPLAY_PROFILE_GANGSTERS_OFFSET = 0x0C,
+    FREEPLAY_PROFILE_SPECIALIST_OFFSET = 0x10,
+    FREEPLAY_PROFILE_POLITICIANS_OFFSET = 0x14,
+    FREEPLAY_PROFILE_SELLER_OFFSET = 0x18,
+    FREEPLAY_PROFILE_GUARD_OFFSET = 0x1C,
     FREEPLAY_PROFILE_GENDER_OFFSET = 0x20,
     FREEPLAY_PROFILE_HAIR_OFFSET = 0x24,
     FREEPLAY_PROFILE_EYES_OFFSET = 0x28,
@@ -66,6 +85,27 @@ _Static_assert(sizeof(FreePlayProfile) == FREEPLAY_PROFILE_STRIDE,
 _Static_assert(offsetof(FreePlayProfile, cash_multiplier) ==
                    FREEPLAY_PROFILE_CASH_OFFSET,
                "cash multiplier must stay at +0x00");
+_Static_assert(offsetof(FreePlayProfile, characteristic_adjust) ==
+                   FREEPLAY_PROFILE_ADJUST_OFFSET,
+               "characteristic adjustment must stay at +0x04");
+_Static_assert(offsetof(FreePlayProfile, buyer) ==
+                   FREEPLAY_PROFILE_BUYER_OFFSET,
+               "buyer must stay at +0x08");
+_Static_assert(offsetof(FreePlayProfile, gangsters) ==
+                   FREEPLAY_PROFILE_GANGSTERS_OFFSET,
+               "gangsters must stay at +0x0C");
+_Static_assert(offsetof(FreePlayProfile, specialist) ==
+                   FREEPLAY_PROFILE_SPECIALIST_OFFSET,
+               "specialist must stay at +0x10");
+_Static_assert(offsetof(FreePlayProfile, politicians) ==
+                   FREEPLAY_PROFILE_POLITICIANS_OFFSET,
+               "politicians must stay at +0x14");
+_Static_assert(offsetof(FreePlayProfile, seller) ==
+                   FREEPLAY_PROFILE_SELLER_OFFSET,
+               "seller must stay at +0x18");
+_Static_assert(offsetof(FreePlayProfile, guard) ==
+                   FREEPLAY_PROFILE_GUARD_OFFSET,
+               "guard must stay at +0x1C");
 _Static_assert(offsetof(FreePlayProfile, gender) ==
                    FREEPLAY_PROFILE_GENDER_OFFSET,
                "gender must stay at +0x20");
@@ -113,6 +153,10 @@ void freeplay_profile_apply_defaults(FreePlayProfile *profile);
 
 int32_t freeplay_profile_cash_multiplier(const FreePlayProfile *profile);
 bool freeplay_profile_is_active(const FreePlayProfile *profile);
+
+/* Game_InitScenario 0x481D90: one random +/-1 adjustment of a character value.
+ * The original keeps every value strictly between -4 and 4. */
+bool freeplay_adjust_characteristic(int32_t *value, int32_t delta);
 
 /* Game_InitScenario 0x481D90: copies profile +0x20..+0x30 into Character
  * +0x24..+0x34. */
