@@ -413,6 +413,25 @@ int32_t index_map8to5(const int32_t values[8], int32_t index);
 uint8_t stats_get_level_from_four_counters(int32_t sum);
 uint8_t stats_get_level_from_ten_counters(uint32_t sum);
 
+/* Table/grid mappers and searches. */
+int32_t stats_get_matrix_variant_value(const uint8_t *object,
+                                        int32_t variant, int32_t row,
+                                        int32_t column);
+int32_t stats_get_or_sum_series(const uint8_t *object, int32_t series,
+                                int32_t index);
+int32_t map_get_2d_table_value(const uint8_t *object, int32_t table,
+                               int32_t row, int32_t column);
+const uint8_t *grid_get_cell(const uint8_t *grid, int32_t x, int32_t y);
+float grid_get_max_value(const float *values);
+int32_t global_array_find_index(const int32_t *values, int32_t count,
+                                int32_t key);
+int32_t global_array_find_int(const int32_t *values, int32_t count,
+                              int32_t key);
+int32_t save_list_find_index(const int32_t *values, int32_t count,
+                             int32_t key);
+int32_t market_get_price_modifier(const int32_t *values, int32_t row,
+                                  int32_t column);
+
 /* Game_GetActiveScreenOrFallback (0x482910). */
 int32_t game_get_active_screen_or_fallback(const uint8_t *game);
 

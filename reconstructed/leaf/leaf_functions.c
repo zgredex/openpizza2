@@ -1801,3 +1801,124 @@ uint8_t stats_get_level_from_ten_counters(uint32_t sum) {
     }
     return 2;
 }
+
+int32_t stats_get_matrix_variant_value(const uint8_t *object,
+                                        int32_t variant, int32_t row,
+                                        int32_t column) {
+    if (object == NULL) {
+        return variant == 0 || variant == 1 || variant == 2 || variant == 3
+                   ? 0
+                   : row;
+    }
+    size_t base;
+    switch (variant) {
+    case 0:
+        base = 5000;
+        break;
+    case 1:
+        base = 0x13d0;
+        break;
+    case 2:
+        base = 0x1418;
+        break;
+    case 3:
+        base = 0x1460;
+        break;
+    default:
+        return row;
+    }
+    return read_i32(object + base + (size_t)(column + row * 9) * 4u);
+}
+
+int32_t stats_get_or_sum_series(const uint8_t *object, int32_t series,
+                                int32_t index) {
+    if (object == NULL) {
+        return 0;
+    }
+    if (index != -1) {
+        return read_i32(object + (size_t)(index + series * 100) * 4u + 0x44);
+    }
+    int32_t sum = 0;
+    for (int32_t slot = 0; slot < 100; slot++) {
+        sum += read_i32(object + (size_t)(series * 100 + slot) * 4u + 0x44);
+    }
+    return sum;
+}
+
+int32_t map_get_2d_table_value(const uint8_t *object, int32_t table,
+                               int32_t row, int32_t column) {
+    if (object == NULL) {
+        return 0;
+    }
+    size_t base;
+    if (table == 0) {
+        base = 0x2bf4c;
+    } else if (table == 1) {
+        base = 0x2c234;
+    } else {
+        return 0;
+    }
+    return read_i32(object + base + (size_t)(row * 0x30 + column) * 4u);
+}
+
+const uint8_t *grid_get_cell(const uint8_t *grid, int32_t x, int32_t y) {
+    if (grid == NULL) {
+        return NULL;
+    }
+    int32_t width = read_i32(grid + 0x1c);
+    int32_t height = read_i32(grid + 0x20);
+    if (x < 0 || y < 0 || x >= width || y >= height) {
+        return NULL;
+    }
+    uintptr_t base;
+    memcpy(&base, grid + 0x4c, sizeof(base));
+    return (const uint8_t *)(base + (size_t)(width * y + x) * 0xc);
+}
+
+float grid_get_max_value(const float *values) {
+    if (values == NULL) {
+        return 0.0f;
+    }
+    float maximum = 0.0f;
+    for (size_t index = 0; index < 72; index++) {
+        if (maximum < values[index]) {
+            maximum = values[index];
+        }
+    }
+    return maximum;
+}
+
+int32_t global_array_find_index(const int32_t *values, int32_t count,
+                                int32_t key) {
+    if (values == NULL) {
+        return -1;
+    }
+    for (int32_t index = 0; index < count; index++) {
+        if (values[index] == key) {
+            return index;
+        }
+    }
+    return -1;
+}
+
+int32_t global_array_find_int(const int32_t *values, int32_t count,
+                              int32_t key) {
+    return global_array_find_index(values, count, key);
+}
+
+int32_t save_list_find_index(const int32_t *values, int32_t count,
+                             int32_t key) {
+    return global_array_find_index(values, count, key);
+}
+
+int32_t market_get_price_modifier(const int32_t *values, int32_t row,
+                                  int32_t column) {
+    if (values == NULL) {
+        return 0;
+    }
+    int32_t value = values[column + 0xa0 + row * 8];
+    if (value == 0) {
+        return 0;
+    }
+    return value != 1 ? -10 : 10;
+}

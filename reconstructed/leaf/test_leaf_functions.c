@@ -1095,6 +1095,66 @@ static void test_small_stats_accessors(void) {
     assert(stats_get_level_from_ten_counters(6) == 3);
 }
 
+static void test_table_grid_searches(void) {
+    uint8_t matrix[0x1460 + 64 * 4] = {0};
+    write_i32_at(matrix, 5000 + (2 + 1 * 9) * 4, 111);
+    write_i32_at(matrix, 0x13d0 + (3 + 2 * 9) * 4, 222);
+    write_i32_at(matrix, 0x1418 + (4 + 3 * 9) * 4, 333);
+    write_i32_at(matrix, 0x1460 + (5 + 4 * 9) * 4, 444);
+    assert(stats_get_matrix_variant_value(matrix, 0, 1, 2) == 111);
+    assert(stats_get_matrix_variant_value(matrix, 1, 2, 3) == 222);
+    assert(stats_get_matrix_variant_value(matrix, 2, 3, 4) == 333);
+    assert(stats_get_matrix_variant_value(matrix, 3, 4, 5) == 444);
+    assert(stats_get_matrix_variant_value(matrix, 9, 7, 1) == 7);
+
+    uint8_t series[2 * 400 + 4] = {0};
+    write_i32_at(series, (5 + 1 * 100) * 4 + 0x44, 55);
+    assert(stats_get_or_sum_series(series, 1, 5) == 55);
+    for (int index = 0; index < 100; index++) {
+        write_i32_at(series, (index + 0 * 100) * 4 + 0x44, index + 1);
+    }
+    assert(stats_get_or_sum_series(series, 0, -1) == 5050);
+
+    uint8_t map[0x2c234 + 0x30 * 4 * 4] = {0};
+    write_i32_at(map, 0x2bf4c + (2 * 0x30 + 3) * 4, 123);
+    write_i32_at(map, 0x2c234 + (1 * 0x30 + 2) * 4, 456);
+    assert(map_get_2d_table_value(map, 0, 2, 3) == 123);
+    assert(map_get_2d_table_value(map, 1, 1, 2) == 456);
+    assert(map_get_2d_table_value(map, 2, 0, 0) == 0);
+
+    uint8_t grid[0x60] = {0};
+    uint8_t cells[4 * 12] = {0};
+    write_i32_at(grid, 0x1c, 2);
+    write_i32_at(grid, 0x20, 2);
+    uintptr_t cell_base = (uintptr_t)cells;
+    memcpy(grid + 0x4c, &cell_base, sizeof(cell_base));
+    assert(grid_get_cell(grid, 0, 0) == cells);
+    assert(grid_get_cell(grid, 1, 1) == cells + (2 * 1 + 1) * 12);
+    assert(grid_get_cell(grid, 2, 0) == NULL);
+    assert(grid_get_cell(grid, 0, 2) == NULL);
+
+    float floats[72] = {0};
+    floats[0] = -1.0f;
+    floats[35] = 9.5f;
+    assert(grid_get_max_value(floats) == 9.5f);
+    assert(grid_get_max_value(NULL) == 0.0f);
+
+    const int32_t values[4] = {7, 8, 9, 8};
+    assert(global_array_find_index(values, 4, 9) == 2);
+    assert(global_array_find_int(values, 4, 8) == 1);
+    assert(save_list_find_index(values, 4, 7) == 0);
+    assert(global_array_find_index(values, 4, 10) == -1);
+    assert(global_array_find_index(NULL, 4, 7) == -1);
+
+    int32_t market[0x100] = {0};
+    market[0xa0 + 3 + 1 * 8] = 1;
+    market[0xa0 + 4 + 1 * 8] = 2;
+    assert(market_get_price_modifier(market, 1, 3) == 10);
+    assert(market_get_price_modifier(market, 1, 4) == -10);
+    assert(market_get_price_modifier(market, 1, 5) == 0);
+    assert(market_get_price_modifier(NULL, 0, 0) == 0);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -1125,6 +1185,7 @@ int main(void) {
     test_object_sprite_settings();
     test_state_id_predicates();
     test_small_stats_accessors();
+    test_table_grid_searches();
     puts("leaf function reconstruction: OK");
     return 0;
 }
