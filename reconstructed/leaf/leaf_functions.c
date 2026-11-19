@@ -1045,3 +1045,96 @@ void leaf_construction_order_construct(ConstructionOrderState *order,
     order->fields[6] = -1;
     order->fields[7] = -1;
 }
+
+void furniture_type_construct(FurnitureTypeState *type) {
+    if (type == NULL) {
+        return;
+    }
+    memset(type, 0, sizeof(*type));
+    type->fields[2] = 12;
+    type->fields[3] = 11;
+    type->fields[4] = 4;
+    type->fields[5] = 3;
+    type->fields[0x1c] = 0;
+    type->fields[0x1d] = 0;
+    for (size_t index = 0; index < 8; index++) {
+        size_t base = 0x1e + index * 3;
+        type->fields[base] = -1;
+        type->fields[base + 1] = -1;
+        type->fields[base + 2] = 0;
+    }
+}
+
+void furniture_type_destroy(FurnitureTypeState *type) {
+    if (type != NULL) {
+        type->vtable = 0;
+    }
+}
+
+const void *game_get_player_by_slot(const void *const players[6],
+                                    int32_t slot) {
+    if (players == NULL || slot < 0 || slot > 5) {
+        return NULL;
+    }
+    return players[slot];
+}
+
+int32_t game_get_current_player_company_name(const void *const players[6],
+                                             int32_t current_slot) {
+    if (players == NULL || current_slot < 0 || current_slot > 5 ||
+        players[current_slot] == NULL) {
+        return -1;
+    }
+    return read_i32((const uint8_t *)players[current_slot] + 8u);
+}
+
+const void *game_get_player_city(const void *const players[6], int32_t index) {
+    if (players == NULL || index < 0 || index > 5) {
+        return NULL;
+    }
+    return players[index];
+}
+
+int32_t game_find_player_slot(const void *const players[6],
+                              const void *player) {
+    if (players == NULL) {
+        return -1;
+    }
+    for (int32_t index = 0; index < 6; index++) {
+        if (players[index] == player) {
+            return index;
+        }
+    }
+    return -1;
+}
+
+int32_t game_find_group_slot(const int16_t slots[6], int16_t value) {
+    if (slots == NULL) {
+        return -1;
+    }
+    for (int32_t index = 0; index < 6; index++) {
+        if (slots[index] == value) {
+            return index;
+        }
+    }
+    return -1;
+}
+
+size_t game_count_group_slots(const int16_t slots[6]) {
+    if (slots == NULL) {
+        return 0;
+    }
+    size_t count = 0;
+    while (count < 6 && slots[count] != -1) {
+        count++;
+    }
+    return count;
+}
+
+const void *game_get_city_data(const void *const *table, size_t count,
+                               int32_t index) {
+    if (table == NULL || index < 0 || (size_t)index >= count) {
+        return NULL;
+    }
+    return table[index];
+}

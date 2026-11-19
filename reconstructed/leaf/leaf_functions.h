@@ -282,4 +282,40 @@ typedef struct ConstructionOrderState {
 void leaf_construction_order_construct(ConstructionOrderState *order,
                                   int32_t field4, int32_t field8);
 
+typedef struct FurnitureTypeState {
+    int32_t vtable;
+    int32_t fields[0x36];
+} FurnitureTypeState;
+
+/* FurnitureType_Construct (0x4E3FB0). */
+void furniture_type_construct(FurnitureTypeState *type);
+
+/* FurnitureType_Destroy (0x4E4050). */
+void furniture_type_destroy(FurnitureTypeState *type);
+
+/* Game_GetPlayerBySlot (0x488BE0). */
+const void *game_get_player_by_slot(const void *const players[6],
+                                    int32_t slot);
+
+/* Game_GetCurrentPlayerCompanyName (0x482820). */
+int32_t game_get_current_player_company_name(const void *const players[6],
+                                             int32_t current_slot);
+
+/* Game_GetPlayerCity (0x4DDCC0). */
+const void *game_get_player_city(const void *const players[6], int32_t index);
+
+/* Game_FindPlayerSlot (0x488BC0). */
+int32_t game_find_player_slot(const void *const players[6],
+                              const void *player);
+
+/* Game_FindGroupSlot (0x4E42C0). */
+int32_t game_find_group_slot(const int16_t slots[6], int16_t value);
+
+/* Game_CountGroupSlots (0x4E41A0). */
+size_t game_count_group_slots(const int16_t slots[6]);
+
+/* Game_GetCityData (0x4E4140). */
+const void *game_get_city_data(const void *const *table, size_t count,
+                               int32_t index);
+
 #endif

@@ -617,6 +617,62 @@ static void test_economy_plan_order(void) {
     leaf_construction_order_construct(NULL, 1, 2);
 }
 
+static void test_furniture_and_game_accessors(void) {
+    FurnitureTypeState furniture;
+    memset(&furniture, 0xff, sizeof(furniture));
+    furniture_type_construct(&furniture);
+    assert(furniture.vtable == 0);
+    assert(furniture.fields[2] == 12 && furniture.fields[3] == 11);
+    assert(furniture.fields[4] == 4 && furniture.fields[5] == 3);
+    assert(furniture.fields[0x1c] == 0 && furniture.fields[0x1d] == 0);
+    for (int index = 0; index < 8; index++) {
+        size_t base = 0x1e + index * 3;
+        assert(furniture.fields[base] == -1);
+        assert(furniture.fields[base + 1] == -1);
+        assert(furniture.fields[base + 2] == 0);
+    }
+    furniture.vtable = 123;
+    furniture_type_destroy(&furniture);
+    assert(furniture.vtable == 0);
+    furniture_type_construct(NULL);
+    furniture_type_destroy(NULL);
+
+    uint8_t player[16] = {0};
+    write_i32_at(player, 8, 4321);
+    const void *players[6] = {NULL};
+    players[2] = player;
+    assert(game_get_player_by_slot(players, 2) == player);
+    assert(game_get_player_by_slot(players, 0) == NULL);
+    assert(game_get_player_by_slot(players, -1) == NULL);
+    assert(game_get_player_by_slot(players, 6) == NULL);
+    assert(game_get_current_player_company_name(players, 2) == 4321);
+    assert(game_get_current_player_company_name(players, 0) == -1);
+    assert(game_get_current_player_company_name(players, 9) == -1);
+    assert(game_get_player_city(players, 2) == player);
+    assert(game_get_player_city(players, 1) == NULL);
+    assert(game_find_player_slot(players, player) == 2);
+    assert(game_find_player_slot(players, player + 1) == -1);
+
+    const int16_t group[6] = {4, 5, -1, 7, 8, 9};
+    assert(game_find_group_slot(group, 5) == 1);
+    assert(game_find_group_slot(group, 7) == 3);
+    assert(game_find_group_slot(group, 6) == -1);
+    assert(game_count_group_slots(group) == 2);
+    const int16_t full[6] = {1, 2, 3, 4, 5, 6};
+    assert(game_count_group_slots(full) == 6);
+    const int16_t empty[6] = {-1, 2, 3, 4, 5, 6};
+    assert(game_count_group_slots(empty) == 0);
+
+    uint8_t city0[8] = {0};
+    uint8_t city1[8] = {0};
+    const void *city_table[2] = {city0, city1};
+    assert(game_get_city_data(city_table, 2, 0) == city0);
+    assert(game_get_city_data(city_table, 2, 1) == city1);
+    assert(game_get_city_data(city_table, 2, 2) == NULL);
+    assert(game_get_city_data(city_table, 2, -1) == NULL);
+    assert(game_get_city_data(NULL, 2, 0) == NULL);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -639,6 +695,7 @@ int main(void) {
     test_stride_entity_city();
     test_font_clock_economy();
     test_economy_plan_order();
+    test_furniture_and_game_accessors();
     puts("leaf function reconstruction: OK");
     return 0;
 }
