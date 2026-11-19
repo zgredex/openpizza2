@@ -636,6 +636,32 @@ const char *city_get_localized_name(const char *const *names, size_t count,
 int32_t list_find_by_key(const int32_t *nodes, int32_t head, int32_t key);
 void window_clear_state(uint8_t *window);
 
+/* Map hover tile update, mission setting copy and animation point pairs. */
+void map_set_hover_tile(uint8_t *hover, const int32_t input[2],
+                        const int32_t values[15], int32_t base);
+
+typedef struct MissionSettings {
+    int32_t rating_float_state;
+    int32_t scenario_state;
+    int32_t objectives_flag;
+    int32_t freeplay_state_35c;
+    int32_t freeplay_flag;
+    int32_t company_actions_flag_360;
+    int32_t company_actions_flag;
+    int32_t freeplay_state_350;
+    int32_t freeplay_state_354;
+    int32_t freeplay_state_358;
+} MissionSettings;
+
+/* Mission_ApplySettings (0x4DC080). */
+void mission_apply_settings(const uint8_t *source, MissionSettings *settings);
+
+/* Animation_SetPointPairs (0x534B30). */
+void animation_set_point_pairs(uint8_t *frames, size_t index,
+                               const int32_t pair1[2], const int32_t pair2[2],
+                               const int32_t pair4[2],
+                               const int32_t pair5[2]);
+
 /* Game_GetActiveScreenOrFallback (0x482910). */
 int32_t game_get_active_screen_or_fallback(const uint8_t *game);
 

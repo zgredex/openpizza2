@@ -1968,6 +1968,63 @@ static void test_reference_list_window(void) {
     assert(read_i32_at(window, 4) == 0);
 }
 
+static void test_hover_mission_animation(void) {
+    uint8_t hover[0x10] = {0};
+    uint8_t target[0x40] = {0};
+    uintptr_t target_pointer = (uintptr_t)target;
+    memcpy(hover + 8, &target_pointer, sizeof(target_pointer));
+    const int32_t input[2] = {11, 22};
+    int32_t values[15];
+    for (int index = 0; index < 15; index++) {
+        values[index] = index + 1;
+    }
+    map_set_hover_tile(hover, input, values, 77);
+    assert(read_i32_at(hover, 0) == 11);
+    assert(read_i32_at(hover, 4) == 22);
+    assert(read_i32_at(target, 0) == 1);
+    assert(read_i32_at(target, 4) == 77);
+    assert(read_i32_at(target, 8) == 3);
+    assert(read_i32_at(target, 0x10) == 77);
+    assert(read_i32_at(target, 14 * 4) == 15);
+
+    uint8_t source[0x400] = {0};
+    write_i32_at(source, 0x48, 1);
+    write_i32_at(source, 0x344, 2);
+    write_i32_at(source, 0x34c, 3);
+    write_i32_at(source, 0x350, 4);
+    write_i32_at(source, 0x354, 5);
+    write_i32_at(source, 0x358, 6);
+    write_i32_at(source, 0x35c, 7);
+    write_i32_at(source, 0x360, 8);
+    MissionSettings settings = {0};
+    mission_apply_settings(source, &settings);
+    assert(settings.scenario_state == 1);
+    assert(settings.rating_float_state == 2);
+    assert(settings.objectives_flag == 3);
+    assert(settings.freeplay_state_350 == 4);
+    assert(settings.freeplay_state_354 == 5);
+    assert(settings.freeplay_state_358 == 6);
+    assert(settings.freeplay_state_35c == 7);
+    assert(settings.company_actions_flag_360 == 8);
+    assert(settings.freeplay_flag == 1);
+    assert(settings.company_actions_flag == 1);
+
+    uint8_t frames[0x98] = {0};
+    const int32_t pair1[2] = {1, 2};
+    const int32_t pair2[2] = {3, 4};
+    const int32_t pair4[2] = {5, 6};
+    const int32_t pair5[2] = {7, 8};
+    animation_set_point_pairs(frames, 0, pair1, pair2, pair4, pair5);
+    assert(read_i32_at(frames, 0x70) == 1);
+    assert(read_i32_at(frames, 0x74) == 2);
+    assert(read_i32_at(frames, 0x78) == 3);
+    assert(read_i32_at(frames, 0x7c) == 4);
+    assert(read_i32_at(frames, 0x60) == 5);
+    assert(read_i32_at(frames, 0x64) == 6);
+    assert(read_i32_at(frames, 0x68) == 7);
+    assert(read_i32_at(frames, 0x6c) == 8);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -2011,6 +2068,7 @@ int main(void) {
     test_building_datetime();
     test_lookup_initializers();
     test_reference_list_window();
+    test_hover_mission_animation();
     puts("leaf function reconstruction: OK");
     return 0;
 }

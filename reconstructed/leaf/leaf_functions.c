@@ -3201,3 +3201,66 @@ void window_clear_state(uint8_t *window) {
     write_i32(window + 0x1a8, 0);
     write_i32(window + 4, 0);
 }
+
+void map_set_hover_tile(uint8_t *hover, const int32_t input[2],
+                        const int32_t values[15], int32_t base) {
+    if (hover == NULL || input == NULL || values == NULL) {
+        return;
+    }
+    uint8_t *hover_object = hover;
+    write_i32(hover_object, input[0]);
+    write_i32(hover_object + 4, input[1]);
+    uintptr_t target;
+    memcpy(&target, hover_object + 8, sizeof(target));
+    if (target == 0) {
+        return;
+    }
+    uint8_t *destination = (uint8_t *)target;
+    for (size_t index = 0; index < 15; index++) {
+        write_i32(destination + index * 4, values[index]);
+    }
+    write_i32(destination + 4, base);
+    write_i32(destination + 0x10, base);
+}
+
+void mission_apply_settings(const uint8_t *source, MissionSettings *settings) {
+    if (source == NULL || settings == NULL) {
+        return;
+    }
+    settings->rating_float_state = read_i32(source + 0x344);
+    settings->scenario_state = read_i32(source + 0x48);
+    settings->objectives_flag = read_i32(source + 0x34c);
+    settings->freeplay_state_35c = read_i32(source + 0x35c);
+    settings->freeplay_flag = 1;
+    settings->company_actions_flag_360 = read_i32(source + 0x360);
+    settings->company_actions_flag = 1;
+    settings->freeplay_state_350 = read_i32(source + 0x350);
+    settings->freeplay_state_354 = read_i32(source + 0x354);
+    settings->freeplay_state_358 = read_i32(source + 0x358);
+}
+
+void animation_set_point_pairs(uint8_t *frames, size_t index,
+                               const int32_t pair1[2], const int32_t pair2[2],
+                               const int32_t pair4[2],
+                               const int32_t pair5[2]) {
+    if (frames == NULL) {
+        return;
+    }
+    uint8_t *record = frames + index * 0x98u;
+    if (pair1 != NULL) {
+        write_i32(record + 0x70, pair1[0]);
+        write_i32(record + 0x74, pair1[1]);
+    }
+    if (pair2 != NULL) {
+        write_i32(record + 0x78, pair2[0]);
+        write_i32(record + 0x7c, pair2[1]);
+    }
+    if (pair4 != NULL) {
+        write_i32(record + 0x60, pair4[0]);
+        write_i32(record + 0x64, pair4[1]);
+    }
+    if (pair5 != NULL) {
+        write_i32(record + 0x68, pair5[0]);
+        write_i32(record + 0x6c, pair5[1]);
+    }
+}
