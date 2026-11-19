@@ -31,19 +31,27 @@ MENU_SRC = menu/menu_state.c menu/test_menu_state.c
 MENU_HDR = menu/menu_state.h
 MENU_BIN = $(BUILD)/test_menu_state
 
+UI_SRC = ui_screen/ui_screen.c ui_screen/test_ui_screen.c menu/menu_state.c
+UI_HDR = ui_screen/ui_screen.h menu/menu_state.h
+UI_BIN = $(BUILD)/test_ui_screen
+
 CITY_SRC = city/city_state.c city/test_city_state.c $(MISSION_STATE_SRC) branch/branch_economy.c
 CITY_HDR = city/city_state.h $(MISSION_STATE_HDR) branch/branch_economy.h
 CITY_BIN = $(BUILD)/test_city_state
 
-GAME_SRC = settings/settings.c ingredient/ingredient.c mission/mission_state.c \
-           mission/mission_goals.c branch/branch_economy.c city/city_state.c \
-           menu/menu_state.c save/save_state.c construction/construction_state.c \
-           test_game.c
+GAME_MODULES = settings/settings.c ingredient/ingredient.c menu/menu_state.c \
+               ui_screen/ui_screen.c save/save_state.c \
+               construction/construction_state.c mission/mission_state.c \
+               mission/mission_goals.c branch/branch_economy.c city/city_state.c
+GAME_SRC = $(GAME_MODULES) test_game.c
 GAME_BIN = $(BUILD)/test_game
 
-.PHONY: all check clean
+FULL_GAME_BIN = $(BUILD)/pc2-reconstructed
+FULL_GAME_SRC = $(GAME_MODULES) full_game.c
 
-all: check
+.PHONY: all check full-game clean
+
+all: check full-game
 
 $(SETTINGS_BIN): $(SETTINGS_SRC) $(SETTINGS_HDR)
 	@mkdir -p $(BUILD)
@@ -77,15 +85,26 @@ $(MENU_BIN): $(MENU_SRC) $(MENU_HDR)
 	@mkdir -p $(BUILD)
 	$(CC) $(CFLAGS) $(MENU_SRC) -o $@
 
+$(UI_BIN): $(UI_SRC) $(UI_HDR)
+	@mkdir -p $(BUILD)
+	$(CC) $(CFLAGS) $(UI_SRC) -o $@
+
 $(CITY_BIN): $(CITY_SRC) $(CITY_HDR)
 	@mkdir -p $(BUILD)
 	$(CC) $(CFLAGS) $(CITY_SRC) -lm -o $@
 
-$(GAME_BIN): $(GAME_SRC) $(CITY_HDR) $(BRANCH_HDR) $(INGREDIENT_HDR) $(SETTINGS_HDR)
+$(GAME_BIN): $(GAME_SRC) $(CITY_HDR) $(BRANCH_HDR) $(INGREDIENT_HDR) $(SETTINGS_HDR) $(UI_HDR)
 	@mkdir -p $(BUILD)
 	$(CC) $(CFLAGS) $(GAME_SRC) -lm -o $@
 
-check: $(SETTINGS_BIN) $(INGREDIENT_BIN) $(MISSION_STATE_BIN) $(MISSION_GOALS_BIN) $(BRANCH_BIN) $(CONSTRUCTION_BIN) $(SAVE_BIN) $(MENU_BIN) $(CITY_BIN) $(GAME_BIN)
+$(FULL_GAME_BIN): $(FULL_GAME_SRC) $(CITY_HDR) $(BRANCH_HDR) $(INGREDIENT_HDR) $(SETTINGS_HDR) $(UI_HDR)
+	@mkdir -p $(BUILD)
+	$(CC) $(CFLAGS) $(FULL_GAME_SRC) -lm -o $@
+
+full-game: $(FULL_GAME_BIN)
+	./$(FULL_GAME_BIN)
+
+check: $(SETTINGS_BIN) $(INGREDIENT_BIN) $(MISSION_STATE_BIN) $(MISSION_GOALS_BIN) $(BRANCH_BIN) $(CONSTRUCTION_BIN) $(SAVE_BIN) $(MENU_BIN) $(UI_BIN) $(CITY_BIN) $(GAME_BIN)
 	./$(SETTINGS_BIN)
 	./$(INGREDIENT_BIN)
 	./$(MISSION_STATE_BIN)
@@ -94,6 +113,7 @@ check: $(SETTINGS_BIN) $(INGREDIENT_BIN) $(MISSION_STATE_BIN) $(MISSION_GOALS_BI
 	./$(CONSTRUCTION_BIN)
 	./$(SAVE_BIN)
 	./$(MENU_BIN)
+	./$(UI_BIN)
 	./$(CITY_BIN)
 	./$(GAME_BIN)
 

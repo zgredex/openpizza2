@@ -6,6 +6,7 @@
 #include "mission/mission_goals.h"
 #include "settings/settings.h"
 #include "save/save_state.h"
+#include "ui_screen/ui_screen.h"
 
 #include <assert.h>
 #include <math.h>
@@ -46,6 +47,15 @@ int main(void) {
     menu_set_selected(&menu, 2);
     assert(menu_activate(&menu) == MENU_CONTINUE_GAME);
     assert(strcmp(menu.status, "No saved games found.") == 0);
+
+    ScreenState screen;
+    ui_screen_init(&screen);
+    ui_screen_from_menu_action(&screen, MENU_START_NEW_GAME);
+    assert(screen.active == SCREEN_CHARACTER_SELECT);
+    ui_screen_character_select_start(&screen);
+    assert(screen.active == SCREEN_MISSION_BRIEFING);
+    ui_screen_mission_start(&screen);
+    assert(screen.active == SCREEN_GAME_SESSION);
 
     CityState city;
     city_state_init(&city, "London", "lon.iso", 4096, 2048, 280, 500000.0, 2);

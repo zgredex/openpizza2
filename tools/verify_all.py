@@ -1192,7 +1192,7 @@ def check_ingredient_desc_emulation():
 
 def check_reconstructed_c():
     result = subprocess.run(
-        ["make", "-C", "reconstructed", "check"],
+        ["make", "-C", "reconstructed", "check", "full-game"],
         cwd=ROOT, text=True, capture_output=True, timeout=180)
     output = (result.stdout + result.stderr).strip()
     ok = (result.returncode == 0
@@ -1202,15 +1202,17 @@ def check_reconstructed_c():
           and "mission goals reconstruction: OK" in output
           and "branch economy reconstruction: OK" in output
           and "menu state reconstruction: OK" in output
+          and "UI screen reconstruction: OK" in output
           and "save state reconstruction: OK" in output
           and "construction state reconstruction: OK" in output
           and "city branch state reconstruction: OK" in output
-          and "unified game reconstruction: OK" in output)
+          and "unified game reconstruction: OK" in output
+          and "pc2 reconstructed full game: OK" in output)
     return {
         "name": "reconstructed C build",
         "ok": ok,
-        "detail": ("module tests plus the unified construction/save/menu/city/"
-                   "mission/branch target compile with gcc -std=c11 -Werror and pass")
+        "detail": ("module tests, unified target and pc2-reconstructed full-game "
+                   "target compile with gcc -std=c11 -Werror and pass")
         if ok else output[-1200:],
     }
 
