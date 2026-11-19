@@ -1,0 +1,17 @@
+[package]
+name = "pc2-render"
+version = "0.1.0"
+edition = "2021"
+description = "Minimal Vulkan-backed renderer bring-up for Pizza Connection 2"
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "pc2-quads"
+path = "src/main.rs"
+
+[dependencies]
+bytemuck = { version = "1.25", features = ["derive"] }
+pollster = "1.0"
+wgpu = { version = "30.0.2", default-features = false, features = ["std", "parking_lot", "vulkan", "wgsl"] }

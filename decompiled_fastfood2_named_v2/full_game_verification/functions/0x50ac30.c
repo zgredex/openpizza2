@@ -1,0 +1,43 @@
+// rea decompile_all
+// name: UI_SetChildIconAndRatingHeight
+// address: 0x50ac30
+// body: available
+// range: 0x50ac30-0x50ace6 inclusive
+// non_contiguous: false
+// provider: Ghidra 12.2 (ghidra)
+// analysis_profile: aae5fcbbec95ac3047ec86f28609da356814b1c85770f2c09803aad3607b988d
+// limitations: The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.; Ghidra Program checkpoint mode is disabled: closing discards metadata edits; original executable bytes are unchanged. For stock ELF/PE/Mach-O on Linux/macOS, set REA_GHIDRA_CHECKPOINT_DIR to a private absolute directory before starting REA (restart MCP after changing its startup environment).; Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; This session uses Ghidra 12.2. The bridge is verified against 12.1.4; other 12.x (>=12.1) builds are accepted and the observed version is reported.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+void __fastcall UI_SetChildIconAndRatingHeight(int param_1)
+
+{
+  int iVar1;
+  longlong lVar2;
+  
+  if (*(int *)(param_1 + 200) != 0) {
+    iVar1 = IDMap_Lookup((void *)(DAT_0057c670 + 0x20),*(int *)(param_1 + 0x50),(int *)0x0);
+    Rating_GetComposite(iVar1);
+    switch(*(undefined1 *)(iVar1 + 0x824)) {
+    case 0:
+      *(undefined2 *)(*(int *)(param_1 + 200) + 8) = 0x2c;
+      break;
+    case 1:
+      *(undefined2 *)(*(int *)(param_1 + 200) + 8) = 0x2e;
+      break;
+    case 2:
+      *(undefined2 *)(*(int *)(param_1 + 200) + 8) = 0x2d;
+      break;
+    case 3:
+      *(undefined2 *)(*(int *)(param_1 + 200) + 8) = 0x2b;
+    }
+    lVar2 = __ftol();
+    *(short *)(*(int *)(param_1 + 200) + 10) = 0x99 - (short)lVar2;
+    if (*(short *)(*(int *)(param_1 + 200) + 10) < 0x88) {
+      *(undefined2 *)(*(int *)(param_1 + 200) + 10) = 0x88;
+    }
+  }
+  return;
+}
+

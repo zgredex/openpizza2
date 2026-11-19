@@ -1,0 +1,117 @@
+{
+  "seed": 1,
+  "city": "Berlin",
+  "day": 90,
+  "year": 1,
+  "quarter": 2,
+  "companies": [
+    {
+      "name": "Player Pizza",
+      "cash": 280426.3,
+      "market_share": 0.3405,
+      "ledger": {}
+    },
+    {
+      "name": "Rival Pizza",
+      "cash": 125214.27,
+      "market_share": 0.6595,
+      "ledger": {}
+    }
+  ],
+  "branches": [
+    {
+      "id": 0,
+      "company": "Player Pizza",
+      "served": 5085,
+      "lost": 0,
+      "revenue": 69094.63,
+      "costs": 1871.66,
+      "profit": 67222.97,
+      "ratings": [
+        52.0,
+        81.0,
+        75.0,
+        74.0,
+        99.0,
+        100,
+        88.0,
+        91.0
+      ]
+    },
+    {
+      "id": 1,
+      "company": "Rival Pizza",
+      "served": 5133,
+      "lost": 0,
+      "revenue": 60930.0,
+      "costs": 2052.42,
+      "profit": 58877.58,
+      "ratings": [
+        48.0,
+        76.0,
+        66.0,
+        67.0,
+        81.0,
+        85.0,
+        76.0,
+        79.0
+      ]
+    },
+    {
+      "id": 2,
+      "company": "Rival Pizza",
+      "served": 3554,
+      "lost": 221,
+      "revenue": 50887.44,
+      "costs": 1358.87,
+      "profit": 49528.57,
+      "ratings": [
+        48.0,
+        75.0,
+        67.0,
+        66.0,
+        86.0,
+        90.0,
+        77.0,
+        80.0
+      ]
+    },
+    {
+      "id": 3,
+      "company": "Rival Pizza",
+      "served": 1535,
+      "lost": 223,
+      "revenue": 21999.0,
+      "costs": 590.98,
+      "profit": 21408.02,
+      "ratings": [
+        48.0,
+        75.0,
+        67.0,
+        66.0,
+        86.0,
+        90.0,
+        77.0,
+        80.0
+      ]
+    }
+  ],
+  "quarters": [
+    {
+      "year": 1,
+      "quarter": 1,
+      "day": 90,
+      "customers": 4752,
+      "revenue": 202911.07,
+      "cash": {
+        "Player Pizza": 280426.3,
+        "Rival Pizza": 125214.27
+      },
+      "market_share": {
+        "Player Pizza": 0.3405,
+        "Rival Pizza": 0.6595
+      },
+      "avg_rating": 75.5
+    }
+  ]
+}

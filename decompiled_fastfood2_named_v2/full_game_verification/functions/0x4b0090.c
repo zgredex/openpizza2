@@ -1,0 +1,74 @@
+// rea decompile_all
+// name: StatisticsBackdrop_InitCompanyRows
+// address: 0x4b0090
+// body: available
+// range: 0x4b0090-0x4b02c0 inclusive
+// non_contiguous: false
+// provider: Ghidra 12.2 (ghidra)
+// analysis_profile: aae5fcbbec95ac3047ec86f28609da356814b1c85770f2c09803aad3607b988d
+// limitations: The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.; Ghidra Program checkpoint mode is disabled: closing discards metadata edits; original executable bytes are unchanged. For stock ELF/PE/Mach-O on Linux/macOS, set REA_GHIDRA_CHECKPOINT_DIR to a private absolute directory before starting REA (restart MCP after changing its startup environment).; Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; This session uses Ghidra 12.2. The bridge is verified against 12.1.4; other 12.x (>=12.1) builds are accepted and the observed version is reported.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+void __cdecl StatisticsBackdrop_InitCompanyRows(void *param_1)
+
+{
+  void *this;
+  int iVar1;
+  int iVar2;
+  undefined4 unaff_EDI;
+  int iVar3;
+  char local_40 [64];
+  
+                    /* Builds the statistics backdrop company rows and chart. */
+  this = param_1;
+  Game_BuildPlayerRankingData(DAT_0057c670,&DAT_0057d66c);
+  UI_SetPosition(param_1,&LAB_004b0000,0);
+  if (DAT_0057d684 != 0) {
+    UI_ReleaseRefCount(DAT_0057c5e0,DAT_0057d684);
+  }
+  DAT_0057d684 = UI_LoadFontByName(DAT_0057c5e0,s_VERDANA10_fnt_00563e64);
+  iVar3 = 0x401;
+  param_1 = (void *)0x0;
+  iVar2 = 0x3fa;
+  do {
+    iVar1 = Game_GetPlayerBySlot(DAT_0057c670,iVar2 + -0x3fa);
+    if (iVar1 == 0) {
+      UI_RemoveObjectByKey(this,iVar2);
+      UI_RemoveObjectByKey(this,iVar3);
+      UI_RemoveObjectByKey(this,iVar3 + 1);
+      UI_RemoveObjectByKey(this,iVar3 + 2);
+      UI_RemoveObjectByKey(this,*(int *)((int)param_1 + 0x56a654));
+      (&DAT_0056a24a)[iVar2] = 0;
+    }
+    else {
+      UI_ShowChildByID(this,iVar2);
+      UI_ShowChildByID(this,iVar3);
+      UI_ShowChildByID(this,iVar3 + 1);
+      UI_ShowChildByID(this,iVar3 + 2);
+      UI_ShowChildByID(this,*(int *)((int)param_1 + 0x56a654));
+      String_Format(local_40,(byte *)s_LOGOS__0_d_spr_00568eb8,*(int *)(iVar1 + 0x1e0) + 1);
+      UI_SetButtonSpriteByName(this,*(int *)((int)param_1 + 0x56a654),local_40);
+      Window_GadgetNotify_Text_SetText(this,iVar3,iVar1 + 8);
+      Window_GadgetNotify_Button_SetState(this,iVar2,(uint)(byte)(&DAT_0056a24a)[iVar2]);
+      String_Format(local_40,&DAT_005686f4,
+                    *(undefined4 *)(*(int *)((int)param_1 + 0x57d66c) + 0x11c));
+      Window_GadgetNotify_Text_SetText(this,iVar3 + 2,local_40);
+      Window_GadgetNotify_Text_SetTextColor(this,iVar3,*(undefined4 *)(iVar1 + 0x1dc));
+      Window_GadgetNotify_Text_SetTextColor(this,iVar3 + 1,*(undefined4 *)(iVar1 + 0x1dc));
+      Window_GadgetNotify_Text_SetTextColor(this,iVar3 + 2,*(undefined4 *)(iVar1 + 0x1dc));
+    }
+    iVar3 = iVar3 + 3;
+    param_1 = (void *)((int)param_1 + 4);
+    iVar1 = iVar2 + -0x3f9;
+    iVar2 = iVar2 + 1;
+  } while (iVar1 < 6);
+  Gadget_SetButtonState(this,0x1f41,1);
+  String_Format(local_40,DAT_00582e4c,unaff_EDI);
+  Window_GadgetNotify_Text_SetText(this,0x414,local_40);
+  Window_GadgetNotify_Text_SetText(this,0x415,local_40);
+  StatisticsBackdrop_DrawCompanyBarChart(this);
+  StatisticsBackdrop_RestoreCategorySelection(this);
+  return;
+}
+

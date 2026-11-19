@@ -1,0 +1,294 @@
+[
+ {
+  "address": "0x402ef0",
+  "name": "FileObject_Delete"
+ },
+ {
+  "address": "0x50fdd0",
+  "name": "Recipe_Delete"
+ },
+ {
+  "address": "0x476fe0",
+  "name": "Branch_Delete"
+ },
+ {
+  "address": "0x4d3240",
+  "name": "Car_Delete"
+ },
+ {
+  "address": "0x4e9d70",
+  "name": "Game_Delete"
+ },
+ {
+  "address": "0x537d60",
+  "name": "Renderer_Delete"
+ },
+ {
+  "address": "0x52e510",
+  "name": "UI_Tooltip_Delete"
+ },
+ {
+  "address": "0x403350",
+  "name": "UI_ListEntry_Delete"
+ },
+ {
+  "address": "0x513d30",
+  "name": "Storage_Delete"
+ },
+ {
+  "address": "0x4d1d80",
+  "name": "MapObject_Delete"
+ },
+ {
+  "address": "0x4eade0",
+  "name": "IsoMap_Delete"
+ },
+ {
+  "address": "0x5427c0",
+  "name": "SoundMixerThread_Delete"
+ },
+ {
+  "address": "0x536140",
+  "name": "Window_Delete"
+ },
+ {
+  "address": "0x54a8c0",
+  "name": "UI_BriefingList_Delete"
+ },
+ {
+  "address": "0x54db05",
+  "name": "CRT_Streambuf_Delete"
+ },
+ {
+  "address": "0x54d8bb",
+  "name": "CRT_Ios_Delete"
+ },
+ {
+  "address": "0x50e9c0",
+  "name": "Player_Delete"
+ },
+ {
+  "address": "0x534db0",
+  "name": "Gfx_RectList_Delete"
+ },
+ {
+  "address": "0x501b50",
+  "name": "Player_AIState_Delete"
+ },
+ {
+  "address": "0x522ed0",
+  "name": "Array_Delete"
+ },
+ {
+  "address": "0x520af0",
+  "name": "UI_Child_Delete"
+ },
+ {
+  "address": "0x4dd8d0",
+  "name": "Company_Delete"
+ },
+ {
+  "address": "0x4d47e0",
+  "name": "City_Delete"
+ },
+ {
+  "address": "0x54b620",
+  "name": "EmployeeAvatar_Delete"
+ },
+ {
+  "address": "0x5286e0",
+  "name": "UI_ContextMenu_Delete"
+ },
+ {
+  "address": "0x403d60",
+  "name": "MissionBriefing_InitList"
+ },
+ {
+  "address": "0x4cb390",
+  "name": "MissionMap_InitList"
+ },
+ {
+  "address": "0x54b460",
+  "name": "EmployeeAvatar_Construct"
+ },
+ {
+  "address": "0x489880",
+  "name": "Game_BuildCompetitorBuildingList"
+ },
+ {
+  "address": "0x4d59c0",
+  "name": "City_CollectBuildingsByType"
+ },
+ {
+  "address": "0x539ea0",
+  "name": "Renderer_CreateChild"
+ },
+ {
+  "address": "0x4ddd20",
+  "name": "Company_InvalidateAllBranchRatings"
+ },
+ {
+  "address": "0x4f2b60",
+  "name": "Grid_CollectFootprintCells"
+ },
+ {
+  "address": "0x50e2a0",
+  "name": "Person_SetAtWork"
+ },
+ {
+  "address": "0x4e2410",
+  "name": "BuildingValue_Compute"
+ },
+ {
+  "address": "0x50bf50",
+  "name": "Person_FindFreeNeighborCell"
+ },
+ {
+  "address": "0x4d5b90",
+  "name": "City_CollectBranchBuildings"
+ },
+ {
+  "address": "0x4d5c40",
+  "name": "City_CollectBusinessBuildings"
+ },
+ {
+  "address": "0x48c340",
+  "name": "City_CollectVacantLots"
+ },
+ {
+  "address": "0x47d270",
+  "name": "Branch_CollectOrdersByCategory"
+ },
+ {
+  "address": "0x488b30",
+  "name": "Ingredient_CollectByCategory"
+ },
+ {
+  "address": "0x4d8470",
+  "name": "City_FindFreePlotsNearPoint"
+ },
+ {
+  "address": "0x532510",
+  "name": "UI_Group_DestroyMemberList"
+ },
+ {
+  "address": "0x554203",
+  "name": "CRT_FFMessageBanner"
+ },
+ {
+  "address": "0x54cd91",
+  "name": "CRT_FileBuf_Construct"
+ },
+ {
+  "address": "0x5140e0",
+  "name": "Storage_ChargePurchaseCost"
+ },
+ {
+  "address": "0x4e4930",
+  "name": "Ingredient_LoadMarketTable"
+ },
+ {
+  "address": "0x544ba0",
+  "name": "SoundSystem_Destroy"
+ },
+ {
+  "address": "0x4e1bc0",
+  "name": "Company_CollectUnprofitableBranches"
+ },
+ {
+  "address": "0x52b230",
+  "name": "MovieWindow_Destroy"
+ },
+ {
+  "address": "0x50dbf0",
+  "name": "Object_FindOpposingTarget"
+ },
+ {
+  "address": "0x507b90",
+  "name": "Map_PickRandomLinkedCellInSteps"
+ },
+ {
+  "address": "0x4dd130",
+  "name": "Map_CollectBillboardDistances"
+ },
+ {
+  "address": "0x48a3b0",
+  "name": "Game_FindNextFreeObjectOfType"
+ },
+ {
+  "address": "0x48a2d0",
+  "name": "Game_FindPreviousFreeObjectOfType"
+ },
+ {
+  "address": "0x4d43a0",
+  "name": "BuildingValue_ApplyUpgrade"
+ },
+ {
+  "address": "0x529280",
+  "name": "UI_Slider_Destroy"
+ },
+ {
+  "address": "0x4d5ab0",
+  "name": "Map_CollectObjectsOnFlaggedTiles"
+ },
+ {
+  "address": "0x47c2b0",
+  "name": "Object_AttachBuildingValue"
+ },
+ {
+  "address": "0x50ff80",
+  "name": "Recipe_AppendSalesRecord"
+ },
+ {
+  "address": "0x480c40",
+  "name": "Branch_PickRandomActiveCounter"
+ },
+ {
+  "address": "0x512750",
+  "name": "Recipe_FindIngredientsByCategory"
+ },
+ {
+  "address": "0x4d6af0",
+  "name": "Game_CollectObjectsByType"
+ },
+ {
+  "address": "0x54d40e",
+  "name": "CRT_Istream_Construct"
+ },
+ {
+  "address": "0x52bd70",
+  "name": "UI_TextElement_Destroy"
+ },
+ {
+  "address": "0x52d6b0",
+  "name": "UI_ButtonElement_Destroy"
+ },
+ {
+  "address": "0x54d7e9",
+  "name": "CRT_Ostream_Construct"
+ },
+ {
+  "address": "0x4e0170",
+  "name": "Stats_AppendPeriodReport"
+ },
+ {
+  "address": "0x51f230",
+  "name": "UI_ImageElement_Destroy"
+ },
+ {
+  "address": "0x4d2a00",
+  "name": "BuildingValue_CreateDefault"
+ },
+ {
+  "address": "0x47e8c0",
+  "name": "Branch_CancelConstructionAt"
+ },
+ {
+  "address": "0x5221e0",
+  "name": "UI_LabelElement_Destroy"
+ },
+ {
+  "address": "0x54a880",
+  "name": "UI_BriefingList_Construct"
+ }
+]

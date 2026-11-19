@@ -1,0 +1,652 @@
+========================================================================================
+0x541ae0 layer=16 indeg=2 bytes=4439
+calls: SoundFormat_Init, SoundBuffer_CreateDSBuffer, Sound_SetBufferVolume, SoundBuffer_SetVolume, FUN_00541930, Sound_GetDeviceCaps, Sound_AlignBufferSize, FUN_005424b0, _strchr, operator_new
+ provider-specific; not original source
+int __fastcall FUN_00541ae0(void *param_1)
+{
+  int iVar1;
+  int *piVar2;
+  char *pcVar3;
+  int iVar4;
+  void *this;
+  uint uVar5;
+  undefined4 *puVar6;
+  undefined4 local_20;
+  undefined4 local_1c;
+  undefined4 local_18;
+  undefined4 local_14;
+  void *local_10;
+  void *local_c;
+  undefined1 *puStack_8;
+  undefined4 uStack_4;
+  uStack_4 = 0xffffffff;
+  puStack_8 = &LAB_0055afcb;
+  local_c = ExceptionList;
+  ExceptionList = &local_c;
+  *(undefined1 *)((int)param_1 + 0x53) = 0;
+  *(char **)((int)param_1 + 0x48) = *(char **)((int)param_1 + 0x44);
+  pcVar3 = _strchr(*(char **)((int)param_1 + 0x44),0x2c);
+  *(char **)((int)param_1 + 0x4c) = pcVar3;
+========================================================================================
+0x541d50 layer=17 indeg=1 bytes=5436
+calls: FUN_00541ae0, operator_new
+ provider-specific; not original source
+undefined4 * __thiscall
+FUN_00541d50(void *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,char *param_4,
+            char param_5,undefined4 param_6,int *param_7)
+{
+  char cVar1;
+  char *pcVar2;
+  DWORD DVar3;
+  uint uVar4;
+  uint uVar5;
+  int iVar6;
+  char *pcVar7;
+  undefined4 *puVar8;
+  void *local_c;
+  undefined1 *puStack_8;
+  undefined4 local_4;
+  puStack_8 = &LAB_0055aff3;
+  local_c = ExceptionList;
+  ExceptionList = &local_c;
+  *(undefined4 *)((int)this + 4) = 1;
+  *(undefined ***)this = &PTR_LAB_0055c840;
+  *(undefined4 *)((int)this + 8) = 0;
+  *(undefined4 *)((int)this + 0xc) = 0;
+  *(undefined4 *)((int)this + 0x10) = 0;
+  local_4 = 0;
+  *(undefined4 *)((int)this + 0x14) = 0;
+========================================================================================
+0x5420d0 layer=17 indeg=1 bytes=7969
+calls: List_DestroyObjects, SoundBuffer_Configure, Stream_RequestBlock, FUN_00541930, FUN_00541ae0, FUN_005424b0, FUN_005425b0, _strchr
+ provider-specific; not original source
+int __fastcall FUN_005420d0(void *param_1)
+{
+  char cVar1;
+  int *piVar2;
+  int iVar3;
+  char *pcVar4;
+  int iVar5;
+  uint uVar6;
+  int iVar7;
+  uint uVar8;
+  uint local_c;
+  uint local_8;
+  uint local_4;
+  iVar7 = 0;
+  if (*(char *)((int)param_1 + 0x54) == '\0') {
+    return 1;
+  }
+  if (*(char *)((int)param_1 + 0x56) == '\0') {
+    return 0;
+  }
+  if (*(char *)((int)param_1 + 0x53) == '\0') {
+    iVar7 = FUN_00541ae0(param_1);
+    if (iVar7 < 0) {
+      *(undefined1 *)((int)param_1 + 0x57) = 1;
+      return iVar7;
+========================================================================================
+0x5424b0 layer=15 indeg=2 bytes=2900
+calls: FUN_0053f650, SoundBuffer_SeekSample, SoundBuffer_LockSample, SoundBuffer_UnlockSample
+ provider-specific; not original source
+int __thiscall FUN_005424b0(void *this,int param_1,uint param_2)
+{
+  void *this_00;
+  char *pcVar1;
+  uint uVar2;
+  int iVar3;
+  int iVar4;
+  EnterCriticalSection(*(LPCRITICAL_SECTION *)((int)this + 0x38));
+  pcVar1 = (char *)FUN_00540a80(*(void **)((int)this + 0x28),param_1,param_2);
+  LeaveCriticalSection(*(LPCRITICAL_SECTION *)((int)this + 0x38));
+  if (pcVar1 == (char *)0x0) {
+    return -0x7fffbffb;
+  }
+  EnterCriticalSection(*(LPCRITICAL_SECTION *)((int)this + 0x38));
+  if (*(char *)((int)this + 0x88) != '\0') {
+    this_00 = *(void **)((int)this + 0x2c);
+    uVar2 = (uint)*(ushort *)(*(int *)((int)this + 0x28) + 0x24) * *(int *)((int)this + 0x84);
+    if (*(uint *)((int)this_00 + 0x28) < uVar2) {
+      FUN_0053f790(this_00,0);
+      *(undefined4 *)((int)this + 0x84) = 0;
+    }
+    else {
+      FUN_0053f790(this_00,uVar2);
+    }
+    *(undefined1 *)((int)this + 0x88) = 0;
+========================================================================================
+0x5425b0 layer=11 indeg=1 bytes=2337
+calls: SoundBuffer_LockSample, SoundBuffer_UnlockSample
+ provider-specific; not original source
+undefined4 __thiscall FUN_005425b0(void *this,int param_1,uint param_2)
+{
+  undefined4 *puVar1;
+  undefined4 uVar2;
+  uint uVar3;
+  EnterCriticalSection(*(LPCRITICAL_SECTION *)((int)this + 0x38));
+  puVar1 = (undefined4 *)FUN_00540a80(*(void **)((int)this + 0x28),param_1,param_2);
+  LeaveCriticalSection(*(LPCRITICAL_SECTION *)((int)this + 0x38));
+  if (puVar1 == (undefined4 *)0x0) {
+    return 0x80004005;
+  }
+  for (uVar3 = param_2 >> 2; uVar3 != 0; uVar3 = uVar3 - 1) {
+    *puVar1 = 0;
+    puVar1 = puVar1 + 1;
+  }
+  for (uVar3 = param_2 & 3; uVar3 != 0; uVar3 = uVar3 - 1) {
+    *(undefined1 *)puVar1 = 0;
+    puVar1 = (undefined4 *)((int)puVar1 + 1);
+  }
+  EnterCriticalSection(*(LPCRITICAL_SECTION *)((int)this + 0x38));
+  uVar2 = FUN_00540b50(*(int *)((int)this + 0x28));
+  LeaveCriticalSection(*(LPCRITICAL_SECTION *)((int)this + 0x38));
+  return uVar2;
+}
+========================================================================================
+0x542720 layer=13 indeg=1 bytes=2515
+calls: FUN_0054f167, 0x55c8f0
+ provider-specific; not original source
+undefined4 * __thiscall FUN_00542720(void *this,int *param_1)
+{
+  HANDLE pvVar1;
+  *(undefined4 *)((int)this + 4) = 0;
+  *(undefined4 *)((int)this + 8) = 0;
+  *(undefined4 *)((int)this + 0xc) = 0;
+  *(undefined4 *)((int)this + 0x10) = 0;
+  InitializeCriticalSection((LPCRITICAL_SECTION)((int)this + 0x14));
+  *(undefined4 *)((int)this + 0x2c) = 0;
+  *(undefined4 *)((int)this + 0x30) = 0;
+  *(undefined1 *)((int)this + 0x34) = 0;
+  *(undefined ***)this = &PTR_FUN_0055c8f0;
+  if (param_1 != (int *)0x0) {
+    if (*param_1 < 0) {
+      return this;
+    }
+    *param_1 = 0;
+  }
+  pvVar1 = CreateEventA((LPSECURITY_ATTRIBUTES)0x0,0,0,(LPCSTR)0x0);
+  *(HANDLE *)((int)this + 0x2c) = pvVar1;
+  if (pvVar1 == (HANDLE)0xffffffff) {
+    if (param_1 != (int *)0x0) {
+      *param_1 = -0x7fffbffb;
+      return this;
+    }
+========================================================================================
+0x5428c0 layer=18 indeg=0 bytes=5161
+calls: Sound_GetStreamRefillSize, FUN_005420d0, Sound_UpdateBufferFade, Sound_QueryBufferFlag, List_Remove, List_UnlinkNode, FUN_0054dd78
+ provider-specific; not original source
+void __cdecl FUN_005428c0(int param_1)
+{
+  LPCRITICAL_SECTION lpCriticalSection;
+  undefined4 *puVar1;
+  int *piVar2;
+  char cVar3;
+  uint uVar4;
+  LPVOID pvVar5;
+  DWORD DVar6;
+  int iVar7;
+  undefined4 *this;
+  int local_c;
+  uint local_8;
+  uint local_4;
+  do {
+    local_8 = 0xffffffff;
+    local_c = 0;
+    lpCriticalSection = (LPCRITICAL_SECTION)(param_1 + 0x14);
+    EnterCriticalSection(lpCriticalSection);
+    this = (undefined4 *)(param_1 + 4);
+    *(undefined4 *)(param_1 + 0xc) = *(undefined4 *)(param_1 + 4);
+    LeaveCriticalSection(lpCriticalSection);
+    while( true ) {
+      EnterCriticalSection(lpCriticalSection);
+      puVar1 = *(undefined4 **)(param_1 + 0xc);
+========================================================================================
+0x544d90 layer=16 indeg=0 bytes=6599
+calls: FUN_0053f460, SoundSample_Destruct, SoundFormat_Init, SoundStream_Close, SoundBuffer_CreateDSBuffer, FUN_00540a30, List_Insert, FUN_0054dd78, operator_new
+ provider-specific; not original source
+int FUN_00544d90(int param_1,char *param_2,int *param_3)
+{
+  LPCRITICAL_SECTION lpCriticalSection;
+  char *this;
+  int *piVar1;
+  undefined4 *puVar2;
+  int iVar3;
+  uint uVar4;
+  int iVar5;
+  undefined4 uStack_6c;
+  undefined4 uStack_68;
+  undefined4 uStack_64;
+  undefined4 uStack_60;
+  undefined2 uStack_5c;
+  undefined **appuStack_58 [2];
+  int *piStack_50;
+  int iStack_4c;
+  LPVOID pvStack_48;
+  undefined4 uStack_44;
+  undefined4 uStack_40;
+  undefined4 uStack_3c;
+  undefined4 uStack_38;
+  undefined2 uStack_34;
+  undefined4 uStack_30;
+  LPVOID pvStack_1c;
+========================================================================================
+0x545100 layer=18 indeg=0 bytes=4117
+calls: FUN_00541d50, operator_new
+ provider-specific; not original source
+int FUN_00545100(int param_1,char *param_2,undefined4 param_3,undefined4 *param_4)
+{
+  LPCRITICAL_SECTION lpCriticalSection;
+  int iVar1;
+  void *this;
+  undefined4 uVar2;
+  int *piVar3;
+  int iVar4;
+  undefined4 *puVar5;
+  undefined4 uVar6;
+  void *local_c;
+  undefined1 *puStack_8;
+  int local_4;
+  iVar1 = param_1;
+  local_4 = 0xffffffff;
+  puStack_8 = &LAB_0055b593;
+  local_c = ExceptionList;
+  lpCriticalSection = (LPCRITICAL_SECTION)(param_1 + 0xa0);
+  ExceptionList = &local_c;
+  EnterCriticalSection(lpCriticalSection);
+  iVar4 = *(int *)(iVar1 + 0x98);
+  local_4 = 0;
+  param_1 = 0;
+  if (iVar4 < 0) {
+    LeaveCriticalSection(lpCriticalSection);
+========================================================================================
+0x545290 layer=16 indeg=0 bytes=7156
+calls: FUN_0053f460, SoundSample_Destruct, SoundFormat_Init, SoundStream_Close, SoundBuffer_CreateDSBuffer, FUN_00540a30, Rect_Zero, Sound_Get3DBufferParams, List_Insert, FUN_0054dd78, operator_new
+ provider-specific; not original source
+int FUN_00545290(int param_1,char *param_2,int *param_3)
+{
+  int *this;
+  int *piVar1;
+  DWORD DVar2;
+  int iVar3;
+  undefined4 *puVar4;
+  uint uVar5;
+  LPCRITICAL_SECTION lpCriticalSection;
+  undefined1 uStack00000000;
+  int local_74;
+  LPCRITICAL_SECTION local_70;
+  undefined4 uStack_6c;
+  undefined4 uStack_68;
+  undefined4 uStack_64;
+  undefined4 uStack_60;
+  undefined2 uStack_5c;
+  undefined **appuStack_58 [2];
+  int *piStack_50;
+  int iStack_4c;
+  LPVOID pvStack_48;
+  undefined4 uStack_44;
+  undefined4 uStack_40;
+  undefined4 uStack_3c;
+  undefined4 uStack_38;
+========================================================================================
+0x5456a0 layer=16 indeg=0 bytes=6586
+calls: FUN_0053f460, SoundSample_Destruct, SoundFormat_Init, SoundStream_Close, FUN_00540a30, FUN_00541520, List_Insert, FUN_0054dd78, operator_new
+ provider-specific; not original source
+uint FUN_005456a0(uint param_1,char *param_2,int *param_3)
+{
+  LPCRITICAL_SECTION lpCriticalSection;
+  uint uVar1;
+  char *this;
+  int *piVar2;
+  undefined4 *puVar3;
+  int iVar4;
+  uint uVar5;
+  undefined4 uStack_6c;
+  undefined4 uStack_68;
+  undefined4 uStack_64;
+  undefined4 uStack_60;
+  undefined2 uStack_5c;
+  undefined **appuStack_58 [2];
+  int *piStack_50;
+  int iStack_4c;
+  LPVOID pvStack_48;
+  undefined4 uStack_44;
+  undefined4 uStack_40;
+  undefined4 uStack_3c;
+  undefined4 uStack_38;
+  undefined2 uStack_34;
+  undefined4 uStack_30;
+  LPVOID pvStack_1c;
+========================================================================================
+0x548780 layer=11 indeg=1 bytes=4697
+calls: Random_Range, Sound_PlayChannel, Sound_SetMusicTrack, Sound_UpdateProximityGain, FUN_0054dd83, __ftol
+ provider-specific; not original source
+void __thiscall FUN_00548780(void *this,int param_1,int param_2)
+{
+  bool bVar1;
+  float fVar2;
+  int *piVar3;
+  int iVar4;
+  int *piVar5;
+  int iVar6;
+  int *piVar7;
+  longlong lVar8;
+  float local_108;
+  undefined1 local_104 [260];
+  if (*(char *)((int)this + 0xfc) == '\0') {
+    return;
+  }
+  if (0 < *(int *)((int)this + 0x154)) {
+    *(int *)((int)this + 0x154) = *(int *)((int)this + 0x154) + -1;
+  }
+  if (0 < *(int *)((int)this + 0x15c)) {
+    *(int *)((int)this + 0x15c) = *(int *)((int)this + 0x15c) + -1;
+  }
+  if (0 < *(int *)((int)this + 0x158)) {
+    *(int *)((int)this + 0x158) = *(int *)((int)this + 0x158) + -1;
+  }
+  bVar1 = true;
+========================================================================================
+0x54b970 layer=13 indeg=3 bytes=3451
+calls: UI_RemoveObject, Array_GetPairByKey, Array_GetBoundsByKey, UI_CreateMovieWindow, FUN_005319a0, UI_ClipRect, Surface_Configure, Renderer_CreateChild, FUN_0053c710, FUN_0053cea0, Sprite_GetSize, UI_DrawOverlaySprites, operator_new
+ provider-specific; not original source
+undefined4
+FUN_0054b970(void *param_1,int param_2,int param_3,void *param_4,int param_5,int param_6,int param_7
+            )
+{
+  short sVar1;
+  void *pvVar2;
+  void *this;
+  int iVar3;
+  char *pcVar4;
+  undefined4 *this_00;
+  undefined4 *puVar5;
+  undefined4 uVar6;
+  ushort uVar7;
+  int local_28;
+  int local_24;
+  void *local_20;
+  int local_1c [4];
+  void *local_c;
+  undefined1 *puStack_8;
+  undefined4 local_4;
+  iVar3 = param_2;
+  this = param_1;
+  local_4 = 0xffffffff;
+  puStack_8 = &LAB_0055b9db;
+  local_c = ExceptionList;
+========================================================================================
+0x54bb00 layer=14 indeg=7 bytes=1714
+calls: FUN_0054b970
+ provider-specific; not original source
+void FUN_0054bb00(void *param_1,int param_2,int param_3)
+{
+  FUN_0054b970(param_1,param_2,*(int *)(param_3 + 0x24),*(void **)(param_3 + 0x34),
+               *(int *)(param_3 + 0x2c),*(int *)(param_3 + 0x28),*(int *)(param_3 + 0x30));
+  return;
+}
+========================================================================================
+0x54bb30 layer=12 indeg=1 bytes=3001
+calls: FUN_00527580, FUN_0054dd83
+ provider-specific; not original source
+undefined4 * __thiscall FUN_0054bb30(void *this,void *param_1,undefined4 param_2,undefined4 param_3)
+{
+  undefined4 *puVar1;
+  int iVar2;
+  char local_104 [260];
+  iVar2 = 9;
+  puVar1 = (undefined4 *)((int)this + 0x244);
+  do {
+    puVar1[-0x22] = 0;
+    *puVar1 = 0;
+    puVar1[-0x20] = 0;
+    puVar1[-1] = 0;
+    puVar1 = puVar1 + 0x23;
+    iVar2 = iVar2 + -1;
+  } while (iVar2 != 0);
+  *(undefined4 *)((int)this + 0x1ac) = 0;
+  String_Format(local_104,(byte *)s__s1_spr_005765d4,param_2);
+  FUN_00527580(param_1,local_104,(undefined4 *)0x1,(undefined4 *)((int)this + 8));
+  String_Format(local_104,(byte *)s__s2_spr_005765cc,param_2);
+  FUN_00527580(param_1,local_104,(undefined4 *)0x1,(undefined4 *)((int)this + 0x4c));
+  String_Format(local_104,(byte *)s__s3_spr_005765c4,param_2);
+  FUN_00527580(param_1,local_104,(undefined4 *)0x1,(undefined4 *)((int)this + 0x90));
+  String_Format(local_104,(byte *)s__s1_spr_005765d4,param_3);
+  FUN_00527580(param_1,local_104,(undefined4 *)0x1,(undefined4 *)((int)this + 0xd4));
+  String_Format(local_104,(byte *)s__s2_spr_005765cc,param_3);
+========================================================================================
+0x54bcc0 layer=13 indeg=6 bytes=1727
+calls: FUN_00531cf0, UI_UpdateAnimatedSprites
+ provider-specific; not original source
+void __thiscall FUN_0054bcc0(void *this,void *param_1,int param_2)
+{
+  uint *puVar1;
+  *(void **)((int)this + 0x1a8) = param_1;
+  puVar1 = (uint *)FUN_00531cf0(param_1,param_2);
+  *(uint **)((int)this + 4) = puVar1;
+  FUN_0054bd10(this,puVar1);
+  return;
+}
+========================================================================================
+0x54cc99 layer=14 indeg=6 bytes=2821
+calls: CRT_FileBuf_Construct, CRT_Istream_Construct, CRT_Ios_Construct, FUN_0054d950, operator_new, CRT_StackFrameStub
+ provider-specific; not original source
+int * FUN_0054cc99(void)
+{
+  uint *puVar1;
+  int iVar2;
+  uint uVar3;
+  undefined4 *puVar4;
+  int *piVar5;
+  int *extraout_ECX;
+  int unaff_EBP;
+  FUN_0054fe6c();
+  *(int **)(unaff_EBP + -0x14) = extraout_ECX;
+  *(undefined4 *)(unaff_EBP + -0x10) = 0;
+  if (*(int *)(unaff_EBP + 0x14) != 0) {
+    *extraout_ECX = (int)&DAT_0055cc30;
+    FUN_0054d85d(extraout_ECX + 3);
+    *(undefined4 *)(unaff_EBP + -0x10) = 1;
+    *(undefined4 *)(unaff_EBP + -4) = 0;
+  }
+  puVar4 = operator_new(0x54);
+  *(undefined4 **)(unaff_EBP + 0x14) = puVar4;
+  *(undefined4 *)(unaff_EBP + -4) = 1;
+  if (puVar4 != (undefined4 *)0x0) {
+    FUN_0054cd91(puVar4);
+  }
+  *(undefined1 *)(unaff_EBP + -4) = 0;
+========================================================================================
+0x54cdab layer=14 indeg=0 bytes=1612
+calls: FUN_0054cdc7, FUN_0054dd78
+ provider-specific; not original source
+LPVOID __thiscall FUN_0054cdab(void *this,byte param_1)
+{
+  FUN_0054cdc7();
+  if ((param_1 & 1) != 0) {
+    Mem_Free(this);
+  }
+  return this;
+}
+========================================================================================
+0x54cdc7 layer=13 indeg=1 bytes=2032
+calls: FUN_0054ce1e, CRT_Filebuf_Sync, CS_EnterRaw, CRT_Streambuf_Destroy, CRT_StackFrameStub, 0x55cc54
+ provider-specific; not original source
+void FUN_0054cdc7(void)
+{
+  int *extraout_ECX;
+  int unaff_EBP;
+  FUN_0054fe6c();
+  *(int **)(unaff_EBP + -0x10) = extraout_ECX;
+  *extraout_ECX = (int)&PTR_FUN_0055cc54;
+  *(undefined4 *)(unaff_EBP + -4) = 0;
+  if (extraout_ECX[0xc] < 0) {
+    FUN_0054d35c((LPCRITICAL_SECTION)(extraout_ECX + 0xd));
+  }
+  if (extraout_ECX[0x14] == 0) {
+    FUN_0054cfd6((int)extraout_ECX);
+  }
+  else {
+    FUN_0054ce1e(extraout_ECX);
+  }
+  *(undefined4 *)(unaff_EBP + -4) = 0xffffffff;
+  FUN_0054db21(extraout_ECX);
+  ExceptionList = *(void **)(unaff_EBP + -0xc);
+  return;
+}
+========================================================================================
+0x54ce1e layer=12 indeg=2 bytes=2057
+calls: CS_EnterRaw, CS_LeaveRaw, FUN_0054fe8b
+ provider-specific; not original source
+int * __fastcall FUN_0054ce1e(int *param_1)
+{
+  int iVar1;
+  int iVar2;
+  if (param_1[0x13] != -1) {
+    if (param_1[0xc] < 0) {
+      FUN_0054d35c((LPCRITICAL_SECTION)(param_1 + 0xd));
+    }
+    iVar1 = (**(code **)(*param_1 + 4))();
+    iVar2 = FUN_0054fe8b(param_1[0x13]);
+    if ((iVar2 != -1) && (iVar1 != -1)) {
+      param_1[0x13] = -1;
+      if (param_1[0xc] < 0) {
+        FUN_0054d367((LPCRITICAL_SECTION)(param_1 + 0xd));
+      }
+      return param_1;
+    }
+    if (param_1[0xc] < 0) {
+      FUN_0054d367((LPCRITICAL_SECTION)(param_1 + 0xd));
+    }
+  }
+  return (int *)0x0;
+}
+========================================================================================
+0x54d140 layer=14 indeg=3 bytes=2821
+calls: CRT_FileBuf_Construct, CRT_Ostream_Construct, CRT_Ios_Construct, FUN_0054d950, operator_new, CRT_StackFrameStub
+ provider-specific; not original source
+int * FUN_0054d140(void)
+{
+  uint *puVar1;
+  int iVar2;
+  uint uVar3;
+  undefined4 *puVar4;
+  int *piVar5;
+  int *extraout_ECX;
+  int unaff_EBP;
+  FUN_0054fe6c();
+  *(int **)(unaff_EBP + -0x14) = extraout_ECX;
+  *(undefined4 *)(unaff_EBP + -0x10) = 0;
+  if (*(int *)(unaff_EBP + 0x14) != 0) {
+    *extraout_ECX = (int)&DAT_0055cc88;
+    FUN_0054d85d(extraout_ECX + 2);
+    *(undefined4 *)(unaff_EBP + -0x10) = 1;
+    *(undefined4 *)(unaff_EBP + -4) = 0;
+  }
+  puVar4 = operator_new(0x54);
+  *(undefined4 **)(unaff_EBP + 0x14) = puVar4;
+  *(undefined4 *)(unaff_EBP + -4) = 1;
+  if (puVar4 != (undefined4 *)0x0) {
+    FUN_0054cd91(puVar4);
+  }
+  *(undefined1 *)(unaff_EBP + -4) = 0;
+========================================================================================
+0x54d493 layer=11 indeg=1 bytes=3178
+calls: Stream_GetAvailable, CS_EnterRaw, CS_LeaveRaw, CRT_Istream_SkipWhitespace, Stream_AdvanceIterator
+ provider-specific; not original source
+undefined4 __thiscall FUN_0054d493(void *this,int param_1)
+{
+  uint uVar1;
+  int iVar2;
+  undefined4 uVar3;
+  if (*(int *)((int)this + *(int *)(*(int *)this + 4) + 0x34) < 0) {
+    FUN_0054d35c((LPCRITICAL_SECTION)((int)this + *(int *)(*(int *)this + 4) + 0x38));
+  }
+  if (param_1 != 0) {
+    *(undefined4 *)((int)this + 8) = 0;
+  }
+  iVar2 = *(int *)(*(int *)this + 4);
+  uVar1 = *(uint *)(iVar2 + 8 + (int)this);
+  if (uVar1 == 0) {
+    if (*(int *)((int)this + iVar2 + 0x20) != 0) {
+      if (param_1 != 0) {
+        iVar2 = FUN_0054cf82(*(int *)((int)this + iVar2 + 4));
+        if (param_1 <= iVar2) goto LAB_0054d4f5;
+      }
+      FUN_0054d736(*(int **)(*(int *)(*(int *)this + 4) + 0x20 + (int)this));
+    }
+LAB_0054d4f5:
+    iVar2 = *(int *)(*(int *)(*(int *)this + 4) + 4 + (int)this);
+    if (*(int *)(iVar2 + 0x30) < 0) {
+      FUN_0054d35c((LPCRITICAL_SECTION)(iVar2 + 0x34));
+========================================================================================
+0x54d686 layer=13 indeg=1 bytes=2641
+calls: CS_LeaveRaw, FUN_00550655
+ provider-specific; not original source
+void __fastcall FUN_0054d686(int *param_1)
+{
+  uint *puVar1;
+  int iVar2;
+  *(undefined4 *)(*(int *)(*param_1 + 4) + 0x30 + (int)param_1) = 0;
+  if ((*(byte *)((int)param_1 + *(int *)(*param_1 + 4) + 0x25) & 0x20) != 0) {
+    iVar2 = (**(code **)(**(int **)((int)param_1 + *(int *)(*param_1 + 4) + 4) + 4))();
+    if (iVar2 == -1) {
+      *(undefined4 *)(*(int *)(*param_1 + 4) + 8 + (int)param_1) = 6;
+    }
+  }
+  if ((*(byte *)(*(int *)(*param_1 + 4) + 0x25 + (int)param_1) & 0x40) != 0) {
+    iVar2 = FUN_00550655((int *)&DAT_005767a8);
+    if (iVar2 == -1) {
+      puVar1 = (uint *)(*(int *)(*param_1 + 4) + 8 + (int)param_1);
+      *puVar1 = *puVar1 | 2;
+    }
+    iVar2 = FUN_00550655((int *)&DAT_005767c8);
+    if (iVar2 == -1) {
+      puVar1 = (uint *)(*(int *)(*param_1 + 4) + 8 + (int)param_1);
+      *puVar1 = *puVar1 | 2;
+    }
+  }
+  iVar2 = *(int *)(*(int *)(*param_1 + 4) + 4 + (int)param_1);
+  if (*(int *)(iVar2 + 0x30) < 0) {
+========================================================================================
+0x54d950 layer=13 indeg=2 bytes=3617
+calls: FUN_0054ce1e, CS_EnterRaw, CS_LeaveRaw, Stream_AttachBuffer, operator_new, FUN_0055099b
+ provider-specific; not original source
+int * __thiscall FUN_0054d950(void *this,LPCSTR param_1,uint param_2,uint param_3)
+{
+  void *pvVar1;
+  int iVar2;
+  uint uVar3;
+  uint uVar4;
+  uint uVar5;
+  if (*(int *)((int)this + 0x4c) != -1) {
+    return (int *)0x0;
+  }
+  uVar4 = (-(uint)((param_2 & 0x80) != 0) & 0x4000) + 0x4000;
+  if ((param_2 & 0x20) == 0) {
+    uVar4 = uVar4 | 0x100;
+  }
+  uVar5 = 0x40;
+  if ((param_2 & 0x40) != 0) {
+    uVar4 = uVar4 | 0x400;
+  }
+  if ((param_2 & 8) != 0) {
+    param_2 = param_2 | 2;
+    uVar4 = uVar4 | 8;
+  }
+  if ((param_2 & 0x10) != 0) {
+    param_2 = param_2 | 2;
+    uVar4 = uVar4 | 0x200;
+========================================================================================
+0x54dded layer=12 indeg=1 bytes=1708
+calls: FUN_005519e8, 0x576a18, 0x576a1c, 0x576a20, 0x576a24, 0x576a28, 0x576a2c
+ provider-specific; not original source
+void FUN_0054dded(void)
+{
+  PTR_FUN_00576a1c = &LAB_00551a42;
+  PTR_FUN_00576a18 = __cfltcvt;
+  PTR_FUN_00576a20 = __fassign;
+  PTR_FUN_00576a24 = FUN_005519e8;
+  PTR_FUN_00576a28 = &LAB_00551a90;
+  PTR_FUN_00576a2c = __cfltcvt;
+  return;
+}

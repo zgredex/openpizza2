@@ -1,0 +1,8 @@
+[package]
+name = "pc2-audit"
+version = "0.1.0"
+edition = "2021"
+description = "Decoder audit for every shipped Pizza Connection 2 asset"
+
+[dependencies]
+pc2-assets = { path = "../assets" }

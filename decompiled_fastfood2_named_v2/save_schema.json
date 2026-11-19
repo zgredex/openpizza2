@@ -1,0 +1,6120 @@
+{
+ "target": {
+  "path": "game/fastfood2.exe",
+  "sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd"
+ },
+ "header": {
+  "size": 240,
+  "doc": "PIZ_FORMAT.md"
+ },
+ "directory": {
+  "offset": 240,
+  "size": 32,
+  "written_last": true,
+  "entries": [
+   {
+    "index": 0,
+    "meaning": "after_mapobject_list",
+    "evidence": "local_20[0], line 112"
+   },
+   {
+    "index": 1,
+    "meaning": "after_isomap_list",
+    "evidence": "local_20[1], line 88"
+   },
+   {
+    "index": 2,
+    "meaning": "after_character_list",
+    "evidence": "local_20[2], line 100"
+   },
+   {
+    "index": 3,
+    "meaning": "after_player_slots",
+    "evidence": "local_20[3], line 152"
+   },
+   {
+    "index": 4,
+    "meaning": "after_car_list",
+    "evidence": "local_10, line 136"
+   },
+   {
+    "index": 5,
+    "meaning": "after_company_slots",
+    "evidence": "local_c, line 168"
+   },
+   {
+    "index": 6,
+    "meaning": "after_person_list",
+    "evidence": "local_8, line 124"
+   },
+   {
+    "index": 7,
+    "meaning": "end_of_payload",
+    "evidence": "local_4, line 184; also the load-progress denominator"
+   }
+  ],
+  "note": "Earlier notes called this a zero reserved block; the writer fills it with section end offsets and rewrites it at the end."
+ },
+ "top_level": [
+  {
+   "section": "header",
+   "offset": 0,
+   "computed_offset": 0,
+   "size": 240,
+   "computed_size": 240,
+   "kind": "fixed",
+   "writer": "SaveGame_Write",
+   "notes": "title/company/city/slots/time/version/magic"
+  },
+  {
+   "section": "directory",
+   "offset": 240,
+   "computed_offset": 240,
+   "size": 32,
+   "computed_size": 32,
+   "kind": "fixed",
+   "writer": "SaveGame_Serialize",
+   "notes": "8-dword section directory, written last"
+  },
+  {
+   "section": "start_marker",
+   "offset": 272,
+   "computed_offset": 272,
+   "size": 4,
+   "computed_size": 4,
+   "kind": "const",
+   "writer": "SaveGame_Serialize",
+   "notes": "0x2E"
+  },
+  {
+   "section": "global_game_block",
+   "offset": 276,
+   "computed_offset": 276,
+   "size": 1464,
+   "computed_size": 1464,
+   "kind": "fixed",
+   "writer": "SaveGame_Serialize",
+   "notes": "DAT_0057bb20"
+  },
+  {
+   "section": "game_fields_a",
+   "offset": null,
+   "computed_offset": 1740,
+   "size": 32,
+   "computed_size": 32,
+   "kind": "fixed",
+   "writer": "SaveGame_Serialize",
+   "notes": "game+0x298..0x2B7"
+  },
+  {
+   "section": "game_fields_b",
+   "offset": null,
+   "computed_offset": 1772,
+   "size": 32,
+   "computed_size": 32,
+   "kind": "fixed",
+   "writer": "SaveGame_Serialize",
+   "notes": "game+0x2B8..0x2D7"
+  },
+  {
+   "section": "game_scalars",
+   "offset": null,
+   "computed_offset": 1804,
+   "size": 80,
+   "computed_size": 80,
+   "kind": "fixed",
+   "writer": "SaveGame_Serialize",
+   "notes": "20 u32 fields game+0x2D8..0x368 and +0x2D90"
+  },
+  {
+   "section": "ingredient_panel",
+   "offset": null,
+   "computed_offset": 1884,
+   "size": null,
+   "computed_size": 4,
+   "kind": "nested",
+   "writer": "IngredientPanel_Save",
+   "notes": ""
+  },
+  {
+   "section": "city_company_list",
+   "offset": null,
+   "computed_offset": 1888,
+   "size": null,
+   "computed_size": 8,
+   "kind": "nested",
+   "writer": "CityCompanyList_Save",
+   "notes": ""
+  },
+  {
+   "section": "advertising_panel",
+   "offset": null,
+   "computed_offset": 1896,
+   "size": null,
+   "computed_size": 8,
+   "kind": "nested",
+   "writer": "AdvertisingPanel_Save",
+   "notes": ""
+  },
+  {
+   "section": "company_market_share",
+   "offset": null,
+   "computed_offset": 1904,
+   "size": null,
+   "computed_size": 5,
+   "kind": "nested",
+   "writer": "CompanyMarketShare_Save",
+   "notes": ""
+  },
+  {
+   "section": "company_overview",
+   "offset": null,
+   "computed_offset": 1909,
+   "size": null,
+   "computed_size": 17,
+   "kind": "nested",
+   "writer": "CompanyOverview_Save",
+   "notes": ""
+  },
+  {
+   "section": "statistics_balance",
+   "offset": null,
+   "computed_offset": 1926,
+   "size": null,
+   "computed_size": 16,
+   "kind": "nested",
+   "writer": "StatisticsBalance_Save",
+   "notes": ""
+  },
+  {
+   "section": "statistics_branch_balance",
+   "offset": null,
+   "computed_offset": 1942,
+   "size": null,
+   "computed_size": 12,
+   "kind": "nested",
+   "writer": "StatisticsBranchBalance_Save",
+   "notes": ""
+  },
+  {
+   "section": "personnel",
+   "offset": null,
+   "computed_offset": 1954,
+   "size": null,
+   "computed_size": 4,
+   "kind": "nested",
+   "writer": "Personnel_Save",
+   "notes": ""
+  },
+  {
+   "section": "branch_stats_series_flags",
+   "offset": null,
+   "computed_offset": 1958,
+   "size": null,
+   "computed_size": 16,
+   "kind": "nested",
+   "writer": "BranchStats_SeriesFlags_Save",
+   "notes": ""
+  },
+  {
+   "section": "branch_design_color_index",
+   "offset": null,
+   "computed_offset": 1974,
+   "size": null,
+   "computed_size": 4,
+   "kind": "nested",
+   "writer": "BranchDesign_ColorIndex_Save",
+   "notes": ""
+  },
+  {
+   "section": "branch_menu_category",
+   "offset": null,
+   "computed_offset": 1978,
+   "size": null,
+   "computed_size": 4,
+   "kind": "nested",
+   "writer": "BranchMenu_Category_Save",
+   "notes": ""
+  },
+  {
+   "section": "warehouse_product",
+   "offset": null,
+   "computed_offset": 1982,
+   "size": null,
+   "computed_size": 4,
+   "kind": "nested",
+   "writer": "WarehouseProduct_Save",
+   "notes": ""
+  },
+  {
+   "section": "game_calendar",
+   "offset": null,
+   "computed_offset": 1986,
+   "size": null,
+   "computed_size": 25,
+   "kind": "nested",
+   "writer": "GameCalendar_Save",
+   "notes": ""
+  },
+  {
+   "section": "ui_briefing_list",
+   "offset": null,
+   "computed_offset": 2011,
+   "size": null,
+   "computed_size": null,
+   "kind": "nested",
+   "writer": "UI_BriefingList_Save",
+   "notes": ""
+  },
+  {
+   "section": "world_tile_name_table",
+   "offset": null,
+   "computed_offset": null,
+   "size": 125000,
+   "computed_size": 125000,
+   "kind": "fixed",
+   "writer": "Game_SaveTileNameTable",
+   "notes": "2500 x 50-byte tile-name records"
+  },
+  {
+   "section": "isomap_list",
+   "offset": null,
+   "computed_offset": null,
+   "size": null,
+   "computed_size": null,
+   "kind": "counted",
+   "writer": "SaveGame_Serialize",
+   "notes": "u32 count; each: u32 id + IsoMap_Save"
+  },
+  {
+   "section": "character_list",
+   "offset": null,
+   "computed_offset": null,
+   "size": null,
+   "computed_size": null,
+   "kind": "counted",
+   "writer": "SaveGame_Serialize",
+   "notes": "u32 count; each: u32 id + Character_Save"
+  },
+  {
+   "section": "city_mapobject_list",
+   "offset": null,
+   "computed_offset": null,
+   "size": null,
+   "computed_size": null,
+   "kind": "counted",
+   "writer": "SaveGame_Serialize",
+   "notes": "u32 count; each: City/MapObjectList_Save"
+  },
+  {
+   "section": "person_list",
+   "offset": null,
+   "computed_offset": null,
+   "size": null,
+   "computed_size": null,
+   "kind": "counted",
+   "writer": "SaveGame_Serialize",
+   "notes": "u32 count; each: u32 id + PersonList_Save"
+  },
+  {
+   "section": "car_list",
+   "offset": null,
+   "computed_offset": null,
+   "size": null,
+   "computed_size": null,
+   "kind": "counted",
+   "writer": "SaveGame_Serialize",
+   "notes": "u32 count; each: u32 id + CarList_Save"
+  },
+  {
+   "section": "player_slots",
+   "offset": null,
+   "computed_offset": null,
+   "size": null,
+   "computed_size": null,
+   "kind": "array6",
+   "writer": "SaveGame_Serialize",
+   "notes": "6 x (u32 present + Player_Save)"
+  },
+  {
+   "section": "company_slots",
+   "offset": null,
+   "computed_offset": null,
+   "size": null,
+   "computed_size": null,
+   "kind": "array6",
+   "writer": "SaveGame_Serialize",
+   "notes": "6 x (u32 present + CompanyData_Save)"
+  },
+  {
+   "section": "ai_company_slots",
+   "offset": null,
+   "computed_offset": null,
+   "size": null,
+   "computed_size": 2160,
+   "kind": "nested",
+   "writer": "AI_CompanySlots_Save",
+   "notes": ""
+  },
+  {
+   "section": "selected_player_company",
+   "offset": null,
+   "computed_offset": null,
+   "size": 12,
+   "computed_size": 12,
+   "kind": "fixed",
+   "writer": "SaveGame_Serialize",
+   "notes": "present, player slot, company id"
+  },
+  {
+   "section": "runtime_list",
+   "offset": null,
+   "computed_offset": null,
+   "size": null,
+   "computed_size": null,
+   "kind": "nested",
+   "writer": "SaveGame_SerializeRuntimeList",
+   "notes": ""
+  },
+  {
+   "section": "end_marker",
+   "offset": null,
+   "computed_offset": null,
+   "size": 4,
+   "computed_size": 4,
+   "kind": "const",
+   "writer": "SaveGame_Serialize",
+   "notes": "0x2A"
+  },
+  {
+   "section": "directory_rewrite",
+   "offset": null,
+   "computed_offset": null,
+   "size": 32,
+   "computed_size": 32,
+   "kind": "seek+write",
+   "writer": "SaveGame_Serialize",
+   "notes": "seek to 0x00F0, write 8-dword directory"
+  }
+ ],
+ "counts": {
+  "save_functions": 38,
+  "field_blocks": 19,
+  "serialized_fields": 368,
+  "global_writes": 24,
+  "loop_blocks": 2,
+  "global_state_blocks": 24,
+  "fixed_serialized_bytes": 141342,
+  "exact_save_load_pairs": 31
+ },
+ "global_state": [
+  {
+   "address": "0x00568628",
+   "size": 16,
+   "type_hint": "bytes[16]",
+   "writers": [
+    "BranchStats_SeriesFlags_Save"
+   ],
+   "suggested_name": "g_BranchStatsSeriesFlags"
+  },
+  {
+   "address": "0x00568910",
+   "size": 4,
+   "type_hint": "u32/i32/float",
+   "writers": [
+    "IngredientPanel_Save"
+   ],
+   "suggested_name": "g_IngredientPanelState"
+  },
+  {
+   "address": "0x005689f0",
+   "size": 1,
+   "type_hint": "u8/bool",
+   "writers": [
+    "CompanyMarketShare_Save"
+   ],
+   "suggested_name": "g_CompanyMarketShareFlag"
+  },
+  {
+   "address": "0x00569354",
+   "size": 4,
+   "type_hint": "u32/i32/float",
+   "writers": [
+    "StatisticsBalance_Save"
+   ],
+   "suggested_name": "g_StatisticsBalanceA"
+  },
+  {
+   "address": "0x00569358",
+   "size": 4,
+   "type_hint": "u32/i32/float",
+   "writers": [
+    "StatisticsBalance_Save"
+   ],
+   "suggested_name": "g_StatisticsBalanceB"
+  },
+  {
+   "address": "0x0056951c",
+   "size": 4,
+   "type_hint": "u32/i32/float",
+   "writers": [
+    "StatisticsBranchBalance_Save"
+   ],
+   "suggested_name": "g_StatisticsBranchBalance"
+  },
+  {
+   "address": "0x0056a6d8",
+   "size": 4,
+   "type_hint": "u32/i32/float",
+   "writers": [
+    "Personnel_Save"
+   ],
+   "suggested_name": "g_PersonnelState"
+  },
+  {
+   "address": "0x0056a734",
+   "size": 9,
+   "type_hint": "bytes[9]",
+   "writers": [
+    "CompanyOverview_Save"
+   ],
+   "suggested_name": "g_CompanyOverviewText"
+  },
+  {
+   "address": "0x0056a7d4",
+   "size": 4,
+   "type_hint": "u32/i32/float",
+   "writers": [
+    "CompanyOverview_Save"
+   ],
+   "suggested_name": "g_CompanyOverviewState"
+  },
+  {
+   "address": "0x0057bb20",
+   "size": 1464,
+   "type_hint": "bytes[1464]",
+   "writers": [
+    "SaveGame_Serialize"
+   ],
+   "suggested_name": "g_GameGlobalState"
+  },
+  {
+   "address": "0x0057c6a8",
+   "size": 4,
+   "type_hint": "u32/i32/float",
+   "writers": [
+    "BranchMenu_Category_Save"
+   ],
+   "suggested_name": "g_BranchMenuCategory"
+  },
+  {
+   "address": "0x0057c6bc",
+   "size": 4,
+   "type_hint": "u32/i32/float",
+   "writers": [
+    "BranchDesign_ColorIndex_Save"
+   ],
+   "suggested_name": "g_BranchDesignColorIndex"
+  },
+  {
+   "address": "0x0057c9fc",
+   "size": 4,
+   "type_hint": "u32/i32/float",
+   "writers": [
+    "CityCompanyList_Save"
+   ],
+   "suggested_name": "g_CityCompanyListA"
+  },
+  {
+   "address": "0x0057ca00",
+   "size": 4,
+   "type_hint": "u32/i32/float",
+   "writers": [
+    "CityCompanyList_Save"
+   ],
+   "suggested_name": "g_CityCompanyListB"
+  },
+  {
+   "address": "0x0057ca30",
+   "size": 4,
+   "type_hint": "u32/i32/float",
+   "writers": [
+    "AdvertisingPanel_Save"
+   ],
+   "suggested_name": "g_AdvertisingPanelA"
+  },
+  {
+   "address": "0x0057ca34",
+   "size": 4,
+   "type_hint": "u32/i32/float",
+   "writers": [
+    "AdvertisingPanel_Save"
+   ],
+   "suggested_name": "g_AdvertisingPanelB"
+  },
+  {
+   "address": "0x0057ca90",
+   "size": 4,
+   "type_hint": "u32/i32/float",
+   "writers": [
+    "CompanyMarketShare_Save"
+   ],
+   "suggested_name": "g_CompanyMarketShare"
+  },
+  {
+   "address": "0x0057d5c8",
+   "size": 4,
+   "type_hint": "u32/i32/float",
+   "writers": [
+    "StatisticsBalance_Save"
+   ],
+   "suggested_name": "g_StatisticsBalanceC"
+  },
+  {
+   "address": "0x0057d5d0",
+   "size": 4,
+   "type_hint": "u32/i32/float",
+   "writers": [
+    "StatisticsBalance_Save"
+   ],
+   "suggested_name": "g_StatisticsBalanceD"
+  },
+  {
+   "address": "0x0057d62c",
+   "size": 4,
+   "type_hint": "u32/i32/float",
+   "writers": [
+    "StatisticsBranchBalance_Save"
+   ],
+   "suggested_name": "g_StatisticsBranchBalanceA"
+  },
+  {
+   "address": "0x0057d630",
+   "size": 4,
+   "type_hint": "u32/i32/float",
+   "writers": [
+    "StatisticsBranchBalance_Save"
+   ],
+   "suggested_name": "g_StatisticsBranchBalanceB"
+  },
+  {
+   "address": "0x0057d69c",
+   "size": 4,
+   "type_hint": "u32/i32/float",
+   "writers": [
+    "CompanyOverview_Save"
+   ],
+   "suggested_name": "g_CompanyOverviewB"
+  },
+  {
+   "address": "0x0057d714",
+   "size": 4,
+   "type_hint": "u32/i32/float",
+   "writers": [
+    "WarehouseProduct_Save"
+   ],
+   "suggested_name": "g_WarehouseProductState"
+  },
+  {
+   "address": "0x0057dfbc",
+   "size": 4,
+   "type_hint": "u32/i32/float",
+   "writers": [
+    "GameCalendar_Save"
+   ],
+   "suggested_name": "g_GameCalendarState"
+  }
+ ],
+ "owners": [
+  {
+   "name": "AI_CompanySlots_Save",
+   "address": "0x4f6e20",
+   "fields": [],
+   "field_count": 0,
+   "global_writes": [],
+   "loop_blocks": [
+    {
+     "count": 6,
+     "size": 360,
+     "bytes": 2160,
+     "note": "6 x 0x168-byte company AI records"
+    }
+   ],
+   "fixed_bytes": 2160,
+   "temporaries": [
+    {
+     "direction": "write",
+     "target": "&local_4",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "iVar1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 360,
+     "type_hint": "bytes[360]"
+    }
+   ],
+   "nested_calls": [],
+   "loader": "AI_CompanySlots_Load",
+   "loader_basis": "same-name-loader",
+   "loader_status": "exact",
+   "load_field_count": 0
+  },
+  {
+   "name": "AdvertisingPanel_Save",
+   "address": "0x49ad00",
+   "fields": [],
+   "field_count": 0,
+   "global_writes": [
+    {
+     "direction": "write",
+     "target": "&DAT_0057ca30",
+     "kind": "global",
+     "offset": null,
+     "global_address": 5753392,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&DAT_0057ca34",
+     "kind": "global",
+     "offset": null,
+     "global_address": 5753396,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "loop_blocks": [],
+   "fixed_bytes": 8,
+   "temporaries": [],
+   "nested_calls": [],
+   "loader": "AdvertisingPanel_Load",
+   "loader_basis": "same-name-loader",
+   "loader_status": "exact",
+   "load_field_count": 0
+  },
+  {
+   "name": "BranchDesign_ColorIndex_Save",
+   "address": "0x492250",
+   "fields": [],
+   "field_count": 0,
+   "global_writes": [
+    {
+     "direction": "write",
+     "target": "&DAT_0057c6bc",
+     "kind": "global",
+     "offset": null,
+     "global_address": 5752508,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "loop_blocks": [],
+   "fixed_bytes": 4,
+   "temporaries": [],
+   "nested_calls": [],
+   "loader": "BranchDesign_ColorIndex_Load",
+   "loader_basis": "same-name-loader",
+   "loader_status": "exact",
+   "load_field_count": 0
+  },
+  {
+   "name": "BranchMenu_Category_Save",
+   "address": "0x4900c0",
+   "fields": [],
+   "field_count": 0,
+   "global_writes": [
+    {
+     "direction": "write",
+     "target": "&DAT_0057c6a8",
+     "kind": "global",
+     "offset": null,
+     "global_address": 5752488,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "loop_blocks": [],
+   "fixed_bytes": 4,
+   "temporaries": [],
+   "nested_calls": [],
+   "loader": "BranchMenu_Category_Load",
+   "loader_basis": "same-name-loader",
+   "loader_status": "exact",
+   "load_field_count": 0
+  },
+  {
+   "name": "BranchStats_SeriesFlags_Save",
+   "address": "0x4919d0",
+   "fields": [],
+   "field_count": 0,
+   "global_writes": [
+    {
+     "direction": "write",
+     "target": "&DAT_00568628",
+     "kind": "global",
+     "offset": null,
+     "global_address": 5670440,
+     "size": 16,
+     "type_hint": "bytes[16]"
+    }
+   ],
+   "loop_blocks": [],
+   "fixed_bytes": 16,
+   "temporaries": [],
+   "nested_calls": [],
+   "loader": "BranchStats_SeriesFlags_Load",
+   "loader_basis": "same-name-loader",
+   "loader_status": "exact",
+   "load_field_count": 0
+  },
+  {
+   "name": "Branch_Save",
+   "address": "0x47b9e0",
+   "fields": [
+    {
+     "direction": "write",
+     "target": "(int)this + 4",
+     "kind": "field",
+     "offset": 4,
+     "global_address": null,
+     "size": 32,
+     "type_hint": "bytes[32]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x2c",
+     "kind": "field",
+     "offset": 44,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x24",
+     "kind": "field",
+     "offset": 36,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x28",
+     "kind": "field",
+     "offset": 40,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int *)((int)this + 0x30)",
+     "kind": "field",
+     "offset": 48,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x34",
+     "kind": "field",
+     "offset": 52,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x3c",
+     "kind": "field",
+     "offset": 60,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x40",
+     "kind": "field",
+     "offset": 64,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x44",
+     "kind": "field",
+     "offset": 68,
+     "global_address": null,
+     "size": 324,
+     "type_hint": "bytes[324]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x188",
+     "kind": "field",
+     "offset": 392,
+     "global_address": null,
+     "size": 324,
+     "type_hint": "bytes[324]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x554",
+     "kind": "field",
+     "offset": 1364,
+     "global_address": null,
+     "size": 3600,
+     "type_hint": "bytes[3600]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1364",
+     "kind": "field",
+     "offset": 4964,
+     "global_address": null,
+     "size": 36,
+     "type_hint": "bytes[36]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x2cc",
+     "kind": "field",
+     "offset": 716,
+     "global_address": null,
+     "size": 324,
+     "type_hint": "bytes[324]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x410",
+     "kind": "field",
+     "offset": 1040,
+     "global_address": null,
+     "size": 324,
+     "type_hint": "bytes[324]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 5000",
+     "kind": "field",
+     "offset": 5000,
+     "global_address": null,
+     "size": 72,
+     "type_hint": "bytes[72]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x13d0",
+     "kind": "field",
+     "offset": 5072,
+     "global_address": null,
+     "size": 72,
+     "type_hint": "bytes[72]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1418",
+     "kind": "field",
+     "offset": 5144,
+     "global_address": null,
+     "size": 72,
+     "type_hint": "bytes[72]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1460",
+     "kind": "field",
+     "offset": 5216,
+     "global_address": null,
+     "size": 72,
+     "type_hint": "bytes[72]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x14a8",
+     "kind": "field",
+     "offset": 5288,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x14ac",
+     "kind": "field",
+     "offset": 5292,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x14c8",
+     "kind": "field",
+     "offset": 5320,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x14cc",
+     "kind": "field",
+     "offset": 5324,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x14d0",
+     "kind": "field",
+     "offset": 5328,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x14d4",
+     "kind": "field",
+     "offset": 5332,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x14c0",
+     "kind": "field",
+     "offset": 5312,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x14d8",
+     "kind": "field",
+     "offset": 5336,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x16f5",
+     "kind": "field",
+     "offset": 5877,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x16f4",
+     "kind": "field",
+     "offset": 5876,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x14b0",
+     "kind": "field",
+     "offset": 5296,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1714",
+     "kind": "field",
+     "offset": 5908,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1718",
+     "kind": "field",
+     "offset": 5912,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x171c",
+     "kind": "field",
+     "offset": 5916,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1720",
+     "kind": "field",
+     "offset": 5920,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1724",
+     "kind": "field",
+     "offset": 5924,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x151c",
+     "kind": "field",
+     "offset": 5404,
+     "global_address": null,
+     "size": 416,
+     "type_hint": "bytes[416]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x16bc",
+     "kind": "field",
+     "offset": 5820,
+     "global_address": null,
+     "size": 52,
+     "type_hint": "bytes[52]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x177c",
+     "kind": "field",
+     "offset": 6012,
+     "global_address": null,
+     "size": 32,
+     "type_hint": "bytes[32]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x179c",
+     "kind": "field",
+     "offset": 6044,
+     "global_address": null,
+     "size": 32,
+     "type_hint": "bytes[32]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x17bc",
+     "kind": "field",
+     "offset": 6076,
+     "global_address": null,
+     "size": 32,
+     "type_hint": "bytes[32]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x17dc",
+     "kind": "field",
+     "offset": 6108,
+     "global_address": null,
+     "size": 32,
+     "type_hint": "bytes[32]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x17fc",
+     "kind": "field",
+     "offset": 6140,
+     "global_address": null,
+     "size": 32,
+     "type_hint": "bytes[32]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x181c",
+     "kind": "field",
+     "offset": 6172,
+     "global_address": null,
+     "size": 32,
+     "type_hint": "bytes[32]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x183c",
+     "kind": "field",
+     "offset": 6204,
+     "global_address": null,
+     "size": 20,
+     "type_hint": "bytes[20]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1850",
+     "kind": "field",
+     "offset": 6224,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1854",
+     "kind": "field",
+     "offset": 6228,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1858",
+     "kind": "field",
+     "offset": 6232,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x185c",
+     "kind": "field",
+     "offset": 6236,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1860",
+     "kind": "field",
+     "offset": 6240,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1864",
+     "kind": "field",
+     "offset": 6244,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1868",
+     "kind": "field",
+     "offset": 6248,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x186c",
+     "kind": "field",
+     "offset": 6252,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1870",
+     "kind": "field",
+     "offset": 6256,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1874",
+     "kind": "field",
+     "offset": 6260,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1878",
+     "kind": "field",
+     "offset": 6264,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x38",
+     "kind": "field",
+     "offset": 56,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1898",
+     "kind": "field",
+     "offset": 6296,
+     "global_address": null,
+     "size": 64,
+     "type_hint": "bytes[64]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x18d8",
+     "kind": "field",
+     "offset": 6360,
+     "global_address": null,
+     "size": 192,
+     "type_hint": "bytes[192]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x187c",
+     "kind": "field",
+     "offset": 6268,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x19fc",
+     "kind": "field",
+     "offset": 6652,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1a00",
+     "kind": "field",
+     "offset": 6656,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1a04",
+     "kind": "field",
+     "offset": 6660,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1880",
+     "kind": "field",
+     "offset": 6272,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x19b4",
+     "kind": "field",
+     "offset": 6580,
+     "global_address": null,
+     "size": 16,
+     "type_hint": "bytes[16]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x14b4",
+     "kind": "field",
+     "offset": 5300,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1a20",
+     "kind": "field",
+     "offset": 6688,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1a21",
+     "kind": "field",
+     "offset": 6689,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1884",
+     "kind": "field",
+     "offset": 6276,
+     "global_address": null,
+     "size": 16,
+     "type_hint": "bytes[16]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1a2c",
+     "kind": "field",
+     "offset": 6700,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1a30",
+     "kind": "field",
+     "offset": 6704,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1a34",
+     "kind": "field",
+     "offset": 6708,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1a38",
+     "kind": "field",
+     "offset": 6712,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1a24",
+     "kind": "field",
+     "offset": 6692,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x14b8",
+     "kind": "field",
+     "offset": 5304,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x14bc",
+     "kind": "field",
+     "offset": 5308,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1894",
+     "kind": "field",
+     "offset": 6292,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "field_count": 75,
+   "global_writes": [],
+   "loop_blocks": [],
+   "fixed_bytes": 6412,
+   "temporaries": [
+    {
+     "direction": "write",
+     "target": "&local_10",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "piVar2",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_10",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_14",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_14",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_4",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_14",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_14",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_14",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_14",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_14",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "uVar3",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 32,
+     "type_hint": "bytes[32]"
+    },
+    {
+     "direction": "write",
+     "target": "&local_14",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "uVar3",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 48,
+     "type_hint": "bytes[48]"
+    },
+    {
+     "direction": "write",
+     "target": "&local_14",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "nested_calls": [
+    "StatsPeriodReport_Save",
+    "ConstructionOrder_Save"
+   ],
+   "loader": "Branch_Load",
+   "loader_basis": "exact-name-and-sequence",
+   "loader_status": "exact",
+   "load_field_count": 75
+  },
+  {
+   "name": "BuildingValue_Save",
+   "address": "0x4e43f0",
+   "fields": [
+    {
+     "direction": "write",
+     "target": "(int)this + 0xc",
+     "kind": "field",
+     "offset": 12,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 8",
+     "kind": "field",
+     "offset": 8,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x10",
+     "kind": "field",
+     "offset": 16,
+     "global_address": null,
+     "size": 8,
+     "type_hint": "u64/double"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x18",
+     "kind": "field",
+     "offset": 24,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1c",
+     "kind": "field",
+     "offset": 28,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    }
+   ],
+   "field_count": 5,
+   "global_writes": [],
+   "loop_blocks": [],
+   "fixed_bytes": 21,
+   "temporaries": [],
+   "nested_calls": [],
+   "loader": "BuildingValue_Load",
+   "loader_basis": "exact-name-and-sequence",
+   "loader_status": "exact",
+   "load_field_count": 5
+  },
+  {
+   "name": "CarList_Save",
+   "address": "0x4d3490",
+   "fields": [
+    {
+     "direction": "write",
+     "target": "(int)this + 0xc",
+     "kind": "field",
+     "offset": 12,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "field_count": 1,
+   "global_writes": [],
+   "loop_blocks": [],
+   "fixed_bytes": 4,
+   "temporaries": [
+    {
+     "direction": "write",
+     "target": "&local_4",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "nested_calls": [
+    "Car_Save"
+   ],
+   "loader": "Car_LoadFromStream",
+   "loader_basis": "declared-alias",
+   "loader_status": "exact",
+   "load_field_count": 1
+  },
+  {
+   "name": "Car_Save",
+   "address": "0x4d3450",
+   "fields": [],
+   "field_count": 0,
+   "global_writes": [],
+   "loop_blocks": [],
+   "fixed_bytes": 0,
+   "temporaries": [],
+   "nested_calls": [
+    "MapSprite_Save"
+   ],
+   "loader": "Car_LoadSpriteRecord",
+   "loader_basis": "declared-alias",
+   "loader_status": "exact",
+   "load_field_count": 0
+  },
+  {
+   "name": "Character_Save",
+   "address": "0x4d3ba0",
+   "fields": [
+    {
+     "direction": "write",
+     "target": "(int)this + 4",
+     "kind": "field",
+     "offset": 4,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 8",
+     "kind": "field",
+     "offset": 8,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xc",
+     "kind": "field",
+     "offset": 12,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x10",
+     "kind": "field",
+     "offset": 16,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x24",
+     "kind": "field",
+     "offset": 36,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x28",
+     "kind": "field",
+     "offset": 40,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x2c",
+     "kind": "field",
+     "offset": 44,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x30",
+     "kind": "field",
+     "offset": 48,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x34",
+     "kind": "field",
+     "offset": 52,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x38",
+     "kind": "field",
+     "offset": 56,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x3c",
+     "kind": "field",
+     "offset": 60,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x44",
+     "kind": "field",
+     "offset": 68,
+     "global_address": null,
+     "size": 2000,
+     "type_hint": "bytes[2000]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x814",
+     "kind": "field",
+     "offset": 2068,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x818",
+     "kind": "field",
+     "offset": 2072,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x81c",
+     "kind": "field",
+     "offset": 2076,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x820",
+     "kind": "field",
+     "offset": 2080,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x824",
+     "kind": "field",
+     "offset": 2084,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x40",
+     "kind": "field",
+     "offset": 64,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x825",
+     "kind": "field",
+     "offset": 2085,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x14",
+     "kind": "field",
+     "offset": 20,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x18",
+     "kind": "field",
+     "offset": 24,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1c",
+     "kind": "field",
+     "offset": 28,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x20",
+     "kind": "field",
+     "offset": 32,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "field_count": 23,
+   "global_writes": [],
+   "loop_blocks": [],
+   "fixed_bytes": 2082,
+   "temporaries": [],
+   "nested_calls": [],
+   "loader": "Character_Load",
+   "loader_basis": "exact-name-and-sequence",
+   "loader_status": "exact",
+   "load_field_count": 23
+  },
+  {
+   "name": "CityCompanyList_Save",
+   "address": "0x498130",
+   "fields": [],
+   "field_count": 0,
+   "global_writes": [
+    {
+     "direction": "write",
+     "target": "&DAT_0057c9fc",
+     "kind": "global",
+     "offset": null,
+     "global_address": 5753340,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&DAT_0057ca00",
+     "kind": "global",
+     "offset": null,
+     "global_address": 5753344,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "loop_blocks": [],
+   "fixed_bytes": 8,
+   "temporaries": [],
+   "nested_calls": [],
+   "loader": "CityCompanyList_Load",
+   "loader_basis": "same-name-loader",
+   "loader_status": "exact",
+   "load_field_count": 0
+  },
+  {
+   "name": "CompanyData_Save",
+   "address": "0x4e1540",
+   "fields": [
+    {
+     "direction": "write",
+     "target": "(int)this + 8",
+     "kind": "field",
+     "offset": 8,
+     "global_address": null,
+     "size": 64,
+     "type_hint": "bytes[64]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x48",
+     "kind": "field",
+     "offset": 72,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x4c",
+     "kind": "field",
+     "offset": 76,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x5c",
+     "kind": "field",
+     "offset": 92,
+     "global_address": null,
+     "size": 2,
+     "type_hint": "u16"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x50",
+     "kind": "field",
+     "offset": 80,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x54",
+     "kind": "field",
+     "offset": 84,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1dc",
+     "kind": "field",
+     "offset": 476,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x108",
+     "kind": "field",
+     "offset": 264,
+     "global_address": null,
+     "size": 8,
+     "type_hint": "u64/double"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1e4",
+     "kind": "field",
+     "offset": 484,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1e0",
+     "kind": "field",
+     "offset": 480,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 100",
+     "kind": "field",
+     "offset": 100,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x68",
+     "kind": "field",
+     "offset": 104,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x6c",
+     "kind": "field",
+     "offset": 108,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x70",
+     "kind": "field",
+     "offset": 112,
+     "global_address": null,
+     "size": 36,
+     "type_hint": "bytes[36]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x94",
+     "kind": "field",
+     "offset": 148,
+     "global_address": null,
+     "size": 24,
+     "type_hint": "bytes[24]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xac",
+     "kind": "field",
+     "offset": 172,
+     "global_address": null,
+     "size": 6,
+     "type_hint": "bytes[6]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xcc",
+     "kind": "field",
+     "offset": 204,
+     "global_address": null,
+     "size": 24,
+     "type_hint": "bytes[24]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xb4",
+     "kind": "field",
+     "offset": 180,
+     "global_address": null,
+     "size": 24,
+     "type_hint": "bytes[24]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xf0",
+     "kind": "field",
+     "offset": 240,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xf4",
+     "kind": "field",
+     "offset": 244,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xf8",
+     "kind": "field",
+     "offset": 248,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xe4",
+     "kind": "field",
+     "offset": 228,
+     "global_address": null,
+     "size": 10,
+     "type_hint": "bytes[10]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x60",
+     "kind": "field",
+     "offset": 96,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x58",
+     "kind": "field",
+     "offset": 88,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1e8",
+     "kind": "field",
+     "offset": 488,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xfc",
+     "kind": "field",
+     "offset": 252,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x100",
+     "kind": "field",
+     "offset": 256,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "field_count": 27,
+   "global_writes": [],
+   "loop_blocks": [],
+   "fixed_bytes": 270,
+   "temporaries": [
+    {
+     "direction": "write",
+     "target": "&local_5",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "&local_4",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_4",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_4",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_4",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_4",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_4",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_4",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "uVar2",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 8,
+     "type_hint": "u64/double"
+    },
+    {
+     "direction": "write",
+     "target": "&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "uVar2",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 416,
+     "type_hint": "bytes[416]"
+    }
+   ],
+   "nested_calls": [
+    "Branch_Save",
+    "StatsPeriodReport_Save"
+   ],
+   "loader": "Company_Load",
+   "loader_basis": "declared-alias",
+   "loader_status": "exact",
+   "load_field_count": 27
+  },
+  {
+   "name": "CompanyMarketShare_Save",
+   "address": "0x49b490",
+   "fields": [],
+   "field_count": 0,
+   "global_writes": [
+    {
+     "direction": "write",
+     "target": "&DAT_0057ca90",
+     "kind": "global",
+     "offset": null,
+     "global_address": 5753488,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&DAT_005689f0",
+     "kind": "global",
+     "offset": null,
+     "global_address": 5671408,
+     "size": 1,
+     "type_hint": "u8/bool"
+    }
+   ],
+   "loop_blocks": [],
+   "fixed_bytes": 5,
+   "temporaries": [],
+   "nested_calls": [],
+   "loader": "CompanyMarketShare_Load",
+   "loader_basis": "same-name-loader",
+   "loader_status": "exact",
+   "load_field_count": 0
+  },
+  {
+   "name": "CompanyOverview_Save",
+   "address": "0x4b3ce0",
+   "fields": [],
+   "field_count": 0,
+   "global_writes": [
+    {
+     "direction": "write",
+     "target": "&DAT_0056a7d4",
+     "kind": "global",
+     "offset": null,
+     "global_address": 5679060,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&DAT_0057d69c",
+     "kind": "global",
+     "offset": null,
+     "global_address": 5756572,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&DAT_0056a734",
+     "kind": "global",
+     "offset": null,
+     "global_address": 5678900,
+     "size": 9,
+     "type_hint": "bytes[9]"
+    }
+   ],
+   "loop_blocks": [],
+   "fixed_bytes": 17,
+   "temporaries": [],
+   "nested_calls": [],
+   "loader": "CompanyOverview_Load",
+   "loader_basis": "same-name-loader",
+   "loader_status": "exact",
+   "load_field_count": 0
+  },
+  {
+   "name": "ConstructionOrder_Save",
+   "address": "0x4e5e30",
+   "fields": [
+    {
+     "direction": "write",
+     "target": "(int)this + 4",
+     "kind": "field",
+     "offset": 4,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 8",
+     "kind": "field",
+     "offset": 8,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xc",
+     "kind": "field",
+     "offset": 12,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x10",
+     "kind": "field",
+     "offset": 16,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x14",
+     "kind": "field",
+     "offset": 20,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x18",
+     "kind": "field",
+     "offset": 24,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1c",
+     "kind": "field",
+     "offset": 28,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x20",
+     "kind": "field",
+     "offset": 32,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "field_count": 8,
+   "global_writes": [],
+   "loop_blocks": [],
+   "fixed_bytes": 32,
+   "temporaries": [],
+   "nested_calls": [],
+   "loader": "ConstructionOrder_Load",
+   "loader_basis": "same-name-loader",
+   "loader_status": "different-load-path",
+   "load_field_count": 7
+  },
+  {
+   "name": "GameCalendar_Save",
+   "address": "0x4dd4f0",
+   "fields": [
+    {
+     "direction": "write",
+     "target": "(int)this + 7",
+     "kind": "field",
+     "offset": 7,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 6",
+     "kind": "field",
+     "offset": 6,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 8",
+     "kind": "field",
+     "offset": 8,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 4",
+     "kind": "field",
+     "offset": 4,
+     "global_address": null,
+     "size": 2,
+     "type_hint": "u16"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 10",
+     "kind": "field",
+     "offset": 10,
+     "global_address": null,
+     "size": 2,
+     "type_hint": "u16"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xc",
+     "kind": "field",
+     "offset": 12,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x19",
+     "kind": "field",
+     "offset": 25,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x18",
+     "kind": "field",
+     "offset": 24,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x14",
+     "kind": "field",
+     "offset": 20,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x10",
+     "kind": "field",
+     "offset": 16,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "field_count": 10,
+   "global_writes": [
+    {
+     "direction": "write",
+     "target": "&DAT_0057dfbc",
+     "kind": "global",
+     "offset": null,
+     "global_address": 5758908,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "loop_blocks": [],
+   "fixed_bytes": 25,
+   "temporaries": [],
+   "nested_calls": [],
+   "loader": "GameCalendar_Load",
+   "loader_basis": "exact-name-and-sequence",
+   "loader_status": "exact",
+   "load_field_count": 10
+  },
+  {
+   "name": "IngredientPanel_Save",
+   "address": "0x499590",
+   "fields": [],
+   "field_count": 0,
+   "global_writes": [
+    {
+     "direction": "write",
+     "target": "&DAT_00568910",
+     "kind": "global",
+     "offset": null,
+     "global_address": 5671184,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "loop_blocks": [],
+   "fixed_bytes": 4,
+   "temporaries": [],
+   "nested_calls": [],
+   "loader": "IngredientPanel_Load",
+   "loader_basis": "same-name-loader",
+   "loader_status": "exact",
+   "load_field_count": 0
+  },
+  {
+   "name": "IsoMap_Save",
+   "address": "0x4ec4f0",
+   "fields": [
+    {
+     "direction": "write",
+     "target": "(int)this + 0xc",
+     "kind": "field",
+     "offset": 12,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x10",
+     "kind": "field",
+     "offset": 16,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x14",
+     "kind": "field",
+     "offset": 20,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x18",
+     "kind": "field",
+     "offset": 24,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1c",
+     "kind": "field",
+     "offset": 28,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x20",
+     "kind": "field",
+     "offset": 32,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x24",
+     "kind": "field",
+     "offset": 36,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x28",
+     "kind": "field",
+     "offset": 40,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x2c",
+     "kind": "field",
+     "offset": 44,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x30",
+     "kind": "field",
+     "offset": 48,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x34",
+     "kind": "field",
+     "offset": 52,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x38",
+     "kind": "field",
+     "offset": 56,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x3c",
+     "kind": "field",
+     "offset": 60,
+     "global_address": null,
+     "size": 16,
+     "type_hint": "bytes[16]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x60",
+     "kind": "field",
+     "offset": 96,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x6c",
+     "kind": "field",
+     "offset": 108,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x7c",
+     "kind": "field",
+     "offset": 124,
+     "global_address": null,
+     "size": 30,
+     "type_hint": "bytes[30]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xba",
+     "kind": "field",
+     "offset": 186,
+     "global_address": null,
+     "size": 2,
+     "type_hint": "u16"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xf0",
+     "kind": "field",
+     "offset": 240,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xa8",
+     "kind": "field",
+     "offset": 168,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "*(int *)((int)this + 0x9c) + iVar6",
+     "kind": "field",
+     "offset": 156,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "*(int *)((int)this + 0x9c) + 2 + iVar6",
+     "kind": "field",
+     "offset": 156,
+     "global_address": null,
+     "size": 2,
+     "type_hint": "u16"
+    },
+    {
+     "direction": "write",
+     "target": "*(int *)((int)this + 0x9c) + 6 + iVar6",
+     "kind": "field",
+     "offset": 156,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "*(int *)((int)this + 0x9c) + 8 + iVar6",
+     "kind": "field",
+     "offset": 156,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "*(int *)((int)this + 0x9c) + 0xc + iVar6",
+     "kind": "field",
+     "offset": 156,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "*(int *)((int)this + 0x9c) + 0x10 + iVar6",
+     "kind": "field",
+     "offset": 156,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "*(int *)((int)this + 0x9c) + 0x14 + iVar6",
+     "kind": "field",
+     "offset": 156,
+     "global_address": null,
+     "size": 16,
+     "type_hint": "bytes[16]"
+    },
+    {
+     "direction": "write",
+     "target": "*(int *)((int)this + 0x9c) + 0x24 + iVar6",
+     "kind": "field",
+     "offset": 156,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "iVar7 + *(int *)((int)this + 0xa0)",
+     "kind": "field",
+     "offset": 160,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "iVar7 + 2 + *(int *)((int)this + 0xa0)",
+     "kind": "field",
+     "offset": 160,
+     "global_address": null,
+     "size": 2,
+     "type_hint": "u16"
+    },
+    {
+     "direction": "write",
+     "target": "iVar7 + 6 + *(int *)((int)this + 0xa0)",
+     "kind": "field",
+     "offset": 160,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "iVar7 + 8 + *(int *)((int)this + 0xa0)",
+     "kind": "field",
+     "offset": 160,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "iVar7 + 0xc + *(int *)((int)this + 0xa0)",
+     "kind": "field",
+     "offset": 160,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "iVar7 + 0x10 + *(int *)((int)this + 0xa0)",
+     "kind": "field",
+     "offset": 160,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "iVar7 + 0x14 + *(int *)((int)this + 0xa0)",
+     "kind": "field",
+     "offset": 160,
+     "global_address": null,
+     "size": 16,
+     "type_hint": "bytes[16]"
+    },
+    {
+     "direction": "write",
+     "target": "iVar7 + 0x24 + *(int *)((int)this + 0xa0)",
+     "kind": "field",
+     "offset": 160,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "*(undefined4 *)(iVar7 + 8 + *(int *)((int)this + 0x4c))",
+     "kind": "field",
+     "offset": 76,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "*(int *)(iVar7 + 8 + *(int *)((int)this + 0x4c)) + 0x24",
+     "kind": "field",
+     "offset": 76,
+     "global_address": null,
+     "size": 2,
+     "type_hint": "u16"
+    },
+    {
+     "direction": "write",
+     "target": "*(int *)(iVar7 + 8 + *(int *)((int)this + 0x4c)) + 0x30",
+     "kind": "field",
+     "offset": 76,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "*(int *)(iVar7 + 8 + *(int *)((int)this + 0x4c)) + 0x34",
+     "kind": "field",
+     "offset": 76,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "*(int *)(iVar7 + 8 + *(int *)((int)this + 0x4c)) + 0x38",
+     "kind": "field",
+     "offset": 76,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "*(int *)(iVar7 + 8 + *(int *)((int)this + 0x4c)) + 0x28",
+     "kind": "field",
+     "offset": 76,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "*(int *)(iVar7 + 8 + *(int *)((int)this + 0x4c)) + 0x1c",
+     "kind": "field",
+     "offset": 76,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "*(int *)(iVar7 + 8 + *(int *)((int)this + 0x4c)) + 0x2c",
+     "kind": "field",
+     "offset": 76,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "*(int *)(iVar7 + 8 + *(int *)((int)this + 0x4c)) + 0x2d",
+     "kind": "field",
+     "offset": 76,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "*(int *)(iVar7 + 8 + *(int *)((int)this + 0x4c)) + 0x2e",
+     "kind": "field",
+     "offset": 76,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "*(int *)(iVar7 + 8 + *(int *)((int)this + 0x4c)) + 0x2f",
+     "kind": "field",
+     "offset": 76,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "*(int *)(iVar7 + 8 + *(int *)((int)this + 0x4c)) + 4",
+     "kind": "field",
+     "offset": 76,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "*(int *)(iVar7 + 8 + *(int *)((int)this + 0x4c)) + 0x10",
+     "kind": "field",
+     "offset": 76,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "*(int *)((int)this + 0x118) + iVar6 * 4",
+     "kind": "field",
+     "offset": 280,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "field_count": 49,
+   "global_writes": [],
+   "loop_blocks": [],
+   "fixed_bytes": 220,
+   "temporaries": [
+    {
+     "direction": "write",
+     "target": "local_70 + 1",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&param_2",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "piVar9",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_7d",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "&local_7d",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "&local_7c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_74",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_7c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "local_70",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "local_64",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 50,
+     "type_hint": "bytes[50]"
+    },
+    {
+     "direction": "write",
+     "target": "local_70",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "local_64",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 50,
+     "type_hint": "bytes[50]"
+    },
+    {
+     "direction": "write",
+     "target": "&local_7c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_7c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_7c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "nested_calls": [],
+   "loader": "IsoMap_Load",
+   "loader_basis": "same-name-loader",
+   "loader_status": "different-load-path",
+   "load_field_count": 2
+  },
+  {
+   "name": "MapObjectList_Save",
+   "address": "0x4d7090",
+   "fields": [
+    {
+     "direction": "write",
+     "target": "(int)this + 0xc1c",
+     "kind": "field",
+     "offset": 3100,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 4U",
+     "kind": "field",
+     "offset": 4,
+     "global_address": null,
+     "size": 32,
+     "type_hint": "bytes[32]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x44",
+     "kind": "field",
+     "offset": 68,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xc20",
+     "kind": "field",
+     "offset": 3104,
+     "global_address": null,
+     "size": 24,
+     "type_hint": "bytes[24]"
+    },
+    {
+     "direction": "write",
+     "target": "-(uint)(this != (void *)0x0) & (int)this + 4U,local_c); CRT_Ostream_Write(param_1,(int)this + 0xdac",
+     "kind": "field",
+     "offset": 4,
+     "global_address": null,
+     "size": 24,
+     "type_hint": "bytes[24]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xdc4",
+     "kind": "field",
+     "offset": 3524,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xdc8",
+     "kind": "field",
+     "offset": 3528,
+     "global_address": null,
+     "size": 480,
+     "type_hint": "bytes[480]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xc38",
+     "kind": "field",
+     "offset": 3128,
+     "global_address": null,
+     "size": 96,
+     "type_hint": "bytes[96]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xc98",
+     "kind": "field",
+     "offset": 3224,
+     "global_address": null,
+     "size": 24,
+     "type_hint": "bytes[24]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xcc8",
+     "kind": "field",
+     "offset": 3272,
+     "global_address": null,
+     "size": 24,
+     "type_hint": "bytes[24]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xd40",
+     "kind": "field",
+     "offset": 3392,
+     "global_address": null,
+     "size": 24,
+     "type_hint": "bytes[24]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xd58",
+     "kind": "field",
+     "offset": 3416,
+     "global_address": null,
+     "size": 48,
+     "type_hint": "bytes[48]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xd88",
+     "kind": "field",
+     "offset": 3464,
+     "global_address": null,
+     "size": 36,
+     "type_hint": "bytes[36]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xce0",
+     "kind": "field",
+     "offset": 3296,
+     "global_address": null,
+     "size": 96,
+     "type_hint": "bytes[96]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xcb0",
+     "kind": "field",
+     "offset": 3248,
+     "global_address": null,
+     "size": 24,
+     "type_hint": "bytes[24]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xfe4",
+     "kind": "field",
+     "offset": 4068,
+     "global_address": null,
+     "size": 192,
+     "type_hint": "bytes[192]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x10ac",
+     "kind": "field",
+     "offset": 4268,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x10b0",
+     "kind": "field",
+     "offset": 4272,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x10b4",
+     "kind": "field",
+     "offset": 4276,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x10b8",
+     "kind": "field",
+     "offset": 4280,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x10c4",
+     "kind": "field",
+     "offset": 4292,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x10d0",
+     "kind": "field",
+     "offset": 4304,
+     "global_address": null,
+     "size": 120,
+     "type_hint": "bytes[120]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x10c0",
+     "kind": "field",
+     "offset": 4288,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x10bc",
+     "kind": "field",
+     "offset": 4284,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x10cc",
+     "kind": "field",
+     "offset": 4300,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x10c8",
+     "kind": "field",
+     "offset": 4296,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1148",
+     "kind": "field",
+     "offset": 4424,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x114c",
+     "kind": "field",
+     "offset": 4428,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1150",
+     "kind": "field",
+     "offset": 4432,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x1154",
+     "kind": "field",
+     "offset": 4436,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x10a4",
+     "kind": "field",
+     "offset": 4260,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "field_count": 31,
+   "global_writes": [],
+   "loop_blocks": [],
+   "fixed_bytes": 1312,
+   "temporaries": [
+    {
+     "direction": "write",
+     "target": "&local_14",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_14",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_10",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_8",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_4",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "nested_calls": [
+    "MapObject_Save"
+   ],
+   "loader": "MapObjectList_Load",
+   "loader_basis": "declared-alias",
+   "loader_status": "different-load-path",
+   "load_field_count": 30
+  },
+  {
+   "name": "MapObject_Save",
+   "address": "0x4d1fe0",
+   "fields": [
+    {
+     "direction": "write",
+     "target": "(int)this + 4",
+     "kind": "field",
+     "offset": 4,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 8",
+     "kind": "field",
+     "offset": 8,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x4c",
+     "kind": "field",
+     "offset": 76,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x50",
+     "kind": "field",
+     "offset": 80,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x2c",
+     "kind": "field",
+     "offset": 44,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x30",
+     "kind": "field",
+     "offset": 48,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x34",
+     "kind": "field",
+     "offset": 52,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x38",
+     "kind": "field",
+     "offset": 56,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xc",
+     "kind": "field",
+     "offset": 12,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x3c",
+     "kind": "field",
+     "offset": 60,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x94",
+     "kind": "field",
+     "offset": 148,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x10",
+     "kind": "field",
+     "offset": 16,
+     "global_address": null,
+     "size": 16,
+     "type_hint": "bytes[16]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x20",
+     "kind": "field",
+     "offset": 32,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x24",
+     "kind": "field",
+     "offset": 36,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x40",
+     "kind": "field",
+     "offset": 64,
+     "global_address": null,
+     "size": 8,
+     "type_hint": "u64/double"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x48",
+     "kind": "field",
+     "offset": 72,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x54",
+     "kind": "field",
+     "offset": 84,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "field_count": 17,
+   "global_writes": [],
+   "loop_blocks": [],
+   "fixed_bytes": 84,
+   "temporaries": [
+    {
+     "direction": "write",
+     "target": "piVar1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_4",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "nested_calls": [
+    "BuildingValue_Save"
+   ],
+   "loader": "MapObject_Load",
+   "loader_basis": "same-name-loader",
+   "loader_status": "different-load-path",
+   "load_field_count": 18
+  },
+  {
+   "name": "MapSprite_Save",
+   "address": "0x4ecb30",
+   "fields": [
+    {
+     "direction": "write",
+     "target": "iVar3 + 2,uVar6); param_1 = (void *)((int)param_1 + 1); } while ((int)param_1 < local_18); } if (piVar1[8] == 0) { ppvVar4 = &param_1; uVar6 = 4; param_1 = (void *)0x0; } else { param_1 = (void *)0x1; CRT_Ostream_Write(this,&param_1",
+     "kind": "field",
+     "offset": 1,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "field_count": 1,
+   "global_writes": [],
+   "loop_blocks": [],
+   "fixed_bytes": 4,
+   "temporaries": [
+    {
+     "direction": "write",
+     "target": "&param_2",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_1c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_1c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "piVar1 + 2",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 2,
+     "type_hint": "u16"
+    },
+    {
+     "direction": "write",
+     "target": "(int)piVar1 + 10",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 2,
+     "type_hint": "u16"
+    },
+    {
+     "direction": "write",
+     "target": "piVar1 + 3",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "piVar1 + 4",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "&local_14",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "piVar1 + 0xb",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "piVar1 + 0xc",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 8,
+     "type_hint": "u64/double"
+    },
+    {
+     "direction": "write",
+     "target": "piVar1 + 0xe",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 8,
+     "type_hint": "u64/double"
+    },
+    {
+     "direction": "write",
+     "target": "piVar1 + 0x10",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "piVar1 + 0x11",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 8,
+     "type_hint": "u64/double"
+    },
+    {
+     "direction": "write",
+     "target": "piVar1 + 0x15",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "piVar1 + 0x13",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 8,
+     "type_hint": "u64/double"
+    },
+    {
+     "direction": "write",
+     "target": "&local_18",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "ppvVar4,uVar6); if (piVar1[9] == 0) { param_1 = (void *)0x0; CRT_Ostream_Write(this,&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "piVar1[9] + 2",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 2,
+     "type_hint": "u16"
+    }
+   ],
+   "nested_calls": [],
+   "loader": "MapActor_ReadFromStream",
+   "loader_basis": "declared-alias",
+   "loader_status": "different-load-path",
+   "load_field_count": 0
+  },
+  {
+   "name": "PersonList_Save",
+   "address": "0x5053d0",
+   "fields": [
+    {
+     "direction": "write",
+     "target": "(int)this + 4",
+     "kind": "field",
+     "offset": 4,
+     "global_address": null,
+     "size": 32,
+     "type_hint": "bytes[32]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x24",
+     "kind": "field",
+     "offset": 36,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x28",
+     "kind": "field",
+     "offset": 40,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x30",
+     "kind": "field",
+     "offset": 48,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x34",
+     "kind": "field",
+     "offset": 52,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x38",
+     "kind": "field",
+     "offset": 56,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x3c",
+     "kind": "field",
+     "offset": 60,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x40",
+     "kind": "field",
+     "offset": 64,
+     "global_address": null,
+     "size": 2,
+     "type_hint": "u16"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x44",
+     "kind": "field",
+     "offset": 68,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x48",
+     "kind": "field",
+     "offset": 72,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x4c",
+     "kind": "field",
+     "offset": 76,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x50",
+     "kind": "field",
+     "offset": 80,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x54",
+     "kind": "field",
+     "offset": 84,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x58",
+     "kind": "field",
+     "offset": 88,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x5c",
+     "kind": "field",
+     "offset": 92,
+     "global_address": null,
+     "size": 24,
+     "type_hint": "bytes[24]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x74",
+     "kind": "field",
+     "offset": 116,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x78",
+     "kind": "field",
+     "offset": 120,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x7c",
+     "kind": "field",
+     "offset": 124,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x80",
+     "kind": "field",
+     "offset": 128,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x81",
+     "kind": "field",
+     "offset": 129,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x84",
+     "kind": "field",
+     "offset": 132,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x88",
+     "kind": "field",
+     "offset": 136,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x8c",
+     "kind": "field",
+     "offset": 140,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x90",
+     "kind": "field",
+     "offset": 144,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x10c",
+     "kind": "field",
+     "offset": 268,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x94",
+     "kind": "field",
+     "offset": 148,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x98",
+     "kind": "field",
+     "offset": 152,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x9c",
+     "kind": "field",
+     "offset": 156,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x14c",
+     "kind": "field",
+     "offset": 332,
+     "global_address": null,
+     "size": 24,
+     "type_hint": "bytes[24]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xa0",
+     "kind": "field",
+     "offset": 160,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xa4",
+     "kind": "field",
+     "offset": 164,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xa8",
+     "kind": "field",
+     "offset": 168,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x110",
+     "kind": "field",
+     "offset": 272,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x104",
+     "kind": "field",
+     "offset": 260,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x108",
+     "kind": "field",
+     "offset": 264,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xac",
+     "kind": "field",
+     "offset": 172,
+     "global_address": null,
+     "size": 24,
+     "type_hint": "bytes[24]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x2c",
+     "kind": "field",
+     "offset": 44,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "piVar2,uVar3); local_8 = *(int *)((int)this + 0x128); CRT_Ostream_Write(this_00,&local_8",
+     "kind": "field",
+     "offset": 296,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "field_count": 38,
+   "global_writes": [],
+   "loop_blocks": [],
+   "fixed_bytes": 229,
+   "temporaries": [
+    {
+     "direction": "write",
+     "target": "&local_c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_c",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_4",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_8",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_4",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "nested_calls": [
+    "Person_Save"
+   ],
+   "loader": "PersonAction_LoadState",
+   "loader_basis": "declared-alias",
+   "loader_status": "different-load-path",
+   "load_field_count": 37
+  },
+  {
+   "name": "Person_Save",
+   "address": "0x5052e0",
+   "fields": [],
+   "field_count": 0,
+   "global_writes": [],
+   "loop_blocks": [],
+   "fixed_bytes": 0,
+   "temporaries": [
+    {
+     "direction": "write",
+     "target": "&local_4",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_4",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "nested_calls": [
+    "MapSprite_Save"
+   ],
+   "loader": "MapObject_ReadRenderRecord",
+   "loader_basis": "declared-alias",
+   "loader_status": "exact",
+   "load_field_count": 0
+  },
+  {
+   "name": "Personnel_Save",
+   "address": "0x4b0d60",
+   "fields": [],
+   "field_count": 0,
+   "global_writes": [
+    {
+     "direction": "write",
+     "target": "&DAT_0056a6d8",
+     "kind": "global",
+     "offset": null,
+     "global_address": 5678808,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "loop_blocks": [],
+   "fixed_bytes": 4,
+   "temporaries": [],
+   "nested_calls": [],
+   "loader": "Personnel_Load",
+   "loader_basis": "same-name-loader",
+   "loader_status": "exact",
+   "load_field_count": 0
+  },
+  {
+   "name": "Player_AIState_Save",
+   "address": "0x501cb0",
+   "fields": [
+    {
+     "direction": "write",
+     "target": "(int)this + 4",
+     "kind": "field",
+     "offset": 4,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xc",
+     "kind": "field",
+     "offset": 12,
+     "global_address": null,
+     "size": 52,
+     "type_hint": "bytes[52]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x44",
+     "kind": "field",
+     "offset": 68,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x40",
+     "kind": "field",
+     "offset": 64,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x48",
+     "kind": "field",
+     "offset": 72,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x4c",
+     "kind": "field",
+     "offset": 76,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x50",
+     "kind": "field",
+     "offset": 80,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x54",
+     "kind": "field",
+     "offset": 84,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x58",
+     "kind": "field",
+     "offset": 88,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x5c",
+     "kind": "field",
+     "offset": 92,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x60",
+     "kind": "field",
+     "offset": 96,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 100",
+     "kind": "field",
+     "offset": 100,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x84",
+     "kind": "field",
+     "offset": 132,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 8",
+     "kind": "field",
+     "offset": 8,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x88",
+     "kind": "field",
+     "offset": 136,
+     "global_address": null,
+     "size": 228,
+     "type_hint": "bytes[228]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x16c",
+     "kind": "field",
+     "offset": 364,
+     "global_address": null,
+     "size": 228,
+     "type_hint": "bytes[228]"
+    }
+   ],
+   "field_count": 16,
+   "global_writes": [],
+   "loop_blocks": [],
+   "fixed_bytes": 554,
+   "temporaries": [
+    {
+     "direction": "write",
+     "target": "&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_4",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "nested_calls": [],
+   "loader": "Player_AIState_Load",
+   "loader_basis": "exact-name-and-sequence",
+   "loader_status": "exact",
+   "load_field_count": 16
+  },
+  {
+   "name": "Player_Event_Save",
+   "address": "0x501a40",
+   "fields": [
+    {
+     "direction": "write",
+     "target": "(int)this + 4",
+     "kind": "field",
+     "offset": 4,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 8",
+     "kind": "field",
+     "offset": 8,
+     "global_address": null,
+     "size": 2,
+     "type_hint": "u16"
+    }
+   ],
+   "field_count": 2,
+   "global_writes": [],
+   "loop_blocks": [],
+   "fixed_bytes": 6,
+   "temporaries": [],
+   "nested_calls": [],
+   "loader": "Player_Event_Load",
+   "loader_basis": "exact-name-and-sequence",
+   "loader_status": "exact",
+   "load_field_count": 2
+  },
+  {
+   "name": "Player_MissionState_Save",
+   "address": "0x4f5ee0",
+   "fields": [
+    {
+     "direction": "write",
+     "target": "(int)this + 4",
+     "kind": "field",
+     "offset": 4,
+     "global_address": null,
+     "size": 12,
+     "type_hint": "bytes[12]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x10",
+     "kind": "field",
+     "offset": 16,
+     "global_address": null,
+     "size": 176,
+     "type_hint": "bytes[176]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xc0",
+     "kind": "field",
+     "offset": 192,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xc4",
+     "kind": "field",
+     "offset": 196,
+     "global_address": null,
+     "size": 3,
+     "type_hint": "bytes[3]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 200",
+     "kind": "field",
+     "offset": 200,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xcc",
+     "kind": "field",
+     "offset": 204,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xd0",
+     "kind": "field",
+     "offset": 208,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xd4",
+     "kind": "field",
+     "offset": 212,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "field_count": 8,
+   "global_writes": [],
+   "loop_blocks": [],
+   "fixed_bytes": 208,
+   "temporaries": [],
+   "nested_calls": [],
+   "loader": "Player_MissionState_Load",
+   "loader_basis": "exact-name-and-sequence",
+   "loader_status": "exact",
+   "load_field_count": 8
+  },
+  {
+   "name": "Player_Save",
+   "address": "0x50ea90",
+   "fields": [
+    {
+     "direction": "write",
+     "target": "(int)this + 0x84",
+     "kind": "field",
+     "offset": 132,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x88",
+     "kind": "field",
+     "offset": 136,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 8",
+     "kind": "field",
+     "offset": 8,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xc",
+     "kind": "field",
+     "offset": 12,
+     "global_address": null,
+     "size": 32,
+     "type_hint": "bytes[32]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x2c",
+     "kind": "field",
+     "offset": 44,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x30",
+     "kind": "field",
+     "offset": 48,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x3c",
+     "kind": "field",
+     "offset": 60,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x40",
+     "kind": "field",
+     "offset": 64,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x44",
+     "kind": "field",
+     "offset": 68,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x48",
+     "kind": "field",
+     "offset": 72,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x4c",
+     "kind": "field",
+     "offset": 76,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x50",
+     "kind": "field",
+     "offset": 80,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x54",
+     "kind": "field",
+     "offset": 84,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x58",
+     "kind": "field",
+     "offset": 88,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x5c",
+     "kind": "field",
+     "offset": 92,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x60",
+     "kind": "field",
+     "offset": 96,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 100",
+     "kind": "field",
+     "offset": 100,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x68",
+     "kind": "field",
+     "offset": 104,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x6c",
+     "kind": "field",
+     "offset": 108,
+     "global_address": null,
+     "size": 24,
+     "type_hint": "bytes[24]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x34",
+     "kind": "field",
+     "offset": 52,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x38",
+     "kind": "field",
+     "offset": 56,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "field_count": 21,
+   "global_writes": [],
+   "loop_blocks": [],
+   "fixed_bytes": 132,
+   "temporaries": [
+    {
+     "direction": "write",
+     "target": "&local_4",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "nested_calls": [
+    "Character_Save",
+    "Player_Event_Save",
+    "Player_AIState_Save",
+    "Player_MissionState_Save"
+   ],
+   "loader": "Player_Load",
+   "loader_basis": "exact-name-and-sequence",
+   "loader_status": "exact",
+   "load_field_count": 21
+  },
+  {
+   "name": "RecipeTopping_Save",
+   "address": "0x4d1ba0",
+   "fields": [
+    {
+     "direction": "write",
+     "target": "(int)this + 4",
+     "kind": "field",
+     "offset": 4,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 5",
+     "kind": "field",
+     "offset": 5,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 6",
+     "kind": "field",
+     "offset": 6,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 8",
+     "kind": "field",
+     "offset": 8,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xc",
+     "kind": "field",
+     "offset": 12,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x10",
+     "kind": "field",
+     "offset": 16,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x11",
+     "kind": "field",
+     "offset": 17,
+     "global_address": null,
+     "size": 1,
+     "type_hint": "u8/bool"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x14",
+     "kind": "field",
+     "offset": 20,
+     "global_address": null,
+     "size": 8,
+     "type_hint": "u64/double"
+    }
+   ],
+   "field_count": 8,
+   "global_writes": [],
+   "loop_blocks": [],
+   "fixed_bytes": 21,
+   "temporaries": [],
+   "nested_calls": [],
+   "loader": "RecipeTopping_Load",
+   "loader_basis": "exact-name-and-sequence",
+   "loader_status": "exact",
+   "load_field_count": 8
+  },
+  {
+   "name": "SaveGame_Serialize",
+   "address": "0x487b50",
+   "fields": [
+    {
+     "direction": "write",
+     "target": "(int)this + 0x298",
+     "kind": "field",
+     "offset": 664,
+     "global_address": null,
+     "size": 32,
+     "type_hint": "bytes[32]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x2b8",
+     "kind": "field",
+     "offset": 696,
+     "global_address": null,
+     "size": 32,
+     "type_hint": "bytes[32]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x2d8",
+     "kind": "field",
+     "offset": 728,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x2dc",
+     "kind": "field",
+     "offset": 732,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x2ec",
+     "kind": "field",
+     "offset": 748,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x2f0",
+     "kind": "field",
+     "offset": 752,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x2f4",
+     "kind": "field",
+     "offset": 756,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x2e8",
+     "kind": "field",
+     "offset": 744,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x2f8",
+     "kind": "field",
+     "offset": 760,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x33c",
+     "kind": "field",
+     "offset": 828,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x348",
+     "kind": "field",
+     "offset": 840,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x34c",
+     "kind": "field",
+     "offset": 844,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x350",
+     "kind": "field",
+     "offset": 848,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x344",
+     "kind": "field",
+     "offset": 836,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x354",
+     "kind": "field",
+     "offset": 852,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x340",
+     "kind": "field",
+     "offset": 832,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x364",
+     "kind": "field",
+     "offset": 868,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x368",
+     "kind": "field",
+     "offset": 872,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x360",
+     "kind": "field",
+     "offset": 864,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x358",
+     "kind": "field",
+     "offset": 856,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x35c",
+     "kind": "field",
+     "offset": 860,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x2d90",
+     "kind": "field",
+     "offset": 11664,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "field_count": 22,
+   "global_writes": [
+    {
+     "direction": "write",
+     "target": "&DAT_0057bb20",
+     "kind": "global",
+     "offset": null,
+     "global_address": 5749536,
+     "size": 1464,
+     "type_hint": "bytes[1464]"
+    }
+   ],
+   "loop_blocks": [],
+   "fixed_bytes": 1608,
+   "temporaries": [
+    {
+     "direction": "write",
+     "target": "local_20",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 32,
+     "type_hint": "bytes[32]"
+    },
+    {
+     "direction": "write",
+     "target": "local_34 + 2",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "local_34",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "local_34",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "local_34",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "local_34",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "local_34",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "local_34",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "local_34 + 1",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "local_34 + 1",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "local_34",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "local_34",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "local_34",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "local_34 + 3",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "local_20",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 32,
+     "type_hint": "bytes[32]"
+    }
+   ],
+   "nested_calls": [
+    "IngredientPanel_Save",
+    "CityCompanyList_Save",
+    "AdvertisingPanel_Save",
+    "CompanyMarketShare_Save",
+    "CompanyOverview_Save",
+    "StatisticsBalance_Save",
+    "StatisticsBranchBalance_Save",
+    "Personnel_Save",
+    "BranchStats_SeriesFlags_Save",
+    "BranchDesign_ColorIndex_Save",
+    "BranchMenu_Category_Save",
+    "WarehouseProduct_Save",
+    "GameCalendar_Save",
+    "UI_BriefingList_Save",
+    "IsoMap_Save",
+    "Character_Save",
+    "MapObjectList_Save",
+    "PersonList_Save",
+    "CarList_Save",
+    "Player_Save",
+    "CompanyData_Save",
+    "AI_CompanySlots_Save"
+   ],
+   "loader": "Game_LoadSaveGame",
+   "loader_basis": "exact-sequence",
+   "loader_status": "exact",
+   "load_field_count": 22
+  },
+  {
+   "name": "Sprite_Serialize",
+   "address": "0x53d160",
+   "fields": [],
+   "field_count": 0,
+   "global_writes": [],
+   "loop_blocks": [],
+   "fixed_bytes": 0,
+   "temporaries": [],
+   "nested_calls": [],
+   "loader": null,
+   "loader_basis": "",
+   "loader_status": "save-only",
+   "load_field_count": 0
+  },
+  {
+   "name": "StatisticsBalance_Save",
+   "address": "0x4aa700",
+   "fields": [],
+   "field_count": 0,
+   "global_writes": [
+    {
+     "direction": "write",
+     "target": "&DAT_00569354",
+     "kind": "global",
+     "offset": null,
+     "global_address": 5673812,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&DAT_0057d5c8",
+     "kind": "global",
+     "offset": null,
+     "global_address": 5756360,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&DAT_0057d5d0",
+     "kind": "global",
+     "offset": null,
+     "global_address": 5756368,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&DAT_00569358",
+     "kind": "global",
+     "offset": null,
+     "global_address": 5673816,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "loop_blocks": [],
+   "fixed_bytes": 16,
+   "temporaries": [],
+   "nested_calls": [],
+   "loader": "StatisticsBalance_Load",
+   "loader_basis": "same-name-loader",
+   "loader_status": "exact",
+   "load_field_count": 0
+  },
+  {
+   "name": "StatisticsBranchBalance_Save",
+   "address": "0x4ac400",
+   "fields": [],
+   "field_count": 0,
+   "global_writes": [
+    {
+     "direction": "write",
+     "target": "&DAT_0056951c",
+     "kind": "global",
+     "offset": null,
+     "global_address": 5674268,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&DAT_0057d62c",
+     "kind": "global",
+     "offset": null,
+     "global_address": 5756460,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&DAT_0057d630",
+     "kind": "global",
+     "offset": null,
+     "global_address": 5756464,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "loop_blocks": [],
+   "fixed_bytes": 12,
+   "temporaries": [],
+   "nested_calls": [],
+   "loader": "StatisticsBranchBalance_Load",
+   "loader_basis": "same-name-loader",
+   "loader_status": "exact",
+   "load_field_count": 0
+  },
+  {
+   "name": "StatsPeriodReport_Save",
+   "address": "0x401200",
+   "fields": [
+    {
+     "direction": "write",
+     "target": "(int)this + 0x10",
+     "kind": "field",
+     "offset": 16,
+     "global_address": null,
+     "size": 104,
+     "type_hint": "bytes[104]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0x78",
+     "kind": "field",
+     "offset": 120,
+     "global_address": null,
+     "size": 100,
+     "type_hint": "bytes[100]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xdc",
+     "kind": "field",
+     "offset": 220,
+     "global_address": null,
+     "size": 640,
+     "type_hint": "bytes[640]"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 4",
+     "kind": "field",
+     "offset": 4,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 0xc",
+     "kind": "field",
+     "offset": 12,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "(int)this + 8",
+     "kind": "field",
+     "offset": 8,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "field_count": 6,
+   "global_writes": [],
+   "loop_blocks": [],
+   "fixed_bytes": 856,
+   "temporaries": [],
+   "nested_calls": [],
+   "loader": "StatsPeriodReport_Load",
+   "loader_basis": "exact-name-and-sequence",
+   "loader_status": "exact",
+   "load_field_count": 6
+  },
+  {
+   "name": "UI_BriefingList_Save",
+   "address": "0x54b1b0",
+   "fields": [],
+   "field_count": 0,
+   "global_writes": [],
+   "loop_blocks": [],
+   "fixed_bytes": 0,
+   "temporaries": [
+    {
+     "direction": "write",
+     "target": "&local_8",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&local_4",
+     "kind": "temporary",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    },
+    {
+     "direction": "write",
+     "target": "&param_1",
+     "kind": "other",
+     "offset": null,
+     "global_address": null,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "nested_calls": [],
+   "loader": "UI_BriefingList_Load",
+   "loader_basis": "same-name-loader",
+   "loader_status": "exact",
+   "load_field_count": 0
+  },
+  {
+   "name": "WarehouseProduct_Save",
+   "address": "0x4c0d60",
+   "fields": [],
+   "field_count": 0,
+   "global_writes": [
+    {
+     "direction": "write",
+     "target": "&DAT_0057d714",
+     "kind": "global",
+     "offset": null,
+     "global_address": 5756692,
+     "size": 4,
+     "type_hint": "u32/i32/float"
+    }
+   ],
+   "loop_blocks": [],
+   "fixed_bytes": 4,
+   "temporaries": [],
+   "nested_calls": [],
+   "loader": "WarehouseProduct_Load",
+   "loader_basis": "same-name-loader",
+   "loader_status": "exact",
+   "load_field_count": 0
+  },
+  {
+   "name": "Game_SaveTileNameTable",
+   "address": "0x4eaaa0",
+   "fields": [],
+   "field_count": 0,
+   "global_writes": [],
+   "fixed_bytes": 125000,
+   "loop_blocks": [
+    {
+     "count": 2500,
+     "size": 50,
+     "bytes": 125000,
+     "note": "2500 x 50-byte tile-name records"
+    }
+   ],
+   "temporaries": [],
+   "nested_calls": [],
+   "loader": "World_LoadNameIndexTable",
+   "loader_basis": "explicit-writer/loader-pair",
+   "loader_status": "exact",
+   "load_field_count": 0
+  },
+  {
+   "name": "SaveGame_SerializeRuntimeList",
+   "address": "0x487940",
+   "fields": [],
+   "field_count": 0,
+   "global_writes": [],
+   "fixed_bytes": 0,
+   "loop_blocks": [],
+   "temporaries": [],
+   "nested_calls": [],
+   "loader": "SaveGame_DeserializeRuntimeList",
+   "loader_basis": "explicit-writer/loader-pair",
+   "loader_status": "exact",
+   "load_field_count": 0,
+   "dynamic_blocks": [
+    {
+     "count": 6,
+     "shape": "u32 present; if present: float x2 + u32 type; u32 trailing value",
+     "note": "six runtime slots at game+0x2c41c..0x2c434"
+    }
+   ]
+  }
+ ]
+}

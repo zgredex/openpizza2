@@ -1,0 +1,52 @@
+// rea decompile_all
+// name: FUN_00498180
+// address: 0x498180
+// body: available
+// range: 0x498180-0x4982a0 inclusive
+// non_contiguous: false
+// provider: Ghidra 12.2 (ghidra)
+// analysis_profile: aae5fcbbec95ac3047ec86f28609da356814b1c85770f2c09803aad3607b988d
+// limitations: The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.; Ghidra Program checkpoint mode is disabled: closing discards metadata edits; original executable bytes are unchanged. For stock ELF/PE/Mach-O on Linux/macOS, set REA_GHIDRA_CHECKPOINT_DIR to a private absolute directory before starting REA (restart MCP after changing its startup environment).; Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; This session uses Ghidra 12.2. The bridge is verified against 12.1.4; other 12.x (>=12.1) builds are accepted and the observed version is reported.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+void __cdecl FUN_00498180(void *param_1,int param_2)
+
+{
+  int iVar1;
+  int iVar2;
+  int iVar3;
+  float10 fVar4;
+  int local_38;
+  int *local_34;
+  int local_30;
+  undefined1 local_28 [36];
+  
+  iVar1 = *(int *)(DAT_0057c670 + 0x200 + *(int *)(DAT_0057c670 + 0x2ec) * 4);
+  local_30 = *(int *)(iVar1 + 0x124);
+  if (local_30 < 9) {
+    param_2 = 0;
+  }
+  else {
+    local_30 = 8;
+  }
+  if (0 < local_30) {
+    local_38 = param_2 * 4;
+    local_34 = &DAT_00568890;
+    iVar3 = 0x461;
+    while( true ) {
+      FUN_0052ff50(param_1,iVar3,(uint)(*(int *)(local_38 + DAT_0057ca08) == DAT_0057c9fc));
+      iVar2 = IDMap_Lookup((void *)(iVar1 + 0x110),*(int *)(local_38 + DAT_0057ca08),(int *)0x0);
+      FUN_0052f9b0(param_1,*local_34,iVar2 + 4);
+      fVar4 = Get_Float44(iVar2);
+      FUN_0054dd83(local_28,(byte *)s__0_2f___005688b0,SUB84((double)fVar4,0));
+      FUN_0052f9b0(param_1,iVar3 + 0xa4,local_28);
+      local_38 = local_38 + 4;
+      local_34 = local_34 + 1;
+      if (local_30 <= iVar3 + -0x460) break;
+      iVar3 = iVar3 + 1;
+    }
+  }
+  return;
+}
+

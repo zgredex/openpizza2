@@ -1,0 +1,12 @@
+vtable,proposed_class,constructor,evidence,confidence
+0x55c5d0,Game,0x4e64c0,"main game object, 0x2f890 bytes; 10-entry vtable",high
+0x55c5a4,GameSubclass,0x4e42f0,3 own virtuals followed by inherited Game methods,medium
+0x55c7b0,MovieWindow,0x52ae20,derived Window; BinkOpen/DoFrame methods,high
+0x55c814,Window,0x537230,base window/surface class; also used by FullscreenImage_Load,high
+0x55c808,DialogWindow,0x52e8f0,SetRect-based dialog constructor,high
+0x55c860,DirectSoundManager,0x542b50,creates DirectSound primary buffer,high
+0x55c82c,Sprite,0x53c7f0,.spr sprite loader constructor,high
+0x55c2f0,ResourceManager,0x401970,resource manager constructor,high
+0x55c2f4,FileObject,0x402cf0,file/resource object constructor,high
+0x55c2e0,StreamBase,0x401000,base stream constructor,medium
+0x55c2e8,NamedLockable,0x401280,constructor creates critical section and optional name,medium

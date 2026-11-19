@@ -1,0 +1,272 @@
+========================================================================================
+0x52f910 layer=12 indeg=146 bytes=1599
+calls: FUN_0052fdd0
+ provider-specific; not original source
+void __thiscall FUN_0052f910(void *this,int param_1,undefined4 param_2)
+{
+  FUN_0052fdd0(this,param_1,3,0xd,param_2,0);
+  return;
+}
+========================================================================================
+0x52f930 layer=12 indeg=1 bytes=1575
+calls: FUN_0052fdd0
+ provider-specific; not original source
+void __thiscall FUN_0052f930(void *this,int param_1)
+{
+  FUN_0052fdd0(this,param_1,3,0x33,0,0);
+  return;
+}
+========================================================================================
+0x52f950 layer=12 indeg=2 bytes=1575
+calls: FUN_0052fdd0
+ provider-specific; not original source
+void __thiscall FUN_0052f950(void *this,int param_1)
+{
+  FUN_0052fdd0(this,param_1,3,0x10,0,0);
+  return;
+}
+========================================================================================
+0x52f970 layer=12 indeg=2 bytes=1575
+calls: FUN_0052fdd0
+ provider-specific; not original source
+void __thiscall FUN_0052f970(void *this,int param_1)
+{
+  FUN_0052fdd0(this,param_1,3,0x11,0,0);
+  return;
+}
+========================================================================================
+0x52f990 layer=12 indeg=2 bytes=1600
+calls: FUN_0052fdd0
+ provider-specific; not original source
+void __thiscall FUN_0052f990(void *this,int param_1,undefined4 param_2)
+{
+  FUN_0052fdd0(this,param_1,3,0x13,param_2,0);
+  return;
+}
+========================================================================================
+0x52f9b0 layer=12 indeg=155 bytes=1599
+calls: FUN_0052fdd0
+ provider-specific; not original source
+void __thiscall FUN_0052f9b0(void *this,int param_1,undefined4 param_2)
+{
+  FUN_0052fdd0(this,param_1,3,0xe,0,param_2);
+  return;
+}
+========================================================================================
+0x52f9d0 layer=12 indeg=111 bytes=1849
+calls: FUN_0052fdd0
+ provider-specific; not original source
+void __thiscall
+FUN_0052f9d0(void *this,int param_1,undefined4 param_2,undefined2 param_3,undefined2 param_4,
+            undefined4 param_5)
+{
+  undefined2 local_10;
+  undefined2 local_e;
+  undefined4 local_8;
+  undefined4 local_4;
+  local_10 = param_3;
+  local_8 = param_2;
+  local_e = param_4;
+  local_4 = param_5;
+  FUN_0052fdd0(this,param_1,3,0xd8,0,&local_10);
+  return;
+}
+========================================================================================
+0x52fa20 layer=12 indeg=3 bytes=1600
+calls: FUN_0052fdd0
+ provider-specific; not original source
+void __thiscall FUN_0052fa20(void *this,int param_1,undefined4 param_2)
+{
+  FUN_0052fdd0(this,param_1,3,0x1f,param_2,0);
+  return;
+}
+========================================================================================
+0x52fb00 layer=12 indeg=1 bytes=1600
+calls: FUN_0052fdd0
+ provider-specific; not original source
+void __thiscall FUN_0052fb00(void *this,int param_1,undefined4 param_2)
+{
+  FUN_0052fdd0(this,param_1,4,0x1d,param_2,0);
+  return;
+}
+========================================================================================
+0x52fb20 layer=12 indeg=0 bytes=1575
+calls: FUN_0052fdd0
+ provider-specific; not original source
+void __thiscall FUN_0052fb20(void *this,int param_1)
+{
+  FUN_0052fdd0(this,param_1,4,0x1e,0,0);
+  return;
+}
+========================================================================================
+0x52fb40 layer=12 indeg=3 bytes=1599
+calls: FUN_0052fdd0
+ provider-specific; not original source
+void __thiscall FUN_0052fb40(void *this,int param_1,undefined4 param_2)
+{
+  FUN_0052fdd0(this,param_1,4,0xd,param_2,0);
+  return;
+}
+========================================================================================
+0x52fb60 layer=12 indeg=3 bytes=1600
+calls: FUN_0052fdd0
+ provider-specific; not original source
+void __thiscall FUN_0052fb60(void *this,int param_1,undefined4 param_2)
+{
+  FUN_0052fdd0(this,param_1,4,0x15,param_2,0);
+  return;
+}
+========================================================================================
+0x52fb80 layer=12 indeg=3 bytes=1600
+calls: FUN_0052fdd0
+ provider-specific; not original source
+void __thiscall FUN_0052fb80(void *this,int param_1,undefined4 param_2)
+{
+  FUN_0052fdd0(this,param_1,4,0x17,param_2,0);
+  return;
+}
+========================================================================================
+0x52fba0 layer=12 indeg=3 bytes=1600
+calls: FUN_0052fdd0
+ provider-specific; not original source
+void __thiscall FUN_0052fba0(void *this,int param_1,undefined4 param_2)
+{
+  FUN_0052fdd0(this,param_1,4,0x19,param_2,0);
+  return;
+}
+========================================================================================
+0x52fbc0 layer=12 indeg=2 bytes=1599
+calls: FUN_0052fdd0
+ provider-specific; not original source
+void __thiscall FUN_0052fbc0(void *this,int param_1,undefined4 param_2)
+{
+  FUN_0052fdd0(this,param_1,4,0xe,0,param_2);
+  return;
+}
+========================================================================================
+0x52fbe0 layer=12 indeg=0 bytes=1574
+calls: FUN_0052fdd0
+ provider-specific; not original source
+void __thiscall FUN_0052fbe0(void *this,int param_1)
+{
+  FUN_0052fdd0(this,param_1,4,0xf,0,0);
+  return;
+}
+========================================================================================
+0x52fcc0 layer=12 indeg=67 bytes=1600
+calls: FUN_0052fdd0
+ provider-specific; not original source
+void __thiscall FUN_0052fcc0(void *this,int param_1,undefined4 param_2)
+{
+  FUN_0052fdd0(this,param_1,5,0x1b,0,param_2);
+  return;
+}
+========================================================================================
+0x52fce0 layer=12 indeg=40 bytes=1600
+calls: FUN_0052fdd0
+ provider-specific; not original source
+void __thiscall FUN_0052fce0(void *this,int param_1,undefined4 param_2)
+{
+  FUN_0052fdd0(this,param_1,5,0x1c,param_2,0);
+  return;
+}
+========================================================================================
+0x52fd00 layer=12 indeg=48 bytes=1808
+calls: FUN_0052fdd0
+ provider-specific; not original source
+void __thiscall FUN_0052fd00(void *this,int param_1,int param_2,int param_3,int param_4)
+{
+  bool bVar1;
+  FUN_0052fdd0(this,param_1,5,0x21,param_2,0);
+  FUN_0052fdd0(this,param_1,5,0x23,param_3,0);
+  bVar1 = param_2 < param_3;
+  if (param_4 != 0) {
+    bVar1 = !bVar1;
+  }
+  FUN_0052fdd0(this,param_1,5,0x28,(uint)!bVar1,0);
+  return;
+}
+========================================================================================
+0x52fd70 layer=12 indeg=72 bytes=1625
+calls: FUN_0052fdd0
+ provider-specific; not original source
+void __thiscall FUN_0052fd70(void *this,int param_1,undefined4 param_2,undefined4 param_3)
+{
+  FUN_0052fdd0(this,param_1,5,0x25,param_2,param_3);
+  return;
+}
+========================================================================================
+0x52fd90 layer=12 indeg=2 bytes=1600
+calls: FUN_0052fdd0
+ provider-specific; not original source
+void __thiscall FUN_0052fd90(void *this,int param_1,undefined4 param_2)
+{
+  FUN_0052fdd0(this,param_1,5,0x26,0,param_2);
+  return;
+}
+========================================================================================
+0x52fdb0 layer=12 indeg=2 bytes=1625
+calls: FUN_0052fdd0
+ provider-specific; not original source
+void __thiscall FUN_0052fdb0(void *this,int param_1,undefined4 param_2,undefined4 param_3)
+{
+  FUN_0052fdd0(this,param_1,5,0x27,param_2,param_3);
+  return;
+}
+========================================================================================
+0x52fdd0 layer=11 indeg=39 bytes=3000
+calls: CS_Enter, CS_Leave, DebugConsole_Errorf, Array_GetRecordByKey
+ provider-specific; not original source
+undefined4 __thiscall
+FUN_0052fdd0(void *this,int param_1,int param_2,undefined4 param_3,undefined4 param_4,
+            undefined4 param_5)
+{
+  DWORD DVar1;
+  DWORD DVar2;
+  int *piVar3;
+  int iVar4;
+  undefined4 uVar5;
+  undefined4 *puVar6;
+  int iVar7;
+  bool bVar8;
+  DVar1 = *(DWORD *)(*(int *)((int)this + 0x134) + 0x830c);
+  DVar2 = GetCurrentThreadId();
+  bVar8 = DVar2 != DVar1;
+  if (bVar8) {
+    CS_Enter(*(int *)(*(int *)((int)this + 0x134) + 0x1c8));
+  }
+  piVar3 = (int *)FUN_005313d0(this,param_1);
+  if (piVar3 == (int *)0x0) {
+    if (bVar8) {
+      CS_Leave(*(int *)(*(int *)((int)this + 0x134) + 0x1c8));
+    }
+    FUN_00526f20(*(undefined4 *)((int)this + 0x134),0,
+                 (byte *)s_Window__GadgetNotify__Gadget___d_0057447c,param_1);
+========================================================================================
+0x52fef0 layer=11 indeg=2 bytes=1766
+calls: DebugConsole_Errorf, Array_GetRecordByKey
+ provider-specific; not original source
+int __thiscall FUN_0052fef0(void *this,int param_1)
+{
+  int iVar1;
+  iVar1 = FUN_005313d0(this,param_1);
+  if (iVar1 == 0) {
+    FUN_00526f20(*(undefined4 *)((int)this + 0x134),0,
+                 (byte *)s_Window__GadgetNotify__Gadget___d_0057447c,param_1);
+    iVar1 = 0;
+  }
+  return iVar1;
+}
+========================================================================================
+0x52ff50 layer=12 indeg=83 bytes=1662
+calls: FUN_0052fdd0
+ provider-specific; not original source
+void __thiscall FUN_0052ff50(void *this,int param_1,int param_2)
+{
+  if (param_2 == 0) {
+    FUN_0052fdd0(this,param_1,1,0,0,0);
+    return;
+  }
+  FUN_0052fdd0(this,param_1,1,0,1,0);
+  return;
+}

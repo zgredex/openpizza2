@@ -1,0 +1,41 @@
+{
+  "schema": "pc2.fixture.v1",
+  "id": "game_window_command_dispatch",
+  "executable": {
+    "path": "game/fastfood2.exe",
+    "sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd"
+  },
+  "entry": "0x4058f5",
+  "stop": "consumer entry",
+  "abi": "cdecl",
+  "arguments": [],
+  "return_register": "EAX",
+  "initial_registers": {
+    "EAX": "0xfffe79de",
+    "EBX": "0x00000000",
+    "ECX": "0x00000000",
+    "EDX": "0x00000000",
+    "ESP": "0x0020fe00"
+  },
+  "observed_fields": ["EAX", "ECX", "EIP"],
+  "limits": {
+    "max_instructions": 200,
+    "wall_ms": 1000
+  },
+  "cases": [
+    {
+      "id": "hourly_0xfffe79de",
+      "command": "0xfffe79de",
+      "expected_target": "0x405aa9",
+      "expected_eax": "0x00000062",
+      "expected_ecx": "0x00000004"
+    },
+    {
+      "id": "quarter_hour_0xfffe79f7",
+      "command": "0xfffe79f7",
+      "expected_target": "0x405ae0",
+      "expected_eax": "0xfffe79f7",
+      "expected_ecx": "0x00000000"
+    }
+  ]
+}

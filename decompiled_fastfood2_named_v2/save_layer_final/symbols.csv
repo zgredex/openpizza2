@@ -1,0 +1,5 @@
+address,name,confidence,evidence
+0x487520,SaveGame_Write,high,"Builds the 0xF0 header (title/company/city/slots/date), writes it, then serializes game state."
+0x487940,SaveGame_SerializeRuntimeList,medium,Writes a fixed runtime object list (presence flag + fields) near the end of the save.
+0x487a30,SaveGame_DeserializeRuntimeList,medium,Reads the runtime object list and restores it.
+0x487b50,SaveGame_Serialize,high,"Payload writer: reserved block, 0x2e marker, 0x5B8 global block, 20 scalars, subsystem serializers, 0x2a end marker."

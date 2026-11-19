@@ -1,0 +1,650 @@
+[
+ {
+  "address": "0x52d690",
+  "name": "UI_ButtonElement_Delete"
+ },
+ {
+  "address": "0x52b210",
+  "name": "MovieWindow_Delete"
+ },
+ {
+  "address": "0x529140",
+  "name": "UI_Slider_Delete"
+ },
+ {
+  "address": "0x52bd50",
+  "name": "UI_TextElement_Delete"
+ },
+ {
+  "address": "0x51f210",
+  "name": "UI_ImageElement_Delete"
+ },
+ {
+  "address": "0x5221c0",
+  "name": "UI_LabelElement_Delete"
+ },
+ {
+  "address": "0x544ab0",
+  "name": "SoundSystem_Delete"
+ },
+ {
+  "address": "0x4bd490",
+  "name": "UI_SelectNextObjectOfType"
+ },
+ {
+  "address": "0x4bd450",
+  "name": "UI_SelectPreviousObjectOfType"
+ },
+ {
+  "address": "0x552754",
+  "name": "CRT_IsIndst"
+ },
+ {
+  "address": "0x552b98",
+  "name": "CRT_Filbuf"
+ },
+ {
+  "address": "0x5531c5",
+  "name": "CRT_CallCatchBlockFinally"
+ },
+ {
+  "address": "0x5534dc",
+  "name": "CRT_Terminate"
+ },
+ {
+  "address": "0x5539d3",
+  "name": "CRT_Calloc"
+ },
+ {
+  "address": "0x553a60",
+  "name": "CRT_XcptFilter"
+ },
+ {
+  "address": "0x553d8f",
+  "name": "CRT_SetEnvp"
+ },
+ {
+  "address": "0x554095",
+  "name": "CRT_GetEnvStrings"
+ },
+ {
+  "address": "0x55438f",
+  "name": "CRT_AllocOsfHandle"
+ },
+ {
+  "address": "0x5544b2",
+  "name": "CRT_SetOsfHandle"
+ },
+ {
+  "address": "0x55452e",
+  "name": "CRT_FreeOsfHandle"
+ },
+ {
+  "address": "0x554670",
+  "name": "CRT_Flush"
+ },
+ {
+  "address": "0x5554ae",
+  "name": "CRT_Wctomb"
+ },
+ {
+  "address": "0x536160",
+  "name": "FullscreenImage_LoadBmp"
+ },
+ {
+  "address": "0x53a1c0",
+  "name": "Gfx_BlendTable_RegisterAtexit"
+ },
+ {
+  "address": "0x53c6f0",
+  "name": "Sprite_CriticalSection_RegisterAtexit"
+ },
+ {
+  "address": "0x53f0a0",
+  "name": "Sound_SetLastError"
+ },
+ {
+  "address": "0x53fcc0",
+  "name": "SoundPakManager_Destruct"
+ },
+ {
+  "address": "0x53fda0",
+  "name": "SoundPakManager_AddArchive"
+ },
+ {
+  "address": "0x540260",
+  "name": "SoundStream_Close"
+ },
+ {
+  "address": "0x54a660",
+  "name": "DebugConsole_Printf"
+ },
+ {
+  "address": "0x54a980",
+  "name": "UI_Briefing_AddMessage"
+ },
+ {
+  "address": "0x54aa10",
+  "name": "UI_Briefing_AddPinnedMessage"
+ },
+ {
+  "address": "0x54b1b0",
+  "name": "UI_BriefingList_Save"
+ },
+ {
+  "address": "0x54b230",
+  "name": "UI_BriefingList_Load"
+ },
+ {
+  "address": "0x54cfd6",
+  "name": "CRT_Filebuf_Sync"
+ },
+ {
+  "address": "0x54e0cc",
+  "name": "CRT_Atoi"
+ },
+ {
+  "address": "0x54ec7f",
+  "name": "CRT_FtellLocked"
+ },
+ {
+  "address": "0x54ee99",
+  "name": "CRT_Strlwr"
+ },
+ {
+  "address": "0x54f0d5",
+  "name": "CRT_Srand"
+ },
+ {
+  "address": "0x54f3a4",
+  "name": "CRT_LockExit"
+ },
+ {
+  "address": "0x54f3d0",
+  "name": "CRT_FindFirst"
+ },
+ {
+  "address": "0x54f49d",
+  "name": "CRT_FindNext"
+ },
+ {
+  "address": "0x54f565",
+  "name": "CRT_FindClose"
+ },
+ {
+  "address": "0x54f5e9",
+  "name": "CRT_Unlink"
+ },
+ {
+  "address": "0x54f918",
+  "name": "CRT_Tolower_L"
+ },
+ {
+  "address": "0x54fa52",
+  "name": "CRT_Toupper_L"
+ },
+ {
+  "address": "0x54fb56",
+  "name": "CRT_Fwrite"
+ },
+ {
+  "address": "0x54fc60",
+  "name": "CRT_Fputc"
+ },
+ {
+  "address": "0x54fe01",
+  "name": "CRT_AmsgExit"
+ },
+ {
+  "address": "0x54fe25",
+  "name": "CRT_TypeInfoDtor"
+ },
+ {
+  "address": "0x54ffd0",
+  "name": "CRT_WriteCore"
+ },
+ {
+  "address": "0x5501c0",
+  "name": "CRT_ReadCore"
+ },
+ {
+  "address": "0x55062d",
+  "name": "CRT_Isspace_L"
+ },
+ {
+  "address": "0x5508a6",
+  "name": "CRT_LockFile2"
+ },
+ {
+  "address": "0x550c6a",
+  "name": "CRT_SetMode"
+ },
+ {
+  "address": "0x5518db",
+  "name": "CRT_WriteMultiChar"
+ },
+ {
+  "address": "0x55190c",
+  "name": "CRT_WriteString"
+ },
+ {
+  "address": "0x551e0e",
+  "name": "CRT_Realloc"
+ },
+ {
+  "address": "0x551f46",
+  "name": "CRT_Msize"
+ },
+ {
+  "address": "0x551fc9",
+  "name": "CRT_HeapAlloc"
+ },
+ {
+  "address": "0x5520cf",
+  "name": "CRT_ReleaseStreamBuffer"
+ },
+ {
+  "address": "0x5523ff",
+  "name": "CRT_FreeThreadData"
+ },
+ {
+  "address": "0x498100",
+  "name": "CityCompanyList_Load"
+ },
+ {
+  "address": "0x498130",
+  "name": "CityCompanyList_Save"
+ },
+ {
+  "address": "0x499570",
+  "name": "IngredientPanel_Load"
+ },
+ {
+  "address": "0x499590",
+  "name": "IngredientPanel_Save"
+ },
+ {
+  "address": "0x49acd0",
+  "name": "AdvertisingPanel_Load"
+ },
+ {
+  "address": "0x49ad00",
+  "name": "AdvertisingPanel_Save"
+ },
+ {
+  "address": "0x49b460",
+  "name": "CompanyMarketShare_Load"
+ },
+ {
+  "address": "0x49b490",
+  "name": "CompanyMarketShare_Save"
+ },
+ {
+  "address": "0x4aa6c0",
+  "name": "StatisticsBalance_Load"
+ },
+ {
+  "address": "0x4aa700",
+  "name": "StatisticsBalance_Save"
+ },
+ {
+  "address": "0x4ac3c0",
+  "name": "StatisticsBranchBalance_Load"
+ },
+ {
+  "address": "0x4ac400",
+  "name": "StatisticsBranchBalance_Save"
+ },
+ {
+  "address": "0x4b0d40",
+  "name": "Personnel_Load"
+ },
+ {
+  "address": "0x4b0d60",
+  "name": "Personnel_Save"
+ },
+ {
+  "address": "0x4b3ca0",
+  "name": "CompanyOverview_Load"
+ },
+ {
+  "address": "0x4b3ce0",
+  "name": "CompanyOverview_Save"
+ },
+ {
+  "address": "0x4c0d40",
+  "name": "WarehouseProduct_Load"
+ },
+ {
+  "address": "0x4c0d60",
+  "name": "WarehouseProduct_Save"
+ },
+ {
+  "address": "0x49b880",
+  "name": "SaveMenu_MenuFileExists"
+ },
+ {
+  "address": "0x4a19e0",
+  "name": "File_Exists"
+ },
+ {
+  "address": "0x50f6b0",
+  "name": "GamePlan_SaveRecord"
+ },
+ {
+  "address": "0x50f750",
+  "name": "GamePlan_LoadRecord"
+ },
+ {
+  "address": "0x511e60",
+  "name": "Recipe_CollectCategoryCandidates"
+ },
+ {
+  "address": "0x512f10",
+  "name": "Recipe_RecomputeLayoutQuality"
+ },
+ {
+  "address": "0x513d50",
+  "name": "Storage_LoadRecord"
+ },
+ {
+  "address": "0x513e50",
+  "name": "Storage_SaveRecord"
+ },
+ {
+  "address": "0x514330",
+  "name": "Storage_ProduceBatch"
+ },
+ {
+  "address": "0x520e80",
+  "name": "Dialog_WriteChildRecord"
+ },
+ {
+  "address": "0x522e60",
+  "name": "Atexit_RegisterListCritSectDtor"
+ },
+ {
+  "address": "0x5273c0",
+  "name": "SpriteCache_MakeKey"
+ },
+ {
+  "address": "0x528570",
+  "name": "ContextMenu_Construct"
+ },
+ {
+  "address": "0x52a440",
+  "name": "UI_Bar_BuildGradientFill"
+ },
+ {
+  "address": "0x52e4b0",
+  "name": "Tooltip_Construct"
+ },
+ {
+  "address": "0x52ee10",
+  "name": "Dialog_InitBase"
+ },
+ {
+  "address": "0x5324c0",
+  "name": "UI_Group_RemoveAt"
+ },
+ {
+  "address": "0x532520",
+  "name": "UI_Group_ClearAll"
+ },
+ {
+  "address": "0x532bc0",
+  "name": "Atexit_RegisterAnimSwapCritSectDtor"
+ },
+ {
+  "address": "0x532c00",
+  "name": "Atexit_RegisterAnimCritSectDtor"
+ },
+ {
+  "address": "0x535180",
+  "name": "Font_Load"
+ },
+ {
+  "address": "0x535e20",
+  "name": "Palette_WriteToStream"
+ },
+ {
+  "address": "0x4eab00",
+  "name": "World_LoadNameIndexTable"
+ },
+ {
+  "address": "0x4eab80",
+  "name": "World_FindNameIndex"
+ },
+ {
+  "address": "0x4ec4f0",
+  "name": "IsoMap_Save"
+ },
+ {
+  "address": "0x4ecb30",
+  "name": "MapSprite_Save"
+ },
+ {
+  "address": "0x4f2e50",
+  "name": "IsoMap_MarkPlayerFootprints"
+ },
+ {
+  "address": "0x4f4400",
+  "name": "IsoMap_RenderViewport"
+ },
+ {
+  "address": "0x4f5310",
+  "name": "AI_ChooseWalkTarget"
+ },
+ {
+  "address": "0x4f5e50",
+  "name": "Player_MissionState_Load"
+ },
+ {
+  "address": "0x4f5ee0",
+  "name": "Player_MissionState_Save"
+ },
+ {
+  "address": "0x4f6dd0",
+  "name": "AI_CompanySlots_Load"
+ },
+ {
+  "address": "0x4f6e20",
+  "name": "AI_CompanySlots_Save"
+ },
+ {
+  "address": "0x4f8240",
+  "name": "AI_FindBestBranchSite"
+ },
+ {
+  "address": "0x4f8510",
+  "name": "AI_FindBranchPlotNearOwn"
+ },
+ {
+  "address": "0x4f8710",
+  "name": "AI_PickInitialBranchPlot"
+ },
+ {
+  "address": "0x4f88c0",
+  "name": "AI_FindCheapestShop"
+ },
+ {
+  "address": "0x4f89d0",
+  "name": "AI_FindNearestHouse"
+ },
+ {
+  "address": "0x501a40",
+  "name": "Player_Event_Save"
+ },
+ {
+  "address": "0x501a70",
+  "name": "Player_Event_Load"
+ },
+ {
+  "address": "0x501b80",
+  "name": "Player_AIState_Load"
+ },
+ {
+  "address": "0x501cb0",
+  "name": "Player_AIState_Save"
+ },
+ {
+  "address": "0x4cb3a0",
+  "name": "MissionMap_RegisterCleanup"
+ },
+ {
+  "address": "0x4d1ba0",
+  "name": "RecipeTopping_Save"
+ },
+ {
+  "address": "0x4d1c20",
+  "name": "RecipeTopping_Load"
+ },
+ {
+  "address": "0x4d3a50",
+  "name": "Character_Load"
+ },
+ {
+  "address": "0x4d3ba0",
+  "name": "Character_Save"
+ },
+ {
+  "address": "0x4d5940",
+  "name": "Map_BuildOccupiedCellList"
+ },
+ {
+  "address": "0x4d8650",
+  "name": "City_InitOfferSlots"
+ },
+ {
+  "address": "0x4dcd00",
+  "name": "Person_RefreshShopChoices"
+ },
+ {
+  "address": "0x4dd4f0",
+  "name": "GameCalendar_Save"
+ },
+ {
+  "address": "0x4dd590",
+  "name": "GameCalendar_Load"
+ },
+ {
+  "address": "0x4ddd60",
+  "name": "Company_RemoveRecipe"
+ },
+ {
+  "address": "0x4decf0",
+  "name": "Stats_Report_FillCompanyOverview"
+ },
+ {
+  "address": "0x4e3460",
+  "name": "Recipe_SetOnMenu"
+ },
+ {
+  "address": "0x4e43f0",
+  "name": "BuildingValue_Save"
+ },
+ {
+  "address": "0x4e4440",
+  "name": "BuildingValue_Load"
+ },
+ {
+  "address": "0x4e5e30",
+  "name": "ConstructionOrder_Save"
+ },
+ {
+  "address": "0x4e5eb0",
+  "name": "ConstructionOrder_Load"
+ },
+ {
+  "address": "0x4e6420",
+  "name": "Filename_ToUpperStripExt"
+ },
+ {
+  "address": "0x4ea230",
+  "name": "Game_ResizeZoomSurfaces"
+ },
+ {
+  "address": "0x4eaaa0",
+  "name": "Game_SaveTileNameTable"
+ },
+ {
+  "address": "0x401190",
+  "name": "StatsPeriodReport_Load"
+ },
+ {
+  "address": "0x401200",
+  "name": "StatsPeriodReport_Save"
+ },
+ {
+  "address": "0x401380",
+  "name": "CRT_RegisterListLockCleanup"
+ },
+ {
+  "address": "0x403510",
+  "name": "Debug_WarningMessageBox"
+ },
+ {
+  "address": "0x403960",
+  "name": "File_ReadHeaderDwords"
+ },
+ {
+  "address": "0x403d70",
+  "name": "CRT_RegisterMissionListCleanup"
+ },
+ {
+  "address": "0x477b80",
+  "name": "Branch_ClearAssignedEmployee"
+ },
+ {
+  "address": "0x477bd0",
+  "name": "Branch_SetAssignedEmployee"
+ },
+ {
+  "address": "0x47d340",
+  "name": "Branch_ComputeWorkDuration"
+ },
+ {
+  "address": "0x47ea30",
+  "name": "Branch_UpdateConstructionQueue"
+ },
+ {
+  "address": "0x47fd90",
+  "name": "Branch_GetBuildingValue"
+ },
+ {
+  "address": "0x481140",
+  "name": "Branch_GetCachedBillboards"
+ },
+ {
+  "address": "0x48c6d0",
+  "name": "Game_RedirectPersonDestination"
+ },
+ {
+  "address": "0x4900a0",
+  "name": "BranchMenu_Category_Load"
+ },
+ {
+  "address": "0x4900c0",
+  "name": "BranchMenu_Category_Save"
+ },
+ {
+  "address": "0x4919b0",
+  "name": "BranchStats_SeriesFlags_Load"
+ },
+ {
+  "address": "0x4919d0",
+  "name": "BranchStats_SeriesFlags_Save"
+ },
+ {
+  "address": "0x492230",
+  "name": "BranchDesign_ColorIndex_Load"
+ },
+ {
+  "address": "0x492250",
+  "name": "BranchDesign_ColorIndex_Save"
+ },
+ {
+  "address": "0x495500",
+  "name": "Game_RebuildObjectTypeLists"
+ }
+]

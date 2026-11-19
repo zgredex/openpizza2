@@ -1,0 +1,184 @@
+{
+  "seed": 1,
+  "city": "Berlin",
+  "day": 360,
+  "year": 2,
+  "quarter": 1,
+  "companies": [
+    {
+      "name": "Player Pizza",
+      "cash": 374611.38,
+      "market_share": 0.1971,
+      "ledger": {}
+    },
+    {
+      "name": "Rival Pizza",
+      "cash": 406494.55,
+      "market_share": 0.8029,
+      "ledger": {}
+    }
+  ],
+  "branches": [
+    {
+      "id": 0,
+      "company": "Player Pizza",
+      "served": 20541,
+      "lost": 0,
+      "revenue": 279562.25,
+      "costs": 7549.09,
+      "profit": 272013.16,
+      "ratings": [
+        52.0,
+        81.0,
+        75.0,
+        74.0,
+        99.0,
+        100,
+        88.0,
+        91.0
+      ]
+    },
+    {
+      "id": 1,
+      "company": "Rival Pizza",
+      "served": 20513,
+      "lost": 0,
+      "revenue": 243442.2,
+      "costs": 8182.48,
+      "profit": 235259.72,
+      "ratings": [
+        48.0,
+        76.0,
+        66.0,
+        67.0,
+        81.0,
+        85.0,
+        76.0,
+        79.0
+      ]
+    },
+    {
+      "id": 2,
+      "company": "Rival Pizza",
+      "served": 18167,
+      "lost": 227,
+      "revenue": 260159.52,
+      "costs": 6924.54,
+      "profit": 253234.98,
+      "ratings": [
+        48.0,
+        75.0,
+        67.0,
+        66.0,
+        86.0,
+        90.0,
+        77.0,
+        80.0
+      ]
+    },
+    {
+      "id": 3,
+      "company": "Rival Pizza",
+      "served": 15341,
+      "lost": 222,
+      "revenue": 219765.72,
+      "costs": 5849.97,
+      "profit": 213915.75,
+      "ratings": [
+        48.0,
+        75.0,
+        67.0,
+        66.0,
+        86.0,
+        90.0,
+        77.0,
+        80.0
+      ]
+    },
+    {
+      "id": 4,
+      "company": "Rival Pizza",
+      "served": 10932,
+      "lost": 224,
+      "revenue": 156674.52,
+      "costs": 4172.35,
+      "profit": 152502.17,
+      "ratings": [
+        48.0,
+        75.0,
+        67.0,
+        66.0,
+        86.0,
+        90.0,
+        77.0,
+        80.0
+      ]
+    }
+  ],
+  "quarters": [
+    {
+      "year": 1,
+      "quarter": 1,
+      "day": 90,
+      "customers": 4080,
+      "revenue": 175767.53,
+      "cash": {
+        "Player Pizza": 281170.67,
+        "Rival Pizza": 123307.31
+      },
+      "market_share": {
+        "Player Pizza": 0.3978,
+        "Rival Pizza": 0.6022
+      },
+      "avg_rating": 75.5
+    },
+    {
+      "year": 1,
+      "quarter": 2,
+      "day": 180,
+      "customers": 6176,
+      "revenue": 280887.98,
+      "cash": {
+        "Player Pizza": 312491.12,
+        "Rival Pizza": 154016.15
+      },
+      "market_share": {
+        "Player Pizza": 0.2495,
+        "Rival Pizza": 0.7505
+      },
+      "avg_rating": 75.12
+    },
+    {
+      "year": 1,
+      "quarter": 3,
+      "day": 270,
+      "customers": 7200,
+      "revenue": 353079.62,
+      "cash": {
+        "Player Pizza": 344373.72,
+        "Rival Pizza": 276044.64
+      },
+      "market_share": {
+        "Player Pizza": 0.2,
+        "Rival Pizza": 0.8
+      },
+      "avg_rating": 75.12
+    },
+    {
+      "year": 1,
+      "quarter": 4,
+      "day": 360,
+      "customers": 7200,
+      "revenue": 349869.08,
+      "cash": {
+        "Player Pizza": 374611.38,
+        "Rival Pizza": 406494.55
+      },
+      "market_share": {
+        "Player Pizza": 0.1971,
+        "Rival Pizza": 0.8029
+      },
+      "avg_rating": 75.12
+    }
+  ]
+}

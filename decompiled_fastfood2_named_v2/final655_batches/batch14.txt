@@ -1,0 +1,744 @@
+========================================================================================
+0x4240a0 layer=[4] indeg=1 bytes=18439
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x52fc00, Window_GadgetNotify_Slider_SetGradientColors, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_004240a0(int *param_1)
+{
+  int iVar1;
+  void *this;
+  undefined4 local_10;
+  undefined4 local_c;
+  undefined4 local_8;
+  undefined4 local_4;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_0049ef10);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x460,99,0x13b,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(this,0x461,99,0x13b,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(this,0x462,99,0x13b,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(this,0x463,99,0x13b,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(this,0x464,99,0x13b,s_BEWERTUNG__04_spr_00563fc8);
+  UI_AddSprite(this,0x465,99,0x13b,s_BEWERTUNG__05_spr_00563fb4);
+  UI_AddSprite(this,0x466,99,0x13b,s_BEWERTUNG__06_spr_00563fa0);
+  UI_AddSprite(this,0x467,99,0x13b,s_BEWERTUNG__07_spr_00563f8c);
+  UI_AddSprite(this,0x468,99,0x13b,s_BEWERTUNG__08_spr_00563f78);
+  UI_AddSprite(this,0x469,99,0x13b,s_BEWERTUNG__09_spr_00563f64);
+  UI_AddSprite(this,0x46a,99,0x13b,s_BEWERTUNG__10_spr_00563f50);
+  UI_AddSprite(this,0x46b,99,0x13b,s_BEWERTUNG__11_spr_00563f3c);
+  UI_AddSprite(this,0x46c,99,0x13b,s_BEWERTUNG__12_spr_00563f28);
+========================================================================================
+0x41a800 layer=[4] indeg=1 bytes=18345
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x52fc00, Window_GadgetNotify_Slider_SetGradientColors, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_0041a800(int *param_1)
+{
+  int iVar1;
+  void *this;
+  undefined4 local_10;
+  undefined4 local_c;
+  undefined4 local_8;
+  undefined4 local_4;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_00498f40);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x469,99,0x13b,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(this,0x46a,99,0x13b,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(this,0x46b,99,0x13b,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(this,0x46c,99,0x13b,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(this,0x46d,99,0x13b,s_BEWERTUNG__04_spr_00563fc8);
+  UI_AddSprite(this,0x46e,99,0x13b,s_BEWERTUNG__05_spr_00563fb4);
+  UI_AddSprite(this,0x46f,99,0x13b,s_BEWERTUNG__06_spr_00563fa0);
+  UI_AddSprite(this,0x470,99,0x13b,s_BEWERTUNG__07_spr_00563f8c);
+  UI_AddSprite(this,0x471,99,0x13b,s_BEWERTUNG__08_spr_00563f78);
+  UI_AddSprite(this,0x472,99,0x13b,s_BEWERTUNG__09_spr_00563f64);
+  UI_AddSprite(this,0x473,99,0x13b,s_BEWERTUNG__10_spr_00563f50);
+  UI_AddSprite(this,0x474,99,0x13b,s_BEWERTUNG__11_spr_00563f3c);
+  UI_AddSprite(this,0x475,99,0x13b,s_BEWERTUNG__12_spr_00563f28);
+========================================================================================
+0x417590 layer=[4] indeg=1 bytes=18147
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x52fc00, Window_GadgetNotify_Slider_SetGradientColors, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_00417590(int *param_1)
+{
+  int iVar1;
+  void *this;
+  undefined4 local_10;
+  undefined4 local_c;
+  undefined4 local_8;
+  undefined4 local_4;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_00496be0);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x461,99,0x13b,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(this,0x462,99,0x13b,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(this,0x463,99,0x13b,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(this,0x464,99,0x13b,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(this,0x465,99,0x13b,s_BEWERTUNG__04_spr_00563fc8);
+  UI_AddSprite(this,0x466,99,0x13b,s_BEWERTUNG__05_spr_00563fb4);
+  UI_AddSprite(this,0x467,99,0x13b,s_BEWERTUNG__06_spr_00563fa0);
+  UI_AddSprite(this,0x468,99,0x13b,s_BEWERTUNG__07_spr_00563f8c);
+  UI_AddSprite(this,0x469,99,0x13b,s_BEWERTUNG__08_spr_00563f78);
+  UI_AddSprite(this,0x46a,99,0x13b,s_BEWERTUNG__09_spr_00563f64);
+  UI_AddSprite(this,0x46b,99,0x13b,s_BEWERTUNG__10_spr_00563f50);
+  UI_AddSprite(this,0x46c,99,0x13b,s_BEWERTUNG__11_spr_00563f3c);
+  UI_AddSprite(this,0x46d,99,0x13b,s_BEWERTUNG__12_spr_00563f28);
+========================================================================================
+0x459300 layer=[4] indeg=1 bytes=18114
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x52fc00, Window_GadgetNotify_Slider_SetGradientColors, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_00459300(int *param_1)
+{
+  int iVar1;
+  void *this;
+  undefined4 local_10;
+  undefined4 local_c;
+  undefined4 local_8;
+  undefined4 local_4;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_004c0b80);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x408,0x27,0x129,s_TRENNZEILE_spr_00563eb8);
+  iVar1 = UI_AddText(this,0x45d,0x41,0x3f,s_VERDANA8_fnt_00563e98,DAT_00582e28);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x45d,0);
+    FUN_0052f9d0(this,0x45d,2,0x98,0,0);
+  }
+  iVar1 = UI_AddText(this,0x45e,0x41,0x5b,s_VERDANA8_fnt_00563e98,DAT_00580b80);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x45e,0);
+    FUN_0052f9d0(this,0x45e,2,0x98,0,0);
+  }
+  iVar1 = UI_AddText(this,0x465,0x2c,5,s_TIMESFONT_fnt_00563ea8,DAT_00582de0);
+  if (iVar1 != 0) {
+========================================================================================
+0x41ed20 layer=[4] indeg=1 bytes=17987
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x52fc00, Window_GadgetNotify_Slider_SetGradientColors, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_0041ed20(int *param_1)
+{
+  int iVar1;
+  void *this;
+  undefined4 local_10;
+  undefined4 local_c;
+  undefined4 local_8;
+  undefined4 local_4;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_0049c670);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x46e,99,0x13b,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(this,0x46f,99,0x13b,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(this,0x470,99,0x13b,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(this,0x471,99,0x13b,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(this,0x472,99,0x13b,s_BEWERTUNG__04_spr_00563fc8);
+  UI_AddSprite(this,0x473,99,0x13b,s_BEWERTUNG__05_spr_00563fb4);
+  UI_AddSprite(this,0x474,99,0x13b,s_BEWERTUNG__06_spr_00563fa0);
+  UI_AddSprite(this,0x475,99,0x13b,s_BEWERTUNG__07_spr_00563f8c);
+  UI_AddSprite(this,0x476,99,0x13b,s_BEWERTUNG__08_spr_00563f78);
+  UI_AddSprite(this,0x477,99,0x13b,s_BEWERTUNG__09_spr_00563f64);
+  UI_AddSprite(this,0x478,99,0x13b,s_BEWERTUNG__10_spr_00563f50);
+  UI_AddSprite(this,0x479,99,0x13b,s_BEWERTUNG__11_spr_00563f3c);
+  UI_AddSprite(this,0x47a,99,0x13b,s_BEWERTUNG__12_spr_00563f28);
+========================================================================================
+0x461b20 layer=[4] indeg=1 bytes=17960
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x52fc00, Window_GadgetNotify_Slider_SetGradientColors, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_00461b20(int *param_1)
+{
+  int iVar1;
+  void *this;
+  undefined4 local_10;
+  undefined4 local_c;
+  undefined4 local_8;
+  undefined4 local_4;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_004c36f0);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x4d2,99,0x13b,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(this,0x4d3,99,0x13b,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(this,0x585,0x2f,0x83,s_MOEBELRAHMEN_spr_00566960);
+  UI_AddSprite(this,0x4d4,99,0x13b,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(this,0x4d5,99,0x13b,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(this,0x4d6,99,0x13b,s_BEWERTUNG__04_spr_00563fc8);
+  UI_AddSprite(this,0x4d7,99,0x13b,s_BEWERTUNG__05_spr_00563fb4);
+  UI_AddSprite(this,0x4d8,99,0x13b,s_BEWERTUNG__06_spr_00563fa0);
+  UI_AddSprite(this,0x4d9,99,0x13b,s_BEWERTUNG__07_spr_00563f8c);
+  UI_AddSprite(this,0x4da,99,0x13b,s_BEWERTUNG__08_spr_00563f78);
+  UI_AddSprite(this,0x4db,99,0x13b,s_BEWERTUNG__09_spr_00563f64);
+  UI_AddSprite(this,0x4dc,99,0x13b,s_BEWERTUNG__10_spr_00563f50);
+  UI_AddSprite(this,0x4dd,99,0x13b,s_BEWERTUNG__11_spr_00563f3c);
+========================================================================================
+0x45ebd0 layer=[4] indeg=1 bytes=17416
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x52fc00, Window_GadgetNotify_Slider_SetGradientColors, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_0045ebd0(int *param_1)
+{
+  int iVar1;
+  void *this;
+  undefined4 local_10;
+  undefined4 local_c;
+  undefined4 local_8;
+  undefined4 local_4;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_004c29b0);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x408,0x27,0x129,s_TRENNZEILE_spr_00563eb8);
+  iVar1 = UI_AddText(this,0x454,0x27,0x130,s_VERDANA7_fnt_00563ec8,DAT_00580bec);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x454,0);
+    FUN_0052f9d0(this,0x454,2,0x32,0,0);
+  }
+  iVar1 = UI_AddText(this,0x455,0x58,0x130,s_VERDANA7_fnt_00563ec8,DAT_005816d4);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x455,0);
+    FUN_0052f9d0(this,0x455,2,0x32,0,0);
+  }
+  iVar1 = UI_AddText(this,0x456,0x8a,0x130,s_VERDANA7_fnt_00563ec8,DAT_00582974);
+  if (iVar1 != 0) {
+========================================================================================
+0x40daa0 layer=[4] indeg=1 bytes=17212
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x531850, 0x531c60
+ provider-specific; not original source
+void * __cdecl FUN_0040daa0(int *param_1)
+{
+  int iVar1;
+  void *this;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_00490e90);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddImage(this,0x596,0x5b,0x44,s_ZUTABPB__00_spr_00564180,1,0);
+  UI_AddImage(this,0x597,0x8b,0x44,s_ZUTABPB__00_spr_00564180,1,0);
+  UI_AddImage(this,0x598,0xbb,0x44,s_ZUTABPB__00_spr_00564180,1,0);
+  UI_AddImage(this,0x599,0x5b,0x6a,s_ZUTABPB__00_spr_00564180,1,0);
+  UI_AddImage(this,0x59a,0x8b,0x6a,s_ZUTABPB__00_spr_00564180,1,0);
+  UI_AddImage(this,0x59b,0xbb,0x6a,s_ZUTABPB__00_spr_00564180,1,0);
+  UI_AddImage(this,0x59c,0x5b,0x90,s_ZUTABPB__00_spr_00564180,1,0);
+  UI_AddImage(this,0x59d,0x8b,0x90,s_ZUTABPB__00_spr_00564180,1,0);
+  UI_AddImage(this,0x59e,0xbb,0x90,s_ZUTABPB__00_spr_00564180,1,0);
+  UI_AddImage(this,0x59f,0x5b,0xb6,s_ZUTABPB__00_spr_00564180,1,0);
+  UI_AddImage(this,0x5a0,0x8b,0xb6,s_ZUTABPB__00_spr_00564180,1,0);
+  UI_AddImage(this,0x5a1,0xbb,0xb6,s_ZUTABPB__00_spr_00564180,1,0);
+  UI_AddSprite(this,0x4d2,99,0x13b,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(this,0x4d3,99,0x13b,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(this,0x4d4,99,0x13b,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(this,0x4d5,99,0x13b,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(this,0x4d6,99,0x13b,s_BEWERTUNG__04_spr_00563fc8);
+========================================================================================
+0x45aad0 layer=[4] indeg=1 bytes=17107
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x52fc00, Window_GadgetNotify_Slider_SetGradientColors, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_0045aad0(int *param_1)
+{
+  int iVar1;
+  void *this;
+  undefined4 local_10;
+  undefined4 local_c;
+  undefined4 local_8;
+  undefined4 local_4;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_004c1060);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x408,0x27,0x129,s_TRENNZEILE_spr_00563eb8);
+  iVar1 = UI_AddText(this,0x454,0x27,0x130,s_VERDANA7_fnt_00563ec8,DAT_00580bec);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x454,0);
+    FUN_0052f9d0(this,0x454,2,0x32,0,0);
+  }
+  iVar1 = UI_AddText(this,0x455,0x58,0x130,s_VERDANA7_fnt_00563ec8,DAT_005816d4);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x455,0);
+    FUN_0052f9d0(this,0x455,2,0x32,0,0);
+  }
+  iVar1 = UI_AddText(this,0x456,0x8a,0x130,s_VERDANA7_fnt_00563ec8,DAT_00582974);
+  if (iVar1 != 0) {
+========================================================================================
+0x41c000 layer=[4] indeg=1 bytes=16741
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x52fc00, Window_GadgetNotify_Slider_SetGradientColors, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_0041c000(int *param_1)
+{
+  int iVar1;
+  void *this;
+  undefined4 local_10;
+  undefined4 local_c;
+  undefined4 local_8;
+  undefined4 local_4;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_0049a1c0);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x458,99,0x13b,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(this,0x459,99,0x13b,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(this,0x45a,99,0x13b,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(this,0x45b,99,0x13b,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(this,0x45c,99,0x13b,s_BEWERTUNG__04_spr_00563fc8);
+  UI_AddSprite(this,0x45d,99,0x13b,s_BEWERTUNG__05_spr_00563fb4);
+  UI_AddSprite(this,0x45e,99,0x13b,s_BEWERTUNG__06_spr_00563fa0);
+  UI_AddSprite(this,0x45f,99,0x13b,s_BEWERTUNG__07_spr_00563f8c);
+  UI_AddSprite(this,0x460,99,0x13b,s_BEWERTUNG__08_spr_00563f78);
+  UI_AddSprite(this,0x461,99,0x13b,s_BEWERTUNG__09_spr_00563f64);
+  UI_AddSprite(this,0x462,99,0x13b,s_BEWERTUNG__10_spr_00563f50);
+  UI_AddSprite(this,0x463,99,0x13b,s_BEWERTUNG__11_spr_00563f3c);
+  UI_AddSprite(this,0x464,99,0x13b,s_BEWERTUNG__12_spr_00563f28);
+========================================================================================
+0x418d60 layer=[4] indeg=1 bytes=16364
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x52fc00, Window_GadgetNotify_Slider_SetGradientColors, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_00418d60(int *param_1)
+{
+  int iVar1;
+  void *this;
+  undefined4 local_10;
+  undefined4 local_c;
+  undefined4 local_8;
+  undefined4 local_4;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_00497410);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x492,99,0x13b,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(this,0x493,99,0x13b,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(this,0x494,99,0x13b,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(this,0x495,99,0x13b,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(this,0x496,99,0x13b,s_BEWERTUNG__04_spr_00563fc8);
+  UI_AddSprite(this,0x497,99,0x13b,s_BEWERTUNG__05_spr_00563fb4);
+  UI_AddSprite(this,0x498,99,0x13b,s_BEWERTUNG__06_spr_00563fa0);
+  UI_AddSprite(this,0x499,99,0x13b,s_BEWERTUNG__07_spr_00563f8c);
+  UI_AddSprite(this,0x49a,99,0x13b,s_BEWERTUNG__08_spr_00563f78);
+  UI_AddSprite(this,0x49b,99,0x13b,s_BEWERTUNG__09_spr_00563f64);
+  UI_AddSprite(this,0x49c,99,0x13b,s_BEWERTUNG__10_spr_00563f50);
+  UI_AddSprite(this,0x49d,99,0x13b,s_BEWERTUNG__11_spr_00563f3c);
+  UI_AddSprite(this,0x49e,99,0x13b,s_BEWERTUNG__12_spr_00563f28);
+========================================================================================
+0x421380 layer=[4] indeg=1 bytes=16252
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x52fc00, Window_GadgetNotify_Slider_SetGradientColors, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_00421380(int *param_1)
+{
+  int iVar1;
+  void *this;
+  undefined4 local_10;
+  undefined4 local_c;
+  undefined4 local_8;
+  undefined4 local_4;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_0049dc60);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x458,99,0x13b,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(this,0x459,99,0x13b,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(this,0x45a,99,0x13b,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(this,0x45b,99,0x13b,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(this,0x45c,99,0x13b,s_BEWERTUNG__04_spr_00563fc8);
+  UI_AddSprite(this,0x45d,99,0x13b,s_BEWERTUNG__05_spr_00563fb4);
+  UI_AddSprite(this,0x45e,99,0x13b,s_BEWERTUNG__06_spr_00563fa0);
+  UI_AddSprite(this,0x45f,99,0x13b,s_BEWERTUNG__07_spr_00563f8c);
+  UI_AddSprite(this,0x460,99,0x13b,s_BEWERTUNG__08_spr_00563f78);
+  UI_AddSprite(this,0x461,99,0x13b,s_BEWERTUNG__09_spr_00563f64);
+  UI_AddSprite(this,0x462,99,0x13b,s_BEWERTUNG__10_spr_00563f50);
+  UI_AddSprite(this,0x463,99,0x13b,s_BEWERTUNG__11_spr_00563f3c);
+  UI_AddSprite(this,0x464,99,0x13b,s_BEWERTUNG__12_spr_00563f28);
+========================================================================================
+0x466b10 layer=[4] indeg=1 bytes=16119
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_00466b10(int *param_1)
+{
+  int iVar1;
+  void *this;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_004c4ad0);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x427,99,0x13b,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(this,0x428,99,0x13b,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(this,0x429,99,0x13b,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(this,0x42a,99,0x13b,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(this,0x42b,99,0x13b,s_BEWERTUNG__04_spr_00563fc8);
+  UI_AddSprite(this,0x42c,99,0x13b,s_BEWERTUNG__05_spr_00563fb4);
+  UI_AddSprite(this,0x42d,99,0x13b,s_BEWERTUNG__06_spr_00563fa0);
+  UI_AddSprite(this,0x42e,99,0x13b,s_BEWERTUNG__07_spr_00563f8c);
+  UI_AddSprite(this,0x42f,99,0x13b,s_BEWERTUNG__08_spr_00563f78);
+  UI_AddSprite(this,0x430,99,0x13b,s_BEWERTUNG__09_spr_00563f64);
+  UI_AddSprite(this,0x431,99,0x13b,s_BEWERTUNG__10_spr_00563f50);
+  UI_AddSprite(this,0x432,99,0x13b,s_BEWERTUNG__11_spr_00563f3c);
+  UI_AddSprite(this,0x433,99,0x13b,s_BEWERTUNG__12_spr_00563f28);
+  UI_AddSprite(this,0x434,99,0x13b,s_BEWERTUNG__13_spr_00563f14);
+  UI_AddSprite(this,0x435,99,0x13b,s_BEWERTUNG__14_spr_00563f00);
+  UI_AddSprite(this,0x436,99,0x13b,s_BEWERTUNG__15_spr_00563eec);
+  UI_AddSprite(this,0x437,99,0x13b,s_BEWERTUNG__16_spr_00563ed8);
+========================================================================================
+0x40f1d0 layer=[4] indeg=1 bytes=15967
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x531850, 0x531c60
+ provider-specific; not original source
+void * __cdecl FUN_0040f1d0(int *param_1)
+{
+  int iVar1;
+  void *this;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_00491ef0);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x45b,99,0x13b,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(this,0x45c,99,0x13b,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(this,0x45d,99,0x13b,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(this,0x45e,99,0x13b,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(this,0x45f,99,0x13b,s_BEWERTUNG__04_spr_00563fc8);
+  UI_AddSprite(this,0x460,99,0x13b,s_BEWERTUNG__05_spr_00563fb4);
+  UI_AddSprite(this,0x461,99,0x13b,s_BEWERTUNG__06_spr_00563fa0);
+  UI_AddSprite(this,0x462,99,0x13b,s_BEWERTUNG__07_spr_00563f8c);
+  UI_AddSprite(this,0x463,99,0x13b,s_BEWERTUNG__08_spr_00563f78);
+  UI_AddSprite(this,0x464,99,0x13b,s_BEWERTUNG__09_spr_00563f64);
+  UI_AddSprite(this,0x465,99,0x13b,s_BEWERTUNG__10_spr_00563f50);
+  UI_AddSprite(this,0x466,99,0x13b,s_BEWERTUNG__11_spr_00563f3c);
+  UI_AddSprite(this,0x467,99,0x13b,s_BEWERTUNG__12_spr_00563f28);
+  UI_AddSprite(this,0x468,99,0x13b,s_BEWERTUNG__13_spr_00563f14);
+  UI_AddSprite(this,0x469,99,0x13b,s_BEWERTUNG__14_spr_00563f00);
+  UI_AddSprite(this,0x46a,99,0x13b,s_BEWERTUNG__15_spr_00563eec);
+  UI_AddSprite(this,0x46b,99,0x13b,s_BEWERTUNG__16_spr_00563ed8);
+========================================================================================
+0x4508a0 layer=[4] indeg=1 bytes=15851
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x531850, 0x531c60
+ provider-specific; not original source
+void * __cdecl FUN_004508a0(int *param_1)
+{
+  int iVar1;
+  void *this;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_004bc190);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x408,0x27,0x129,s_TRENNZEILE_spr_00563eb8);
+  UI_AddSprite(this,0x537,99,0x13b,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(this,0x538,99,0x13b,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(this,0x539,99,0x13b,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(this,0x53a,99,0x13b,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(this,0x53b,99,0x13b,s_BEWERTUNG__04_spr_00563fc8);
+  UI_AddSprite(this,0x53c,99,0x13b,s_BEWERTUNG__05_spr_00563fb4);
+  UI_AddSprite(this,0x53d,99,0x13b,s_BEWERTUNG__06_spr_00563fa0);
+  UI_AddSprite(this,0x53e,99,0x13b,s_BEWERTUNG__07_spr_00563f8c);
+  UI_AddSprite(this,0x53f,99,0x13b,s_BEWERTUNG__08_spr_00563f78);
+  UI_AddSprite(this,0x540,99,0x13b,s_BEWERTUNG__09_spr_00563f64);
+  UI_AddSprite(this,0x541,99,0x13b,s_BEWERTUNG__10_spr_00563f50);
+  UI_AddSprite(this,0x542,99,0x13b,s_BEWERTUNG__11_spr_00563f3c);
+  UI_AddSprite(this,0x543,99,0x13b,s_BEWERTUNG__12_spr_00563f28);
+  UI_AddSprite(this,0x544,99,0x13b,s_BEWERTUNG__13_spr_00563f14);
+  UI_AddSprite(this,0x545,99,0x13b,s_BEWERTUNG__14_spr_00563f00);
+  UI_AddSprite(this,0x546,99,0x13b,s_BEWERTUNG__15_spr_00563eec);
+========================================================================================
+0x465600 layer=[4] indeg=1 bytes=15804
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_00465600(int *param_1)
+{
+  int iVar1;
+  void *this;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_004c3c90);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x482,99,0x13b,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(this,0x483,99,0x13b,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(this,0x484,99,0x13b,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(this,0x485,99,0x13b,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(this,0x486,99,0x13b,s_BEWERTUNG__04_spr_00563fc8);
+  UI_AddSprite(this,0x487,99,0x13b,s_BEWERTUNG__05_spr_00563fb4);
+  UI_AddSprite(this,0x488,99,0x13b,s_BEWERTUNG__06_spr_00563fa0);
+  UI_AddSprite(this,0x489,99,0x13b,s_BEWERTUNG__07_spr_00563f8c);
+  UI_AddSprite(this,0x48a,99,0x13b,s_BEWERTUNG__08_spr_00563f78);
+  UI_AddSprite(this,0x48b,99,0x13b,s_BEWERTUNG__09_spr_00563f64);
+  UI_AddSprite(this,0x48c,99,0x13b,s_BEWERTUNG__10_spr_00563f50);
+  UI_AddSprite(this,0x48d,99,0x13b,s_BEWERTUNG__11_spr_00563f3c);
+  UI_AddSprite(this,0x48e,99,0x13b,s_BEWERTUNG__12_spr_00563f28);
+  UI_AddSprite(this,0x48f,99,0x13b,s_BEWERTUNG__13_spr_00563f14);
+  UI_AddSprite(this,0x490,99,0x13b,s_BEWERTUNG__14_spr_00563f00);
+  UI_AddSprite(this,0x491,99,0x13b,s_BEWERTUNG__15_spr_00563eec);
+  UI_AddSprite(this,0x492,99,0x13b,s_BEWERTUNG__16_spr_00563ed8);
+========================================================================================
+0x443ab0 layer=[4] indeg=1 bytes=15606
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_00443ab0(int *param_1)
+{
+  int iVar1;
+  void *this;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_004b6400);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  iVar1 = UI_AddText(this,0x429,0x2c,5,s_TIMESFONT_fnt_00563ea8,DAT_00582a14);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x429,0);
+    FUN_0052f9d0(this,0x429,2,0xbe,0,0);
+  }
+  UI_AddImage(this,8000,0xb,-1,s_HILFEBUTTONSNIP_00_spr_00563e4c,1,0);
+  iVar1 = FUN_0052f690(this,0x1f41,0x30,0x35,s_VERDANA8_fnt_00563e98,DAT_00581fbc,0,
+                       s_TEXTPB01__00_spr_00563e84);
+  if (iVar1 != 0) {
+    FUN_0052f750(this,0x1f41,0,0,0);
+    FUN_0052f7a0(this,0x1f41,2,0x54,0,0,0xfffe);
+  }
+  iVar1 = FUN_0052f690(this,0x1f42,0x8e,0x35,s_VERDANA8_fnt_00563e98,DAT_005818c4,0,
+                       s_TEXTPB01__00_spr_00563e84);
+  if (iVar1 != 0) {
+    FUN_0052f750(this,0x1f42,0,0,0);
+    FUN_0052f7a0(this,0x1f42,2,0x54,0,0,0xfffe);
+========================================================================================
+0x410740 layer=[4] indeg=1 bytes=15287
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x531850, 0x531c60
+ provider-specific; not original source
+void * __cdecl FUN_00410740(int *param_1)
+{
+  int iVar1;
+  void *this;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_00492480);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x46b,99,0x13b,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(this,0x46c,99,0x13b,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(this,0x46d,99,0x13b,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(this,0x46e,99,0x13b,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(this,0x46f,99,0x13b,s_BEWERTUNG__04_spr_00563fc8);
+  UI_AddSprite(this,0x470,99,0x13b,s_BEWERTUNG__05_spr_00563fb4);
+  UI_AddSprite(this,0x471,99,0x13b,s_BEWERTUNG__06_spr_00563fa0);
+  UI_AddSprite(this,0x472,99,0x13b,s_BEWERTUNG__07_spr_00563f8c);
+  UI_AddSprite(this,0x473,99,0x13b,s_BEWERTUNG__08_spr_00563f78);
+  UI_AddSprite(this,0x474,99,0x13b,s_BEWERTUNG__09_spr_00563f64);
+  UI_AddSprite(this,0x475,99,0x13b,s_BEWERTUNG__10_spr_00563f50);
+  UI_AddSprite(this,0x476,99,0x13b,s_BEWERTUNG__11_spr_00563f3c);
+  UI_AddSprite(this,0x477,99,0x13b,s_BEWERTUNG__12_spr_00563f28);
+  UI_AddSprite(this,0x478,99,0x13b,s_BEWERTUNG__13_spr_00563f14);
+  UI_AddSprite(this,0x479,99,0x13b,s_BEWERTUNG__14_spr_00563f00);
+  UI_AddSprite(this,0x47a,99,0x13b,s_BEWERTUNG__15_spr_00563eec);
+  UI_AddSprite(this,0x47b,99,0x13b,s_BEWERTUNG__16_spr_00563ed8);
+========================================================================================
+0x40bc50 layer=[4] indeg=1 bytes=14145
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_0040bc50(int *param_1)
+{
+  int iVar1;
+  void *this;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_0048f8b0);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x45b,99,0x13b,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(this,0x45c,99,0x13b,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(this,0x45d,99,0x13b,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(this,0x45e,99,0x13b,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(this,0x45f,99,0x13b,s_BEWERTUNG__04_spr_00563fc8);
+  UI_AddSprite(this,0x460,99,0x13b,s_BEWERTUNG__05_spr_00563fb4);
+  UI_AddSprite(this,0x461,99,0x13b,s_BEWERTUNG__06_spr_00563fa0);
+  UI_AddSprite(this,0x462,99,0x13b,s_BEWERTUNG__07_spr_00563f8c);
+  UI_AddSprite(this,0x463,99,0x13b,s_BEWERTUNG__08_spr_00563f78);
+  UI_AddSprite(this,0x464,99,0x13b,s_BEWERTUNG__09_spr_00563f64);
+  UI_AddSprite(this,0x465,99,0x13b,s_BEWERTUNG__10_spr_00563f50);
+  UI_AddSprite(this,0x466,99,0x13b,s_BEWERTUNG__11_spr_00563f3c);
+  UI_AddSprite(this,0x467,99,0x13b,s_BEWERTUNG__12_spr_00563f28);
+  UI_AddSprite(this,0x468,99,0x13b,s_BEWERTUNG__13_spr_00563f14);
+  UI_AddSprite(this,0x469,99,0x13b,s_BEWERTUNG__14_spr_00563f00);
+  UI_AddSprite(this,0x46a,99,0x13b,s_BEWERTUNG__15_spr_00563eec);
+  UI_AddSprite(this,0x46b,99,0x13b,s_BEWERTUNG__16_spr_00563ed8);
+========================================================================================
+0x456f70 layer=[4] indeg=1 bytes=13763
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x531850, 0x531c60
+ provider-specific; not original source
+void * __cdecl FUN_00456f70(int *param_1)
+{
+  int iVar1;
+  void *this;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_004bf6a0);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x429,0x37,0x86,s_RAHMEN01_spr_00566790);
+  UI_AddSprite(this,0x42a,0x3b,0xad,s_RAHMEN02_spr_00566780);
+  UI_AddSprite(this,0x408,0x27,0x129,s_TRENNZEILE_spr_00563eb8);
+  iVar1 = UI_AddText(this,0x43b,0x2c,5,s_TIMESFONT_fnt_00563ea8,DAT_00582938);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x43b,0);
+    FUN_0052f9d0(this,0x43b,2,0xbe,0,0);
+  }
+  iVar1 = UI_AddText(this,0x43c,0x38,0x79,s_VERDANA8_fnt_00563e98,DAT_00581094);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x43c,0);
+    FUN_0052f9d0(this,0x43c,0,100,0,0);
+  }
+  UI_AddImage(this,8000,0xb,-1,s_HILFEBUTTONSNIP_00_spr_00563e4c,1,0);
+  UI_AddSprite(this,0x1f41,0x27,0x10b,s_TRENNZEILE_spr_00563eb8);
+  iVar1 = UI_AddText(this,0x1f42,0x30,0x111,s_VERDANA7_fnt_00563ec8,DAT_005819f0);
+  if (iVar1 != 0) {
+========================================================================================
+0x4281e0 layer=[4] indeg=1 bytes=13042
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_004281e0(int *param_1)
+{
+  int iVar1;
+  void *this;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_004a3720);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x45f,0x27,0xf2,s_TRENNZEILE_spr_00563eb8);
+  iVar1 = UI_AddText(this,0x472,0x2a,5,s_TIMESFONT_fnt_00563ea8,DAT_00581850);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x472,0);
+    FUN_0052f9d0(this,0x472,2,0xbe,0,0);
+  }
+  iVar1 = UI_AddText(this,0x476,0x2f,0x82,s_VERDANA10_fnt_00563e64,DAT_005822d0);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x476,0);
+    FUN_0052f9d0(this,0x476,0,0x46,0,0);
+  }
+  UI_AddImage(this,8000,0xb,-1,s_HILFEBUTTONSNIP_00_spr_00563e4c,1,0);
+  UI_AddSprite(this,0x1f43,0x27,0x79,s_TRENNZEILE_spr_00563eb8);
+  UI_AddSprite(this,0x1f4b,0x27,0x12a,s_TRENNZEILE_spr_00563eb8);
+  iVar1 = UI_AddText(this,0x1f4e,0x2f,0x24,s_VERDANA10_fnt_00563e64,DAT_00581664);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x1f4e,0);
+========================================================================================
+0x453ec0 layer=[4] indeg=1 bytes=12564
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x531850, 0x531c60
+ provider-specific; not original source
+void * __cdecl FUN_00453ec0(int *param_1)
+{
+  int iVar1;
+  void *this;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_004bde20);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x408,0x27,0x129,s_TRENNZEILE_spr_00563eb8);
+  iVar1 = UI_AddText(this,0x501,0x2b,5,s_TIMESFONT_fnt_00563ea8,DAT_00582be0);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x501,0);
+    FUN_0052f9d0(this,0x501,2,0xbe,0,0);
+  }
+  iVar1 = UI_AddText(this,0x515,0x7d,0x25,s_VERDANA8_fnt_00563e98,s__Carlos_Estarda_00564468);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x515,0);
+    FUN_0052f9d0(this,0x515,0,0x6c,0,0);
+  }
+  UI_AddSprite(this,0x519,0x27,0xf3,s_TRENNZEILE_spr_00563eb8);
+  iVar1 = UI_AddText(this,0x51a,0x30,0xfd,s_VERDANA8_fnt_00563e98,DAT_00582e50);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x51a,0);
+    FUN_0052f9d0(this,0x51a,0,100,0,0);
+  }
+========================================================================================
+0x4d44e0 layer=[4] indeg=1 bytes=11470
+calls: List_Construct, 0x402cf0, 0x4034d0, Map_LoadMapSprite, CityDefinition_ParseIni, Weather_SelectRandomState, Game_RegisterWorldObject, 0x4eb0f0, 0x54dd78, 0x54dd83, 0x54e221, 0x55c500
+ provider-specific; not original source
+undefined4 * __thiscall
+FUN_004d44e0(void *this,char *param_1,undefined4 param_2,char *param_3,undefined4 param_4,
+            int param_5,undefined4 param_6,char *param_7,undefined4 param_8,int param_9,
+            undefined4 param_10,char *param_11,undefined4 param_12,int param_13,undefined4 param_14,
+            char *param_15,undefined4 param_16,int param_17,undefined4 param_18,char *param_19,
+            undefined4 param_20,int param_21,undefined4 param_22,char *param_23,undefined4 param_24,
+            int param_25,undefined4 param_26,char *param_27,undefined4 param_28,int param_29,
+            undefined4 param_30,char *param_31,undefined4 param_32,int param_33,undefined4 param_34,
+            char *param_35,undefined4 param_36,int param_37,undefined4 param_38,char *param_39,
+            undefined4 param_40,int param_41,undefined4 param_42,char *param_43,undefined4 param_44,
+            int param_45)
+{
+  char cVar1;
+  undefined4 *puVar2;
+  void *pvVar3;
+  uint uVar4;
+  int iVar5;
+  int unaff_EBX;
+  undefined4 unaff_EBP;
+  undefined4 unaff_ESI;
+  undefined4 *puVar6;
+  uint *puVar7;
+  undefined1 *unaff_EDI;
+  char *pcVar8;
+  undefined4 *puVar9;
+  int iVar10;
+  undefined4 unaff_retaddr;
+========================================================================================
+0x429fb0 layer=[4] indeg=1 bytes=11296
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x52fc00, Window_GadgetNotify_Slider_SetGradientColors, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_00429fb0(int *param_1)
+{
+  int iVar1;
+  void *this;
+  undefined4 local_10;
+  undefined4 local_c;
+  undefined4 local_8;
+  undefined4 local_4;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_004a4b60);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  iVar1 = UI_AddText(this,0x479,0x2a,5,s_TIMESFONT_fnt_00563ea8,DAT_00582300);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x479,0);
+    FUN_0052f9d0(this,0x479,2,0xbe,0,0);
+  }
+  UI_AddImage(this,8000,0xb,-1,s_HILFEBUTTONSNIP_00_spr_00563e4c,1,0);
+  iVar1 = FUN_0052f690(this,0x1f4d,0x8e,0x111,s_VERDANA8_fnt_00563e98,DAT_00581518,0,
+                       s_TEXTPB01__00_spr_00563e84);
+  if (iVar1 != 0) {
+    FUN_0052f750(this,0x1f4d,0,0,0);
+    FUN_0052f7a0(this,0x1f4d,2,0x54,0,0,0xfffe);
+  }
+  iVar1 = UI_AddText(this,0x1f54,0xb5,0x167,s_VERDANA8_fnt_00563e98,&DAT_005644f4);

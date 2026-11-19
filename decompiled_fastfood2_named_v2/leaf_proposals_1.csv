@@ -1,0 +1,95 @@
+address,proposed_name,confidence,evidence
+0x50dbd0,State_IsMenuMode2DOr2E,medium,Returns true only when +0x38 equals 0x2d or 0x2e (menu-state pair).
+0x513fc0,Object_GetSubobjectAt4,high,"Returns this+4, the common embedded subobject pointer accessor."
+0x5391a0,SoundThread_PollDrain,medium,"Waits on global event DAT_0057c0d8, polls vtable+0x6c until 0, retries DS error 0x887600e1 via vtable+0x50(0x13)."
+0x5140b0,Array_FindKey20,medium,Scans 20 records stride 0xc for first slot whose set flag is nonzero and key equals param.
+0x50fbe0,Math_PiecewisePercentCurve,medium,Maps 0..49 by x*0x12/0x19 and 50..100 by (x-50)*0x20/0x19+0x24.
+0x5312e0,Object_GetCountF0,high,Returns the 32-bit count at this+0xf0.
+0x539660,Rect_ClampToLimits,medium,Clamps four values against fields +0x64/+0x68/+0x6c/+0x70 into +4/+0xc/+8/+0x10.
+0x4f5db0,Object_ResetChildState,medium,Clears child +0x1c to -1 and bytes +0x2c..+0x2f when both object and child are present.
+0x50fe50,Game_CountPositiveStats86,high,Counts positive ints among 86 dwords starting at this+0x64.
+0x47c590,Array_Clear8Stride34,high,Zeroes eight byte entries at this+0x154e with stride 0x34.
+0x50e700,Object_SetField168,high,Stores the argument at this+0x168.
+0x403190,Ptr_ClearDword,high,Writes zero to the dword pointed to by the argument.
+0x4f1f70,Object_DetachPairRefs,medium,"Decrements target counters for indices +0x30/+0x34, handling type -1 via object slot table at +0x4c."
+0x4ed500,Object_DistanceWeighted,medium,"Returns 3*|dx|+4*|dy| from +0xc/+0x10; special mode this+0xc==0x10 returns 14 when one coord matches, else 10."
+0x4f5c20,UI_ComputeViewRect,medium,Builds four view-rect coords from origin +0x2c/+0x30 and offsets +0x10160..+0x10174.
+0x5312f0,Array_GetPair8Checked,high,Bounds-checks index against +0xf0 and returns the 8-byte pair at +0xec.
+0x52ffa0,Rect_IsPointInside,high,Tests a point against left/top/right/bottom fields +8/+0xc/+0x10/+0x14.
+0x541210,SoundBuffer_ApplyFormatAndStart,low,"Passes a 0x14-byte descriptor to vtable+0xc, then calls vtable+0x30(this,0,0,flag)."
+0x533540,Surface_GetDimensions16,high,Returns the 16-bit width at +0x12 and height at +0x14.
+0x50e840,Object_ResetIndices108And8C,high,Sets both this+0x108 and this+0x8c to -1.
+0x4d42e0,Object_IsField20Positive,high,Returns boolean (this+0x20 > 0).
+0x53e1e0,Surface_DrawShadedLine,medium,Draws horizontal/vertical/Bresenham lines with two RGB565/555-converted colors and a midpoint shade split.
+0x501580,Game_GetAIPlanName,high,Maps AI plan IDs 0..0x18 to localized German plan-name strings.
+0x539550,Surface_ZeroRowBuffer,high,Zeroes each scanline of a 16-bit surface using pitch +0x20 and height +0x1c.
+0x4f5ae0,Object_ReleasePairIndices,medium,Clears object slot flags at +0x38 for indices +0x44/+0x48 and resets both indices to -1.
+0x534df0,Surface_FillWhite,high,Fills width*height dwords at +0x14 with 0xffffffff.
+0x535570,UI_SetColorTriplet,low,Copies three parameters into seven dwords around this+0x9a0..+0x9c4.
+0x4e47e0,Player_GetBestAttributeSlot,medium,Returns the index 0..3 of the largest signed byte among four at this+200.
+0x47a820,Stats_SumEightColumn,high,Sums eight ints at this+0x1364 when index matches or param is -1.
+0x532b60,Object_ReleaseChildAt138,high,"If this+0x2c0 is set, clears it and releases child +0x138 through vtable slot 0 with argument 1."
+0x54e5a7,CRT_LocalUnwind,high,RtlUnwind-based local unwind helper that restores ExceptionList and clears flag 2.
+0x4e4180,Player_CountUsedSlots,medium,Scans eight 6-byte entries at this+0x78 until short -1; caller 0x4f9a20 uses result as slot count/index.
+0x5078b0,Object_WriteChildShort8,high,Writes a 16-bit value to child+8 when child pointer at this+200 is present.
+0x54dc89,Stream_GetByteStatus,low,"Calls vtable+0x28 when fields +8/+0x10 are zero and maps -1/other to -1/1, else returns 0."
+0x482910,Game_GetActiveScreenOrFallback,medium,"Returns this+0x270, falling back to this+0x264 when zero."
+0x50e4a0,Object_GetChildField2C,high,"Returns child+0x2c, or 0 when this+200 is null."
+0x54d84e,Thunk_SetVTable55CCA4,high,Destructor adjustor thunk writing vtable PTR_LAB_0055cca4 into the adjusted object.
+0x4d8d30,Player_SetSlotFlag18,medium,Sets byte at this+0x10e5+index*0x18 to 1.
+0x482710,Game_GetGlobalTableValue,medium,Returns global dword DAT_00567d4c indexed by parameter.
+0x520640,Surface_BlitOriented,high,Copies bitmap rows for ten orientation modes (0..9) using pitch +0x1c and width +0x28.
+0x53ea00,Sound_ADPCMDecode,high,Decodes 4-bit ADPCM nibbles into 16-bit samples using step table DAT_00574a24 and scale table DAT_00574a64.
+0x479750,Map_CountBuildableNeighbors,medium,Counts up to eight neighbor groups of 4 tile shorts at 80-cell stride that are 0 or 2.
+0x531e10,Map_FloodFillMask,high,"BFS flood fill over a byte grid using a 160-entry ring queue, marking cells 4-neighbor connected."
+0x53f1c0,Sound_FormatErrorString,high,Maps DirectSound/COM HRESULTs such as DSERR_BUFFERLOST to English error strings.
+0x532930,UI_FindNearestWindow,medium,Scans +0xec window table for type 5 visible candidates and returns the nearest by squared center distance.
+0x534b30,Animation_SetPointPairs,medium,Stores four x/y point pairs at +0x60/+0x68/+0x70/+0x78 of a 0x98-byte animation object.
+0x4eaa40,Map_FindNameIndex,high,Linear name search over 2500 stride-0x48 records comparing strings at +0x25.
+0x4ed480,Map_ComputeObjectDistance,medium,Scores weighted distance from a point to object param_5 in the stride-0xc map-cell array +0x4c.
+0x4dc6a0,Calendar_InterpolateMonthlyValue,medium,Interpolates this+0xa4[] monthly values using global day byte +7 and month byte +8 over six-day steps.
+0x5418c0,Stream_RequestBlock,medium,"Computes range and retry state from +0x10/+0xc, decrements +4 and sets end flag bit 1 at exhaustion."
+0x47a5d0,Stats_SumFloatMatrix,medium,Sums a 9x8 float matrix at this+0x410 filtered by row param_3 and column param_2 (-1 means all).
+0x4037d0,Profiler_StopTimer,medium,Updates per-id timing stats from timeGetTime deltas for ids 0..99 when DAT_0057b558 is set.
+0x534830,Record_GetPairPositions,medium,"For a valid stride-0x48 record, returns ints +6/+7 and +0x20/+0x24 as two coordinate pairs."
+0x539930,Rect_ScaleAndOffset,high,"Divides rect coords by +0x58 then adds offsets +0x5c/+0x60, rounding far edges up."
+0x53fc40,SoundBuffer_ConstructBase,medium,Constructor sets base vtable 0x55c840 then 0x55c864 and initializes a critical section at +0x23c.
+0x47a850,Stats_GetMatrixVariantValue,medium,Selects one of four 9x9 int matrices (bases 0x1388/0x13d0/0x1418/0x1460) by variant 0..3.
+0x4dc660,Stats_SumSixSlotValues,high,"Sums six ints at this+0xce0+row*0x18, or returns one selected slot when param_2 != -1."
+0x525b70,EventQueue_SetEntryState22,high,Walks 0x400-entry queue at +0x32c0 stride 0x14 and sets state +8 of matching id entries to 0x22.
+0x502360,Stats_GetLevelFromTenCounters,low,Sums ten bytes at current entity +0xe4 and maps 0/1-3/4-5/>5 to levels 0..3.
+0x53e140,Surface_SetPixel,high,Bounds-checks x/y and writes a 16-bit pixel into the 3-byte-per-pixel surface at +0x28/+0x20.
+0x51e9d0,UI_InitInputHelper,low,"Initializes a 0x28-byte helper: zeroes fields, stores owner at +8, sentinel -9999 at +0xc."
+0x5021d0,Stats_GetLevelFromFourCounters,low,Sums current entity fields +0x3c/+0x44/+0x54/+0x5c and maps total to levels 0..3.
+0x54a770,Window_SetVisible,high,"ShowWindow(hwnd,1/0) and stores visible flag at +0x20."
+0x4aaac0,Calendar_IsSelectedDate,medium,Compares global game date month/day (+4/+8) with DAT_00569354/DAT_0057d5c8 and returns 1 on match.
+0x4ead90,Map_Get2DTableValue,medium,Returns a dword from two 0x30-stride 2D tables at +0x2bf4c (type 0) or +0x2c234 (type 1).
+0x535690,UI_GetFirstEnabledIndex,medium,Scans 0xe0 flag dwords at +0x460 and returns the parallel byte at +0x1c0 for the first set flag.
+0x553934,Thread_InitLocks,high,Initializes four global critical sections at PTR_DAT_00576e74..00576eb4.
+0x403790,Profiler_StartTimer,high,Resets global or per-id timeGetTime timestamps for ids 0..99 when DAT_0057b558 is set.
+0x528200,UI_SetActiveChild,medium,Releases previous child at +0x230 through vtable+0xc(10) and stores the new pointer.
+0x548ac0,Object_FlushPending,medium,"When flag +0x140 is set, calls child vtable+0x68 with +0x80 and clears the flag."
+0x5281c0,UI_InvokeCallback,high,Tail-calls the four-argument callback stored at this+0x8308 when non-null.
+0x54a5d0,Window_GetChildAndNotify,medium,Returns child pointer +8 after calling its vtable slot 1 with a back-pointer.
+0x4f5ab0,Object_EnsureFirstChild,medium,"When child+0x38 is zero, sets it to 1 and outputs child[0] through param_3."
+0x512700,Array_AreBothCountsPositive,high,Returns 1 only if counts at this+0x64+idx*4 are positive for both byte indices.
+0x54dc72,Stream_ValidateRange,medium,"Returns -1 when +0x28<+0x2c or +0x18<+0x1c, else 0."
+0x47c7b0,Object_SetIndex171C,medium,Stores parameter at +0x171c and zeroes +0x1720/+0x1724.
+0x4dd0f0,Economy_ApplyTablePercent,medium,Multiplies global table DAT_0056ca2c[sel*9+idx] by this+0x6c[idx] and divides by 100.
+0x5272d0,UI_SetLayoutParams,low,Stores two dwords into UI-manager fields +0x82e4/+0x82e8 (defaults 0 and 0x18).
+0x537c30,Object_GetChildField14,high,"Returns the first dword of child object at this+0x14, or 0 if absent."
+0x4d2e60,Object_IsIdIn840Range,medium,Returns 1 when this+0x20 is in 0x840..0x84b inclusive.
+0x510c70,Output_StorePair,high,Writes two input values through two output pointers.
+0x4dd650,Game_SetGlobalWord16,medium,Stores a 16-bit value at this+4 and mirrors it into global DAT_0057dfbc.
+0x545650,Rect_Zero,high,Zeroes four consecutive dwords (an empty rect).
+0x483110,Object_SetField280,high,Stores the argument at this+0x280.
+0x4e4760,Object_SetField0C,high,Stores the argument at this+0xc.
+0x551981,Stub_ReturnZero,high,Unreachable-code-removed stub that always returns 0.
+0x539e90,Object_ClearField54,high,Sets this+0x54 to 0.
+0x520e20,Object_GetField0C,high,Returns the dword at this+0xc.
+0x542f10,Sound_SetSampleFormat,high,Builds WAVEFORMATEX for 44.1/22.05/11.025 kHz and 8/16-bit presets and calls vtable+0x38.
+0x544840,SoundBuffer_GetFrequency,high,"Returns +0x84 only when valid-flag +0x53 is set, else 0."
+0x543300,SoundBuffer_SetFrequency,high,Validates 1..10000 and stores the frequency at +0x84 under critical section +0xa0.
+0x541290,SoundBuffer_SetFreqAndPan,medium,"Calls vtable+0x44 with the parameter then vtable+0x40 with 0, returning E_INVALIDARG on failure."
+0x54a7f0,Window_MoveToRect,high,Calls MoveWindow with rect x/y and computed width/height.
+0x54bcf0,Window_ClearState,medium,Clears this+0x1a8 and this+4.

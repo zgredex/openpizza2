@@ -1,0 +1,64 @@
+// rea decompile_all
+// name: UI_ShowHelpTopicDialog
+// address: 0x482d70
+// body: available
+// range: 0x482d70-0x482f0c inclusive
+// non_contiguous: false
+// provider: Ghidra 12.2 (ghidra)
+// analysis_profile: aae5fcbbec95ac3047ec86f28609da356814b1c85770f2c09803aad3607b988d
+// limitations: The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.; Ghidra Program checkpoint mode is disabled: closing discards metadata edits; original executable bytes are unchanged. For stock ELF/PE/Mach-O on Linux/macOS, set REA_GHIDRA_CHECKPOINT_DIR to a private absolute directory before starting REA (restart MCP after changing its startup environment).; Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; This session uses Ghidra 12.2. The bridge is verified against 12.1.4; other 12.x (>=12.1) builds are accepted and the observed version is reported.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+void UI_ShowHelpTopicDialog(char param_1)
+
+{
+  int *piVar1;
+  uint uVar2;
+  void *this;
+  int iVar3;
+  int iVar4;
+  int extraout_ECX;
+  undefined1 local_res0;
+  undefined4 in_stack_00002008;
+  char *in_stack_0000200c;
+  undefined4 in_stack_00002010;
+  undefined4 in_stack_00002014;
+  
+  local_res0 = (undefined1)_local_res0;
+                    /* Shows a help-topic text dialog. */
+  __chkstk(local_res0);
+  if (*(int *)(extraout_ECX + 0x268) == 0) {
+    piVar1 = Resource_Open(DAT_0057c5d8,in_stack_0000200c,1);
+    uVar2 = Resource_Read(DAT_0057c5d8,&param_1,0x2000,(int)piVar1);
+    (&param_1)[uVar2] = '\0';
+    Resource_Close(DAT_0057c5d8,(int)piVar1);
+    this = HelpTopicDialog_Create((int *)&local_res0);
+    *(void **)(extraout_ECX + 0x268) = this;
+    Window_GadgetNotify_Text_SetText(this,0x42b,in_stack_00002010);
+    Window_GadgetNotify_Text_SetText(*(void **)(extraout_ECX + 0x268),0x42c,&param_1);
+    iVar3 = Window_GadgetNotify_Text_GetLineCount(*(void **)(extraout_ECX + 0x268),0x42c);
+    iVar4 = Window_GadgetNotify_Text_GetHeight(*(void **)(extraout_ECX + 0x268),0x42c);
+    if (iVar4 < iVar3) {
+      UI_ShowChildByID(*(void **)(extraout_ECX + 0x268),0x1f42);
+      Window_GadgetNotify_Slider_SetRange(*(void **)(extraout_ECX + 0x268),0x1f42,0,iVar3 - iVar4,1)
+      ;
+      Window_GadgetNotify_Slider_SetValue(*(void **)(extraout_ECX + 0x268),0x1f42,0,0);
+      Window_GadgetNotify_Slider_SetChangeNotify(*(void **)(extraout_ECX + 0x268),0x1f42,1);
+    }
+    else {
+      UI_RemoveObjectByKey(*(void **)(extraout_ECX + 0x268),0x1f42);
+      Window_GadgetNotify_Text_ResetScroll(*(void **)(extraout_ECX + 0x268),0x42c,0);
+    }
+    *(undefined4 *)(extraout_ECX + 0x270) = in_stack_00002014;
+    *(undefined4 *)(extraout_ECX + 0x274) = in_stack_00002008;
+    *(undefined4 *)(extraout_ECX + 0x278) = 0xffffffff;
+    *(undefined4 *)(extraout_ECX + 0x27c) = 0;
+    *(undefined4 *)(extraout_ECX + 0x280) = 0;
+    UI_AddUniquePair(*(void **)(extraout_ECX + 0x268),0x42e,0xd);
+    UI_AddUniquePair(*(void **)(extraout_ECX + 0x268),0x42e,0x1b);
+    Window_ShowWindowById(DAT_0057c5e0,_local_res0);
+  }
+  return;
+}
+

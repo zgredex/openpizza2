@@ -1,0 +1,272 @@
+{
+  "addresses": [
+    "0x4dd270",
+    "0x4dd2d0",
+    "0x4dd300",
+    "0x4dd4f0",
+    "0x4dd590",
+    "0x528190",
+    "0x4058d0",
+    "0x4034d0",
+    "0x52ff20",
+    "0x531b70",
+    "0x41a2b0"
+  ],
+  "annotations": "clock_worker.annotations.json",
+  "expected_controls": {
+    "0x411": {
+      "animation": "KAKANIM2.ani",
+      "call_instruction": "0x41a5e6",
+      "creation_instruction": "0x41a5df",
+      "family": "cockroach"
+    },
+    "0x412": {
+      "animation": "KAKANIM.ani",
+      "call_instruction": "0x41a694",
+      "creation_instruction": "0x41a68d",
+      "family": "cockroach"
+    },
+    "0x413": {
+      "animation": "KAKANIM1.ani",
+      "call_instruction": "0x41a6af",
+      "creation_instruction": "0x41a6a8",
+      "family": "cockroach"
+    },
+    "0x414": {
+      "animation": "TOMATENANIM.ani",
+      "call_instruction": "0x41a6c7",
+      "creation_instruction": "0x41a6c0",
+      "family": "tomato"
+    },
+    "0x415": {
+      "animation": "SPIDERANIM.ani",
+      "call_instruction": "0x41a50d",
+      "creation_instruction": "0x41a506",
+      "family": "spider"
+    },
+    "owner_field": {
+      "game_field": "Game+0x25c",
+      "source": "0x41a2b0",
+      "write_instruction": "0x485f92"
+    }
+  },
+  "expected_dispatch_targets": {
+    "0x4058d0": [
+      "0x405ae0",
+      "0x405aa9",
+      "0x486590",
+      "0x4034d0",
+      "0x52ff20",
+      "0x531b70"
+    ],
+    "0x41a2b0": [
+      "0x531a50"
+    ],
+    "0x4dd2d0": [
+      "0x4dd300"
+    ],
+    "0x4dd300": [
+      "0x528190",
+      "0x488a10"
+    ]
+  },
+  "expected_field_instructions": {
+    "0x4058d0": {
+      "command": "0x4058f5"
+    },
+    "0x4dd270": {
+      "clock+0x14": "0x4dd2b7"
+    },
+    "0x4dd300": {
+      "clock+0x07.quarter": "0x4dd459",
+      "clock+0x10": "0x4dd3e0",
+      "clock+0x19": "0x4dd417"
+    },
+    "0x4dd4f0": {
+      "DAT_0057dfbc": "0x4dd57c",
+      "clock+0x07": "0x4dd500"
+    },
+    "0x4dd590": {
+      "clock+0x14": "0x4dd616"
+    }
+  },
+  "expected_fixtures": [
+    {
+      "command": "0xfffe79f7",
+      "consumer": "0x405ae0",
+      "five_minute_units": [
+        0,
+        3,
+        6,
+        9
+      ],
+      "id": "quarter_hour_command"
+    },
+    {
+      "command": "0xfffe79de",
+      "condition": "(quarter_counter & 3) == 0",
+      "id": "hourly_command",
+      "queue": "0x4dd469"
+    },
+    {
+      "fields": [
+        "+0x07:1",
+        "+0x06:1",
+        "+0x08:1",
+        "+0x04:2",
+        "+0x0a:2",
+        "+0x0c:4",
+        "+0x19:1",
+        "+0x18:1",
+        "+0x14:4",
+        "+0x10:4",
+        "DAT_0057dfbc:4"
+      ],
+      "id": "calendar_save_order"
+    },
+    {
+      "after_field": "+0x14",
+      "hex": "0xc35",
+      "id": "calendar_load_interval_override",
+      "value": 3173
+    },
+    {
+      "command": "0xfffe79de",
+      "handler": "0x486590",
+      "id": "hourly_command_consumer",
+      "index": "0x62",
+      "selector": "4",
+      "target": "0x405aa9"
+    },
+    {
+      "controls": {
+        "0x411": {
+          "animation": "KAKANIM2.ani",
+          "call_instruction": "0x41a5e6",
+          "creation_instruction": "0x41a5df",
+          "family": "cockroach"
+        },
+        "0x412": {
+          "animation": "KAKANIM.ani",
+          "call_instruction": "0x41a694",
+          "creation_instruction": "0x41a68d",
+          "family": "cockroach"
+        },
+        "0x413": {
+          "animation": "KAKANIM1.ani",
+          "call_instruction": "0x41a6af",
+          "creation_instruction": "0x41a6a8",
+          "family": "cockroach"
+        },
+        "0x414": {
+          "animation": "TOMATENANIM.ani",
+          "call_instruction": "0x41a6c7",
+          "creation_instruction": "0x41a6c0",
+          "family": "tomato"
+        },
+        "0x415": {
+          "animation": "SPIDERANIM.ani",
+          "call_instruction": "0x41a50d",
+          "creation_instruction": "0x41a506",
+          "family": "spider"
+        },
+        "owner_field": {
+          "game_field": "Game+0x25c",
+          "source": "0x41a2b0",
+          "write_instruction": "0x485f92"
+        }
+      },
+      "id": "quarter_hour_controls"
+    }
+  ],
+  "expected_imports": {
+    "0x55c090": {
+      "call_instruction": "0x4dd39d",
+      "dll": "KERNEL32.dll",
+      "evidence": "REA inspect_pe_imports",
+      "iat_rva": "0x15c090",
+      "name": "WaitForSingleObject"
+    }
+  },
+  "expected_signatures": {
+    "0x4034d0": "unsigned int __cdecl Random_RangeFast(int low, unsigned int high)",
+    "0x4058d0": "int __cdecl Game_WindowProc(int command, int value)",
+    "0x41a2b0": "void *__cdecl CityDetailView_CreateOwnCityWindow(int *window_out)",
+    "0x4dd270": "GameClock *__thiscall GameClock_Construct(GameClock *this, int load_from_save)",
+    "0x4dd2d0": "void __cdecl GameClock_ThreadThunk(void *clock)",
+    "0x4dd300": "void __fastcall GameClock_Worker(GameClock *this)",
+    "0x4dd4f0": "void __thiscall GameCalendar_Save(GameClock *this, void *stream)",
+    "0x4dd590": "void __thiscall GameCalendar_Load(GameClock *this, void *stream)",
+    "0x528190": "int __thiscall UI_QueueChildCommand(UI *this, int command, int value)",
+    "0x52ff20": "void *__thiscall Array_GetRecordByKeyPtr(Array *this, int key)",
+    "0x531b70": "void __thiscall UI_SetButtonRecordVariant(UI *this, int control_id, int variant)"
+  },
+  "expected_tables": {
+    "hourly_command_selector": {
+      "address": "0x4066a2",
+      "count": 1,
+      "entries": {
+        "0": "0x4"
+      },
+      "width": 1
+    }
+  },
+  "markdown": "clock_worker.md",
+  "min_trace_steps": 40,
+  "packet": "clock_worker.json",
+  "required_records": [
+    "0x4034d0",
+    "0x4058d0",
+    "0x41a2b0",
+    "0x4dd270",
+    "0x4dd2d0",
+    "0x4dd300",
+    "0x4dd4f0",
+    "0x4dd590",
+    "0x528190",
+    "0x52ff20",
+    "0x531b70"
+  ],
+  "required_trace": {
+    "clock_callback_push": "0x4dd29d",
+    "clock_date_increment": "0x4dd448",
+    "clock_five_minute_read": "0x4dd3da",
+    "clock_five_minute_write": "0x4dd3e0",
+    "clock_hour_command": "0x4dd464",
+    "clock_hour_derive": "0x4dd456",
+    "clock_hour_write": "0x4dd459",
+    "clock_interval_init": "0x4dd2b7",
+    "clock_interval_read": "0x4dd30f",
+    "clock_load_hour": "0x4dd5a1",
+    "clock_load_interval_override": "0x4dd616",
+    "clock_load_old_base": "0x4dd640",
+    "clock_load_version": "0x4dd621",
+    "clock_minute_unit": "0x4dd3f2",
+    "clock_quarter_command": "0x4dd412",
+    "clock_quarter_increment": "0x4dd417",
+    "clock_quarter_read": "0x4dd40b",
+    "clock_quarter_reset": "0x4dd42e",
+    "clock_quarter_wrap_check": "0x4dd425",
+    "clock_queue_hour": "0x4dd469",
+    "clock_queue_quarter": "0x4dd420",
+    "clock_save_base": "0x4dd57c",
+    "clock_save_hour": "0x4dd500",
+    "clock_thread_start": "0x4dd2be",
+    "clock_thunk": "0x4dd2d4",
+    "clock_year_increment": "0x4dd43d",
+    "command_branch": "0x40591f",
+    "command_compare": "0x4058f5",
+    "consumer_control_id": "0x405b3f",
+    "consumer_lookup": "0x405b49",
+    "consumer_roll": "0x405b0c",
+    "consumer_threshold": "0x405b14",
+    "consumer_variant_roll": "0x405b38",
+    "consumer_variant_set": "0x405b5b",
+    "hourly_command_dispatch": "0x40593b",
+    "hourly_command_index": "0x405925",
+    "hourly_command_range": "0x40592a",
+    "hourly_command_selector": "0x405935",
+    "hourly_handler_call": "0x405ab3",
+    "worker_wait": "0x4dd39d"
+  }
+}

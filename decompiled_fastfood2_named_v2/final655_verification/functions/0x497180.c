@@ -1,0 +1,78 @@
+// rea decompile_all
+// name: AdvertisingScreen_UpdatePlan
+// address: 0x497180
+// body: available
+// range: 0x497180-0x4973e1 inclusive
+// non_contiguous: false
+// provider: Ghidra 12.2 (ghidra)
+// analysis_profile: aae5fcbbec95ac3047ec86f28609da356814b1c85770f2c09803aad3607b988d
+// limitations: The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.; Ghidra Program checkpoint mode is disabled: closing discards metadata edits; original executable bytes are unchanged. For stock ELF/PE/Mach-O on Linux/macOS, set REA_GHIDRA_CHECKPOINT_DIR to a private absolute directory before starting REA (restart MCP after changing its startup environment).; Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; This session uses Ghidra 12.2. The bridge is verified against 12.1.4; other 12.x (>=12.1) builds are accepted and the observed version is reported.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+void __cdecl AdvertisingScreen_UpdatePlan(void *param_1)
+
+{
+  void *this;
+  int iVar1;
+  int iVar2;
+  longlong lVar3;
+  undefined4 uVar4;
+  undefined1 local_20 [32];
+  
+                    /* Fills the advertising/city-plan editor. */
+  FUN_004a8030(&DAT_0057c71c,&DAT_0057c884);
+  iVar1 = *(int *)((int)DAT_0057c670 + 0x9c);
+  this = *(void **)((int)DAT_0057c670 + *(int *)((int)DAT_0057c670 + 0x2ec) * 4 + 0x200);
+  DAT_0057c9ec = (void *)FUN_004e34a0(this,*(int *)(iVar1 + 0x3c));
+  *(undefined4 *)((int)DAT_0057c9ec + 0xc) = *(undefined4 *)(iVar1 + 0x3c);
+  DAT_0057c718 = *(int *)((int)DAT_0057c9ec + 4) == 0;
+  if ((bool)DAT_0057c718) {
+    uVar4 = DAT_00580f1c;
+  }
+  else {
+    uVar4 = DAT_005820c8;
+  }
+  FUN_0052f830(param_1,0x1f47,uVar4);
+  FUN_0052f830(param_1,0x482,
+               *(undefined4 *)
+                (&DAT_00583504 + (&DAT_0057c884)[*(int *)((int)DAT_0057c9ec + 0x10)] * 4));
+  FUN_0052ff50(param_1,0x43a,*(uint *)((int)DAT_0057c9ec + 0x14) & 8);
+  FUN_0052ff50(param_1,0x43b,*(uint *)((int)DAT_0057c9ec + 0x14) & 4);
+  FUN_0052ff50(param_1,0x43c,*(uint *)((int)DAT_0057c9ec + 0x14) & 2);
+  FUN_0052ff50(param_1,0x43d,*(uint *)((int)DAT_0057c9ec + 0x14) & 1);
+  if (*(int *)((int)DAT_0057c9ec + 0x18) == 0) {
+    uVar4 = DAT_00580f68;
+  }
+  else {
+    DAT_0057c9f0 = FUN_004973f0(*(int *)((int)DAT_0057c9ec + 0x18));
+    uVar4 = *(undefined4 *)(&DAT_00583540 + *(int *)((int)DAT_0057c9ec + 0x18) * 4);
+  }
+  FUN_0052f830(param_1,0x48b,uVar4);
+  if (*(int *)((int)DAT_0057c9ec + 0x1c) == -1) {
+    iVar1 = DAT_00582634;
+  }
+  else {
+    iVar1 = FUN_00488be0(DAT_0057c670,*(int *)((int)DAT_0057c9ec + 0x1c));
+    iVar1 = iVar1 + 8;
+  }
+  FUN_0052f830(param_1,0x48e,iVar1);
+  FUN_0052fd00(param_1,0x1f44,0,5000,0);
+  FUN_0052fd70(param_1,0x1f44,*(undefined4 *)((int)DAT_0057c9ec + 0x20),0);
+  FUN_0052fce0(param_1,0x1f44,1);
+  FUN_0054dd83(local_20,&DAT_005683a4,*(undefined4 *)((int)DAT_0057c9ec + 0x20));
+  FUN_0052f9b0(param_1,0x1f45,local_20);
+  iVar1 = FUN_00482820((int)DAT_0057c670);
+  lVar3 = FUN_0050fba0(DAT_0057c9ec,iVar1);
+  FUN_0054dd83(local_20,&DAT_005686f4,(int)lVar3);
+  FUN_0052f9b0(param_1,0x1f46,local_20);
+  iVar1 = 0;
+  do {
+    iVar2 = FUN_0050f870(DAT_0057c9ec,*(int *)((int)this + 0x48),iVar1);
+    iVar2 = FUN_0050fbe0(iVar2);
+    Rating_UpdateBarByKey(param_1,0x519,iVar1,iVar2,DAT_00582858);
+    iVar1 = iVar1 + 1;
+  } while (iVar1 < 8);
+  return;
+}
+

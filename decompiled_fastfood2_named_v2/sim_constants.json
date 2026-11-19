@@ -1,0 +1,3025 @@
+{
+ "target": {
+  "path": "game/fastfood2.exe",
+  "sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd"
+ },
+ "customer_groups": {
+  "names": [
+   "kids",
+   "teens",
+   "students",
+   "prolls",
+   "clerks",
+   "rich",
+   "grufties",
+   "tourists"
+  ],
+  "berlin_shares": [
+   0.08,
+   0.12,
+   0.14,
+   0.15,
+   0.17,
+   0.11,
+   0.17,
+   0.06
+  ],
+  "min_rating": [
+   20,
+   30,
+   35,
+   25,
+   40,
+   55,
+   35,
+   40
+  ],
+  "price_sensitivity": [
+   0.9,
+   1.0,
+   1.1,
+   1.2,
+   0.9,
+   0.7,
+   1.0,
+   0.8
+  ],
+  "appetite": [
+   0.9,
+   1.1,
+   1.0,
+   1.3,
+   1.0,
+   0.9,
+   1.0,
+   1.0
+  ],
+  "status": "shares from daten/ber.ini VOLK; thresholds/sensitivity/appetite are reconstructed"
+ },
+ "freshness_base": {
+  "14.1": 38,
+  "15.5": 30,
+  "16.9": 22,
+  "6.5": 34,
+  "7.5": 27,
+  "8.6": 20,
+  "2.5": 30,
+  "2.9": 24,
+  "3.6": 18,
+  "1.0": 25,
+  "1.2": 20,
+  "1.6": 15
+ },
+ "city_construction_base": [
+  35,
+  30,
+  23,
+  15,
+  12,
+  8,
+  65,
+  75,
+  85,
+  70
+ ],
+ "city_service_divisor": [
+  15,
+  12,
+  8,
+  65,
+  75,
+  85,
+  70,
+  95,
+  100,
+  90
+ ],
+ "ledger_names": {
+  "0": "stocks_warehouse",
+  "1": "rent_expenses",
+  "2": "construction",
+  "3": "expansion",
+  "4": "furnishings",
+  "5": "misc_expense_a",
+  "6": "wage_cook",
+  "7": "wage_service",
+  "8": "wage_errand",
+  "9": "service_fees",
+  "10": "city_operations",
+  "11": "training_cure",
+  "12": "ingredients",
+  "13": "training_expense",
+  "14": "stocks_warehouse_2",
+  "15": "city_advertising",
+  "16": "poster_advertising",
+  "17": "restaurant_advertising",
+  "18": "delivery_ingredients",
+  "19": "manager",
+  "20": "quarterly_bribes",
+  "21": "police_bribes",
+  "22": "delivery_income",
+  "23": "misc_admin",
+  "24": "advertising_campaign"
+ },
+ "formula_sources": {
+  "group_rating": "Branch_GetCustomerGroupRating 0x47A3B0",
+  "menu_rating": "Branch_GetMenuRating 0x478320",
+  "price_rating": "Branch_GetPriceRating 0x4783C0",
+  "price_comparison": "Branch_GetPriceComparisonRating 0x478420",
+  "building_rating": "Branch_ComputeBuildingRating 0x478BE0",
+  "building_score": "Rating_ComputeBuildingScore 0x47A000",
+  "market_bonus": "Game_GetMarketBonusFactor 0x47AB20",
+  "freshness": "Product_ComputeFreshness 0x47ACF0",
+  "service_level": "City_ComputeServiceLevel 0x47C830",
+  "order": "Branch_ProcessCustomerOrder 0x47D4A0",
+  "rent": "Branch_CloseMonth 0x477850",
+  "salary_interest": "Company_ProcessHourlyTick 0x4E0200",
+  "quarter": "Game_EndOfQuarter 0x4867E0",
+  "weekly": "Branch_AdvanceWeekStatistics 0x47EF30"
+ },
+ "reconstructed": [
+  "hourly customer traffic curve and branch-choice logit",
+  "menu/building component scales",
+  "stock capacity/refill policy",
+  "market price index",
+  "market-share smoothing",
+  "delivery/table category split"
+ ],
+ "traffic": {
+  "walkin_per_open_branch_hour": 1,
+  "pedestrian_every_hours": 3,
+  "default_open_hours": "10:00-21:59",
+  "travel_speed_map_units_per_hour": 300,
+  "queue_capacity_default": 40,
+  "lost_counter": "branch+0x16E0",
+  "queue_idmap": "branch+0x1744",
+  "queue_capacity_field": "branch+0x1758",
+  "party_size": "(Character_GetComposite >> 4) + 1",
+  "world_tick_ms": 10,
+  "ticks_per_second": 100,
+  "ticks_per_hour": 360000,
+  "movement": "Object_UpdateWalkStep: one map cell per tick",
+  "tile_pixels": 72,
+  "service_ticks": {
+   "branch_type_0x0F_or_0x21": 80,
+   "other": 30
+  },
+  "entry_ticks": {
+   "branch_type_0x0F_or_0x21": "0x104 +/- 10",
+   "other": "object-type table"
+  },
+  "hourly_queue": "service time is sub-hour; queue drains each hour"
+ },
+ "branch_choice": {
+  "threshold": "Random_RangeFast(0x1E,0x32) = 30..50",
+  "size_scores": "six ints at person+0x5C",
+  "sufficiency": "person[0x2C] <= group_rating(branch, group, price_comparison=0)",
+  "radius": "dx^2 + 4*dy^2 < 4*radius^2",
+  "choice": "max person[0x5C + branch.size_class*4]; ties later",
+  "score_bands": {
+   "96+": 100,
+   "85-95": 10,
+   "75-84": 8,
+   "65-74": 5,
+   "55-64": 3,
+   "44-54": 0,
+   "35-43": -3,
+   "25-34": -5,
+   "15-24": -10,
+   "<15": -20
+  }
+ },
+ "rating_composite": {
+  "function": "Rating_GetComposite 0x4D4000",
+  "clamp_adjusted": "state<51: v4-25+state; else (55-state)*5+v4; clamp 0..100",
+  "adjust_a": "v8+(55-state)*3 if state>55; clamp >=0",
+  "adjust_b": "v16+(50-state)*2 if state>50; clamp >=0",
+  "average": "(c0+c1+c2+c3)>>2",
+  "flag": "if flagged: avg=(avg-(total>>31))>>1",
+  "cap": "min(avg, min_component*4)"
+ },
+ "building_weights": {
+  "function": "Rating_ComputeBuildingScore 0x47A000",
+  "values": [
+   -7,
+   0,
+   -5,
+   -3,
+   -17,
+   -20,
+   -15,
+   -11,
+   1,
+   1,
+   2,
+   2,
+   4,
+   5,
+   3,
+   3,
+   -1,
+   -2,
+   -2,
+   -3,
+   -6,
+   -7,
+   -5,
+   -4,
+   2,
+   8,
+   6,
+   4,
+   14,
+   16,
+   12,
+   10,
+   -1,
+   -3,
+   -2,
+   -4,
+   -7,
+   -8,
+   -6,
+   -5,
+   0,
+   -3,
+   -5,
+   0,
+   4,
+   5,
+   3,
+   2,
+   -1,
+   -1,
+   -1,
+   -1,
+   -2,
+   -3,
+   -2,
+   -2
+  ],
+  "default_facilities": {
+   "0x16": 2,
+   "0x17": 2,
+   "0x0F": 1,
+   "0x21": 1,
+   "0x1A": 5,
+   "0x1B": 5,
+   "0x1C": 5
+  }
+ },
+ "menu_scores": {
+  "price_scales": [
+   5.0,
+   5.0,
+   5.0,
+   5.0,
+   3.0,
+   2.0,
+   3.0,
+   5.0
+  ],
+  "market_price_delta": {
+   "-1": -40,
+   "0": 0,
+   "other": 40
+  },
+  "skill_caps": [
+   40,
+   10,
+   20,
+   30,
+   5,
+   0,
+   40,
+   20
+  ],
+  "skill_level_bonus": {
+   "0": 0,
+   "1": "2 * city_pref",
+   "2": "4 * city_pref"
+  },
+  "market_value": "price_delta + 10*matching_levels + group_price_adj + group_quality_adj - 1000 if pref/(scale*0.01) < branch_price",
+  "product_score": "clamp(avg(product_values) + availability + skill, 0, 100)",
+  "price_rating": "100 if avg_price <= expected else 100 - (avg_price-expected)*10",
+  "menu_rating": "min(price_rating, (product_score + availability)/2)"
+ },
+ "stock": {
+  "produce_batch": "Storage_ProduceBatch 0x514330",
+  "batch_struct_bytes": 32,
+  "batch_expiry_key": 200000,
+  "delivery_trigger_fill_percent": 34,
+  "delivery_slots": 20,
+  "cost_category": "0 or 14 depending on purchase flag",
+  "distribution": "cost split equally across active shop slots; company if none"
+ },
+ "market_share": {
+  "function": "Game_ComputeCompanySharePercent 0x4DDF10",
+  "period": "current quarter values via Stats_SumValuesByCategory",
+  "simulator": "quarter-to-date revenue share; last quarter retained at boundary"
+ },
+ "construction": {
+  "order_fields": {
+   "+4": "type",
+   "+8": "quality",
+   "+0xC": "progress=100",
+   "+0x10": "0",
+   "+0x14/+0x18/+0x1C": "plot coords/cell",
+   "+0x20": "cell index"
+  },
+  "queue_list": "branch+0x16F8",
+  "active_list": "branch+0x1998",
+  "cost_ledger_category": 12,
+  "cost_function": "Branch_PayConstructionOrder via Market_ComputeWeightedAveragePrice",
+  "completion": "Branch_CompleteConstruction 0x486F30"
+ },
+ "advertising": {
+  "table": "0x5730AC",
+  "media_weights": {
+   "1": [
+    6,
+    1,
+    -2,
+    -4,
+    2,
+    -2,
+    -6,
+    -2
+   ],
+   "2": [
+    5,
+    0,
+    3,
+    5,
+    -5,
+    -6,
+    6,
+    -4
+   ],
+   "3": [
+    4,
+    2,
+    0,
+    1,
+    -2,
+    -5,
+    0,
+    2
+   ]
+  },
+  "effect": "(weight+8)*5, competitor band \u00b15, company percent modifier, city adjustment",
+  "setup_cost": 35000,
+  "monthly_cost": 3500,
+  "cost_ledger_category": 16,
+  "setup_ledger_category": 23,
+  "attraction": "extra pedestrian every 3h when marketing > 0.4 (reconstructed link)"
+ },
+ "batch_price": {
+  "function": "BuildingValue_Compute 0x4E2410",
+  "default_multiplier": 1.5,
+  "formula": "base_price * ((owned_count*product_scale + 1) * multiplier) * (1 - (city54+city3C)*0.03)",
+  "mission_discounts": {
+   "low": 0.5,
+   "high": 1.5
+  },
+  "supplier_base_price": "supplier building+0x94; simulator Branch.supplier_base_price",
+  "city_factors": "city+0x54/+0x3C mapped from CityProfile price_factor/income_factor"
+ },
+ "delivery": {
+  "spawn_function": "City_SpawnDeliveryVehicles 0x4DC1A0",
+  "vehicle_count": "Get_Field2C(storage)+1 (1..3)",
+  "vehicle_speed": "one map cell per world tick",
+  "state": "0x34 countdown -> destination mode 9 target +0x100",
+  "simulator": {
+   "convoy": "VehicleConvoy",
+   "count": "min(3, storage_level+1)",
+   "arrival": "delay + path_cells",
+   "conflict": "existing convoy blocks order",
+   "settle": "process_convoy -> receive_delivery per arrival, capacity caps"
+  },
+  "order_condition": "fill < 34%, no active vehicle, supplier idle, supplier id != -1",
+  "initial_delay": "(Random_RangeFast(4,7) * vehicle_index) + 1 ticks",
+  "arrival": "Person_OnEnterBuilding type 0xC -> Storage_ProduceBatch",
+  "return": "destination mode 10 to +0xCC",
+  "produce_cap": "min(capacity-pending, capacity/(branch_size+1)); 200000 units per batch"
+ },
+ "company_ai": {
+  "frequency_days": 7,
+  "price_down_threshold": -5,
+  "price_down_factor": 0.98,
+  "price_up_threshold": 5,
+  "price_up_factor": 1.01,
+  "advertise_below_rating": 70,
+  "advertise_min_cash": 60000,
+  "expand_min_cash": 150000,
+  "max_branches": 4,
+  "expansion_cost": 50000,
+  "evidence": [
+   "Branch_AutoTunePrice 0x4FF6E0",
+   "AI_CheckPriceCompetitiveness 0x512CA0",
+   "AI_StartAdvertisingCampaign 0x4FEE30",
+   "AI_SelectExpansionAction 0x502610"
+  ]
+ },
+ "ledger_categories": [
+  "stocks_warehouse",
+  "rent_expenses",
+  "construction",
+  "expansion",
+  "furnishings",
+  "misc_expense_a",
+  "wage_cook",
+  "wage_service",
+  "wage_errand",
+  "service_fees",
+  "city_operations",
+  "training_cure",
+  "ingredients",
+  "training_expense",
+  "stocks_warehouse_2",
+  "city_advertising",
+  "poster_advertising",
+  "restaurant_advertising",
+  "delivery_ingredients",
+  "manager",
+  "quarterly_bribes",
+  "police_bribes",
+  "delivery_income",
+  "misc_admin",
+  "advertising_campaign"
+ ],
+ "ai_action_selection": {
+  "function": "AI_SelectActionForType 0x502B80",
+  "strategy_types": {
+   "0": "random",
+   "1": "expansion",
+   "2": "strategy",
+   "3": "50% random / 50% expansion",
+   "4": "50% expansion / 50% strategy",
+   "5": "50% strategy / 50% random",
+   "6": "1/3 random / 1/3 expansion / 1/3 strategy"
+  },
+  "plan_scores": "AI_ComputePlanScores 0x4F7B90: yearly branch income-expense, newest first",
+  "target_selection": "AI_SelectBestPlan 0x4F9A20: filter owned buildings by action/state, random candidate/slot",
+  "action_tables": {
+   "random_actions": [
+    [
+     0,
+     3,
+     6,
+     9
+    ],
+    [
+     1,
+     4,
+     7,
+     10
+    ],
+    [
+     2,
+     5,
+     8,
+     11
+    ],
+    [
+     48,
+     6,
+     12,
+     24
+    ]
+   ],
+   "random_steps": [
+    [
+     48,
+     6,
+     12,
+     24
+    ],
+    [
+     48,
+     12,
+     48,
+     12
+    ],
+    [
+     48,
+     8,
+     12,
+     24
+    ],
+    [
+     12,
+     15,
+     18,
+     21
+    ]
+   ],
+   "expansion_actions": [
+    [
+     12,
+     15,
+     18,
+     21
+    ],
+    [
+     13,
+     16,
+     19,
+     22
+    ],
+    [
+     14,
+     17,
+     20,
+     23
+    ],
+    [
+     24,
+     12,
+     48,
+     48
+    ]
+   ],
+   "expansion_steps": [
+    [
+     24,
+     12,
+     48,
+     48
+    ],
+    [
+     24,
+     24,
+     48,
+     80
+    ],
+    [
+     24,
+     12,
+     48,
+     48
+    ],
+    [
+     24,
+     27,
+     30,
+     33
+    ]
+   ],
+   "strategy_actions": [
+    [
+     24,
+     27,
+     30,
+     33
+    ],
+    [
+     25,
+     28,
+     31,
+     34
+    ],
+    [
+     26,
+     29,
+     32,
+     35
+    ],
+    [
+     24,
+     24,
+     48,
+     48
+    ]
+   ],
+   "strategy_steps": [
+    [
+     24,
+     24,
+     48,
+     48
+    ],
+    [
+     48,
+     36,
+     48,
+     48
+    ],
+    [
+     24,
+     48,
+     48,
+     48
+    ],
+    [
+     1,
+     2,
+     3,
+     4
+    ]
+   ]
+  },
+  "no_action_sentinel": 48,
+  "plan_step_weights": {
+   "4": 80,
+   "5": 20,
+   "6": "branches*20",
+   "7": 0,
+   "8": 100,
+   "10": 200,
+   "11": 40,
+   "12": "200 if needs supplier else 20",
+   "9": 20,
+   "13": 20,
+   "15": 20,
+   "14": "branches*5",
+   "16": 50,
+   "17": 50,
+   "18": 10,
+   "19": 30,
+   "20": 30,
+   "21": 30,
+   "22": 30,
+   "23": 30
+  },
+  "queue": "Company_PushRecentEntry 0x500F40: max 10, newest first, duplicate move-to-front, TTL 5",
+  "executor": "Company_ExecuteAction 0x5016C0 action codes 1..0x17",
+  "setup_sequence": [
+   12,
+   7,
+   8,
+   10
+  ],
+  "implemented_actions": [
+   5,
+   7,
+   8,
+   10,
+   11,
+   12,
+   13,
+   16,
+   17,
+   19,
+   20,
+   21,
+   22,
+   23
+  ],
+  "action_effects": {
+   "11": "city tick: ratings/supplier/price",
+   "13": "guard target=min(city_score/40+1, round(16781057*4y_income/(4000*years))+1); level5 +2 reserve, level6 +4; no direct ledger charge",
+   "16": "annoy: 30-day cooldown; 50% success; -3 quality; stock*0.8; 2000 ledger24",
+   "17": "gangsters: target=min(3,1+branches//2); 1000 each ledger24",
+   "20": "security <5 and security_need*(count+1)<city_score; type-2 trade-offer price to ledger 2; cap5",
+   "21": "advancement: avg plan score*17%; 5000 ledger20"
+  },
+  "strategy_plan_ids": {
+   "ids": [
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35
+   ],
+   "meaning": "AI_InitActionPlan mission-plan ids; stored as one action + step budget, not Company_ExecuteAction codes"
+  }
+ },
+ "construction_cost": {
+  "function": "Game_ComputePrice 0x4E4060",
+  "level_bases": [
+   20.0,
+   100.0,
+   500.0,
+   150.0,
+   300.0,
+   180.0
+  ],
+  "formula": "trunc((100 - 3*(city54+city3C))*level_base[level]*record[0x70]*0.01)",
+  "installments": "Game_ComputeCityPriceShare 0x47F230: full at progress<1; 25%*(1-progress*0.01) otherwise",
+  "order_fields": {
+   "+4": "record type",
+   "+8": "quality/variant",
+   "+0xC": "duration 100",
+   "+0x10": "state",
+   "+0x14": "tile/variant",
+   "+0x18/+0x1C": "cell coords",
+   "+0x20": "cell index"
+  },
+  "ledger_category": 3
+ },
+ "weighted_average_price": {
+  "function": "Market_ComputeWeightedAveragePrice 0x48C060",
+  "formula": "(sum(market_price[i]*usage[i]*0.001)/sum(usage[i])) * batch_unit_price * batch_quantity",
+  "list": "branch+0x1998 stock/material batches (0x20 bytes each)",
+  "batch_fields": {
+   "+0": "quantity",
+   "+4": "product",
+   "+0xC": "variant",
+   "+0x10": "unit price",
+   "+0x1C": "active flag"
+  },
+  "market_bonus": "Game_GetMarketBonusFactor 0x47AB20"
+ },
+ "character": {
+  "constructor": "Character_Construct 0x4D3730",
+  "components": {
+   "+4": "Random_RangeFast(0x1E,0x46) = 30..70",
+   "+8": "Random_RangeFast(0x1E,0x46) = 30..70",
+   "+0xC": "Random_RangeFast(0x1E,0x46) = 30..70",
+   "+0x10": "Random_RangeFast(0x1E,0x46) = 30..70",
+   "+0x38": "Random_RangeFast(0x12,0x3C) = 18..60",
+   "+0x14/+0x18": "0 (flag inputs)"
+  },
+  "composite": "Rating_GetComposite 0x4D4000",
+  "party_size": "(composite >> 4) + 1 at customer+0x98",
+  "customer_link": "customer+0x50 -> DAT_0057c670+0x20 character list"
+ },
+ "path": {
+  "function": "Map_FindShortestPath 0x4F14A0",
+  "graph": "8 neighbours per node at +0x14 via Map_LinkCells 0x4F0AB0",
+  "neighbor_rebuild": "Grid_RebuildStreetNodes 0x4F3200",
+  "step_cost": "Object_Compare 0x4ED500: 3*|dx(0xC)| + 4*|dy(0x10)|",
+  "node_count_cap": 400,
+  "iso_view_cell": [
+   64,
+   32
+  ],
+  "iso_half_steps": [
+   32,
+   16
+  ],
+  "cell_delta": "cell_x=(dx/32+dy/16)/2; cell_y=(dy/16-dx/32)/2",
+  "open_grid_nodes": "max(1, ceil(|cell_x|), ceil(|cell_y|))",
+  "per_node_ticks": 1,
+  "limitations": "obstacle-aware routing and sprite-frame duration are not loaded",
+  "graph_source": ".iso object tables list1/list2: 34-byte records -> 0x28-byte nodes",
+  "node_fields": {
+   "+0x04": "sequential index",
+   "+0x08": "map value/sprite key",
+   "+0x0C/+0x10": "coordinates",
+   "+0x14": "eight neighbor shorts",
+   "+0x24": "extra"
+  },
+  "pathfinder": "PathGraph.shortest_path in tools/iso_tool.py; Dijkstra over Object_Compare cost",
+  "walk_frame_delay_units": 12,
+  "walk_frame_ms": 83,
+  "walk_delay_source": "*_sma.ani templates: gehen1..8 delay byte 12 (37/40 customer anims; police 18)",
+  "delay_formula": "round(1000 / (delay_byte * sequence_scale * animation_scale)) ms",
+  "city_graph_calibration": {
+   "nodes": 673,
+   "path_0_to_100": {
+    "count": 15,
+    "cost": 5184
+   },
+   "path_0_to_7": {
+    "count": 7,
+    "cost": 2784
+   }
+  }
+ },
+ "market_table": {
+  "loader": "Ingredient_LoadMarketTable 0x4E4930",
+  "record_count": 86,
+  "size_tab": {
+   "file": "extracted/daten/size.tab",
+   "record_bytes": 128,
+   "layers": 4,
+   "slots": 8,
+   "pairs": "u16 width,height"
+  },
+  "ingredients_tab": {
+   "file": "extracted/daten/ingredients.tab",
+   "block_bytes": 128,
+   "blocks": 35776,
+   "slots": 32,
+   "bases": 13
+  },
+  "record_fields": {
+   "+0xA8": "category byte",
+   "+0xAC..+0xB8": "four quantity tiers",
+   "+0xC0": "double price"
+  },
+  "price_source": "Game_SetBuildingDesc 0x4E4860 call arguments (86 records)",
+  "usage_source": "PlayerStats_Reset 0x50FEC0: sum market_record quantity[variant] over menu records",
+  "simulator": {
+   "file": "decompiled_fastfood2_named_v2/market_table.json",
+   "prices": "MARKET_PRICES",
+   "usage": "Company.product_usage rebuilt from recipes",
+   "derivation": "derive_recipe_usage uses three closest prices and Size.tab tier-0 quantity",
+   "normalization": "raw wavg divided by equal-weight reference"
+  }
+ },
+ "income_ledger_names": {
+  "0": "turnover_0",
+  "1": "turnover_1",
+  "2": "turnover_2",
+  "3": "turnover_3",
+  "4": "turnover_4",
+  "5": "turnover_5",
+  "6": "turnover_6",
+  "7": "turnover_7",
+  "21": "misc_income",
+  "22": "delivery_income",
+  "23": "manager_income"
+ },
+ "ledger_evidence": {
+  "source": "FinanceScreen_UpdateStatement 0x48FAD0 + SubMenu_BuildBranchBalance 0x40CEE0 + Language_MapStrings 0x5146D0",
+  "labels": {
+   "0x469": "Stocks",
+   "0x46a": "Rent/Expenses",
+   "0x478": "Construction",
+   "0x479": "Furnishings",
+   "0x47c": "Staff",
+   "0x47d": "Ingredients",
+   "0x481": "Manager",
+   "0x484": "Advertisement",
+   "0x480": "Miscellaneous",
+   "0x1f41": "Training/Cure",
+   "0x46e": "Turnover",
+   "0x46d": "Delivery serv.",
+   "0x488": "Manager revenue",
+   "0x46b": "Miscellaneous revenue"
+  },
+  "expense": {
+   "0+14": "Stocks",
+   "1": "Rent/Expenses",
+   "2": "Construction",
+   "4": "Furnishings",
+   "5+9": "Miscellaneous",
+   "11": "Training/Cure",
+   "12": "Ingredients",
+   "19": "Manager"
+  },
+  "income": {
+   "0..7": "Turnover",
+   "21": "Miscellaneous",
+   "22": "Delivery service",
+   "23": "Manager"
+  },
+  "callsite_only": {
+   "3": "AI_Action_BuildNewBranch",
+   "6/7/8": "Branch_ProcessHour wages",
+   "9": "Branch_ApplyProductSales / open branch / customer visit",
+   "10": "Company_ProcessDailyAccounting / Game_UpgradeProductionLevel",
+   "11": "PersonnelPlan_WindowProc",
+   "13": "Branch_ProcessHour training",
+   "16/17": "Company_ProcessHourlyTick ad campaigns",
+   "18": "Branch_ProcessCustomerOrder delivery ingredients",
+   "20": "Game_ChargeQuarterlyBribes",
+   "21": "City_ChargePoliceBribes",
+   "23": "AI hires/gangsters/advertising plan/hourly tick",
+   "24": "City_SettleAdvertisingCampaign"
+  }
+ },
+ "guard_formula": {
+  "function": "AI_CheckBranchGuards 0x4FE040",
+  "level": "Game_GetPlayerFieldC20",
+  "cap": "city_stats+0x130/40+1",
+  "branch_target": "round(0x57bb24 * sum(4y income) / (4000*years)) + 1, capped",
+  "extra": {
+   "5": 2,
+   "6": 4
+  },
+  "hire": "Company_HireFreeGuard 0x4F7E80: free guard type0x17, no direct charge"
+ },
+ "security_formula": {
+  "function": "AI_ImproveSecurity 0x4FFAD0",
+  "max_buildings": 5,
+  "condition": "security_need*(count+1) < city_score",
+  "price": "type-2 trade offer: trunc(6000*City[0x94]); City[0x94]=KAUFPREIS*0.02",
+  "berlin": 8400,
+  "simulator": "_security_action uses trade_offer_price(2, purchase_factor)"
+ },
+ "mission_plan": {
+  "initializer": "AI_InitActionPlan 0x502CE0",
+  "evaluate": "MissionGoal_Evaluate 0x504430",
+  "completion": "MissionGoal_ApplyCompletionEffects 0x5032C0",
+  "evaluated_ids": {
+   "24": "input/building exists",
+   "27": "any rating>0x50",
+   "28": "any category>0x50",
+   "30": "any object stat>0x50",
+   "32": "all checks>0x32",
+   "33": "all categories>0x32"
+  },
+  "effects": {
+   "24": "counter+1, refresh ratings",
+   "26/27": "city score 100",
+   "30": "add building",
+   "31": "branch level+1 cap5",
+   "32": "reset advancement, city factor60",
+   "34": "record stat",
+   "35": "reward (common_type*5+5)*20000"
+  },
+  "simulator": "MissionPlan + tick_mission_plans weekly; unmet plans expire"
+ },
+ "recipe_composition": {
+  "constructor": "Recipe_StreamConstruct 0x511BE0",
+  "topping_fields": {
+   "+4": "ingredient index",
+   "+5": "category",
+   "+6": "quantity tier",
+   "+8/+0xC": "placement"
+  },
+  "cost": "market_record[+0xAC+tier*4] * units",
+  "usage": "PlayerStats_Reset 0x50FEC0 adds quantity[tier] per topping",
+  "price_formula": "Branch_ComputeRecipePrice 0x513BF0: base*percent*0.01*building_value+offset",
+  "auto_tune": "Branch_AutoTunePrice 0x4FF6E0 binary search offset 0..99, step16 halved",
+  "construct": "Recipe_Construct 0x50FC20: 7 random toppings",
+  "load": "Recipe_LoadFromStream 0x5108E0",
+  "topping_record": "0x1C bytes: +4 ingredient,+5 category,+6 tier,+8/+0xC placement",
+  "simulator": "Recipe.to_stream/from_stream/load_menu/menu_to_stream",
+  "stream_layout": "name[0x40], cost f32, count u32, topping[21], usage[86], fixed blocks, sales list, +0x308/+0x30C"
+ },
+ "advertising_optimizer": {
+  "function": "GamePlan_Optimize 0x4FE5F0",
+  "budgets": {
+   "1": 10000,
+   "2": 5000,
+   "3": 3500
+  },
+  "media": "0 or 1..12; media 0 is the baseline; accept media only if gain >= 1",
+  "flags": "greedy 1/2/4/8, accept only if gain >= 1",
+  "category": "most-used ingredient index+1",
+  "target": "best other company by average effect",
+  "weights_table": "0x5730AC 12x8",
+  "formula": "(weight+8)*5, metric bands, flags, percent, city",
+  "weights_rows": 13,
+  "metric_function": "GamePlan_GetCompanyCategoryMetric 0x50FAB0",
+  "metrics": {
+   "1": "price",
+   "2": "menu",
+   "4": "building",
+   "8": "average8"
+  },
+  "own_metric": "type1: average owner branches; type2/3: target branch",
+  "competitor_metric": "average target company branches",
+  "percent_modifier": "Company_GetPercentModifier 0x50F7F0: type1 budget*100/10000, type2 budget*100/5000, else 100",
+  "city_term": "100 - 3*(City+0x64 + City+0x4C) = 100 - 3*(VOLK[6]+VOLK[0]); Berlin 25",
+  "category_effect": "trunc(city_term*(trunc(percent*(effect-40)/100)+40)/100), clamp 0..100",
+  "average": "sum(category effects 0..7) >> 3",
+  "runtime": "AdvertisingPlan stores plan_type/flags/target/percent and uses plan_average_effect"
+ },
+ "trade_offer": {
+  "function": "Game_ComputeTradeOffers 0x4D5DD0 (City method)",
+  "this": "City object (IDMap_Lookup(Game+4, Game+0x2F4))",
+  "base": "nearbyA*0.1+nearbyB*0.25+1; special_nearby *1.75",
+  "type2": "base=0, value=0, type_base=6000",
+  "other": "value=((usage+6)*building_value)//20; type_base 5000/4000/3000",
+  "price": "value-trunc(base*-5000); *City[0x94]; +=trunc(price*adjust); +=trunc(type_base*City[0x94])",
+  "sell": "type_base*City[0x94]; current player -> type_base*mission; type 2 current player -> type_base",
+  "rounding": "Math_RoundFloat 0x54F140 truncates toward zero",
+  "city_adjust": "1+(60-City+0xCC8[slot])*0.005; six ints default 60",
+  "special_rent": {
+   "type1": {
+    "ids": "0x84C..0x857",
+    "table": [
+     300,
+     600,
+     1200
+    ],
+    "index": "(id-0x84C)>>2"
+   },
+   "type3": {
+    "ids": "0x840..0x84B",
+    "table": [
+     200,
+     400,
+     800
+    ],
+    "index": "(id-0x840)>>2"
+   },
+   "gate": "object+0x4C must be non-zero or rent stays 0",
+   "rent": "trunc(table*base); *City[0x8C]; +=trunc(rent*adjust)",
+   "mission": "free=0, half=0.5, bonus=1.5; type 2 has no mission modifier",
+   "mission_fields": {
+    "1": {
+     "free": "+0xC0",
+     "half": "+0x120",
+     "bonus": "+0x1A4"
+    },
+    "3/4": {
+     "free": "+0x15C",
+     "half": "+0x14C",
+     "bonus": "+0x230"
+    }
+   },
+   "simulator": "special_trade_offer()",
+   "mission_fields_special": {
+    "free": "player[0xA8]+0x10C",
+    "half": "+0xFC",
+    "bonus": "+0x1E0"
+   },
+   "mission_fields_non_special": {
+    "type1": {
+     "free": "+0xC0",
+     "half": "+0x120",
+     "bonus": "+0x1A4"
+    },
+    "type3/4": {
+     "free": "+0x15C",
+     "half": "+0x14C",
+     "bonus": "+0x230"
+    },
+    "type2": "none (factor 1.0)"
+   }
+  }
+ },
+ "city_definition": {
+  "parser": "CityDefinition_ParseIni 0x4DB430",
+  "copy": "City_ConstructFromName 0x4D44E0 copies 0xC18 bytes from parser struct to City+4",
+  "float_scale": "INI int * 0.02 (50 = neutral)",
+  "fields": {
+   "MIETEN": "City+0x8C rent factor",
+   "GEDULT": "City+0x90",
+   "KAUFPREIS": "City+0x94 purchase factor",
+   "EINKOMMEN": "City+0x98",
+   "QUALITAET": "City+0x9C",
+   "KOMFORT": "City+0xA0"
+  },
+  "price_factors": "City+0xCC8[6] default 60 (neutral)",
+  "berlin": {
+   "rent": 1.3,
+   "purchase": 1.4
+  },
+  "api": "CityProfile.rent_trade_factor / purchase_trade_factor"
+ },
+ "food_pairs": {
+  "source": "DAT_00573264",
+  "triples": [
+   [
+    0,
+    67,
+    1
+   ],
+   [
+    0,
+    80,
+    1
+   ],
+   [
+    1,
+    11,
+    1
+   ],
+   [
+    1,
+    74,
+    1
+   ],
+   [
+    1,
+    85,
+    1
+   ],
+   [
+    2,
+    15,
+    1
+   ],
+   [
+    2,
+    16,
+    1
+   ],
+   [
+    2,
+    74,
+    1
+   ],
+   [
+    3,
+    24,
+    1
+   ],
+   [
+    3,
+    27,
+    1
+   ],
+   [
+    4,
+    15,
+    1
+   ],
+   [
+    4,
+    28,
+    1
+   ],
+   [
+    4,
+    67,
+    1
+   ],
+   [
+    5,
+    8,
+    1
+   ],
+   [
+    5,
+    28,
+    1
+   ],
+   [
+    5,
+    76,
+    1
+   ],
+   [
+    6,
+    43,
+    1
+   ],
+   [
+    7,
+    66,
+    1
+   ],
+   [
+    9,
+    15,
+    1
+   ],
+   [
+    9,
+    23,
+    1
+   ],
+   [
+    9,
+    24,
+    1
+   ],
+   [
+    10,
+    12,
+    1
+   ],
+   [
+    10,
+    14,
+    1
+   ],
+   [
+    10,
+    23,
+    1
+   ],
+   [
+    10,
+    25,
+    1
+   ],
+   [
+    10,
+    66,
+    1
+   ],
+   [
+    10,
+    76,
+    1
+   ],
+   [
+    11,
+    74,
+    1
+   ],
+   [
+    12,
+    66,
+    1
+   ],
+   [
+    12,
+    74,
+    1
+   ],
+   [
+    13,
+    36,
+    1
+   ],
+   [
+    13,
+    37,
+    1
+   ],
+   [
+    13,
+    31,
+    1
+   ],
+   [
+    13,
+    75,
+    1
+   ],
+   [
+    13,
+    85,
+    1
+   ],
+   [
+    14,
+    18,
+    1
+   ],
+   [
+    14,
+    48,
+    1
+   ],
+   [
+    15,
+    28,
+    1
+   ],
+   [
+    15,
+    31,
+    1
+   ],
+   [
+    16,
+    25,
+    1
+   ],
+   [
+    16,
+    28,
+    1
+   ],
+   [
+    16,
+    31,
+    1
+   ],
+   [
+    17,
+    42,
+    1
+   ],
+   [
+    17,
+    81,
+    1
+   ],
+   [
+    18,
+    24,
+    1
+   ],
+   [
+    18,
+    76,
+    1
+   ],
+   [
+    18,
+    85,
+    1
+   ],
+   [
+    19,
+    25,
+    1
+   ],
+   [
+    19,
+    45,
+    1
+   ],
+   [
+    19,
+    30,
+    1
+   ],
+   [
+    20,
+    25,
+    1
+   ],
+   [
+    20,
+    26,
+    1
+   ],
+   [
+    21,
+    32,
+    1
+   ],
+   [
+    21,
+    33,
+    1
+   ],
+   [
+    21,
+    81,
+    1
+   ],
+   [
+    22,
+    69,
+    1
+   ],
+   [
+    22,
+    85,
+    1
+   ],
+   [
+    23,
+    66,
+    1
+   ],
+   [
+    24,
+    54,
+    1
+   ],
+   [
+    24,
+    62,
+    1
+   ],
+   [
+    25,
+    57,
+    1
+   ],
+   [
+    25,
+    58,
+    1
+   ],
+   [
+    25,
+    84,
+    1
+   ],
+   [
+    27,
+    48,
+    1
+   ],
+   [
+    27,
+    63,
+    1
+   ],
+   [
+    27,
+    81,
+    1
+   ],
+   [
+    28,
+    82,
+    1
+   ],
+   [
+    29,
+    85,
+    1
+   ],
+   [
+    32,
+    40,
+    1
+   ],
+   [
+    32,
+    41,
+    1
+   ],
+   [
+    32,
+    53,
+    1
+   ],
+   [
+    33,
+    40,
+    1
+   ],
+   [
+    33,
+    41,
+    1
+   ],
+   [
+    33,
+    53,
+    1
+   ],
+   [
+    36,
+    40,
+    1
+   ],
+   [
+    36,
+    41,
+    1
+   ],
+   [
+    37,
+    40,
+    1
+   ],
+   [
+    37,
+    41,
+    1
+   ],
+   [
+    37,
+    53,
+    1
+   ],
+   [
+    39,
+    66,
+    1
+   ],
+   [
+    40,
+    53,
+    1
+   ],
+   [
+    41,
+    53,
+    1
+   ],
+   [
+    42,
+    55,
+    1
+   ]
+  ]
+ },
+ "market_descriptors": [
+  {
+   "dat": "DAT_00583544",
+   "category": 1,
+   "amounts": [
+    140,
+    20,
+    5,
+    2
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 0,
+   "taste": [
+    -1,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_00583548",
+   "category": 1,
+   "amounts": [
+    7,
+    4,
+    2,
+    1
+   ],
+   "price_adjust": 0,
+   "quality_adjust": -1,
+   "taste": [
+    1,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_0058354c",
+   "category": 1,
+   "amounts": [
+    220,
+    20,
+    5,
+    2
+   ],
+   "price_adjust": 0,
+   "quality_adjust": -1,
+   "taste": [
+    -1,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_00583550",
+   "category": 1,
+   "amounts": [
+    38,
+    10,
+    5,
+    1
+   ],
+   "price_adjust": 1,
+   "quality_adjust": 1,
+   "taste": [
+    0,
+    1,
+    1,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_00583554",
+   "category": 1,
+   "amounts": [
+    210,
+    50,
+    10,
+    5
+   ],
+   "price_adjust": 1,
+   "quality_adjust": 0,
+   "taste": [
+    -1,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_00583558",
+   "category": 1,
+   "amounts": [
+    50,
+    15,
+    7,
+    4
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 0,
+   "taste": [
+    -1,
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_0058355c",
+   "category": 1,
+   "amounts": [
+    420,
+    100,
+    10,
+    2
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 1,
+   "taste": [
+    -1,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_00583560",
+   "category": 1,
+   "amounts": [
+    14,
+    10,
+    5,
+    3
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 0,
+   "taste": [
+    0,
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_00583564",
+   "category": 1,
+   "amounts": [
+    12,
+    8,
+    4,
+    2
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 0,
+   "taste": [
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_00583568",
+   "category": 1,
+   "amounts": [
+    530,
+    100,
+    50,
+    5
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 0,
+   "taste": [
+    -1,
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_0058356c",
+   "category": 1,
+   "amounts": [
+    160,
+    20,
+    10,
+    3
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 1,
+   "taste": [
+    -1,
+    1,
+    1,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_00583570",
+   "category": 1,
+   "amounts": [
+    20,
+    5,
+    2,
+    1
+   ],
+   "price_adjust": 0,
+   "quality_adjust": -1,
+   "taste": [
+    1,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_00583574",
+   "category": 1,
+   "amounts": [
+    200,
+    100,
+    50,
+    5
+   ],
+   "price_adjust": 0,
+   "quality_adjust": -1,
+   "taste": [
+    -1,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_00583578",
+   "category": 1,
+   "amounts": [
+    300,
+    50,
+    10,
+    5
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 0,
+   "taste": [
+    -1,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_0058357c",
+   "category": 1,
+   "amounts": [
+    75,
+    10,
+    5,
+    3
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 0,
+   "taste": [
+    -1,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_00583580",
+   "category": 1,
+   "amounts": [
+    100,
+    10,
+    6,
+    3
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 0,
+   "taste": [
+    -1,
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_00583584",
+   "category": 1,
+   "amounts": [
+    170,
+    20,
+    10,
+    5
+   ],
+   "price_adjust": 0,
+   "quality_adjust": -1,
+   "taste": [
+    -1,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_00583588",
+   "category": 1,
+   "amounts": [
+    2400,
+    100,
+    10,
+    5
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 0,
+   "taste": [
+    -2,
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_0058358c",
+   "category": 1,
+   "amounts": [
+    12,
+    6,
+    4,
+    2
+   ],
+   "price_adjust": 0,
+   "quality_adjust": -1,
+   "taste": [
+    0,
+    0,
+    1,
+    -1
+   ]
+  },
+  {
+   "dat": "DAT_00583590",
+   "category": 1,
+   "amounts": [
+    16,
+    6,
+    3,
+    1
+   ],
+   "price_adjust": 1,
+   "quality_adjust": 0,
+   "taste": [
+    0,
+    0,
+    1,
+    -1
+   ]
+  },
+  {
+   "dat": "DAT_00583594",
+   "category": 1,
+   "amounts": [
+    20,
+    8,
+    4,
+    2
+   ],
+   "price_adjust": 1,
+   "quality_adjust": 0,
+   "taste": [
+    0,
+    0,
+    1,
+    -1
+   ]
+  },
+  {
+   "dat": "DAT_00583598",
+   "category": 1,
+   "amounts": [
+    50,
+    20,
+    10,
+    2
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 2,
+   "taste": [
+    -2,
+    -2,
+    1,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_0058359c",
+   "category": 3,
+   "amounts": [
+    400,
+    20,
+    5,
+    1
+   ],
+   "price_adjust": 0,
+   "quality_adjust": -1,
+   "taste": [
+    -2,
+    1,
+    0,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_005835a0",
+   "category": 3,
+   "amounts": [
+    500,
+    50,
+    10,
+    2
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 0,
+   "taste": [
+    -2,
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_005835a4",
+   "category": 3,
+   "amounts": [
+    1500,
+    100,
+    20,
+    2
+   ],
+   "price_adjust": 0,
+   "quality_adjust": -1,
+   "taste": [
+    -2,
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_005835a8",
+   "category": 3,
+   "amounts": [
+    380,
+    50,
+    10,
+    2
+   ],
+   "price_adjust": 1,
+   "quality_adjust": 0,
+   "taste": [
+    -1,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_005835ac",
+   "category": 3,
+   "amounts": [
+    360,
+    50,
+    10,
+    2
+   ],
+   "price_adjust": 1,
+   "quality_adjust": 0,
+   "taste": [
+    -1,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_005835b0",
+   "category": 3,
+   "amounts": [
+    1000,
+    100,
+    10,
+    2
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 0,
+   "taste": [
+    -2,
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_005835b4",
+   "category": 3,
+   "amounts": [
+    100,
+    50,
+    20,
+    2
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 0,
+   "taste": [
+    -2,
+    -1,
+    0,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_005835b8",
+   "category": 3,
+   "amounts": [
+    80,
+    20,
+    5,
+    2
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 0,
+   "taste": [
+    0,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_005835bc",
+   "category": 3,
+   "amounts": [
+    370,
+    50,
+    10,
+    2
+   ],
+   "price_adjust": 1,
+   "quality_adjust": 3,
+   "taste": [
+    -1,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_005835c0",
+   "category": 4,
+   "amounts": [
+    200,
+    50,
+    10,
+    1
+   ],
+   "price_adjust": 0,
+   "quality_adjust": -1,
+   "taste": [
+    -2,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_005835c4",
+   "category": 4,
+   "amounts": [
+    100,
+    50,
+    5,
+    1
+   ],
+   "price_adjust": 1,
+   "quality_adjust": 0,
+   "taste": [
+    -1,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_005835c8",
+   "category": 4,
+   "amounts": [
+    1000,
+    50,
+    10,
+    1
+   ],
+   "price_adjust": 1,
+   "quality_adjust": 1,
+   "taste": [
+    -2,
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_005835cc",
+   "category": 4,
+   "amounts": [
+    200,
+    100,
+    10,
+    2
+   ],
+   "price_adjust": 0,
+   "quality_adjust": -1,
+   "taste": [
+    -1,
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_005835d0",
+   "category": 4,
+   "amounts": [
+    500,
+    50,
+    10,
+    1
+   ],
+   "price_adjust": 1,
+   "quality_adjust": 0,
+   "taste": [
+    -2,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_005835d4",
+   "category": 4,
+   "amounts": [
+    20,
+    5,
+    2,
+    1
+   ],
+   "price_adjust": 2,
+   "quality_adjust": 0,
+   "taste": [
+    -1,
+    0,
+    1,
+    -1
+   ]
+  },
+  {
+   "dat": "DAT_005835d8",
+   "category": 4,
+   "amounts": [
+    100,
+    40,
+    20,
+    5
+   ],
+   "price_adjust": 2,
+   "quality_adjust": 1,
+   "taste": [
+    1,
+    0,
+    1,
+    -1
+   ]
+  },
+  {
+   "dat": "DAT_005835dc",
+   "category": 4,
+   "amounts": [
+    400,
+    100,
+    20,
+    5
+   ],
+   "price_adjust": 3,
+   "quality_adjust": 2,
+   "taste": [
+    -2,
+    -1,
+    1,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_005835e0",
+   "category": 4,
+   "amounts": [
+    50,
+    10,
+    5,
+    1
+   ],
+   "price_adjust": 3,
+   "quality_adjust": 3,
+   "taste": [
+    -1,
+    1,
+    1,
+    -2
+   ]
+  },
+  {
+   "dat": "DAT_005835e4",
+   "category": 4,
+   "amounts": [
+    50,
+    40,
+    10,
+    2
+   ],
+   "price_adjust": 1,
+   "quality_adjust": 0,
+   "taste": [
+    -1,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_005835e8",
+   "category": 4,
+   "amounts": [
+    40,
+    30,
+    10,
+    2
+   ],
+   "price_adjust": 1,
+   "quality_adjust": 2,
+   "taste": [
+    -1,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_005835ec",
+   "category": 3,
+   "amounts": [
+    1000,
+    100,
+    5,
+    1
+   ],
+   "price_adjust": 1,
+   "quality_adjust": 3,
+   "taste": [
+    -2,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_005835f0",
+   "category": 3,
+   "amounts": [
+    100,
+    40,
+    20,
+    5
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 3,
+   "taste": [
+    -1,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_005835f4",
+   "category": 3,
+   "amounts": [
+    150,
+    100,
+    30,
+    2
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 3,
+   "taste": [
+    -1,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_005835f8",
+   "category": 3,
+   "amounts": [
+    100,
+    30,
+    5,
+    2
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 3,
+   "taste": [
+    -2,
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_005835fc",
+   "category": 5,
+   "amounts": [
+    170,
+    50,
+    10,
+    3
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 2,
+   "taste": [
+    -1,
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_00583600",
+   "category": 5,
+   "amounts": [
+    200,
+    50,
+    10,
+    5
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 3,
+   "taste": [
+    -1,
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_00583604",
+   "category": 5,
+   "amounts": [
+    80,
+    60,
+    10,
+    3
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 2,
+   "taste": [
+    -2,
+    -1,
+    1,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_00583608",
+   "category": 5,
+   "amounts": [
+    100,
+    40,
+    20,
+    5
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 3,
+   "taste": [
+    -1,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_0058360c",
+   "category": 5,
+   "amounts": [
+    60,
+    30,
+    10,
+    2
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 2,
+   "taste": [
+    -1,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_00583610",
+   "category": 5,
+   "amounts": [
+    10,
+    5,
+    2,
+    1
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 3,
+   "taste": [
+    -1,
+    0,
+    0,
+    -2
+   ]
+  },
+  {
+   "dat": "DAT_00583614",
+   "category": 5,
+   "amounts": [
+    170,
+    100,
+    10,
+    5
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 3,
+   "taste": [
+    -2,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_00583618",
+   "category": 5,
+   "amounts": [
+    140,
+    20,
+    10,
+    3
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 3,
+   "taste": [
+    -2,
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_0058361c",
+   "category": 5,
+   "amounts": [
+    1000,
+    100,
+    20,
+    5
+   ],
+   "price_adjust": 0,
+   "quality_adjust": -1,
+   "taste": [
+    -2,
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_00583620",
+   "category": 5,
+   "amounts": [
+    80,
+    10,
+    5,
+    2
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 2,
+   "taste": [
+    -2,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_00583624",
+   "category": 5,
+   "amounts": [
+    30,
+    15,
+    5,
+    2
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 3,
+   "taste": [
+    0,
+    0,
+    0,
+    -1
+   ]
+  },
+  {
+   "dat": "DAT_00583628",
+   "category": 5,
+   "amounts": [
+    30,
+    15,
+    5,
+    1
+   ],
+   "price_adjust": 1,
+   "quality_adjust": 3,
+   "taste": [
+    0,
+    0,
+    0,
+    -1
+   ]
+  },
+  {
+   "dat": "DAT_0058362c",
+   "category": 5,
+   "amounts": [
+    30,
+    15,
+    5,
+    1
+   ],
+   "price_adjust": 1,
+   "quality_adjust": 3,
+   "taste": [
+    0,
+    0,
+    0,
+    -1
+   ]
+  },
+  {
+   "dat": "DAT_00583630",
+   "category": 5,
+   "amounts": [
+    30,
+    15,
+    5,
+    1
+   ],
+   "price_adjust": 2,
+   "quality_adjust": 3,
+   "taste": [
+    0,
+    0,
+    0,
+    -1
+   ]
+  },
+  {
+   "dat": "DAT_00583634",
+   "category": 5,
+   "amounts": [
+    150,
+    20,
+    5,
+    1
+   ],
+   "price_adjust": 2,
+   "quality_adjust": 3,
+   "taste": [
+    -1,
+    1,
+    0,
+    -1
+   ]
+  },
+  {
+   "dat": "DAT_00583638",
+   "category": 5,
+   "amounts": [
+    40,
+    20,
+    10,
+    2
+   ],
+   "price_adjust": 1,
+   "quality_adjust": 3,
+   "taste": [
+    -1,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_0058363c",
+   "category": 5,
+   "amounts": [
+    600,
+    20,
+    5,
+    2
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 2,
+   "taste": [
+    -2,
+    0,
+    1,
+    -1
+   ]
+  },
+  {
+   "dat": "DAT_00583640",
+   "category": 5,
+   "amounts": [
+    600,
+    100,
+    10,
+    5
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 3,
+   "taste": [
+    -2,
+    -1,
+    0,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_00583644",
+   "category": 5,
+   "amounts": [
+    240,
+    100,
+    50,
+    10
+   ],
+   "price_adjust": 1,
+   "quality_adjust": 3,
+   "taste": [
+    -2,
+    -1,
+    0,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_00583648",
+   "category": 5,
+   "amounts": [
+    30,
+    10,
+    5,
+    1
+   ],
+   "price_adjust": 1,
+   "quality_adjust": 3,
+   "taste": [
+    0,
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_0058364c",
+   "category": 3,
+   "amounts": [
+    60,
+    30,
+    15,
+    5
+   ],
+   "price_adjust": 0,
+   "quality_adjust": -1,
+   "taste": [
+    -1,
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_00583650",
+   "category": 2,
+   "amounts": [
+    125,
+    40,
+    10,
+    2
+   ],
+   "price_adjust": 1,
+   "quality_adjust": 1,
+   "taste": [
+    -2,
+    1,
+    0,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_00583654",
+   "category": 2,
+   "amounts": [
+    150,
+    20,
+    10,
+    1
+   ],
+   "price_adjust": 1,
+   "quality_adjust": 2,
+   "taste": [
+    -2,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_00583658",
+   "category": 2,
+   "amounts": [
+    300,
+    20,
+    10,
+    1
+   ],
+   "price_adjust": 1,
+   "quality_adjust": 2,
+   "taste": [
+    -2,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_0058365c",
+   "category": 2,
+   "amounts": [
+    100,
+    40,
+    20,
+    2
+   ],
+   "price_adjust": 1,
+   "quality_adjust": 3,
+   "taste": [
+    -2,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_00583660",
+   "category": 2,
+   "amounts": [
+    300,
+    20,
+    10,
+    1
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 1,
+   "taste": [
+    -2,
+    -1,
+    1,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_00583664",
+   "category": 2,
+   "amounts": [
+    300,
+    20,
+    10,
+    1
+   ],
+   "price_adjust": 0,
+   "quality_adjust": -1,
+   "taste": [
+    -2,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_00583668",
+   "category": 2,
+   "amounts": [
+    200,
+    20,
+    10,
+    1
+   ],
+   "price_adjust": 0,
+   "quality_adjust": -1,
+   "taste": [
+    -2,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "dat": "DAT_0058366c",
+   "category": 2,
+   "amounts": [
+    150,
+    50,
+    20,
+    2
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 1,
+   "taste": [
+    -2,
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_00583670",
+   "category": 6,
+   "amounts": [
+    20,
+    5,
+    2,
+    1
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 0,
+   "taste": [
+    -1,
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_00583674",
+   "category": 6,
+   "amounts": [
+    4,
+    3,
+    2,
+    1
+   ],
+   "price_adjust": 0,
+   "quality_adjust": -1,
+   "taste": [
+    0,
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_00583678",
+   "category": 6,
+   "amounts": [
+    5,
+    3,
+    2,
+    1
+   ],
+   "price_adjust": 2,
+   "quality_adjust": 3,
+   "taste": [
+    0,
+    1,
+    0,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_0058367c",
+   "category": 6,
+   "amounts": [
+    4,
+    3,
+    2,
+    1
+   ],
+   "price_adjust": 2,
+   "quality_adjust": 3,
+   "taste": [
+    0,
+    1,
+    0,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_00583680",
+   "category": 6,
+   "amounts": [
+    60,
+    20,
+    5,
+    1
+   ],
+   "price_adjust": 1,
+   "quality_adjust": 3,
+   "taste": [
+    -3,
+    -2,
+    -1,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_00583684",
+   "category": 6,
+   "amounts": [
+    5,
+    4,
+    2,
+    1
+   ],
+   "price_adjust": 1,
+   "quality_adjust": 0,
+   "taste": [
+    0,
+    1,
+    0,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_00583688",
+   "category": 6,
+   "amounts": [
+    6,
+    4,
+    2,
+    1
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 3,
+   "taste": [
+    -1,
+    -1,
+    0,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_0058368c",
+   "category": 6,
+   "amounts": [
+    10,
+    3,
+    2,
+    1
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 2,
+   "taste": [
+    -3,
+    -1,
+    0,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_00583690",
+   "category": 6,
+   "amounts": [
+    5,
+    3,
+    2,
+    1
+   ],
+   "price_adjust": 1,
+   "quality_adjust": 1,
+   "taste": [
+    -3,
+    -2,
+    0,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_00583694",
+   "category": 6,
+   "amounts": [
+    10,
+    5,
+    2,
+    1
+   ],
+   "price_adjust": 0,
+   "quality_adjust": 0,
+   "taste": [
+    -2,
+    -1,
+    0,
+    1
+   ]
+  },
+  {
+   "dat": "DAT_00583698",
+   "category": 6,
+   "amounts": [
+    80,
+    10,
+    3,
+    1
+   ],
+   "price_adjust": 0,
+   "quality_adjust": -1,
+   "taste": [
+    -1,
+    0,
+    0,
+    1
+   ]
+  }
+ ]
+}

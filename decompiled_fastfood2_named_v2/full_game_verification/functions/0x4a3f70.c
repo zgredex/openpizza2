@@ -1,0 +1,120 @@
+// rea decompile_all
+// name: HeadquartersCompanyPage_Update
+// address: 0x4a3f70
+// body: available
+// range: 0x4a3f70-0x4a418b inclusive
+// non_contiguous: false
+// provider: Ghidra 12.2 (ghidra)
+// analysis_profile: aae5fcbbec95ac3047ec86f28609da356814b1c85770f2c09803aad3607b988d
+// limitations: The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.; Ghidra Program checkpoint mode is disabled: closing discards metadata edits; original executable bytes are unchanged. For stock ELF/PE/Mach-O on Linux/macOS, set REA_GHIDRA_CHECKPOINT_DIR to a private absolute directory before starting REA (restart MCP after changing its startup environment).; Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; This session uses Ghidra 12.2. The bridge is verified against 12.1.4; other 12.x (>=12.1) builds are accepted and the observed version is reported.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+void __cdecl HeadquartersCompanyPage_Update(void *param_1)
+
+{
+  void *this;
+  int iVar1;
+  int iVar2;
+  int iVar3;
+  int *piVar4;
+  
+                    /* Refreshes the headquarters company-overview page. */
+  this = param_1;
+  iVar1 = *(int *)((int)DAT_0057c670 + *(int *)((int)DAT_0057c670 + 0x2ec) * 4 + 0x200);
+  iVar3 = *(int *)(iVar1 + 0x1d8);
+  iVar1 = Game_GetPlayerFieldC20(iVar1);
+  Sound_PlaySfxByIndex(DAT_0057ba0c,0x1c,iVar1);
+  iVar1 = Game_GetPlayerBySlot(DAT_0057c670,*(int *)(iVar3 + 8));
+  iVar3 = 0;
+  do {
+    iVar2 = Game_GetPlayerBySlot(DAT_0057c670,iVar3);
+    if (iVar2 == 0) {
+      (&DAT_0057d240)[iVar3] = 0;
+    }
+    else {
+      (&DAT_0057d240)[iVar3] = *(undefined1 *)(*(int *)(iVar1 + 0x48) + 0xac + iVar2);
+    }
+    iVar3 = iVar3 + 1;
+  } while (iVar3 < 6);
+  Window_GadgetNotify_Text_SetText(param_1,0x51b,iVar1 + 8);
+  Personnel_SetEmployeePhotoByKey(param_1,0x23f0,iVar1);
+  CompanyProfile_UpdateStatistics(param_1);
+  iVar1 = 0x23c8;
+  do {
+    UI_RemoveObjectByKey(param_1,iVar1);
+    iVar1 = iVar1 + 1;
+  } while (iVar1 < 0x23e0);
+  iVar1 = 0x23f1;
+  do {
+    UI_RemoveObjectByKey(param_1,iVar1);
+    iVar1 = iVar1 + 1;
+  } while (iVar1 < 0x23f5);
+  piVar4 = &DAT_00568f2c;
+  do {
+    iVar1 = 4;
+    do {
+      UI_RemoveObjectByKey(param_1,*piVar4);
+      piVar4 = piVar4 + 1;
+      iVar1 = iVar1 + -1;
+    } while (iVar1 != 0);
+  } while ((int)piVar4 < 0x568f6c);
+  UI_RemoveObjectByKey(param_1,0x23b4);
+  DAT_0057d248 = 0;
+  param_1 = (void *)0x0;
+  iVar1 = 0;
+  piVar4 = &DAT_0057d24c;
+  do {
+    iVar3 = Game_GetPlayerBySlot(DAT_0057c670,iVar1);
+    if (iVar3 == 0) {
+      *piVar4 = 0;
+    }
+    else {
+      iVar2 = Game_GetCurrentPlayerCompanyName((int)DAT_0057c670);
+      iVar3 = *(int *)(iVar3 + 0x94 + iVar2 * 4);
+      *piVar4 = iVar3;
+      if (0 < iVar3) {
+        param_1 = (void *)((int)param_1 + 1);
+      }
+    }
+    piVar4 = piVar4 + 1;
+    iVar1 = iVar1 + 1;
+  } while ((int)piVar4 < 0x57d264);
+  if ((int)param_1 < 5) {
+    iVar1 = 0;
+    if (0 < (int)param_1) {
+      piVar4 = &DAT_00568f2c;
+      do {
+        UI_ShowChildByID(this,iVar1 + 0x23f1);
+        iVar3 = 4;
+        do {
+          UI_ShowChildByID(this,*piVar4);
+          piVar4 = piVar4 + 1;
+          iVar3 = iVar3 + -1;
+        } while (iVar3 != 0);
+        iVar1 = iVar1 + 1;
+      } while (iVar1 < (int)param_1);
+    }
+  }
+  else {
+    iVar1 = 0;
+    piVar4 = &DAT_00568f2c;
+    do {
+      UI_ShowChildByID(this,iVar1 + 0x23f1);
+      iVar3 = 4;
+      do {
+        UI_ShowChildByID(this,*piVar4);
+        piVar4 = piVar4 + 1;
+        iVar3 = iVar3 + -1;
+      } while (iVar3 != 0);
+      iVar1 = iVar1 + 1;
+    } while ((int)piVar4 < 0x568f6c);
+    UI_ShowChildByID(this,0x23b4);
+    Window_GadgetNotify_Slider_SetRange(this,0x23b4,0,200,0);
+    Window_GadgetNotify_Slider_SetValue(this,0x23b4,DAT_0057d248,0);
+    Window_GadgetNotify_Slider_SetChangeNotify(this,0x23b4,1);
+  }
+  HeadquartersPage_FillCompetitorRows(this,DAT_0057d248,(int)param_1);
+  return;
+}
+

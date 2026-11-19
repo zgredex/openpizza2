@@ -1,0 +1,2390 @@
+[
+ {
+  "address": "0x49b4e0",
+  "name": "RecipeMenu_BuildOnMenuList"
+ },
+ {
+  "address": "0x498090",
+  "name": "Mission_CheckGamePlanCategoryGoal"
+ },
+ {
+  "address": "0x4f5e40",
+  "name": "Player_MissionState_Destructor"
+ },
+ {
+  "address": "0x4f5e20",
+  "name": "Player_MissionState_Delete"
+ },
+ {
+  "address": "0x4d1b80",
+  "name": "RecipeTopping_Delete"
+ },
+ {
+  "address": "0x53a1f0",
+  "name": "SpriteBase_Delete"
+ },
+ {
+  "address": "0x54a610",
+  "name": "DebugConsole_Delete"
+ },
+ {
+  "address": "0x401020",
+  "name": "StatsPeriodReport_Delete"
+ },
+ {
+  "address": "0x501a10",
+  "name": "AwardNode_Delete"
+ },
+ {
+  "address": "0x4e5da0",
+  "name": "ConstructionOrder_Delete"
+ },
+ {
+  "address": "0x50f670",
+  "name": "GamePlan_Delete"
+ },
+ {
+  "address": "0x4e4320",
+  "name": "BuildingValue_Delete"
+ },
+ {
+  "address": "0x4d3710",
+  "name": "Character_Delete"
+ },
+ {
+  "address": "0x4012e0",
+  "name": "NamedLockable_Delete"
+ },
+ {
+  "address": "0x4e47c0",
+  "name": "Ingredient_Delete"
+ },
+ {
+  "address": "0x4dd2e0",
+  "name": "GameClock_Delete"
+ },
+ {
+  "address": "0x4e4030",
+  "name": "FurnitureType_Delete"
+ },
+ {
+  "address": "0x53c6e0",
+  "name": "SpriteCriticalSection_Init"
+ },
+ {
+  "address": "0x532bb0",
+  "name": "AnimSwapCritical_Init"
+ },
+ {
+  "address": "0x532bf0",
+  "name": "AnimCritical_Init"
+ },
+ {
+  "address": "0x522e50",
+  "name": "ArrayLock_Init"
+ },
+ {
+  "address": "0x401370",
+  "name": "ListLock_Init"
+ },
+ {
+  "address": "0x5316b0",
+  "name": "UI_ShowChildByID"
+ },
+ {
+  "address": "0x5316f0",
+  "name": "UI_SetChildVisibleByID"
+ },
+ {
+  "address": "0x532330",
+  "name": "UI_Group_Create"
+ },
+ {
+  "address": "0x509060",
+  "name": "UI_SetChildRecordVariant"
+ },
+ {
+  "address": "0x527090",
+  "name": "UI_LoadFontByName"
+ },
+ {
+  "address": "0x477c80",
+  "name": "Stats_AddRecordValue"
+ },
+ {
+  "address": "0x532c40",
+  "name": "Anim_Load"
+ },
+ {
+  "address": "0x403a60",
+  "name": "Timer_Destroy"
+ },
+ {
+  "address": "0x4dc540",
+  "name": "Object_SetFacadeAndLogoVariant"
+ },
+ {
+  "address": "0x4f1b60",
+  "name": "MapActor_UpdateLinkedOverlays"
+ },
+ {
+  "address": "0x4ecd70",
+  "name": "MapActor_ReadFromStream"
+ },
+ {
+  "address": "0x4fbee0",
+  "name": "Map_CommitPendingObjectEdits"
+ },
+ {
+  "address": "0x4eef40",
+  "name": "Map_BuildElementAnimationList"
+ },
+ {
+  "address": "0x4dc420",
+  "name": "Object_SetSignAndLogoVariant"
+ },
+ {
+  "address": "0x528930",
+  "name": "UI_Bar_Construct"
+ },
+ {
+  "address": "0x523100",
+  "name": "UI_Manager_Construct"
+ },
+ {
+  "address": "0x4d87f0",
+  "name": "City_BuildObjectListEntries"
+ },
+ {
+  "address": "0x51ef80",
+  "name": "UI_Image_Construct"
+ },
+ {
+  "address": "0x4dd6b0",
+  "name": "Company_ConstructDefault"
+ },
+ {
+  "address": "0x4d9780",
+  "name": "City_GenerateRatingNews"
+ },
+ {
+  "address": "0x5235b0",
+  "name": "UI_Manager_Destroy"
+ },
+ {
+  "address": "0x509a20",
+  "name": "Branch_ComputeAdvisorTipId"
+ },
+ {
+  "address": "0x4dc760",
+  "name": "Map_SpawnAdvertisingZeppelin"
+ },
+ {
+  "address": "0x4dce70",
+  "name": "City_SettleAdvertisingCampaign"
+ },
+ {
+  "address": "0x477190",
+  "name": "Branch_SpawnWalkInCustomer"
+ },
+ {
+  "address": "0x521000",
+  "name": "UI_ImageChild_Construct"
+ },
+ {
+  "address": "0x49b720",
+  "name": "SaveMenu_ScanMenuFileList"
+ },
+ {
+  "address": "0x498a70",
+  "name": "SaveGame_ScanSaveFileList"
+ },
+ {
+  "address": "0x504430",
+  "name": "MissionGoal_Evaluate"
+ },
+ {
+  "address": "0x4fecc0",
+  "name": "AI_UpdateAdvertisingCampaigns"
+ },
+ {
+  "address": "0x4cded0",
+  "name": "SubStartMenuA_InitSaveGamePage"
+ },
+ {
+  "address": "0x4ce450",
+  "name": "FreePlaySubmenu_InitSaveGamePage"
+ },
+ {
+  "address": "0x4e41c0",
+  "name": "FurnitureType_InitTable"
+ },
+ {
+  "address": "0x49b5f0",
+  "name": "Menu_BuildUnassignedMenuList"
+ },
+ {
+  "address": "0x53cf40",
+  "name": "Sprite_Destruct"
+ },
+ {
+  "address": "0x47e930",
+  "name": "Branch_StartConstructionOnPlot"
+ },
+ {
+  "address": "0x5335f0",
+  "name": "SpriteFile_Destruct"
+ },
+ {
+  "address": "0x401970",
+  "name": "ResourceManager_Construct"
+ },
+ {
+  "address": "0x4039d0",
+  "name": "TimerClass_Construct"
+ },
+ {
+  "address": "0x47a920",
+  "name": "Branch_ApplyStatsToOwner"
+ },
+ {
+  "address": "0x532400",
+  "name": "UI_AddSelectionGroup"
+ },
+ {
+  "address": "0x4f2ac0",
+  "name": "Grid_CollectFootprintCellsAtCell"
+ },
+ {
+  "address": "0x401a20",
+  "name": "ResourceManager_Destruct"
+ },
+ {
+  "address": "0x4ddb80",
+  "name": "Player_AddBranchPlan"
+ },
+ {
+  "address": "0x48c1c0",
+  "name": "Object_AbortOrderForTarget"
+ },
+ {
+  "address": "0x5471d0",
+  "name": "SoundSystem_Destruct"
+ },
+ {
+  "address": "0x4f7b50",
+  "name": "Branch_RemoveAllStaff"
+ },
+ {
+  "address": "0x547030",
+  "name": "SoundSystem_Construct"
+ },
+ {
+  "address": "0x4b3fb0",
+  "name": "CompanyOverview_InitWindow"
+ },
+ {
+  "address": "0x4ac800",
+  "name": "StatisticsBranchBalance_InitMetricSliders"
+ },
+ {
+  "address": "0x4949a0",
+  "name": "CompanyProfileWindow_InitCategoryLayout"
+ },
+ {
+  "address": "0x4c4fa0",
+  "name": "CityInfo_InitQuarterPanel"
+ },
+ {
+  "address": "0x4b9c90",
+  "name": "CompanyList_InitCompanyRows"
+ },
+ {
+  "address": "0x4a3230",
+  "name": "CompetitorWindow_InitStatsPanel"
+ },
+ {
+  "address": "0x4b0090",
+  "name": "StatisticsBackdrop_InitCompanyRows"
+ },
+ {
+  "address": "0x49cf90",
+  "name": "CompanyRating_InitCompanyList"
+ },
+ {
+  "address": "0x4ad360",
+  "name": "StatisticsBranchBalance_InitCategoryRows"
+ },
+ {
+  "address": "0x4c54d0",
+  "name": "BranchWindow_InitCostPanel"
+ },
+ {
+  "address": "0x4c58f0",
+  "name": "BranchWindow_InitCompetitorRows"
+ },
+ {
+  "address": "0x4d5360",
+  "name": "City_SpawnPersonAtRandomCell"
+ },
+ {
+  "address": "0x4ffcb0",
+  "name": "CityMap_TryPlaceBuilding"
+ },
+ {
+  "address": "0x4a4520",
+  "name": "BranchWindow_InitPriceRows"
+ },
+ {
+  "address": "0x50d4f0",
+  "name": "Object_ComputeInteractionCell"
+ },
+ {
+  "address": "0x4b98e0",
+  "name": "CompanyBranches_InitBranchRows"
+ },
+ {
+  "address": "0x4ac460",
+  "name": "StatisticsBranchBalance_InitBranchTabs"
+ },
+ {
+  "address": "0x4a1b00",
+  "name": "LoadGameMenu_InitSlotList"
+ },
+ {
+  "address": "0x5211a0",
+  "name": "UI_CustomControl_Destructor"
+ },
+ {
+  "address": "0x48f710",
+  "name": "CompanyRating_InitHeaderRow"
+ },
+ {
+  "address": "0x4d0040",
+  "name": "UI_InfoPanelBranch_InitTabStates"
+ },
+ {
+  "address": "0x4a28f0",
+  "name": "AttackMenu_InitCompetitorRows"
+ },
+ {
+  "address": "0x4997a0",
+  "name": "RecipeEditor_InitRecipeRows"
+ },
+ {
+  "address": "0x49d4a0",
+  "name": "RecipeComparison_InitRecipeRows"
+ },
+ {
+  "address": "0x52f690",
+  "name": "UI_AddTextButton"
+ },
+ {
+  "address": "0x507a80",
+  "name": "Person_TruncatePathToCurrentStep"
+ },
+ {
+  "address": "0x50e7a0",
+  "name": "Person_CanContinuePath"
+ },
+ {
+  "address": "0x4fb660",
+  "name": "Customer_VisitBranch"
+ },
+ {
+  "address": "0x5078d0",
+  "name": "Person_PathToTileAndStep"
+ },
+ {
+  "address": "0x42bde0",
+  "name": "Window_BuildCompanyProfilePage"
+ },
+ {
+  "address": "0x42caa0",
+  "name": "Window_BuildMarketAnalysisPage"
+ },
+ {
+  "address": "0x493110",
+  "name": "Window_UpdateStaffPlanPage"
+ },
+ {
+  "address": "0x4a6990",
+  "name": "Window_UpdateCompanyProfilePage"
+ },
+ {
+  "address": "0x4a81f0",
+  "name": "Window_UpdateConstructionOrderPage"
+ },
+ {
+  "address": "0x4dae90",
+  "name": "City_UpdateSecurityPatrolFrames"
+ },
+ {
+  "address": "0x4eb0f0",
+  "name": "IsoMap_Construct"
+ },
+ {
+  "address": "0x507920",
+  "name": "Person_RecomputePathStep"
+ },
+ {
+  "address": "0x52fa40",
+  "name": "UI_AddInputField"
+ },
+ {
+  "address": "0x4b83f0",
+  "name": "Window_UpdateBranchInfoPage"
+ },
+ {
+  "address": "0x4c2be0",
+  "name": "Window_UpdateFurniturePage"
+ },
+ {
+  "address": "0x4c16e0",
+  "name": "Window_UpdateWarehousePage"
+ },
+ {
+  "address": "0x4871a0",
+  "name": "Game_CompleteObjectTransfer"
+ },
+ {
+  "address": "0x4c4e30",
+  "name": "Window_UpdatePolicePage"
+ },
+ {
+  "address": "0x433790",
+  "name": "Window_BuildStatisticsBranchBalancePage"
+ },
+ {
+  "address": "0x422900",
+  "name": "Window_BuildRecipeEditorPage"
+ },
+ {
+  "address": "0x44b5a0",
+  "name": "Window_BuildBranchProductsPage"
+ },
+ {
+  "address": "0x411b90",
+  "name": "Window_BuildBranchPriceSettingsPage"
+ },
+ {
+  "address": "0x445c80",
+  "name": "Window_BuildBranchManagerPage"
+ },
+ {
+  "address": "0x4d01c0",
+  "name": "Screen_OptionsSidebar_SelectPage"
+ },
+ {
+  "address": "0x4cb3c0",
+  "name": "FreePlaySetup_SetOpponentSlotEnabled"
+ },
+ {
+  "address": "0x4aef90",
+  "name": "Glossary_BranchesPage_Init"
+ },
+ {
+  "address": "0x4af250",
+  "name": "Glossary_IngredientList_Update"
+ },
+ {
+  "address": "0x4e3b70",
+  "name": "Player_RestorePlanTargetAnimations"
+ },
+ {
+  "address": "0x480ab0",
+  "name": "MapObject_RemoveAndRefund"
+ },
+ {
+  "address": "0x505340",
+  "name": "MapObject_ReadRenderRecord"
+ },
+ {
+  "address": "0x480e30",
+  "name": "MapObject_RestoreSignLogoAnimations"
+ },
+ {
+  "address": "0x4aeac0",
+  "name": "Glossary_BuildingsPage_Init"
+ },
+ {
+  "address": "0x52e8b0",
+  "name": "Tooltip_SetBackgroundImage"
+ },
+ {
+  "address": "0x47c7d0",
+  "name": "MapObject_SettlePendingAmount"
+ },
+ {
+  "address": "0x50d710",
+  "name": "Object_BeginServiceDecision"
+ },
+ {
+  "address": "0x4d3470",
+  "name": "Car_LoadSpriteRecord"
+ },
+ {
+  "address": "0x48ea50",
+  "name": "Game_ReturnToPlayScreen"
+ },
+ {
+  "address": "0x4a52d0",
+  "name": "TradeOffer_Page_Init"
+ },
+ {
+  "address": "0x523590",
+  "name": "UI_Manager_ScalarDeletingDestructor"
+ },
+ {
+  "address": "0x53c7d0",
+  "name": "Sprite_ScalarDeletingDestructor"
+ },
+ {
+  "address": "0x401a00",
+  "name": "ResourceManager_ScalarDeletingDestructor"
+ },
+ {
+  "address": "0x532c20",
+  "name": "Animation_ScalarDeletingDestructor"
+ },
+ {
+  "address": "0x403a40",
+  "name": "TimerClass_ScalarDeletingDestructor"
+ },
+ {
+  "address": "0x52fc00",
+  "name": "UI_CreateSlider"
+ },
+ {
+  "address": "0x4a80e0",
+  "name": "Rating_UpdateBarByKey"
+ },
+ {
+  "address": "0x531c60",
+  "name": "UI_CreateBitmapGadget"
+ },
+ {
+  "address": "0x505e00",
+  "name": "Object_IsVisibleThisFrame"
+ },
+ {
+  "address": "0x4a66d0",
+  "name": "Personnel_SetEmployeePhotoByKey"
+ },
+ {
+  "address": "0x531a50",
+  "name": "UI_CreateAnimationWindow"
+ },
+ {
+  "address": "0x4f21e0",
+  "name": "Object_UpdateWalkStep"
+ },
+ {
+  "address": "0x4d2420",
+  "name": "MapObject_SetTypeAndSprite"
+ },
+ {
+  "address": "0x4aab00",
+  "name": "StatisticsBalance_UpdateReport"
+ },
+ {
+  "address": "0x4aa740",
+  "name": "StatisticsBalance_UpdateBranchList"
+ },
+ {
+  "address": "0x47c5e0",
+  "name": "Branch_ClearInteriorObjects"
+ },
+ {
+  "address": "0x48c220",
+  "name": "Game_AbortOrdersTargetingObject"
+ },
+ {
+  "address": "0x48e6d0",
+  "name": "Branch_UpdateStarRating"
+ },
+ {
+  "address": "0x4b1a50",
+  "name": "PersonnelPlan_UpdateEmployeeDetail"
+ },
+ {
+  "address": "0x4a7c30",
+  "name": "Mission_UpdateObjectivesPanel"
+ },
+ {
+  "address": "0x4b1f40",
+  "name": "PersonnelPlan_LayoutEmployeeList"
+ },
+ {
+  "address": "0x4cec60",
+  "name": "SubMenu_UpdateButtonStatesVariant1"
+ },
+ {
+  "address": "0x4a6c20",
+  "name": "SubMenu_UpdateMenuPlanPage"
+ },
+ {
+  "address": "0x4a7180",
+  "name": "BauenPage_UpdateBuildingMarket"
+ },
+ {
+  "address": "0x4eb900",
+  "name": "IsoMap_DeserializeGrid"
+ },
+ {
+  "address": "0x4b10e0",
+  "name": "PersonnelPage_UpdateEmployeePanel"
+ },
+ {
+  "address": "0x4cdac0",
+  "name": "Screen_MissionBriefing_Populate"
+ },
+ {
+  "address": "0x50d930",
+  "name": "Character_OnArriveAtDestination"
+ },
+ {
+  "address": "0x4cefe0",
+  "name": "SubMenu_UpdateButtonStatesVariant2"
+ },
+ {
+  "address": "0x458140",
+  "name": "SubMenu_BuildCriminalHiring"
+ },
+ {
+  "address": "0x444ee0",
+  "name": "SubMenu_BuildAttacks"
+ },
+ {
+  "address": "0x442870",
+  "name": "StatisticsRecipes_CreateWindow"
+ },
+ {
+  "address": "0x456450",
+  "name": "SubMenu_BuildPersonnelChoice"
+ },
+ {
+  "address": "0x42fe10",
+  "name": "SubMenu_BuildPolice"
+ },
+ {
+  "address": "0x46ee80",
+  "name": "SubMenu_BuildEndResult"
+ },
+ {
+  "address": "0x42f340",
+  "name": "SubMenu_BuildTownAdministration"
+ },
+ {
+  "address": "0x476b60",
+  "name": "Branch_Construct"
+ },
+ {
+  "address": "0x44e390",
+  "name": "SubMenu_BuildMayor"
+ },
+ {
+  "address": "0x4acdc0",
+  "name": "StatisticsBranchBalance_UpdateWeeklyRows"
+ },
+ {
+  "address": "0x46a390",
+  "name": "SubMenu_BuildGuardOverview"
+ },
+ {
+  "address": "0x4756e0",
+  "name": "FreePlaySubMenu_BuildLoadSavegame"
+ },
+ {
+  "address": "0x455be0",
+  "name": "SubMenu_BuildCriminalOrderStatus"
+ },
+ {
+  "address": "0x454ee0",
+  "name": "SubMenu_BuildStockInformation"
+ },
+ {
+  "address": "0x44cc90",
+  "name": "SubMenu_BuildPizzaContestInvitation"
+ },
+ {
+  "address": "0x4b2240",
+  "name": "StatisticsPersonnel_UpdateWindow"
+ },
+ {
+  "address": "0x453760",
+  "name": "SubMenu_BuildGuardHiring"
+ },
+ {
+  "address": "0x4501c0",
+  "name": "SubMenu_BuildCourierMission"
+ },
+ {
+  "address": "0x4cbcd0",
+  "name": "FreePlaySetup_InitWindow"
+ },
+ {
+  "address": "0x5268c0",
+  "name": "UI_ShowChoiceMessageBox"
+ },
+ {
+  "address": "0x426c30",
+  "name": "SubMenu_BuildSaveGame"
+ },
+ {
+  "address": "0x426200",
+  "name": "SubMenu_BuildLoadSavegame"
+ },
+ {
+  "address": "0x46cc70",
+  "name": "UI_CreateScrollListWindow"
+ },
+ {
+  "address": "0x46bfa0",
+  "name": "AI_DebugStatusWindow_Create"
+ },
+ {
+  "address": "0x507d90",
+  "name": "Person_AdvanceRoute"
+ },
+ {
+  "address": "0x50adf0",
+  "name": "Person_ProcessMoveEvent"
+ },
+ {
+  "address": "0x50e7d0",
+  "name": "Person_ResumeRouteOrDetach"
+ },
+ {
+  "address": "0x415620",
+  "name": "Screen_PersonnelOverview"
+ },
+ {
+  "address": "0x42ddf0",
+  "name": "Screen_BuildingProject"
+ },
+ {
+  "address": "0x4951f0",
+  "name": "PersonnelOverview_Refresh"
+ },
+ {
+  "address": "0x42d990",
+  "name": "Screen_MissionGoals"
+ },
+ {
+  "address": "0x42d560",
+  "name": "Screen_BranchList"
+ },
+ {
+  "address": "0x406910",
+  "name": "UI_ShowLoadingOverlay"
+ },
+ {
+  "address": "0x45d3e0",
+  "name": "Screen_Warehouse"
+ },
+ {
+  "address": "0x45c150",
+  "name": "Screen_BranchOffer"
+ },
+ {
+  "address": "0x50c2e0",
+  "name": "Person_ResolveGroupFight"
+ },
+ {
+  "address": "0x50c0f0",
+  "name": "Person_ApplyAttackOutcome"
+ },
+ {
+  "address": "0x46c690",
+  "name": "Dialog_Confirm"
+ },
+ {
+  "address": "0x46c570",
+  "name": "Dialog_Loading"
+ },
+ {
+  "address": "0x4c2000",
+  "name": "WarehouseScreen_Refresh"
+ },
+ {
+  "address": "0x507c90",
+  "name": "Person_WanderToLinkedCell"
+ },
+ {
+  "address": "0x507b40",
+  "name": "Person_WanderToRandomTile"
+ },
+ {
+  "address": "0x4db010",
+  "name": "City_SetPlayerAdvertisingBudget"
+ },
+ {
+  "address": "0x43edb0",
+  "name": "Screen_StatisticsPersonnel"
+ },
+ {
+  "address": "0x46f9c0",
+  "name": "Screen_EndResults"
+ },
+ {
+  "address": "0x4632c0",
+  "name": "Screen_PersonnelRecord"
+ },
+ {
+  "address": "0x449a80",
+  "name": "Screen_CompetitorDetails"
+ },
+ {
+  "address": "0x451dd0",
+  "name": "Screen_BranchDetails"
+ },
+ {
+  "address": "0x4c51b0",
+  "name": "CityInfo_UpdateDemandRatingBars"
+ },
+ {
+  "address": "0x49d6f0",
+  "name": "RecipeEdit_UpdateRatingBars"
+ },
+ {
+  "address": "0x4af370",
+  "name": "Glossary_InitIngredientPage"
+ },
+ {
+  "address": "0x481050",
+  "name": "MapObject_RemoveFromMap"
+ },
+ {
+  "address": "0x499be0",
+  "name": "NewRecipe_CloseIngredientPalette"
+ },
+ {
+  "address": "0x48f860",
+  "name": "BranchInfo_UpdateRatingBars"
+ },
+ {
+  "address": "0x4b8830",
+  "name": "CompanyProfile_UpdateRatingBars"
+ },
+ {
+  "address": "0x4d34e0",
+  "name": "Car_LoadFromStream"
+ },
+ {
+  "address": "0x4c39f0",
+  "name": "GamePlan_UpdateEffectBars"
+ },
+ {
+  "address": "0x4962a0",
+  "name": "CompareScreen_UpdateMenuRatingBars"
+ },
+ {
+  "address": "0x492ae0",
+  "name": "TakeoverScreen_UpdateRatingBars"
+ },
+ {
+  "address": "0x4d35a0",
+  "name": "Car_DriveToPoint"
+ },
+ {
+  "address": "0x4befd0",
+  "name": "GangsterWeaponPanel_RefreshWithSound"
+ },
+ {
+  "address": "0x5272a0",
+  "name": "UI_SetFontName"
+ },
+ {
+  "address": "0x4b63f0",
+  "name": "StaffCosts_UpdatePage"
+ },
+ {
+  "address": "0x49da50",
+  "name": "RecipeEdit_PlaceIngredient"
+ },
+ {
+  "address": "0x499d20",
+  "name": "NewRecipe_PlaceIngredient"
+ },
+ {
+  "address": "0x4ab6a0",
+  "name": "StatisticsBalance_ChangeTimeSelection"
+ },
+ {
+  "address": "0x498e20",
+  "name": "RecipeList_SelectRecipe"
+ },
+ {
+  "address": "0x49d910",
+  "name": "RecipeEdit_CloseIngredientPalette"
+ },
+ {
+  "address": "0x4817a0",
+  "name": "GameWorld_Delete"
+ },
+ {
+  "address": "0x521160",
+  "name": "UI_Viewport_Delete"
+ },
+ {
+  "address": "0x4240a0",
+  "name": "SubMenu_BuildRecipeIngredients"
+ },
+ {
+  "address": "0x41a800",
+  "name": "SubMenu_BuildRecipeList"
+ },
+ {
+  "address": "0x417590",
+  "name": "SubMenu_BuildMenuOverview"
+ },
+ {
+  "address": "0x459300",
+  "name": "SubMenu_BuildBranchStorerooms"
+ },
+ {
+  "address": "0x41ed20",
+  "name": "SubMenu_BuildMenuPlan"
+ },
+ {
+  "address": "0x461b20",
+  "name": "SubMenu_BuildKitchen"
+ },
+ {
+  "address": "0x45ebd0",
+  "name": "SubMenu_BuildSupplierInfo"
+ },
+ {
+  "address": "0x40daa0",
+  "name": "SubMenu_BuildFurnishings"
+ },
+ {
+  "address": "0x45aad0",
+  "name": "SubMenu_BuildWarehouse"
+ },
+ {
+  "address": "0x41c000",
+  "name": "SubMenu_BuildNewRecipe"
+ },
+ {
+  "address": "0x418d60",
+  "name": "SubMenu_BuildBranchAdvertising"
+ },
+ {
+  "address": "0x421380",
+  "name": "SubMenu_BuildContestRecipe"
+ },
+ {
+  "address": "0x466b10",
+  "name": "SubMenu_BuildPosterAdvertisingStatus"
+ },
+ {
+  "address": "0x40f1d0",
+  "name": "SubMenu_BuildBranchInformation"
+ },
+ {
+  "address": "0x4508a0",
+  "name": "SubMenu_BuildBranchOverview"
+ },
+ {
+  "address": "0x465600",
+  "name": "SubMenu_BuildPosterAdvertisingSetup"
+ },
+ {
+  "address": "0x443ab0",
+  "name": "SubMenu_BuildAnnoyances"
+ },
+ {
+  "address": "0x410740",
+  "name": "SubMenu_BuildInteriorDesigner"
+ },
+ {
+  "address": "0x40bc50",
+  "name": "SubMenu_BuildBranchExpansion"
+ },
+ {
+  "address": "0x456f70",
+  "name": "SubMenu_BuildSchool"
+ },
+ {
+  "address": "0x4281e0",
+  "name": "SubMenu_BuildSyndicate"
+ },
+ {
+  "address": "0x453ec0",
+  "name": "SubMenu_BuildHeadquarters"
+ },
+ {
+  "address": "0x4d44e0",
+  "name": "City_ConstructFromName"
+ },
+ {
+  "address": "0x429fb0",
+  "name": "SubMenu_BuildGuards"
+ },
+ {
+  "address": "0x4cf690",
+  "name": "RestaurantInfoPanel_UpdateTabButtons"
+ },
+ {
+  "address": "0x4cf380",
+  "name": "CityAdminPanel_UpdateTabButtons"
+ },
+ {
+  "address": "0x4c4bd0",
+  "name": "PolicePage_FillContributionStats"
+ },
+ {
+  "address": "0x4cfa20",
+  "name": "BranchScreen_UpdateTabButtons"
+ },
+ {
+  "address": "0x49d300",
+  "name": "ContestRecipePage_FillIngredientDetails"
+ },
+ {
+  "address": "0x4a3bc0",
+  "name": "HeadquartersPage_FillCompetitorRows"
+ },
+ {
+  "address": "0x499600",
+  "name": "CreateRecipePage_FillIngredientDetails"
+ },
+ {
+  "address": "0x4055d0",
+  "name": "Game_ShutdownSubsystems"
+ },
+ {
+  "address": "0x49f1e0",
+  "name": "RecipeKitchen_ShowPlacedIngredient"
+ },
+ {
+  "address": "0x4e64c0",
+  "name": "Game_Construct"
+ },
+ {
+  "address": "0x52c500",
+  "name": "UI_RichText_SetMarkupText"
+ },
+ {
+  "address": "0x4b5ac0",
+  "name": "AnnoyancesPage_FillCosts"
+ },
+ {
+  "address": "0x4b7430",
+  "name": "AttacksPage_FillProtectionMoney"
+ },
+ {
+  "address": "0x4be9e0",
+  "name": "CriminalsPage_FillUnitDetails"
+ },
+ {
+  "address": "0x52d360",
+  "name": "UI_TextPanel_Construct"
+ },
+ {
+  "address": "0x47d4a0",
+  "name": "Branch_ProcessCustomerOrder"
+ },
+ {
+  "address": "0x4af8f0",
+  "name": "GlossaryWeapons_FillWeaponPage"
+ },
+ {
+  "address": "0x522010",
+  "name": "UI_TextLabel_Construct"
+ },
+ {
+  "address": "0x4bf980",
+  "name": "CriminalsPage_FillRecruitOptions"
+ },
+ {
+  "address": "0x4b8a20",
+  "name": "StaffPage_FillEmployeeDetails"
+ },
+ {
+  "address": "0x488e20",
+  "name": "GameState_Destruct"
+ },
+ {
+  "address": "0x4c7110",
+  "name": "CharacterSelect_UpdateScreen"
+ },
+ {
+  "address": "0x4cfc80",
+  "name": "RecipeKitchen_UpdateTabButtons"
+ },
+ {
+  "address": "0x4be1a0",
+  "name": "StockPage_FillStorageDetails"
+ },
+ {
+  "address": "0x427bb0",
+  "name": "HeadquartersExpansionPage_Create"
+ },
+ {
+  "address": "0x469e30",
+  "name": "PestMenu_CreateWindow"
+ },
+ {
+  "address": "0x42ad30",
+  "name": "BauenPage_Create"
+ },
+ {
+  "address": "0x4962e0",
+  "name": "CityBuildingListPage_Update"
+ },
+ {
+  "address": "0x426840",
+  "name": "SoundOptionsPage_Create"
+ },
+ {
+  "address": "0x46d400",
+  "name": "MissionOfferDialog_Create"
+ },
+ {
+  "address": "0x4a3f70",
+  "name": "HeadquartersCompanyPage_Update"
+ },
+ {
+  "address": "0x47c3e0",
+  "name": "Company_AssignEmployee"
+ },
+ {
+  "address": "0x427270",
+  "name": "GameOptionsPage_Create"
+ },
+ {
+  "address": "0x4c3a40",
+  "name": "PosterAdvertisingPage_Update"
+ },
+ {
+  "address": "0x46c820",
+  "name": "RequestDialog_Create"
+ },
+ {
+  "address": "0x425f30",
+  "name": "GraphicsOptionsPage_Create"
+ },
+ {
+  "address": "0x492b20",
+  "name": "ManagerPage_Update"
+ },
+ {
+  "address": "0x4835c0",
+  "name": "CityOverviewDialog_Show"
+ },
+ {
+  "address": "0x4999f0",
+  "name": "RecipeEditorPage_Update"
+ },
+ {
+  "address": "0x4ab830",
+  "name": "StatisticsScreen_ChangeTab"
+ },
+ {
+  "address": "0x46cad0",
+  "name": "HelpTopicDialog_Create"
+ },
+ {
+  "address": "0x47f670",
+  "name": "Company_RemoveAttachedBuildingObjects"
+ },
+ {
+  "address": "0x474c70",
+  "name": "LoadingScreen_Create"
+ },
+ {
+  "address": "0x49d770",
+  "name": "PizzaContestRecipePage_Update"
+ },
+ {
+  "address": "0x4b8870",
+  "name": "OtherManagerPage_Update"
+ },
+ {
+  "address": "0x46d290",
+  "name": "MissionHintWindow_Create"
+ },
+ {
+  "address": "0x475f90",
+  "name": "MissionFailedScreen_Create"
+ },
+ {
+  "address": "0x509c10",
+  "name": "Building_PruneStaleListRow"
+ },
+ {
+  "address": "0x4ba440",
+  "name": "Game_EnterSelectedBranch"
+ },
+ {
+  "address": "0x48b9b0",
+  "name": "Game_HandleBriefingEntry"
+ },
+ {
+  "address": "0x49c450",
+  "name": "RecipeMenu_ShowRecipeChooser"
+ },
+ {
+  "address": "0x498ef0",
+  "name": "RecipeMenu_ShowRecipeFileChooser"
+ },
+ {
+  "address": "0x49c4d0",
+  "name": "RecipeMenu_ShowMenuFileChooser"
+ },
+ {
+  "address": "0x50be90",
+  "name": "Object_StartWorkOrderAndSetState"
+ },
+ {
+  "address": "0x50be00",
+  "name": "Object_StartOrderAction9"
+ },
+ {
+  "address": "0x49bd90",
+  "name": "RecipeRankingPanel_Update"
+ },
+ {
+  "address": "0x49e270",
+  "name": "CompanyRecipeIngredients_Update"
+ },
+ {
+  "address": "0x49e940",
+  "name": "RecipeEditorIngredients_Update"
+ },
+ {
+  "address": "0x4bc530",
+  "name": "PersonInfoPanel_Update"
+ },
+ {
+  "address": "0x4c47d0",
+  "name": "BranchInfoPanel_Update"
+ },
+ {
+  "address": "0x430a80",
+  "name": "CityMapView_CreateWindow"
+ },
+ {
+  "address": "0x443520",
+  "name": "StatisticsView_CreateWindow"
+ },
+ {
+  "address": "0x4983f0",
+  "name": "RecipeListPanel_Update"
+ },
+ {
+  "address": "0x4c1c00",
+  "name": "BranchStorageDistribution_Update"
+ },
+ {
+  "address": "0x41a2b0",
+  "name": "CityDetailView_CreateOwnCityWindow"
+ },
+ {
+  "address": "0x44d4a0",
+  "name": "CityDetailView_CreateForeignCityWindow"
+ },
+ {
+  "address": "0x4c0d80",
+  "name": "BranchStoragePanel_Update"
+ },
+ {
+  "address": "0x489c50",
+  "name": "MapCell_CheckSpriteOverlap"
+ },
+ {
+  "address": "0x4275a0",
+  "name": "OfficeView_CreateWindow"
+ },
+ {
+  "address": "0x4080e0",
+  "name": "Game_UpdateVisitorObjectState"
+ },
+ {
+  "address": "0x497180",
+  "name": "AdvertisingScreen_UpdatePlan"
+ },
+ {
+  "address": "0x4a3d40",
+  "name": "CompanyProfile_UpdateStatistics"
+ },
+ {
+  "address": "0x46d910",
+  "name": "RecipeSelectPopup_CreateWindow"
+ },
+ {
+  "address": "0x4aa340",
+  "name": "RankingPanel_UpdatePlayerSummary"
+ },
+ {
+  "address": "0x4a3490",
+  "name": "HeadquartersPanel_UpdateStaffCosts"
+ },
+ {
+  "address": "0x4b8da0",
+  "name": "PersonnelPanel_Update"
+ },
+ {
+  "address": "0x4a48b0",
+  "name": "CompanyOverview_UpdatePanel"
+ },
+ {
+  "address": "0x4bbfd0",
+  "name": "BranchRatingPanel_Update"
+ },
+ {
+  "address": "0x4b81e0",
+  "name": "JobMarketPanel_Update"
+ },
+ {
+  "address": "0x43cee0",
+  "name": "Glossary_BuildTargetGroupsPage"
+ },
+ {
+  "address": "0x448650",
+  "name": "SubMenu_BuildRatingComparison"
+ },
+ {
+  "address": "0x46ac80",
+  "name": "SubMenu_BuildAdvertisingCampaign"
+ },
+ {
+  "address": "0x44ee20",
+  "name": "SubMenu_BuildBranchRating"
+ },
+ {
+  "address": "0x43b940",
+  "name": "Glossary_BuildCityBuildingsPage"
+ },
+ {
+  "address": "0x429290",
+  "name": "SubMenu_BuildCompanyComparison"
+ },
+ {
+  "address": "0x43aca0",
+  "name": "Glossary_BuildCompanyBuildingsPage"
+ },
+ {
+  "address": "0x44d8c0",
+  "name": "SubMenu_BuildBranchReport"
+ },
+ {
+  "address": "0x4bd750",
+  "name": "CompanyOverview_FillTotals"
+ },
+ {
+  "address": "0x4bb760",
+  "name": "BuildingInfo_Fill"
+ },
+ {
+  "address": "0x509580",
+  "name": "Action_AddBestRecipeToBranchMenu"
+ },
+ {
+  "address": "0x4811b0",
+  "name": "GameSession_Construct"
+ },
+ {
+  "address": "0x476100",
+  "name": "HighScore_BuildCityListWindow"
+ },
+ {
+  "address": "0x494c10",
+  "name": "PersonnelPage_UpdateEmployee"
+ },
+ {
+  "address": "0x4a2a10",
+  "name": "CompanyInfo_FillActions"
+ },
+ {
+  "address": "0x505910",
+  "name": "PersonAction_LoadState"
+ },
+ {
+  "address": "0x43c7e0",
+  "name": "Glossary_BuildHeadSymbolsPage"
+ },
+ {
+  "address": "0x4258c0",
+  "name": "Screen_BuildOfficeDesk"
+ },
+ {
+  "address": "0x4556f0",
+  "name": "SubMenu_BuildGuardAssignment"
+ },
+ {
+  "address": "0x4bb120",
+  "name": "StarAward_Fill"
+ },
+ {
+  "address": "0x4c07c0",
+  "name": "MenuPage_FillRecipeDetails"
+ },
+ {
+  "address": "0x4f26f0",
+  "name": "CityAds_UpdateCampaign"
+ },
+ {
+  "address": "0x4c3310",
+  "name": "OvenPage_FillStatistics"
+ },
+ {
+  "address": "0x4c5a60",
+  "name": "AdvertisingPage_FillCampaign"
+ },
+ {
+  "address": "0x5087c0",
+  "name": "Person_LeaveBuildingAndReset"
+ },
+ {
+  "address": "0x4e3ab0",
+  "name": "Company_DeactivatePlanEntry"
+ },
+ {
+  "address": "0x50e310",
+  "name": "Person_CancelVisitAtOccupiedBuilding"
+ },
+ {
+  "address": "0x4e2080",
+  "name": "Company_AddStaffMember"
+ },
+ {
+  "address": "0x4f7c30",
+  "name": "Branch_ValidateMenuAndRecalculate"
+ },
+ {
+  "address": "0x4fe370",
+  "name": "Company_AssignStaffToBranch"
+ },
+ {
+  "address": "0x4ff4c0",
+  "name": "AI_HireBranchWorker"
+ },
+ {
+  "address": "0x4602d0",
+  "name": "SubMenu_CreateFurniturePage"
+ },
+ {
+  "address": "0x468090",
+  "name": "SubMenu_CreatePolicePage"
+ },
+ {
+  "address": "0x5071d0",
+  "name": "Person_UpdateWaitAndHunger"
+ },
+ {
+  "address": "0x50dd10",
+  "name": "Person_UpdateFightAction"
+ },
+ {
+  "address": "0x50b9c0",
+  "name": "Person_TryDeliverCustomerOrder"
+ },
+ {
+  "address": "0x50a950",
+  "name": "Person_OnArriveAtDestination"
+ },
+ {
+  "address": "0x4ff080",
+  "name": "AI_AssignBuilderToConstructionSite"
+ },
+ {
+  "address": "0x4fe420",
+  "name": "Branch_ApplyProductSales"
+ },
+ {
+  "address": "0x50a7e0",
+  "name": "Person_OnEnterBuilding"
+ },
+ {
+  "address": "0x4fd520",
+  "name": "City_EnsurePedestrianCoverage"
+ },
+ {
+  "address": "0x4da110",
+  "name": "City_SpawnResidentWeighted"
+ },
+ {
+  "address": "0x4da550",
+  "name": "City_SpawnResidentInPreferredCity"
+ },
+ {
+  "address": "0x4fdcf0",
+  "name": "City_MoveResidentIntoVacantHouse"
+ },
+ {
+  "address": "0x4d2f10",
+  "name": "Building_EvictOccupants"
+ },
+ {
+  "address": "0x4ff5d0",
+  "name": "AI_HireCourier"
+ },
+ {
+  "address": "0x50e520",
+  "name": "Person_ClearCompletedAction"
+ },
+ {
+  "address": "0x4e3d30",
+  "name": "Advertising_StartCampaignAgainstPlayer"
+ },
+ {
+  "address": "0x4a24a0",
+  "name": "Screen_CityView_Init"
+ },
+ {
+  "address": "0x50a110",
+  "name": "Waiter_ServeCustomer"
+ },
+ {
+  "address": "0x50a280",
+  "name": "Waiter_LoadOrderFromKitchen"
+ },
+ {
+  "address": "0x4d5250",
+  "name": "Branch_HireExterminator"
+ },
+ {
+  "address": "0x484de0",
+  "name": "Statistics_InitSelectedPage"
+ },
+ {
+  "address": "0x4ffef0",
+  "name": "Staff_HandleKidnapping"
+ },
+ {
+  "address": "0x508d90",
+  "name": "Object_RebuildVisualAtDestination"
+ },
+ {
+  "address": "0x484f60",
+  "name": "SubMenu_InitSelectedPage"
+ },
+ {
+  "address": "0x4fdf00",
+  "name": "AI_SendTroublePunks"
+ },
+ {
+  "address": "0x4febb0",
+  "name": "Branch_ApplyStyleSettings"
+ },
+ {
+  "address": "0x4ba0d0",
+  "name": "Screen_BranchView_Init"
+ },
+ {
+  "address": "0x4d5580",
+  "name": "Branch_ExpelCustomers"
+ },
+ {
+  "address": "0x4c4eb0",
+  "name": "SubMenu_Police_HandleControl"
+ },
+ {
+  "address": "0x4fde00",
+  "name": "AI_SendGraffitiPunk"
+ },
+ {
+  "address": "0x4ff530",
+  "name": "AI_SendGangsterForProtection"
+ },
+ {
+  "address": "0x48b500",
+  "name": "Game_ReassignObjectsFromRemovedBuilding"
+ },
+ {
+  "address": "0x48bae0",
+  "name": "Game_ShowFindPersonPrompt"
+ },
+ {
+  "address": "0x50be30",
+  "name": "Courier_StartHeadquartersBombing"
+ },
+ {
+  "address": "0x50bf00",
+  "name": "Gangster_StartProtectionCollection"
+ },
+ {
+  "address": "0x50be60",
+  "name": "Thug_StartRestaurantRampage"
+ },
+ {
+  "address": "0x48f540",
+  "name": "CityView_SelectBranch"
+ },
+ {
+  "address": "0x495fa0",
+  "name": "Menu_OpenRecipePicker"
+ },
+ {
+  "address": "0x49ed90",
+  "name": "Menu_DeleteRecipeFromCompanyMenu"
+ },
+ {
+  "address": "0x498780",
+  "name": "Menu_DeleteRecipeByIndex"
+ },
+ {
+  "address": "0x46d7d0",
+  "name": "UI_CreateMessageBoxSubmenu"
+ },
+ {
+  "address": "0x489e20",
+  "name": "Game_AnyBuildingReachesCellList"
+ },
+ {
+  "address": "0x4c3610",
+  "name": "FurnitureMenu_InitOvenPage"
+ },
+ {
+  "address": "0x4c3070",
+  "name": "FurnitureMenu_InitChairPage"
+ },
+ {
+  "address": "0x5049a0",
+  "name": "Person_ConstructFromSave"
+ },
+ {
+  "address": "0x4c2950",
+  "name": "MarketShareMenu_Init"
+ },
+ {
+  "address": "0x507d30",
+  "name": "MapObject_StepToRandomCell"
+ },
+ {
+  "address": "0x4c0ff0",
+  "name": "StorageMenu_Init"
+ },
+ {
+  "address": "0x4ead00",
+  "name": "Game_TickWorldObjects"
+ },
+ {
+  "address": "0x490b00",
+  "name": "MusicMenu_Init"
+ },
+ {
+  "address": "0x491ea0",
+  "name": "BuildingInfoMenu_Init"
+ },
+ {
+  "address": "0x4a36d0",
+  "name": "CompanyMenu_InitBranchOverview"
+ },
+ {
+  "address": "0x4d35e0",
+  "name": "Car_PickRandomRoadStep"
+ },
+ {
+  "address": "0x4c0b30",
+  "name": "PriceMenu_Init"
+ },
+ {
+  "address": "0x4c5fc0",
+  "name": "CheatMenu_InitCompanyPage"
+ },
+ {
+  "address": "0x492440",
+  "name": "CompanyMenu_InitStylePage"
+ },
+ {
+  "address": "0x4d3260",
+  "name": "Car_ConstructFromSave"
+ },
+ {
+  "address": "0x4bb650",
+  "name": "FurniturePriceMenu_Init"
+ },
+ {
+  "address": "0x4aa690",
+  "name": "CompanyMenu_InitPolicePage"
+ },
+ {
+  "address": "0x4cb5a0",
+  "name": "ListDialog_Open"
+ },
+ {
+  "address": "0x49a0e0",
+  "name": "Company_CreateNew"
+ },
+ {
+  "address": "0x4c3000",
+  "name": "Game_HandleMapClickCloseSubmenu"
+ },
+ {
+  "address": "0x507e20",
+  "name": "Object_SetDestinationAndTarget"
+ },
+ {
+  "address": "0x482b70",
+  "name": "Game_ShowConfirmationDialog"
+ },
+ {
+  "address": "0x50e6b0",
+  "name": "Person_WalkToCellOrAbort"
+ },
+ {
+  "address": "0x482f40",
+  "name": "Mission_ShowObjectiveDialog"
+ },
+ {
+  "address": "0x483210",
+  "name": "UI_ShowScrollingListDialog"
+ },
+ {
+  "address": "0x482c40",
+  "name": "Game_ShowQuestionDialog"
+ },
+ {
+  "address": "0x482d70",
+  "name": "UI_ShowHelpTopicDialog"
+ },
+ {
+  "address": "0x4844c0",
+  "name": "SubMenu_BuildBranchInteriorPage"
+ },
+ {
+  "address": "0x4f7dd0",
+  "name": "City_AssignPersonToBuilding"
+ },
+ {
+  "address": "0x409c60",
+  "name": "AdCampaign_GoToNextQueuedBuilding"
+ },
+ {
+  "address": "0x409b10",
+  "name": "AdCampaign_GoToNearestOwnBuilding"
+ },
+ {
+  "address": "0x50c9a0",
+  "name": "Person_SelectTargetInFacingArc"
+ },
+ {
+  "address": "0x50cdc0",
+  "name": "Person_SelectFacingTarget"
+ },
+ {
+  "address": "0x409350",
+  "name": "Person_SitAndEatPizza"
+ },
+ {
+  "address": "0x409030",
+  "name": "Person_EnterBuildingAndWork"
+ },
+ {
+  "address": "0x4ad9a0",
+  "name": "StatisticsBranchBalance_InitPage"
+ },
+ {
+  "address": "0x489180",
+  "name": "Game_ValidateObjectPlacement"
+ },
+ {
+  "address": "0x4ab970",
+  "name": "StatisticsBalance_InitPage"
+ },
+ {
+  "address": "0x482930",
+  "name": "Game_ShowDatedMessageDialog"
+ },
+ {
+  "address": "0x4848b0",
+  "name": "SubMenu_BuildGangsterPanelPage"
+ },
+ {
+  "address": "0x484a90",
+  "name": "SubMenu_BuildPolicePanelPage"
+ },
+ {
+  "address": "0x4833b0",
+  "name": "UI_ShowAmountEntryDialog"
+ },
+ {
+  "address": "0x484c50",
+  "name": "SubMenu_BuildRecipePanelPage"
+ },
+ {
+  "address": "0x50e600",
+  "name": "Person_ChooseWanderTarget"
+ },
+ {
+  "address": "0x489bc0",
+  "name": "Game_CommitObjectPlacement"
+ },
+ {
+  "address": "0x48d420",
+  "name": "UI_ShowMessageDialog"
+ },
+ {
+  "address": "0x40bab0",
+  "name": "Game_UpdateIdleCars"
+ },
+ {
+  "address": "0x4da2a0",
+  "name": "City_ChargePoliceBribes"
+ },
+ {
+  "address": "0x50d790",
+  "name": "AI_WanderToRandomRoadTile"
+ },
+ {
+  "address": "0x48d4c0",
+  "name": "UI_ShowPauseDialog"
+ },
+ {
+  "address": "0x482b30",
+  "name": "UI_ShowAIStatusWindow"
+ },
+ {
+  "address": "0x526870",
+  "name": "UI_MessageBoxf"
+ },
+ {
+  "address": "0x485140",
+  "name": "Game_RenderFrame"
+ },
+ {
+  "address": "0x4d54a0",
+  "name": "City_SpawnFlyerBoy"
+ },
+ {
+  "address": "0x49fad0",
+  "name": "UI_ShowRecipeChoiceList"
+ },
+ {
+  "address": "0x406d70",
+  "name": "UI_ShowModalMessageBox"
+ },
+ {
+  "address": "0x4ce320",
+  "name": "UI_ShowConfirmDialog"
+ },
+ {
+  "address": "0x507fd0",
+  "name": "Person_ReturnToHomeBase"
+ },
+ {
+  "address": "0x50a080",
+  "name": "Person_SetRouteToBuilding"
+ },
+ {
+  "address": "0x4e2110",
+  "name": "Company_RemoveStaffMember"
+ },
+ {
+  "address": "0x48c400",
+  "name": "City_SendResidentsToVenue"
+ },
+ {
+  "address": "0x50b5e0",
+  "name": "Person_AssignBranchStaffRole"
+ },
+ {
+  "address": "0x488110",
+  "name": "Game_LoadSaveGame"
+ },
+ {
+  "address": "0x4f8d40",
+  "name": "Branch_AssignEntranceAndCustomerSlots"
+ },
+ {
+  "address": "0x507ee0",
+  "name": "Person_SelectRouteStopForTimeSlot"
+ },
+ {
+  "address": "0x48a4c0",
+  "name": "City_OpenBuildingDirectory"
+ },
+ {
+  "address": "0x409bb0",
+  "name": "Customer_ApproachBranchEntrance"
+ },
+ {
+  "address": "0x4fe300",
+  "name": "Company_DispatchWorkerToBranch"
+ },
+ {
+  "address": "0x50b680",
+  "name": "Person_SendToBranchWithCarryMode"
+ },
+ {
+  "address": "0x508780",
+  "name": "Person_SetRandomResidentialTarget"
+ },
+ {
+  "address": "0x50bed0",
+  "name": "Person_SendToBranchForAction"
+ },
+ {
+  "address": "0x49f6e0",
+  "name": "Screen_RecipeMenu_Construct"
+ },
+ {
+  "address": "0x50df30",
+  "name": "Person_UpdateSocialEncounter"
+ },
+ {
+  "address": "0x48bb70",
+  "name": "Game_SearchObjectsByName"
+ },
+ {
+  "address": "0x4b5110",
+  "name": "Screen_Statistics_Construct"
+ },
+ {
+  "address": "0x407ea0",
+  "name": "Customer_UpdateMovement"
+ },
+ {
+  "address": "0x508120",
+  "name": "Person_FindNearbyBranchToVisit"
+ },
+ {
+  "address": "0x486960",
+  "name": "Game_DispatchQuarterlyVisitors"
+ },
+ {
+  "address": "0x4c3110",
+  "name": "FurnitureMenu_WindowProc"
+ },
+ {
+  "address": "0x4a90a0",
+  "name": "Screen_GameView_Construct"
+ },
+ {
+  "address": "0x48e800",
+  "name": "Screen_BranchDetail_Construct"
+ },
+ {
+  "address": "0x4f7e80",
+  "name": "Company_HireFreeGuard"
+ },
+ {
+  "address": "0x4a4ae0",
+  "name": "Guard_RemoveFromRestaurant"
+ },
+ {
+  "address": "0x491d40",
+  "name": "BranchStats_UpdateRatingPage"
+ },
+ {
+  "address": "0x52bc80",
+  "name": "UI_Text_Construct"
+ },
+ {
+  "address": "0x4909b0",
+  "name": "FurnitureMenu_UpdatePage"
+ },
+ {
+  "address": "0x49af20",
+  "name": "AdvertisingMenu_UpdatePage"
+ },
+ {
+  "address": "0x4be820",
+  "name": "GuardMenu_UpdateOrderPage"
+ },
+ {
+  "address": "0x49d590",
+  "name": "WarehousePanel_UpdatePage"
+ },
+ {
+  "address": "0x499890",
+  "name": "IngredientPanel_UpdatePage"
+ },
+ {
+  "address": "0x4eb280",
+  "name": "IsoMap_ConstructFromStream"
+ },
+ {
+  "address": "0x4bf4d0",
+  "name": "SchoolMenu_UpdatePage"
+ },
+ {
+  "address": "0x509cf0",
+  "name": "Person_BlocksFootprintCells"
+ },
+ {
+  "address": "0x4c2820",
+  "name": "ExclusiveImport_UpdatePage"
+ },
+ {
+  "address": "0x4aca80",
+  "name": "StatisticsBranchBalance_DrawColumn"
+ },
+ {
+  "address": "0x4c5e80",
+  "name": "AIStatus_UpdateCompanyPanel"
+ },
+ {
+  "address": "0x4afd10",
+  "name": "Glossary_UpdatePeoplePage"
+ },
+ {
+  "address": "0x4ab760",
+  "name": "StatisticsBalance_MovePeriod"
+ },
+ {
+  "address": "0x4b9a40",
+  "name": "BranchMenu_UpdatePage"
+ },
+ {
+  "address": "0x4b7a00",
+  "name": "ProtectionDemand_UpdatePage"
+ },
+ {
+  "address": "0x4b1e80",
+  "name": "Personnel_UpdateEmployeeRows"
+ },
+ {
+  "address": "0x474b90",
+  "name": "LoadingWindow_Create"
+ },
+ {
+  "address": "0x509eb0",
+  "name": "Person_BlocksFootprintPath"
+ },
+ {
+  "address": "0x4859c0",
+  "name": "GameView_SetupZoomedViewport"
+ },
+ {
+  "address": "0x492390",
+  "name": "RenovationScreen_UpdatePage"
+ },
+ {
+  "address": "0x4cb480",
+  "name": "FreePlaySetup_RefreshPlayerProfiles"
+ },
+ {
+  "address": "0x4be490",
+  "name": "LeaseBuilding_UpdatePage"
+ },
+ {
+  "address": "0x4a9320",
+  "name": "Game_SelectBuilding"
+ },
+ {
+  "address": "0x503b20",
+  "name": "MissionGoal_ApplyFailureEffects"
+ },
+ {
+  "address": "0x4e3900",
+  "name": "Company_Dissolve"
+ },
+ {
+  "address": "0x4d8d50",
+  "name": "City_TickSimulation"
+ },
+ {
+  "address": "0x4fd610",
+  "name": "AI_Action_AnnoyRival"
+ },
+ {
+  "address": "0x4f7ed0",
+  "name": "AI_Action_BuyOrRentBranch"
+ },
+ {
+  "address": "0x4fce20",
+  "name": "AI_Action_BuildNewBranch"
+ },
+ {
+  "address": "0x4fd310",
+  "name": "AI_EnsureBranchStorage"
+ },
+ {
+  "address": "0x500070",
+  "name": "AI_BuyUndervaluedBuildings"
+ },
+ {
+  "address": "0x47f470",
+  "name": "Branch_HandleBuildCommand"
+ },
+ {
+  "address": "0x4f8a80",
+  "name": "Company_OpenStartingBranch"
+ },
+ {
+  "address": "0x4fd0a0",
+  "name": "Company_EnsureRequiredBranch"
+ },
+ {
+  "address": "0x486f30",
+  "name": "Branch_CompleteConstruction"
+ },
+ {
+  "address": "0x485bb0",
+  "name": "Game_ApplyPendingScreen"
+ },
+ {
+  "address": "0x40b400",
+  "name": "Person_UpdateBehavior"
+ },
+ {
+  "address": "0x50efe0",
+  "name": "Player_MissionState_Tick"
+ },
+ {
+  "address": "0x4fca30",
+  "name": "AI_LiquidateBankruptCompany"
+ },
+ {
+  "address": "0x4fd190",
+  "name": "AI_Action_AssignSuppliers"
+ },
+ {
+  "address": "0x484650",
+  "name": "SubMenu_BuildSelectedPage"
+ },
+ {
+  "address": "0x4daaf0",
+  "name": "City_AddRandomBuilding"
+ },
+ {
+  "address": "0x4f7420",
+  "name": "Player_CreateBranch"
+ },
+ {
+  "address": "0x4f7710",
+  "name": "Player_BuildStorage"
+ },
+ {
+  "address": "0x4fd0f0",
+  "name": "Player_BuildHeadquarters"
+ },
+ {
+  "address": "0x4fe040",
+  "name": "AI_CheckBranchGuards"
+ },
+ {
+  "address": "0x47f780",
+  "name": "Branch_UpgradeSize"
+ },
+ {
+  "address": "0x40b110",
+  "name": "Person_UpdateStreetBehavior"
+ },
+ {
+  "address": "0x5001f0",
+  "name": "Branch_AddAdvertisingPlan"
+ },
+ {
+  "address": "0x4867e0",
+  "name": "Game_EndOfQuarter"
+ },
+ {
+  "address": "0x4ff200",
+  "name": "AI_Annoy_SendThugsToHeadquarters"
+ },
+ {
+  "address": "0x4ffad0",
+  "name": "AI_ImproveSecurity"
+ },
+ {
+  "address": "0x4fd9b0",
+  "name": "AI_Annoy_HireHarasser"
+ },
+ {
+  "address": "0x406e90",
+  "name": "Person_UpdateIndoorAction"
+ },
+ {
+  "address": "0x4ff8b0",
+  "name": "AI_ManageGangsters"
+ },
+ {
+  "address": "0x4fefb0",
+  "name": "AI_Annoy_SendGangsterGroup"
+ },
+ {
+  "address": "0x4ffbe0",
+  "name": "Game_AddPoliceStations"
+ },
+ {
+  "address": "0x4dc9a0",
+  "name": "City_PlaceObjectOnMap"
+ },
+ {
+  "address": "0x48bdd0",
+  "name": "Game_SelectFoundObject"
+ },
+ {
+  "address": "0x4dc0f0",
+  "name": "Company_PlaceScenarioBranches"
+ },
+ {
+  "address": "0x503180",
+  "name": "BuildingProject_AdvanceStep"
+ },
+ {
+  "address": "0x4fe570",
+  "name": "Company_OptimizeMenuPricing"
+ },
+ {
+  "address": "0x481870",
+  "name": "Game_HandleMapInput"
+ },
+ {
+  "address": "0x47fa40",
+  "name": "Branch_ValidatePersonnelList"
+ },
+ {
+  "address": "0x4e0200",
+  "name": "Company_ProcessHourlyTick"
+ },
+ {
+  "address": "0x506d60",
+  "name": "Branch_UpdateConstruction"
+ },
+ {
+  "address": "0x4dd8f0",
+  "name": "Company_GenerateStartingRecipes"
+ },
+ {
+  "address": "0x48bda0",
+  "name": "Game_OnObjectListSelection"
+ },
+ {
+  "address": "0x5016c0",
+  "name": "Company_ExecuteAction"
+ },
+ {
+  "address": "0x481d90",
+  "name": "Game_InitScenario"
+ },
+ {
+  "address": "0x486590",
+  "name": "Game_EndOfHour"
+ },
+ {
+  "address": "0x40b900",
+  "name": "Game_UpdateWorldObjects"
+ },
+ {
+  "address": "0x404af0",
+  "name": "Game_RunSession"
+ },
+ {
+  "address": "0x488c00",
+  "name": "Game_RunSimulationFrame"
+ },
+ {
+  "address": "0x50e4e0",
+  "name": "Person_WatchTVProgram"
+ },
+ {
+  "address": "0x409d40",
+  "name": "Object_AdvanceToQueuedTarget"
+ },
+ {
+  "address": "0x4a0b80",
+  "name": "SaveGame_LoadFromFile"
+ },
+ {
+  "address": "0x4e2dc0",
+  "name": "Player_ReleaseAssignmentForObject"
+ },
+ {
+  "address": "0x4a4a60",
+  "name": "CompanyOverview_AssignEmployeeToBuilding"
+ },
+ {
+  "address": "0x4d77b0",
+  "name": "MapObject_SpawnByKind"
+ },
+ {
+  "address": "0x4fea70",
+  "name": "Player_AcquireBranch"
+ },
+ {
+  "address": "0x483740",
+  "name": "SubMenu_OpenPage"
+ },
+ {
+  "address": "0x508300",
+  "name": "Object_ActionActivate"
+ },
+ {
+  "address": "0x4fe5f0",
+  "name": "GamePlan_Optimize"
+ },
+ {
+  "address": "0x4ff390",
+  "name": "AI_OpenBranchesInCity"
+ },
+ {
+  "address": "0x406ff0",
+  "name": "Object_UpdateBranchOps"
+ },
+ {
+  "address": "0x4773a0",
+  "name": "Branch_ProcessHour"
+ },
+ {
+  "address": "0x409d80",
+  "name": "Object_UpdateCustomerQueue"
+ },
+ {
+  "address": "0x408a70",
+  "name": "Object_UpdateBranchOpenClose"
+ },
+ {
+  "address": "0x40a760",
+  "name": "Object_UpdateConstructionWorker"
+ },
+ {
+  "address": "0x408640",
+  "name": "Object_UpdateCompanyBuilding"
+ },
+ {
+  "address": "0x409730",
+  "name": "Object_UpdateCitizen"
+ },
+ {
+  "address": "0x40acf0",
+  "name": "Object_UpdateFallback"
+ },
+ {
+  "address": "0x40a380",
+  "name": "Object_UpdateProductionWorker"
+ },
+ {
+  "address": "0x4082d0",
+  "name": "Object_UpdateSupplyBuilding"
+ },
+ {
+  "address": "0x50a580",
+  "name": "Object_ActionRemove"
+ },
+ {
+  "address": "0x50a3c0",
+  "name": "Object_ActionSpawnBranch"
+ },
+ {
+  "address": "0x4fc630",
+  "name": "City_TickBranches"
+ },
+ {
+  "address": "0x4fee30",
+  "name": "AI_StartAdvertisingCampaign"
+ },
+ {
+  "address": "0x4da480",
+  "name": "City_ProcessQuarterEnd"
+ },
+ {
+  "address": "0x4dca80",
+  "name": "City_ApplyCrimeWave"
+ },
+ {
+  "address": "0x4fdb20",
+  "name": "AI_TryTakeOverRivalBranch"
+ },
+ {
+  "address": "0x4ddc10",
+  "name": "Player_RemoveBranch"
+ }
+]

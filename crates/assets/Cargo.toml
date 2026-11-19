@@ -1,0 +1,8 @@
+[package]
+name = "pc2-assets"
+version = "0.1.0"
+edition = "2021"
+description = "Read-only asset layer for Pizza Connection 2"
+
+[lib]
+path = "src/lib.rs"

@@ -1,0 +1,9 @@
+[package]
+name = "pc2-scene"
+version = "0.1.0"
+edition = "2021"
+description = "Isometric scene builder for Pizza Connection 2 maps"
+
+[dependencies]
+pc2-assets = { path = "../assets" }
+png = "0.18"

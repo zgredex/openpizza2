@@ -1,0 +1,35 @@
+section,computed_offset,computed_size,kind,writer,notes
+header,0x0,0xf0,fixed,SaveGame_Write,title/company/city/slots/time/version/magic
+directory,0xf0,0x20,fixed,SaveGame_Serialize,"8-dword section directory, written last"
+start_marker,0x110,0x4,const,SaveGame_Serialize,0x2E
+global_game_block,0x114,0x5b8,fixed,SaveGame_Serialize,DAT_0057bb20
+game_fields_a,0x6cc,0x20,fixed,SaveGame_Serialize,game+0x298..0x2B7
+game_fields_b,0x6ec,0x20,fixed,SaveGame_Serialize,game+0x2B8..0x2D7
+game_scalars,0x70c,0x50,fixed,SaveGame_Serialize,20 u32 fields game+0x2D8..0x368 and +0x2D90
+ingredient_panel,0x75c,0x4,nested,IngredientPanel_Save,
+city_company_list,0x760,0x8,nested,CityCompanyList_Save,
+advertising_panel,0x768,0x8,nested,AdvertisingPanel_Save,
+company_market_share,0x770,0x5,nested,CompanyMarketShare_Save,
+company_overview,0x775,0x11,nested,CompanyOverview_Save,
+statistics_balance,0x786,0x10,nested,StatisticsBalance_Save,
+statistics_branch_balance,0x796,0xc,nested,StatisticsBranchBalance_Save,
+personnel,0x7a2,0x4,nested,Personnel_Save,
+branch_stats_series_flags,0x7a6,0x10,nested,BranchStats_SeriesFlags_Save,
+branch_design_color_index,0x7b6,0x4,nested,BranchDesign_ColorIndex_Save,
+branch_menu_category,0x7ba,0x4,nested,BranchMenu_Category_Save,
+warehouse_product,0x7be,0x4,nested,WarehouseProduct_Save,
+game_calendar,0x7c2,0x19,nested,GameCalendar_Save,
+ui_briefing_list,0x7db,,nested,UI_BriefingList_Save,
+world_tile_name_table,,0x1e848,fixed,Game_SaveTileNameTable,2500 x 50-byte tile-name records
+isomap_list,,,counted,SaveGame_Serialize,u32 count; each: u32 id + IsoMap_Save
+character_list,,,counted,SaveGame_Serialize,u32 count; each: u32 id + Character_Save
+city_mapobject_list,,,counted,SaveGame_Serialize,u32 count; each: City/MapObjectList_Save
+person_list,,,counted,SaveGame_Serialize,u32 count; each: u32 id + PersonList_Save
+car_list,,,counted,SaveGame_Serialize,u32 count; each: u32 id + CarList_Save
+player_slots,,,array6,SaveGame_Serialize,6 x (u32 present + Player_Save)
+company_slots,,,array6,SaveGame_Serialize,6 x (u32 present + CompanyData_Save)
+ai_company_slots,,0x870,nested,AI_CompanySlots_Save,
+selected_player_company,,0xc,fixed,SaveGame_Serialize,"present, player slot, company id"
+runtime_list,,,nested,SaveGame_SerializeRuntimeList,
+end_marker,,0x4,const,SaveGame_Serialize,0x2A
+directory_rewrite,,0x20,seek+write,SaveGame_Serialize,"seek to 0x00F0, write 8-dword directory"

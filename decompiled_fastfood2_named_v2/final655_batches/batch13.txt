@@ -1,0 +1,688 @@
+========================================================================================
+0x507d90 layer=[4] indeg=22 bytes=2112
+calls: 0x401320, 0x401340, 0x505e00, 0x5078d0, 0x507920
+ provider-specific; not original source
+int __thiscall FUN_00507d90(void *this,int param_1)
+{
+  undefined1 uVar1;
+  undefined3 extraout_var;
+  int iVar2;
+  if (*(int *)((int)this + 200) == 0) {
+    return 0;
+  }
+  CS_Enter(*(int *)(DAT_0057c670 + 0x240));
+  if (*(int *)((int)this + 200) == 0) {
+    iVar2 = 0;
+  }
+  else {
+    iVar2 = *(int *)(*(int *)((int)this + 200) + 0x20);
+  }
+  uVar1 = FUN_00505e00((int)this);
+  if ((CONCAT31(extraout_var,uVar1) == 0) || (*(short *)(*(int *)((int)this + 200) + 0x28) == -1)) {
+    iVar2 = FUN_005078d0(this,iVar2,param_1);
+  }
+  else {
+    iVar2 = FUN_00507920((int)this);
+  }
+  CS_Leave(*(int *)(DAT_0057c670 + 0x240));
+  return iVar2;
+}
+========================================================================================
+0x50adf0 layer=[4] indeg=11 bytes=4841
+calls: Game_GetPlayerSubmapValue, UI_DrawCenteredSelectionRect, Game_GetTimeByMode, UI_SetChildState, 0x507a80, UI_DetachChildRecord, Game_ApplyObjectEvent, Game_MoveTypeBObjectsToStateList, Object_AbortOrderAndReturnHome, 0x50e4c0, 0x50e7a0, Object_SetFieldA4Locked, Object_SetState
+ provider-specific; not original source
+undefined4 __fastcall FUN_0050adf0(void *param_1)
+{
+  void *pvVar1;
+  int iVar2;
+  int *piVar3;
+  if ((*(char *)((int)param_1 + 0x80) == '\0') && (*(char *)((int)param_1 + 0x81) == '\0')) {
+    return 0;
+  }
+  switch(*(undefined4 *)((int)param_1 + 0x30)) {
+  case 0:
+  case 1:
+  case 2:
+  case 3:
+  case 4:
+  case 5:
+  case 6:
+  case 7:
+  case 0xb:
+  case 0xf:
+  case 0x21:
+    if (*(char *)((int)param_1 + 0x81) != '\0') {
+      iVar2 = *(int *)((int)param_1 + 0x38);
+      if (((iVar2 == 0xb) || (iVar2 == 0xd)) || (iVar2 == 0x11)) {
+        if ((*(short *)((int)param_1 + 0x40) == 9) &&
+           (piVar3 = (int *)FUN_0050ad00((int)param_1), piVar3 != (int *)0x0)) {
+          FUN_004f5bb0(*(void **)((int)param_1 + 0xc4),piVar3);
+        }
+========================================================================================
+0x50e7d0 layer=[4] indeg=10 bytes=1879
+calls: 0x505e00, 0x507a80, UI_DetachChildRecord, 0x50e7a0, Object_SetState
+ provider-specific; not original source
+void __fastcall FUN_0050e7d0(void *param_1)
+{
+  undefined1 uVar1;
+  undefined3 extraout_var;
+  int iVar2;
+  uVar1 = FUN_00505e00((int)param_1);
+  if (CONCAT31(extraout_var,uVar1) != 0) {
+    iVar2 = FUN_0050e7a0((int)param_1);
+    if (iVar2 != 0) {
+      FUN_00507a80((int)param_1);
+      FUN_0050e890(param_1,6);
+      return;
+    }
+    FUN_005090e0((int)param_1);
+  }
+  FUN_0050e890(param_1,6);
+  return;
+}
+========================================================================================
+0x415620 layer=[4] indeg=3 bytes=23904
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x52fc00, Window_GadgetNotify_Slider_SetGradientColors, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_00415620(int *param_1)
+{
+  int iVar1;
+  void *this;
+  undefined4 local_10;
+  undefined4 local_c;
+  undefined4 local_8;
+  undefined4 local_4;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_00495560);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x46a,0x35,0xf2,s_PERSOUEBER_00_spr_005645d0);
+  UI_AddSprite(this,0x46b,0x61,0xf2,s_PERSOUEBER_01_spr_005645bc);
+  UI_AddSprite(this,0x46c,0x8d,0xf2,s_PERSOUEBER_02_spr_005645a8);
+  UI_AddSprite(this,0x46d,0xb9,0xf2,s_PERSOUEBER_03_spr_00564594);
+  UI_AddSprite(this,0x408,0x27,0x129,s_TRENNZEILE_spr_00563eb8);
+  iVar1 = UI_AddText(this,0x487,0x2c,5,s_TIMESFONT_fnt_00563ea8,DAT_005827dc);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x487,0);
+    FUN_0052f9d0(this,0x487,2,0xbe,0,0);
+  }
+  iVar1 = UI_AddText(this,0x488,0x35,0xb9,s_VERDANA7_fnt_00563ec8,DAT_005818c4);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x488,0);
+========================================================================================
+0x42ddf0 layer=[4] indeg=3 bytes=16344
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x52fc00, Window_GadgetNotify_Slider_SetGradientColors, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_0042ddf0(int *param_1)
+{
+  int iVar1;
+  void *this;
+  undefined4 local_10;
+  undefined4 local_c;
+  undefined4 local_8;
+  undefined4 local_4;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_004a8470);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x492,99,0x13b,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(this,0x493,99,0x13b,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(this,0x494,99,0x13b,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(this,0x495,99,0x13b,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(this,0x496,99,0x13b,s_BEWERTUNG__04_spr_00563fc8);
+  UI_AddSprite(this,0x497,99,0x13b,s_BEWERTUNG__05_spr_00563fb4);
+  UI_AddSprite(this,0x498,99,0x13b,s_BEWERTUNG__06_spr_00563fa0);
+  UI_AddSprite(this,0x499,99,0x13b,s_BEWERTUNG__07_spr_00563f8c);
+  UI_AddSprite(this,0x49a,99,0x13b,s_BEWERTUNG__08_spr_00563f78);
+  UI_AddSprite(this,0x49b,99,0x13b,s_BEWERTUNG__09_spr_00563f64);
+  UI_AddSprite(this,0x49c,99,0x13b,s_BEWERTUNG__10_spr_00563f50);
+  UI_AddSprite(this,0x49d,99,0x13b,s_BEWERTUNG__11_spr_00563f3c);
+  UI_AddSprite(this,0x49e,99,0x13b,s_BEWERTUNG__12_spr_00563f28);
+========================================================================================
+0x4951f0 layer=[4] indeg=3 bytes=4682
+calls: 0x4017f0, 0x482820, 0x494c10, Game_RebuildObjectTypeLists, Game_GetPlayerFieldC20, Gadget_SetTextf, Window_GadgetNotify_Button_SetState, UI_RemoveObjectByKey, 0x532310, 0x532330, UI_Group_ClearAll, Sound_SelectCurrentTrack, Sound_ProcessEvent
+ provider-specific; not original source
+void __cdecl FUN_004951f0(void *param_1,int param_2)
+{
+  int iVar1;
+  int iVar2;
+  undefined4 uVar3;
+  int *piVar4;
+  int iVar5;
+  int iVar6;
+  undefined4 unaff_EDI;
+  iVar5 = *(int *)(DAT_0057c670 + 0x21c);
+  if ((iVar5 != 0) && ((char)param_2 != '\0')) {
+    iVar2 = IDMap_Lookup((void *)(DAT_0057c670 + 0x20),*(int *)(iVar5 + 0x50),(int *)0x0);
+    switch(*(undefined1 *)(iVar2 + 0x824)) {
+    case 0:
+      param_2 = 0x11;
+      break;
+    case 1:
+      param_2 = 0x12;
+      break;
+    case 2:
+      param_2 = 0x13;
+      break;
+    case 3:
+      param_2 = 0x14;
+      break;
+    default:
+    }
+========================================================================================
+0x42d990 layer=[4] indeg=3 bytes=4676
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_0042d990(int *param_1)
+{
+  int iVar1;
+  void *this;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_004a7f80);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  iVar1 = UI_AddText(this,0x429,0x2c,5,s_TIMESFONT_fnt_00563ea8,DAT_00580e70);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x429,0);
+    FUN_0052f9d0(this,0x429,2,0xbe,0,0);
+  }
+  iVar1 = UI_AddText(this,0x42b,0x2f,0x25,s_VERDANA7_fnt_00563ec8,&DAT_005655bc);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x42b,0);
+    FUN_0052f9d0(this,0x42b,0,0xb9,0xa0,0);
+  }
+  UI_AddImage(this,8000,0xb,-1,s_HILFEBUTTONSNIP_00_spr_00563e4c,1,0);
+  UI_AddSprite(this,0x1f41,0x27,0x14c,s_TRENNZEILE_spr_00563eb8);
+  iVar1 = FUN_0052f690(this,0x1f42,0x30,0x15b,s_VERDANA8_fnt_00563e98,DAT_00582ef4,0,
+                       s_TEXTPB01__00_spr_00563e84);
+  if (iVar1 != 0) {
+    FUN_0052f750(this,0x1f42,0,0,0);
+    FUN_0052f7a0(this,0x1f42,2,0xb4,0,0,0xfffe);
+========================================================================================
+0x42d560 layer=[4] indeg=3 bytes=4446
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_0042d560(int *param_1)
+{
+  int iVar1;
+  void *this;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_004a7510);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x408,0x27,0x129,s_TRENNZEILE_spr_00563eb8);
+  iVar1 = UI_AddText(this,0x441,0x2c,5,s_TIMESFONT_fnt_00563ea8,DAT_00581270);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x441,0);
+    FUN_0052f9d0(this,0x441,2,0xbe,0,0);
+  }
+  iVar1 = FUN_0052f690(this,0x44f,0x8e,0x112,s_VERDANA8_fnt_00563e98,DAT_0058292c,0,
+                       s_TEXTPB01__00_spr_00563e84);
+  if (iVar1 != 0) {
+    FUN_0052f750(this,0x44f,0,0,0);
+    FUN_0052f7a0(this,0x44f,2,0x54,0,0,0xfffe);
+  }
+  UI_AddImage(this,0x4ef,99,0x7e,s_SKFILIALE_00_spr_005654fc,1,0);
+  UI_AddImage(this,0x4f0,0x8d,0x7e,s_SKLAGER_00_spr_005654ec,1,0);
+  UI_AddSprite(this,0x4f3,0x27,0xf2,s_TRENNZEILE_spr_00563eb8);
+  iVar1 = UI_AddText(this,0x4f4,0x31,0x7e,s_VERDANA8_fnt_00563e98,DAT_005829e4);
+  if (iVar1 != 0) {
+========================================================================================
+0x406910 layer=[4] indeg=3 bytes=2962
+calls: 0x474b90, UI_ReplaceActiveObject, Window_ShowWindowById, UI_RefreshAndCenter, Window_ProcessMessageQueue, 0x526cf0, 0x537230, 0x5397e0, 0x54e221
+ provider-specific; not original source
+longlong __cdecl FUN_00406910(int param_1)
+{
+  ushort uVar1;
+  ushort uVar2;
+  void *this;
+  uint uVar3;
+  int iVar4;
+  undefined4 *puVar5;
+  ushort *puVar6;
+  longlong lVar7;
+  byte bVar8;
+  void *local_c;
+  undefined1 *puStack_8;
+  undefined4 local_4;
+  local_4 = 0xffffffff;
+  puStack_8 = &LAB_00557d3b;
+  local_c = ExceptionList;
+  puVar5 = (undefined4 *)0x0;
+  ExceptionList = &local_c;
+  if (param_1 != 0) {
+    ExceptionList = &local_c;
+    this = operator_new(0x11c);
+    local_4 = 0;
+    if (this != (void *)0x0) {
+      puVar5 = Window_Construct(this,800,600,2);
+    }
+    local_4 = 0xffffffff;
+========================================================================================
+0x45d3e0 layer=[4] indeg=2 bytes=18425
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x52fc00, Window_GadgetNotify_Slider_SetGradientColors, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_0045d3e0(int *param_1)
+{
+  int iVar1;
+  void *this;
+  undefined4 local_10;
+  undefined4 local_c;
+  undefined4 local_8;
+  undefined4 local_4;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_004c20c0);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  iVar1 = UI_AddText(this,0x42d,0x2c,5,s_TIMESFONT_fnt_00563ea8,DAT_00582030);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x42d,0);
+    FUN_0052f9d0(this,0x42d,2,0xbe,0,0);
+  }
+  iVar1 = UI_AddText(this,0x432,0x2f,0x23,s_VERDANA8_fnt_00563e98,DAT_005827ec);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x432,0);
+    FUN_0052f9d0(this,0x432,0,0xa0,0,0);
+  }
+  UI_AddSprite(this,0x433,0x2e,0x30,s_RAHMEN05_spr_005668d0);
+  iVar1 = FUN_0052fc00(this,0x435,0xdd,0x39,0x91,s_SL01_00_spr_0056448c,0,1);
+  if (iVar1 != 0) {
+========================================================================================
+0x45c150 layer=[4] indeg=2 bytes=14146
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_0045c150(int *param_1)
+{
+  int iVar1;
+  void *this;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_004c1830);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x45b,99,0x13b,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(this,0x45c,99,0x13b,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(this,0x45d,99,0x13b,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(this,0x45e,99,0x13b,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(this,0x45f,99,0x13b,s_BEWERTUNG__04_spr_00563fc8);
+  UI_AddSprite(this,0x460,99,0x13b,s_BEWERTUNG__05_spr_00563fb4);
+  UI_AddSprite(this,0x461,99,0x13b,s_BEWERTUNG__06_spr_00563fa0);
+  UI_AddSprite(this,0x462,99,0x13b,s_BEWERTUNG__07_spr_00563f8c);
+  UI_AddSprite(this,0x463,99,0x13b,s_BEWERTUNG__08_spr_00563f78);
+  UI_AddSprite(this,0x464,99,0x13b,s_BEWERTUNG__09_spr_00563f64);
+  UI_AddSprite(this,0x465,99,0x13b,s_BEWERTUNG__10_spr_00563f50);
+  UI_AddSprite(this,0x466,99,0x13b,s_BEWERTUNG__11_spr_00563f3c);
+  UI_AddSprite(this,0x467,99,0x13b,s_BEWERTUNG__12_spr_00563f28);
+  UI_AddSprite(this,0x468,99,0x13b,s_BEWERTUNG__13_spr_00563f14);
+  UI_AddSprite(this,0x469,99,0x13b,s_BEWERTUNG__14_spr_00563f00);
+  UI_AddSprite(this,0x46a,99,0x13b,s_BEWERTUNG__15_spr_00563eec);
+  UI_AddSprite(this,0x46b,99,0x13b,s_BEWERTUNG__16_spr_00563ed8);
+========================================================================================
+0x50c2e0 layer=[4] indeg=2 bytes=4379
+calls: 0x4017f0, 0x4034d0, Game_UpdateFreeBuildingCount, Game_CountObjectsType1DSub19, Game_CountFreeBuildingsTypeD, Game_CountAvailableBusinessBuildings, Branch_InitCityObjects, 0x488be0, 0x4ddcc0, 0x507a80, UI_DetachChildRecord, UI_HitTestChildPoint, 0x50dbd0, Object_SetFieldA4Locked, Object_SetState, Record_GetTwoFloats48
+ provider-specific; not original source
+char __thiscall FUN_0050c2e0(void *this,void *param_1,int param_2)
+{
+  int *piVar1;
+  void *this_00;
+  int iVar2;
+  void *this_01;
+  int iVar3;
+  uint uVar4;
+  char cVar5;
+  int local_10;
+  int local_c;
+  int local_8;
+  int local_4;
+  piVar1 = *(int **)((int)this + 200);
+  cVar5 = '\0';
+  if (piVar1 == (int *)0x0) {
+    return '\x01';
+  }
+  FUN_00534370((void *)piVar1[0x16],*piVar1,&local_c,&local_4);
+  this_00 = (void *)IDMap_Lookup((void *)((int)DAT_0057c670 + 0x3c),param_2,(int *)0x0);
+  if (this_00 == (void *)0x0) {
+    return '\x01';
+  }
+  if (*(int *)((int)this_00 + 0x74) == 0) {
+    return '\x01';
+  }
+  iVar2 = FUN_0050dbd0((int)this_00);
+========================================================================================
+0x50c0f0 layer=[4] indeg=2 bytes=4040
+calls: 0x4017f0, 0x488be0, 0x4ddcc0, 0x507a80, UI_DetachChildRecord, Object_SetFieldA4Locked, Object_SetState, Record_GetTwoFloats48
+ provider-specific; not original source
+undefined4 __thiscall FUN_0050c0f0(void *this,undefined4 param_1,int param_2)
+{
+  int *piVar1;
+  void *this_00;
+  void *this_01;
+  int iVar2;
+  uint uVar3;
+  undefined4 uVar4;
+  int local_10;
+  int local_c;
+  int local_8;
+  int local_4;
+  piVar1 = *(int **)((int)this + 200);
+  uVar4 = 0;
+  if (piVar1 == (int *)0x0) {
+    return 0;
+  }
+  FUN_00534370((void *)piVar1[0x16],*piVar1,&local_c,&local_4);
+  this_00 = (void *)IDMap_Lookup((void *)((int)DAT_0057c670 + 0x3c),param_2,(int *)0x0);
+  if (this_00 == (void *)0x0) {
+    return 1;
+  }
+  if (*(int *)((int)this_00 + 0x74) == 0) {
+    return 1;
+  }
+  if (((*(int *)((int)this + 0x30) == 0x17) || (*(int *)((int)this + 0x30) == 0x1d)) &&
+     (*(int *)((int)this_00 + 0xa4) == -1)) {
+========================================================================================
+0x46c690 layer=[4] indeg=2 bytes=2714
+calls: 0x523bb0, 0x528040, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_0046c690(int *param_1)
+{
+  int iVar1;
+  void *this;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_004c6420);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x429,0x27,0x14c,s_TRENNZEILE_spr_00563eb8);
+  iVar1 = UI_AddText(this,0x42d,0x2c,5,s_TIMESFONT_fnt_00563ea8,DAT_00582748);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x42d,0);
+    FUN_0052f9d0(this,0x42d,2,0xbe,0,0);
+  }
+  iVar1 = UI_AddText(this,0x42f,0x32,0x26,s_VEDANA12_fnt_00566d60,s__Wollen__00566d70);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x42f,0);
+    FUN_0052f9d0(this,0x42f,2,0xb4,0x122,2);
+  }
+  iVar1 = FUN_0052f690(this,0x430,0x30,0x15b,s_VERDANA8_fnt_00563e98,DAT_00582ae4,0,
+                       s_TEXTPB01__00_spr_00563e84);
+  if (iVar1 != 0) {
+    FUN_0052f750(this,0x430,0,0,0);
+    FUN_0052f7a0(this,0x430,2,0x54,0,0,0xfffe);
+  }
+========================================================================================
+0x46c570 layer=[4] indeg=2 bytes=2398
+calls: 0x523bb0, 0x528040, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout
+ provider-specific; not original source
+void * __cdecl FUN_0046c570(int *param_1)
+{
+  int iVar1;
+  void *this;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0xbb,0xf8,s_PE_RQ_LOADING_spr_00566d34,&LAB_004c6390);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  iVar1 = UI_AddText(this,0x3e9,0xe,0x1b,s_VERDANA16_fnt_00565788,DAT_0058203c);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x3e9,0);
+    FUN_0052f9d0(this,0x3e9,2,400,0,0);
+  }
+  iVar1 = FUN_0052f690(this,0x3f8,0xac,0x44,s_VERDANA8_fnt_00563e98,DAT_005827ac,0,
+                       s_TEXTPB01__00_spr_00563e84);
+  if (iVar1 != 0) {
+    FUN_0052f750(this,0x3f8,0,0,0);
+    FUN_0052f7a0(this,0x3f8,2,0x54,0,0,0xfffe);
+  }
+  iVar1 = UI_AddText(this,0x3f9,0x10,0xd,s_VERDANA10_fnt_00563e64,DAT_00582140);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x3f9,0);
+    FUN_0052f9d0(this,0x3f9,2,400,0x36,2);
+  }
+  return this;
+========================================================================================
+0x4c2000 layer=[4] indeg=2 bytes=2139
+calls: 0x4c1c00, Game_FindRecordByField34, Game_FindSubrecordIndex, Gadget_SetText, Window_GadgetNotify_Button_SetState, 0x532310, 0x532330
+ provider-specific; not original source
+void __cdecl FUN_004c2000(void *param_1)
+{
+  FUN_00532310(param_1,&LAB_004c1a40,0);
+  DAT_0057d724 = FUN_004e2330(*(void **)(DAT_0057c670 + 0x200 + *(int *)(DAT_0057c670 + 0x2ec) * 4),
+                              *(int *)(DAT_0057c670 + 0x218));
+  DAT_0057d71c = FUN_004e2370(*(void **)(DAT_0057c670 + 0x200 + *(int *)(DAT_0057c670 + 0x2ec) * 4),
+                              DAT_0057d724);
+  FUN_00532330(param_1,0,2,0x2004);
+  FUN_0052ff50(param_1,DAT_0057d728 + 0x2004,1);
+  FUN_004c1c00(param_1);
+  if (*(char *)(DAT_0057d724 + 0x3c) == '\0') {
+    FUN_0052f830(param_1,0x1ff1,DAT_00581278);
+    return;
+  }
+  FUN_0052f830(param_1,0x1ff1,DAT_00582624);
+  return;
+}
+========================================================================================
+0x507c90 layer=[4] indeg=2 bytes=2137
+calls: 0x401320, 0x401340, 0x4017f0, 0x48e0a0, 0x4f0cc0, 0x5078d0, Map_PickRandomLinkedCellInSteps
+ provider-specific; not original source
+void __fastcall FUN_00507c90(void *param_1)
+{
+  void *this;
+  int iVar1;
+  int iVar2;
+  iVar1 = IDMap_Lookup((void *)(DAT_0057c670 + 4),*(int *)(DAT_0057c670 + 0x2f4),(int *)0x0);
+  this = *(void **)(iVar1 + 0xfa8);
+  CS_Enter(*(int *)(DAT_0057c670 + 0x240));
+  if (*(int *)((int)param_1 + 0xd0) == 0) {
+    FUN_0048e0a0();
+  }
+  iVar1 = FUN_004f0cc0(this,1,*(int *)(*(int *)((int)param_1 + 0xcc) + 0x54));
+  iVar1 = FUN_00507b90(iVar1,2);
+  if (*(int *)((int)param_1 + 200) == 0) {
+    iVar2 = 0;
+  }
+  else {
+    iVar2 = *(int *)(*(int *)((int)param_1 + 200) + 0x20);
+  }
+  FUN_005078d0(param_1,iVar2,iVar1);
+  CS_Leave(*(int *)(DAT_0057c670 + 0x240));
+  return;
+}
+========================================================================================
+0x507b40 layer=[4] indeg=2 bytes=1848
+calls: 0x48e0a0, Map_ApplyRandomTileVariant, 0x5078d0
+ provider-specific; not original source
+void __fastcall FUN_00507b40(void *param_1)
+{
+  int iVar1;
+  int iVar2;
+  if (*(int *)((int)param_1 + 0xd0) == 0) {
+    FUN_0048e0a0();
+  }
+  if (*(int *)((int)param_1 + 200) == 0) {
+    iVar2 = 0;
+  }
+  else {
+    iVar2 = *(int *)(*(int *)((int)param_1 + 200) + 0x20);
+  }
+  iVar1 = FUN_004d22c0(*(int *)((int)param_1 + 0xd0));
+  FUN_005078d0(param_1,iVar2,iVar1);
+  return;
+}
+========================================================================================
+0x4db010 layer=[4] indeg=2 bytes=1639
+calls: 0x4dae90
+ provider-specific; not original source
+void __thiscall FUN_004db010(void *this,int param_1,undefined4 param_2)
+{
+  *(undefined4 *)((int)this + param_1 * 4 + 0xcb0) = param_2;
+  FUN_004dae90(this,0);
+  return;
+}
+========================================================================================
+0x43edb0 layer=[4] indeg=1 bytes=43883
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x52fc00, Window_GadgetNotify_Slider_SetGradientColors, 0x531850, 0x531c60
+ provider-specific; not original source
+void * __cdecl FUN_0043edb0(int *param_1)
+{
+  int iVar1;
+  void *this;
+  undefined4 local_10;
+  undefined4 local_c;
+  undefined4 local_8;
+  undefined4 local_4;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0,0,s_SK_PERSONAL_spr_00566210,&LAB_004b2850);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x45a,0x261,0x1ba,s_PERSOPLAN_spr_005644ac);
+  UI_AddSprite(this,0x1794,0x261,0x1ba,s_PERSOPLANLIGHT_spr_00564498);
+  UI_AddSprite(this,0x1795,0x261,0x1c4,s_PERSOPLANLIGHT_spr_00564498);
+  UI_AddSprite(this,0x1796,0x261,0x1ce,s_PERSOPLANLIGHT_spr_00564498);
+  UI_AddSprite(this,0x1797,0x261,0x1d8,s_PERSOPLANLIGHT_spr_00564498);
+  UI_AddSprite(this,0x1798,0x261,0x1e2,s_PERSOPLANLIGHT_spr_00564498);
+  UI_AddSprite(this,0x1799,0x261,0x1ec,s_PERSOPLANLIGHT_spr_00564498);
+  UI_AddSprite(this,0x179a,0x261,0x1f6,s_PERSOPLANLIGHT_spr_00564498);
+  UI_AddImage(this,0x57e,0x22,0x79,s_LEUCHTFELD_SK_00_spr_005661f8,1,0);
+  UI_AddImage(this,0x57f,0x22,0xb7,s_LEUCHTFELD_SK_00_spr_005661f8,1,0);
+  UI_AddImage(this,0x580,0x22,0xf5,s_LEUCHTFELD_SK_00_spr_005661f8,1,0);
+  UI_AddImage(this,0x581,0x22,0x133,s_LEUCHTFELD_SK_00_spr_005661f8,1,0);
+  UI_AddImage(this,0x582,0x22,0x171,s_LEUCHTFELD_SK_00_spr_005661f8,1,0);
+========================================================================================
+0x46f9c0 layer=[4] indeg=1 bytes=37553
+calls: Window_CreatePictureWindow, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_0046f9c0(int *param_1)
+{
+  int iVar1;
+  void *this;
+  iVar1 = FUN_00523c90(DAT_0057c5e0,s_Pe_Endergebnis_Punkte_tga_00567370,&LAB_004cad80);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  iVar1 = UI_AddText(this,0x420,0xd,5,s_TIMESFONT_fnt_00563ea8,DAT_00580d88);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x420,0);
+    FUN_0052f9d0(this,0x420,2,0x230,0,0);
+  }
+  iVar1 = UI_AddText(this,0x422,0x260,5,s_TIMESFONT_fnt_00563ea8,DAT_0058245c);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x422,0);
+    FUN_0052f9d0(this,0x422,2,0xb4,0,0);
+  }
+  iVar1 = UI_AddText(this,0x429,0xe0,0x1fe,s_VERDANA8_fnt_00563e98,s__Online_Hilfetext_005672b8);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x429,0);
+    FUN_0052f9d0(this,0x429,0,0x159,0x50,0);
+  }
+  iVar1 = UI_AddText(this,0x4a9,0x25f,0x7e,s_TIMES14_fnt_00564788,DAT_00582844);
+  if (iVar1 != 0) {
+========================================================================================
+0x4632c0 layer=[4] indeg=1 bytes=28188
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x52fc00, Window_GadgetNotify_Slider_SetGradientColors, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_004632c0(int *param_1)
+{
+  int iVar1;
+  void *this;
+  undefined4 local_10;
+  undefined4 local_c;
+  undefined4 local_8;
+  undefined4 local_4;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_004c39d0);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x45a,0x30,0xe0,s_PERSOPLAN_spr_005644ac);
+  UI_AddSprite(this,0x1794,0x30,0xe0,s_PERSOPLANLIGHT_spr_00564498);
+  UI_AddSprite(this,0x1795,0x30,0xea,s_PERSOPLANLIGHT_spr_00564498);
+  UI_AddSprite(this,0x1796,0x30,0xf4,s_PERSOPLANLIGHT_spr_00564498);
+  UI_AddSprite(this,0x1797,0x30,0xfe,s_PERSOPLANLIGHT_spr_00564498);
+  UI_AddSprite(this,0x1798,0x30,0x108,s_PERSOPLANLIGHT_spr_00564498);
+  UI_AddSprite(this,0x1799,0x30,0x112,s_PERSOPLANLIGHT_spr_00564498);
+  UI_AddSprite(this,0x179a,0x30,0x11c,s_PERSOPLANLIGHT_spr_00564498);
+  UI_AddSprite(this,0x491,99,0x13b,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(this,0x492,99,0x13b,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(this,0x493,99,0x13b,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(this,0x494,99,0x13b,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(this,0x495,99,0x13b,s_BEWERTUNG__04_spr_00563fc8);
+========================================================================================
+0x449a80 layer=[4] indeg=1 bytes=20329
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x52fc00, Window_GadgetNotify_Slider_SetGradientColors, 0x531850, 0x531c60
+ provider-specific; not original source
+void * __cdecl FUN_00449a80(int *param_1)
+{
+  int iVar1;
+  void *this;
+  undefined4 local_10;
+  undefined4 local_c;
+  undefined4 local_8;
+  undefined4 local_4;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_004b8fe0);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x408,0x27,0x129,s_TRENNZEILE_spr_00563eb8);
+  iVar1 = UI_AddText(this,0x501,0x2c,5,s_TIMESFONT_fnt_00563ea8,DAT_00582a9c);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x501,0);
+    FUN_0052f9d0(this,0x501,2,0xbe,0,0);
+  }
+  iVar1 = UI_AddText(this,0x502,0x30,0x75,s_VERDANA7_fnt_00563ec8,DAT_00581b18);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x502,0);
+    FUN_0052f9d0(this,0x502,2,0x5a,0,0);
+  }
+  iVar1 = UI_AddText(this,0x503,0x30,0x8c,s_VERDANA7_fnt_00563ec8,DAT_00581000);
+  if (iVar1 != 0) {
+========================================================================================
+0x451dd0 layer=[4] indeg=1 bytes=19360
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f690, Gadget_SetButtonColors, Gadget_SetButtonTextLayout, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x52fc00, Window_GadgetNotify_Slider_SetGradientColors, 0x531850, 0x531c60
+ provider-specific; not original source
+void * __cdecl FUN_00451dd0(int *param_1)
+{
+  int iVar1;
+  void *this;
+  undefined4 local_10;
+  undefined4 local_c;
+  undefined4 local_8;
+  undefined4 local_4;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_004bc860);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x408,0x27,0x129,s_TRENNZEILE_spr_00563eb8);
+  iVar1 = UI_AddText(this,0x501,0x2c,5,s_TIMESFONT_fnt_00563ea8,DAT_00581670);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x501,0);
+    FUN_0052f9d0(this,0x501,2,0xbe,0,0);
+  }
+  iVar1 = UI_AddText(this,0x502,0x30,0x75,s_VERDANA7_fnt_00563ec8,DAT_00581b18);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x502,0);
+    FUN_0052f9d0(this,0x502,2,0x5a,0,0);
+  }
+  iVar1 = UI_AddText(this,0x503,0x30,0x8c,s_VERDANA7_fnt_00563ec8,DAT_00581000);
+  if (iVar1 != 0) {

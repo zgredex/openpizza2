@@ -1,0 +1,10 @@
+address,name,confidence,evidence
+0x401af0,Pak_Open,high,"Opens a .pak, validates magic, reads 0x6c header, loads index_size bytes, decodes and sorts entries."
+0x401cf0,Pak_OpenEmbedded,high,Loads the same format from PE resource type ResourceFiles and decodes it.
+0x401f30,Pak_DecodeIndex,high,Position-dependent index decoder: ((b - (i & 0xff)) & 0xff) ^ 0xaa.
+0x401f60,FUN_00401f60,medium,Helper adjacent to the decoder; called during index setup.
+0x401f90,ResourceIterator_Next,high,"Iterates entries across loaded archives, copying name/size/offset into a handle."
+0x402060,Pak_FindEntry,high,Binary searches the sorted entry table by name; returns archive and entry indices.
+0x402240,Pak_SortEntries,high,"qsort of decoded entries by name, stride 0x14, comparator at 0x4021f0."
+0x402260,ResourceHandle_Alloc,high,Allocates one of 20 resource-handle slots from the manager table.
+0x402290,Resource_Open,high,Resolves a name via Pak_FindEntry or falls back to filesystem; builds handle size/offset/mode.

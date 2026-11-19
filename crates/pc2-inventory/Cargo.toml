@@ -1,0 +1,8 @@
+[package]
+name = "pc2-inventory"
+version = "0.1.0"
+edition = "2021"
+description = "Headless archive inventory for Pizza Connection 2"
+
+[dependencies]
+pc2-assets = { path = "../assets" }

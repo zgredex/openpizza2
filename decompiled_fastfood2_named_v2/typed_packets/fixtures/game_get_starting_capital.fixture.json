@@ -1,0 +1,53 @@
+{
+  "schema": "pc2.fixture.v1",
+  "id": "game_get_starting_capital",
+  "executable": {
+    "path": "game/fastfood2.exe",
+    "sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd"
+  },
+  "entry": "0x48d3a0",
+  "stop": "first RET",
+  "abi": "cdecl",
+  "arguments": [],
+  "return_register": "EAX",
+  "initial_registers": {
+    "EAX": "0x00000000",
+    "EBX": "0x00000000",
+    "ECX": "0x00000000",
+    "EDX": "0x00000000",
+    "ESI": "0x00000000",
+    "EDI": "0x00000000",
+    "EBP": "0x00000000",
+    "ESP": "0x0020fff0"
+  },
+  "initial_memory": [
+    {
+      "name": "difficulty",
+      "address": "0x57bb24",
+      "width": 4,
+      "type": "u32"
+    }
+  ],
+  "observed_fields": [
+    "EAX",
+    "0x57bb24"
+  ],
+  "limits": {
+    "max_instructions": 1000,
+    "wall_ms": 1000
+  },
+  "cases": [
+    {"id": "difficulty_0", "memory": {"0x57bb24": 0}, "expected_eax": 1000000},
+    {"id": "difficulty_1", "memory": {"0x57bb24": 1}, "expected_eax": 500000},
+    {"id": "difficulty_2", "memory": {"0x57bb24": 2}, "expected_eax": 200000},
+    {"id": "difficulty_3", "memory": {"0x57bb24": 3}, "expected_eax": 100000},
+    {"id": "difficulty_4", "memory": {"0x57bb24": 4}, "expected_eax": 75000},
+    {"id": "difficulty_5", "memory": {"0x57bb24": 5}, "expected_eax": 50000},
+    {"id": "difficulty_6", "memory": {"0x57bb24": 6}, "expected_eax": 40000},
+    {"id": "difficulty_7", "memory": {"0x57bb24": 7}, "expected_eax": 30000},
+    {"id": "difficulty_8", "memory": {"0x57bb24": 8}, "expected_eax": 25000},
+    {"id": "difficulty_9", "memory": {"0x57bb24": 9}, "expected_eax": 22000},
+    {"id": "fallback_10", "memory": {"0x57bb24": 10}, "expected_eax": 20000},
+    {"id": "fallback_255", "memory": {"0x57bb24": 255}, "expected_eax": 20000}
+  ]
+}

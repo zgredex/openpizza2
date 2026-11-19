@@ -1,0 +1,134 @@
+========================================================================================
+0x4ba440 layer=[6] indeg=0 bytes=2721
+calls: Game_CountObjectsByType, Game_DestroyRootWindow, 0x4844c0, Game_EnterBranchInterior, 0x48e6d0, 0x4cfa20, Window_ShowWindowById, Window_GadgetNotify_Text_SetText, UI_QueueControlCommand, Sound_SelectCurrentTrack, Sound_StopSpeech
+ provider-specific; not original source
+void __cdecl FUN_004ba440(void *param_1)
+{
+  void *pvVar1;
+  int iVar2;
+  FUN_0052f9b0(param_1,0x40f,(int)DAT_0057d6e8 + 4);
+  *(void **)((int)DAT_0057c670 + 0x9c) = DAT_0057d6e8;
+  FUN_00547e70(DAT_0057ba0c);
+  FUN_00488de0(DAT_0057c670,(int)DAT_0057d6e8);
+  FUN_00548430(DAT_0057ba0c,(int)DAT_0057d6e8);
+  pvVar1 = DAT_0057c670;
+  if (*(int *)((int)DAT_0057c670 + 0x21c) != 0) {
+    *(undefined4 *)((int)DAT_0057c670 + 0x21c) = 0;
+    *(undefined4 *)((int)pvVar1 + 0x2da8) = 1;
+    *(undefined4 *)((int)DAT_0057c670 + 0x2e4) = 0;
+    FUN_00482880((int)DAT_0057c670);
+    pvVar1 = DAT_0057c670;
+    *(undefined4 *)((int)DAT_0057c670 + 0x2c8) = *(undefined4 *)((int)DAT_0057c670 + 0x2a8);
+    *(undefined4 *)((int)pvVar1 + 0x2a8) = 1;
+    iVar2 = FUN_004844c0((int)DAT_0057c670);
+    FUN_00523d60(DAT_0057c5e0,iVar2);
+  }
+  iVar2 = FUN_0047aac0(DAT_0057d6e8,1);
+  if ((iVar2 == 0) &&
+     (*(int *)((int)DAT_0057c670 + *(int *)((int)DAT_0057c670 + 0x290) * 4 + 0x298) == 8)) {
+    FUN_005301c0(param_1,-0x18697,0x23,0);
+  }
+  else {
+========================================================================================
+0x48b9b0 layer=[6] indeg=0 bytes=2649
+calls: Game_CloseSelectionDialog, 0x482930, 0x482c40, Sound_TriggerSoundById, Sound_GetChannelObject, UI_AdvanceBriefing, MessageList_FindKeyByValue
+ provider-specific; not original source
+void __thiscall FUN_0048b9b0(void *this,int param_1,int param_2)
+{
+  void *this_00;
+  int iVar1;
+  int iVar2;
+  iVar1 = param_2;
+  if (param_1 == 1) {
+    this_00 = (void *)((int)this + 0x304);
+    iVar2 = FUN_0054b110(this_00,param_2,&param_1);
+    if (*(int *)(iVar2 + 4) == 1) {
+      if (*(int *)((int)this + 0x268) != 0) {
+        if (*(int *)((int)this + 0x278) == 0x11d7) {
+          return;
+        }
+        FUN_00482890((int)this);
+      }
+      FUN_00482930(this,param_1);
+      FUN_00548040(DAT_0057ba0c,0x14);
+      FUN_0054ae60(this_00,param_1);
+      return;
+    }
+    if ((DAT_00567da0 != iVar1) && (*(int *)((int)this + 0x268) != 0)) {
+      FUN_00482890((int)this);
+    }
+    FUN_00482c40(this,0xffffffff,DAT_00582408,iVar2 + 0x78,1,0,iVar1,'\0');
+    FUN_00548040(DAT_0057ba0c,0x14);
+    FUN_0054ae60(this_00,param_1);
+========================================================================================
+0x49c450 layer=[6] indeg=0 bytes=1846
+calls: 0x482b70, 0x483210, 0x49b5f0
+ provider-specific; not original source
+void FUN_0049c450(void)
+{
+  int iVar1;
+  iVar1 = FUN_0049b5f0();
+  if (iVar1 == -1) {
+    FUN_00482b70(DAT_0057c670,0xfffe79af,DAT_0058282c,DAT_00581698,0);
+    return;
+  }
+  if (iVar1 == 0) {
+    FUN_00482b70(DAT_0057c670,0xfffe79af,DAT_0058282c,DAT_00581a00,0);
+    return;
+  }
+  FUN_00483210(DAT_0057c670,0xfffe7986,DAT_0058282c,DAT_00581208,DAT_0057ca8c,0,0);
+  return;
+}
+========================================================================================
+0x498ef0 layer=[6] indeg=0 bytes=1738
+calls: 0x482b70, 0x483210, 0x498a70
+ provider-specific; not original source
+void FUN_00498ef0(void)
+{
+  int iVar1;
+  iVar1 = FUN_00498a70();
+  if (iVar1 == 0) {
+    FUN_00482b70(DAT_0057c670,0xfffe79af,DAT_00581e34,DAT_00580e80,0);
+    return;
+  }
+  FUN_00483210(DAT_0057c670,0xfffe7981,DAT_00581e34,DAT_00581594,DAT_0057ca04,0,0);
+  return;
+}
+========================================================================================
+0x49c4d0 layer=[6] indeg=0 bytes=1737
+calls: 0x482b70, 0x483210, 0x49b720
+ provider-specific; not original source
+void FUN_0049c4d0(void)
+{
+  int iVar1;
+  iVar1 = FUN_0049b720();
+  if (iVar1 < 1) {
+    FUN_00482b70(DAT_0057c670,0xfffe79af,DAT_0058282c,DAT_00582c8c,0);
+    return;
+  }
+  FUN_00483210(DAT_0057c670,0xfffe7987,DAT_0058282c,DAT_00581a1c,DAT_0057ca8c,0,0);
+  return;
+}
+========================================================================================
+0x50be90 layer=[6] indeg=0 bytes=1700
+calls: 0x507e20, Object_SetFieldA4Locked
+ provider-specific; not original source
+void __thiscall FUN_0050be90(void *this,int param_1,undefined4 param_2,undefined4 param_3)
+{
+  FUN_00507e20(this,1,*(int *)(param_1 + 0x16f0));
+  FUN_0050e850(this,param_2);
+  *(undefined4 *)((int)this + 0xac) = param_3;
+  return;
+}
+========================================================================================
+0x50be00 layer=[6] indeg=0 bytes=1647
+calls: UI_SetChildState, 0x507e20, 0x50e4c0, Object_SetFieldA4Locked
+ provider-specific; not original source
+void __thiscall FUN_0050be00(void *this,int param_1)
+{
+  FUN_0050e850(this,0x1d);
+  FUN_00507550(this,0x22);
+  FUN_0050e4c0(this,0x10);
+  FUN_00507e20(this,9,param_1);
+  return;
+}

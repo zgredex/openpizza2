@@ -1,0 +1,103 @@
+address,proposed_name,confidence,evidence
+0x5338c0,RecordList_AllocateRecord,high,"Finds/claims a free stride-0x48 record (key -1), grows the list by 20, zeroes and initializes it under lock 0x5842a0."
+0x4db030,Game_ComputeCompanyValueLevel,medium,"Sums six +0xcb0 company counters minus base +0x10c4, averages player +0xf0 counters, and returns a capped 0..10 level plus three split values."
+0x4e2750,Game_CountCityObjectsForOwner,high,"Scans IDMap +0x1b8 for entries whose +4 equals the owner, then counts global records with type +0xa4==0x12 in city +0x10c."
+0x527aa0,UI_GetInputHelperIndex,medium,Returns Object_GetByte36Max7(UI+0x8310); Game_WindowProc uses the byte as (value+1)&7.
+0x4f34f0,UI_GetIndexedCenteredRect,high,Wraps UI_ComputeCenteredRect for the stride-0xc record at this+0x4c+index*0xc and returns the centered rect.
+0x4ed0a0,Map_UpdateObjectScreenBounds,high,"Projects isometric tile corners via Grid_GetCell and sprite size/hotspot, updates +0x2c..+0x38 and clamps +0x24/+0x28."
+0x533400,RecordList_EnsureLoaded,high,"One-shot bulk resource load: opens filename +0x38, seeks +0x3c, reads +0x40 bytes and splits them by +0x68 offsets into +0x80 pointers."
+0x489750,Game_FindRecordByTripleKey,medium,"Linear IDMap +0x74 search matching +8, +0x10 and byte +0x14, optionally returning the found slot index."
+0x5410b0,Sound_SetBufferVolume,medium,Maps 0..10000 through log2(10000/value) and calls sound vtable +0x3c; returns 0x80070057 above 10000.
+0x4d7600,Game_FindRecordByField24,medium,Linear scan of IDMap +0xfac (count +0xfc0) returning the entry whose +0x24 matches.
+0x526e50,UI_MarkFullRectDirty,high,Sets global flag 0x584508 and unions the full +0x270/+0x274 extent through Rect_Union.
+0x539980,Gfx_BlitClipped16,high,"Software 16-bpp clipped blit with optional RGB555-to-565 conversion, DIB section creation and BitBlt."
+0x4d7640,Market_ComputeValueAdjustment,medium,Combines Market_GetPriceDelta and Rating_GetFloat with category-dependent +0xcc/+0xcd multipliers and a six-slot +0xfe4 match bonus.
+0x48cdd0,Game_CountProductUsageByCategory,medium,Zeroes 0x40 outputs and counts matching +0xd4 slot values per record category +0x30 into 8x8 bins.
+0x510030,Stats_SumValuesByCategory,medium,Sums floats at entry+8 from IDMap +0x304 filtered by fields +0x10 and +0x14 (-1 is wildcard).
+0x4a1aa0,IDMap_DestroyAllObjects,high,"Calls virtual destructor(1) on every IDMap entry, destroys the map itself and clears the caller pointer."
+0x477c20,Stats_FindRecordByType,medium,"Looks up the last entry for -1, otherwise scans IDMap +0x14e4 for entry+4 equal to the key; callers use the returned record pointer."
+0x51eae0,UI_ClearChildExtent,high,"Unions the child sprite extent into the dirty rect, then clears the cached rect and flags under lock +0x1c8."
+0x5144a0,Stats_GetAverageRecordValue,medium,"Averages entry+4 over IDMap +0x44 (count +0x58), dividing the sum by 10 and by the count."
+0x54dcd4,Stream_AttachBuffer,medium,"Frees the old buffer at +0x10 and stores a new buffer, length and capacity in +0x10/+4/+0x14."
+0x547a00,Sound_ConvertVolumeSetting,medium,"Piecewise float-to-int volume conversion with a 5001 threshold, clamped to 10000."
+0x5482e0,Sound_PlayEffectByIndex,medium,"If sound is enabled (+0xfc), forwards the indexed entry at this+index*4+0x24 to Sound_SetParam."
+0x53c130,Gfx_BlitRLEScaled,high,"Decodes 3-byte RLE sprite runs to 16-bpp with palette lookup and scale modes 0/1/2 (full, half, quarter)."
+0x4eae60,Map_CompactVisibleDrawRecords,medium,Culls tile records against the viewport with 100-px margins and compacts visible 0x3c-byte draw records into +0x138.
+0x537390,Surface_CopyRect16,medium,For 16-bpp surfaces copies a clipped rectangle from source pitch +0x1c/+0x20 into buffer +0x18 via Memory_Fill16.
+0x538fa0,Surface_Lock,high,"Locks the surface via vtable+0x64 with a 0x6c DDSURFACEDESC, retries DDERR_WASSTILLDRAWING and fills width/height/pitch."
+0x531d10,UI_MoveElementToIndex,medium,Binary-searches the element key and memmoves the +0xec 8-byte table to move the child to index param_2.
+0x535c10,Font_WrapText,high,Replaces newlines with spaces and inserts line breaks at the last space using Font_GetCharWidth measurements.
+0x4033c0,String_SetOwned,high,Frees +0x44 and duplicates the argument string into a newly allocated +0x44 buffer.
+0x533b90,Record_SetVariant,medium,Copies a 6-byte variant entry selected by +0x32 from table +0x50 into stride-0x48 record fields +0x32/+0x34/+0x36/+0x3a/+0x38.
+0x534790,Record_GetScreenOffset,medium,Resolves record +0x32 through +0x20/+0x28/+0x2c tables and float conversion to return two screen offsets.
+0x4e0e90,Game_SelectLeastUsedCategory,medium,"Builds eight category counts from entry+0x308 and returns the least-used category below the threshold, or -1."
+0x47e6e0,Map_CollectType351ToList,medium,Collects type-0x351 grid cells through Grid_CollectType351 and appends freshly allocated 0x20-byte nodes to list +0x1998.
+0x4ee640,Map_GetObjectNeighborCell,medium,Maps tile record +0x4c[index] to grid x/y and returns the adjacent cell for object types 0x14-0x17.
+0x553401,CRT_InvokeExceptionHandler,low,Walks an SEH frame (+0x18/+0x1c) and calls the recovered handler pointer through the CRT jump stub.
+0x4fb600,Stats_SumRecordCounts,medium,Sums entry+4 over a map into *param_3 and only flagged entries (+0x1c!=0) into *param_2.
+0x47c370,IDMap_FindIndexByValue,high,"Scans IDMap +0x1500 for an entry value equal to the key and returns its index, or -1."
+0x47e180,Game_FindRecordByField20,medium,Linear IDMap +0x16f8 scan returning the entry whose +0x20 matches.
+0x4d3020,MapObject_SetCityFromPlayer,high,Sets +8 to the player slot and writes city index+1 (Game_FindCityIndex) into tile field +0x24 via Record_SetField2D0C; -1 clears it.
+0x4f3a90,Grid_GetRandomRecord28,medium,Picks a random entry from table +0x110 and returns grid base +0x9c + entry*0x28.
+0x4d3560,MapObject_PlaceAtPoint,medium,"Offsets the input point by -0xa0/-0xd0, calls Record_SetDoubles48 and stores the input record in the context array +0x20."
+0x4e5ff0,Game_GetRecordByte14,medium,"Looks up global IDMap +0x74 by key +4 and returns byte +0x14, or 0xffffffff."
+0x5508f8,CRT_UnlockHandle,high,Leaves indexed CRT lock 0..0x13 or LeaveCriticalSection at +0x20 for larger handles.
+0x509290,Screen_AddRecordToPanel,low,Appends the pointer at record+0x164 to the panel list at this+0x114.
+0x549300,Employee_GetProfessionName,high,Maps employee type IDs to German profession strings and cycles the per-role sprite variant 1/2.
+0x530a60,Gfx_FillGradientDither,high,Bilinearly interpolates four corner colors with a 4x4 ordered-dither matrix and writes RGB16 pixels through the sprite buffer.
+0x550471,CRT_IOInit,high,"Initializes the CRT stdio handle table, inherits handles from STARTUPINFO and calls SetHandleCount."
+0x4af620,Stats_BuildCategoryMatrix,medium,Builds a 36x8 average matrix from map records +0xd4 and emits only non-empty category rows.
+0x4b0710,Stats_GetGlobalMaximum,medium,Scans all player IDMap +0x19c entries and returns the maximum of four counters for the selected statistic category.
+0x4f4960,Sprite_ApplyPaletteRemap,medium,Clips a sprite rect and remaps destination palette indices through source alpha bytes plus palette offset param_4.
+0x533310,Record_CopyTemplate98,low,"Copies name text to +0x80, six 0x10-byte attribute/animation entries and resets ten 6-byte slots in a 0x98 record."
+0x4f6e70,Game_InitCompanySlots,medium,"Initializes six company blocks from player records 0x224..0x238, zeroing 0x5a dwords and setting +0x88=50000 plus a random 6..9*DAT_0057bb24 value."
+0x406bb0,Settings_LoadFromRegistry,high,Reads registry values Options (0x164 bytes) and Sound (4 dwords) from SOFTWARE\Software2000\Pizza Connection 2.
+0x4825c0,Map_BuildPixelCoordIndex,medium,Loads KI.PCX and indexes all 800x600 pixels by palette byte into coordinate/count arrays at +0x388.
+0x5024f0,AI_SelectRandomAction,medium,Chooses an action from tables 0x5726dc/0x57270c using player state +0x44 and random ranges; writes +0x4c.
+0x478ae0,Rating_ComputeEightCategories,medium,Combines Rating_AdjustA/B values with a 4x8 comparison table and clamps eight category scores to 0..100.
+0x541fc0,Sound_GetStreamRefillSize,medium,Uses DirectSound GetCurrentPosition (vtable+0x10) and the half-buffer threshold to compute the writable byte count.
+0x548680,Sound_SetMusicTrack,high,Handles track IDs 1000 (stop) and 0x3e9-0x3ec by formatting Music/Mus_City_%s_%d.wav and creating a buffer.
+0x5282c0,UI_FillFadeRect,medium,Advances fade value +0xc by delta*+8 up to 32 and fills the +0x28 buffer with the resulting RGB555 color.
+0x547810,Sound_LoadEffectBuffers,high,Loads sfx/*.wav effect names into +0x24 and +0x90 buffer slots and applies the +0xf4 parameter via vtable+0x9c.
+0x4d64b0,Map_PickObjectsAtPoint,high,"Tests map IDMap +0xfac entries whose +0x10..+0x1c bounds contain the point, skipping types 0x20/0x12378d6, and queues them."
+0x40bb00,Screen_BuildGameSidebar,high,Creates window 0x237 from DUMMYSPRITE.spr and adds R_INFO..R_BAUEN sidebar images with IDs 0x3f4-0x3fe.
+0x54b860,Sprite_LoadSequence,high,Formats a filename pattern with increasing index and loads sprites into 0x50-byte objects appended to a list until load fails.
+0x527ee0,UI_BringWindowToFront,high,"Finds a child by ID, shifts the +0x14 table up, moves the selected index to slot 0 and invalidates the children."
+0x478eb0,Stats_ComputeWeightedTotals,medium,Computes eight weighted sums from player +0x220 fields and weights +0x183c..+0x1848 plus +0x19fc/+0x1a04.
+0x4793b0,Stats_ComputeOccupancyPercent,medium,Counts 0x50x0x50 map cells and stores the zero-cell percentage clamped to 0..100 at +0x1858.
+0x52ffe0,UI_HitTestTopChild,medium,Walks the +0xec child array top-down calling UI_IsValidSize with the point offset by +0x18/+0x1c.
+0x4f13d0,List_RemoveObject,medium,Unlinks the node matching param_1 from the +0xbc linked list after Object_UpdateState and returns success.
+0x5003e0,Game_UpdateCompanyAccount,medium,"Adjusts the per-company account at this+index*0x168+0x19c from the double at +0x108: negative balance covers up to 1000, otherwise subtracts 250."
+0x513f50,Game_DecayProductValues,medium,"Every third tick reduces each entry +4 by +0xc/10 minus table 0x573b08[+0x2c] plus 10, clamped at 0."
+0x5136c0,Game_ComputeCompanyRatings,medium,"Blends three fields per category and scales by 100 + a bonus from the current player building +0xa8/+0xe8/+0x1cc, clamped 0..100."
+0x425e70,Screen_BuildOptionsSidebar,high,Creates window 0x237 from DUMMYSPRITE.spr and adds R_GRAFIK/R_LADEN/R_SOUND/R_SPEICHERN/R_HELP images 0x3f0-0x3f5.
+0x539e20,List_RemoveByValue,high,"Linked-list delete of the node whose first dword equals param_1, freeing it and fixing the head/next link."
+0x5392e0,Surface_InitFromBuffer,high,"Releases the old surface then stores buffer +0x28, width/height +0x1a/+0x1c, pitch/2 +0x20 and SetRect bounds."
+0x47ee60,Stats_GetAverageFlaggedValue,medium,"Averages entry+4 over IDMap +0x1998 entries with +0x1c!=0, dividing the sum by 10 and by the count."
+0x4872b0,UI_ClearActiveRecordSlots,medium,"For the six global slots 0x2c41c..0x2c430, clears flagged record +0x3e via Record_ClearFlags48 and resets the slot to -1."
+0x54ebe3,CRT_SelectionSort,high,In-place selection sort over stride param_3 using comparator param_4 and Mem_Swap.
+0x485700,Game_RefreshDaylightCurve,high,Fills 25 hourly values at +0x2db0 from the current light setting; 0x485820 interpolates them into global shading 0x585518.
+0x4d80e0,Game_GetLowestValuePlayer,medium,"Returns the player slot with the smallest +0xdac counter among the six active players, or -1."
+0x4e2570,Game_CollectObjectsByOwner,high,Appends every IDMap +0x180 entry whose owner +0x30 equals param_2 to the caller list.
+0x4de710,Game_CountRecordsWithFlag16F4,medium,Counts IDMap +0x148 entries whose byte +0x16f4 is non-zero.
+0x54cb8c,CRT_LeaveNestedLocks,low,Conditionally leaves two nested CRT critical sections at object +0x34/+0x38 based on negative lock counts.
+0x512820,IDMap_FindIndexByPointer,high,Linear IDMap scan comparing the entry pointer to param_2 and returning its index or -1.
+0x4e1b80,Game_ResetRecordTurnCounters,medium,Iterates IDMap +0x110 (count +0x124) and clears +0x30c on every entry.
+0x4d8610,AI_AddKnownRecord,low,"Allocates {record, -1} and appends it to the AI list at +0xfc8, or appends NULL on allocation failure."
+0x47aca0,Rating_ComputePenalty,high,"Returns the negated +0x14d4 count divided by max(1, Rating_ClampAdjusted(+0x14c4)/10)."
+0x539e00,List_PushFront,high,"Allocates an 8-byte {value, next} node and pushes it onto the singly linked list head at +0x50."
+0x4e5e10,Game_GetRecordByteC,medium,"Looks up global IDMap +0x74 by key +4 and returns byte +0xc, or 0."
+0x527810,UI_FindStringRecord,high,"StringList_Find returns an index, then maps it to this+0x82f8+index*0x48."
+0x54c7e0,CRT_FreeBufferNode,low,Frees the two buffer pointers at node+8/+4 then the node itself.
+0x50d7f0,Object_GetLevelProperty,medium,Clamps the object level through Object_GetClampedLevel and indexes table 0x56d0e0 at (param+level*3).
+0x47d230,Screen_AddRecordToList,medium,Appends the pointer stored at record+0x164 to the screen list at this+0x1744.
+0x482810,Game_RegisterObject,high,Appends a newly created game object to the global object list at this+0x58.
+0x546b10,Sound_StartStreamVoice,medium,"Locks the sound stream, allocates a voice node, configures the buffer and signals the stream event."
+0x546300,Sound_StopStreamVoice,medium,"Stops/releases a streaming voice buffer, unlinks its node from the list and frees it."
+0x540ff0,Sound_ReleaseInactiveVoices,high,"Walks the +0x38 voice list, releasing and freeing entries whose status bit 1 is clear, optionally invoking +0x48."
+0x48e1a0,Game_CheckPlayerControlFlags,low,"Checks per-player control bytes +0xac for the referenced player and the current player, returning true only when both are clear."
+0x54dd1c,CRT_StreamFlushChar,medium,Output-stream overflow: flushes via vtable+0xc when the put area is full and writes the char for unbuffered streams.
+0x4dce00,Game_InitCompanyAIStrategy,low,"Counts players with +0x50==0, then initializes AI fields +0x1148 (random 0..7), +0x1150=count*5000 and +0x114c/+0x1154=12/count+3."
+0x549170,Sound_StopMusic,high,"If sound is enabled and stream state +0x14==3, calls vtable+0x54 to stop the current music and clears fields +0x10/+0x14."
+0x520fd0,UI_DispatchCallback,high,"Forwards the child, ID, command and flags to UI_InvokeCallback at this+8+0x134."
+0x553c9d,CRT_LocalUnwind2,high,Tail-calls __local_unwind2 with the frame and target state from +0x18/+0x1c.

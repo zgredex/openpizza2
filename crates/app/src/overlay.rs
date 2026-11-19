@@ -1,0 +1,514 @@
+//! Small built-in 5x7 status overlay for the playable branch view.
+
+use pc2_sim::{CharacterProfile, GameMode, ScenarioSetup, Snapshot};
+
+const SCALE: u32 = 2;
+const GLYPH_WIDTH: u32 = 5;
+const ADVANCE: u32 = GLYPH_WIDTH + 1;
+
+fn glyph(ch: char) -> [u8; 7] {
+    match ch.to_ascii_uppercase() {
+        'A' => [
+            0b01110, 0b10001, 0b10001, 0b11111, 0b10001, 0b10001, 0b10001,
+        ],
+        'B' => [
+            0b11110, 0b10001, 0b10001, 0b11110, 0b10001, 0b10001, 0b11110,
+        ],
+        'C' => [
+            0b01111, 0b10000, 0b10000, 0b10000, 0b10000, 0b10000, 0b01111,
+        ],
+        'D' => [
+            0b11110, 0b10001, 0b10001, 0b10001, 0b10001, 0b10001, 0b11110,
+        ],
+        'E' => [
+            0b11111, 0b10000, 0b10000, 0b11110, 0b10000, 0b10000, 0b11111,
+        ],
+        'F' => [
+            0b11111, 0b10000, 0b10000, 0b11110, 0b10000, 0b10000, 0b10000,
+        ],
+        'G' => [
+            0b01111, 0b10000, 0b10000, 0b10111, 0b10001, 0b10001, 0b01110,
+        ],
+        'H' => [
+            0b10001, 0b10001, 0b10001, 0b11111, 0b10001, 0b10001, 0b10001,
+        ],
+        'I' => [
+            0b11111, 0b00100, 0b00100, 0b00100, 0b00100, 0b00100, 0b11111,
+        ],
+        'K' => [
+            0b10001, 0b10010, 0b10100, 0b11000, 0b10100, 0b10010, 0b10001,
+        ],
+        'L' => [
+            0b10000, 0b10000, 0b10000, 0b10000, 0b10000, 0b10000, 0b11111,
+        ],
+        'M' => [
+            0b10001, 0b11011, 0b10101, 0b10101, 0b10001, 0b10001, 0b10001,
+        ],
+        'N' => [
+            0b10001, 0b11001, 0b10101, 0b10011, 0b10001, 0b10001, 0b10001,
+        ],
+        'O' => [
+            0b01110, 0b10001, 0b10001, 0b10001, 0b10001, 0b10001, 0b01110,
+        ],
+        'P' => [
+            0b11110, 0b10001, 0b10001, 0b11110, 0b10000, 0b10000, 0b10000,
+        ],
+        'R' => [
+            0b11110, 0b10001, 0b10001, 0b11110, 0b10100, 0b10010, 0b10001,
+        ],
+        'S' => [
+            0b01111, 0b10000, 0b10000, 0b01110, 0b00001, 0b00001, 0b11110,
+        ],
+        'T' => [
+            0b11111, 0b00100, 0b00100, 0b00100, 0b00100, 0b00100, 0b00100,
+        ],
+        'U' => [
+            0b10001, 0b10001, 0b10001, 0b10001, 0b10001, 0b10001, 0b01110,
+        ],
+        'V' => [
+            0b10001, 0b10001, 0b10001, 0b10001, 0b10001, 0b01010, 0b00100,
+        ],
+        'W' => [
+            0b10001, 0b10001, 0b10001, 0b10101, 0b10101, 0b11011, 0b10001,
+        ],
+        'X' => [
+            0b10001, 0b10001, 0b01010, 0b00100, 0b01010, 0b10001, 0b10001,
+        ],
+        'Y' => [
+            0b10001, 0b10001, 0b01010, 0b00100, 0b00100, 0b00100, 0b00100,
+        ],
+        'Z' => [
+            0b11111, 0b00001, 0b00010, 0b00100, 0b01000, 0b10000, 0b11111,
+        ],
+        '0' => [
+            0b01110, 0b10001, 0b10011, 0b10101, 0b11001, 0b10001, 0b01110,
+        ],
+        '1' => [
+            0b00100, 0b01100, 0b00100, 0b00100, 0b00100, 0b00100, 0b01110,
+        ],
+        '2' => [
+            0b01110, 0b10001, 0b00001, 0b00010, 0b00100, 0b01000, 0b11111,
+        ],
+        '3' => [
+            0b11111, 0b00010, 0b00100, 0b00010, 0b00001, 0b10001, 0b01110,
+        ],
+        '4' => [
+            0b00010, 0b00110, 0b01010, 0b10010, 0b11111, 0b00010, 0b00010,
+        ],
+        '5' => [
+            0b11111, 0b10000, 0b11110, 0b00001, 0b00001, 0b10001, 0b01110,
+        ],
+        '6' => [
+            0b00110, 0b01000, 0b10000, 0b11110, 0b10001, 0b10001, 0b01110,
+        ],
+        '7' => [
+            0b11111, 0b00001, 0b00010, 0b00100, 0b01000, 0b01000, 0b01000,
+        ],
+        '8' => [
+            0b01110, 0b10001, 0b10001, 0b01110, 0b10001, 0b10001, 0b01110,
+        ],
+        '9' => [
+            0b01110, 0b10001, 0b10001, 0b01111, 0b00001, 0b00010, 0b01100,
+        ],
+        ':' => [
+            0b00000, 0b00100, 0b00100, 0b00000, 0b00100, 0b00100, 0b00000,
+        ],
+        '.' => [
+            0b00000, 0b00000, 0b00000, 0b00000, 0b00000, 0b00110, 0b00110,
+        ],
+        ',' => [
+            0b00000, 0b00000, 0b00000, 0b00000, 0b00110, 0b00110, 0b00100,
+        ],
+        '$' => [
+            0b00100, 0b01111, 0b10100, 0b01110, 0b00101, 0b11110, 0b00100,
+        ],
+        '-' => [
+            0b00000, 0b00000, 0b00000, 0b11111, 0b00000, 0b00000, 0b00000,
+        ],
+        '/' => [
+            0b00001, 0b00010, 0b00010, 0b00100, 0b01000, 0b01000, 0b10000,
+        ],
+        '+' => [
+            0b00000, 0b00100, 0b00100, 0b11111, 0b00100, 0b00100, 0b00000,
+        ],
+        '=' => [
+            0b00000, 0b00000, 0b11111, 0b00000, 0b11111, 0b00000, 0b00000,
+        ],
+        '[' => [
+            0b01110, 0b01000, 0b01000, 0b01000, 0b01000, 0b01000, 0b01110,
+        ],
+        ']' => [
+            0b01110, 0b00010, 0b00010, 0b00010, 0b00010, 0b00010, 0b01110,
+        ],
+        _ => [0; 7],
+    }
+}
+
+fn blend(frame: &mut [u8], width: u32, height: u32, x: i32, y: i32, color: [u8; 4]) {
+    if x < 0 || y < 0 || x >= width as i32 || y >= height as i32 {
+        return;
+    }
+    let offset = ((y as u32 * width + x as u32) * 4) as usize;
+    let alpha = color[3] as u32;
+    if alpha == 255 {
+        frame[offset..offset + 4].copy_from_slice(&color);
+    } else {
+        for channel in 0..3 {
+            frame[offset + channel] = ((color[channel] as u32 * alpha
+                + frame[offset + channel] as u32 * (255 - alpha)
+                + 127)
+                / 255) as u8;
+        }
+        frame[offset + 3] = 255;
+    }
+}
+
+fn fill_rect(
+    frame: &mut [u8],
+    width: u32,
+    height: u32,
+    x: i32,
+    y: i32,
+    w: i32,
+    h: i32,
+    color: [u8; 4],
+) {
+    for py in y..y + h {
+        for px in x..x + w {
+            blend(frame, width, height, px, py, color);
+        }
+    }
+}
+
+fn draw_text(
+    frame: &mut [u8],
+    width: u32,
+    height: u32,
+    mut x: i32,
+    y: i32,
+    text: &str,
+    color: [u8; 4],
+) {
+    for ch in text.chars() {
+        let rows = glyph(ch);
+        for (row, bits) in rows.iter().enumerate() {
+            for column in 0..GLYPH_WIDTH {
+                if bits & (1 << (GLYPH_WIDTH - 1 - column)) != 0 {
+                    for sy in 0..SCALE {
+                        for sx in 0..SCALE {
+                            blend(
+                                frame,
+                                width,
+                                height,
+                                x + (column * SCALE + sx) as i32,
+                                y + (row as u32 * SCALE + sy) as i32,
+                                color,
+                            );
+                        }
+                    }
+                }
+            }
+        }
+        x += (ADVANCE * SCALE) as i32;
+    }
+}
+
+fn clock_text(minutes: u32) -> String {
+    format!("{:02}:{:02}", (minutes / 60) % 24, minutes % 60)
+}
+
+pub fn draw_status(
+    frame: &mut [u8],
+    width: u32,
+    height: u32,
+    snapshot: &Snapshot,
+    profile: Option<&CharacterProfile>,
+    scenario: Option<&ScenarioSetup>,
+) -> Result<(), String> {
+    if frame.len() != (width * height * 4) as usize {
+        return Err("overlay frame has the wrong size".into());
+    }
+    let panel_x = 12;
+    let panel_y = 12;
+    let (panel_w, panel_h) = if scenario.is_some() {
+        (620, 256)
+    } else if profile.is_some() {
+        (620, 232)
+    } else {
+        (520, 184)
+    };
+    fill_rect(
+        frame,
+        width,
+        height,
+        panel_x,
+        panel_y,
+        panel_w,
+        panel_h,
+        [8, 10, 14, 210],
+    );
+    fill_rect(
+        frame,
+        width,
+        height,
+        panel_x,
+        panel_y,
+        panel_w,
+        2,
+        [210, 170, 80, 255],
+    );
+    let line_height = 24;
+    let mut y = panel_y + 12;
+    let open_color = if snapshot.open {
+        [120, 230, 130, 255]
+    } else {
+        [240, 120, 110, 255]
+    };
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        y,
+        if snapshot.open {
+            "BRANCH: OPEN"
+        } else {
+            "BRANCH: CLOSED"
+        },
+        open_color,
+    );
+    y += line_height;
+    if let Some(profile) = profile {
+        let mode = match profile.mode {
+            GameMode::Campaign => "CAMPAIGN",
+            GameMode::FreeGame => "FREE GAME",
+        };
+        draw_text(
+            frame,
+            width,
+            height,
+            panel_x + 14,
+            y,
+            &format!(
+                "PLAYER: {}   MODE: {}",
+                if profile.player_name.is_empty() {
+                    "(unnamed)"
+                } else {
+                    &profile.player_name
+                },
+                mode
+            ),
+            [235, 235, 235, 255],
+        );
+        y += line_height;
+        draw_text(
+            frame,
+            width,
+            height,
+            panel_x + 14,
+            y,
+            &format!(
+                "COMPANY: {}",
+                if profile.enterprise_name.is_empty() {
+                    "(unnamed)"
+                } else {
+                    &profile.enterprise_name
+                }
+            ),
+            [235, 235, 235, 255],
+        );
+        y += line_height;
+    }
+    if let Some(scenario) = scenario {
+        draw_text(
+            frame,
+            width,
+            height,
+            panel_x + 14,
+            y,
+            &format!(
+                "CITY: {} ({})   POP: {}   LENGTH: {}Y   OPP: {}/{}/{}",
+                scenario.city_name,
+                scenario.city_code.to_ascii_uppercase(),
+                scenario.population,
+                scenario.game_length_years,
+                scenario.opponents[0],
+                scenario.opponents[1],
+                scenario.opponents[2]
+            ),
+            [235, 235, 235, 255],
+        );
+        y += line_height;
+    }
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        y,
+        &format!(
+            "CLOCK: {}   CASH: {:.2}",
+            clock_text(snapshot.clock_minutes),
+            snapshot.cash
+        ),
+        [235, 235, 235, 255],
+    );
+    y += line_height;
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        y,
+        &format!(
+            "STOCK: {:.0}/{:.0}   PRICE: {:.2}",
+            snapshot.stock, snapshot.stock_capacity, snapshot.price
+        ),
+        [235, 235, 235, 255],
+    );
+    y += line_height;
+    let last = snapshot
+        .last_sale
+        .as_ref()
+        .map(|sale| {
+            format!(
+                "LAST SALE: {:.2}  STOCK -{}",
+                sale.cash_delta, sale.servings
+            )
+        })
+        .unwrap_or_else(|| "LAST SALE: NONE".to_string());
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        y,
+        &last,
+        [235, 235, 235, 255],
+    );
+    y += line_height;
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        y,
+        &format!(
+            "SERVED: {}   SALES: {}   LOST: {}",
+            snapshot.customers_served, snapshot.sales, snapshot.customers_lost
+        ),
+        [235, 235, 235, 255],
+    );
+    y += line_height;
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        y,
+        "O OPEN/CLOSE   -/+ PRICE   SPACE STEP",
+        [200, 200, 210, 255],
+    );
+    Ok(())
+}
+
+pub fn draw_lease_marker(frame: &mut [u8], width: u32, height: u32, x: i32, y: i32) {
+    let color = [120, 210, 250, 255];
+    fill_rect(frame, width, height, x - 13, y - 3, 27, 2, color);
+    fill_rect(frame, width, height, x - 1, y - 7, 2, 10, color);
+}
+
+pub fn draw_city_status(
+    frame: &mut [u8],
+    width: u32,
+    height: u32,
+    camera: (i32, i32),
+    city_size: (u32, u32),
+    controls: &str,
+    campaign_summary: Option<&str>,
+) -> Result<(), String> {
+    if frame.len() != (width * height * 4) as usize {
+        return Err("overlay frame has the wrong size".into());
+    }
+    let panel_x = 12;
+    let panel_y = 12;
+    let panel_w = 520;
+    let panel_h = 112;
+    fill_rect(
+        frame,
+        width,
+        height,
+        panel_x,
+        panel_y,
+        panel_w,
+        panel_h,
+        [8, 10, 14, 210],
+    );
+    fill_rect(
+        frame,
+        width,
+        height,
+        panel_x,
+        panel_y,
+        panel_w,
+        2,
+        [90, 170, 230, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 12,
+        "CITY VIEW",
+        [120, 210, 250, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 36,
+        &format!(
+            "CAMERA: {},{}  MAP: {}x{}",
+            camera.0, camera.1, city_size.0, city_size.1
+        ),
+        [235, 235, 235, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 60,
+        controls,
+        [200, 200, 210, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 84,
+        campaign_summary.unwrap_or("CITY CROP IS CACHED; NO MAP RELOAD"),
+        [170, 170, 180, 255],
+    );
+    Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use pc2_sim::BranchSim;
+
+    #[test]
+    fn overlay_draws_status_text() {
+        let mut frame = vec![0u8; 800 * 600 * 4];
+        let sim = BranchSim::new();
+        draw_status(&mut frame, 800, 600, &sim.snapshot(), None, None).unwrap();
+        assert!(frame
+            .chunks_exact(4)
+            .any(|pixel| pixel[3] == 255 && pixel[0] > 0));
+        assert_ne!(frame, vec![0u8; 800 * 600 * 4]);
+    }
+}

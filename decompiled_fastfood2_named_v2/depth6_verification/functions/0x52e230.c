@@ -1,0 +1,78 @@
+// rea decompile_all
+// name: FUN_0052e230
+// address: 0x52e230
+// body: available
+// range: 0x52e230-0x52e39b inclusive
+// non_contiguous: false
+// provider: Ghidra 12.2 (ghidra)
+// analysis_profile: aae5fcbbec95ac3047ec86f28609da356814b1c85770f2c09803aad3607b988d
+// limitations: The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.; Ghidra Program checkpoint mode is disabled: closing discards metadata edits; original executable bytes are unchanged. For stock ELF/PE/Mach-O on Linux/macOS, set REA_GHIDRA_CHECKPOINT_DIR to a private absolute directory before starting REA (restart MCP after changing its startup environment).; Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; This session uses Ghidra 12.2. The bridge is verified against 12.1.4; other 12.x (>=12.1) builds are accepted and the observed version is reported.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+void __fastcall FUN_0052e230(void *param_1)
+
+{
+  void *this;
+  int iVar1;
+  int iVar2;
+  int iVar3;
+  int iVar4;
+  int local_30;
+  int local_28;
+  int local_24;
+  int local_20;
+  int local_1c;
+  int local_18;
+  int local_14;
+  int local_10;
+  int local_c;
+  int local_8;
+  int local_4;
+  
+  iVar2 = 4 - (uint)(*(int *)((int)param_1 + 0x3a8) != 1);
+  local_30 = 0;
+  iVar3 = local_4;
+  iVar4 = local_8;
+  if (0 < iVar2) {
+    do {
+      this = *(void **)((int)param_1 + local_30 * 0xcc + 0x9c);
+      if (this != (void *)0x0) {
+        FUN_0053d090(this,&local_1c,&local_18);
+        FUN_0053d090(*(void **)((int)param_1 + local_30 * 0xcc + 0x124),&local_20,&local_14);
+        FUN_0053d100(*(void **)((int)param_1 + local_30 * 0xcc + 0x9c),&local_28,&local_24);
+        if (local_30 == 0) {
+          local_10 = local_28;
+          local_c = local_24;
+          if (0 < *(short *)((int)param_1 + 0x3b0)) {
+            *(int *)((int)param_1 + 0x3a4) =
+                 (*(short *)((int)param_1 + 0x3b0) - local_20) - local_1c;
+          }
+          iVar4 = *(int *)((int)param_1 + 0x3a4) + local_28 + local_20 + local_1c;
+          iVar3 = local_24 + local_18;
+        }
+        else {
+          if (local_28 < local_10) {
+            local_10 = local_28;
+          }
+          if (local_24 < local_c) {
+            local_c = local_24;
+          }
+          iVar1 = local_1c + *(int *)((int)param_1 + 0x3a4) + local_28 + local_20;
+          if (iVar4 < iVar1) {
+            iVar4 = iVar1;
+          }
+          if (iVar3 < local_24 + local_18) {
+            iVar3 = local_24 + local_18;
+          }
+        }
+      }
+      local_30 = local_30 + 1;
+    } while (local_30 < iVar2);
+  }
+  *(int *)((int)param_1 + 0x28) = *(int *)((int)param_1 + 0x38) + local_10;
+  *(int *)((int)param_1 + 0x2c) = *(int *)((int)param_1 + 0x3c) + local_c;
+  FUN_00520b40(param_1,iVar4 - local_10,iVar3 - local_c);
+  return;
+}
+

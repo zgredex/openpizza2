@@ -1,0 +1,103 @@
+========================================================================================
+0x50e4e0 layer=[7] indeg=1 bytes=1767
+calls: Game_GetTimeByMode, 0x508780
+ provider-specific; not original source
+void __fastcall FUN_0050e4e0(void *param_1)
+{
+  *(undefined4 *)((int)param_1 + 0x108) = 10;
+  if (*(int *)((int)param_1 + 0x74) == 0) {
+    FUN_00504a90(param_1,0);
+    *(undefined4 *)((int)param_1 + 0x4c) = 0;
+    *(undefined4 *)((int)param_1 + 0x54) = 0;
+    FUN_00508780(param_1);
+  }
+  return;
+}
+========================================================================================
+0x409d40 layer=[7] indeg=1 bytes=1730
+calls: 0x409bb0, 0x409c60, 0x50e4c0
+ provider-specific; not original source
+undefined4 __thiscall FUN_00409d40(void *this,void *param_1,void *param_2)
+{
+  int iVar1;
+  iVar1 = FUN_00409c60(this,(int)param_1,param_2);
+  if (iVar1 == 0) {
+    FUN_0050e4c0(param_2,0x10);
+    FUN_00409bb0(param_1,param_2);
+    return 0;
+  }
+  return 1;
+}
+========================================================================================
+0x4a0b80 layer=[7] indeg=0 bytes=3477
+calls: 0x401320, 0x401340, 0x406910, UI_CloseLoadingScreen, Game_AcquireStateLock, Window_UnlockState, Game_ShutdownWorld, 0x488110, UI_ResetScrollPosition, Sound_StopCurrentBuffer, CRT_Istream_Read, CRT_Ifstream_Construct, 0x54e221
+ provider-specific; not original source
+undefined4 FUN_004a0b80(void)
+{
+  HCURSOR pHVar1;
+  void *pvVar2;
+  int iVar3;
+  int *this;
+  undefined4 local_100;
+  undefined1 local_fc [240];
+  void *pvStack_c;
+  undefined1 *puStack_8;
+  undefined4 local_4;
+  local_4 = 0xffffffff;
+  puStack_8 = &LAB_0055882e;
+  pvStack_c = ExceptionList;
+  ExceptionList = &pvStack_c;
+  FUN_00406910(0);
+  pHVar1 = LoadCursorA((HINSTANCE)0x0,(LPCSTR)0x7f02);
+  SetClassLongA(DAT_0057c5d0,-0xc,(LONG)pHVar1);
+  PostMessageA(DAT_0057c5d0,0x400,0,(LPARAM)pHVar1);
+  pvVar2 = operator_new(0x5c);
+  this = (int *)0x0;
+  local_4 = 0;
+  if (pvVar2 != (void *)0x0) {
+    this = FUN_0054cc99();
+  }
+  local_4 = 0xffffffff;
+  if ((*(byte *)(*(int *)(*this + 4) + 8 + (int)this) & 6) == 0) {
+========================================================================================
+0x4e2dc0 layer=[7] indeg=0 bytes=2033
+calls: 0x4017f0, 0x4e2110
+ provider-specific; not original source
+void __thiscall FUN_004e2dc0(void *this,int *param_1)
+{
+  int *piVar1;
+  int *piVar2;
+  int iVar3;
+  iVar3 = 0;
+  if (0 < *(int *)((int)this + 0x1cc)) {
+    do {
+      piVar1 = (int *)IDMap_Lookup((void *)((int)this + 0x1b8),iVar3,(int *)0x0);
+      piVar2 = (int *)IDMap_Lookup((void *)(DAT_0057c670 + 0x3c),*piVar1,(int *)0x0);
+      if (piVar2 == param_1) break;
+      iVar3 = iVar3 + 1;
+    } while (iVar3 < *(int *)((int)this + 0x1cc));
+    param_1 = piVar1;
+  }
+  if (iVar3 != *(int *)((int)this + 0x1cc)) {
+    FUN_004e2110(this,*param_1);
+  }
+  return;
+}
+========================================================================================
+0x4a4a60 layer=[7] indeg=0 bytes=1908
+calls: 0x4017f0, 0x482b70, CompanyOverview_UpdateBuildingRows, 0x4fe300
+ provider-specific; not original source
+void __cdecl FUN_004a4a60(int param_1,void *param_2)
+{
+  int iVar1;
+  int iVar2;
+  iVar2 = *(int *)((int)DAT_0057c670 + *(int *)((int)DAT_0057c670 + 0x2ec) * 4 + 0x200);
+  iVar1 = IDMap_Lookup((void *)(iVar2 + 0x148),param_1,(int *)0x0);
+  iVar2 = FUN_004fe300(iVar2,iVar1);
+  if (iVar2 == 0) {
+    FUN_00482b70(DAT_0057c670,0xfffe79af,DAT_005825a4,DAT_00580fc0._4_4_,0);
+    return;
+  }
+  FUN_004a47e0(param_2,DAT_0057d264);
+  return;
+}

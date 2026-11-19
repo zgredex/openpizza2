@@ -1,0 +1,238 @@
+[
+ {
+  "address": "0x4132a0",
+  "name": "SubMenu_BuildPersonnelPlan"
+ },
+ {
+  "address": "0x47a9d0",
+  "name": "Branch_RemoveStaffMember"
+ },
+ {
+  "address": "0x483fd0",
+  "name": "SubMenu_SetSelection"
+ },
+ {
+  "address": "0x484270",
+  "name": "SubMenu_CreateBuildingPage"
+ },
+ {
+  "address": "0x48bef0",
+  "name": "Game_OpenObjectView"
+ },
+ {
+  "address": "0x4936a0",
+  "name": "PersonnelPlan_WindowProc"
+ },
+ {
+  "address": "0x4d3cf0",
+  "name": "Person_ReleaseFromBranch"
+ },
+ {
+  "address": "0x4d3e30",
+  "name": "Person_RemoveFromStaff"
+ },
+ {
+  "address": "0x4e0c40",
+  "name": "Company_AddLedgerAmount"
+ },
+ {
+  "address": "0x4e3d80",
+  "name": "Advertising_StopCampaign"
+ },
+ {
+  "address": "0x401270",
+  "name": "StatsPeriodReport_Destroy"
+ },
+ {
+  "address": "0x401280",
+  "name": "NamedLockable_Construct"
+ },
+ {
+  "address": "0x401300",
+  "name": "NamedLockable_Destroy"
+ },
+ {
+  "address": "0x403300",
+  "name": "UI_ListEntry_ConstructWithValue"
+ },
+ {
+  "address": "0x403370",
+  "name": "UI_ListEntry_Construct"
+ },
+ {
+  "address": "0x4d1ca0",
+  "name": "RecipeTopping_Destroy"
+ },
+ {
+  "address": "0x4d3f80",
+  "name": "Character_Destroy"
+ },
+ {
+  "address": "0x4dd670",
+  "name": "GameClock_Destroy"
+ },
+ {
+  "address": "0x4e3fb0",
+  "name": "FurnitureType_Construct"
+ },
+ {
+  "address": "0x4e4050",
+  "name": "FurnitureType_Destroy"
+ },
+ {
+  "address": "0x4e4390",
+  "name": "BuildingValue_Destroy"
+ },
+ {
+  "address": "0x4e4920",
+  "name": "Ingredient_Destroy"
+ },
+ {
+  "address": "0x4e5d60",
+  "name": "ConstructionOrder_Construct"
+ },
+ {
+  "address": "0x54ddd5",
+  "name": "CRT_InitFpEnvironment"
+ },
+ {
+  "address": "0x54e5f6",
+  "name": "CRT_CxxFrameHandler"
+ },
+ {
+  "address": "0x54e62c",
+  "name": "CRT_CallCatchBlock2"
+ },
+ {
+  "address": "0x54e680",
+  "name": "CRT_CatchBlockFrameHandler"
+ },
+ {
+  "address": "0x54e6a5",
+  "name": "CRT_InvokeSeTranslator"
+ },
+ {
+  "address": "0x54e75b",
+  "name": "CRT_SeTranslatorFrameHandler"
+ },
+ {
+  "address": "0x54f71e",
+  "name": "CRT_Atof"
+ },
+ {
+  "address": "0x55196f",
+  "name": "CRT_SetDefaultPrecision"
+ },
+ {
+  "address": "0x552c74",
+  "name": "CRT_InternalCxxFrameHandler"
+ },
+ {
+  "address": "0x552d0f",
+  "name": "CRT_CxxCatchSearch"
+ },
+ {
+  "address": "0x552ec2",
+  "name": "CRT_CxxCatchAllSearch"
+ },
+ {
+  "address": "0x55307d",
+  "name": "CRT_CatchIt"
+ },
+ {
+  "address": "0x5530f8",
+  "name": "CRT_CallCatchBlock"
+ },
+ {
+  "address": "0x553cb8",
+  "name": "CRT_StrToDouble"
+ },
+ {
+  "address": "0x553d37",
+  "name": "CRT_GetWinMainCmdLine"
+ },
+ {
+  "address": "0x4e5de0",
+  "name": "ConstructionOrder_Destructor"
+ },
+ {
+  "address": "0x4f5e40",
+  "name": "Player_MissionState_Destructor"
+ },
+ {
+  "address": "0x501a30",
+  "name": "AwardNode_Destructor"
+ },
+ {
+  "address": "0x50f630",
+  "name": "GamePlan_Construct"
+ },
+ {
+  "address": "0x50fb30",
+  "name": "GamePlan_Destructor"
+ },
+ {
+  "address": "0x520a80",
+  "name": "UI_Child_Construct"
+ },
+ {
+  "address": "0x526f60",
+  "name": "UI_FindFontByName"
+ },
+ {
+  "address": "0x53a1e0",
+  "name": "SpriteBase_Construct"
+ },
+ {
+  "address": "0x53a210",
+  "name": "SpriteBase_Destructor"
+ },
+ {
+  "address": "0x53fbf0",
+  "name": "DirectSoundBuffer_Destructor"
+ },
+ {
+  "address": "0x54a5f0",
+  "name": "DebugConsole_Construct"
+ },
+ {
+  "address": "0x54a630",
+  "name": "DebugConsole_Destructor"
+ },
+ {
+  "address": "0x4e3df0",
+  "name": "Gangster_CancelJobsTargetingPlayer"
+ },
+ {
+  "address": "0x502f10",
+  "name": "MissionGoal_HandleEvent"
+ },
+ {
+  "address": "0x5032c0",
+  "name": "MissionGoal_ApplyCompletionEffects"
+ },
+ {
+  "address": "0x50bc40",
+  "name": "Object_AbortOrderAndReturnHome"
+ },
+ {
+  "address": "0x520e30",
+  "name": "UI_Child_Activate"
+ },
+ {
+  "address": "0x532580",
+  "name": "UI_Group_SelectMemberByKey"
+ },
+ {
+  "address": "0x532620",
+  "name": "UI_Group_ApplyMemberSelection"
+ },
+ {
+  "address": "0x533aa0",
+  "name": "Record_SelectVariant"
+ },
+ {
+  "address": "0x534bc0",
+  "name": "Record_AssignVariant"
+ }
+]

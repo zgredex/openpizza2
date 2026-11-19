@@ -1,0 +1,12 @@
+[package]
+name = "pc2-sim"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic headless branch simulation for Pizza Connection 2"
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "pc2-clock"
+path = "src/bin/pc2-clock.rs"

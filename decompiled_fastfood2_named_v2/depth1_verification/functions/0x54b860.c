@@ -1,0 +1,52 @@
+// rea decompile_all
+// name: Sprite_LoadSequence
+// address: 0x54b860
+// body: available
+// range: 0x54b860-0x54b923 inclusive
+// non_contiguous: false
+// provider: Ghidra 12.2 (ghidra)
+// analysis_profile: aae5fcbbec95ac3047ec86f28609da356814b1c85770f2c09803aad3607b988d
+// limitations: The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.; Ghidra Program checkpoint mode is disabled: closing discards metadata edits; original executable bytes are unchanged. For stock ELF/PE/Mach-O on Linux/macOS, set REA_GHIDRA_CHECKPOINT_DIR to a private absolute directory before starting REA (restart MCP after changing its startup environment).; Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; This session uses Ghidra 12.2. The bridge is verified against 12.1.4; other 12.x (>=12.1) builds are accepted and the observed version is reported.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+void Sprite_LoadSequence(byte *param_1,void *param_2,void *param_3,void *param_4)
+
+{
+  undefined4 *puVar1;
+  int iVar2;
+  int local_118;
+  void *local_114;
+  CHAR local_110 [260];
+  void *local_c;
+  undefined1 *puStack_8;
+  undefined4 local_4;
+  
+                    /* Depth-1 proposal batch 1. */
+  local_4 = 0xffffffff;
+  puStack_8 = &LAB_0055b9be;
+  local_c = ExceptionList;
+  iVar2 = 0;
+  ExceptionList = &local_c;
+  while( true ) {
+    FUN_0054dd83(local_110,param_1,iVar2);
+    local_114 = operator_new(0x50);
+    local_4 = 0;
+    if (local_114 == (void *)0x0) {
+      puVar1 = (undefined4 *)0x0;
+    }
+    else {
+      puVar1 = FUN_0053c7f0(local_114,param_3,param_4,local_110,&local_118,0,(void *)0x0,0);
+    }
+    local_4 = 0xffffffff;
+    if (local_118 != 0) break;
+    FUN_004014b0(param_2,puVar1);
+    iVar2 = iVar2 + 1;
+  }
+  if (puVar1 != (undefined4 *)0x0) {
+    (**(code **)*puVar1)(1);
+  }
+  ExceptionList = local_c;
+  return;
+}
+

@@ -1,0 +1,379 @@
+========================================================================================
+0x54ddd5 indeg=0 bytes=1698
+calls: CRT_InitFloatCvtTable, FUN_0055196f, CRT_QueryProcessorFeature
+ provider-specific; not original source
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+void FUN_0054ddd5(void)
+{
+  void *extraout_ECX;
+  FUN_0054dded();
+  _DAT_005855d8 = FUN_005519bf();
+  FUN_0055196f(extraout_ECX);
+  return;
+}
+========================================================================================
+0x54e5f6 indeg=0 bytes=1713
+calls: FUN_00552c74
+ provider-specific; not original source
+undefined4 __cdecl
+FUN_0054e5f6(PEXCEPTION_RECORD param_1,PVOID param_2,DWORD param_3,undefined4 param_4)
+{
+  int *in_EAX;
+  undefined4 uVar1;
+  uVar1 = FUN_00552c74(param_1,param_2,param_3,param_4,in_EAX,0,(PVOID)0x0,'\0');
+  return uVar1;
+}
+========================================================================================
+0x54e62c indeg=1 bytes=1958
+calls: FUN_0054e680
+ provider-specific; not original source
+undefined4 __cdecl
+FUN_0054e62c(undefined4 param_1,undefined4 param_2,undefined4 param_3,int param_4,int param_5)
+{
+  undefined4 uVar1;
+  void *local_18;
+  code *local_14;
+  undefined4 local_10;
+  undefined4 local_c;
+  int local_8;
+  local_10 = param_2;
+  local_14 = FUN_0054e680;
+  local_8 = param_4 + 1;
+  local_c = param_1;
+  local_18 = ExceptionList;
+  ExceptionList = &local_18;
+  uVar1 = __CallSettingFrame_12(param_3,param_1,param_5);
+  ExceptionList = local_18;
+  return uVar1;
+}
+========================================================================================
+0x54e680 indeg=1 bytes=1715
+calls: FUN_00552c74
+ provider-specific; not original source
+void __cdecl FUN_0054e680(PEXCEPTION_RECORD param_1,PVOID param_2,DWORD param_3)
+{
+  FUN_00552c74(param_1,*(PVOID *)((int)param_2 + 0xc),param_3,0,*(int **)((int)param_2 + 8),
+               *(int *)((int)param_2 + 0x10),param_2,'\0');
+  return;
+}
+========================================================================================
+0x54e6a5 indeg=1 bytes=2562
+calls: FUN_0054e75b, CRT_GetThreadData
+ provider-specific; not original source
+undefined4 __cdecl
+FUN_0054e6a5(undefined4 *param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
+            undefined4 param_5,undefined4 param_6,undefined4 param_7)
+{
+  DWORD *pDVar1;
+  undefined1 auStackY_cc [128];
+  undefined4 uVar2;
+  undefined4 **ppuVar3;
+  undefined4 *local_34;
+  undefined4 local_30;
+  undefined4 *local_2c;
+  code *local_28;
+  undefined4 local_24;
+  undefined4 local_20;
+  undefined4 local_1c;
+  undefined4 local_18;
+  undefined4 local_14;
+  undefined1 *local_10;
+  undefined1 *local_c;
+  undefined4 local_8;
+  local_c = auStackY_cc + 200;
+  local_10 = auStackY_cc + 0x88;
+  local_28 = FUN_0054e75b;
+  local_24 = param_5;
+  local_20 = param_2;
+  local_1c = param_6;
+  local_18 = param_7;
+  local_8 = 0;
+  local_14 = 0x54e72d;
+  local_2c = ExceptionList;
+  ExceptionList = &local_2c;
+========================================================================================
+0x54e75b indeg=1 bytes=2217
+calls: CRT_Unwind, FUN_00552c74
+ provider-specific; not original source
+undefined4 __cdecl FUN_0054e75b(PEXCEPTION_RECORD param_1,PVOID param_2,DWORD param_3)
+{
+  undefined4 uVar1;
+  if ((param_1->ExceptionFlags & 0x66) != 0) {
+    *(undefined4 *)((int)param_2 + 0x24) = 1;
+    return 1;
+  }
+  FUN_00552c74(param_1,*(PVOID *)((int)param_2 + 0xc),param_3,0,*(int **)((int)param_2 + 8),
+               *(int *)((int)param_2 + 0x10),*(PVOID *)((int)param_2 + 0x14),'\x01');
+  if (*(int *)((int)param_2 + 0x24) == 0) {
+    FUN_0054e5a7(param_2,param_1);
+  }
+                    /* WARNING: Could not recover jumptable at 0x0054e7c5. Too many branches */
+                    /* WARNING: Treating indirect jump as call */
+  uVar1 = (**(code **)((int)param_2 + 0x18))();
+  return uVar1;
+}
+========================================================================================
+0x54f71e indeg=0 bytes=2095
+calls: _strlen, CRT_Mbtowc, FUN_00553cb8
+ provider-specific; not original source
+float10 __thiscall FUN_0054f71e(undefined *param_1,byte *param_2)
+{
+  uint uVar1;
+  int iVar2;
+  byte *this;
+  undefined *puVar3;
+  uint local_1c [6];
+  while( true ) {
+    if (DAT_00576cf0 < 2) {
+      uVar1 = (byte)PTR_DAT_00576ae4[(uint)*param_2 * 2] & 8;
+      param_1 = PTR_DAT_00576ae4;
+    }
+    else {
+      puVar3 = (undefined *)0x8;
+      uVar1 = FUN_00552b23(param_1,(uint)*param_2,8);
+      param_1 = puVar3;
+    }
+    if (uVar1 == 0) break;
+    param_2 = param_2 + 1;
+  }
+  this = param_2;
+  _strlen((char *)param_2);
+  iVar2 = FUN_00553cb8(this,local_1c,param_2);
+  return (float10)*(double *)(iVar2 + 0x10);
+}
+========================================================================================
+0x55196f indeg=1 bytes=1566
+calls: FUN_0055563a
+ provider-specific; not original source
+void __fastcall FUN_0055196f(void *param_1)
+{
+  FUN_0055563a(param_1,0x10000,0x30000);
+  return;
+}
+========================================================================================
+0x552c74 indeg=3 bytes=2358
+calls: FUN_00552d0f, CRT_FrameUnwindToState, CRT_Inconsistency
+ provider-specific; not original source
+undefined4 __cdecl
+FUN_00552c74(PEXCEPTION_RECORD param_1,PVOID param_2,DWORD param_3,undefined4 param_4,int *param_5,
+            int param_6,PVOID param_7,char param_8)
+{
+  code *pcVar1;
+  undefined4 uVar2;
+  if (*param_5 != 0x19930520) {
+    FUN_0055353d();
+  }
+  if ((param_1->ExceptionFlags & 0x66) == 0) {
+    if (param_5[3] != 0) {
+      if (((param_1->ExceptionCode == 0xe06d7363) && (0x19930520 < param_1->ExceptionInformation[0])
+          ) && (pcVar1 = *(code **)(param_1->ExceptionInformation[2] + 8), pcVar1 != (code *)0x0)) {
+        uVar2 = (*pcVar1)(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+        return uVar2;
+      }
+      FUN_00552d0f(param_1,param_2,param_3,param_4,(uint)param_5,param_8,param_6,param_7);
+    }
+  }
+  else if ((param_5[1] != 0) && (param_6 == 0)) {
+    FUN_00552fc9((int)param_2,param_4,(int)param_5,-1);
+  }
+  return 1;
+}
+========================================================================================
+0x552d0f indeg=1 bytes=4596
+calls: CRT_FindTryBlockRange, CRT_GetThreadData, FUN_00552ec2, CRT_ExceptionTypeMatch, FUN_0055307d, CRT_InvokeExceptionHandler, CRT_Terminate, CRT_Inconsistency, FUN_00555f86
+ provider-specific; not original source
+void __cdecl
+FUN_00552d0f(PEXCEPTION_RECORD param_1,PVOID param_2,DWORD param_3,undefined4 param_4,uint param_5,
+            char param_6,int param_7,PVOID param_8)
+{
+  byte *pbVar1;
+  bool bVar2;
+  DWORD *pDVar3;
+  undefined3 extraout_var;
+  int *piVar4;
+  int iVar5;
+  int *piVar6;
+  uint local_1c;
+  uint local_18;
+  int local_14;
+  int local_10;
+  int local_c;
+  uint local_8;
+  local_18 = local_18 & 0xffffff00;
+  local_14 = *(int *)((int)param_2 + 8);
+  if ((local_14 < -1) || (*(int *)(param_5 + 4) <= local_14)) {
+    FUN_0055353d();
+  }
+  if (param_1->ExceptionCode == 0xe06d7363) {
+    if (((param_1->NumberParameters == 3) && (param_1->ExceptionInformation[0] == 0x19930520)) &&
+       (param_1->ExceptionInformation[2] == 0)) {
+      pDVar3 = FUN_00552398();
+      if (pDVar3[0x1b] == 0) {
+        return;
+      }
+      pDVar3 = FUN_00552398();
+      param_1 = (PEXCEPTION_RECORD)pDVar3[0x1b];
+========================================================================================
+0x552ec2 indeg=1 bytes=2446
+calls: FUN_0054e6a5, CRT_FindTryBlockRange, CRT_GetThreadData, FUN_0055307d
+ provider-specific; not original source
+void __cdecl
+FUN_00552ec2(PEXCEPTION_RECORD param_1,PVOID param_2,DWORD param_3,undefined4 param_4,uint param_5,
+            int param_6,int param_7,PVOID param_8)
+{
+  DWORD *pDVar1;
+  int iVar2;
+  int *piVar3;
+  int iVar4;
+  uint local_c;
+  uint local_8;
+  pDVar1 = FUN_00552398();
+  if ((pDVar1[0x1a] != 0) &&
+     (iVar2 = FUN_0054e6a5(&param_1->ExceptionCode,param_2,param_3,param_4,param_5,param_7,param_8),
+     iVar2 != 0)) {
+    return;
+  }
+  piVar3 = (int *)FUN_0054e7d0(param_5,param_7,param_6,&local_8,&local_c);
+  for (; local_8 < local_c; local_8 = local_8 + 1) {
+    if ((*piVar3 <= param_6) && (param_6 <= piVar3[1])) {
+      iVar4 = piVar3[3] * 0x10 + piVar3[4];
+      iVar2 = *(int *)(iVar4 + -0xc);
+      if ((iVar2 == 0) || (*(char *)(iVar2 + 8) == '\0')) {
+        FUN_0055307d(param_1,param_2,param_3,param_4,param_5,(byte *)(iVar4 + -0x10),(byte *)0x0,
+                     piVar3,param_7,param_8);
+      }
+    }
+    piVar3 = piVar3 + 5;
+  }
+  return;
+}
+========================================================================================
+0x55307d indeg=2 bytes=2289
+calls: CRT_CallExceptionHandler, CRT_Unwind, CRT_FrameUnwindToState, FUN_005530f8, CRT_BuildCatchObject
+ provider-specific; not original source
+void __cdecl
+FUN_0055307d(PEXCEPTION_RECORD param_1,PVOID param_2,DWORD param_3,undefined4 param_4,int param_5,
+            byte *param_6,byte *param_7,int *param_8,int param_9,PVOID param_10)
+{
+  undefined *UNRECOVERED_JUMPTABLE;
+  if (param_7 != (byte *)0x0) {
+    FUN_0055323d((int)param_1,(int)param_2,param_6,param_7);
+  }
+  if (param_10 == (PVOID)0x0) {
+    param_10 = param_2;
+  }
+  else {
+  }
+  FUN_0054e5a7(param_10,param_1);
+  FUN_00552fc9((int)param_2,param_4,param_5,*param_8);
+  *(int *)((int)param_2 + 8) = param_8[1] + 1;
+  UNRECOVERED_JUMPTABLE =
+       (undefined *)
+       FUN_005530f8((DWORD)param_1,param_2,param_3,param_5,*(undefined4 *)(param_6 + 0xc),param_9,
+                    0x100);
+  if (UNRECOVERED_JUMPTABLE != (undefined *)0x0) {
+    FUN_0054e565(UNRECOVERED_JUMPTABLE);
+  }
+  return;
+}
+========================================================================================
+0x5530f8 indeg=1 bytes=2204
+calls: FUN_0054e62c, CRT_GetThreadData, CRT_CallCatchBlockFinally
+ provider-specific; not original source
+undefined4 __cdecl
+FUN_005530f8(DWORD param_1,undefined4 param_2,DWORD param_3,undefined4 param_4,undefined4 param_5,
+            int param_6,int param_7)
+{
+  DWORD *pDVar1;
+  undefined4 uVar2;
+  void *local_14;
+  undefined1 *puStack_10;
+  undefined *puStack_c;
+  undefined4 local_8;
+  local_8 = 0xffffffff;
+  puStack_c = &DAT_0055ce28;
+  puStack_10 = &LAB_00553be0;
+  local_14 = ExceptionList;
+  ExceptionList = &local_14;
+  FUN_00552398();
+  FUN_00552398();
+  pDVar1 = FUN_00552398();
+  pDVar1[0x1b] = param_1;
+  pDVar1 = FUN_00552398();
+  pDVar1[0x1c] = param_3;
+  local_8 = 1;
+  uVar2 = FUN_0054e62c(param_2,param_4,param_5,param_6,param_7);
+  local_8 = 0xffffffff;
+  FUN_005531c5();
+  ExceptionList = local_14;
+  return uVar2;
+}
+========================================================================================
+0x553cb8 indeg=1 bytes=2166
+calls: FUN_00555ad1, FUN_0055606a
+ provider-specific; not original source
+void __thiscall FUN_00553cb8(void *this,uint *param_1,byte *param_2)
+{
+  uint uVar1;
+  int iVar2;
+  uint uVar3;
+  ushort local_1c [6];
+  uint local_10;
+  undefined4 uStack_c;
+  int local_8;
+  uVar3 = 0;
+  uVar1 = FUN_0055606a(this,local_1c,&local_8,param_2,0,0,0,0);
+  if ((uVar1 & 4) == 0) {
+    iVar2 = FUN_00555ad1(local_1c,&local_10);
+    if (((uVar1 & 2) != 0) || (iVar2 == 1)) {
+      uVar3 = 0x80;
+    }
+    if (((uVar1 & 1) != 0) || (iVar2 == 2)) {
+      uVar3 = uVar3 | 0x100;
+    }
+  }
+  else {
+    uVar3 = 0x200;
+    local_10 = 0;
+    uStack_c = 0;
+  }
+  *param_1 = uVar3;
+  *(ulonglong *)(param_1 + 4) = CONCAT44(uStack_c,local_10);
+  param_1[1] = local_8 - (int)param_2;
+  return;
+}
+========================================================================================
+0x553d37 indeg=1 bytes=2179
+calls: FUN_0055655f, FUN_00556979
+ provider-specific; not original source
+byte * FUN_00553d37(void)
+{
+  byte bVar1;
+  int iVar2;
+  byte *pbVar3;
+  byte *pbVar4;
+  if (DAT_00586d2c == 0) {
+    FUN_00556979();
+  }
+  bVar1 = *DAT_00586d24;
+  pbVar4 = DAT_00586d24;
+  if (bVar1 == 0x22) {
+    while( true ) {
+      pbVar3 = pbVar4;
+      bVar1 = pbVar3[1];
+      pbVar4 = pbVar3 + 1;
+      if ((bVar1 == 0x22) || (bVar1 == 0)) break;
+      iVar2 = FUN_0055655f(bVar1);
+      if (iVar2 != 0) {
+        pbVar4 = pbVar3 + 2;
+      }
+    }
+    if (*pbVar4 == 0x22) goto LAB_00553d74;
+  }
+  else {
+    while (0x20 < bVar1) {
+      bVar1 = pbVar4[1];
+      pbVar4 = pbVar4 + 1;
+    }
+  }
+  for (; (*pbVar4 != 0 && (*pbVar4 < 0x21)); pbVar4 = pbVar4 + 1) {

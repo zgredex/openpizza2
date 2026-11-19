@@ -1,0 +1,1550 @@
+[
+ {
+  "address": "0x53f5b0",
+  "name": "SoundSample_Delete"
+ },
+ {
+  "address": "0x5053d0",
+  "name": "PersonList_Save"
+ },
+ {
+  "address": "0x4e1540",
+  "name": "CompanyData_Save"
+ },
+ {
+  "address": "0x4d7090",
+  "name": "MapObjectList_Save"
+ },
+ {
+  "address": "0x4d3490",
+  "name": "CarList_Save"
+ },
+ {
+  "address": "0x49b8d0",
+  "name": "SaveMenu_WriteMenuFile"
+ },
+ {
+  "address": "0x498930",
+  "name": "SaveMenu_WritePreview"
+ },
+ {
+  "address": "0x4d6cb0",
+  "name": "MapObjectList_Load"
+ },
+ {
+  "address": "0x4eb4f0",
+  "name": "IsoMap_Load"
+ },
+ {
+  "address": "0x49ba50",
+  "name": "Recipe_ImportFile"
+ },
+ {
+  "address": "0x498bd0",
+  "name": "SaveMenu_Load"
+ },
+ {
+  "address": "0x511be0",
+  "name": "Recipe_StreamConstruct"
+ },
+ {
+  "address": "0x5108e0",
+  "name": "Recipe_LoadFromStream"
+ },
+ {
+  "address": "0x50eca0",
+  "name": "Player_Load"
+ },
+ {
+  "address": "0x4d1da0",
+  "name": "MapObject_Load"
+ },
+ {
+  "address": "0x50f4c0",
+  "name": "Player_AIState_Init"
+ },
+ {
+  "address": "0x50fc20",
+  "name": "Recipe_Construct"
+ },
+ {
+  "address": "0x4dd270",
+  "name": "GameClock_Construct"
+ },
+ {
+  "address": "0x47b000",
+  "name": "Branch_Load"
+ },
+ {
+  "address": "0x4e0f90",
+  "name": "Company_Load"
+ },
+ {
+  "address": "0x49c520",
+  "name": "CompanyRanking_SelectCompanyButton"
+ },
+ {
+  "address": "0x49c5d0",
+  "name": "CompanyRanking_SelectLastCompanyButton"
+ },
+ {
+  "address": "0x49cf10",
+  "name": "CompanyRating_UpdateScoreText"
+ },
+ {
+  "address": "0x49d970",
+  "name": "RecipeEditor_ShowIngredientCursorSprite"
+ },
+ {
+  "address": "0x49e160",
+  "name": "RecipeInfo_FillNutritionRows"
+ },
+ {
+  "address": "0x49e830",
+  "name": "RecipePreview_FillNutritionRows"
+ },
+ {
+  "address": "0x49f240",
+  "name": "RecipeMenu_SetCurrentRecipe"
+ },
+ {
+  "address": "0x49f3b0",
+  "name": "RecipeMenu_RefreshPortionPreview"
+ },
+ {
+  "address": "0x49f500",
+  "name": "RecipeMenu_ShowSelectedRecipe"
+ },
+ {
+  "address": "0x49f580",
+  "name": "RecipeMenu_RefreshSelectedRecipe"
+ },
+ {
+  "address": "0x49f5f0",
+  "name": "RecipeMenu_ChooseRecipe"
+ },
+ {
+  "address": "0x49f640",
+  "name": "UI_RecordList_SetVisibleRange"
+ },
+ {
+  "address": "0x49fa20",
+  "name": "RecipeMenu_PrevRecipe"
+ },
+ {
+  "address": "0x49fa70",
+  "name": "RecipeMenu_NextRecipe"
+ },
+ {
+  "address": "0x4a0540",
+  "name": "GammaOptions_DrawPreview"
+ },
+ {
+  "address": "0x4a0680",
+  "name": "GammaOptions_Init"
+ },
+ {
+  "address": "0x4a09d0",
+  "name": "SaveGameMenu_UpdateSlotRows"
+ },
+ {
+  "address": "0x4a0a70",
+  "name": "SaveGameMenu_Init"
+ },
+ {
+  "address": "0x4a1170",
+  "name": "SoundOptions_Init"
+ },
+ {
+  "address": "0x4a1a10",
+  "name": "LoadGameMenu_UpdateSlotRows"
+ },
+ {
+  "address": "0x4a21a0",
+  "name": "Game_HandleQueryEndSession"
+ },
+ {
+  "address": "0x4a21f0",
+  "name": "AutosaveOptions_Init"
+ },
+ {
+  "address": "0x4a46c0",
+  "name": "CompanyOverview_UpdateCityInfo"
+ },
+ {
+  "address": "0x4a47e0",
+  "name": "CompanyOverview_UpdateBuildingRows"
+ },
+ {
+  "address": "0x4a5070",
+  "name": "TradeOffer_UpdatePanel"
+ },
+ {
+  "address": "0x48ac00",
+  "name": "CustomerGroups_DrawProductSalesGrid"
+ },
+ {
+  "address": "0x48aef0",
+  "name": "CustomerGroups_DrawTrafficGrid"
+ },
+ {
+  "address": "0x48b1b0",
+  "name": "CustomerGroups_DrawCountRow"
+ },
+ {
+  "address": "0x48b420",
+  "name": "Game_ReassignDestroyedObjectReferences"
+ },
+ {
+  "address": "0x48b570",
+  "name": "Game_AutoSaveTick"
+ },
+ {
+  "address": "0x48b600",
+  "name": "Map_DrawMinimap"
+ },
+ {
+  "address": "0x48b8a0",
+  "name": "Map_ScrollToClamped"
+ },
+ {
+  "address": "0x48c160",
+  "name": "Game_SelectPlayer"
+ },
+ {
+  "address": "0x48cae0",
+  "name": "Game_SetObjectInfoWindowVisible"
+ },
+ {
+  "address": "0x48cb30",
+  "name": "Map_RefreshObjectSprites"
+ },
+ {
+  "address": "0x48fad0",
+  "name": "FinanceScreen_UpdateStatement"
+ },
+ {
+  "address": "0x490100",
+  "name": "FurnitureMenu_SetItemSprite"
+ },
+ {
+  "address": "0x4901b0",
+  "name": "FurnitureMenu_SetWallFloorSprite"
+ },
+ {
+  "address": "0x4902a0",
+  "name": "FurnitureMenu_RefreshSlots"
+ },
+ {
+  "address": "0x490bd0",
+  "name": "FurnitureMenu_ShowItemDetails"
+ },
+ {
+  "address": "0x4919f0",
+  "name": "Chart_DrawRatingMatrix"
+ },
+ {
+  "address": "0x491c80",
+  "name": "Chart_DrawGroupMatrix"
+ },
+ {
+  "address": "0x492270",
+  "name": "UI_FillObjectWithPaletteColor"
+ },
+ {
+  "address": "0x4922d0",
+  "name": "RenovationScreen_UpdateCost"
+ },
+ {
+  "address": "0x496680",
+  "name": "CompareScreen_UpdateRows"
+ },
+ {
+  "address": "0x498180",
+  "name": "BranchList_UpdateRows"
+ },
+ {
+  "address": "0x4982b0",
+  "name": "BranchList_UpdateSummary"
+ },
+ {
+  "address": "0x499c40",
+  "name": "IngredientPanel_ShowSpritePreview"
+ },
+ {
+  "address": "0x49ad30",
+  "name": "AdvertisingScreen_UpdateGroupPrices"
+ },
+ {
+  "address": "0x49c300",
+  "name": "RankingScreen_UpdateRows"
+ },
+ {
+  "address": "0x4a53e0",
+  "name": "UI_DrawNeighborhoodCustomerIcons"
+ },
+ {
+  "address": "0x4a5420",
+  "name": "BauenPage_ResetBuildingSlots"
+ },
+ {
+  "address": "0x4a5bb0",
+  "name": "FinancePage_UpdateBalanceSheet"
+ },
+ {
+  "address": "0x4a6680",
+  "name": "UI_PrintSignedValue"
+ },
+ {
+  "address": "0x4a6750",
+  "name": "UI_DrawAwardMedals"
+ },
+ {
+  "address": "0x4a6fc0",
+  "name": "BuildingMarket_ShowSelectedBuildingInfo"
+ },
+ {
+  "address": "0x4aa970",
+  "name": "StatisticsBalance_UpdateBranchProfitColumn"
+ },
+ {
+  "address": "0x4ab600",
+  "name": "StatisticsBalance_UpdateHeader"
+ },
+ {
+  "address": "0x4ac5e0",
+  "name": "StatisticsBranchBalance_UpdateBranchProfits"
+ },
+ {
+  "address": "0x4acb90",
+  "name": "StatisticsBranchBalance_DrawProfitBars"
+ },
+ {
+  "address": "0x4ad4e0",
+  "name": "StatisticsBranchBalance_DrawDailyChart"
+ },
+ {
+  "address": "0x4ae180",
+  "name": "Glossary_ShowCompanyBuildingDetail"
+ },
+ {
+  "address": "0x4aec60",
+  "name": "Glossary_FillCityBuildingList"
+ },
+ {
+  "address": "0x4aeda0",
+  "name": "Glossary_ShowCityBuildingDetail"
+ },
+ {
+  "address": "0x4af2f0",
+  "name": "Glossary_ShowIngredientDetail"
+ },
+ {
+  "address": "0x4af5c0",
+  "name": "Glossary_FillPeopleNameList"
+ },
+ {
+  "address": "0x4b0020",
+  "name": "StatisticsBackdrop_UpdateCompanyValues"
+ },
+ {
+  "address": "0x4b02d0",
+  "name": "StatisticsBackdrop_RestoreCategorySelection"
+ },
+ {
+  "address": "0x4b0300",
+  "name": "StatisticsBackdrop_DrawCompanyBarChart"
+ },
+ {
+  "address": "0x4b0d80",
+  "name": "Personnel_DrawEmployeeAbilityChart"
+ },
+ {
+  "address": "0x4b3d80",
+  "name": "CompanyOverview_UpdateCompanyRows"
+ },
+ {
+  "address": "0x4b4280",
+  "name": "CompanyOverview_BuildCompanyList"
+ },
+ {
+  "address": "0x4b4630",
+  "name": "CompanyOverview_DrawQuarterChart"
+ },
+ {
+  "address": "0x4b5a40",
+  "name": "BranchScreen_SelectBranchRecord"
+ },
+ {
+  "address": "0x4bade0",
+  "name": "BranchPage_UpdateInfoPanel"
+ },
+ {
+  "address": "0x4025e0",
+  "name": "Resource_OpenNativeHandle"
+ },
+ {
+  "address": "0x4029e0",
+  "name": "ResourceManager_RegisterExtensionAlias"
+ },
+ {
+  "address": "0x402b80",
+  "name": "ResourceManager_NormalizeResourcePath"
+ },
+ {
+  "address": "0x4035d0",
+  "name": "Profiler_DumpReport"
+ },
+ {
+  "address": "0x4052a0",
+  "name": "Screen_CloseSubStartMenu"
+ },
+ {
+  "address": "0x406a60",
+  "name": "UI_CloseLoadingScreen"
+ },
+ {
+  "address": "0x40cee0",
+  "name": "SubMenu_BuildBranchBalance"
+ },
+ {
+  "address": "0x41d610",
+  "name": "SubMenu_BuildRecipeCheck"
+ },
+ {
+  "address": "0x420490",
+  "name": "SubMenu_BuildPizzaContest"
+ },
+ {
+  "address": "0x42b220",
+  "name": "SubMenu_BuildTownBalance"
+ },
+ {
+  "address": "0x447310",
+  "name": "SubMenu_BuildCompetitorBranchInfo"
+ },
+ {
+  "address": "0x458f50",
+  "name": "SubMenu_BuildConstructionInfo"
+ },
+ {
+  "address": "0x468bd0",
+  "name": "SubMenu_BuildStadiumInfo"
+ },
+ {
+  "address": "0x477000",
+  "name": "Branch_ConstructFromStream"
+ },
+ {
+  "address": "0x477850",
+  "name": "Branch_CloseMonth"
+ },
+ {
+  "address": "0x478320",
+  "name": "Branch_GetMenuRating"
+ },
+ {
+  "address": "0x4783c0",
+  "name": "Branch_GetPriceRating"
+ },
+ {
+  "address": "0x478420",
+  "name": "Branch_GetPriceComparisonRating"
+ },
+ {
+  "address": "0x4784e0",
+  "name": "Branch_RecomputeMenuPriceRatings"
+ },
+ {
+  "address": "0x47a3b0",
+  "name": "Branch_GetCustomerGroupRating"
+ },
+ {
+  "address": "0x47e6a0",
+  "name": "Branch_ApplyBuildingStyleVariant"
+ },
+ {
+  "address": "0x47eed0",
+  "name": "Branch_SettleDueConstructionOrders"
+ },
+ {
+  "address": "0x47ef30",
+  "name": "Branch_AdvanceWeekStatistics"
+ },
+ {
+  "address": "0x47f5c0",
+  "name": "Branch_RemoveBuildingObject"
+ },
+ {
+  "address": "0x47f5f0",
+  "name": "Branch_RemoveAllBuildings"
+ },
+ {
+  "address": "0x47fb40",
+  "name": "Branch_EndConstructionMode"
+ },
+ {
+  "address": "0x47fbd0",
+  "name": "Branch_StepStarRating"
+ },
+ {
+  "address": "0x480200",
+  "name": "Branch_InitCityObjects"
+ },
+ {
+  "address": "0x480900",
+  "name": "Branch_SpawnRandomPedestrian"
+ },
+ {
+  "address": "0x481010",
+  "name": "Branch_SetName"
+ },
+ {
+  "address": "0x482740",
+  "name": "City_Register"
+ },
+ {
+  "address": "0x482860",
+  "name": "UI_DestroyWindowAt"
+ },
+ {
+  "address": "0x482880",
+  "name": "Game_DestroyRootWindow"
+ },
+ {
+  "address": "0x482890",
+  "name": "Game_CloseSelectionDialog"
+ },
+ {
+  "address": "0x4830e0",
+  "name": "Game_DestroyEventWindow"
+ },
+ {
+  "address": "0x483150",
+  "name": "IngredientDialog_FillRows"
+ },
+ {
+  "address": "0x483530",
+  "name": "CityOverviewDialog_FillRows"
+ },
+ {
+  "address": "0x483c40",
+  "name": "Game_DestroyCachedScreens"
+ },
+ {
+  "address": "0x4850a0",
+  "name": "Game_SetViewMode"
+ },
+ {
+  "address": "0x4858d0",
+  "name": "Game_LoadBackgroundImage"
+ },
+ {
+  "address": "0x485ae0",
+  "name": "Game_ShowBranchScene"
+ },
+ {
+  "address": "0x487310",
+  "name": "Game_ShutdownWorld"
+ },
+ {
+  "address": "0x4880c0",
+  "name": "Game_UpdateLoadProgress"
+ },
+ {
+  "address": "0x488a10",
+  "name": "Game_UpdateDateLabels"
+ },
+ {
+  "address": "0x488cc0",
+  "name": "Game_SuspendSimulation"
+ },
+ {
+  "address": "0x488d20",
+  "name": "Game_ResumeSimulation"
+ },
+ {
+  "address": "0x488db0",
+  "name": "Game_ShowBranchInteriorDefaultZoom"
+ },
+ {
+  "address": "0x488de0",
+  "name": "Game_EnterBranchInterior"
+ },
+ {
+  "address": "0x48a5a0",
+  "name": "Chart_DrawCustomerGroups"
+ },
+ {
+  "address": "0x48a970",
+  "name": "Chart_DrawCustomerPortraits"
+ },
+ {
+  "address": "0x4f3ec0",
+  "name": "Map_ConnectCellToStreetGraph"
+ },
+ {
+  "address": "0x4f5cd0",
+  "name": "CityView_IsCarSpawnCellFree"
+ },
+ {
+  "address": "0x4f5d40",
+  "name": "CityView_ReserveCarCell"
+ },
+ {
+  "address": "0x4f5fd0",
+  "name": "Mission_EvaluateGoals"
+ },
+ {
+  "address": "0x4f6b80",
+  "name": "Mission_TickGoalDeadline"
+ },
+ {
+  "address": "0x4f6d30",
+  "name": "Game_CompanyManager_Construct"
+ },
+ {
+  "address": "0x4f6db0",
+  "name": "Game_CompanyManager_Delete"
+ },
+ {
+  "address": "0x4f9ee0",
+  "name": "CityMap_StampObjectPattern"
+ },
+ {
+  "address": "0x4fab10",
+  "name": "CityMap_PlaceBuildingBlocks"
+ },
+ {
+  "address": "0x4facb0",
+  "name": "CityMap_PlaceHouseBlocks"
+ },
+ {
+  "address": "0x4fad60",
+  "name": "CityMap_PlaceSceneryProps"
+ },
+ {
+  "address": "0x4fb060",
+  "name": "CityMap_PlaceLargeComplexes"
+ },
+ {
+  "address": "0x4fb170",
+  "name": "CityMap_GenerateLayout"
+ },
+ {
+  "address": "0x4fc0f0",
+  "name": "Company_OpenBranchAtSite"
+ },
+ {
+  "address": "0x4fc290",
+  "name": "Company_OpenBranchInHomeCity"
+ },
+ {
+  "address": "0x4fc5f0",
+  "name": "Company_RefreshMenuSalesIfDue"
+ },
+ {
+  "address": "0x4fe870",
+  "name": "Company_AllocateMenuSales"
+ },
+ {
+  "address": "0x4ff6e0",
+  "name": "Branch_AutoTunePrice"
+ },
+ {
+  "address": "0x501f90",
+  "name": "Game_GetBestBuildingRatingBand"
+ },
+ {
+  "address": "0x502430",
+  "name": "Game_GetStatBandByIndex"
+ },
+ {
+  "address": "0x502910",
+  "name": "Game_AnyBuildingCategoryRatingAbove"
+ },
+ {
+  "address": "0x502a10",
+  "name": "Game_AllBuildingCategoryRatingsAbove"
+ },
+ {
+  "address": "0x502a90",
+  "name": "AI_SelectStrategyAction"
+ },
+ {
+  "address": "0x502b80",
+  "name": "AI_SelectActionForType"
+ },
+ {
+  "address": "0x502ce0",
+  "name": "AI_InitActionPlan"
+ },
+ {
+  "address": "0x4d4800",
+  "name": "City_Construct"
+ },
+ {
+  "address": "0x4d4940",
+  "name": "City_SpawnPerson"
+ },
+ {
+  "address": "0x4d4a20",
+  "name": "City_InitPopulation"
+ },
+ {
+  "address": "0x4d50a0",
+  "name": "City_CreateBranchObject"
+ },
+ {
+  "address": "0x4d5160",
+  "name": "City_CreateExplosionEffect"
+ },
+ {
+  "address": "0x4d5650",
+  "name": "City_InitBuildings"
+ },
+ {
+  "address": "0x4d6770",
+  "name": "City_PickObjectAtScreenPoint"
+ },
+ {
+  "address": "0x4d6c00",
+  "name": "City_RemovePersonEntry"
+ },
+ {
+  "address": "0x4d6c10",
+  "name": "City_RemovePersonAndMaintainPopulation"
+ },
+ {
+  "address": "0x4d7ed0",
+  "name": "City_CollectBranchesNearPoint"
+ },
+ {
+  "address": "0x4d8140",
+  "name": "Game_FindBestCompositeRatedBranch"
+ },
+ {
+  "address": "0x4d8c80",
+  "name": "City_CreateObjectsOfType"
+ },
+ {
+  "address": "0x4d9c00",
+  "name": "City_SendPoliceUnits"
+ },
+ {
+  "address": "0x4d9de0",
+  "name": "City_SendPoliceToDistrictWithSiren"
+ },
+ {
+  "address": "0x4d9ef0",
+  "name": "City_SendPoliceToDistrict"
+ },
+ {
+  "address": "0x4da000",
+  "name": "City_TrySendPoliceToDistrict"
+ },
+ {
+  "address": "0x4db310",
+  "name": "Parse_ReadIntToken"
+ },
+ {
+  "address": "0x4db430",
+  "name": "CityDefinition_ParseIni"
+ },
+ {
+  "address": "0x4dc1a0",
+  "name": "City_SpawnDeliveryVehicles"
+ },
+ {
+  "address": "0x4dc330",
+  "name": "City_ResetPoliceDistrictSlot"
+ },
+ {
+  "address": "0x4ddab0",
+  "name": "Company_Construct"
+ },
+ {
+  "address": "0x4de760",
+  "name": "Company_ProcessDailyAccounting"
+ },
+ {
+  "address": "0x4dec10",
+  "name": "Company_RecordDailyStatistics"
+ },
+ {
+  "address": "0x4dfe40",
+  "name": "Stats_ComputeCompanyRatingStats"
+ },
+ {
+  "address": "0x4e3c00",
+  "name": "Company_CreateAIStrategy"
+ },
+ {
+  "address": "0x4bd230",
+  "name": "GuardMenu_FillSummary"
+ },
+ {
+  "address": "0x4bd340",
+  "name": "GuardMenu_Fill"
+ },
+ {
+  "address": "0x4bf120",
+  "name": "Submenu_SetObjectPicture"
+ },
+ {
+  "address": "0x4bf400",
+  "name": "SchoolMenu_FillLocalStructure"
+ },
+ {
+  "address": "0x4bf730",
+  "name": "SyndicateMenu_FillStaffCounts"
+ },
+ {
+  "address": "0x4c0390",
+  "name": "ConstructionMenu_FillTimeLeft"
+ },
+ {
+  "address": "0x4c03c0",
+  "name": "ConstructionMenu_Fill"
+ },
+ {
+  "address": "0x4c1ae0",
+  "name": "DeliveryMenu_FillProductRows"
+ },
+ {
+  "address": "0x4c26c0",
+  "name": "SupplierMenu_FillClientRows"
+ },
+ {
+  "address": "0x4c5280",
+  "name": "PestMenu_FillPricesAndCounts"
+ },
+ {
+  "address": "0x4c6780",
+  "name": "UI_WarpCursorToControl"
+ },
+ {
+  "address": "0x4c67f0",
+  "name": "IngredientMenu_HandleInput"
+ },
+ {
+  "address": "0x4c6f50",
+  "name": "CharacterSelect_DrawPortrait"
+ },
+ {
+  "address": "0x4c6f90",
+  "name": "CharacterSelect_FillAttributes"
+ },
+ {
+  "address": "0x4c7040",
+  "name": "CharacterSelect_SetPhotoSprite"
+ },
+ {
+  "address": "0x4c7090",
+  "name": "FreePlaySetup_SetDifficultyText"
+ },
+ {
+  "address": "0x4c70f0",
+  "name": "UI_SetOnlineHelpText"
+ },
+ {
+  "address": "0x4c7d80",
+  "name": "SubStartMenu_FillOptions"
+ },
+ {
+  "address": "0x4c8320",
+  "name": "EndResultGraph_DrawChart"
+ },
+ {
+  "address": "0x4c86a0",
+  "name": "EndResultGraph_SelectCategory"
+ },
+ {
+  "address": "0x4c86f0",
+  "name": "EndResultGraph_Fill"
+ },
+ {
+  "address": "0x4c90e0",
+  "name": "EndResultPoints_FillOverview"
+ },
+ {
+  "address": "0x4c9390",
+  "name": "EndResultPoints_FillBuildingTable"
+ },
+ {
+  "address": "0x4c9610",
+  "name": "EndResultPoints_FillMissionTable"
+ },
+ {
+  "address": "0x4c98d0",
+  "name": "EndResultPoints_FillPersonnelTable"
+ },
+ {
+  "address": "0x4c9b50",
+  "name": "EndResults_FillBalancePage"
+ },
+ {
+  "address": "0x4c9dd0",
+  "name": "EndResults_FillAdvertisingPage"
+ },
+ {
+  "address": "0x4ca070",
+  "name": "EndResults_FillRecipePage"
+ },
+ {
+  "address": "0x4ca310",
+  "name": "EndResults_FillSyndicatePage"
+ },
+ {
+  "address": "0x4ca5e0",
+  "name": "EndResults_FillRatingPage"
+ },
+ {
+  "address": "0x4ca880",
+  "name": "EndResults_RefreshScreen"
+ },
+ {
+  "address": "0x4cb520",
+  "name": "ListDialog_FillRows"
+ },
+ {
+  "address": "0x4cb6e0",
+  "name": "FreePlaySetup_FillCityTable"
+ },
+ {
+  "address": "0x4cb7a0",
+  "name": "FreePlaySetup_FillStartCapitalText"
+ },
+ {
+  "address": "0x4cb7e0",
+  "name": "FreePlaySetup_FillGameLengthText"
+ },
+ {
+  "address": "0x4cb860",
+  "name": "UI_SetImageFromTemplate"
+ },
+ {
+  "address": "0x4cb8b0",
+  "name": "UI_SetPlayerLogoSprite"
+ },
+ {
+  "address": "0x4cb900",
+  "name": "FreePlaySetup_ShowMapPreview"
+ },
+ {
+  "address": "0x4cbb10",
+  "name": "FreePlaySetup_FillHighScoreTable"
+ },
+ {
+  "address": "0x4cd8e0",
+  "name": "MapList_AddIniRecord"
+ },
+ {
+  "address": "0x4cd960",
+  "name": "MapList_LoadAllMapDefinitions"
+ },
+ {
+  "address": "0x4cde40",
+  "name": "SubStartMenuA_FillSaveGameRows"
+ },
+ {
+  "address": "0x4ce3c0",
+  "name": "FreePlaySubmenu_FillSaveGameRows"
+ },
+ {
+  "address": "0x4ce720",
+  "name": "Movie_PlayGameOverMovie"
+ },
+ {
+  "address": "0x4ce9d0",
+  "name": "Movie_Play"
+ },
+ {
+  "address": "0x4d1cb0",
+  "name": "MapObject_Construct"
+ },
+ {
+  "address": "0x4d23b0",
+  "name": "Game_CenterViewOnObject"
+ },
+ {
+  "address": "0x4d2600",
+  "name": "Game_UpdateObjectMapMarker"
+ },
+ {
+  "address": "0x4d3680",
+  "name": "MapActor_RelocateToRandomTile"
+ },
+ {
+  "address": "0x4d3730",
+  "name": "Character_Construct"
+ },
+ {
+  "address": "0x504610",
+  "name": "Object_Construct"
+ },
+ {
+  "address": "0x505f40",
+  "name": "Object_SetCompanyStylePalette"
+ },
+ {
+  "address": "0x506010",
+  "name": "Object_PickWeightedBuildingRecord"
+ },
+ {
+  "address": "0x506330",
+  "name": "Object_InitCompanyBuildingGraphics"
+ },
+ {
+  "address": "0x508070",
+  "name": "Object_ScrollViewToObject"
+ },
+ {
+  "address": "0x5080f0",
+  "name": "Object_IsSiteRatingSufficient"
+ },
+ {
+  "address": "0x508c20",
+  "name": "Object_RebindRenderList"
+ },
+ {
+  "address": "0x508d50",
+  "name": "Object_ApplyDeferredType"
+ },
+ {
+  "address": "0x50a0b0",
+  "name": "Object_SetBuildingRecordForAllCompanies"
+ },
+ {
+  "address": "0x50b7c0",
+  "name": "Object_FindNearbyCustomer"
+ },
+ {
+  "address": "0x50c8a0",
+  "name": "Object_LinkWithFacingObject"
+ },
+ {
+  "address": "0x50e8e0",
+  "name": "Player_Construct"
+ },
+ {
+  "address": "0x50f840",
+  "name": "GamePlan_ComputeAverageEffect"
+ },
+ {
+  "address": "0x50f870",
+  "name": "GamePlan_ComputeCategoryEffect"
+ },
+ {
+  "address": "0x50fab0",
+  "name": "GamePlan_GetCompanyCategoryMetric"
+ },
+ {
+  "address": "0x50fb70",
+  "name": "GamePlan_SetActiveEffect"
+ },
+ {
+  "address": "0x50fba0",
+  "name": "GamePlan_ComputeEffectValue"
+ },
+ {
+  "address": "0x510c90",
+  "name": "Recipe_CreateGenerated"
+ },
+ {
+  "address": "0x511ff0",
+  "name": "Recipe_AddCategoryIngredients"
+ },
+ {
+  "address": "0x5142c0",
+  "name": "Storage_ReceivePendingOrder"
+ },
+ {
+  "address": "0x514450",
+  "name": "Storage_SetSupplierBuilding"
+ },
+ {
+  "address": "0x514510",
+  "name": "Storage_OrderDelivery"
+ },
+ {
+  "address": "0x522860",
+  "name": "UI_EditFieldHandleKey"
+ },
+ {
+  "address": "0x523930",
+  "name": "UI_AllocWindowSlot"
+ },
+ {
+  "address": "0x5239d0",
+  "name": "UI_CreateFixedWindow"
+ },
+ {
+  "address": "0x54dfaf",
+  "name": "CRT_Fsopen"
+ },
+ {
+  "address": "0x54e7d0",
+  "name": "CRT_FindTryBlockRange"
+ },
+ {
+  "address": "0x54ede0",
+  "name": "CRT_Fseek"
+ },
+ {
+  "address": "0x54f167",
+  "name": "CRT_BeginThread"
+ },
+ {
+  "address": "0x54f1de",
+  "name": "CRT_ThreadStart"
+ },
+ {
+  "address": "0x54f2dd",
+  "name": "CRT_Exit"
+ },
+ {
+  "address": "0x54fe8b",
+  "name": "CRT_Close"
+ },
+ {
+  "address": "0x550655",
+  "name": "CRT_Fflush"
+ },
+ {
+  "address": "0x550717",
+  "name": "CRT_FlushAllStreams"
+ },
+ {
+  "address": "0x55099b",
+  "name": "CRT_Sopen"
+ },
+ {
+  "address": "0x551165",
+  "name": "CRT_Output"
+ },
+ {
+  "address": "0x5519e8",
+  "name": "CRT_ForceDecimalPoint"
+ },
+ {
+  "address": "0x5520f9",
+  "name": "CRT_OpenFile"
+ },
+ {
+  "address": "0x55249f",
+  "name": "CRT_TzsetInit"
+ },
+ {
+  "address": "0x552a61",
+  "name": "CRT_LoctoTime64"
+ },
+ {
+  "address": "0x552fc9",
+  "name": "CRT_FrameUnwindToState"
+ },
+ {
+  "address": "0x55323d",
+  "name": "CRT_BuildCatchObject"
+ },
+ {
+  "address": "0x52f910",
+  "name": "Window_GadgetNotify_Text_SetTextColor"
+ },
+ {
+  "address": "0x52f930",
+  "name": "Window_GadgetNotify_Text_GetFont"
+ },
+ {
+  "address": "0x52f950",
+  "name": "Window_GadgetNotify_Text_GetLineCount"
+ },
+ {
+  "address": "0x52f970",
+  "name": "Window_GadgetNotify_Text_GetHeight"
+ },
+ {
+  "address": "0x52f990",
+  "name": "Window_GadgetNotify_Text_ResetScroll"
+ },
+ {
+  "address": "0x52f9b0",
+  "name": "Window_GadgetNotify_Text_SetText"
+ },
+ {
+  "address": "0x52f9d0",
+  "name": "Window_GadgetNotify_Text_SetLayout"
+ },
+ {
+  "address": "0x52fa20",
+  "name": "Window_GadgetNotify_Text_SetMode"
+ },
+ {
+  "address": "0x52fb00",
+  "name": "Window_GadgetNotify_Input_SetFilter"
+ },
+ {
+  "address": "0x52fb20",
+  "name": "Window_GadgetNotify_Input_GetFilter"
+ },
+ {
+  "address": "0x52fb40",
+  "name": "Window_GadgetNotify_Input_SetNormalColor"
+ },
+ {
+  "address": "0x52fb60",
+  "name": "Window_GadgetNotify_Input_SetEditingColor"
+ },
+ {
+  "address": "0x52fb80",
+  "name": "Window_GadgetNotify_Input_SetFocusColor"
+ },
+ {
+  "address": "0x52fba0",
+  "name": "Window_GadgetNotify_Input_SetSelectionColor"
+ },
+ {
+  "address": "0x52fbc0",
+  "name": "Window_GadgetNotify_Input_SetText"
+ },
+ {
+  "address": "0x52fbe0",
+  "name": "Window_GadgetNotify_Input_GetText"
+ },
+ {
+  "address": "0x52fcc0",
+  "name": "Window_GadgetNotify_Slider_SetGradientColors"
+ },
+ {
+  "address": "0x52fce0",
+  "name": "Window_GadgetNotify_Slider_SetChangeNotify"
+ },
+ {
+  "address": "0x52fd00",
+  "name": "Window_GadgetNotify_Slider_SetRange"
+ },
+ {
+  "address": "0x52fd70",
+  "name": "Window_GadgetNotify_Slider_SetValue"
+ },
+ {
+  "address": "0x52fd90",
+  "name": "Window_GadgetNotify_Slider_GetValue"
+ },
+ {
+  "address": "0x52fdb0",
+  "name": "Window_GadgetNotify_Slider_AttachValueText"
+ },
+ {
+  "address": "0x52fdd0",
+  "name": "Window_GadgetNotify"
+ },
+ {
+  "address": "0x52fef0",
+  "name": "Window_GetGadgetChecked"
+ },
+ {
+  "address": "0x52ff50",
+  "name": "Window_GadgetNotify_Button_SetState"
+ },
+ {
+  "address": "0x541ae0",
+  "name": "SoundVoice_Open"
+ },
+ {
+  "address": "0x541d50",
+  "name": "SoundVoice_Construct"
+ },
+ {
+  "address": "0x5420d0",
+  "name": "SoundVoice_ServiceStream"
+ },
+ {
+  "address": "0x5424b0",
+  "name": "SoundVoice_WriteSamples"
+ },
+ {
+  "address": "0x5425b0",
+  "name": "SoundVoice_WriteSilence"
+ },
+ {
+  "address": "0x542720",
+  "name": "SoundVoiceThread_Construct"
+ },
+ {
+  "address": "0x5428c0",
+  "name": "SoundVoiceThread_Run"
+ },
+ {
+  "address": "0x544d90",
+  "name": "Sound_LoadSample2D"
+ },
+ {
+  "address": "0x545100",
+  "name": "Sound_CreateVoice"
+ },
+ {
+  "address": "0x545290",
+  "name": "Sound_LoadSample3D"
+ },
+ {
+  "address": "0x5456a0",
+  "name": "Sound_LoadSample3DEx"
+ },
+ {
+  "address": "0x548780",
+  "name": "Sound_UpdateCityAmbience"
+ },
+ {
+  "address": "0x54b970",
+  "name": "UI_ComposeOverlayWindow"
+ },
+ {
+  "address": "0x54bb00",
+  "name": "UI_ComposeOverlayWindowFromRecord"
+ },
+ {
+  "address": "0x54bb30",
+  "name": "MapBadgeAnim_Construct"
+ },
+ {
+  "address": "0x54bcc0",
+  "name": "MapBadgeAnim_SetWindow"
+ },
+ {
+  "address": "0x54cc99",
+  "name": "CRT_Ifstream_Construct"
+ },
+ {
+  "address": "0x54cdab",
+  "name": "CRT_Filebuf_Delete"
+ },
+ {
+  "address": "0x54cdc7",
+  "name": "CRT_Filebuf_Destroy"
+ },
+ {
+  "address": "0x54ce1e",
+  "name": "CRT_Filebuf_Close"
+ },
+ {
+  "address": "0x54d140",
+  "name": "CRT_Ofstream_Construct"
+ },
+ {
+  "address": "0x54d493",
+  "name": "CRT_Istream_Prefix"
+ },
+ {
+  "address": "0x54d686",
+  "name": "CRT_Ostream_Suffix"
+ },
+ {
+  "address": "0x54d950",
+  "name": "CRT_Filebuf_Open"
+ },
+ {
+  "address": "0x54dded",
+  "name": "CRT_InitFloatCvtTable"
+ },
+ {
+  "address": "0x52ff80",
+  "name": "UI_DisableButton"
+ },
+ {
+  "address": "0x531910",
+  "name": "UI_SetButtonSpriteByName"
+ },
+ {
+  "address": "0x531960",
+  "name": "UI_SetButtonColorVariant"
+ },
+ {
+  "address": "0x531980",
+  "name": "UI_GetButtonSprite"
+ },
+ {
+  "address": "0x5319a0",
+  "name": "UI_GetButtonSpriteRecord"
+ },
+ {
+  "address": "0x531b50",
+  "name": "UI_ClearButtonRecordAnimation"
+ },
+ {
+  "address": "0x531b70",
+  "name": "UI_SetButtonRecordVariant"
+ },
+ {
+  "address": "0x531b90",
+  "name": "UI_GetButtonContext"
+ },
+ {
+  "address": "0x531c40",
+  "name": "UI_StartButtonMovie"
+ },
+ {
+  "address": "0x531cf0",
+  "name": "UI_GetWindowObject"
+ },
+ {
+  "address": "0x532890",
+  "name": "UI_SetWindowVisible"
+ },
+ {
+  "address": "0x536350",
+  "name": "FullscreenImage_LoadTGA"
+ },
+ {
+  "address": "0x536ab0",
+  "name": "FullscreenImage_LoadPCX"
+ },
+ {
+  "address": "0x539860",
+  "name": "Renderer_FlipPrimarySurface"
+ },
+ {
+  "address": "0x53f320",
+  "name": "SoundSample_ParseWavFormat"
+ },
+ {
+  "address": "0x53f460",
+  "name": "SoundSample_Construct"
+ },
+ {
+  "address": "0x53f650",
+  "name": "SoundSample_ReadPCM"
+ },
+ {
+  "address": "0x53f8e0",
+  "name": "SoundSample_ReadADPCM"
+ },
+ {
+  "address": "0x540040",
+  "name": "SoundPakManager_OpenStream"
+ },
+ {
+  "address": "0x5401b0",
+  "name": "SoundPakStream_Read"
+ },
+ {
+  "address": "0x5402a0",
+  "name": "SoundPakManager_AddExtensionMapping"
+ },
+ {
+  "address": "0x5405e0",
+  "name": "SoundPakManager_BuildArchivePath"
+ },
+ {
+  "address": "0x540a30",
+  "name": "SoundBuffer_FillFromSample"
+ },
+ {
+  "address": "0x541520",
+  "name": "SoundStreamBuffer_Construct"
+ },
+ {
+  "address": "0x541930",
+  "name": "SoundStream_LoadNextSample"
+ },
+ {
+  "address": "0x523ad0",
+  "name": "Window_CreateSimpleWindow"
+ },
+ {
+  "address": "0x523c90",
+  "name": "Window_CreatePictureWindow"
+ },
+ {
+  "address": "0x523d60",
+  "name": "Window_ShowWindowById"
+ },
+ {
+  "address": "0x523f10",
+  "name": "Window_HideWindowById"
+ },
+ {
+  "address": "0x5243c0",
+  "name": "Window_RenderFrame"
+ },
+ {
+  "address": "0x524970",
+  "name": "Window_NotifyMouseMove"
+ },
+ {
+  "address": "0x524990",
+  "name": "Window_DispatchMouseEvent"
+ },
+ {
+  "address": "0x524e80",
+  "name": "Window_ExportDialog"
+ },
+ {
+  "address": "0x525a10",
+  "name": "Window_ProcessMessageQueue"
+ },
+ {
+  "address": "0x525fd0",
+  "name": "Window_DispatchWindowMessage"
+ },
+ {
+  "address": "0x526100",
+  "name": "Window_UpdateTooltip"
+ },
+ {
+  "address": "0x526700",
+  "name": "Window_DestroyChild"
+ },
+ {
+  "address": "0x527580",
+  "name": "Window_LoadSpriteCached"
+ },
+ {
+  "address": "0x527e20",
+  "name": "Window_SetCursorPosition"
+ },
+ {
+  "address": "0x52ac50",
+  "name": "UI_RefreshButtonSprites"
+ },
+ {
+  "address": "0x52cba0",
+  "name": "Dialog_ParseInteger"
+ },
+ {
+  "address": "0x52e9b0",
+  "name": "Dialog_Delete"
+ },
+ {
+  "address": "0x52eb70",
+  "name": "Dialog_ConstructWithSprite"
+ },
+ {
+  "address": "0x52eca0",
+  "name": "Dialog_ConstructWithPicture"
+ },
+ {
+  "address": "0x52f080",
+  "name": "Gadget_SetTextf"
+ },
+ {
+  "address": "0x52f0d0",
+  "name": "Gadget_GetSpriteFrames"
+ },
+ {
+  "address": "0x52f750",
+  "name": "Gadget_SetButtonColors"
+ },
+ {
+  "address": "0x52f7a0",
+  "name": "Gadget_SetButtonTextLayout"
+ },
+ {
+  "address": "0x52f800",
+  "name": "Gadget_SetButtonState"
+ },
+ {
+  "address": "0x52f830",
+  "name": "Gadget_SetText"
+ }
+]

@@ -1,0 +1,877 @@
+{
+  "days": 30,
+  "cities": [
+    {
+      "name": "Berlin",
+      "short": "ber",
+      "rent_factor": 65,
+      "purchase_factor": 70,
+      "rent_trade_factor": 1.3,
+      "purchase_trade_factor": 1.4,
+      "ad_city_term": 25,
+      "security_buy": 8400,
+      "special_rent_type1": [
+        780,
+        1560,
+        3120
+      ],
+      "special_rent_type3": [
+        520,
+        1040,
+        2080
+      ],
+      "cash_conserved": true,
+      "max_cash_diff": 8.731149137020111e-10,
+      "player_cash": 260366.06,
+      "player_revenue": 22929.28,
+      "player_served": 1687,
+      "sweep": [
+        {
+          "scenario": "base",
+          "cash": 260366.06,
+          "revenue": 22929.28,
+          "costs": 12563.22,
+          "served": 1687,
+          "avg_rating": 82.5,
+          "market_share": 0.5122,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "price_-20%",
+          "cash": 255891.85,
+          "revenue": 18457.21,
+          "costs": 12565.36,
+          "served": 1687,
+          "avg_rating": 83.88,
+          "market_share": 0.4581,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "price_+20%",
+          "cash": 264440.54,
+          "revenue": 26999.02,
+          "costs": 12558.48,
+          "served": 1687,
+          "avg_rating": 78.0,
+          "market_share": 0.5528,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "quality_-20%",
+          "cash": 260110.01,
+          "revenue": 22669.46,
+          "costs": 12559.45,
+          "served": 1687,
+          "avg_rating": 79.62,
+          "market_share": 0.5093,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "quality_+20%",
+          "cash": 260485.65,
+          "revenue": 23050.5,
+          "costs": 12564.85,
+          "served": 1687,
+          "avg_rating": 83.25,
+          "market_share": 0.5135,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "ad_type3",
+          "cash": 155366.06,
+          "revenue": 22929.28,
+          "costs": 117563.22,
+          "served": 1687,
+          "avg_rating": 82.5,
+          "market_share": 0.5122,
+          "customer_share": 0.4985
+        }
+      ]
+    },
+    {
+      "name": "London",
+      "short": "lon",
+      "rent_factor": 70,
+      "purchase_factor": 55,
+      "rent_trade_factor": 1.4,
+      "purchase_trade_factor": 1.1,
+      "ad_city_term": 28,
+      "security_buy": 6600,
+      "special_rent_type1": [
+        840,
+        1680,
+        3360
+      ],
+      "special_rent_type3": [
+        560,
+        1120,
+        2240
+      ],
+      "cash_conserved": true,
+      "max_cash_diff": 4.743924364447594e-09,
+      "player_cash": 260653.57,
+      "player_revenue": 22903.76,
+      "player_served": 1687,
+      "sweep": [
+        {
+          "scenario": "base",
+          "cash": 260653.57,
+          "revenue": 22903.76,
+          "costs": 12250.19,
+          "served": 1687,
+          "avg_rating": 82.0,
+          "market_share": 0.5127,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "price_-20%",
+          "cash": 256164.87,
+          "revenue": 18416.64,
+          "costs": 12251.77,
+          "served": 1687,
+          "avg_rating": 83.38,
+          "market_share": 0.4583,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "price_+20%",
+          "cash": 264694.44,
+          "revenue": 26940.67,
+          "costs": 12246.24,
+          "served": 1687,
+          "avg_rating": 77.5,
+          "market_share": 0.5531,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "quality_-20%",
+          "cash": 260370.88,
+          "revenue": 22618.09,
+          "costs": 12247.21,
+          "served": 1687,
+          "avg_rating": 79.12,
+          "market_share": 0.5095,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "quality_+20%",
+          "cash": 260703.47,
+          "revenue": 22954.47,
+          "costs": 12251.0,
+          "served": 1687,
+          "avg_rating": 82.75,
+          "market_share": 0.5132,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "ad_type3",
+          "cash": 155653.57,
+          "revenue": 22903.76,
+          "costs": 117250.19,
+          "served": 1687,
+          "avg_rating": 82.0,
+          "market_share": 0.5127,
+          "customer_share": 0.4985
+        }
+      ]
+    },
+    {
+      "name": "Madrid",
+      "short": "mad",
+      "rent_factor": 50,
+      "purchase_factor": 45,
+      "rent_trade_factor": 1.0,
+      "purchase_trade_factor": 0.9,
+      "ad_city_term": 13,
+      "security_buy": 5400,
+      "special_rent_type1": [
+        600,
+        1200,
+        2400
+      ],
+      "special_rent_type3": [
+        400,
+        800,
+        1600
+      ],
+      "cash_conserved": true,
+      "max_cash_diff": 3.754394128918648e-09,
+      "player_cash": 261659.52,
+      "player_revenue": 22919.93,
+      "player_served": 1693,
+      "sweep": [
+        {
+          "scenario": "base",
+          "cash": 261659.52,
+          "revenue": 22919.93,
+          "costs": 11260.41,
+          "served": 1693,
+          "avg_rating": 82.12,
+          "market_share": 0.5323,
+          "customer_share": 0.4993
+        },
+        {
+          "scenario": "price_-20%",
+          "cash": 257218.88,
+          "revenue": 18481.85,
+          "costs": 11262.97,
+          "served": 1693,
+          "avg_rating": 83.62,
+          "market_share": 0.4785,
+          "customer_share": 0.4993
+        },
+        {
+          "scenario": "price_+20%",
+          "cash": 265724.77,
+          "revenue": 26981.2,
+          "costs": 11256.42,
+          "served": 1693,
+          "avg_rating": 77.62,
+          "market_share": 0.5726,
+          "customer_share": 0.4993
+        },
+        {
+          "scenario": "quality_-20%",
+          "cash": 261425.85,
+          "revenue": 22683.54,
+          "costs": 11257.69,
+          "served": 1693,
+          "avg_rating": 79.38,
+          "market_share": 0.5297,
+          "customer_share": 0.4993
+        },
+        {
+          "scenario": "quality_+20%",
+          "cash": 261752.03,
+          "revenue": 23013.87,
+          "costs": 11261.84,
+          "served": 1693,
+          "avg_rating": 83.0,
+          "market_share": 0.5333,
+          "customer_share": 0.4993
+        },
+        {
+          "scenario": "ad_type3",
+          "cash": 156659.51,
+          "revenue": 22919.93,
+          "costs": 116260.42,
+          "served": 1693,
+          "avg_rating": 82.12,
+          "market_share": 0.5323,
+          "customer_share": 0.4993
+        }
+      ]
+    },
+    {
+      "name": "Moscow",
+      "short": "mos",
+      "rent_factor": 10,
+      "purchase_factor": 20,
+      "rent_trade_factor": 0.2,
+      "purchase_trade_factor": 0.4,
+      "ad_city_term": 10,
+      "security_buy": 2400,
+      "special_rent_type1": [
+        120,
+        240,
+        480
+      ],
+      "special_rent_type3": [
+        80,
+        160,
+        320
+      ],
+      "cash_conserved": true,
+      "max_cash_diff": 7.2177499532699585e-09,
+      "player_cash": 264701.56,
+      "player_revenue": 22031.68,
+      "player_served": 1687,
+      "sweep": [
+        {
+          "scenario": "base",
+          "cash": 264701.56,
+          "revenue": 22031.68,
+          "costs": 7330.12,
+          "served": 1687,
+          "avg_rating": 72.88,
+          "market_share": 0.51,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "price_-20%",
+          "cash": 260438.73,
+          "revenue": 17771.42,
+          "costs": 7332.69,
+          "served": 1687,
+          "avg_rating": 74.62,
+          "market_share": 0.4564,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "price_+20%",
+          "cash": 268656.54,
+          "revenue": 25981.96,
+          "costs": 7325.41,
+          "served": 1687,
+          "avg_rating": 68.88,
+          "market_share": 0.551,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "quality_-20%",
+          "cash": 264701.56,
+          "revenue": 22031.68,
+          "costs": 7330.12,
+          "served": 1687,
+          "avg_rating": 72.88,
+          "market_share": 0.51,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "quality_+20%",
+          "cash": 264763.97,
+          "revenue": 22096.25,
+          "costs": 7332.28,
+          "served": 1687,
+          "avg_rating": 73.62,
+          "market_share": 0.5107,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "ad_type3",
+          "cash": 159701.56,
+          "revenue": 22031.68,
+          "costs": 112330.12,
+          "served": 1687,
+          "avg_rating": 72.88,
+          "market_share": 0.51,
+          "customer_share": 0.4985
+        }
+      ]
+    },
+    {
+      "name": "Paris",
+      "short": "par",
+      "rent_factor": 60,
+      "purchase_factor": 65,
+      "rent_trade_factor": 1.2,
+      "purchase_trade_factor": 1.3,
+      "ad_city_term": 19,
+      "security_buy": 7800,
+      "special_rent_type1": [
+        720,
+        1440,
+        2880
+      ],
+      "special_rent_type3": [
+        480,
+        960,
+        1920
+      ],
+      "cash_conserved": true,
+      "max_cash_diff": 8.003553375601768e-09,
+      "player_cash": 260806.05,
+      "player_revenue": 22946.33,
+      "player_served": 1693,
+      "sweep": [
+        {
+          "scenario": "base",
+          "cash": 260806.05,
+          "revenue": 22946.33,
+          "costs": 12140.28,
+          "served": 1693,
+          "avg_rating": 82.62,
+          "market_share": 0.5321,
+          "customer_share": 0.4993
+        },
+        {
+          "scenario": "price_-20%",
+          "cash": 256339.16,
+          "revenue": 18481.85,
+          "costs": 12142.68,
+          "served": 1693,
+          "avg_rating": 83.88,
+          "market_share": 0.478,
+          "customer_share": 0.4993
+        },
+        {
+          "scenario": "price_+20%",
+          "cash": 264877.4,
+          "revenue": 27012.88,
+          "costs": 12135.48,
+          "served": 1693,
+          "avg_rating": 78.0,
+          "market_share": 0.5724,
+          "customer_share": 0.4993
+        },
+        {
+          "scenario": "quality_-20%",
+          "cash": 260578.05,
+          "revenue": 22714.78,
+          "costs": 12136.73,
+          "served": 1693,
+          "avg_rating": 79.75,
+          "market_share": 0.5295,
+          "customer_share": 0.4993
+        },
+        {
+          "scenario": "quality_+20%",
+          "cash": 260942.86,
+          "revenue": 23084.71,
+          "costs": 12141.85,
+          "served": 1693,
+          "avg_rating": 83.5,
+          "market_share": 0.5335,
+          "customer_share": 0.4993
+        },
+        {
+          "scenario": "ad_type3",
+          "cash": 155806.05,
+          "revenue": 22946.33,
+          "costs": 117140.28,
+          "served": 1693,
+          "avg_rating": 82.62,
+          "market_share": 0.5321,
+          "customer_share": 0.4993
+        }
+      ]
+    },
+    {
+      "name": "Rio de Janeiro",
+      "short": "Rio",
+      "rent_factor": 45,
+      "purchase_factor": 50,
+      "rent_trade_factor": 0.9,
+      "purchase_trade_factor": 1.0,
+      "ad_city_term": 10,
+      "security_buy": 6000,
+      "special_rent_type1": [
+        540,
+        1080,
+        2160
+      ],
+      "special_rent_type3": [
+        360,
+        720,
+        1440
+      ],
+      "cash_conserved": true,
+      "max_cash_diff": 3.1141098588705063e-09,
+      "player_cash": 263071.63,
+      "player_revenue": 22495.99,
+      "player_served": 1687,
+      "sweep": [
+        {
+          "scenario": "base",
+          "cash": 263071.63,
+          "revenue": 22495.99,
+          "costs": 9424.36,
+          "served": 1687,
+          "avg_rating": 77.88,
+          "market_share": 0.5108,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "price_-20%",
+          "cash": 258710.88,
+          "revenue": 18136.98,
+          "costs": 9426.1,
+          "served": 1687,
+          "avg_rating": 79.5,
+          "market_share": 0.4571,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "price_+20%",
+          "cash": 267035.34,
+          "revenue": 26455.04,
+          "costs": 9419.71,
+          "served": 1687,
+          "avg_rating": 73.12,
+          "market_share": 0.5512,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "quality_-20%",
+          "cash": 263008.41,
+          "revenue": 22431.42,
+          "costs": 9423.01,
+          "served": 1687,
+          "avg_rating": 77.0,
+          "market_share": 0.5101,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "quality_+20%",
+          "cash": 263356.43,
+          "revenue": 22784.08,
+          "costs": 9427.65,
+          "served": 1687,
+          "avg_rating": 80.75,
+          "market_share": 0.514,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "ad_type3",
+          "cash": 158071.62,
+          "revenue": 22495.99,
+          "costs": 114424.37,
+          "served": 1687,
+          "avg_rating": 77.88,
+          "market_share": 0.5108,
+          "customer_share": 0.4985
+        }
+      ]
+    },
+    {
+      "name": "Roma",
+      "short": "rom",
+      "rent_factor": 55,
+      "purchase_factor": 50,
+      "rent_trade_factor": 1.1,
+      "purchase_trade_factor": 1.0,
+      "ad_city_term": 28,
+      "security_buy": 6000,
+      "special_rent_type1": [
+        660,
+        1320,
+        2640
+      ],
+      "special_rent_type3": [
+        440,
+        880,
+        1760
+      ],
+      "cash_conserved": true,
+      "max_cash_diff": 1.0011717677116394e-08,
+      "player_cash": 262112.1,
+      "player_revenue": 22995.61,
+      "player_served": 1687,
+      "sweep": [
+        {
+          "scenario": "base",
+          "cash": 262112.1,
+          "revenue": 22995.61,
+          "costs": 10883.51,
+          "served": 1687,
+          "avg_rating": 83.0,
+          "market_share": 0.5098,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "price_-20%",
+          "cash": 257608.75,
+          "revenue": 18494.43,
+          "costs": 10885.68,
+          "served": 1687,
+          "avg_rating": 84.5,
+          "market_share": 0.4554,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "price_+20%",
+          "cash": 266226.5,
+          "revenue": 27104.48,
+          "costs": 10877.98,
+          "served": 1687,
+          "avg_rating": 78.88,
+          "market_share": 0.5507,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "quality_-20%",
+          "cash": 262024.33,
+          "revenue": 22905.52,
+          "costs": 10881.19,
+          "served": 1687,
+          "avg_rating": 82.12,
+          "market_share": 0.5088,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "quality_+20%",
+          "cash": 262185.31,
+          "revenue": 23070.3,
+          "costs": 10884.99,
+          "served": 1687,
+          "avg_rating": 83.75,
+          "market_share": 0.5106,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "ad_type3",
+          "cash": 157112.09,
+          "revenue": 22995.61,
+          "costs": 115883.52,
+          "served": 1687,
+          "avg_rating": 83.0,
+          "market_share": 0.5098,
+          "customer_share": 0.4985
+        }
+      ]
+    },
+    {
+      "name": "Sydney",
+      "short": "syd",
+      "rent_factor": 40,
+      "purchase_factor": 35,
+      "rent_trade_factor": 0.8,
+      "purchase_trade_factor": 0.7,
+      "ad_city_term": 37,
+      "security_buy": 4200,
+      "special_rent_type1": [
+        480,
+        960,
+        1920
+      ],
+      "special_rent_type3": [
+        320,
+        640,
+        1280
+      ],
+      "cash_conserved": true,
+      "max_cash_diff": 5.238689482212067e-09,
+      "player_cash": 262775.25,
+      "player_revenue": 22571.01,
+      "player_served": 1687,
+      "sweep": [
+        {
+          "scenario": "base",
+          "cash": 262775.25,
+          "revenue": 22571.01,
+          "costs": 9795.76,
+          "served": 1687,
+          "avg_rating": 78.25,
+          "market_share": 0.5106,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "price_-20%",
+          "cash": 258374.52,
+          "revenue": 18172.7,
+          "costs": 9798.18,
+          "served": 1687,
+          "avg_rating": 80.0,
+          "market_share": 0.4565,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "price_+20%",
+          "cash": 266778.92,
+          "revenue": 26570.02,
+          "costs": 9791.1,
+          "served": 1687,
+          "avg_rating": 74.0,
+          "market_share": 0.5512,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "quality_-20%",
+          "cash": 262661.85,
+          "revenue": 22456.94,
+          "costs": 9795.09,
+          "served": 1687,
+          "avg_rating": 77.5,
+          "market_share": 0.5093,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "quality_+20%",
+          "cash": 263005.57,
+          "revenue": 22805.31,
+          "costs": 9799.74,
+          "served": 1687,
+          "avg_rating": 81.12,
+          "market_share": 0.5132,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "ad_type3",
+          "cash": 157775.24,
+          "revenue": 22571.01,
+          "costs": 114795.77,
+          "served": 1687,
+          "avg_rating": 78.25,
+          "market_share": 0.5106,
+          "customer_share": 0.4985
+        }
+      ]
+    },
+    {
+      "name": "Tokyo",
+      "short": "tok",
+      "rent_factor": 100,
+      "purchase_factor": 100,
+      "rent_trade_factor": 2.0,
+      "purchase_trade_factor": 2.0,
+      "ad_city_term": 40,
+      "security_buy": 12000,
+      "special_rent_type1": [
+        1200,
+        2400,
+        4800
+      ],
+      "special_rent_type3": [
+        800,
+        1600,
+        3200
+      ],
+      "cash_conserved": true,
+      "max_cash_diff": 5.878973752260208e-09,
+      "player_cash": 259508.07,
+      "player_revenue": 23094.06,
+      "player_served": 1687,
+      "sweep": [
+        {
+          "scenario": "base",
+          "cash": 259508.07,
+          "revenue": 23094.06,
+          "costs": 13585.99,
+          "served": 1687,
+          "avg_rating": 84.25,
+          "market_share": 0.5097,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "price_-20%",
+          "cash": 255003.05,
+          "revenue": 18589.03,
+          "costs": 13585.99,
+          "served": 1687,
+          "avg_rating": 85.5,
+          "market_share": 0.4555,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "price_+20%",
+          "cash": 263666.41,
+          "revenue": 27246.52,
+          "costs": 13580.11,
+          "served": 1687,
+          "avg_rating": 80.0,
+          "market_share": 0.5508,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "quality_-20%",
+          "cash": 259462.57,
+          "revenue": 23047.31,
+          "costs": 13584.74,
+          "served": 1687,
+          "avg_rating": 83.38,
+          "market_share": 0.5092,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "quality_+20%",
+          "cash": 259747.29,
+          "revenue": 23335.62,
+          "costs": 13588.33,
+          "served": 1687,
+          "avg_rating": 86.62,
+          "market_share": 0.5123,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "ad_type3",
+          "cash": 154508.07,
+          "revenue": 23094.06,
+          "costs": 118585.99,
+          "served": 1687,
+          "avg_rating": 84.25,
+          "market_share": 0.5097,
+          "customer_share": 0.4985
+        }
+      ]
+    },
+    {
+      "name": "New York",
+      "short": "yor",
+      "rent_factor": 90,
+      "purchase_factor": 100,
+      "rent_trade_factor": 1.8,
+      "purchase_trade_factor": 2.0,
+      "ad_city_term": 37,
+      "security_buy": 12000,
+      "special_rent_type1": [
+        1080,
+        2160,
+        4320
+      ],
+      "special_rent_type3": [
+        720,
+        1440,
+        2880
+      ],
+      "cash_conserved": true,
+      "max_cash_diff": 7.62520357966423e-09,
+      "player_cash": 259038.34,
+      "player_revenue": 23033.45,
+      "player_served": 1688,
+      "sweep": [
+        {
+          "scenario": "base",
+          "cash": 259038.34,
+          "revenue": 23033.45,
+          "costs": 13995.11,
+          "served": 1688,
+          "avg_rating": 84.12,
+          "market_share": 0.5287,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "price_-20%",
+          "cash": 254546.58,
+          "revenue": 18541.69,
+          "costs": 13995.11,
+          "served": 1688,
+          "avg_rating": 85.38,
+          "market_share": 0.4746,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "price_+20%",
+          "cash": 263166.1,
+          "revenue": 27155.44,
+          "costs": 13989.34,
+          "served": 1688,
+          "avg_rating": 79.62,
+          "market_share": 0.5695,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "quality_-20%",
+          "cash": 259018.5,
+          "revenue": 23011.67,
+          "costs": 13993.17,
+          "served": 1688,
+          "avg_rating": 83.25,
+          "market_share": 0.5285,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "quality_+20%",
+          "cash": 259180.02,
+          "revenue": 23175.13,
+          "costs": 13995.11,
+          "served": 1688,
+          "avg_rating": 84.88,
+          "market_share": 0.5303,
+          "customer_share": 0.4985
+        },
+        {
+          "scenario": "ad_type3",
+          "cash": 154038.34,
+          "revenue": 23033.45,
+          "costs": 118995.11,
+          "served": 1688,
+          "avg_rating": 84.12,
+          "market_share": 0.5287,
+          "customer_share": 0.4985
+        }
+      ]
+    }
+  ],
+  "max_cash_diff": 1.0011717677116394e-08,
+  "all_conserved": true
+}

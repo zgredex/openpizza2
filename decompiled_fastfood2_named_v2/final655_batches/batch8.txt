@@ -1,0 +1,693 @@
+========================================================================================
+0x52f690 layer=[3] indeg=78 bytes=2370
+calls: 0x52d360, UI_EnsureObjectArray, 0x54e221
+ provider-specific; not original source
+undefined4 __thiscall
+FUN_0052f690(void *this,int param_1,int param_2,int param_3,char *param_4,char *param_5,int param_6,
+            char *param_7)
+{
+  undefined4 *puVar1;
+  int local_14;
+  void *local_10;
+  void *local_c;
+  undefined1 *puStack_8;
+  undefined4 local_4;
+  local_4 = 0xffffffff;
+  puStack_8 = &LAB_0055aacb;
+  local_c = ExceptionList;
+  ExceptionList = &local_c;
+  local_10 = operator_new(0x3c8);
+  local_4 = 0;
+  if (local_10 == (void *)0x0) {
+    puVar1 = (undefined4 *)0x0;
+  }
+  else {
+    puVar1 = FUN_0052d360(local_10,param_1,param_2,param_3,param_4,param_5,param_7,param_6,(int)this
+                          ,&local_14);
+  }
+  local_4 = 0xffffffff;
+  if (local_14 == 0) {
+    FUN_00530f80(this,(int)puVar1,param_1);
+    ExceptionList = local_c;
+========================================================================================
+0x507a80 layer=[3] indeg=17 bytes=2320
+calls: 0x401320, 0x401340, 0x4f21e0, 0x4f5c70, 0x54b3c0, Array_Grow, 0x54b440
+ provider-specific; not original source
+void __fastcall FUN_00507a80(int param_1)
+{
+  short sVar1;
+  undefined4 uVar2;
+  undefined4 uVar3;
+  DWORD DVar4;
+  sVar1 = *(short *)(*(int *)(param_1 + 200) + 0x28);
+  if (-1 < sVar1) {
+    uVar2 = FUN_0054b440((void *)(*(int *)(param_1 + 200) + 0x14),(int)sVar1);
+    uVar3 = FUN_0054b440((void *)(*(int *)(param_1 + 200) + 0x14),
+                         *(short *)(*(int *)(param_1 + 200) + 0x28) + 1);
+    CS_Enter(*(int *)(DAT_0057c670 + 0x240));
+    FUN_0054b3c0(*(int *)(param_1 + 200) + 0x14);
+    FUN_0054b3d0((void *)(*(int *)(param_1 + 200) + 0x14),uVar2);
+    FUN_0054b3d0((void *)(*(int *)(param_1 + 200) + 0x14),uVar3);
+    FUN_004f5c70(*(void **)(param_1 + 200),0);
+    DVar4 = timeGetTime();
+    FUN_004f21e0(*(void **)(param_1 + 0xc4),*(uint **)(param_1 + 200),DVar4);
+    CS_Leave(*(int *)(DAT_0057c670 + 0x240));
+  }
+  return;
+}
+========================================================================================
+0x50e7a0 layer=[3] indeg=7 bytes=1781
+calls: 0x505e00
+ provider-specific; not original source
+undefined4 __fastcall FUN_0050e7a0(int param_1)
+{
+  undefined1 uVar1;
+  undefined3 extraout_var;
+  if (*(int *)(param_1 + 200) != 0) {
+    uVar1 = FUN_00505e00(param_1);
+    if ((CONCAT31(extraout_var,uVar1) != 0) && (*(short *)(*(int *)(param_1 + 200) + 0x28) != -1)) {
+      return 1;
+    }
+  }
+  return 0;
+}
+========================================================================================
+0x4fb660 layer=[3] indeg=4 bytes=6468
+calls: Game_CanAfford, Branch_RecalculateRatings, 0x47c590, 0x47c5e0, 0x47c7d0, Game_CheckObjectUpgrade, Game_MarkAllObjectsDirty, 0x482820, UI_Briefing_Printf, Grid_RebuildStreetNodes, Map_UpdateVisibleTiles, CityMap_GenerateLayout, Stats_SumRecordCounts, 0x4fbee0, IDMap_FreeValuesAndDestroy, Game_UpdateMusicTheme, Branch_AutoTunePrice, 0x54f0e2, 0x54f110
+ provider-specific; not original source
+int FUN_004fb660(int param_1,int param_2,void *param_3,int param_4,int param_5,undefined4 *param_6,
+                int param_7,int param_8)
+{
+  int iVar1;
+  int extraout_ECX;
+  undefined4 unaff_EBX;
+  uint uVar2;
+  char *unaff_EBP;
+  char *unaff_ESI;
+  char *unaff_EDI;
+  bool bVar3;
+  undefined1 unaff_retaddr;
+  int iVar4;
+  int iStack00000024;
+  uint uStack00000028;
+  uint uStack0000002c;
+  uint uStack00000030;
+  int in_stack_00001938;
+  void *in_stack_0000193c;
+  int in_stack_00001940;
+  int in_stack_00001944;
+  int in_stack_00001948;
+  uint in_stack_0000194c;
+  char cVar5;
+  FUN_0054f110(unaff_retaddr);
+  if ((*(int *)((int)in_stack_0000193c + 0x2c) != 0) &&
+     (*(int *)((int)in_stack_0000193c + 0x2c) != 3)) {
+========================================================================================
+0x5078d0 layer=[3] indeg=4 bytes=1881
+calls: Object_TryStepToTile, 0x4f21e0
+ provider-specific; not original source
+undefined4 __thiscall FUN_005078d0(void *this,int param_1,int param_2)
+{
+  undefined4 uVar1;
+  DWORD DVar2;
+  uVar1 = 0;
+  if (*(void **)((int)this + 200) != (void *)0x0) {
+    uVar1 = FUN_004f1ab0(*(void **)((int)this + 0xc4),1,*(void **)((int)this + 200),param_1,param_2)
+    ;
+    DVar2 = timeGetTime();
+    FUN_004f21e0(*(void **)((int)this + 0xc4),*(uint **)((int)this + 200),DVar2);
+  }
+  return uVar1;
+}
+========================================================================================
+0x42bde0 layer=[3] indeg=3 bytes=10154
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x531850, 0x531c60
+ provider-specific; not original source
+void * __cdecl FUN_0042bde0(int *param_1)
+{
+  int iVar1;
+  void *this;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_004a6bd0);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x408,0x27,0x129,s_TRENNZEILE_spr_00563eb8);
+  iVar1 = UI_AddText(this,0x501,0x2b,5,s_TIMESFONT_fnt_00563ea8,DAT_00581d38);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x501,0);
+    FUN_0052f9d0(this,0x501,2,0xbe,0,0);
+  }
+  iVar1 = UI_AddText(this,0x511,0x7d,0x3d,s_VERDANA8_fnt_00563e98,DAT_0058173c);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x511,0);
+    FUN_0052f9d0(this,0x511,0,0x4b,0,0);
+  }
+  iVar1 = UI_AddText(this,0x512,0x7d,0x49,s_VERDANA8_fnt_00563e98,DAT_00581a44);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x512,0);
+    FUN_0052f9d0(this,0x512,0,0x41,0,0);
+  }
+  iVar1 = UI_AddText(this,0x513,0xae,0x49,s_VERDANA8_fnt_00563e98,&DAT_00564478);
+========================================================================================
+0x42caa0 layer=[3] indeg=3 bytes=8981
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x52fc00, Window_GadgetNotify_Slider_SetGradientColors, 0x531850, 0x531c60
+ provider-specific; not original source
+void * __cdecl FUN_0042caa0(int *param_1)
+{
+  int iVar1;
+  void *this;
+  undefined4 local_10;
+  undefined4 local_c;
+  undefined4 local_8;
+  undefined4 local_4;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_004a6f50);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x429,0x27,0x14c,s_TRENNZEILE_spr_00563eb8);
+  UI_AddSprite(this,0x436,0x2b,0x34,s_RAHMEN04_spr_005654a0);
+  UI_AddSprite(this,0x437,0x95,0x15a,s_ZUTATICONS_00_spr_0056548c);
+  UI_AddSprite(this,0x438,0x35,0x15b,s_ZUTATICONS_01_spr_00565478);
+  UI_AddSprite(this,0x439,0x56,0x15b,s_ZUTATICONS_02_spr_00565464);
+  UI_AddSprite(this,0x43a,0x76,0x15b,s_ZUTATICONS_03_spr_00565450);
+  UI_AddSprite(this,0x43b,0xb4,0x15a,s_ZUTATICONS_04_spr_0056543c);
+  UI_AddSprite(this,0x43c,0xcf,0x15a,s_ZUTATICONS_05_spr_00565428);
+  UI_AddSprite(this,0x43d,0x95,0x15a,s_ZUTATICONS_06_spr_00565414);
+  UI_AddSprite(this,0x43e,0x35,0x15b,s_ZUTATICONS_07_spr_00565400);
+  UI_AddSprite(this,0x43f,0x56,0x15b,s_ZUTATICONS_08_spr_005653ec);
+  UI_AddSprite(this,0x440,0x76,0x15b,s_ZUTATICONS_09_spr_005653d8);
+  UI_AddSprite(this,0x441,0xb5,0x15a,s_ZUTATICONS_10_spr_005653c4);
+========================================================================================
+0x493110 layer=[3] indeg=3 bytes=6733
+calls: 0x4017f0, Stats_GetAverage8, Game_CountObjectsByType, 0x4a80e0, 0x4b1a50, 0x4b1f40, Game_GetObjectStatusLevel, Gadget_SetText, Window_GadgetNotify_Text_SetText, Window_GadgetNotify_Slider_SetChangeNotify, Window_GadgetNotify_Slider_SetRange, Window_GadgetNotify_Slider_SetValue, Array_GetRecordByKeyPtr, UI_RemoveObject, 0x5316f0, UI_RemoveObjectByKey, Sound_ProcessEvent, 0x54dd83
+ provider-specific; not original source
+void __cdecl FUN_00493110(void *param_1,char param_2,char param_3)
+{
+  uint uVar1;
+  byte bVar2;
+  undefined3 extraout_var;
+  int iVar3;
+  int *piVar4;
+  undefined4 uVar5;
+  int iVar6;
+  int iVar7;
+  undefined1 local_20 [32];
+  iVar6 = *(int *)(DAT_0057c670 + 0x21c);
+  if ((iVar6 != 0) && (param_3 != '\0')) {
+    bVar2 = FUN_0050e550(iVar6);
+    FUN_005499f0(DAT_0057ba0c,*(int *)(iVar6 + 0x30),CONCAT31(extraout_var,bVar2),
+                 *(int *)(iVar6 + 0x24) == 0);
+  }
+  DAT_0057c6d0 = *(int *)(DAT_0057c670 + 0x200 + *(int *)(DAT_0057c670 + 0x2ec) * 4);
+  FUN_0052f9b0(param_1,0x1389,DAT_00582d28);
+  iVar6 = 6000;
+  do {
+    FUN_0052fce0(param_1,iVar6,1);
+    iVar6 = iVar6 + 1;
+  } while (iVar6 < 0x178c);
+  if (param_2 == '\0') {
+    _param_3 = *(void **)(DAT_0057c670 + 0x9c);
+  }
+========================================================================================
+0x4a6990 layer=[3] indeg=3 bytes=4223
+calls: 0x4017f0, UI_PrintSignedValue, 0x4a66d0, UI_DrawAwardMedals, Gadget_SetTextf, Window_GadgetNotify_Text_SetText, UI_ComposeOverlayWindowFromRecord, 0x54dd83
+ provider-specific; not original source
+void __cdecl FUN_004a6990(void *param_1)
+{
+  int iVar1;
+  int iVar2;
+  int iVar3;
+  int *piVar4;
+  int iVar5;
+  undefined4 unaff_EDI;
+  int local_5c [3];
+  undefined1 local_50 [32];
+  int local_30 [4];
+  undefined4 local_20;
+  undefined4 local_1c;
+  int local_18 [4];
+  undefined4 local_8;
+  undefined4 local_4;
+  iVar5 = *(int *)(DAT_0057c670 + 0x224 + *(int *)(DAT_0057c670 + 0x2f0) * 4);
+  iVar1 = *(int *)(DAT_0057c670 + 0x200 + *(int *)(DAT_0057c670 + 0x2ec) * 4);
+  iVar3 = *(int *)(iVar5 + 4);
+  FUN_0054bb00(param_1,0x2357,iVar3);
+  FUN_0052f9b0(param_1,0x515,iVar5 + 0xc);
+  String_Format(local_50,(byte *)s__d__s_00568324,*(undefined4 *)(iVar3 + 0x40));
+  FUN_0052f9b0(param_1,0x514,local_50);
+  String_Format(local_50,&DAT_005686f4,*(undefined4 *)(iVar5 + 0x2c));
+  FUN_0052f9b0(param_1,0x513,local_50);
+  String_Format(local_50,&DAT_005686f4,*(int *)(iVar5 + 0x30) + 1);
+  FUN_0052f9b0(param_1,0x2331,local_50);
+========================================================================================
+0x4a81f0 layer=[3] indeg=3 bytes=3740
+calls: 0x4017f0, 0x482820, 0x488be0, StringTable_SortIndexArray, 0x4a80e0, 0x4a8450, Player_GetFirstRecordType1, GamePlan_ComputeCategoryEffect, GamePlan_ComputeEffectValue, 0x50fbe0, Gadget_SetText, Window_GadgetNotify_Text_SetText, Window_GadgetNotify_Slider_SetChangeNotify, Window_GadgetNotify_Slider_SetRange, Window_GadgetNotify_Slider_SetValue, Window_GadgetNotify_Button_SetState, 0x54dd83
+ provider-specific; not original source
+void __cdecl FUN_004a81f0(void *param_1)
+{
+  int iVar1;
+  int iVar2;
+  int iVar3;
+  bool bVar4;
+  longlong lVar5;
+  undefined4 uVar6;
+  undefined1 local_20 [32];
+  FUN_004a8030(&DAT_0057d29c,&DAT_0057d404);
+  IDMap_Lookup((void *)((int)DAT_0057c670 + 4),*(int *)((int)DAT_0057c670 + 0x2f4),(int *)0x0);
+  iVar1 = *(int *)((int)DAT_0057c670 + *(int *)((int)DAT_0057c670 + 0x2ec) * 4 + 0x200);
+  DAT_0057d56c = (void *)FUN_004e34e0(iVar1);
+  bVar4 = *(int *)((int)DAT_0057d56c + 4) != 0;
+  if (bVar4) {
+    uVar6 = DAT_005820c8;
+  }
+  else {
+    uVar6 = DAT_00580f1c;
+  }
+  DAT_0057d298 = !bVar4;
+  FUN_0052f830(param_1,0x1f43,uVar6);
+  FUN_0052f830(param_1,0x482,
+               *(undefined4 *)
+                (&DAT_00583504 + (&DAT_0057d404)[*(int *)((int)DAT_0057d56c + 0x10)] * 4));
+  FUN_0052ff50(param_1,0x43a,*(uint *)((int)DAT_0057d56c + 0x14) & 8);
+  FUN_0052ff50(param_1,0x43b,*(uint *)((int)DAT_0057d56c + 0x14) & 4);
+========================================================================================
+0x4dae90 layer=[3] indeg=3 bytes=3571
+calls: 0x4017f0, 0x4d2420, City_CollectBuildingsByType, CRT_QSort
+ provider-specific; not original source
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+void __thiscall FUN_004dae90(void *this,int param_1)
+{
+  int *piVar1;
+  undefined4 *this_00;
+  int iVar2;
+  void *this_01;
+  int iVar3;
+  undefined4 *puVar4;
+  int iVar5;
+  int iVar6;
+  int local_14 [5];
+  iVar3 = 0;
+  piVar1 = (int *)((int)this + 0xcb0);
+  iVar5 = 6;
+  do {
+    iVar6 = *piVar1;
+    piVar1 = piVar1 + 1;
+    iVar3 = iVar3 + iVar6;
+    iVar5 = iVar5 + -1;
+  } while (iVar5 != 0);
+  iVar5 = 0;
+  DAT_0057df98 = 999;
+  _DAT_0057df9c = 999;
+  _DAT_0057dfa0 = 999;
+  _DAT_0057dfa4 = 999;
+  _DAT_0057dfa8 = 999;
+========================================================================================
+0x4eb0f0 layer=[3] indeg=3 bytes=3174
+calls: List_Construct, 0x48e0a0, 0x4eae00, Map_CompactVisibleDrawRecords, 0x4eb900, Map_UpdateObjectScreenBounds, Map_SetScrollPosition, IsoMap_RenderViewport, CRT_Ifstream_Construct, 0x54dd83, 0x54e221, 0x55c5d4
+ provider-specific; not original source
+undefined4 * __thiscall FUN_004eb0f0(void *this,int param_1)
+{
+  void *pvVar1;
+  int *piVar2;
+  undefined1 local_110 [260];
+  void *pvStack_c;
+  undefined1 *puStack_8;
+  undefined4 local_4;
+  local_4 = 0xffffffff;
+  puStack_8 = &LAB_00559f20;
+  pvStack_c = ExceptionList;
+  ExceptionList = &pvStack_c;
+  FUN_004013a0((void *)((int)this + 0x11c),0);
+  local_4 = 0;
+  FUN_004013a0((void *)((int)this + 0x140),0);
+  local_4._0_1_ = 1;
+  *(undefined ***)this = &PTR_FUN_0055c5d4;
+  if (param_1 == 0) {
+    FUN_0048e0a0();
+  }
+  *(undefined4 *)((int)this + 8) = 0;
+  *(undefined4 *)((int)this + 0x70) = 0;
+  *(undefined4 *)((int)this + 0x74) = 0;
+  *(undefined4 *)((int)this + 0x78) = 0;
+  *(undefined4 *)((int)this + 0x1015c) = 1;
+  *(int *)((int)this + 4) = param_1;
+  String_Format(local_110,(byte *)s__sIsokarten__s_00571a60,&DAT_0057c278);
+========================================================================================
+0x507920 layer=[3] indeg=3 bytes=3092
+calls: 0x48e0a0, AI_ComputeWeightedPath, 0x4f21e0, 0x4f5c70, Palette_Free, MessageList_Construct, 0x54b3c0, Array_Grow, 0x54b440, 0x54dd78, 0x54e221
+ provider-specific; not original source
+int __fastcall FUN_00507920(int param_1)
+{
+  undefined4 *this;
+  int iVar1;
+  void *pvVar2;
+  undefined4 uVar3;
+  undefined4 uVar4;
+  int iVar5;
+  int iVar6;
+  DWORD DVar7;
+  void *local_c;
+  undefined1 *puStack_8;
+  undefined4 local_4;
+  local_4 = 0xffffffff;
+  puStack_8 = &LAB_0055a2bb;
+  local_c = ExceptionList;
+  ExceptionList = &local_c;
+  pvVar2 = operator_new(0x7c);
+  local_4 = 0;
+  if (pvVar2 == (void *)0x0) {
+    pvVar2 = (LPVOID)0x0;
+  }
+  else {
+    FUN_0054b390((undefined4 *)((int)pvVar2 + 0x14));
+  }
+  local_4 = 0xffffffff;
+  uVar3 = FUN_0054b440((void *)(*(int *)(param_1 + 200) + 0x14),
+========================================================================================
+0x52fa40 layer=[3] indeg=3 bytes=2334
+calls: 0x522010, UI_EnsureObjectArray, 0x54e221
+ provider-specific; not original source
+undefined4 __thiscall
+FUN_0052fa40(void *this,int param_1,int param_2,int param_3,char *param_4,char *param_5,int param_6)
+{
+  undefined4 *puVar1;
+  int local_14;
+  void *local_10;
+  void *local_c;
+  undefined1 *puStack_8;
+  undefined4 local_4;
+  local_4 = 0xffffffff;
+  puStack_8 = &LAB_0055ab0b;
+  local_c = ExceptionList;
+  ExceptionList = &local_c;
+  local_10 = operator_new(0x9c);
+  local_4 = 0;
+  if (local_10 == (void *)0x0) {
+    puVar1 = (undefined4 *)0x0;
+  }
+  else {
+    puVar1 = FUN_00522010(local_10,param_1,param_2,param_3,param_4,param_5,param_6,(int)this,
+                          &local_14);
+  }
+  local_4 = 0xffffffff;
+  if (local_14 == 0) {
+    FUN_00530f80(this,(int)puVar1,param_1);
+    ExceptionList = local_c;
+    return 1;
+========================================================================================
+0x4b83f0 layer=[3] indeg=2 bytes=4987
+calls: 0x4017f0, Branch_GetCustomerGroupRating, 0x488be0, Chart_DrawGroupMatrix, 0x4a66d0, 0x4a80e0, Player_FindRecordType2ByKey, Window_GadgetNotify_Text_SetText, 0x54dd83
+ provider-specific; not original source
+void __cdecl FUN_004b83f0(void *param_1,char param_2)
+{
+  void *this;
+  int iVar1;
+  int iVar2;
+  byte *pbVar3;
+  undefined4 unaff_EBP;
+  uint uVar4;
+  undefined4 unaff_EDI;
+  bool bVar5;
+  undefined1 *puVar6;
+  undefined1 *puVar7;
+  int iVar8;
+  undefined1 local_340 [64];
+  undefined1 local_300 [64];
+  undefined1 local_2c0 [64];
+  undefined1 local_280 [64];
+  undefined1 local_240 [64];
+  undefined1 local_200 [256];
+  byte local_100 [256];
+  puVar6 = local_340;
+  String_Format(local_340,DAT_00582e4c,unaff_EDI);
+  puVar7 = local_300;
+  String_Format(puVar7,DAT_00582e4c,puVar6);
+  puVar6 = local_2c0;
+  String_Format(puVar6,DAT_00582e4c,puVar7);
+  String_Format(local_280,DAT_00582e4c,puVar6);
+========================================================================================
+0x4c2be0 layer=[3] indeg=2 bytes=4460
+calls: 0x4017f0, 0x4781b0, Branch_ComputeBuildingRating, Game_ContainsObjectPointer, 0x488be0, 0x4a80e0, 0x4ddcc0, Game_ComputeEventValue, Gadget_SetTextf, Window_GadgetNotify_Text_SetText, Window_GadgetNotify_Slider_SetValue, 0x5316f0, UI_SetButtonSpriteByName, 0x54dd83
+ provider-specific; not original source
+void __cdecl FUN_004c2be0(void *param_1)
+{
+  void *this;
+  uint uVar1;
+  int iVar2;
+  undefined4 uVar3;
+  void *pvVar4;
+  undefined4 extraout_EDX;
+  undefined4 extraout_EDX_00;
+  byte bVar5;
+  int iVar6;
+  int iVar7;
+  int local_118;
+  int local_114;
+  int local_110;
+  void *local_10c;
+  int local_108;
+  int local_104;
+  char local_100 [256];
+  pvVar4 = *(void **)((int)DAT_0057c670 + 0x9c);
+  local_10c = pvVar4;
+  iVar2 = FUN_00488be0(DAT_0057c670,*(int *)((int)pvVar4 + 0x30));
+  local_108 = FUN_004ddcc0(iVar2);
+  this = *(void **)((int)DAT_0057c670 + 0x220);
+  if (DAT_0056adec == 2) {
+    uVar3 = FUN_00480bf0(pvVar4,(int)this);
+    if ((char)uVar3 != '\0') {
+========================================================================================
+0x4c16e0 layer=[3] indeg=2 bytes=2796
+calls: 0x4017f0, Game_GetRatingPercent, 0x4a80e0, Stats_GetCombinedValue, 0x4da630, 0x513fd0, Stats_GetAverageRecordValue, Gadget_SetTextf
+ provider-specific; not original source
+void __cdecl FUN_004c16e0(void *param_1)
+{
+  void *this;
+  int iVar1;
+  int iVar2;
+  int iVar3;
+  int iVar4;
+  longlong lVar5;
+  iVar3 = *(int *)((int)DAT_0057c670 + 0x218);
+  this = (void *)IDMap_Lookup((void *)((int)DAT_0057c670 + 4),*(int *)(iVar3 + 0x28),(int *)0x0);
+  iVar1 = IDMap_Lookup((void *)(*(int *)((int)DAT_0057c670 +
+                                        *(int *)((int)DAT_0057c670 + 0x2ec) * 4 + 0x200) + 0x180),
+                       *(int *)(iVar3 + 0x2c),(int *)0x0);
+  iVar2 = FUN_004da630(this,*(int *)(iVar1 + 0x30));
+  iVar3 = FUN_00513fd0(iVar1);
+  lVar5 = FUN_004d6390(3,iVar3);
+  iVar4 = (int)lVar5;
+  iVar3 = *(int *)(*(int *)((int)DAT_0057c670 + 0x224) + 0xa8);
+  if (*(int *)(iVar3 + 0x11c) == 0) {
+    if (*(int *)(iVar3 + 0x200) != 0) {
+      iVar4 = (iVar4 * 0xf) / 10;
+    }
+  }
+  else {
+    iVar4 = (iVar4 * 5) / 10;
+  }
+  FUN_0052f080(param_1,0x4ee,&DAT_005683a4,iVar4);
+========================================================================================
+0x4871a0 layer=[3] indeg=2 bytes=2706
+calls: 0x401320, 0x401340, 0x4017f0, Game_AcquireStateLock, Window_UnlockState, 0x488be0, 0x4d2420, Game_PlaceObjectInPlayerCity, Player_RemoveObjectReference, 0x513fd0, Storage_SettlePendingOrders, UI_QueueControlCommand
+ provider-specific; not original source
+void __thiscall FUN_004871a0(void *this,undefined4 *param_1)
+{
+  void *this_00;
+  void *this_01;
+  void *this_02;
+  int iVar1;
+  int iVar2;
+  this_01 = (void *)FUN_00488be0(this,param_1[9]);
+  this_02 = (void *)IDMap_Lookup((void *)((int)this + 4),param_1[10],(int *)0x0);
+  iVar1 = FUN_00513fd0((int)param_1);
+  this_00 = (void *)param_1[0xd];
+  iVar2 = *(int *)((int)this_00 + 0x48);
+  if ((-1 < iVar2) && (iVar2 < 4)) {
+    iVar2 = *(int *)(&DAT_00568188 + iVar2 * 4);
+  }
+  FUN_00486be0(this,1);
+  FUN_00513ff0((int)param_1);
+  FUN_004ddca0(this_01,(int)param_1);
+  CS_Enter(*(int *)((int)this + 0x240));
+  FUN_004d2420(this_00,iVar1 + 0x1d,iVar2 + 0x840 + iVar1 * 4);
+  FUN_004dc720(this_02,this_00,-1);
+  *(undefined4 *)((int)this_00 + 0x2c) = 0xffffffff;
+  *(undefined4 *)((int)this_00 + 0x4c) = 1;
+  *(undefined4 *)(*(int *)((int)this_02 + 0xfa8) + 0xf4) = 1;
+  CS_Leave(*(int *)((int)this + 0x240));
+  if (((*(void **)((int)this + 0x218) == this_00) && (*(int *)((int)this + 0x290) == 1)) &&
+     (*(void **)((int)this + 0x25c) != (void *)0x0)) {
+========================================================================================
+0x4c4e30 layer=[3] indeg=2 bytes=1908
+calls: 0x4017f0, 0x4c4bd0, Gadget_SetTextf, Sound_ProcessEvent
+ provider-specific; not original source
+void __cdecl FUN_004c4e30(void *param_1)
+{
+  DAT_0057dcf8 = *(undefined4 *)(DAT_0057c670 + 0x200 + *(int *)(DAT_0057c670 + 0x2ec) * 4);
+  DAT_0057dcf4 = IDMap_Lookup((void *)(DAT_0057c670 + 4),*(int *)(DAT_0057c670 + 0x2f4),(int *)0x0);
+  FUN_0052f080(param_1,0x1fee,(byte *)s___d___0056aef4,1000);
+  FUN_0052f080(param_1,0x1fef,(byte *)s___d___00568730,1000);
+  FUN_005499f0(DAT_0057ba0c,0xd,0,'\x01');
+  FUN_004c4bd0(param_1);
+  return;
+}
+========================================================================================
+0x433790 layer=[3] indeg=1 bytes=79387
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x52fc00, Window_GadgetNotify_Slider_SetGradientColors, 0x531850, 0x531c60
+ provider-specific; not original source
+void * __cdecl FUN_00433790(int *param_1)
+{
+  int iVar1;
+  void *this;
+  undefined4 local_10;
+  undefined4 local_c;
+  undefined4 local_8;
+  undefined4 local_4;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0,0,s_STATISTIKFILIALBILANZ_spr_00565b30,&LAB_004adc80);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  FUN_00531c60(this,0x88e,0x178,0x55,0x25,0x10,0x10);
+  FUN_00531c60(this,0x88f,0x178,0x6e,0x25,0x10,0x10);
+  FUN_00531c60(this,0x890,0x178,0xa1,0x25,0x10,0x10);
+  FUN_00531c60(this,0x891,0x178,0x87,0x25,0x10,0x10);
+  FUN_00531c60(this,0x892,0x178,0xb9,0x25,0x10,0x10);
+  FUN_00531c60(this,0x893,0x178,0xd2,0x25,0x10,0x10);
+  FUN_00531c60(this,0x894,0x178,0xeb,0x25,0x10,0x10);
+  FUN_00531c60(this,0x895,0x178,0x104,0x25,0x10,0x10);
+  FUN_00531c60(this,0x896,0x178,0x11d,0x25,0x10,0x10);
+  FUN_00531c60(this,0x897,0x178,0x136,0x25,0x10,0x10);
+  FUN_00531c60(this,0x898,0x1a2,0x55,0x25,0x10,0x10);
+  FUN_00531c60(this,0x899,0x1a2,0x6e,0x25,0x10,0x10);
+  FUN_00531c60(this,0x89a,0x1a2,0x87,0x25,0x10,0x10);
+========================================================================================
+0x422900 layer=[3] indeg=1 bytes=18000
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x52fc00, Window_GadgetNotify_Slider_SetGradientColors, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_00422900(int *param_1)
+{
+  int iVar1;
+  void *this;
+  undefined4 local_10;
+  undefined4 local_c;
+  undefined4 local_8;
+  undefined4 local_4;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_0049e6d0);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x460,99,0x13b,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(this,0x461,99,0x13b,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(this,0x462,99,0x13b,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(this,0x463,99,0x13b,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(this,0x464,99,0x13b,s_BEWERTUNG__04_spr_00563fc8);
+  UI_AddSprite(this,0x465,99,0x13b,s_BEWERTUNG__05_spr_00563fb4);
+  UI_AddSprite(this,0x466,99,0x13b,s_BEWERTUNG__06_spr_00563fa0);
+  UI_AddSprite(this,0x467,99,0x13b,s_BEWERTUNG__07_spr_00563f8c);
+  UI_AddSprite(this,0x468,99,0x13b,s_BEWERTUNG__08_spr_00563f78);
+  UI_AddSprite(this,0x469,99,0x13b,s_BEWERTUNG__09_spr_00563f64);
+  UI_AddSprite(this,0x46a,99,0x13b,s_BEWERTUNG__10_spr_00563f50);
+  UI_AddSprite(this,0x46b,99,0x13b,s_BEWERTUNG__11_spr_00563f3c);
+  UI_AddSprite(this,0x46c,99,0x13b,s_BEWERTUNG__12_spr_00563f28);
+========================================================================================
+0x44b5a0 layer=[3] indeg=1 bytes=17529
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x52fc00, Window_GadgetNotify_Slider_SetGradientColors, 0x531850, 0x531c60
+ provider-specific; not original source
+void * __cdecl FUN_0044b5a0(int *param_1)
+{
+  int iVar1;
+  void *this;
+  undefined4 local_10;
+  undefined4 local_c;
+  undefined4 local_8;
+  undefined4 local_4;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_004b9b40);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x408,0x27,0x129,s_TRENNZEILE_spr_00563eb8);
+  UI_AddSprite(this,0x500,0x27,0xf2,s_TRENNZEILE_spr_00563eb8);
+  iVar1 = UI_AddText(this,0x501,0x2d,0xfd,s_VERDANA8_fnt_00563e98,DAT_0058281c);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x501,0);
+    FUN_0052f9d0(this,0x501,0,0x5a,0,0);
+  }
+  iVar1 = UI_AddText(this,0x502,0x2d,0x116,s_VERDANA8_fnt_00563e98,s__Pizza_Tingeltangel_0056510c);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x502,0);
+    FUN_0052f9d0(this,0x502,0,0x87,0,0);
+  }
+  UI_AddSprite(this,0x503,0xb5,0x104,s_LOGORAHMEN_00_spr_005650f8);
+========================================================================================
+0x411b90 layer=[3] indeg=1 bytes=17213
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x52fc00, Window_GadgetNotify_Slider_SetGradientColors, 0x531850
+ provider-specific; not original source
+void * __cdecl FUN_00411b90(int *param_1)
+{
+  int iVar1;
+  void *this;
+  undefined4 local_10;
+  undefined4 local_c;
+  undefined4 local_8;
+  undefined4 local_4;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_00492d90);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x439,0x2e,0x23,s_UEBMANA_spr_005642dc);
+  UI_AddSprite(this,0x468,99,0x13b,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(this,0x469,99,0x13b,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(this,0x46a,99,0x13b,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(this,0x46b,99,0x13b,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(this,0x46c,99,0x13b,s_BEWERTUNG__04_spr_00563fc8);
+  UI_AddSprite(this,0x46d,99,0x13b,s_BEWERTUNG__05_spr_00563fb4);
+  UI_AddSprite(this,0x46e,99,0x13b,s_BEWERTUNG__06_spr_00563fa0);
+  UI_AddSprite(this,0x46f,99,0x13b,s_BEWERTUNG__07_spr_00563f8c);
+  UI_AddSprite(this,0x470,99,0x13b,s_BEWERTUNG__08_spr_00563f78);
+  UI_AddSprite(this,0x471,99,0x13b,s_BEWERTUNG__09_spr_00563f64);
+  UI_AddSprite(this,0x472,99,0x13b,s_BEWERTUNG__10_spr_00563f50);
+  UI_AddSprite(this,0x473,99,0x13b,s_BEWERTUNG__11_spr_00563f3c);
+========================================================================================
+0x445c80 layer=[3] indeg=1 bytes=16906
+calls: 0x523bb0, 0x528040, 0x52f5b0, 0x52f850, Window_GadgetNotify_Text_SetTextColor, Window_GadgetNotify_Text_SetLayout, 0x52fc00, Window_GadgetNotify_Slider_SetGradientColors, 0x531850, 0x531c60
+ provider-specific; not original source
+void * __cdecl FUN_00445c80(int *param_1)
+{
+  int iVar1;
+  void *this;
+  undefined4 local_10;
+  undefined4 local_c;
+  undefined4 local_8;
+  undefined4 local_4;
+  iVar1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_004b83a0);
+  *param_1 = iVar1;
+  this = (void *)UI_FindWindowByID(DAT_0057c5e0,iVar1,(int *)0x0);
+  if (this == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(this,0x408,0x27,0x129,s_TRENNZEILE_spr_00563eb8);
+  iVar1 = UI_AddText(this,0x501,0x2c,5,s_TIMESFONT_fnt_00563ea8,DAT_00582728);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x501,0);
+    FUN_0052f9d0(this,0x501,2,0xbe,0,0);
+  }
+  UI_AddSprite(this,0x519,0x27,0xf2,s_TRENNZEILE_spr_00563eb8);
+  iVar1 = UI_AddText(this,0x51a,0x2d,0xfd,s_VERDANA8_fnt_00563e98,DAT_0058281c);
+  if (iVar1 != 0) {
+    FUN_0052f910(this,0x51a,0);
+    FUN_0052f9d0(this,0x51a,0,0x5a,0,0);
+  }
+  iVar1 = UI_AddText(this,0x51b,0x2d,0x116,s_VERDANA8_fnt_00563e98,s__Pizza_Tingeltangel_0056510c);

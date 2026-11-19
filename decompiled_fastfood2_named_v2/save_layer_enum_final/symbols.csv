@@ -1,0 +1,6 @@
+address,name,confidence,evidence
+0x4a13e0,SaveGame_NextFreeSlot,high,Finds the first missing save_%03d.piz slot.
+0x4a1450,SaveGame_AnyExist,high,Checks for save_*.piz or auto_*.piz files.
+0x4a14c0,SaveGame_CompareTime,high,Sorts save entries by SYSTEMTIME year/month/day/hour/minute/second.
+0x4a1570,SaveGame_ReadHeaderEntry,high,"Reads 0xF0 bytes from a .piz, validates magic 0x13738317 and builds save-list text."
+0x4a1940,SaveGame_Scan,high,Adds the autosave entry and scans manual saves into the save list.

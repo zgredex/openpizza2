@@ -1,0 +1,1267 @@
+{
+ "0x504980": {
+  "name": "WorldObject_Delete",
+  "used_by": [
+   {
+    "class": "WorldObject",
+    "slot": 0,
+    "vtable": "0x55c668"
+   }
+  ]
+ },
+ "0x51f2b0": {
+  "name": "UI_ImageElement_vfunc1",
+  "used_by": [
+   {
+    "class": "UI_ImageElement",
+    "slot": 1,
+    "vtable": "0x55c704"
+   }
+  ]
+ },
+ "0x51f310": {
+  "name": "UI_ImageElement_vfunc3",
+  "used_by": [
+   {
+    "class": "UI_ImageElement",
+    "slot": 3,
+    "vtable": "0x55c704"
+   }
+  ]
+ },
+ "0x51f980": {
+  "name": "UI_ImageElement_vfunc4",
+  "used_by": [
+   {
+    "class": "UI_ImageElement",
+    "slot": 4,
+    "vtable": "0x55c704"
+   }
+  ]
+ },
+ "0x51f9f0": {
+  "name": "UI_ImageElement_vfunc2",
+  "used_by": [
+   {
+    "class": "UI_ImageElement",
+    "slot": 2,
+    "vtable": "0x55c704"
+   }
+  ]
+ },
+ "0x51fa60": {
+  "name": "UI_Child_ForwardToVFunc4",
+  "used_by": [
+   {
+    "class": "UI_ImageElement",
+    "slot": 5,
+    "vtable": "0x55c704"
+   },
+   {
+    "class": "UI_Child",
+    "slot": 5,
+    "vtable": "0x55c720"
+   },
+   {
+    "class": "UI_Viewport",
+    "slot": 5,
+    "vtable": "0x55c73c"
+   },
+   {
+    "class": "UI_LabelElement",
+    "slot": 5,
+    "vtable": "0x55c758"
+   },
+   {
+    "class": "MovieWindow",
+    "slot": 5,
+    "vtable": "0x55c7b0"
+   },
+   {
+    "class": "UI_TextElement",
+    "slot": 5,
+    "vtable": "0x55c7cc"
+   },
+   {
+    "class": "UI_ButtonElement",
+    "slot": 5,
+    "vtable": "0x55c7e8"
+   }
+  ]
+ },
+ "0x520fb0": {
+  "name": "UI_Child_InvokeCallback",
+  "used_by": [
+   {
+    "class": "UI_ImageElement",
+    "slot": 6,
+    "vtable": "0x55c704"
+   },
+   {
+    "class": "UI_Child",
+    "slot": 6,
+    "vtable": "0x55c720"
+   },
+   {
+    "class": "UI_LabelElement",
+    "slot": 6,
+    "vtable": "0x55c758"
+   },
+   {
+    "class": "UI_Slider",
+    "slot": 6,
+    "vtable": "0x55c78c"
+   },
+   {
+    "class": "UI_TextElement",
+    "slot": 6,
+    "vtable": "0x55c7cc"
+   },
+   {
+    "class": "UI_ButtonElement",
+    "slot": 6,
+    "vtable": "0x55c7e8"
+   }
+  ]
+ },
+ "0x520ff0": {
+  "name": "UI_Child_ReturnTrue",
+  "used_by": [
+   {
+    "class": "UI_Child",
+    "slot": 4,
+    "vtable": "0x55c720"
+   },
+   {
+    "class": "UI_LabelElement",
+    "slot": 4,
+    "vtable": "0x55c758"
+   },
+   {
+    "class": "UI_TextElement",
+    "slot": 4,
+    "vtable": "0x55c7cc"
+   },
+   {
+    "class": "UI_ButtonElement",
+    "slot": 4,
+    "vtable": "0x55c7e8"
+   }
+  ]
+ },
+ "0x521630": {
+  "name": "UI_Viewport_vfunc4",
+  "used_by": [
+   {
+    "class": "UI_Viewport",
+    "slot": 4,
+    "vtable": "0x55c73c"
+   }
+  ]
+ },
+ "0x521b00": {
+  "name": "UI_Viewport_GetTypeId",
+  "used_by": [
+   {
+    "class": "UI_Viewport",
+    "slot": 2,
+    "vtable": "0x55c73c"
+   }
+  ]
+ },
+ "0x521e50": {
+  "name": "UI_Viewport_vfunc6",
+  "used_by": [
+   {
+    "class": "UI_Viewport",
+    "slot": 6,
+    "vtable": "0x55c73c"
+   }
+  ]
+ },
+ "0x522250": {
+  "name": "UI_LabelElement_vfunc1",
+  "used_by": [
+   {
+    "class": "UI_LabelElement",
+    "slot": 1,
+    "vtable": "0x55c758"
+   }
+  ]
+ },
+ "0x522360": {
+  "name": "UI_LabelElement_vfunc3",
+  "used_by": [
+   {
+    "class": "UI_LabelElement",
+    "slot": 3,
+    "vtable": "0x55c758"
+   }
+  ]
+ },
+ "0x522cb0": {
+  "name": "UI_LabelElement_vfunc2",
+  "used_by": [
+   {
+    "class": "UI_LabelElement",
+    "slot": 2,
+    "vtable": "0x55c758"
+   }
+  ]
+ },
+ "0x529370": {
+  "name": "UI_Slider_vfunc1",
+  "used_by": [
+   {
+    "class": "UI_Slider",
+    "slot": 1,
+    "vtable": "0x55c78c"
+   }
+  ]
+ },
+ "0x5299c0": {
+  "name": "UI_Slider_vfunc3",
+  "used_by": [
+   {
+    "class": "UI_Slider",
+    "slot": 3,
+    "vtable": "0x55c78c"
+   }
+  ]
+ },
+ "0x52ab00": {
+  "name": "UI_Slider_vfunc4",
+  "used_by": [
+   {
+    "class": "UI_Slider",
+    "slot": 4,
+    "vtable": "0x55c78c"
+   }
+  ]
+ },
+ "0x52ac40": {
+  "name": "UI_Slider_ReturnTrue",
+  "used_by": [
+   {
+    "class": "UI_Slider",
+    "slot": 5,
+    "vtable": "0x55c78c"
+   }
+  ]
+ },
+ "0x52b4c0": {
+  "name": "MovieWindow_vfunc3",
+  "used_by": [
+   {
+    "class": "MovieWindow",
+    "slot": 3,
+    "vtable": "0x55c7b0"
+   }
+  ]
+ },
+ "0x52b9e0": {
+  "name": "MovieWindow_IsPlaying",
+  "used_by": [
+   {
+    "class": "MovieWindow",
+    "slot": 4,
+    "vtable": "0x55c7b0"
+   }
+  ]
+ },
+ "0x52ba30": {
+  "name": "MovieWindow_vfunc2",
+  "used_by": [
+   {
+    "class": "MovieWindow",
+    "slot": 2,
+    "vtable": "0x55c7b0"
+   }
+  ]
+ },
+ "0x52be20": {
+  "name": "UI_TextElement_vfunc1",
+  "used_by": [
+   {
+    "class": "UI_TextElement",
+    "slot": 1,
+    "vtable": "0x55c7cc"
+   }
+  ]
+ },
+ "0x52bfe0": {
+  "name": "UI_TextElement_vfunc3",
+  "used_by": [
+   {
+    "class": "UI_TextElement",
+    "slot": 3,
+    "vtable": "0x55c7cc"
+   }
+  ]
+ },
+ "0x52c470": {
+  "name": "UI_TextElement_vfunc2",
+  "used_by": [
+   {
+    "class": "UI_TextElement",
+    "slot": 2,
+    "vtable": "0x55c7cc"
+   }
+  ]
+ },
+ "0x52d750": {
+  "name": "UI_ButtonElement_vfunc1",
+  "used_by": [
+   {
+    "class": "UI_ButtonElement",
+    "slot": 1,
+    "vtable": "0x55c7e8"
+   }
+  ]
+ },
+ "0x52dac0": {
+  "name": "UI_ButtonElement_vfunc3",
+  "used_by": [
+   {
+    "class": "UI_ButtonElement",
+    "slot": 3,
+    "vtable": "0x55c7e8"
+   }
+  ]
+ },
+ "0x52e3a0": {
+  "name": "UI_ButtonElement_vfunc2",
+  "used_by": [
+   {
+    "class": "UI_ButtonElement",
+    "slot": 2,
+    "vtable": "0x55c7e8"
+   }
+  ]
+ },
+ "0x53ef60": {
+  "name": "RefCount_AddRef",
+  "used_by": [
+   {
+    "class": "SoundDevice",
+    "slot": 0,
+    "vtable": "0x55c830"
+   },
+   {
+    "class": "SoundBufferBase",
+    "slot": 0,
+    "vtable": "0x55c840"
+   },
+   {
+    "class": "SoundSample",
+    "slot": 0,
+    "vtable": "0x55c850"
+   },
+   {
+    "class": "SoundPakManagerBase",
+    "slot": 0,
+    "vtable": "0x55c864"
+   },
+   {
+    "class": "SoundBuffer",
+    "slot": 0,
+    "vtable": "0x55c874"
+   },
+   {
+    "class": "SoundStreamBuffer",
+    "slot": 0,
+    "vtable": "0x55c8b0"
+   },
+   {
+    "class": "SoundStreamBuffer3D",
+    "slot": 0,
+    "vtable": "0x55c8c8"
+   },
+   {
+    "class": "SoundVoice",
+    "slot": 0,
+    "vtable": "0x55c8e0"
+   },
+   {
+    "class": "ListContainer",
+    "slot": 0,
+    "vtable": "0x55cb04"
+   },
+   {
+    "class": "SoundBufferAux",
+    "slot": 0,
+    "vtable": "0x55cb14"
+   }
+  ]
+ },
+ "0x53efe0": {
+  "name": "SoundBufferBase_Delete",
+  "used_by": [
+   {
+    "class": "SoundBufferBase",
+    "slot": 3,
+    "vtable": "0x55c840"
+   }
+  ]
+ },
+ "0x540c80": {
+  "name": "SoundBuffer_vfunc4",
+  "used_by": [
+   {
+    "class": "SoundBuffer",
+    "slot": 4,
+    "vtable": "0x55c874"
+   }
+  ]
+ },
+ "0x541750": {
+  "name": "SoundStreamBuffer_vfunc4_ForwardQuery",
+  "used_by": [
+   {
+    "class": "SoundStreamBuffer",
+    "slot": 4,
+    "vtable": "0x55c8b0"
+   },
+   {
+    "class": "SoundStreamBuffer3D",
+    "slot": 4,
+    "vtable": "0x55c8c8"
+   }
+  ]
+ },
+ "0x542e30": {
+  "name": "ComIDirectSoundBuffer_vfunc0",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 0,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x542e50": {
+  "name": "ComIDirectSoundBuffer_vfunc1",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 1,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x542e80": {
+  "name": "ComIDirectSoundBuffer_vfunc2",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 2,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x543080": {
+  "name": "ComIDirectSoundBuffer_vfunc4",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 4,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x543170": {
+  "name": "ComIDirectSoundBuffer_vfunc5",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 5,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x543240": {
+  "name": "ComIDirectSoundBuffer_vfunc6",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 6,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x543430": {
+  "name": "ComIDirectSoundBuffer_vfunc26",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 26,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x543500": {
+  "name": "ComIDirectSoundBuffer_vfunc28",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 28,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x5435c0": {
+  "name": "ComIDirectSoundBuffer_vfunc27",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 27,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x543700": {
+  "name": "ComIDirectSoundBuffer_vfunc29",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 29,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x543810": {
+  "name": "ComIDirectSoundBuffer_vfunc30",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 30,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x543890": {
+  "name": "ComIDirectSoundBuffer_vfunc31",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 31,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x543960": {
+  "name": "ComIDirectSoundBuffer_vfunc32",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 32,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x543a50": {
+  "name": "ComIDirectSoundBuffer_vfunc33",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 33,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x543b20": {
+  "name": "ComIDirectSoundBuffer_vfunc34",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 34,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x544030": {
+  "name": "ComIDirectSoundBuffer_vfunc38",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 38,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x544110": {
+  "name": "ComIDirectSoundBuffer_vfunc45",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 45,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x544180": {
+  "name": "ComIDirectSoundBuffer_vfunc46",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 46,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x544260": {
+  "name": "ComIDirectSoundBuffer_vfunc44",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 44,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x544480": {
+  "name": "ComIDirectSoundBuffer_vfunc42",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 42,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x544700": {
+  "name": "COM_E_NOTIMPL_Ret4",
+  "used_by": [
+   {
+    "class": "SoundStreamBuffer",
+    "slot": 5,
+    "vtable": "0x55c8b0"
+   },
+   {
+    "class": "SoundStreamBuffer3D",
+    "slot": 5,
+    "vtable": "0x55c8c8"
+   },
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 50,
+    "vtable": "0x55c8f8"
+   },
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 51,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x544710": {
+  "name": "COM_E_NOTIMPL_Ret12",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 43,
+    "vtable": "0x55c8f8"
+   },
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 48,
+    "vtable": "0x55c8f8"
+   },
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 54,
+    "vtable": "0x55c8f8"
+   },
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 56,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x544720": {
+  "name": "COM_E_NOTIMPL_Ret8",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 47,
+    "vtable": "0x55c8f8"
+   },
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 49,
+    "vtable": "0x55c8f8"
+   },
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 52,
+    "vtable": "0x55c8f8"
+   },
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 53,
+    "vtable": "0x55c8f8"
+   },
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 55,
+    "vtable": "0x55c8f8"
+   },
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 57,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x544730": {
+  "name": "ComIDirectSoundBuffer_vfunc58_GetError",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 58,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x545a10": {
+  "name": "ComIDirectSoundBuffer_vfunc14",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 14,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x545bd0": {
+  "name": "ComIDirectSoundBuffer_vfunc15",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 15,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x545ca0": {
+  "name": "ComIDirectSoundBuffer_vfunc16",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 16,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x5465a0": {
+  "name": "ComIDirectSoundBuffer_vfunc39",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 39,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x5467c0": {
+  "name": "ComIDirectSoundBuffer_vfunc40",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 40,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x546950": {
+  "name": "ComIDirectSoundBuffer_vfunc22",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 22,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x546a40": {
+  "name": "ComIDirectSoundBuffer_vfunc23",
+  "used_by": [
+   {
+    "class": "ComIDirectSoundBuffer",
+    "slot": 23,
+    "vtable": "0x55c8f8"
+   }
+  ]
+ },
+ "0x546f90": {
+  "name": "ComIDirectSound_AdjustorThunk0",
+  "used_by": [
+   {
+    "class": "ComIDirectSound",
+    "slot": 0,
+    "vtable": "0x55c9f8"
+   }
+  ]
+ },
+ "0x546fa0": {
+  "name": "ComIDirectSound_AdjustorThunk1",
+  "used_by": [
+   {
+    "class": "ComIDirectSound",
+    "slot": 1,
+    "vtable": "0x55c9f8"
+   }
+  ]
+ },
+ "0x546fb0": {
+  "name": "ComInterface_55C8F4_AdjustorThunk0",
+  "used_by": [
+   {
+    "class": "ComInterface_55C8F4",
+    "slot": 0,
+    "vtable": "0x55c8f4"
+   }
+  ]
+ },
+ "0x546fc0": {
+  "name": "ComInterface_55C9F4_AdjustorThunk0",
+  "used_by": [
+   {
+    "class": "ComInterface_55C9F4",
+    "slot": 0,
+    "vtable": "0x55c9f4"
+   }
+  ]
+ },
+ "0x54cc6e": {
+  "name": "CRT_Ifstream_ScalarDeletingDestructor",
+  "used_by": [
+   {
+    "class": "CRT_Ifstream",
+    "slot": 0,
+    "vtable": "0x55cc2c"
+   }
+  ]
+ },
+ "0x54cf92": {
+  "name": "CRT_Filebuf_vfunc3",
+  "used_by": [
+   {
+    "class": "CRT_Filebuf",
+    "slot": 3,
+    "vtable": "0x55cc54"
+   }
+  ]
+ },
+ "0x54d115": {
+  "name": "CRT_Ofstream_ScalarDeletingDestructor",
+  "used_by": [
+   {
+    "class": "CRT_Ofstream",
+    "slot": 0,
+    "vtable": "0x55cc84"
+   }
+  ]
+ },
+ "0x54d3e3": {
+  "name": "CRT_Istream_ScalarDeletingDestructor",
+  "used_by": [
+   {
+    "class": "CRT_Istream",
+    "slot": 0,
+    "vtable": "0x55cc94"
+   }
+  ]
+ },
+ "0x54d7be": {
+  "name": "CRT_Ostream_ScalarDeletingDestructor",
+  "used_by": [
+   {
+    "class": "CRT_Ostream",
+    "slot": 0,
+    "vtable": "0x55cca4"
+   }
+  ]
+ },
+ "0x54db51": {
+  "name": "CRT_Streambuf_SetBuffer",
+  "used_by": [
+   {
+    "class": "CRT_Streambuf",
+    "slot": 2,
+    "vtable": "0x55ccc8"
+   }
+  ]
+ },
+ "0x54dd04": {
+  "name": "CRT_Streambuf_ReturnMinusOne",
+  "used_by": [
+   {
+    "class": "CRT_Streambuf",
+    "slot": 3,
+    "vtable": "0x55ccc8"
+   }
+  ]
+ },
+ "0x54dd0a": {
+  "name": "CRT_Streambuf_ForwardToVFunc3",
+  "used_by": [
+   {
+    "class": "CRT_Filebuf",
+    "slot": 4,
+    "vtable": "0x55cc54"
+   },
+   {
+    "class": "CRT_Streambuf",
+    "slot": 4,
+    "vtable": "0x55ccc8"
+   }
+  ]
+ },
+ "0x54fb1e": {
+  "name": "_purecall",
+  "used_by": [
+   {
+    "class": "UI_Child",
+    "slot": 1,
+    "vtable": "0x55c720"
+   },
+   {
+    "class": "UI_Child",
+    "slot": 2,
+    "vtable": "0x55c720"
+   },
+   {
+    "class": "UI_Child",
+    "slot": 3,
+    "vtable": "0x55c720"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 0,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 1,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 2,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 3,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 4,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 5,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 6,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 7,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 8,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 9,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 10,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 11,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 12,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 13,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 14,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 15,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 16,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 17,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 18,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 19,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 20,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 21,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 22,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 23,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 24,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 25,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 26,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 27,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 28,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 29,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 30,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 31,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 32,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 33,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 34,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 35,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 36,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 37,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 38,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 39,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 40,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 41,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 42,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 43,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 44,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 45,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 46,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 47,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 48,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 49,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 50,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 51,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 52,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 53,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 54,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 55,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 56,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 57,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 58,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 59,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 60,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 61,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "ComIDirectSound3DListener",
+    "slot": 62,
+    "vtable": "0x55ca08"
+   },
+   {
+    "class": "CRT_Streambuf",
+    "slot": 7,
+    "vtable": "0x55ccc8"
+   },
+   {
+    "class": "CRT_Streambuf",
+    "slot": 8,
+    "vtable": "0x55ccc8"
+   }
+  ]
+ }
+}

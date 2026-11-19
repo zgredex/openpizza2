@@ -1,0 +1,224 @@
+{
+ "target": {
+  "path": "game/fastfood2.exe",
+  "sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd"
+ },
+ "tables": [
+  {
+   "address": "0x005677f8",
+   "count": 8,
+   "label": "group baseline A",
+   "values": [
+    0,
+    60,
+    0,
+    40,
+    90,
+    100,
+    80,
+    20
+   ],
+   "used_by": "Branch_ComputeBuildingRating"
+  },
+  {
+   "address": "0x00567818",
+   "count": 8,
+   "label": "group baseline B",
+   "values": [
+    30,
+    60,
+    70,
+    40,
+    90,
+    100,
+    80,
+    50
+   ],
+   "used_by": "Branch_ComputeBuildingRating"
+  },
+  {
+   "address": "0x00567838",
+   "count": 8,
+   "label": "group threshold A",
+   "values": [
+    0,
+    10,
+    20,
+    30,
+    90,
+    80,
+    40,
+    50
+   ],
+   "used_by": "Rating_ComputeBranchScores"
+  },
+  {
+   "address": "0x00567858",
+   "count": 8,
+   "label": "group threshold B",
+   "values": [
+    0,
+    40,
+    30,
+    20,
+    80,
+    90,
+    50,
+    60
+   ],
+   "used_by": "Rating_ComputeBranchScores"
+  },
+  {
+   "address": "0x00567878",
+   "count": 8,
+   "label": "group threshold C",
+   "values": [
+    30,
+    50,
+    70,
+    40,
+    90,
+    100,
+    80,
+    60
+   ],
+   "used_by": "Rating_ComputeBranchScores"
+  },
+  {
+   "address": "0x00567898",
+   "count": 8,
+   "label": "group threshold D",
+   "values": [
+    25,
+    20,
+    35,
+    15,
+    45,
+    50,
+    40,
+    30
+   ],
+   "used_by": "Rating_ComputeBranchScores"
+  },
+  {
+   "address": "0x005678b8",
+   "count": 8,
+   "label": "group weight A",
+   "values": [
+    75,
+    60,
+    45,
+    30,
+    15,
+    0,
+    0,
+    100
+   ],
+   "used_by": "Rating_ComputeBranchScores"
+  },
+  {
+   "address": "0x005678d8",
+   "count": 8,
+   "label": "group weight B",
+   "values": [
+    15,
+    30,
+    50,
+    35,
+    20,
+    25,
+    40,
+    45
+   ],
+   "used_by": "Rating_ComputeBranchScores"
+  },
+  {
+   "address": "0x005678f8",
+   "count": 8,
+   "label": "group divisor",
+   "values": [
+    7,
+    5,
+    5,
+    6,
+    8,
+    8,
+    7,
+    6
+   ],
+   "used_by": "Rating_ComputeBranchScores"
+  },
+  {
+   "address": "0x005675a0",
+   "count": 10,
+   "label": "city construction time base",
+   "values": [
+    35,
+    30,
+    23,
+    15,
+    12,
+    8,
+    65,
+    75,
+    85,
+    70
+   ],
+   "used_by": "Branch_AdvanceWeekStatistics"
+  },
+  {
+   "address": "0x005675c8",
+   "count": 10,
+   "label": "city table B (unresolved)",
+   "values": [
+    95,
+    100,
+    90,
+    80,
+    80,
+    85,
+    95,
+    90,
+    100,
+    70
+   ],
+   "used_by": "unknown"
+  },
+  {
+   "address": "0x005675f0",
+   "count": 10,
+   "label": "city table C (unresolved)",
+   "values": [
+    65,
+    75,
+    85,
+    75,
+    80,
+    65,
+    95,
+    100,
+    90,
+    70
+   ],
+   "used_by": "unknown"
+  },
+  {
+   "address": "0x005675ac",
+   "count": 10,
+   "label": "city service level divisor",
+   "values": [
+    15,
+    12,
+    8,
+    65,
+    75,
+    85,
+    70,
+    95,
+    100,
+    90
+   ],
+   "used_by": "City_ComputeServiceLevel"
+  }
+ ]
+}

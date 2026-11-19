@@ -1,0 +1,105 @@
+// rea decompile_all
+// name: SubMenu_UpdateButtonStatesVariant2
+// address: 0x4cefe0
+// body: available
+// range: 0x4cefe0-0x4cf377 inclusive
+// non_contiguous: false
+// provider: Ghidra 12.2 (ghidra)
+// analysis_profile: aae5fcbbec95ac3047ec86f28609da356814b1c85770f2c09803aad3607b988d
+// limitations: The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.; Ghidra Program checkpoint mode is disabled: closing discards metadata edits; original executable bytes are unchanged. For stock ELF/PE/Mach-O on Linux/macOS, set REA_GHIDRA_CHECKPOINT_DIR to a private absolute directory before starting REA (restart MCP after changing its startup environment).; Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; This session uses Ghidra 12.2. The bridge is verified against 12.1.4; other 12.x (>=12.1) builds are accepted and the observed version is reported.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+void __cdecl SubMenu_UpdateButtonStatesVariant2(void *param_1)
+
+{
+  int iVar1;
+  int iVar2;
+  int iVar3;
+  undefined4 *puVar4;
+  int iVar5;
+  uint uVar6;
+  
+                    /* Updates the menu-mode-2 submenu button group. */
+  iVar1 = *(int *)(DAT_0057c670 + 0x298 + *(int *)(DAT_0057c670 + 0x290) * 4);
+  iVar2 = IDMap_Lookup((void *)(DAT_0057c670 + 4),*(int *)(DAT_0057c670 + 0x2f4),(int *)0x0);
+  iVar3 = Game_GetCurrentPlayerCompanyName(DAT_0057c670);
+  iVar2 = *(int *)(iVar2 + 0xc20 + iVar3 * 4);
+  UI_Group_ClearAll((int)param_1);
+  UI_Group_Create(param_1,0,10,0x3f4);
+  Window_GadgetNotify_Button_SetState(param_1,0x3f4,(uint)(iVar1 == 1));
+  Array_ToggleObjectActive(param_1,0x3f4,(uint)(iVar1 == 1));
+  Window_GadgetNotify_Button_SetState(param_1,0x3fe,(uint)(iVar1 == 2));
+  Array_ToggleObjectActive(param_1,0x3fe,(uint)(iVar1 == 2));
+  iVar3 = IDMap_Lookup((void *)(DAT_0057c670 + 4),*(int *)(DAT_0057c670 + 0x2f4),(int *)0x0);
+  puVar4 = City_CollectBranchBuildings(iVar3);
+  iVar3 = puVar4[5];
+  if (puVar4 != (undefined4 *)0x0) {
+    (**(code **)*puVar4)(1);
+  }
+  iVar5 = IDMap_Lookup((void *)(DAT_0057c670 + 4),*(int *)(DAT_0057c670 + 0x2f4),(int *)0x0);
+  puVar4 = City_CollectBusinessBuildings(iVar5);
+  iVar5 = puVar4[5];
+  if (puVar4 != (undefined4 *)0x0) {
+    (**(code **)*puVar4)(1);
+  }
+  Window_GadgetNotify_Button_SetState(param_1,0x406,(uint)(iVar1 == 0xb));
+  Array_ToggleObjectActive(param_1,0x406,(uint)(iVar1 == 0xb));
+  UI_SetChildVisibleByID(param_1,0x406,(uint)(0 < iVar3 + iVar5));
+  Window_GadgetNotify_Button_SetState(param_1,0x400,(uint)(iVar1 == 4));
+  Array_ToggleObjectActive(param_1,0x400,(uint)(iVar1 == 4));
+  Window_GadgetNotify_Button_SetState(param_1,0x401,(uint)(iVar1 == 5));
+  Array_ToggleObjectActive(param_1,0x401,(uint)(iVar1 == 5));
+  UI_SetChildVisibleByID(param_1,0x401,(uint)(0 < iVar2));
+  iVar3 = Game_GetPlayerFieldC20
+                    (*(int *)(DAT_0057c670 + 0x200 + *(int *)(DAT_0057c670 + 0x2ec) * 4));
+  if (iVar3 < 3) {
+    Window_GadgetNotify_Button_SetState(param_1,0x3f9,0);
+    UI_RemoveObjectByKey(param_1,0x3f9);
+  }
+  else {
+    Window_GadgetNotify_Button_SetState(param_1,0x3f9,(uint)(iVar1 == 6));
+    Array_ToggleObjectActive(param_1,0x3f9,(uint)(iVar1 == 6));
+    UI_SetChildVisibleByID(param_1,0x3f9,(uint)(0 < iVar2));
+  }
+  if ((*(int *)(DAT_0057c670 + 0x218) == 0) ||
+     (*(int *)(*(int *)(DAT_0057c670 + 0x218) + 4) != 0x1c)) {
+    UI_SetChildVisibleByID(param_1,0x403,0);
+    UI_SetChildVisibleByID(param_1,0x405,0);
+    UI_SetChildVisibleByID(param_1,0x402,0);
+    UI_SetChildVisibleByID(param_1,0x3fd,0);
+    return;
+  }
+  Window_GadgetNotify_Button_SetState(param_1,0x403,(uint)(iVar1 == 7));
+  Array_ToggleObjectActive(param_1,0x403,(uint)(iVar1 == 7));
+  if (*(int *)(DAT_0057c670 + 0x2e4) == 0x14) {
+    uVar6 = 0;
+  }
+  else {
+    uVar6 = (uint)(3 < iVar2);
+  }
+  UI_SetChildVisibleByID(param_1,0x403,uVar6);
+  Window_GadgetNotify_Button_SetState(param_1,0x405,(uint)(iVar1 == 8));
+  Array_ToggleObjectActive(param_1,0x405,(uint)(iVar1 == 8));
+  if (*(int *)(DAT_0057c670 + 0x2e4) == 0x14) {
+    uVar6 = 0;
+  }
+  else {
+    uVar6 = (uint)(1 < iVar2);
+  }
+  UI_SetChildVisibleByID(param_1,0x405,uVar6);
+  Window_GadgetNotify_Button_SetState(param_1,0x402,(uint)(iVar1 == 9));
+  Array_ToggleObjectActive(param_1,0x402,(uint)(iVar1 == 9));
+  if ((*(int *)(DAT_0057c670 + 0x2e4) == 0x14) ||
+     (*(int *)(*(int *)(DAT_0057c670 + 0x200 + *(int *)(DAT_0057c670 + 0x2ec) * 4) + 0x1d8) == 0)) {
+    uVar6 = 0;
+  }
+  else {
+    uVar6 = (uint)(iVar2 < 6);
+  }
+  UI_SetChildVisibleByID(param_1,0x402,uVar6);
+  Window_GadgetNotify_Button_SetState(param_1,0x3fd,(uint)(iVar1 == 10));
+  UI_SetChildVisibleByID(param_1,0x3fd,1);
+  return;
+}
+

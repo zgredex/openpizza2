@@ -1,0 +1,153 @@
+// rea decompile_all
+// name: Person_EnterBuildingAndWork
+// address: 0x409030
+// body: available
+// range: 0x409030-0x4092e0 inclusive
+// non_contiguous: false
+// provider: Ghidra 12.2 (ghidra)
+// analysis_profile: aae5fcbbec95ac3047ec86f28609da356814b1c85770f2c09803aad3607b988d
+// limitations: The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.; Ghidra Program checkpoint mode is disabled: closing discards metadata edits; original executable bytes are unchanged. For stock ELF/PE/Mach-O on Linux/macOS, set REA_GHIDRA_CHECKPOINT_DIR to a private absolute directory before starting REA (restart MCP after changing its startup environment).; Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; This session uses Ghidra 12.2. The bridge is verified against 12.1.4; other 12.x (>=12.1) builds are accepted and the observed version is reported.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+void Person_EnterBuildingAndWork(int param_1,void *param_2)
+
+{
+  undefined1 uVar1;
+  undefined3 extraout_var;
+  int iVar2;
+  undefined1 unaff_SI;
+  undefined4 unaff_EDI;
+  
+                    /* Enters a building and performs work until finished. */
+  uVar1 = Object_IsVisibleThisFrame((int)param_2);
+  iVar2 = *(int *)((int)param_2 + 0x38);
+  if (iVar2 == 0x1f) {
+    return;
+  }
+  if (CONCAT31(extraout_var,uVar1) == 0) {
+    switch(iVar2) {
+    case 8:
+      if (*(int *)((int)param_2 + 0x30) == 0x1a) {
+        iVar2 = *(int *)((int)param_2 + 0x88) + 0x10;
+        Sound_HandleEvent(DAT_0057ba0c,param_1,0x2c);
+      }
+      else if (*(int *)((int)param_2 + 0x30) == 0x1b) {
+        iVar2 = *(int *)((int)param_2 + 0x88);
+        Sound_HandleEvent(DAT_0057ba0c,param_1,0x22);
+        iVar2 = iVar2 + 8;
+      }
+      else {
+        iVar2 = param_1;
+      }
+      Object_SetState(param_2,0x19);
+      Object_SetFrame5(param_2,10);
+      UI_SetChildRecordVariant(param_2,iVar2);
+      Game_ApplyAreaObjectEvent(param_2,param_1);
+      return;
+    case 0x18:
+      iVar2 = AI_ComputePath(0,0,0,unaff_EDI,unaff_SI);
+      if (iVar2 != 0) {
+        Person_AdvanceRoute(param_2,iVar2);
+        Object_SetState(param_2,8);
+        return;
+      }
+      break;
+    case 0x23:
+    case 0x24:
+      iVar2 = Object_HasNearbyType20Object((int)param_2);
+      if (iVar2 == 0) {
+        UI_SetListEntryHalfScale((int)param_2);
+        Object_SetState(param_2,0x18);
+        return;
+      }
+      if (*(int *)((int)param_2 + 0x30) == 0x1a) {
+        iVar2 = *(int *)((int)param_2 + 0xa8) + -0x14;
+        *(int *)((int)param_2 + 0xa8) = iVar2;
+      }
+      else {
+        iVar2 = *(int *)((int)param_2 + 0xa8) + -7;
+        *(int *)((int)param_2 + 0xa8) = iVar2;
+      }
+joined_r0x0040925e:
+      if (iVar2 < 0) {
+        *(undefined4 *)((int)param_2 + 0xa8) = 0;
+      }
+      UI_SetChildHeightFromValue((int)param_2);
+      if (*(int *)((int)param_2 + 0xa8) == 0) {
+        UI_ShiftChildRect((int)param_2);
+        Object_SetState(param_2,0x1f);
+        return;
+      }
+    }
+  }
+  else {
+    switch(iVar2) {
+    case 8:
+      if (*(int *)((int)param_2 + 200) == 0) {
+        *(undefined4 *)((int)param_2 + 0x88) = 0xffffffff;
+        return;
+      }
+      *(undefined4 *)((int)param_2 + 0x88) = *(undefined4 *)(*(int *)((int)param_2 + 200) + 0xc);
+      return;
+    case 0x19:
+      iVar2 = *(int *)((int)param_2 + 0x94) + -1;
+      *(int *)((int)param_2 + 0x94) = iVar2;
+      if (iVar2 == 0) {
+        Object_SetFrame5(param_2,-1);
+        UI_DetachChildRecord((int)param_2);
+        Object_SetState(param_2,0x18);
+      }
+      break;
+    case 0x23:
+      iVar2 = Object_HasNearbyType20Object((int)param_2);
+      if (iVar2 != 0) {
+        iVar2 = Person_CanContinuePath((int)param_2);
+        if (iVar2 == 0) {
+          UI_DetachChildRecord((int)param_2);
+        }
+        if (*(int *)((int)param_2 + 0x30) == 0x1a) {
+          iVar2 = *(int *)((int)param_2 + 0xa8) + -0x14;
+          *(int *)((int)param_2 + 0xa8) = iVar2;
+        }
+        else {
+          iVar2 = *(int *)((int)param_2 + 0xa8) + -7;
+          *(int *)((int)param_2 + 0xa8) = iVar2;
+        }
+        if (iVar2 < 0) {
+          *(undefined4 *)((int)param_2 + 0xa8) = 0;
+        }
+        UI_SetChildHeightFromValue((int)param_2);
+        if (*(int *)((int)param_2 + 0xa8) == 0) {
+          UI_ShiftChildRect((int)param_2);
+          Object_SetState(param_2,0x1f);
+          return;
+        }
+        Record_DoublePositionValue((int)param_2);
+        iVar2 = AI_ComputePath(0,0,0,unaff_EDI,unaff_SI);
+        if (iVar2 != 0) {
+          Person_AdvanceRoute(param_2,iVar2);
+          Object_SetState(param_2,0x24);
+          return;
+        }
+      }
+      break;
+    case 0x24:
+      iVar2 = Object_HasNearbyType20Object((int)param_2);
+      if (iVar2 == 0) {
+        return;
+      }
+      if (*(int *)((int)param_2 + 0x30) == 0x1a) {
+        iVar2 = *(int *)((int)param_2 + 0xa8) + -0x14;
+        *(int *)((int)param_2 + 0xa8) = iVar2;
+      }
+      else {
+        iVar2 = *(int *)((int)param_2 + 0xa8) + -7;
+        *(int *)((int)param_2 + 0xa8) = iVar2;
+      }
+      goto joined_r0x0040925e;
+    }
+  }
+  return;
+}
+

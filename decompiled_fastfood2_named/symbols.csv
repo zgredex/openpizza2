@@ -1,0 +1,58 @@
+address,name,confidence,annotated_in_rea,evidence
+0x54fcd4,CRT_Entry,high,no,CRT startup; calls the WinMain-style function with HINSTANCE/cmdline.
+0x403d90,WinMain,high,yes,"Registers class 'Pizza Connection 2', parses command line, plays intros, creates Game and runs GameMain."
+0x4043e0,GameMain,high,yes,"Called by WinMain; resets state, calls GameLoop_DispatchScreens, then shuts screens down."
+0x4052c0,GameLoop_DispatchScreens,high,yes,"Opens mission.txt, loads mission list, waits on exit event and dispatches screen states 0x15-0x1d."
+0x403580,ResetScreenRegistry,high,yes,Clears five 100-entry global screen/UI registries.
+0x404420,SetScreenRects,high,yes,SetRect for 800x600 game viewport and 860x600 side panel.
+0x404760,ShutdownScreens,high,yes,Destroys active screen/window objects once during shutdown.
+0x404500,ResourceManager_Init,high,yes,Creates 0x1ac4-byte resource manager and registers sprites/fonts/pictures/daten aliases.
+0x401970,ResourceManager_Construct,high,no,Resource manager constructor; assigns vtable 0x55c2f0 and creates internal named lock.
+0x402290,Resource_Open,high,yes,Central resource opener (18 callers); resolves archive/filesystem paths.
+0x402750,Resource_Read,high,yes,Reads bytes from opened resource/file object.
+0x402840,Resource_ReadLine,high,yes,Reads a CR/LF-terminated line from an opened resource.
+0x402990,Resource_Close,high,yes,Closes opened resource/file object.
+0x4029d0,Resource_GetSize,high,yes,Returns declared size of opened resource.
+0x402cf0,FileObject_Open,high,yes,Opens resource as file object; assigns vtable 0x55c2f4.
+0x5145a0,Language_LoadLDF,high,yes,"Opens language.ldf through Resource_Open, reads it and builds the string table."
+0x5146d0,Language_MapStrings,high,yes,Bulk-copies parsed LDF string pointers into the globals used by UI strings.
+0x4e64c0,Game_Construct,high,no,WinMain allocates 0x2f890 bytes and calls this; assigns Game vtable 0x55c5d0 and loads animations/sprites.
+0x4ea440,Map_LoadIsodata,high,yes,"Opens Isodaten.idx, reads tile records and builds isometric map objects."
+0x4ce9d0,Movie_Play,medium,no,"Creates a movie window, uses BinkOpen and plays intro_*.bik clips."
+0x537f20,DirectDraw_Init,high,yes,Calls DirectDrawCreate and configures the display.
+0x537230,Window_Construct,high,yes,Constructs window/surface object; assigns vtable 0x55c814.
+0x52ae20,MovieWindow_Construct,high,yes,Bink movie window constructor; assigns vtable 0x55c7b0 and calls BinkOpen.
+0x52e8f0,Dialog_Construct,high,yes,Rectangular dialog constructor; SetRect + vtable 0x55c808.
+0x535fc0,FullscreenImage_Load,high,yes,Loads TGA/fullscreen image resource into a window object.
+0x53c7f0,Sprite_Load,high,yes,Parses .spr sprite resource; assigns vtable 0x55c82c.
+0x523bb0,UI_CreateWindow,high,yes,Creates/registers UI window from sprite resource; 113 call sites.
+0x528040,UI_FindWindowByID,high,yes,Finds UI window object by numeric ID in UI manager table.
+0x52f850,UI_AddText,high,yes,Creates UI text element bound to a font resource; 112 call sites.
+0x52f5b0,UI_AddImage,high,yes,Creates UI image element from sprite resource; 110 call sites.
+0x531850,UI_AddSprite,high,yes,Loads sprite resource and attaches it as UI element.
+0x5475a0,SoundSystem_Init,high,yes,"Initializes DirectSound, opens resources/sound.pak, logs success/failure."
+0x542b50,Sound_CreatePrimaryBuffer,high,yes,Creates DirectSound primary buffer; logs 'creating primary buffer'.
+0x4894d0,Input_MouseHandler,high,yes,Handles mouse movement/buttons and updates cursor/input state.
+0x4058d0,Screenshot_SaveTGA,high,yes,Writes TGA screenshot named pizza_shot%d.tga.
+0x4031b0,RegistryKey_OpenOrCreate,high,yes,Opens or creates game settings registry key.
+0x403200,RegistryKey_ReadValue,high,yes,Reads registry value into newly allocated buffer.
+0x4032a0,RegistryKey_WriteValue,high,yes,Writes registry value for game settings.
+0x54dd78,Mem_Free,high,yes,HeapFree/CRT free wrapper; 732 call sites.
+0x54dd83,String_Format,high,yes,sprintf-like formatting into caller buffer; 172 call sites.
+0x401320,CS_Enter,high,yes,EnterCriticalSection wrapper; records owning thread.
+0x401340,CS_Leave,high,yes,LeaveCriticalSection wrapper.
+0x401480,List_Node_Destroy,high,yes,Destructor for two-pointer list node.
+0x4014b0,List_Add,high,yes,Growable pointer-list append under global lock; 111 call sites.
+0x4017f0,IDMap_Lookup,high,yes,"ID map lookup: direct index below 100000, binary search above."
+0x4034d0,Random_Range,high,yes,Pseudo-random integer in inclusive range; 103 call sites.
+0x476920,Screen_MainMenu,high,yes,Builds main menu from Pe_Startscreen.tga.
+0x474df0,Screen_MissionBriefing,high,yes,Builds mission briefing from PE_MISSIONSBRIEFING_*.tga.
+0x472da0,Screen_FreePlaySetup,high,yes,Builds free-play/new-game setup from Pe_Freies_Spiel.tga.
+0x46dbd0,Screen_CharacterSelect,high,yes,Builds character selection from Pe_Charakterauswahl.tga.
+0x4750b0,Screen_SubStartMenu_A,medium,yes,PE_SUB_STARTSCREEN submenu dispatched in state 0x19.
+0x46e960,Screen_SubStartMenu_B,medium,yes,PE_SUB_STARTSCREEN submenu dispatched in state 0x1b.
+0x430fd0,Screen_StatisticsBalance,high,yes,Builds statistics balance screen from STATISTIKBILANZBACK.spr.
+0x43e430,Screen_StatisticsBackdrop,medium,yes,Builds statistics backdrop from STATISTIKBACKSPRITE.spr.
+0x433790,Screen_StatisticsBranchBalance,high,no,Builds branch balance statistics screen from STATISTIKFILIALBILANZ.spr.
+0x43edb0,Screen_Personnel,high,no,Builds personnel screen from SK_PERSONAL.spr / PERSOPLAN.spr.
+0x46f9c0,Screen_EndResults,high,no,Builds end-result/score screen from Pe_Endergebnis_Punkte.tga.

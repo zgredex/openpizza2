@@ -1,0 +1,12 @@
+/target/
+/berlin_crop.png
+/berlin_draws.json
+/setup_*.exe
+/game/
+/extracted/
+/extracted_png/
+*.png
+__pycache__/
+*.pyc
+.pytest_cache/
+/session-*.md

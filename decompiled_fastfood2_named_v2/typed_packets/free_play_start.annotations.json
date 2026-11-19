@@ -1,0 +1,1599 @@
+{
+  "batch": {
+    "acceptance": [
+      "selected city reaches City_ConstructFromName with instruction evidence",
+      "difficulty reaches Game_GetStartingCapital and company+0x108 with instruction evidence",
+      "population reaches City_Register and City_InitPopulation with instruction evidence",
+      "starting cash reaches company+0x108 with instruction evidence",
+      "ownership percentage fixtures 100% -> 22,000 and 110% -> 24,200 at difficulty 9"
+    ],
+    "entry": "0x4cc640",
+    "name": "free_play_start_to_city",
+    "path": [
+      "Screen_FreePlaySetup 0x472da0",
+      "FreePlaySetup_InitWindow 0x4cbcd0",
+      "FreePlaySetup_ControlCallback 0x4cc640",
+      "GameLoop_DispatchScreens 0x4052c0",
+      "Game_RunSession 0x404af0",
+      "Game_InitScenario 0x481d90",
+      "City_ConstructFromName 0x4d44e0"
+    ]
+  },
+  "fixtures": [
+    {
+      "base_capital": 22000,
+      "difficulty": 9,
+      "expected_capital": 22000,
+      "formula": "base * percent / 100",
+      "id": "free_play_difficulty9_ownership100",
+      "ownership_percent": 100
+    },
+    {
+      "base_capital": 22000,
+      "difficulty": 9,
+      "expected_capital": 24200,
+      "formula": "base * percent / 100",
+      "id": "free_play_difficulty9_ownership110",
+      "ownership_percent": 110
+    }
+  ],
+  "known_gaps": [
+    {
+      "detail": "No named procedure exists in the retained export; callback entry is registered at 0x472daa and recovered by bounded disassembly 0x4cc640-0x4cd72d.",
+      "id": "callback_0x4cc640",
+      "status": "recovered"
+    },
+    {
+      "detail": "GameClock_Construct registers 0x4dd2d0; the worker at 0x4dd300 has no named body in the retained export. Not part of this batch.",
+      "id": "clock_0x4dd300",
+      "status": "outside_named_export"
+    },
+    {
+      "detail": "The six Player fields copied by Character Select still have no established sale-economy consumer; Game_GetPlayerStaff reads +0x40/+0x50 but the semantic formula is not proven.",
+      "id": "attributes",
+      "status": "unresolved"
+    },
+    {
+      "detail": "Virtual cleanup calls in the setup callback/session loop are recorded as unresolved; the vtable inventory remains the next dispatch-edge batch.",
+      "id": "indirect_calls",
+      "status": "partial"
+    }
+  ],
+  "method": {
+    "authority": "REA Ghidra provider on game/fastfood2.exe; REA read_bytes for instruction bytes; bounded objdump only for functions with no named procedure",
+    "notes": "Addresses are PE virtual addresses. Instruction bytes are stored in trace entries and checked by tools/verify_typed_packet.py.",
+    "target_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd"
+  },
+  "records": {
+    "0x404af0": {
+      "dispatch": [
+        {
+          "call": "0x4811b0",
+          "instruction": "0x404bb0",
+          "kind": "call",
+          "name": "GameSession_Construct",
+          "targets": [
+            "0x4811b0"
+          ]
+        },
+        {
+          "call": "0x481d90",
+          "instruction": "0x404dfc",
+          "kind": "call",
+          "name": "Game_InitScenario",
+          "targets": [
+            "0x481d90"
+          ]
+        }
+      ],
+      "event_order": [
+        {
+          "address": "0x404bb0",
+          "effect": "construct GameSession and store it in DAT_0057c670"
+        },
+        {
+          "address": "0x404df6",
+          "effect": "load Game pointer into ECX"
+        },
+        {
+          "address": "0x404dfc",
+          "effect": "call Game_InitScenario"
+        }
+      ],
+      "fields": [
+        {
+          "address": "0x57c670",
+          "direction": "write",
+          "instruction": "0x404bb0",
+          "name": "DAT_0057c670",
+          "role": "new session object backing Game_InitScenario",
+          "type": "Game*",
+          "width": 4
+        }
+      ],
+      "signature": {
+        "call_site": "0x405444",
+        "confidence": "derived from call site and no stack arguments",
+        "recovered": "void __cdecl Game_RunSession(void)",
+        "return": "void"
+      },
+      "unresolved_questions": [
+        "Indirect virtual/import calls in the session loop are outside this batch."
+      ]
+    },
+    "0x4052c0": {
+      "dispatch": [
+        {
+          "instruction": "0x4053a3",
+          "kind": "screen_state_table",
+          "range": "0x15..0x1d",
+          "table": "0x4055a4",
+          "targets": {
+            "0x15": "0x4053aa",
+            "0x16": "0x405407",
+            "0x17": "0x40542e",
+            "0x18": "0x405463",
+            "0x19": "0x40548f",
+            "0x1a": "0x4054ba",
+            "0x1b": "0x4054e4",
+            "0x1c": "0x4053d8",
+            "0x1d": "0x40552c"
+          }
+        },
+        {
+          "call": "0x404af0",
+          "instruction": "0x405444",
+          "kind": "call",
+          "name": "Game_RunSession",
+          "targets": [
+            "0x404af0"
+          ]
+        }
+      ],
+      "event_order": [
+        {
+          "address": "0x405389",
+          "effect": "read requested screen state"
+        },
+        {
+          "address": "0x405397",
+          "effect": "subtract 0x15 to index the screen table"
+        },
+        {
+          "address": "0x4053a3",
+          "effect": "jump through table at 0x4055a4"
+        },
+        {
+          "address": "0x40542e",
+          "effect": "case 0x17 entry"
+        },
+        {
+          "address": "0x405444",
+          "effect": "call Game_RunSession 0x404af0"
+        }
+      ],
+      "fields": [
+        {
+          "address": "0x56386c",
+          "direction": "read",
+          "instruction": "0x405389",
+          "name": "DAT_0056386c",
+          "role": "requested screen state",
+          "type": "int",
+          "width": 4
+        }
+      ],
+      "signature": {
+        "confidence": "derived from internal dispatch",
+        "note": "Provider signature has many stack parameters; this batch uses the observed internal state machine: DAT_0056386c selects the screen, no explicit arguments are forwarded to Game_RunSession.",
+        "recovered": "void __cdecl GameLoop_DispatchScreens(void)"
+      },
+      "unresolved_questions": [
+        "Other screen cases are enumerated by table target but not semantically annotated in this batch."
+      ]
+    },
+    "0x406a90": {
+      "dispatch": [
+        {
+          "call": "0x406bb0",
+          "instruction": "0x406a9f",
+          "kind": "call",
+          "name": "Settings_LoadFromRegistry",
+          "targets": [
+            "0x406bb0"
+          ]
+        }
+      ],
+      "event_order": [
+        {
+          "address": "0x406a9d",
+          "effect": "clear 0x57b8a8..0x57ba0c settings block"
+        },
+        {
+          "address": "0x406a9f",
+          "effect": "call Settings_LoadFromRegistry"
+        },
+        {
+          "address": "0x406b90",
+          "effect": "write 100 to 0x57b97c (company slot 0 ownership percentage)"
+        }
+      ],
+      "fields": [
+        {
+          "address": "0x57b97c",
+          "confidence": "observed",
+          "direction": "write",
+          "instruction": "0x406b90",
+          "name": "DAT_0057b97c",
+          "role": "default company ownership percentage (100)",
+          "type": "int",
+          "width": 4
+        }
+      ],
+      "signature": {
+        "call_site": "startup settings path",
+        "confidence": "derived from no stack args and RET",
+        "recovered": "void __cdecl Settings_InitDefaults(void)",
+        "return": "void"
+      },
+      "unresolved_questions": [
+        "The registry-loaded branch can overwrite the fresh-path defaults; this packet records the no-registry path."
+      ]
+    },
+    "0x472da0": {
+      "dispatch": [
+        {
+          "detail": "PUSH 0x4cc640 callback",
+          "instruction": "0x472daa",
+          "kind": "callback_registration",
+          "registration_call": "0x472db4",
+          "targets": [
+            "0x4cc640"
+          ]
+        }
+      ],
+      "event_order": [
+        {
+          "address": "0x472daa",
+          "effect": "push FreePlaySetup callback 0x4cc640"
+        },
+        {
+          "address": "0x472db4",
+          "effect": "call 0x523c90 to create the screen window"
+        },
+        {
+          "address": "0x405478",
+          "effect": "GameLoop_DispatchScreens calls Screen_FreePlaySetup"
+        },
+        {
+          "address": "0x405480",
+          "effect": "GameLoop_DispatchScreens calls FreePlaySetup_InitWindow"
+        }
+      ],
+      "fields": [
+        {
+          "direction": "write",
+          "instruction": "0x472dc0",
+          "name": "state_out",
+          "role": "screen pointer returned to GameLoop_DispatchScreens"
+        }
+      ],
+      "signature": {
+        "call_site": "0x405478",
+        "confidence": "derived from call site and prologue",
+        "recovered": "void *__cdecl Screen_FreePlaySetup(int *state_out)",
+        "return": "screen pointer in EAX"
+      },
+      "unresolved_questions": [
+        "The callback at 0x4cc640 has no named procedure in the Ghidra export; its body is recovered from bounded disassembly."
+      ]
+    },
+    "0x481d90": {
+      "dispatch": [
+        {
+          "call": "0x4d44e0",
+          "instruction": "0x481e85",
+          "kind": "call",
+          "name": "City_ConstructFromName",
+          "targets": [
+            "0x4d44e0"
+          ]
+        },
+        {
+          "call": "0x482740",
+          "instruction": "0x481ecd",
+          "kind": "call",
+          "name": "City_Register",
+          "targets": [
+            "0x482740"
+          ]
+        },
+        {
+          "call": "0x48d3a0",
+          "instruction": "0x481f5f",
+          "kind": "call",
+          "name": "Game_GetStartingCapital",
+          "targets": [
+            "0x48d3a0"
+          ]
+        }
+      ],
+      "event_order": [
+        {
+          "address": "0x481e7c",
+          "effect": "push reserved 0"
+        },
+        {
+          "address": "0x481e7e",
+          "effect": "push city short name DAT_0057bb44"
+        },
+        {
+          "address": "0x481e85",
+          "effect": "call City_ConstructFromName"
+        },
+        {
+          "address": "0x481eb5",
+          "effect": "read free-game flag"
+        },
+        {
+          "address": "0x481ec3",
+          "effect": "read free-play population"
+        },
+        {
+          "address": "0x481ecd",
+          "effect": "call City_Register with population and configured-company count"
+        },
+        {
+          "address": "0x481f5f",
+          "effect": "call Game_GetStartingCapital"
+        },
+        {
+          "address": "0x48203d",
+          "effect": "read ownership percentage DAT_0057bcd8"
+        },
+        {
+          "address": "0x482048",
+          "effect": "multiply ownership percentage by starting capital"
+        },
+        {
+          "address": "0x4820c1",
+          "effect": "store double to company+0x108 (cash)"
+        }
+      ],
+      "fields": [
+        {
+          "address": "0x57bb44",
+          "direction": "read",
+          "instruction": "0x481e7e",
+          "name": "DAT_0057bb44",
+          "role": "selected city short name",
+          "type": "char*",
+          "width": 4
+        },
+        {
+          "address": "0x57bb20",
+          "direction": "read",
+          "instruction": "0x481eb5",
+          "name": "DAT_0057bb20",
+          "role": "free-game flag",
+          "type": "bool",
+          "width": 1
+        },
+        {
+          "address": "0x57bb28",
+          "direction": "read",
+          "instruction": "0x481ec3",
+          "name": "DAT_0057bb28",
+          "role": "population passed to City_Register",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57bb24",
+          "direction": "read",
+          "instruction": "0x48d3a0",
+          "name": "DAT_0057bb24",
+          "role": "difficulty consumed through Game_GetStartingCapital",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57bcd8",
+          "direction": "read",
+          "instruction": "0x48203d",
+          "name": "DAT_0057bcd8",
+          "role": "player company ownership percentage",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "company+0x108",
+          "direction": "write",
+          "instruction": "0x4820c1",
+          "name": "company+0x108",
+          "role": "company cash initialized from starting capital",
+          "type": "double",
+          "width": 8
+        },
+        {
+          "address": "0x57bb40",
+          "direction": "read",
+          "instruction": "0x482331",
+          "name": "DAT_0057bb40",
+          "role": "campaign-only city branch selector",
+          "type": "int",
+          "width": 4
+        }
+      ],
+      "signature": {
+        "call_site": "0x404dfc",
+        "confidence": "derived from call site",
+        "note": "Provider signature has extra stack-tracking parameters; observed call passes only ECX=Game* and no stack arguments.",
+        "recovered": "void __thiscall Game_InitScenario(Game *this)",
+        "return": "void"
+      },
+      "unresolved_questions": [
+        "Company/player object fields other than cash +0x108 are outside this batch.",
+        "The provider signature carries spurious stack parameters; use the call-site signature."
+      ]
+    },
+    "0x482740": {
+      "dispatch": [
+        {
+          "call": "0x4d4a20",
+          "instruction": "0x482779",
+          "kind": "call",
+          "name": "City_InitPopulation",
+          "targets": [
+            "0x4d4a20"
+          ]
+        }
+      ],
+      "event_order": [
+        {
+          "address": "0x48274c",
+          "effect": "List_Add city"
+        },
+        {
+          "address": "0x482754",
+          "effect": "Map_FindIndex"
+        },
+        {
+          "address": "0x48275b",
+          "effect": "store city index at city+0xc1c"
+        },
+        {
+          "address": "0x482761",
+          "effect": "City_InitBuildings"
+        },
+        {
+          "address": "0x482768",
+          "effect": "City_InitOfferSlots"
+        },
+        {
+          "address": "0x482771",
+          "effect": "load population argument"
+        },
+        {
+          "address": "0x482779",
+          "effect": "call City_InitPopulation"
+        }
+      ],
+      "fields": [
+        {
+          "direction": "read",
+          "instruction": "0x482771",
+          "name": "population",
+          "role": "second stack argument",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "city+0xc1c",
+          "direction": "write",
+          "instruction": "0x48275b",
+          "name": "city+0xc1c",
+          "role": "city index in game city list",
+          "type": "int",
+          "width": 4
+        }
+      ],
+      "signature": {
+        "call_site": "0x481ecd",
+        "confidence": "derived from call site pushes",
+        "recovered": "void __thiscall City_Register(Game *this, City *city, int population, int company_count)",
+        "return": "void"
+      },
+      "unresolved_questions": [
+        "City_InitPopulation internals are outside this batch; the first observed use is this+0x48 at 0x4d4a45."
+      ]
+    },
+    "0x48d3a0": {
+      "dispatch": [
+        {
+          "instruction": "0x48d3aa",
+          "kind": "jump_table",
+          "range": "0..9",
+          "table": "0x48d3f4",
+          "targets": {
+            "0": "0x48d3b1:1000000",
+            "1": "0x48d3b7:500000",
+            "2": "0x48d3bd:200000",
+            "3": "0x48d3c3:100000",
+            "4": "0x48d3c9:75000",
+            "5": "0x48d3cf:50000",
+            "6": "0x48d3d5:40000",
+            "7": "0x48d3db:30000",
+            "8": "0x48d3e1:25000",
+            "9": "0x48d3e7:22000",
+            "default": "0x48d3ed:20000"
+          }
+        }
+      ],
+      "event_order": [
+        {
+          "address": "0x48d3a0",
+          "effect": "read difficulty"
+        },
+        {
+          "address": "0x48d3a5",
+          "effect": "compare against 9"
+        },
+        {
+          "address": "0x48d3aa",
+          "effect": "jump through 0x48d3f4"
+        },
+        {
+          "address": "0x48d3b1",
+          "effect": "difficulty 0 returns 1,000,000"
+        },
+        {
+          "address": "0x48d3e7",
+          "effect": "difficulty 9 returns 22,000"
+        }
+      ],
+      "fields": [
+        {
+          "address": "0x57bb24",
+          "direction": "read",
+          "instruction": "0x48d3a0",
+          "name": "DAT_0057bb24",
+          "role": "difficulty index",
+          "type": "int",
+          "width": 4
+        }
+      ],
+      "signature": {
+        "call_site": "0x481f5f",
+        "confidence": "derived from no stack args and RET",
+        "recovered": "int __cdecl Game_GetStartingCapital(void)",
+        "return": "int in EAX"
+      },
+      "unresolved_questions": [
+        "Values are exact for 0..9; all other difficulty values fall through to 20,000."
+      ]
+    },
+    "0x4cbcd0": {
+      "dispatch": [
+        {
+          "call": "0x4cd960",
+          "instruction": "0x4cbdb3",
+          "kind": "call",
+          "name": "MapList_LoadAllMapDefinitions",
+          "targets": [
+            "0x4cd960"
+          ]
+        },
+        {
+          "call": "0x4017f0",
+          "instruction": "0x4cbe78",
+          "kind": "call",
+          "name": "List_GetAt",
+          "targets": [
+            "0x4017f0"
+          ]
+        },
+        {
+          "call": "0x5570c0",
+          "instruction": "0x4cbe86",
+          "kind": "call",
+          "name": "String_Equals",
+          "targets": [
+            "0x5570c0"
+          ]
+        }
+      ],
+      "event_order": [
+        {
+          "address": "0x4cbdb3",
+          "effect": "load daten/*.ini map definitions into DAT_0057de38"
+        },
+        {
+          "address": "0x4cbe16",
+          "effect": "read persisted difficulty DAT_0057b8b4"
+        },
+        {
+          "address": "0x4cbe26",
+          "effect": "write screen difficulty DAT_0057bb24"
+        },
+        {
+          "address": "0x4cbe4b",
+          "effect": "read persisted population DAT_0057b9c8"
+        },
+        {
+          "address": "0x4cbeb7",
+          "effect": "read default ownership percentage 0x57b97c"
+        },
+        {
+          "address": "0x4cbebd",
+          "effect": "copy ownership percentage to working value 0x57bcd8"
+        },
+        {
+          "address": "0x4cbe51",
+          "effect": "write screen population DAT_0057bb28"
+        },
+        {
+          "address": "0x4cbe69",
+          "effect": "reset selected city index to 0"
+        },
+        {
+          "address": "0x4cbe78",
+          "effect": "fetch map record at candidate index"
+        },
+        {
+          "address": "0x4cbe86",
+          "effect": "compare record+0x40 short name with DAT_0057b9c4"
+        },
+        {
+          "address": "0x4cbe9e",
+          "effect": "store the matching map-list index in DAT_0057bb40"
+        }
+      ],
+      "fields": [
+        {
+          "address": "0x57b8b4",
+          "direction": "read",
+          "instruction": "0x4cbe16",
+          "name": "DAT_0057b8b4",
+          "role": "persisted difficulty",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57bb24",
+          "direction": "write",
+          "instruction": "0x4cbe26",
+          "name": "DAT_0057bb24",
+          "role": "screen difficulty",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57b9c8",
+          "direction": "read",
+          "instruction": "0x4cbe4b",
+          "name": "DAT_0057b9c8",
+          "role": "persisted population",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57bb28",
+          "direction": "write",
+          "instruction": "0x4cbe51",
+          "name": "DAT_0057bb28",
+          "role": "screen population",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57b9cc",
+          "direction": "read",
+          "instruction": "0x4cbe0b",
+          "name": "DAT_0057b9cc",
+          "role": "persisted game length",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57bb2c",
+          "direction": "write",
+          "instruction": "0x4cbe1c",
+          "name": "DAT_0057bb2c",
+          "role": "screen game length",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57b9d0",
+          "direction": "read",
+          "instruction": "0x4cbe57",
+          "name": "DAT_0057b9d0",
+          "role": "persisted opponent slot 1",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57bb48",
+          "direction": "write",
+          "instruction": "0x4cbe63",
+          "name": "DAT_0057bb48",
+          "role": "screen opponent slot 1",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57b9d4",
+          "direction": "read",
+          "instruction": "0x4cbe21",
+          "name": "DAT_0057b9d4",
+          "role": "persisted opponent slot 2",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57bb4c",
+          "direction": "write",
+          "instruction": "0x4cbe32",
+          "name": "DAT_0057bb4c",
+          "role": "screen opponent slot 2",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57b9d8",
+          "direction": "read",
+          "instruction": "0x4cbe2c",
+          "name": "DAT_0057b9d8",
+          "role": "persisted opponent slot 3",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57bb50",
+          "direction": "write",
+          "instruction": "0x4cbe3c",
+          "name": "DAT_0057bb50",
+          "role": "screen opponent slot 3",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57b9c4",
+          "direction": "read",
+          "instruction": "0x4cbe80",
+          "name": "DAT_0057b9c4",
+          "role": "previous city short name used as map-list match",
+          "type": "char*",
+          "width": 4
+        },
+        {
+          "address": "0x57bb40",
+          "direction": "write",
+          "instruction": "0x4cbe69",
+          "name": "DAT_0057bb40",
+          "role": "selected map-list index; reset to 0",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57bb40",
+          "direction": "write",
+          "instruction": "0x4cbe9e",
+          "name": "DAT_0057bb40",
+          "role": "selected map-list index; match found",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57b97c",
+          "direction": "read",
+          "instruction": "0x4cbeb7",
+          "name": "DAT_0057b97c",
+          "role": "fresh-path ownership percentage source",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57bcd8",
+          "direction": "write",
+          "instruction": "0x4cbebd",
+          "name": "DAT_0057bcd8",
+          "role": "working ownership percentage for company slot 0",
+          "type": "int",
+          "width": 4
+        }
+      ],
+      "signature": {
+        "call_site": "0x405480",
+        "confidence": "derived from call site",
+        "recovered": "void __cdecl FreePlaySetup_InitWindow(void *window)",
+        "return": "void"
+      },
+      "unresolved_questions": [
+        "The full control table and all map/opponent UI states are not part of this batch; only the data paths that feed world creation are annotated."
+      ]
+    },
+    "0x4cc640": {
+      "body": {
+        "available": false,
+        "pseudocode_path": null,
+        "ranges": [
+          {
+            "end": "0x4cd72d",
+            "start": "0x4cc640"
+          }
+        ],
+        "recovery": "disassembly-only; SEH prologue at 0x4cc640 and RET at 0x4cd51c/0x4cd72d"
+      },
+      "dispatch": [
+        {
+          "detail": "selector byte indexes a dword target table",
+          "instruction": "0x4cc7e1",
+          "kind": "control_table",
+          "range": "0x3fa..0x4e3",
+          "selector_base": "0x4cd7e0",
+          "table_base": "0x4cd770",
+          "targets": {
+            "0x4e2": "0x4cd2b9",
+            "0x4e3": "0x4cd33d"
+          }
+        },
+        {
+          "global": "DAT_0056386c",
+          "instruction": "0x4cd342",
+          "kind": "screen_state",
+          "targets": [
+            "GameLoop_DispatchScreens case 0x17 at 0x40542e"
+          ],
+          "value": "0x17"
+        },
+        {
+          "global": "DAT_0056386c",
+          "instruction": "0x4cd2be",
+          "kind": "screen_state",
+          "targets": [
+            "GameLoop_DispatchScreens case 0x15 at 0x4053aa"
+          ],
+          "value": "0x15"
+        }
+      ],
+      "event_order": [
+        {
+          "address": "0x4cd342",
+          "effect": "write screen state 0x17 (start game)"
+        },
+        {
+          "address": "0x4cd3aa",
+          "effect": "begin committing setup values"
+        },
+        {
+          "address": "0x4cd3e8",
+          "effect": "read screen population DAT_0057bb28"
+        },
+        {
+          "address": "0x4cd3f8",
+          "effect": "write persisted population DAT_0057b9c8"
+        },
+        {
+          "address": "0x4cd415",
+          "effect": "read screen difficulty DAT_0057bb24"
+        },
+        {
+          "address": "0x4cd432",
+          "effect": "write persisted difficulty DAT_0057b8b4"
+        },
+        {
+          "address": "0x4cd420",
+          "effect": "read selected city index DAT_0057bb40"
+        },
+        {
+          "address": "0x4cd44f",
+          "effect": "fetch selected map record from DAT_0057de38"
+        },
+        {
+          "address": "0x4cd454",
+          "effect": "advance map record pointer to +0x40 (short name)"
+        },
+        {
+          "address": "0x4cd490",
+          "effect": "destination DAT_0057bb44"
+        },
+        {
+          "address": "0x4cd498",
+          "effect": "copy map record short name into DAT_0057bb44 and DAT_0057b9c4"
+        },
+        {
+          "address": "0x4cd4cc",
+          "effect": "call Config_SaveOptionsToRegistry 0x406cd0"
+        },
+        {
+          "address": "0x4cc8d7",
+          "effect": "subtract 10 from working ownership percentage"
+        },
+        {
+          "address": "0x4cc8dc",
+          "effect": "store working ownership percentage; minimum 70 at 0x4cc8e3"
+        },
+        {
+          "address": "0x4cc929",
+          "effect": "add 10 to working ownership percentage"
+        },
+        {
+          "address": "0x4cc92e",
+          "effect": "store working ownership percentage; maximum 990 at 0x4cc938"
+        }
+      ],
+      "fields": [
+        {
+          "address": "0x57bb28",
+          "direction": "read",
+          "instruction": "0x4cd3e8",
+          "name": "DAT_0057bb28",
+          "role": "population to persist",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57b9c8",
+          "direction": "write",
+          "instruction": "0x4cd3f8",
+          "name": "DAT_0057b9c8",
+          "role": "persisted population",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57bb24",
+          "direction": "read",
+          "instruction": "0x4cd415",
+          "name": "DAT_0057bb24",
+          "role": "difficulty to persist",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57b8b4",
+          "direction": "write",
+          "instruction": "0x4cd432",
+          "name": "DAT_0057b8b4",
+          "role": "persisted difficulty",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57bb40",
+          "direction": "read",
+          "instruction": "0x4cd420",
+          "name": "DAT_0057bb40",
+          "role": "selected map-list index",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57b9c4",
+          "direction": "write",
+          "instruction": "0x4cd46a",
+          "name": "DAT_0057b9c4",
+          "role": "persisted city short name",
+          "type": "char*",
+          "width": 4
+        },
+        {
+          "address": "0x57bb44",
+          "direction": "write",
+          "instruction": "0x4cd490",
+          "name": "DAT_0057bb44",
+          "role": "city short name used by Game_InitScenario",
+          "type": "char*",
+          "width": 4
+        },
+        {
+          "address": "0x57bb2c",
+          "direction": "read",
+          "instruction": "0x4cd40a",
+          "name": "DAT_0057bb2c",
+          "role": "game length",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57b9cc",
+          "direction": "write",
+          "instruction": "0x4cd426",
+          "name": "DAT_0057b9cc",
+          "role": "persisted game length",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x56386c",
+          "direction": "write",
+          "instruction": "0x4cd342",
+          "name": "DAT_0056386c",
+          "role": "screen state 0x17",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57bcd8",
+          "direction": "read",
+          "instruction": "0x4cc8cb",
+          "name": "DAT_0057bcd8",
+          "role": "working ownership percentage, decrement path",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57bcd8",
+          "direction": "write",
+          "instruction": "0x4cc8dc",
+          "name": "DAT_0057bcd8",
+          "role": "working ownership percentage -10, clamped to 70",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57bcd8",
+          "direction": "read",
+          "instruction": "0x4cc91d",
+          "name": "DAT_0057bcd8",
+          "role": "working ownership percentage, increment path",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57bcd8",
+          "direction": "write",
+          "instruction": "0x4cc92e",
+          "name": "DAT_0057bcd8",
+          "role": "working ownership percentage +10, clamped to 990",
+          "type": "int",
+          "width": 4
+        }
+      ],
+      "name": "FreePlaySetup_ControlCallback",
+      "signature": {
+        "call_site": "0x472daa callback registration; control id at [esp+0x44], value at [esp+0x4c]",
+        "confidence": "derived from register/stack use",
+        "recovered": "int __cdecl FreePlaySetup_ControlCallback(void *window, unsigned message, int control_id, int value)",
+        "return": "callback return consumed by UI dispatcher"
+      },
+      "symbol": {
+        "in_named_export": false,
+        "provider_name": null,
+        "source": "curated callback entry from 0x472daa push and bounded disassembly"
+      },
+      "unresolved_questions": [
+        "The complete 0x3fa..0x4e3 control jump table is not annotated; only Back (0x4e2) and Start (0x4e3) are in this batch.",
+        "Virtual cleanup calls at 0x4cd376/0x4cd38b have unresolved targets."
+      ]
+    },
+    "0x4d44e0": {
+      "dispatch": [
+        {
+          "call": "0x4db430",
+          "instruction": "0x4d4573",
+          "kind": "call",
+          "name": "Config_LoadFromFile",
+          "targets": [
+            "0x4db430"
+          ]
+        },
+        {
+          "call": "0x4eb0f0",
+          "instruction": "0x4d472e",
+          "kind": "call",
+          "name": "IsoMap_Load",
+          "targets": [
+            "0x4eb0f0"
+          ]
+        },
+        {
+          "call": "0x4eac80",
+          "instruction": "0x4d474e",
+          "kind": "call",
+          "name": "IsoMap_Attach",
+          "targets": [
+            "0x4eac80"
+          ]
+        }
+      ],
+      "event_order": [
+        {
+          "address": "0x4d4557",
+          "effect": "push city_name"
+        },
+        {
+          "address": "0x4d455c",
+          "effect": "push format string '%s.ini'"
+        },
+        {
+          "address": "0x4d4562",
+          "effect": "format ini path"
+        },
+        {
+          "address": "0x4d4573",
+          "effect": "load city ini"
+        },
+        {
+          "address": "0x4d4591",
+          "effect": "copy 0x306 dwords of ini record into this+4"
+        },
+        {
+          "address": "0x4d46f7",
+          "effect": "push format string '%s.iso'"
+        },
+        {
+          "address": "0x4d46fd",
+          "effect": "format iso path"
+        },
+        {
+          "address": "0x4d472e",
+          "effect": "load city iso map"
+        },
+        {
+          "address": "0x4d4737",
+          "effect": "store map pointer at this+0xfa8"
+        }
+      ],
+      "fields": [
+        {
+          "direction": "read",
+          "instruction": "0x4d4557",
+          "name": "city_name",
+          "role": "city short name used to format ini/iso paths",
+          "type": "char*",
+          "width": 4
+        },
+        {
+          "address": "this+0x4",
+          "direction": "write",
+          "instruction": "0x4d4591",
+          "name": "this+0x4",
+          "role": "3096-byte ini record copied into city object",
+          "type": "CityConfig",
+          "width": 3096
+        },
+        {
+          "address": "this+0xfa8",
+          "direction": "write",
+          "instruction": "0x4d4737",
+          "name": "this+0xfa8",
+          "role": "loaded city map object",
+          "type": "IsoMap*",
+          "width": 4
+        }
+      ],
+      "signature": {
+        "call_site": "0x481e85",
+        "confidence": "derived from call site pushes and EAX capture",
+        "recovered": "City *__thiscall City_ConstructFromName(City *this, const char *city_name, int unused)",
+        "return": "City* in EAX"
+      },
+      "unresolved_questions": [
+        "Provider signature is varargs/stack-spurious; recovered signature is from the 0x481e85 call site.",
+        "The full CityConfig field map and IsoMap loader internals are outside this batch."
+      ]
+    }
+  },
+  "resolved_questions": [
+    {
+      "answer": "Settings_InitDefaults writes 100 to 0x57b97c; FreePlaySetup_InitWindow copies it to 0x57bcd8; the setup arrows adjust it in steps of 10.",
+      "evidence": [
+        "0x406b90",
+        "0x4cbebd",
+        "0x4cc8d7",
+        "0x4cc8dc",
+        "0x4cc929",
+        "0x4cc92e"
+      ],
+      "question": "How is DAT_0057bcd8 initialized on the free-play path?"
+    }
+  ],
+  "tables": [
+    {
+      "address": "0x4055a4",
+      "bytes": "aa534000075440002e544000635440008f544000ba544000e4544000d85340002c554000",
+      "consumer": "0x4053a3",
+      "count": 9,
+      "entries": {
+        "0x15": "0x4053aa",
+        "0x16": "0x405407",
+        "0x17": "0x40542e",
+        "0x18": "0x405463",
+        "0x19": "0x40548f",
+        "0x1a": "0x4054ba",
+        "0x1b": "0x4054e4",
+        "0x1c": "0x4053d8",
+        "0x1d": "0x40552c"
+      },
+      "id": "game_screen_dispatch",
+      "range": "0x15..0x1d",
+      "width": 4
+    },
+    {
+      "address": "0x48d3f4",
+      "bytes": "b1d34800b7d34800bdd34800c3d34800c9d34800cfd34800d5d34800dbd34800e1d34800e7d34800",
+      "consumer": "0x48d3aa",
+      "count": 10,
+      "entries": {
+        "0": "0x48d3b1",
+        "1": "0x48d3b7",
+        "2": "0x48d3bd",
+        "3": "0x48d3c3",
+        "4": "0x48d3c9",
+        "5": "0x48d3cf",
+        "6": "0x48d3d5",
+        "7": "0x48d3db",
+        "8": "0x48d3e1",
+        "9": "0x48d3e7"
+      },
+      "id": "game_get_starting_capital",
+      "range": "0..9",
+      "width": 4
+    }
+  ],
+  "trace": [
+    {
+      "address": "0x4cd342",
+      "bytes": "c7056c38560017000000",
+      "instruction": "mov dword ptr [0x0056386c],0x17",
+      "name": "setup_start_screen_state",
+      "next": "GameLoop_DispatchScreens",
+      "step": 1,
+      "value": "screen state 0x17"
+    },
+    {
+      "address": "0x4cd3e8",
+      "bytes": "8b0d28bb5700",
+      "instruction": "mov ecx,dword ptr [0x0057bb28]",
+      "name": "setup_population_commit",
+      "next": "write DAT_0057b9c8 at 0x4cd3f8",
+      "step": 2,
+      "value": "population source DAT_0057bb28"
+    },
+    {
+      "address": "0x4cd3f8",
+      "bytes": "890dc8b95700",
+      "instruction": "mov dword ptr [0x0057b9c8],ecx",
+      "name": "setup_population_persist",
+      "next": "setup callback",
+      "step": 3,
+      "value": "persisted population"
+    },
+    {
+      "address": "0x4cd415",
+      "bytes": "a124bb5700",
+      "instruction": "mov eax,dword ptr [0x0057bb24]",
+      "name": "setup_difficulty_commit",
+      "next": "write DAT_0057b8b4 at 0x4cd432",
+      "step": 4,
+      "value": "difficulty source DAT_0057bb24"
+    },
+    {
+      "address": "0x4cd432",
+      "bytes": "a3b4b85700",
+      "instruction": "mov dword ptr [0x0057b8b4],eax",
+      "name": "setup_difficulty_persist",
+      "next": "Game_InitScenario",
+      "step": 5,
+      "value": "persisted difficulty"
+    },
+    {
+      "address": "0x406b90",
+      "bytes": "8948d0",
+      "instruction": "mov dword ptr [eax-0x30],ecx",
+      "name": "settings_ownership_default",
+      "next": "FreePlaySetup_InitWindow",
+      "step": 6,
+      "value": "100 at 0x57b97c"
+    },
+    {
+      "address": "0x4cbebd",
+      "bytes": "8951fc",
+      "instruction": "mov dword ptr [ecx-0x4],edx",
+      "name": "setup_ownership_copy",
+      "next": "setup arrows",
+      "step": 7,
+      "value": "100 copied to 0x57bcd8"
+    },
+    {
+      "address": "0x4cc8d7",
+      "bytes": "83c6f6",
+      "instruction": "add esi,-0x0a",
+      "name": "ownership_decrement_step",
+      "next": "0x4cc8dc",
+      "step": 8,
+      "value": "-10 percentage step"
+    },
+    {
+      "address": "0x4cc8dc",
+      "bytes": "8930",
+      "instruction": "mov dword ptr [eax],esi",
+      "name": "ownership_decrement_write",
+      "next": "clamp 70 at 0x4cc8e3",
+      "step": 9,
+      "value": "working ownership percentage"
+    },
+    {
+      "address": "0x4cc929",
+      "bytes": "83c60a",
+      "instruction": "add esi,0x0a",
+      "name": "ownership_increment_step",
+      "next": "0x4cc92e",
+      "step": 10,
+      "value": "+10 percentage step"
+    },
+    {
+      "address": "0x4cc92e",
+      "bytes": "8930",
+      "instruction": "mov dword ptr [eax],esi",
+      "name": "ownership_increment_write",
+      "next": "clamp 990 at 0x4cc938",
+      "step": 11,
+      "value": "working ownership percentage"
+    },
+    {
+      "address": "0x4cd420",
+      "bytes": "8b0d40bb5700",
+      "instruction": "mov ecx,dword ptr [0x0057bb40]",
+      "name": "setup_city_index",
+      "next": "map-list get at 0x4cd44f",
+      "step": 12,
+      "value": "selected city index"
+    },
+    {
+      "address": "0x4cd44f",
+      "bytes": "e89c43f3ff",
+      "instruction": "call 0x004017f0 (List_GetAt DAT_0057de38)",
+      "name": "setup_map_record",
+      "next": "record+0x40 at 0x4cd454",
+      "step": 13,
+      "value": "map record pointer"
+    },
+    {
+      "address": "0x4cd454",
+      "bytes": "8d5040",
+      "instruction": "lea edx,[eax+0x40]",
+      "name": "setup_record_short_name",
+      "next": "copy to DAT_0057bb44",
+      "step": 14,
+      "value": "city short-name pointer"
+    },
+    {
+      "address": "0x4cd490",
+      "bytes": "bf44bb5700",
+      "instruction": "mov edi,0x0057bb44",
+      "name": "setup_city_short_name",
+      "next": "rep movs at 0x4cd498",
+      "step": 15,
+      "value": "destination DAT_0057bb44"
+    },
+    {
+      "address": "0x4cd498",
+      "bytes": "f3a5",
+      "instruction": "rep movs dword ptr es:[edi],dword ptr ds:[esi]",
+      "name": "setup_city_copy",
+      "next": "GameLoop_DispatchScreens",
+      "step": 16,
+      "value": "city short name (e.g. ber)"
+    },
+    {
+      "address": "0x405389",
+      "bytes": "a16c385600",
+      "instruction": "mov eax,dword ptr [0x0056386c]",
+      "name": "dispatch_read_state",
+      "next": "screen-state jump",
+      "step": 17,
+      "value": "0x17"
+    },
+    {
+      "address": "0x4053a3",
+      "bytes": "ff2485a4554000",
+      "instruction": "jmp dword ptr [eax*4+0x4055a4]",
+      "name": "dispatch_jump_case_17",
+      "next": "0x405444",
+      "step": 18,
+      "value": "case 0x17 -> 0x40542e"
+    },
+    {
+      "address": "0x405444",
+      "bytes": "e8a7f6ffff",
+      "instruction": "call 0x00404af0 (Game_RunSession)",
+      "name": "dispatch_call_session",
+      "next": "0x404dfc",
+      "step": 19,
+      "value": "Game_RunSession"
+    },
+    {
+      "address": "0x404dfc",
+      "bytes": "e88fcf0700",
+      "instruction": "call 0x00481d90 (Game_InitScenario)",
+      "name": "session_call_scenario",
+      "next": "city construction",
+      "step": 20,
+      "value": "Game_InitScenario"
+    },
+    {
+      "address": "0x481e7e",
+      "bytes": "6844bb5700",
+      "instruction": "push 0x0057bb44",
+      "name": "scenario_push_city",
+      "next": "City_ConstructFromName",
+      "step": 21,
+      "value": "city short name"
+    },
+    {
+      "address": "0x481e85",
+      "bytes": "e856260500",
+      "instruction": "call 0x004d44e0 (City_ConstructFromName)",
+      "name": "scenario_construct_city",
+      "next": "0x4d455c",
+      "step": 22,
+      "value": "city object"
+    },
+    {
+      "address": "0x4d455c",
+      "bytes": "6880b35600",
+      "instruction": "push 0x0056b380 ('%s.ini')",
+      "name": "city_ini_format",
+      "next": "0x4d4562",
+      "step": 23,
+      "value": "city ini path"
+    },
+    {
+      "address": "0x4d4562",
+      "bytes": "e81c980700",
+      "instruction": "call 0x0054dd83 (sprintf)",
+      "name": "city_ini_build",
+      "next": "0x4d4573",
+      "step": 24,
+      "value": "ber.ini"
+    },
+    {
+      "address": "0x4d46f7",
+      "bytes": "680ccd5600",
+      "instruction": "push 0x0056cd0c ('%s.iso')",
+      "name": "city_iso_format",
+      "next": "0x4d46fd",
+      "step": 25,
+      "value": "city iso path"
+    },
+    {
+      "address": "0x4d46fd",
+      "bytes": "e881960700",
+      "instruction": "call 0x0054dd83 (sprintf)",
+      "name": "city_iso_build",
+      "next": "0x4d472e",
+      "step": 26,
+      "value": "ber.iso"
+    },
+    {
+      "address": "0x481eb5",
+      "bytes": "a020bb5700",
+      "instruction": "mov al,[0x0057bb20]",
+      "name": "scenario_free_flag",
+      "next": "0x481ec3",
+      "step": 27,
+      "value": "free-game flag"
+    },
+    {
+      "address": "0x481ec3",
+      "bytes": "a128bb5700",
+      "instruction": "mov eax,[0x0057bb28]",
+      "name": "scenario_population",
+      "next": "0x481ecd",
+      "step": 28,
+      "value": "250 (default)"
+    },
+    {
+      "address": "0x481ecd",
+      "bytes": "e86e080000",
+      "instruction": "call 0x00482740 (City_Register)",
+      "name": "scenario_register_city",
+      "next": "0x482779",
+      "step": 29,
+      "value": "population argument in EAX"
+    },
+    {
+      "address": "0x482771",
+      "bytes": "8b4c2410",
+      "instruction": "mov ecx,dword ptr [esp+0x10]",
+      "name": "city_population_forward",
+      "next": "0x482779",
+      "step": 30,
+      "value": "population argument"
+    },
+    {
+      "address": "0x482779",
+      "bytes": "e8a2220500",
+      "instruction": "call 0x004d4a20 (City_InitPopulation)",
+      "name": "city_init_population",
+      "next": "0x4d4a45",
+      "step": 31,
+      "value": "population"
+    },
+    {
+      "address": "0x4d4a45",
+      "bytes": "894348",
+      "instruction": "mov dword ptr [ebx+0x48],eax",
+      "name": "population_first_write",
+      "next": "starting capital",
+      "step": 32,
+      "value": "city+0x48 = population"
+    },
+    {
+      "address": "0x481f5f",
+      "bytes": "e83cb40000",
+      "instruction": "call 0x0048d3a0 (Game_GetStartingCapital)",
+      "name": "scenario_start_capital_call",
+      "next": "0x48d3a0",
+      "step": 33,
+      "value": "difficulty-derived capital"
+    },
+    {
+      "address": "0x48d3a0",
+      "bytes": "a124bb5700",
+      "instruction": "mov eax,dword ptr [0x0057bb24]",
+      "name": "capital_read_difficulty",
+      "next": "0x48d3aa",
+      "step": 34,
+      "value": "9"
+    },
+    {
+      "address": "0x48d3aa",
+      "bytes": "ff2485f4d34800",
+      "instruction": "jmp dword ptr [eax*4+0x48d3f4]",
+      "name": "capital_jump_table",
+      "next": "0x48d3e7",
+      "step": 35,
+      "value": "difficulty 9 -> 0x48d3e7"
+    },
+    {
+      "address": "0x48d3e7",
+      "bytes": "b8f0550000",
+      "instruction": "mov eax,0x55f0",
+      "name": "capital_difficulty_9",
+      "next": "0x481f64",
+      "step": 36,
+      "value": "22000"
+    },
+    {
+      "address": "0x481f64",
+      "bytes": "89442418",
+      "instruction": "mov dword ptr [esp+0x18],eax",
+      "name": "capital_store_return",
+      "next": "0x48203d",
+      "step": 37,
+      "value": "starting capital 22000"
+    },
+    {
+      "address": "0x48203d",
+      "bytes": "8b0dd8bc5700",
+      "instruction": "mov ecx,dword ptr [0x0057bcd8]",
+      "name": "cash_read_ownership",
+      "next": "0x482048",
+      "step": 38,
+      "value": "ownership percentage"
+    },
+    {
+      "address": "0x482048",
+      "bytes": "0faf4c2418",
+      "instruction": "imul ecx,dword ptr [esp+0x18]",
+      "name": "cash_multiply",
+      "next": "0x4820c1",
+      "step": 39,
+      "value": "ownership * capital"
+    },
+    {
+      "address": "0x4820c1",
+      "bytes": "dd9808010000",
+      "instruction": "fstp qword ptr [eax+0x108]",
+      "name": "cash_first_write",
+      "next": "world ready",
+      "step": 40,
+      "value": "company cash = 22000.0"
+    }
+  ]
+}

@@ -1,0 +1,481 @@
+address,name,confidence,pass,in_degree,bytes,evidence
+0x488be0,Game_GetPlayerBySlot,high,1,220,1647,Returns player pointer for slot 0..5 from this+0x200.
+0x482820,Game_GetCurrentPlayerCompanyName,medium,1,98,1688,Returns field +8 of the current player (company name per save header).
+0x48e0a0,NoOp_Stub,high,1,65,1505,Empty function with 65 call sites; debug/error hook compiled out.
+0x53ff80,CS_LeavePtr,high,1,63,1585,Leaves critical section through a pointer-to-pointer.
+0x4ddcc0,Game_GetPlayerCity,high,1,55,1598,Returns city object for a player from the global player table.
+0x4f0cc0,Array_GetRecord28,medium,1,39,1712,Selects array at +0x9c/+0xa0 and returns index*0x28.
+0x532310,UI_SetPosition,medium,1,29,1656,Stores two coordinates at +0x28c/+0x290.
+0x5539be,CS_LeaveIndexed,high,1,27,1598,Leaves indexed CRT lock-table critical section.
+0x4ef4b0,Grid_GetCell,high,1,25,1789,"Bounds-checked grid cell lookup, stride 0xc."
+0x531330,BinarySearch8,high,1,19,2401,"Binary search over 8-byte records, key at +4."
+0x54f110,__chkstk,high,1,18,1821,CRT stack-probe helper.
+0x4d3fc0,Rating_AdjustA,medium,1,15,1719,"Rating-dependent adjustment of +8, clamped at 0."
+0x4d3fe0,Rating_AdjustB,medium,1,15,1722,"Rating-dependent adjustment of +0x10, clamped at 0."
+0x4d3f90,Rating_ClampAdjusted,medium,1,12,1805,"Rating-dependent adjustment of +4, clamped to 0..100."
+0x4eab50,SparseMap_Lookup48,medium,1,15,1772,Sparse map with 2500 stride-0x48 slots.
+0x4da630,Array_GetStride60,high,1,12,1607,Returns this+0xdc8 + index*0x60.
+0x4f34c0,UI_ComputeCenteredRect,medium,1,12,1751,Computes centered rect using half width/height.
+0x50d200,Object_SetFrame5,medium,1,12,1669,Sets field 0x94 to index*5 or -1.
+0x5321f0,UI_ClipRect,high,1,12,3126,Clips and accumulates a dirty rectangle.
+0x553620,_strcpy,high,1,12,2552,CRT strcpy.
+0x482720,Game_GetPlayerCount,high,1,11,1770,Counts six player slots.
+0x521b10,Object_GetActiveValue,medium,1,11,1673,Returns +0x6c or +0x68 gated by flag 0x78.
+0x533a70,Record_ClearFlags48,medium,1,11,1846,Clears active flags in stride-0x48 record.
+0x53d040,Sprite_GetRenderSize,high,1,11,1854,"Returns render width/height, swapped for 90/270 rotation."
+0x540000,Stream_Seek,high,1,11,1925,"Sets stream position (absolute/relative/end), clamps to size."
+0x488d90,Game_GetTimeSegment,medium,1,10,1567,Game date byte / 3.
+0x4e2250,Game_FindCityIndex,medium,1,10,1759,"Searches city table for +0x1dc, returns 0..6 or 7."
+0x401930,Map_LookupLinear,high,1,9,1896,Linear key/value map lookup; 0xffffffff if missing.
+0x4032e0,RegistryKey_Close,high,1,9,1621,Closes/clears an HKEY.
+0x477100,Clamp_0_100,high,1,9,1605,Clamps an integer in place to 0..100.
+0x54d35c,CS_EnterRaw,high,2,16,1568,Raw EnterCriticalSection wrapper.
+0x54d367,CS_LeaveRaw,high,2,17,1568,Raw LeaveCriticalSection wrapper.
+0x50e4c0,Object_SetChildField2C,medium,2,21,1650,Writes param to child+0x2c when this+200 is set.
+0x53efd0,SoundBuffer_SetBaseVTable,medium,2,25,1563,Sets base vtable PTR_LAB_0055c840 (sound object layer).
+0x50fe70,Game_GetPlayerWeightedStat,medium,2,9,1941,Weighted sum of 86 player counters times a double field /1000.
+0x5230b0,Array_GetPtr,high,2,9,1676,Bounds-checked pointer array getter.
+0x4f5c70,Object_SetShort28,medium,2,9,1588,Stores a 16-bit value at +0x28.
+0x535650,Font_GetCharWidth,high,2,8,1755,"Per-character width from the font table, default if absent."
+0x50e810,Object_GetClampedLevel,high,2,8,1684,"Reads +0x10c, forcing it into 1..3."
+0x520b40,UI_SetAbsolutePosition,high,2,8,1684,Sets +0x30/+0x34 = base(+0x28/+0x2c) + offset.
+0x54b440,Array_GetPtr4,high,2,8,1665,Bounds-checked pointer array getter (element at +0).
+0x4e4160,Object_GetPair68,medium,2,8,1658,Writes fields +0x68 and +0x6c to two outputs.
+0x50e710,Object_SetFlag104,medium,2,8,1589,Stores a byte at +0x104.
+0x4f2aa0,IsMenuId34EOr350,medium,2,8,1588,Returns 1 for IDs 0x34e/0x350.
+0x534060,Record_GetBounds48,high,2,7,2244,"Reads four bounds arrays using record+0x32, stride 0x48."
+0x547fd0,SoundBuffer_Release,high,2,7,2139,Stops/removes a sound buffer through the sound vtable.
+0x5342e0,Record_SetDoubles48,high,2,7,1906,"Writes two doubles at record+8/+0x10, stride 0x48."
+0x534990,Record_SetIndex48,high,2,7,1846,"Writes a 16-bit index at record+0x32, bounds-checked."
+0x401900,Map_FindIndex,high,2,7,1834,Linear key search returning index or -1.
+0x4781b0,Rating_GetInverse100,medium,2,7,1631,"Returns max(0, 100 - 3*field_0x19f4)."
+0x489b10,Game_GetDateField0C,medium,2,7,1577,Returns field +0xc of the game date object.
+0x546f00,List_Insert,high,2,6,2534,Inserts a node at list head or tail and fixes links.
+0x526d30,Rect_Union,high,2,6,2289,Unions a rectangle into the accumulator at +0x1a4.
+0x5355f0,Font_MeasureText,high,2,6,2011,Sums per-character widths for a string.
+0x535520,Text_SetMetrics,medium,2,6,1946,Writes a group of text metrics at +0x9a0..+0x9c4.
+0x4f3b30,Object_GetRect100,high,2,6,1811,Writes four fields at +0x100/+0x104/+0x108/+0x10c.
+0x4e42c0,Game_FindGroupSlot,medium,2,6,1788,Searches six shorts at this + group*0xc + 0x78.
+0x5397e0,Color_RGBTo16,high,2,6,1762,Packs RGB888 into RGB555 or RGB565.
+0x539f00,Object_GetRootType,medium,2,6,1718,"Follows parent while type==3, then returns root type."
+0x55464e,CS_LeaveSlot,high,2,6,1662,Leaves a CRT lock-table critical section by slot index.
+0x50d750,State_IsMenuState,medium,2,6,1657,Returns 1 for states 0xd/0x17/0x1d/0x1e.
+0x5260e0,Object_GetId,medium,2,6,1596,"Returns field +4, or -1 for null."
+0x50e720,Object_SetFieldFC,medium,2,6,1588,Stores a dword at +0xfc.
+0x54b3c0,Object_ClearField4,low,2,6,1559,Clears field +4.
+0x54e230,_memmove,high,3,21,11326,CRT memmove (overlap-safe backward copy).
+0x550cd0,_memmove_2,high,3,5,11326,Second CRT memmove copy in this build.
+0x50dbd0,State_Is2DOr2E,high,3,28,1631,Returns 1 when field 0x38 is 0x2d or 0x2e.
+0x4e25b0,Economy_GetModifier,medium,3,11,3557,"Type-0x17 economy modifier from a table, adjusted by player stats."
+0x535500,Set_Field9B8,high,3,10,1589,Stores a dword at +0x9b8.
+0x513fd0,Get_Field2C,high,3,10,1561,Returns dword at +0x2c.
+0x513fc0,Get_Subobject4,high,3,10,1534,Returns this+4.
+0x5094a0,Object_SyncChildState,medium,3,5,3464,Updates cached child/state fields from param_1.
+0x48d110,Game_GetDataByIndex,high,3,5,2699,Switch 0..4 returning global data pointers.
+0x526dc0,Rect_Set1A4,high,3,5,2374,Copies a rectangle into this+0x1a4.
+0x5391a0,Thread_WaitForExit,medium,3,5,2298,Waits on the global exit event/thread state.
+0x513980,Index_Map8To5,medium,3,5,2103,Maps index 8 to 5 and -1 to a table lookup.
+0x5374b0,Surface_Clear,high,3,5,1965,Allocates/clears a surface using width*height*bytes-per-pixel.
+0x4f5fa0,Array_SearchSet,medium,3,5,1811,Searches three slots and stores a value at the matching index.
+0x5140b0,Array_FindPair,medium,3,5,1773,Searches paired array entries for a value.
+0x4edbd0,Array_CountValid8,high,3,5,1763,Counts eight shorts that are not -1.
+0x5396e0,Surface_Reset,high,3,5,1724,Resets surface dimensions and pitch fields.
+0x535160,Object_GetPair4,high,3,5,1652,Writes fields +4 and +8 to outputs.
+0x50fbe0,Math_PiecewiseLinear,high,3,5,1616,Piecewise linear scale with a break at 50.
+0x526cf0,Set_Field228,high,3,5,1589,Stores a dword at +0x228.
+0x53fd90,CS_Delete,high,3,5,1572,Deletes a critical section.
+0x5312e0,Get_FieldF0,high,3,5,1561,Returns dword at +0xf0.
+0x53a3f0,Sprite_BlitClipped,medium,3,4,7021,Clipped sprite blit path with alpha/format handling.
+0x5336f0,Sprite_DrawMasked,medium,3,4,4146,Sprite draw path with mask/rotation parameters.
+0x539660,Surface_SetBounds,high,3,4,2184,Clamps and stores surface bounds.
+0x53a060,Sprite_ClearBuffers,medium,3,4,2101,Clears sprite pixel/palette buffers.
+0x520b60,UI_IsValidSize,high,3,4,2075,Checks width/height and child fields for a valid layout.
+0x53f020,SoundBuffer_Destruct,high,3,4,1981,Destroys a sound buffer/object.
+0x4f5db0,Object_ClearState,medium,3,4,1856,Clears child/state fields.
+0x50fb40,Game_SetDifficulty,medium,3,4,1842,Sets difficulty/mode and associated constants.
+0x4018c0,IDMap_Update,high,3,4,1817,Updates a sorted ID map entry above 99999.
+0x4e43a0,Game_SetHQLevel,medium,3,4,1813,Maps HQ level 0..2 to size constants.
+0x50fe50,Game_CountActiveStats,medium,3,4,1770,Counts non-zero entries in 86 player counters.
+0x539230,Surface_Release,high,3,4,1766,Releases a surface through its vtable.
+0x534960,Record_GetValue48,high,3,4,1760,"Returns a value from a stride-0x48 record, or -1."
+0x4d42c0,State_HasFlags,medium,3,4,1722,Boolean flag state based on fields +0x14/+0x18.
+0x47c590,Array_ClearStride34,high,3,4,1719,Clears eight records with stride 0x34.
+0x53f840,SoundFormat_Init,high,3,4,1687,Initializes a sound format descriptor.
+0x533a50,Record_Clear48,high,3,4,1683,Clears the first dword of a stride-0x48 record.
+0x535150,Object_GetPair10,high,3,4,1630,Writes fields +0x10 and +0x14 to outputs.
+0x50e700,Set_Field168,high,3,4,1589,Stores a dword at +0x168.
+0x480050,Get_Field19F4,high,3,4,1563,Returns dword at +0x19f4.
+0x526d00,Clear_Field228,high,3,4,1563,Clears dword at +0x228.
+0x520e00,Get_Field24,high,3,4,1561,Returns dword at +0x24.
+0x403190,Clear_Ptr,high,3,4,1547,Clears the first dword/pointer.
+0x4f2a60,IsMenuId352,high,3,4,1529,Returns true for ID 0x352.
+0x527400,StringList_Find,medium,3,3,3858,Searches a string/list table and returns an index/pointer.
+0x540960,SoundBuffer_Init,high,3,3,3083,Initializes a sound buffer object and its stream.
+0x4f1f70,Object_UpdateState,medium,3,3,2758,Updates object state from param_1 and cached fields.
+0x539770,Memory_Fill16,medium,3,3,2647,Copies/fills 16-bit surface pixels with alignment handling.
+0x547400,Sound_Play,medium,3,3,2484,Starts/updates a sound instance.
+0x489070,Rating_GetFloat,medium,3,3,2275,Rating float transform with a switch over categories.
+0x4ed500,Object_Compare,medium,3,3,2065,Compares two objects and returns ordering/distance.
+0x4f7020,Thread_IsOwner,high,3,3,2020,Checks current thread ID against object owner.
+0x547270,Sound_SetVolume,medium,3,3,1918,Adjusts sound volume/parameter.
+0x547300,Sound_SetParam,medium,3,3,1841,Calls a sound vtable method with a parameter.
+0x4f5c20,UI_GetViewRect,high,3,3,1839,Computes a view rectangle from cached offsets.
+0x4d42f0,State_GetFlags,medium,3,3,1797,Returns flag bits or a boolean state.
+0x548070,Sound_SetState,medium,3,3,1791,Applies a state change through the sound vtable.
+0x4f5f70,Array_SetSlot,high,3,3,1781,Stores a value in a small slot array.
+0x5312f0,Array_GetPair8,high,3,3,1778,Returns a pair from a stride-8 array by index.
+0x4f29d0,IsMenuIdRange,high,3,3,1769,Returns true for a whitelist of menu IDs.
+0x5548e7,Heap_FindBlock,medium,3,3,1759,Searches the CRT heap block table for an allocation.
+0x533c60,Record_ClearActive48,high,3,3,1758,Clears active flags in a stride-0x48 record.
+0x52ffa0,Rect_ContainsPoint,high,3,3,1751,Point-in-rectangle test against this+8..+0x14.
+0x4f1d90,Enum_MapDirection,medium,3,3,1746,Maps direction enum 1..5 to opposite/rotated values.
+0x4f7080,Thread_Init,medium,3,3,1745,Initializes thread owner/state fields.
+0x4ed570,Distance_Manhattan3,high,3,3,1738,Returns 3*|dx| + |dy| (Manhattan distance).
+0x541210,SoundBuffer_Configure,medium,3,3,1700,Configures sound buffer parameters via vtable calls.
+0x48b3c0,Game_GetDateFields,high,3,3,1677,Returns two game-date fields (day and day*5).
+0x509fa0,State_Is1A1B1C,high,3,3,1666,Returns true for states 0x1a/0x1b/0x1c.
+0x54cf82,Stream_GetAvailable,high,3,3,1657,Returns remaining bytes between read and write positions.
+0x533540,Get_WidthHeight,high,3,3,1650,Writes 16-bit width/height at +0x12/+0x14.
+0x4f3490,Rect_Center,high,3,3,1649,Subtracts half viewport size from a point.
+0x4d2e40,IsSpecialIdRange,high,3,3,1631,Returns true for IDs in 0x84c..0x857.
+0x509220,Object_SetChildShort,medium,3,3,1624,Writes 0xffff to child+8 when present.
+0x50e840,Object_Reset108,high,3,3,1620,Sets fields +0x108/+0x8c to -1.
+0x520cd0,Object_EnsureInit,medium,3,3,1618,Lazily initializes object and calls vtable method.
+0x54fe6c,CRT_StackFrameStub,high,3,5,1566,Sets up a stack frame and returns; compiler/CRT helper.
+0x4edbc0,NoOp_2,high,3,5,1505,Second empty function stub.
+0x548d70,Sound_SetTimeout,medium,3,3,1614,"If flag +0xfc is set, writes 500 to +0x150."
+0x4e4140,Game_GetCityData,high,3,3,1613,Returns global city data for index 0..0x9c3.
+0x4d42e0,State_HasPositive,medium,3,3,1612,Boolean test of field +0x20.
+0x552385,FileObject_InitBase,medium,3,3,1610,Sets file-object base vtable and field +0x14=1.
+0x4f2a80,IsMenuId351Or355,high,3,3,1588,Returns true for IDs 0x351/0x355.
+0x510570,Get_Float44,high,3,3,1562,Returns float at +0x44.
+0x53e1e0,Surface_BlitFormat,medium,3,2,6750,Blits/converts pixels between RGB555/RGB565 formats.
+0x538af0,Surface_CreateDesc,high,3,2,3890,Builds a surface description and creates it through vtable.
+0x48ce70,Palette_Expand,medium,3,2,3212,Expands 3-byte palette entries into 16-bit colors.
+0x501580,Game_GetPlanName,high,3,2,2690,Returns localized AI plan name for a plan ID.
+0x539f20,Surface_ResetFlags,medium,3,2,2674,Clears surface state/flags.
+0x5474b0,Sound_GetChannel,medium,3,2,2509,Returns sound channel state for channel 1/2.
+0x525af0,UI_ProcessCommandQueue,medium,3,2,2352,Processes queued UI commands in a 1024-entry ring.
+0x539550,Surface_ClearRows,high,3,2,2293,Clears each surface row to zero.
+0x534ac0,Record_GetRect98,high,3,2,2257,Returns four coordinate pairs from a stride-0x98 record.
+0x542b00,List_Remove,high,3,2,2149,Unlinks a node from a doubly linked list.
+0x50fdf0,Game_ResetStats,high,3,2,2134,Resets a large statistics/state block.
+0x4e4860,Game_SetBuildingDesc,medium,3,2,3103,Copies a building name and 14 parameters into a game object.
+0x4f5ae0,Object_ClearSlotRefs,high,3,2,2116,Clears two slot references and linked record flags.
+0x47a4f0,Game_SumStatGrid,high,3,2,2053,"Sums an 8x8 statistic grid, optionally filtered."
+0x47a540,Game_SumStatGrid2,high,3,2,2052,Sums a second 8x8 statistic grid.
+0x4f5b40,Object_CanAssignSlot,medium,3,2,2043,Checks whether a slot can be assigned.
+0x534df0,Surface_FillFF,high,3,2,1958,Fills a surface with 0xff bytes.
+0x4eae00,UI_SetWindowOffsets,high,3,2,1951,Sets window offsets for 16-bit vs other modes.
+0x54a820,Window_MoveToSidePanel,high,3,2,1945,Moves a child window into the side panel.
+0x534320,Record_SetRect48,high,3,2,1921,Stores rectangle coordinates in a stride-0x48 record.
+0x535570,Text_SetMetrics2,medium,3,2,1915,Stores a second set of text metrics.
+0x5335b0,Record_SetDoubles48B,high,3,2,1904,Stores two doubles in a stride-0x48 record.
+0x4f1370,List_AppendNode,high,3,2,1903,Appends a node to the tail of a linked list.
+0x54d921,Stream_SetBuffer,high,3,2,1900,Replaces a stream buffer and updates its flag.
+0x4e47e0,Game_GetMaxIndex4,high,3,2,1845,Returns the index of the maximum of four bytes.
+0x527dc0,UI_GetScrollRatio,medium,3,2,1838,Computes a scroll ratio from two positions and a scale.
+0x54ec31,Mem_Swap,high,3,2,1835,Swaps two byte buffers.
+0x4d4310,State_IsNegative,medium,3,2,1832,Checks three state fields for negative values.
+0x47a820,Game_SumStatRow8,high,3,2,1813,Sums one row/filter of an 8-entry statistic array.
+0x4d4330,Game_GetCostForType,high,3,2,1790,Returns cost constants based on type 0..3.
+0x534a80,Record_GetTypeIndex48,high,3,2,1788,Returns a record index after checking its type byte.
+0x53a3c0,Mem_FillWord,high,3,2,1782,Fills a buffer with a 16-bit value.
+0x532b60,Sound_StopBuffer,medium,3,2,1781,Clears active-buffer field and releases the sound object.
+0x52e880,Window_GetRect,high,3,2,1776,Writes left/top/right/bottom from position and size fields.
+0x54e599,CRT_LockStub,high,3,2,1774,CRT lock/jump stub.
+0x54e5a7,CRT_Unwind,high,3,2,1770,Calls RtlUnwind and restores the exception list.
+0x47c3c0,Array_Copy68,high,3,2,1762,Copies 0x68 dwords from this+0x151c.
+0x488bc0,Game_FindPlayerSlot,high,3,2,1753,"Finds player pointer in six slots, returns index or -1."
+0x4eaa10,Game_GetMapValue,medium,3,2,1735,"Returns 16-bit map value for an index, or -1/-2."
+0x4e4180,Array_FindEmptySlot8,medium,3,2,1730,Scans eight stride-12 records for an empty slot.
+0x4eac00,Game_GetRecordChild14,medium,3,2,1718,Returns field +0x14 of child at index*0x48+0x68.
+0x4db2e0,String_SkipDelimiters,high,3,2,1714,"Advances past spaces, tabs and commas."
+0x4fc7a0,Thread_SetGlobalFlag,medium,3,2,1695,Owner thread updates a global flag.
+0x5078b0,Object_SetChildShort8,medium,3,2,1695,Writes 16-bit value to child+8.
+0x482840,Game_GetPlayerField8,high,3,2,1683,Returns player field +8 or -1.
+0x547230,Sound_ClampGlobalLimits,medium,3,2,1683,Clamps global sound limit constants.
+0x54f3b6,CRT_RunAtexitRange,high,3,2,1683,Calls non-null function pointers in a range.
+0x54dc89,Stream_GetStatus,medium,3,2,1682,Queries stream status through vtable.
+0x55542c,CRT_TestLockFlag,high,3,2,1654,Tests bit 0x40 in CRT lock-table entry.
+0x531dd0,UI_OffsetPoint,high,3,2,1652,Adds +0x18/+0x1c offsets to a point.
+0x482910,Game_GetActiveScreenOrFallback,medium,4,2,1644,"Returns this+0x270, falling back to this+0x264 when zero."
+0x50e4a0,Object_GetChildField2C,high,4,2,1633,"Returns child+0x2c, or 0 when this+200 is null."
+0x54d84e,Thunk_SetVTable55CCA4,high,4,2,1616,Destructor adjustor thunk writing vtable PTR_LAB_0055cca4 into the adjusted object.
+0x4d8d30,Player_SetSlotFlag18,medium,4,2,1594,Sets byte at this+0x10e5+index*0x18 to 1.
+0x482710,Game_GetGlobalTableValue,medium,4,2,1563,Returns global dword DAT_00567d4c indexed by parameter.
+0x520640,Surface_BlitOriented,high,4,1,10823,Copies bitmap rows for ten orientation modes (0..9) using pitch +0x1c and width +0x28.
+0x53ea00,Sound_ADPCMDecode,high,4,1,5110,Decodes 4-bit ADPCM nibbles into 16-bit samples using step table DAT_00574a24 and scale table DAT_00574a64.
+0x479750,Map_CountBuildableNeighbors,medium,4,1,4271,Counts up to eight neighbor groups of 4 tile shorts at 80-cell stride that are 0 or 2.
+0x531e10,Map_FloodFillMask,high,4,1,3243,"BFS flood fill over a byte grid using a 160-entry ring queue, marking cells 4-neighbor connected."
+0x53f1c0,Sound_FormatErrorString,high,4,1,3106,Maps DirectSound/COM HRESULTs such as DSERR_BUFFERLOST to English error strings.
+0x532930,UI_FindNearestWindow,medium,4,1,2611,Scans +0xec window table for type 5 visible candidates and returns the nearest by squared center distance.
+0x534b30,Animation_SetPointPairs,medium,4,1,2482,Stores four x/y point pairs at +0x60/+0x68/+0x70/+0x78 of a 0x98-byte animation object.
+0x4eaa40,Map_FindNameIndex,high,4,1,2341,Linear name search over 2500 stride-0x48 records comparing strings at +0x25.
+0x4ed480,Map_ComputeObjectDistance,medium,4,1,2220,Scores weighted distance from a point to object param_5 in the stride-0xc map-cell array +0x4c.
+0x4dc6a0,Calendar_InterpolateMonthlyValue,medium,4,1,2160,Interpolates this+0xa4[] monthly values using global day byte +7 and month byte +8 over six-day steps.
+0x5418c0,Stream_RequestBlock,medium,4,1,2122,"Computes range and retry state from +0x10/+0xc, decrements +4 and sets end flag bit 1 at exhaustion."
+0x47a5d0,Stats_SumFloatMatrix,medium,4,1,2086,Sums a 9x8 float matrix at this+0x410 filtered by row param_3 and column param_2 (-1 means all).
+0x4037d0,Profiler_StopTimer,medium,4,1,2040,Updates per-id timing stats from timeGetTime deltas for ids 0..99 when DAT_0057b558 is set.
+0x534830,Record_GetPairPositions,medium,4,1,2012,"For a valid stride-0x48 record, returns ints +6/+7 and +0x20/+0x24 as two coordinate pairs."
+0x539930,Rect_ScaleAndOffset,high,4,1,1973,"Divides rect coords by +0x58 then adds offsets +0x5c/+0x60, rounding far edges up."
+0x53fc40,SoundBuffer_ConstructBase,medium,4,1,1957,Constructor sets base vtable 0x55c840 then 0x55c864 and initializes a critical section at +0x23c.
+0x47a850,Stats_GetMatrixVariantValue,medium,4,1,1931,Selects one of four 9x9 int matrices (bases 0x1388/0x13d0/0x1418/0x1460) by variant 0..3.
+0x4dc660,Stats_SumSixSlotValues,high,4,1,1913,"Sums six ints at this+0xce0+row*0x18, or returns one selected slot when param_2 != -1."
+0x525b70,EventQueue_SetEntryState22,high,4,1,1885,Walks 0x400-entry queue at +0x32c0 stride 0x14 and sets state +8 of matching id entries to 0x22.
+0x502360,Stats_GetLevelFromTenCounters,low,4,1,1869,Sums ten bytes at current entity +0xe4 and maps 0/1-3/4-5/>5 to levels 0..3.
+0x53e140,Surface_SetPixel,high,4,1,1843,Bounds-checks x/y and writes a 16-bit pixel into the 3-byte-per-pixel surface at +0x28/+0x20.
+0x51e9d0,UI_InitInputHelper,low,4,1,1822,"Initializes a 0x28-byte helper: zeroes fields, stores owner at +8, sentinel -9999 at +0xc."
+0x5021d0,Stats_GetLevelFromFourCounters,low,4,1,1809,Sums current entity fields +0x3c/+0x44/+0x54/+0x5c and maps total to levels 0..3.
+0x54a770,Window_SetVisible,high,4,1,1798,"ShowWindow(hwnd,1/0) and stores visible flag at +0x20."
+0x4aaac0,Calendar_IsSelectedDate,medium,4,1,1785,Compares global game date month/day (+4/+8) with DAT_00569354/DAT_0057d5c8 and returns 1 on match.
+0x4ead90,Map_Get2DTableValue,medium,4,1,1782,Returns a dword from two 0x30-stride 2D tables at +0x2bf4c (type 0) or +0x2c234 (type 1).
+0x535690,UI_GetFirstEnabledIndex,medium,4,1,1778,Scans 0xe0 flag dwords at +0x460 and returns the parallel byte at +0x1c0 for the first set flag.
+0x553934,Thread_InitLocks,high,4,1,1773,Initializes four global critical sections at PTR_DAT_00576e74..00576eb4.
+0x403790,Profiler_StartTimer,high,4,1,1763,Resets global or per-id timeGetTime timestamps for ids 0..99 when DAT_0057b558 is set.
+0x528200,UI_SetActiveChild,medium,4,1,1751,Releases previous child at +0x230 through vtable+0xc(10) and stores the new pointer.
+0x548ac0,Object_FlushPending,medium,4,1,1735,"When flag +0x140 is set, calls child vtable+0x68 with +0x80 and clears the flag."
+0x5281c0,UI_InvokeCallback,high,4,1,1729,Tail-calls the four-argument callback stored at this+0x8308 when non-null.
+0x54a5d0,Window_GetChildAndNotify,medium,4,1,1724,Returns child pointer +8 after calling its vtable slot 1 with a back-pointer.
+0x4f5ab0,Object_EnsureFirstChild,medium,4,1,1710,"When child+0x38 is zero, sets it to 1 and outputs child[0] through param_3."
+0x512700,Array_AreBothCountsPositive,high,4,1,1701,Returns 1 only if counts at this+0x64+idx*4 are positive for both byte indices.
+0x54dc72,Stream_ValidateRange,medium,4,1,1687,"Returns -1 when +0x28<+0x2c or +0x18<+0x1c, else 0."
+0x47c7b0,Object_SetIndex171C,medium,4,1,1676,Stores parameter at +0x171c and zeroes +0x1720/+0x1724.
+0x4dd0f0,Economy_ApplyTablePercent,medium,4,1,1668,Multiplies global table DAT_0056ca2c[sel*9+idx] by this+0x6c[idx] and divides by 100.
+0x5272d0,UI_SetLayoutParams,low,4,1,1658,Stores two dwords into UI-manager fields +0x82e4/+0x82e8 (defaults 0 and 0x18).
+0x537c30,Object_GetChildField14,high,4,1,1644,"Returns the first dword of child object at this+0x14, or 0 if absent."
+0x4d2e60,Object_IsIdIn840Range,medium,4,1,1631,Returns 1 when this+0x20 is in 0x840..0x84b inclusive.
+0x510c70,Output_StorePair,high,4,1,1622,Writes two input values through two output pointers.
+0x4dd650,Game_SetGlobalWord16,medium,4,1,1609,Stores a 16-bit value at this+4 and mirrors it into global DAT_0057dfbc.
+0x545650,Rect_Zero,high,4,1,1601,Zeroes four consecutive dwords (an empty rect).
+0x483110,Object_SetField280,high,4,1,1589,Stores the argument at this+0x280.
+0x4e4760,Object_SetField0C,high,4,1,1587,Stores the argument at this+0xc.
+0x551981,Stub_ReturnZero,high,4,1,1573,Unreachable-code-removed stub that always returns 0.
+0x539e90,Object_ClearField54,high,4,1,1562,Sets this+0x54 to 0.
+0x520e20,Object_GetField0C,high,4,1,1560,Returns the dword at this+0xc.
+0x542f10,Sound_SetSampleFormat,high,4,0,2985,Builds WAVEFORMATEX for 44.1/22.05/11.025 kHz and 8/16-bit presets and calls vtable+0x38.
+0x544840,SoundBuffer_GetFrequency,high,4,0,2162,"Returns +0x84 only when valid-flag +0x53 is set, else 0."
+0x543300,SoundBuffer_SetFrequency,high,4,0,2007,Validates 1..10000 and stores the frequency at +0x84 under critical section +0xa0.
+0x541290,SoundBuffer_SetFreqAndPan,medium,4,0,1882,"Calls vtable+0x44 with the parameter then vtable+0x40 with 0, returning E_INVALIDARG on failure."
+0x54a7f0,Window_MoveToRect,high,4,0,1712,Calls MoveWindow with rect x/y and computed width/height.
+0x54bcf0,Window_ClearState,medium,4,0,1599,Clears this+0x1a8 and this+4.
+0x531df0,UI_SubtractOrigin,high,5,2,1652,Subtracts +0x18/+0x1c from two coordinate outputs.
+0x547770,Options_GetGlobalSettings,medium,5,2,1634,Copies four globals used as 0..10000 slider values on the options screen.
+0x520cf0,UI_ClearPendingCommand,medium,5,2,1618,"Clears +0x1c and calls vtable +0xc(0x35,0,0)."
+0x4808a0,Game_SetChildField94,medium,5,2,1607,Writes param to (this+0x16f0)+0x94.
+0x54d351,CS_DeleteRaw,high,5,2,1569,DeleteCriticalSection wrapper.
+0x50e540,Object_IsState10,medium,5,2,1555,Returns +0x108 == 10.
+0x553ee1,ParseCommandLine,high,5,1,5185,"CRT command-line tokenizer handling quotes, backslashes and whitespace."
+0x512a10,Product_MapCategory,medium,5,1,4286,Maps product type byte +6 to one of four static category tables.
+0x552921,Game_SetDateTime,high,5,1,3288,Computes day-of-year and time-of-day globals from Y/M/D/h/m/s.
+0x53ec60,Sound_DecodeADPCM,high,5,1,3132,Nibble ADPCM decoder using step/scale tables and a 0x58 clamp.
+0x4d2e80,Building_GetSpriteVariant,medium,5,1,2693,Maps IDs 0x81c..0x863 to 0..3 used to pick sprite 0x810+4*variant.
+0x535e50,Palette_Convert256,high,5,1,2500,Converts 256 RGB888 entries from +0 to RGB555 or RGB565 selected by param.
+0x4f9d50,Building_GetLevelFromType,medium,5,1,2346,Maps building type 0..3 plus level 0..2 to a 1..5 level.
+0x47a430,Stats_SumPlayerGrid,high,5,1,2274,"Sums a [100][8] int grid at +0x554, filtered by row/column."
+0x535cb0,Palette_FindIndex,high,5,1,2177,Compares 0xc0 dwords (256 RGB) against a palette pointer list.
+0x5356c0,Font_MeasureRange,high,5,1,2132,Sums per-character widths at +0x1c0 between string bounds.
+0x4da810,Player_TrackRecentEntry,medium,5,1,2101,Moves or inserts a value in a six-entry recent list at +0xfe4.
+0x4dbff0,Game_GetPlayerQuarterStat,medium,5,1,2046,Returns one of four per-player arrays or their average.
+0x485820,Game_UpdateAmbientLight,medium,5,1,2015,Interpolates a day/night table by hour byte into global blit alpha 0x585518.
+0x4ed360,UI_ClampScrollY,high,5,1,1974,Clamps +0xe8 between content limit and viewport bottom.
+0x5349e0,RecordList_ReadSlot98,high,5,1,1957,"Copies 6 bytes from record [index][sub] at +0x50, stride 0x98."
+0x4d3ef0,Employee_ApplySkillMultipliers,medium,5,1,1937,Scales four stats by global percentages into +0x28..+0x34.
+0x4d3940,Stats_GetOrSumSeries,medium,5,1,1916,Returns [row][col] at +0x44 or sums the 100-entry row when col==-1.
+0x4db170,Market_GetPriceDelta,medium,5,1,1897,Returns +40/-40/0 from a competitor strategy byte via player table.
+0x403750,String_RegisterSlot,medium,5,1,1876,Replaces the shared unknown pointer in a 100-slot global table and returns its index.
+0x48d3a0,Game_GetStartingCapital,high,5,1,1844,"Difficulty switch returns 1,000,000 down to 20,000."
+0x5405b0,Sound_AllocVoice,high,5,1,1824,Finds a free slot in a 20-entry stride-0x24 voice table and marks it used.
+0x501df0,Game_GetPlayerStaffBand,medium,5,1,1809,Sums four current-player counters and bands the total to 0..3.
+0x502120,Game_GetPlayerSatisfactionBand,medium,5,1,1802,Averages three current-player fields and bands to 0..2.
+0x5414e0,Input_GetDeviceObjectInfo,medium,5,1,1788,Calls device vtable +0x14 with an object index and output struct for capability probing.
+0x496900,SaveList_FindIndex,medium,5,1,1782,Linear search of global save-entry ID array; returns index or -1.
+0x401170,Object_SumFloat25,high,5,1,1778,Sums 25 floats at +0x78.
+0x54e5a0,CRT_UnlockHelper,low,5,1,1774,LOCK/UNLOCK sequence then indirect jump; CRT unlock helper stub.
+0x501ea0,Game_GetPlayerWealthBand,high,5,1,1765,Reads double +0x108 and bands at 100k/500k/1M to 0..3.
+0x47fd50,Game_IncrementVisitCounter,medium,5,1,1755,Increments total +0x16c0 and one of eight counters at +0x16c2.
+0x4f5770,Record_SetField2D0C,medium,5,1,1739,Sets byte +0x2d of the object at (this+0x4c)+index*0xc+8.
+0x5237e0,UI_SetChildPosition,medium,5,1,1729,Writes +0x5c/+0x60 of the child at this+0x240.
+0x48d020,Building_GetAreaByLevel,high,5,1,1724,Returns 2070/2916/3420/3960 for level 0..3.
+0x5548a9,Heap_InitSmallBlock,high,5,1,1712,HeapAlloc 0x140 and initializes CRT small-block heap globals.
+0x4dbfc0,Market_GetPriceModifier,medium,5,1,1707,Converts strategy byte 1/other/0 to +10/-12/0 price modifier.
+0x4f2a20,Object_IsKnownId,medium,5,1,1691,"True for -1, 0..0x20 and 0x356..0x602."
+0x51ea00,RefPtr_Release,high,5,1,1678,Releases the +4 object via vtable and clears +0x14.
+0x485ac0,Game_GetSpeedSetting,medium,5,1,1669,"Returns 1 when either progression counter is below threshold, else 2."
+0x47db10,Stats_Increment2D,medium,5,1,1658,Increments a dword counter at this+(param2+0x626+param1*2)*4.
+0x54e922,CRT_NotifyDebugger,medium,5,1,1648,Stores EAX/EBP into exception globals; called by __local_unwind2.
+0x539260,Surface_Unlock,medium,5,1,1639,"Calls vtable +0x80(...,0) on the object at (this+0x40)+0x10."
+0x551961,CRT_ReadArg16,low,5,1,1627,Advances a va-list pointer by 4 and returns the 16-bit argument.
+0x480740,Object_AccumulateIncome,medium,5,1,1611,Adds per-object rate +0x14d4 to accumulator +0x16bc.
+0x50efc0,Player_ResetAiState,low,5,1,1601,Resets player +0x84=1 and +0x88=0 for non-human players.
+0x5281f0,UI_SetEventCallback,medium,5,1,1590,Stores a code callback at UI manager +0x8308 during UI_Init.
+0x512730,Product_HasStock,high,5,1,1588,Returns whether counter +100+index*4 is positive.
+0x551951,CRT_ReadArg64,low,5,1,1585,Advances a va-list pointer by 8 and returns the 64-bit argument.
+0x535510,Text_GetLineHeight,medium,5,1,1562,Returns +0x9b8 text metric used for line layout.
+0x5349d0,RecordList_GetCount,high,5,1,1561,Returns +0x68 item count; callers use count-1 as last index.
+0x5449a0,Media_QueryFlagLocked,low,5,0,3243,"Locks +0xa0, queries a bool through a nested vtable call and writes it out."
+0x54db85,File_WriteBytes,high,5,0,2167,Writes bytes to the stream buffer or via putc vtable; returns count.
+0x4ff9e0,Building_ResetInventory,medium,5,0,2011,Resets ten product slots and sets stock double +0x108 from a table.
+0x5433e0,Media_SetValue94,low,5,0,1901,Lock-protected write of +0x94 after an HRESULT check.
+0x527cc0,UI_SetModalHandler,medium,5,0,1766,"Stores owner at +0x8338 and callback at +0x833c, then invokes it."
+0x526850,Dialog_SetResult,high,5,0,1631,Sets result flag +0x280=1 and result code +0x27c; read by dialog loop.
+0x508d40,Object_ApplyPendingType,medium,6,2,1638,Copies the pending type at +0x78 into the active type at +0x30 unless the new value is 0x23.
+0x4f0e20,Counter_IncrementShortBA,high,6,2,1624,Increments the 16-bit counter at +0xba and returns the new value.
+0x4e3be0,Player_ResetDebtHours,high,6,2,1614,Clears the +0x1e8 debt-hour counter when the cash balance at +0x108 is non-negative; the counter increments hourly while cash is negative.
+0x4f3b10,Array_GetField4Stride12,high,6,2,1589,Returns the dword at (+8)->+4+index*0xc.
+0x4dd4d0,ThreadSync_Signal,medium,6,2,1562,Sets the thread-synchronization flag at +0x1c to 1; callers pair it with the wait routine at 0x4f7020.
+0x5550f2,CRT_HeapFreeBlock,high,6,1,6788,"Frees a small-block heap block: unlinks it from its bucket, updates the 32/64-bit bucket bitmaps and coalesces neighbours."
+0x539380,Gfx_Blit16Clipped,high,6,1,4838,"Clips source/destination rectangles then copies 16-bpp rows, using 2-byte or 4-byte stores depending on renderer flag 0x57c5c8+0x74."
+0x479b00,Grid_ScoreRuns,medium,6,1,3577,"Scores an 80x80 grid of 16-bit cells, counting runs of value 1 and 2 and adding penalties for runs longer than 2 or 4."
+0x554ff7,CRT_HeapCreateRegion,high,6,1,3157,Creates a 0x8000-byte heap region with VirtualAlloc and initializes the 64 bucket free lists and their bitmap.
+0x538870,Renderer_CopyState,medium,6,1,3099,"Copies renderer mode, rectangle, child handle and fields +0x74/+0x84..+0x94 from a source renderer and sets +0x48."
+0x528090,UI_ClearTransientEntries,medium,6,1,2560,Walks the 0x400-entry ring at +0x2b4 and clears entries of types 0x100/0x102/0x104 or 0x202/0x204/0x205/0x20a.
+0x4f55e0,Grid_CollectType351,medium,6,1,2446,Scans the map grid and emits up to 0x50 coordinate pairs for cells whose object type at +4 equals 0x351.
+0x4e4670,Value_Approach,high,6,1,2313,"Moves the double at +0x10 toward a target by a delta, clamps at the target and sets the reached flag +0x1c."
+0x4ed3c0,Map_ClampScrollY,medium,6,1,2211,"Clamps scroll field +0xec between bounds derived from +0x30/+0x38 and view margins +0x10174/+0x10170, honoring mode 2."
+0x4ed930,Map_SetHoverTile,medium,6,1,2152,Copies the hovered cell's x/y and 0xf dwords into this+0x64 and writes two fields from this+0x68; sets the hover flag.
+0x47a4a0,Matrix_Max100x8,medium,6,1,2105,Scans up to 100 columns by 8 rows of dwords at +0x554 and computes the maximum (returned in EAX despite the void signature).
+0x546750,SoundBuffer_Destructor,high,6,1,2077,Restores the sound-buffer vtables 0055cb14/0055c840 and releases the child object through vtable slot +4.
+0x520bc0,UI_HitTestChild,high,6,1,2030,"Returns true when +0x18 is set, otherwise bounds-checks the point against +0x28/+0x2c/+0x30/+0x34 and calls vtable +0x14 with relative coordinates."
+0x47a590,Matrix_MaxByRow9x8,high,6,1,2008,Computes the maximum of the 9x8 dword matrix at +0x188 for one row (or all rows when -1).
+0x47a8e0,Matrix_Max4x9,high,6,1,1967,Computes the maximum across four rows of nine dwords starting at +0x13f4-0x48.
+0x53e190,Tilemap_GetCell,high,6,1,1956,Bounds-checks x/y against ushort +0x1a/+0x1c and returns the 16-bit cell from base +0x28 at y*pitch + x*3.
+0x541ca0,Sound_GetDeviceCaps,medium,6,1,1927,Calls the DirectSound GetCaps slot +0x10 with a 0x60-byte DSCAPS and returns 0x10000 when capability bit 0x20 is present.
+0x5043f0,UI_DecrementTimer,medium,6,1,1905,"Decrements a per-index countdown in the array at +0x88 or +0x16c, depending on the flag, clamped at zero."
+0x534a30,Record_SetSlot6_98,high,6,1,1883,"Writes a 6-byte {dword,word} entry into slot 0..15 of a stride-0x98 record at +0x50."
+0x54cc09,Stream_PutByte,high,6,1,1869,"Buffered putc: stores the byte at +0x1c and advances, otherwise flushes through vtable slot +0x1c."
+0x553b9e,CRT_FindExceptionHandler,high,6,1,1838,Scans the per-thread exception-handler table in stride-0xc records for the first int matching the exception code.
+0x539700,Win32_PumpMessages,high,6,1,1815,Drains the Win32 message queue with PeekMessageA/GetMessageA/TranslateMessage/DispatchMessageA.
+0x4d3530,Record_GetFlag3E48,high,6,1,1808,"Follows this+8, validates its index against the stride-0x48 record count, and returns the record's byte at +0x3e."
+0x521180,Object_ClearFieldsA,high,6,1,1795,Clears the seven dword fields at +0x54/+0x58/+0x70/+0x9c/+0x78/+0x6c/+0x64.
+0x4986c0,GlobalArray_FindInt,high,6,1,1784,"Linear search of the global dword array at 0x57ca08 for a value, returning its index or -1."
+0x514660,Language_IndexOfString,high,6,1,1781,"Searches the global LDF string-pointer array at 0x580ad4 (count 0x580ad0) and returns the index, or 0 when absent."
+0x527ad0,Object_GetChildOrigin,medium,6,1,1777,"Returns the child at +0x8310's +0xc/+0x10 coordinates, or zeros when the child is null."
+0x514240,Array_CountNonZero20,high,6,1,1772,Counts nonzero dwords among 20 entries of stride 3 at +0x60.
+0x4e41a0,Game_CountGroupSlots,medium,6,1,1763,"Counts up to six 16-bit group slots at this + (group*3+0x1e)*4, stopping at the first -1."
+0x403b90,List_FindByKey,high,6,1,1744,"Walks the linked list from this+0xc via next pointers at +0x14, returning the node whose +0x10 key matches."
+0x4da690,Array_FindIndexStride60,high,6,1,1732,"Returns the index 0..3 of a pointer among the four 0x60-stride objects at +0xdc8, or 4 when absent."
+0x52cb70,Text_SkipFieldSeparators,medium,6,1,1725,"Advances a string cursor past characters <= space or commas, stopping at '}' or NUL."
+0x48d070,Stats_GetAmountByType,medium,6,1,1723,Returns one of four hardcoded amounts (576/2322/1368/1656) selected by param/3 for a %.2f statistics field.
+0x508fb0,Building_MapSubtypeToState,medium,6,1,1708,"Maps building subtype +0x84 values 0..3 to 6/0/2/4, which is added to state ids 0x18/0x20/0x28."
+0x509fc0,Building_IsSpecialType,low,6,1,1700,"Returns true for building types 4, 5, 0xb, 0x21 and 0xf stored at +0x30."
+0x5445f0,Sound_RewindBuffer,high,6,1,1686,Invokes the buffer vtable slot +0x34 with 0 (SetCurrentPosition) and normalizes failure to E_FAIL.
+0x48b3f0,Game_GetYearAndWeekday,high,6,1,1676,Returns the date object's ushort year at +4 and weekday byte at +8; used in save headers and date displays.
+0x535d50,Array_GetPtrChecked,high,6,1,1665,Bounds-checks an index against +8 and returns the dword from the array at *(this)+index*4.
+0x5355d0,Text_SetCursor,high,6,1,1656,Stores the text draw cursor x/y at +0x9a0/+0x9a4 before per-character rendering.
+0x51ef60,Object_GetByte36Max7,medium,6,1,1641,"Returns the byte at (*this)+0x36 when it is <= 7, otherwise 0; 0 for a null object."
+0x527ca0,UI_ClearField230,high,6,1,1630,Clears UI manager field +0x230 when it equals the supplied object.
+0x4ed310,Array_SetField4Stride12,high,6,1,1615,Stores a dword at (+8)->+4+index*0xc.
+0x4973f0,Supplier_GetValuePlusOne,low,6,1,1601,Returns table entry 0x57c718[index]+1 for the supplier/contract index at +0x18; 0 for index 0.
+0x4dca70,City_GetLocalizedName,high,6,1,1593,Returns the localized string from table 0x582fd8 indexed by the city index at +0x10bc (eight strings mapped by language).
+0x4c3c70,Lookup_BytePlusOne,low,6,1,1588,Returns byte-table entry 0x57d73c[index]+1 for the contract index at +0x18; 0 for index 0.
+0x50efb0,Object_SetField8,high,6,1,1585,Stores the argument dword at +8.
+0x4dd4e0,ThreadSync_Clear,medium,6,1,1562,Clears the thread-synchronization flag at +0x1c to 0; paired with the wait routine at 0x4f7020.
+0x520e10,Object_GetField10,high,6,1,1561,Returns the dword at +0x10.
+0x526590,UI_GetTheme,high,6,1,1538,"Returns this+0x288, the theme block that UI_Init fills with the default font and color fields."
+0x544760,Sound_GetPlayPosition,high,6,0,2610,"Locks the sound object, calls buffer vtable +0x10 (GetCurrentPosition) and divides the play cursor by block align +0x24."
+0x527d10,UI_SetWaitCursor,high,6,0,2142,Loads cursor resource 0x7f00 and sets it directly or posts WM_USER 0x400 to the window and waits up to 500 ms.
+0x543370,SoundBuffer_SetLevel88,low,6,0,2007,"Validates a 1..10000 level and stores it at sound-buffer +0x88 under the +0xa0 critical section, parallel to the frequency setter at +0x84."
+0x5479c0,Sound_SetEnabledFlag,high,6,0,1823,Updates byte 1 of the global sound settings 0x575090 only when it changes and marks the object dirty at +0xfe.
+0x53ef70,RefCount_Release,high,6,0,1701,"Decrements the reference count at +4 and, when it reaches zero, calls vtable slot +0xc with argument 1."
+0x4d40d0,Cost_ComputeQuantityPrice,medium,6,0,1585,"Returns (value at +0xc / 10) * value at +0x3c * 10, a quantity-times-price calculation."
+0x539340,Color_Convert555To565,high,7,2,1775,In-place 15-bit to 16-bit pixel expansion gated by flag +0x18.
+0x480880,City_IsIdle,low,7,2,1634,True when player +0x16f0 is null or its +0x94 task pointer is null.
+0x54d484,COM_SetSecondaryVTable,medium,7,2,1620,"Writes vtable 0x55cc94 into the secondary base subobject at param-0xc, matching constructor 0x54d40e."
+0x539180,Surface_IsReady,low,7,2,1612,"Returns true when virtual method +0x80(obj,0) returns 0."
+0x54d346,CS_Initialize,high,7,2,1573,Direct InitializeCriticalSection wrapper.
+0x514320,Storage_GetCapacity,medium,7,2,1560,Returns +0x2c * 15 + 36; used as divisor for storage fill percentage.
+0x53de60,Surface_DrawLine,high,7,1,5863,Bresenham line with clipping and color conversion using stride +0x20 and pixel base +0x28.
+0x540390,ResourceTable_FindEntry,medium,7,1,4416,"Searches the 0x238 groups of 0x1c, entries stride 0x14 by name, returning group and entry index."
+0x553630,CRT_Strcat,high,7,1,3467,Scans destination to NUL then copies source; companion of _strcpy at 0x553620.
+0x4e0010,Company_ComputeTotals,high,7,1,3146,Sums eight 4-field groups into +0xfc..+0x118 and stores the grand total at +0x11c.
+0x403880,String_CompareLocalizedNoCase,high,7,1,2719,Case-insensitive compare with German umlaut folding; used to sort localized names.
+0x50f590,PlayerCompany_InitDefaults,medium,7,1,2557,"Copies global default tables into player-company fields +0x3c..+0x68, +0x2c/+0x30 and +0x6c..+0x80."
+0x554f46,CRT_SmallBlockNewRegion,high,7,1,2352,Allocates a 0x41c4 region header plus a 1 MB VirtualAlloc block and appends a 0x14-byte region entry.
+0x528820,UI_UpdateHoveredRow,medium,7,1,2302,Computes the hovered row from y using row height +0x4c->0x9b0 and updates +0x48 when it changes.
+0x4817c0,System_QueryMemoryInfo,high,7,1,2178,"GlobalMemoryStatus total RAM plus DirectDraw +0x2c query, stored in MB at +0x2e1c/+0x2e20."
+0x53a220,Sprite_InitFormat,high,7,1,2152,"Initializes sprite flags, bpp, width, height, pitch and color key from constructor arguments."
+0x4d2b40,Entity_ApplyTypeProperties,medium,7,1,2101,Stores type +0x20 and copies three properties from the DAT_0056b468 table.
+0x5322a0,UI_GetWindowRect,high,7,1,2067,Returns overlay rect +8..+0x14 or window rect +0x38..+0x44; empty rect for sentinel -999.
+0x54d372,Stream_GetChar,high,7,1,2026,streambuf sbumpc: returns *gptr++ or falls back to virtual +0x20 (uflow).
+0x4dc080,Mission_ApplySettings,high,7,1,1982,Publishes mission game-object difficulty +0x344 and modifiers into globals DAT_0057bb24..0x57bb50.
+0x47a620,Grid_GetMaxValue,medium,7,1,1962,Returns the maximum of the 9x9 float grid at +0x410; used for city rating.
+0x545660,Sound_Get3DBufferParams,high,7,1,1950,Clears a 0x40-byte DS3DBUFFER and calls vtable +0xc; returns E_INVALIDARG on failure.
+0x4dd4a0,GameClock_Reset,high,7,1,1921,Resets date bytes +6/+7/+8 and tick fields of the game clock at game+0x94; +4 holds default year 2000.
+0x549930,Employee_NextSpriteVariant,medium,7,1,1905,Cycles the per-role counter at +0x1dc and returns sprite pointer DAT_005762b0 or DAT_005762b4.
+0x5288b0,UI_GetOuterRect,medium,7,1,1880,Builds a rect from margins +0x30/+0x34 and size +0x28/+0x2c at position +0x38/+0x3c.
+0x54d574,Stream_PutBackChar,high,7,1,1866,"streambuf sputbackc: stores the char at --pptr while pptr>pbase, else calls virtual +0x24."
+0x5230d0,Array_IndexOfInt,high,7,1,1830,Linear search of an int array at +4 with count +8.
+0x542ad0,Sound_QueryBufferFlag,medium,7,1,1812,Calls sub-object vtable +0x24 and returns its low bit; used in sound streaming checks.
+0x502180,Stats_ComputeCategory7,low,7,1,1808,Sums four player-company fields and maps the total to level 0..3; switch case 7 of 0x502430.
+0x50e200,Object_CountMatchingSlots,medium,7,1,1788,Counts how many of eight ints at +0xd4 equal the given value.
+0x49c0e0,GlobalArray_FindIndex,medium,7,1,1784,"Linear search of global int array DAT_0057ca94 with count param_2, returning index or -1."
+0x401150,Record_SumFloatArray26,high,7,1,1778,Sums 26 consecutive floats at +0x10; used when aggregating record values.
+0x54e565,CRT_CallExceptionHandler,medium,7,1,1776,Pops ExceptionList and tail-calls the recovered SEH handler pointer.
+0x4ed010,Map_ComputeIsoOffsets,medium,7,1,1769,"Derives 2*width, 2*height and 3*height offsets at +0xd8..+0xe4 used by diagonal map stepping."
+0x50f7f0,Company_GetPercentModifier,medium,7,1,1761,"Scales a value to percent using mode +8 denominators 10000/5000, otherwise returns 100."
+0x54d3be,Stream_PeekChar,medium,7,1,1743,"Returns cached char [3], refilling it via virtual +0x20 when needed."
+0x4d2e10,TileDef_TestFlag,high,7,1,1731,Tests flag mask param_2 against per-tile definition +0x4c + index*0xc -> +8 -> +0x1c.
+0x54a7d0,Dialog_SetItemText,medium,7,1,1725,"SetWindowTextA(GetDlgItem(hwnd,0x3ef), DAT_00579aec) when the dialog window exists."
+0x553468,CRT_ResolveCatchObject,medium,7,1,1721,Computes a catch-object address from the frame offset and pdata/catch info; used by exception handler 0x55323d.
+0x489040,Map_GetTileByte,high,7,1,1707,Reads a byte from map buffer +0xa0->+0x18 at x + y*800.
+0x4e3dd0,Player_InitSlotFlags,medium,7,1,1695,Sets per-index byte +0xac and clears dwords +0xb4 and +0xcc for a player.
+0x49f190,Game_ClearObjectReferences,medium,7,1,1679,Clears DAT_0057cda0 and game+0x98 when the destroyed object matches them.
+0x543e90,Sound_QueryFormatType,medium,7,1,1672,"Calls sound vtable +0xc, returning 0 on failure or 0xc; caller branches on the format result."
+0x5355b0,Text_GetPosition,high,7,1,1660,Reads text draw x/y at +0x9a0/+0x9a4 set by Text_SetMetrics.
+0x52e830,Renderer_ReleaseTarget,medium,7,1,1648,Clears render target +0x14 and marks +0x3c invalidated when a target is present.
+0x527ab0,MapView_GetRotation,high,7,1,1639,Returns map-view +0x8310 field +0x24; the window proc uses it as the 0..7 map rotation.
+0x526d10,UI_SetMenuToggle,low,7,1,1627,Stores toggle flag +8 and marks +0x234; called for WM_SYSCOMMAND 0x4300.
+0x53f820,StreamBuffer_Reset,medium,7,1,1614,Zeroes the four-dword stream buffer state; used by sound stream reader 0x541880.
+0x4a8450,Personnel_GetTrainingLevel,low,7,1,1601,Returns DAT_0057d298[index]+1; displayed in the personnel dialog field 0x48b.
+0x527940,UI_SetWindowProc,high,7,1,1590,"Stores Game_WindowProc at +0x8304, the callback used by the UI dialog dispatch."
+0x4d3070,Entity_SetTileId,medium,7,1,1588,Stores the cell tile id from piVar3[2] at entity +0x24.
+0x551944,CRT_GetVaArg,medium,7,1,1585,Returns the dword at *param_1 and advances it by 4; used repeatedly by varargs parser 0x551165.
+0x4f5fc0,Object_ClearField28,medium,7,1,1562,Clears +0x28 of the player sub-object at game+0x224->0xac.
+0x52e8e0,Renderer_GetTextObject,medium,7,1,1561,"Returns +0x18, the text object the renderer configures with Text_SetColor."
+0x54cb70,NoOp_ReturnArg,high,7,1,1533,Identity function whose result is discarded at its only call site 0x54cad0.
+0x5448c0,Sound_QueryStatusLocked,medium,7,0,2578,"Enters CS +0xa0, queries buffer param_2->0x48 via vtable +0x24, and writes its low bit."
+0x5484b0,Sound_StopAmbientBuffers,medium,7,0,2059,Clears flag +0x16a and stops buffers +0x88/+0x8c/+0xf4.
+0x53ef90,COM_QueryInterfaceGuid,high,7,0,1904,"Compares four GUID dwords with DAT_0055cb68, returning this or E_NOINTERFACE."
+0x5396b0,Surface_GetCursorRect,high,7,0,1800,Outputs cursor fields +4/+0xc/+8/+0x10.
+0x527cf0,UI_ClearScrollDrag,medium,7,0,1646,Clears drag target/object/offset +0x8338/+0x833c/+0x8348 set by 0x527cc0.
+0x54ddec,NoOp_Empty,high,7,0,1505,Empty function body with no side effects.
+0x402060,Pak_FindEntry,high,8,2,4323,Pak entry binary search
+0x401f90,ResourceIterator_Next,high,8,2,3114,resource iterator
+0x402260,ResourceHandle_Alloc,high,8,1,1827,resource handle allocator
+0x401f30,Pak_DecodeIndex,high,8,3,1727,pak index decoder
+0x4a14c0,SaveGame_CompareTime,high,8,1,2130,save-list time comparator
+0x53d090,Sprite_GetSize,high,8,38,2231,sprite size accessor
+0x53d100,Sprite_GetHotspot,high,8,21,1738,sprite hotspot accessor
+0x53d140,Sprite_SetHotspot,high,8,1,1704,sprite hotspot setter
+0x53d420,Sprite_GetFormat,high,8,3,1558,sprite format accessor
+0x53d430,Sprite_GetColorKey,high,8,3,1625,sprite color-key accessor
+0x53d440,Sprite_SetColorKey,high,8,4,1647,sprite color-key setter
+0x53d4a0,Sprite_GetPalette,high,8,2,1561,sprite palette accessor
+0x401320,CS_Enter,high,8,108,1820,critical-section enter
+0x401340,CS_Leave,high,8,109,1762,critical-section leave
+0x4017f0,IDMap_Lookup,high,8,673,3137,ID map lookup
+0x4029d0,Resource_GetSize,high,8,1,1630,resource size accessor
+0x4031b0,RegistryKey_OpenOrCreate,high,8,4,1943,registry key open/create
+0x4032a0,RegistryKey_WriteValue,high,8,2,1875,registry value writer
+0x403580,ResetScreenRegistry,high,8,1,2336,screen registry reset
+0x404420,SetScreenRects,high,8,1,1700,screen rectangle setup
+0x404760,ShutdownScreens,high,8,1,1920,screen shutdown
+0x5146d0,Language_MapStrings,high,8,1,92267,LDF string mapping
+0x528040,UI_FindWindowByID,high,8,139,2172,UI window lookup
+0x537f20,DirectDraw_Init,high,8,1,9641,DirectDraw init
+0x54cb80,GetSaveFileNameA_Thunk,high,8,0,1768,import thunk
+0x54cb86,DirectDrawCreate_Thunk,high,8,0,1708,import thunk
+0x54e010,_strchr,high,8,14,3273,CRT strchr
+0x54e170,_strstr,high,8,5,4110,CRT strstr
+0x54e84c,__global_unwind2,high,8,0,1692,CRT unwind
+0x54e8f6,__abnormal_termination,high,8,1,1848,CRT termination
+0x54e919,__NLG_Notify1,high,8,1,1844,CRT notification
+0x54e940,_strncmp,high,8,4,2489,CRT strncmp
+0x54efd0,_strrchr,high,8,12,2202,CRT strrchr
+0x54f000,_strcmp,high,8,2,3263,CRT strcmp
+0x54f140,__ftol,high,8,155,1622,CRT float-to-int
+0x54f620,_strncpy,high,8,8,4169,CRT strncpy
+0x54fca0,__allmul,high,8,1,1911,CRT multiply
+0x550920,_strlen,high,8,11,2425,CRT strlen
+0x555520,__aulldiv,high,8,1,2697,CRT unsigned divide

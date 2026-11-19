@@ -1,0 +1,266 @@
+========================================================================================
+0x49b4e0 layer=[1] indeg=0 bytes=2709
+calls: List_Construct, 0x4014b0, 0x4017f0, UI_ListEntry_Construct, 0x54e221
+ provider-specific; not original source
+int FUN_0049b4e0(void)
+{
+  int iVar1;
+  int iVar2;
+  void *pvVar3;
+  int iVar4;
+  char *pcVar5;
+  int iVar6;
+  int local_18;
+  void *local_c;
+  undefined1 *puStack_8;
+  undefined4 local_4;
+  local_4 = 0xffffffff;
+  puStack_8 = &LAB_005586b6;
+  local_c = ExceptionList;
+  iVar1 = *(int *)(DAT_0057c670 + 0x200 + *(int *)(DAT_0057c670 + 0x2ec) * 4);
+  iVar6 = 0;
+  local_18 = 0;
+  iVar2 = *(int *)(iVar1 + 0x124);
+  ExceptionList = &local_c;
+  pvVar3 = operator_new(0x1c);
+  local_4 = 0;
+  if (pvVar3 == (void *)0x0) {
+    DAT_0057ca8c = (undefined4 *)0x0;
+  }
+  else {
+    DAT_0057ca8c = FUN_004013a0(pvVar3,0);
+========================================================================================
+0x498090 layer=[1] indeg=0 bytes=1966
+calls: MissionGoal_HandleEvent, UI_AppendCommandIfActive, GamePlan_ComputeCategoryEffect
+ provider-specific; not original source
+void FUN_00498090(void)
+{
+  int iVar1;
+  int iVar2;
+  int iVar3;
+  iVar3 = 0;
+  iVar1 = *(int *)(DAT_0057c670 + 0x200 + *(int *)(DAT_0057c670 + 0x2ec) * 4);
+  do {
+    iVar2 = FUN_0050f870(DAT_0057c9ec,*(int *)(iVar1 + 0x48),iVar3);
+    if (0x46 < iVar2) {
+      FUN_00503250(*(void **)(*(int *)(DAT_0057c670 + 0x224) + 0xa8),0x1a,-1);
+      FUN_00502f10(*(void **)(*(int *)(DAT_0057c670 + 0x224) + 0xa8),0x1a,-1,-1);
+      return;
+    }
+    iVar3 = iVar3 + 1;
+  } while (iVar3 < 7);
+  return;
+}
+========================================================================================
+0x4f5e20 layer=[1] indeg=0 bytes=1622
+calls: PlayerAIState_Destructor, 0x54dd78
+ provider-specific; not original source
+undefined4 * __thiscall FUN_004f5e20(void *this,byte param_1)
+{
+  FUN_004f5e40(this);
+  if ((param_1 & 1) != 0) {
+    Mem_Free(this);
+  }
+  return this;
+}
+========================================================================================
+0x4d1b80 layer=[1] indeg=0 bytes=1622
+calls: RecipeTopping_Destroy, 0x54dd78
+ provider-specific; not original source
+undefined4 * __thiscall FUN_004d1b80(void *this,byte param_1)
+{
+  FUN_004d1ca0(this);
+  if ((param_1 & 1) != 0) {
+    Mem_Free(this);
+  }
+  return this;
+}
+========================================================================================
+0x53a1f0 layer=[1] indeg=0 bytes=1622
+calls: SpriteBase_Destructor, 0x54dd78
+ provider-specific; not original source
+undefined4 * __thiscall FUN_0053a1f0(void *this,byte param_1)
+{
+  FUN_0053a210(this);
+  if ((param_1 & 1) != 0) {
+    Mem_Free(this);
+  }
+  return this;
+}
+========================================================================================
+0x54a610 layer=[1] indeg=0 bytes=1622
+calls: DebugConsole_Destructor, 0x54dd78
+ provider-specific; not original source
+undefined4 * __thiscall FUN_0054a610(void *this,byte param_1)
+{
+  FUN_0054a630(this);
+  if ((param_1 & 1) != 0) {
+    Mem_Free(this);
+  }
+  return this;
+}
+========================================================================================
+0x401020 layer=[1] indeg=0 bytes=1622
+calls: StatsPeriodReport_Destroy, 0x54dd78
+ provider-specific; not original source
+undefined4 * __thiscall FUN_00401020(void *this,byte param_1)
+{
+  FUN_00401270(this);
+  if ((param_1 & 1) != 0) {
+    Mem_Free(this);
+  }
+  return this;
+}
+========================================================================================
+0x501a10 layer=[1] indeg=0 bytes=1622
+calls: AwardNode_Destructor, 0x54dd78
+ provider-specific; not original source
+undefined4 * __thiscall FUN_00501a10(void *this,byte param_1)
+{
+  FUN_00501a30(this);
+  if ((param_1 & 1) != 0) {
+    Mem_Free(this);
+  }
+  return this;
+}
+========================================================================================
+0x4e5da0 layer=[1] indeg=0 bytes=1622
+calls: ConstructionOrder_Destructor, 0x54dd78
+ provider-specific; not original source
+undefined4 * __thiscall FUN_004e5da0(void *this,byte param_1)
+{
+  FUN_004e5de0(this);
+  if ((param_1 & 1) != 0) {
+    Mem_Free(this);
+  }
+  return this;
+}
+========================================================================================
+0x50f670 layer=[1] indeg=0 bytes=1622
+calls: GamePlan_Destructor, 0x54dd78
+ provider-specific; not original source
+undefined4 * __thiscall FUN_0050f670(void *this,byte param_1)
+{
+  FUN_0050fb30(this);
+  if ((param_1 & 1) != 0) {
+    Mem_Free(this);
+  }
+  return this;
+}
+========================================================================================
+0x4e4320 layer=[1] indeg=0 bytes=1622
+calls: BuildingValue_Destroy, 0x54dd78
+ provider-specific; not original source
+undefined4 * __thiscall FUN_004e4320(void *this,byte param_1)
+{
+  FUN_004e4390(this);
+  if ((param_1 & 1) != 0) {
+    Mem_Free(this);
+  }
+  return this;
+}
+========================================================================================
+0x4d3710 layer=[1] indeg=0 bytes=1622
+calls: Character_Destroy, 0x54dd78
+ provider-specific; not original source
+undefined4 * __thiscall FUN_004d3710(void *this,byte param_1)
+{
+  FUN_004d3f80(this);
+  if ((param_1 & 1) != 0) {
+    Mem_Free(this);
+  }
+  return this;
+}
+========================================================================================
+0x4012e0 layer=[1] indeg=0 bytes=1622
+calls: NamedLockable_Destroy, 0x54dd78
+ provider-specific; not original source
+undefined4 * __thiscall FUN_004012e0(void *this,byte param_1)
+{
+  FUN_00401300(this);
+  if ((param_1 & 1) != 0) {
+    Mem_Free(this);
+  }
+  return this;
+}
+========================================================================================
+0x4e47c0 layer=[1] indeg=0 bytes=1622
+calls: Ingredient_Destroy, 0x54dd78
+ provider-specific; not original source
+undefined4 * __thiscall FUN_004e47c0(void *this,byte param_1)
+{
+  FUN_004e4920(this);
+  if ((param_1 & 1) != 0) {
+    Mem_Free(this);
+  }
+  return this;
+}
+========================================================================================
+0x4dd2e0 layer=[1] indeg=0 bytes=1622
+calls: GameClock_Destroy, 0x54dd78
+ provider-specific; not original source
+undefined4 * __thiscall FUN_004dd2e0(void *this,byte param_1)
+{
+  FUN_004dd670(this);
+  if ((param_1 & 1) != 0) {
+    Mem_Free(this);
+  }
+  return this;
+}
+========================================================================================
+0x4e4030 layer=[1] indeg=0 bytes=1622
+calls: FurnitureType_Destroy, 0x54dd78
+ provider-specific; not original source
+undefined4 * __thiscall FUN_004e4030(void *this,byte param_1)
+{
+  FUN_004e4050(this);
+  if ((param_1 & 1) != 0) {
+    Mem_Free(this);
+  }
+  return this;
+}
+========================================================================================
+0x53c6e0 layer=[1] indeg=0 bytes=1569
+calls: NamedLockable_Construct
+ provider-specific; not original source
+void FUN_0053c6e0(void)
+{
+  FUN_00401280(&DAT_00585520,s_SpriteCriticalSection_005747c4);
+  return;
+}
+========================================================================================
+0x532bb0 layer=[1] indeg=0 bytes=1564
+calls: NamedLockable_Construct
+ provider-specific; not original source
+void FUN_00532bb0(void)
+{
+  FUN_00401280(&DAT_00584248,s_AnimSwapCritical_005744cc);
+  return;
+}
+========================================================================================
+0x532bf0 layer=[1] indeg=0 bytes=1560
+calls: NamedLockable_Construct
+ provider-specific; not original source
+void FUN_00532bf0(void)
+{
+  FUN_00401280(&DAT_005842a0,s_AnimCritical_005744e0);
+  return;
+}
+========================================================================================
+0x522e50 layer=[1] indeg=0 bytes=1553
+calls: NamedLockable_Construct
+ provider-specific; not original source
+void FUN_00522e50(void)
+{
+  FUN_00401280(&DAT_00584180,s_Liste_0056313c);
+  return;
+}
+========================================================================================
+0x401370 layer=[1] indeg=0 bytes=1553
+calls: NamedLockable_Construct
+ provider-specific; not original source
+void FUN_00401370(void)
+{
+  FUN_00401280(&DAT_00579af0,s_Liste_0056313c);
+  return;
+}

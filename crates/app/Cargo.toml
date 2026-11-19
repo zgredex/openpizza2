@@ -1,0 +1,18 @@
+[package]
+name = "pc2-app"
+version = "0.1.0"
+edition = "2021"
+description = "Berlin crop viewer for Pizza Connection 2"
+
+[[bin]]
+name = "pc2-viewer"
+path = "src/main.rs"
+
+[dependencies]
+pc2-assets = { path = "../assets" }
+pc2-render = { path = "../render" }
+pc2-scene = { path = "../scene" }
+pc2-sim = { path = "../sim" }
+pollster = "1.0"
+wgpu = { version = "30.0.2", default-features = false, features = ["std", "parking_lot", "vulkan", "wgsl"] }
+winit = "0.30.12"

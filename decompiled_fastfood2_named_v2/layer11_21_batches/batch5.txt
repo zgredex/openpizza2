@@ -1,0 +1,620 @@
+========================================================================================
+0x4a53e0 layer=14 indeg=3 bytes=1749
+calls: FUN_0048b1b0, Game_CountNearbyTypesAroundRect
+ provider-specific; not original source
+void __cdecl FUN_004a53e0(void *param_1,int param_2)
+{
+  undefined4 local_20 [8];
+  if (*(int *)((int)DAT_0057c670 + 0x218) != 0) {
+    FUN_0048d2b0(DAT_0057c670,*(int *)((int)DAT_0057c670 + 0x218),0x78,local_20);
+    FUN_0048b1b0(param_1,param_2,(int)local_20);
+  }
+  return;
+}
+========================================================================================
+0x4a5420 layer=15 indeg=1 bytes=1898
+calls: UI_RemoveProfileStatElements, FUN_004a53e0, Array_SetField14ByKey, UI_SetChildLabelText
+ provider-specific; not original source
+void __cdecl FUN_004a5420(void *param_1)
+{
+  FUN_00531470(param_1,0x1f79,0);
+  FUN_00531470(param_1,0x1f7a,0);
+  FUN_00531470(param_1,0x1f7b,0);
+  FUN_00531470(param_1,0x1f7c,0);
+  FUN_00531fb0(param_1,0x1f68,1,(char *)0x0);
+  FUN_00531fb0(param_1,0x1f69,1,(char *)0x0);
+  FUN_00531fb0(param_1,0x1f6a,1,(char *)0x0);
+  FUN_00531fb0(param_1,0x1f6b,1,(char *)0x0);
+  FUN_004a5360(param_1);
+  FUN_004a53e0(param_1,0x43f);
+  return;
+}
+========================================================================================
+0x4a5bb0 layer=13 indeg=3 bytes=13665
+calls: IDMap_Lookup, Stats_SumFilteredFloats, Stats_SumFilteredFloats2, Stats_GetGroupScore, Stats_SumFilteredFloats3, Stats_SumFilteredFloats4, FUN_0052f910, FUN_0052f9b0, FUN_0054dd83
+ provider-specific; not original source
+void __cdecl FUN_004a5bb0(void *param_1)
+{
+  float fVar1;
+  int iVar2;
+  int iVar3;
+  int iVar4;
+  int iVar5;
+  uint uVar6;
+  uint uVar7;
+  float *pfVar8;
+  float10 fVar9;
+  float10 fVar10;
+  float10 fVar11;
+  float10 fVar12;
+  float10 fVar13;
+  float10 fVar14;
+  float10 fVar15;
+  float10 fVar16;
+  float10 fVar17;
+  float10 fVar18;
+  float10 fVar19;
+  float10 fVar20;
+  float10 fVar21;
+  float10 fVar22;
+  float10 fVar23;
+========================================================================================
+0x4a6680 layer=13 indeg=2 bytes=1805
+calls: FUN_0052f080, FUN_0052f910
+ provider-specific; not original source
+void __cdecl FUN_004a6680(void *param_1,int param_2,int param_3)
+{
+  undefined4 uVar1;
+  if (param_3 < 1) {
+    if (param_3 == 0) {
+      uVar1 = 0;
+    }
+    else {
+      uVar1 = 0xff;
+    }
+  }
+  else {
+    uVar1 = 0xa000;
+  }
+  FUN_0052f910(param_1,param_2,uVar1);
+  FUN_0052f080(param_1,param_2,&DAT_005686f4,param_3);
+  return;
+}
+========================================================================================
+0x4a6750 layer=13 indeg=1 bytes=3429
+calls: UI_GetChildSize, Array_GetRecordByKeyPtr, UI_RemoveObject, UI_SetObjectRangeByKey, Array_GetPairByKey, Array_GetRectByKey, FUN_00531850, FUN_00531910, FUN_005319a0, FUN_00531cf0, UI_SetObjectTextByKey, FUN_0054dd83, __ftol, FUN_005570c0
+ provider-specific; not original source
+void __cdecl FUN_004a6750(void *param_1,int param_2,int param_3,int param_4)
+{
+  void *this;
+  int iVar1;
+  byte *pbVar2;
+  uint uVar3;
+  void *this_00;
+  int iVar4;
+  longlong lVar5;
+  int local_164;
+  int local_15c;
+  int local_158;
+  int local_154;
+  int local_150;
+  undefined4 local_14c;
+  int local_148;
+  int local_144;
+  byte local_140 [64];
+  char local_100 [256];
+  this = (void *)FUN_00531cf0(param_1,param_2);
+  if (this != (void *)0x0) {
+    FUN_00521ae0(this,&local_15c,&local_148);
+    FUN_005314a0(param_1,param_2,&local_14c,&local_150);
+    FUN_00531570(param_1,param_2,&local_144,&local_154);
+    local_158 = (local_154 + -0x12 >> 1) + local_150;
+========================================================================================
+0x4a6fc0 layer=16 indeg=1 bytes=2811
+calls: Game_GetCurrentPlayerCompanyName, FUN_004bf120, FUN_004d23b0, Game_ComputeTradeOffers, FUN_0052f9b0, FUN_0054dd83
+ provider-specific; not original source
+void __cdecl FUN_004a6fc0(void *param_1)
+{
+  int iVar1;
+  undefined4 uVar2;
+  int iVar3;
+  int *piVar4;
+  int local_28;
+  int local_24;
+  undefined1 local_20 [32];
+  if (DAT_0057d27c != 0) {
+    switch(*(undefined4 *)(DAT_0057d27c + 4)) {
+    default:
+      DAT_0057d294 = 0;
+      uVar2 = DAT_00582020;
+      break;
+    case 0x15:
+    case 0x1e:
+      DAT_0057d294 = 1;
+      uVar2 = DAT_00582008;
+      break;
+    case 0x16:
+    case 0x1f:
+      DAT_0057d294 = 2;
+      uVar2 = DAT_00582f40;
+    }
+========================================================================================
+0x4aa970 layer=13 indeg=1 bytes=2739
+calls: FUN_0052f910, FUN_0052f9b0, Array_GetField20ByKey, FUN_0054dd83
+ provider-specific; not original source
+void __cdecl FUN_004aa970(void *param_1,int param_2)
+{
+  float fVar1;
+  int iVar2;
+  int iVar3;
+  int iVar4;
+  undefined4 uVar5;
+  float *local_2c;
+  undefined1 local_28 [36];
+  fVar1 = DAT_0057d574;
+  iVar3 = *(int *)(*(int *)(DAT_0057c670 + 0x200 + *(int *)(DAT_0057c670 + 0x2ec) * 4) + 0x15c);
+  if (iVar3 < 9) {
+    param_2 = 0;
+  }
+  else {
+    iVar3 = 8;
+  }
+  String_Format(local_28,(byte *)s__0_2f___005688b0,SUB84((double)DAT_0057d574,0));
+  if (0.0 <= fVar1) {
+    uVar5 = 0;
+  }
+  else {
+    uVar5 = 0xff;
+  }
+  FUN_0052f910(param_1,0x3fb,uVar5);
+========================================================================================
+0x4ab600 layer=13 indeg=4 bytes=1935
+calls: FUN_0052f830, FUN_0054dd83
+ provider-specific; not original source
+void __cdecl FUN_004ab600(void *param_1)
+{
+  undefined4 uVar1;
+  undefined1 local_40 [64];
+  if (DAT_0057d5cc == -1) {
+    uVar1 = DAT_00582f6c;
+  }
+  else {
+    uVar1 = (&DAT_00582fc0)[DAT_0057d5cc];
+  }
+  FUN_0052f830(param_1,0x4b4,uVar1);
+  if (DAT_0057d5c8 < 1) {
+    String_Format(local_40,&DAT_005694e0,DAT_00569354);
+  }
+  else {
+    String_Format(local_40,(byte *)s__d__s__02d_005682ec,DAT_0057d5c8);
+  }
+  FUN_0052f830(param_1,0x4b7,local_40);
+  return;
+}
+========================================================================================
+0x4ac5e0 layer=13 indeg=1 bytes=3785
+calls: IDMap_Lookup, Stats_SumFilteredFloats, Stats_SumFilteredFloats2, Stats_GetFilteredFloatDelta, FUN_0052f910, FUN_0052f9b0, FUN_0054dd83
+ provider-specific; not original source
+void __cdecl FUN_004ac5e0(void *param_1,int param_2)
+{
+  float fVar1;
+  int iVar2;
+  uint uVar3;
+  uint uVar4;
+  int *piVar5;
+  undefined4 *puVar6;
+  int iVar7;
+  float10 fVar8;
+  float10 fVar9;
+  float10 fVar10;
+  float10 fVar11;
+  int iVar12;
+  undefined4 uVar13;
+  float *local_3c;
+  float *local_38;
+  undefined1 local_28 [36];
+  iVar12 = *(int *)(DAT_0057c670 + 0x200 + *(int *)(DAT_0057c670 + 0x2ec) * 4);
+  iVar7 = *(int *)(iVar12 + 0x15c);
+  uVar4 = (uint)*(ushort *)(*(int *)(DAT_0057c670 + 0x94) + 4);
+  uVar3 = (uint)*(ushort *)(*(int *)(DAT_0057c670 + 0x94) + 10);
+  puVar6 = &DAT_0057d5d8;
+  for (iVar2 = 0x15; iVar2 != 0; iVar2 = iVar2 + -1) {
+    *puVar6 = 0;
+========================================================================================
+0x4acb90 layer=13 indeg=1 bytes=3737
+calls: UI_RealizeSprite, Sprite_FillRectColor, UI_ClipChildRect, FUN_00531cf0
+ provider-specific; not original source
+void __cdecl FUN_004acb90(void *param_1,int *param_2,int *param_3,int param_4)
+{
+  int *piVar1;
+  int *piVar2;
+  void *pvVar3;
+  int iVar4;
+  int iVar5;
+  int iVar6;
+  uint uVar7;
+  int iVar8;
+  int iVar9;
+  int local_c;
+  int local_8;
+  int local_4;
+  piVar1 = param_3;
+  local_c = 0;
+  local_8 = 0;
+  local_4 = 0;
+  iVar9 = (int)param_2 - (int)param_3;
+  iVar8 = param_4 - (int)param_3;
+  param_3 = (int *)0x9;
+  piVar2 = piVar1;
+  do {
+    iVar5 = *(int *)(iVar9 + (int)piVar2);
+    if (local_c < iVar5) {
+========================================================================================
+0x4ad4e0 layer=13 indeg=1 bytes=6953
+calls: IDMap_Lookup, Stats_SumByStorageMode, Stats_GetMaxMatrixValue, Stats_GetMaxCityMatrixValue, Game_SumStatGridAll, Stats_SumMatrixCells, Stats_SumRecordFloatMatrix, Stats_GetMaxObjectMatrixValue, Stats_GetMaxDailyFilteredSum, Stats_SumForPlayer, Stats_SumGroupScores, Game_GetObjectValue, Game_SumPlayerMatrixValues, Game_GetMaxMatrixValue, UI_RealizeSprite, UI_DrawChildSprite, UI_GetChildSize, Object_GetActiveValue, UI_ClipChildRect, UI_CreateWindowFromRect, RefCounted_Free, FUN_0052f9b0, FUN_00531cf0, Set_Field9B8, Text_SetMetrics, Font_DrawTextLine, FUN_0054dd83, __ftol
+ provider-specific; not original source
+void __cdecl FUN_004ad4e0(void *param_1)
+{
+  uint *puVar1;
+  ushort uVar2;
+  float fVar3;
+  void *this;
+  void *pvVar4;
+  void *pvVar5;
+  uint uVar6;
+  int iVar7;
+  undefined4 unaff_EDI;
+  int iVar8;
+  float10 fVar9;
+  longlong lVar10;
+  longlong lVar11;
+  int local_88;
+  int local_84;
+  float local_80;
+  int local_7c;
+  float local_78;
+  int local_74;
+  uint *local_70;
+  void *local_6c;
+  uint local_68;
+  int local_64;
+========================================================================================
+0x4ae180 layer=13 indeg=1 bytes=7175
+calls: IDMap_Lookup, FUN_0052f080, FUN_0052f9b0, FUN_0052ff50, UI_RemoveObject, Array_GetPairByKey, Movie_CreatePlayer, FUN_00531c40, Sound_PlayStatisticPageSfx, FUN_0054dd83, __ftol
+ provider-specific; not original source
+void __cdecl FUN_004ae180(void *param_1)
+{
+  int iVar1;
+  longlong lVar2;
+  int local_88;
+  int local_84;
+  char local_80 [128];
+  iVar1 = 0x3e9;
+  do {
+    FUN_0052ff50(param_1,iVar1,(uint)(iVar1 + -0x3e9 == DAT_0057d63c));
+    iVar1 = iVar1 + 1;
+  } while (iVar1 < 0x3f6);
+  FUN_005314a0(param_1,0x3fb,&local_84,&local_88);
+  String_Format(local_80,(byte *)s__s_bik_00569bfc,s_stat_pizz_a_00569680 + DAT_0057d63c * 0x6c);
+  FUN_005311a0(param_1,0x3fb);
+  FUN_00531bb0(param_1,0x3fb,local_84,local_88,local_80,(undefined4 *)0x0);
+  FUN_00531c40(param_1,0x3fb,1);
+  FUN_0054a490(DAT_0057ba0c,DAT_0057d63c);
+  FUN_0052f9b0(param_1,0x3fd,(&DAT_00583fd4)[*(int *)(&DAT_005696c0 + DAT_0057d63c * 0x6c)]);
+  FUN_0052f9b0(param_1,0x3fe,
+               *(undefined4 *)(&DAT_00584008 + *(int *)(&DAT_005696c4 + DAT_0057d63c * 0x6c) * 4));
+  FUN_0052f9b0(param_1,0x1f44,
+               *(undefined4 *)(&DAT_00584018 + *(int *)(&DAT_005696e8 + DAT_0057d63c * 0x6c) * 4));
+  IDMap_Lookup((void *)(DAT_0057c670 + 4),*(int *)(DAT_0057c670 + 0x2f4),(int *)0x0);
+  IDMap_Lookup((void *)(DAT_0057c670 + 4),*(int *)(DAT_0057c670 + 0x2f4),(int *)0x0);
+========================================================================================
+0x4aec60 layer=13 indeg=1 bytes=1895
+calls: FUN_0052f9b0, FUN_0052ff50
+ provider-specific; not original source
+void __cdecl FUN_004aec60(void *param_1,int param_2)
+{
+  int iVar1;
+  undefined4 *puVar2;
+  int iVar3;
+  puVar2 = (undefined4 *)(&DAT_0058404c + param_2 * 4);
+  iVar3 = 0x3e9;
+  do {
+    FUN_0052ff50(param_1,iVar3,(uint)(iVar3 + -0x3e9 + param_2 == DAT_0057d64c));
+    FUN_0052f9b0(param_1,iVar3 + 0x36,*puVar2);
+    puVar2 = puVar2 + 1;
+    iVar1 = iVar3 + -1000;
+    iVar3 = iVar3 + 1;
+  } while (iVar1 < 0xd);
+  return;
+}
+========================================================================================
+0x4aeda0 layer=13 indeg=1 bytes=3183
+calls: Stats_BuildObjectProductMatrix, FUN_0052f9b0, FUN_0052ff50, UI_RemoveObject, Array_GetPairByKey, FUN_00531850, Movie_CreatePlayer, FUN_00531c40, Sound_PlayMenuSfxByIndex, FUN_0054dd83
+ provider-specific; not original source
+void __cdecl FUN_004aeda0(void *param_1)
+{
+  int iVar1;
+  int iVar2;
+  int *piVar3;
+  int local_210;
+  int local_20c;
+  int local_208;
+  int local_204;
+  char local_200 [256];
+  int local_100 [64];
+  iVar1 = 0x3e9;
+  do {
+    FUN_0052ff50(param_1,iVar1,(uint)(iVar1 + -0x3e9 == DAT_0057d64c - DAT_0057d648));
+    iVar1 = iVar1 + 1;
+  } while (iVar1 < 0x3f6);
+  FUN_0052f9b0(param_1,0x3fd,*(undefined4 *)(&DAT_0058404c + DAT_0057d64c * 4));
+  FUN_0052f9b0(param_1,0x3fe,*(undefined4 *)(&DAT_00583db8 + DAT_0057d64c * 4));
+  FUN_005314a0(param_1,0x42c,&local_20c,&local_208);
+  FUN_005311a0(param_1,0x42c);
+  String_Format(local_200,(byte *)s__s_bik_00569bfc,s_stat_wohnhaus_b_00569c2c + DAT_0057d64c * 0x20
+               );
+  FUN_00531bb0(param_1,0x42c,local_20c,local_208,local_200,(undefined4 *)0x0);
+  FUN_00531c40(param_1,0x42c,1);
+  FUN_0054a2a0(DAT_0057ba0c,DAT_0057d64c);
+========================================================================================
+0x4af2f0 layer=13 indeg=1 bytes=1853
+calls: FUN_0052f9b0, FUN_00531b70
+ provider-specific; not original source
+void __cdecl FUN_004af2f0(void *param_1)
+{
+  FUN_0052f9b0(param_1,0x3fd,*(undefined4 *)(&DAT_00583910 + DAT_0057d654 * 0xc));
+  FUN_0052f9b0(param_1,0x3fe,*(undefined4 *)(&DAT_00583914 + DAT_0057d654 * 0xc));
+  FUN_0052f9b0(param_1,0x400,*(undefined4 *)(&DAT_00583918 + DAT_0057d654 * 0xc));
+  FUN_00531b70(param_1,0x1f55,*(undefined4 *)(&DAT_00569f94 + DAT_0057d654 * 4));
+  return;
+}
+========================================================================================
+0x4af5c0 layer=13 indeg=1 bytes=1895
+calls: FUN_0052f9b0, FUN_0052ff50
+ provider-specific; not original source
+void __cdecl FUN_004af5c0(void *param_1,int param_2)
+{
+  int iVar1;
+  undefined4 *puVar2;
+  int iVar3;
+  puVar2 = (undefined4 *)(&DAT_00583434 + param_2 * 4);
+  iVar3 = 0x3e9;
+  do {
+    FUN_0052ff50(param_1,iVar3,(uint)(iVar3 + -0x3e9 + param_2 == DAT_0057d664));
+    FUN_0052f9b0(param_1,iVar3 + 0x36,*puVar2);
+    puVar2 = puVar2 + 1;
+    iVar1 = iVar3 + -1000;
+    iVar3 = iVar3 + 1;
+  } while (iVar1 < 0xd);
+  return;
+}
+========================================================================================
+0x4b0020 layer=13 indeg=0 bytes=1973
+calls: Game_GetPlayerBySlot, FUN_0052f9b0, FUN_0054dd83
+ provider-specific; not original source
+void __cdecl FUN_004b0020(void *param_1)
+{
+  int iVar1;
+  int iVar2;
+  int *piVar3;
+  int iVar4;
+  undefined1 local_40 [64];
+  iVar2 = 0;
+  iVar4 = 0x403;
+  piVar3 = &DAT_0057d66c;
+  do {
+    iVar1 = FUN_00488be0(DAT_0057c670,iVar2);
+    if (iVar1 != 0) {
+      String_Format(local_40,&DAT_005686f4,*(undefined4 *)(*piVar3 + 0x11c));
+      FUN_0052f9b0(param_1,iVar4,local_40);
+    }
+    piVar3 = piVar3 + 1;
+    iVar2 = iVar2 + 1;
+    iVar4 = iVar4 + 3;
+  } while ((int)piVar3 < 0x57d684);
+  return;
+}
+========================================================================================
+0x4b02d0 layer=13 indeg=1 bytes=1659
+calls: FUN_0052f800, FUN_0052ff50
+ provider-specific; not original source
+void __cdecl FUN_004b02d0(void *param_1)
+{
+  if (DAT_0056a68c == -1) {
+    FUN_0052f800(param_1,0x1f41,1);
+    return;
+  }
+  FUN_0052ff50(param_1,(&DAT_0056a66c)[DAT_0056a68c],1);
+  return;
+}
+========================================================================================
+0x4b0300 layer=13 indeg=1 bytes=4406
+calls: IDMap_Lookup, Game_GetPlayerBySlot, Stats_GetGlobalMaximum, UI_RealizeSprite, UI_DrawChildSprite, UI_GetChildSize, Object_GetActiveValue, UI_ClipChildRect, UI_CreateWindowFromRect, RefCounted_Free, FUN_0052f080, FUN_00531cf0, Set_Field9B8, Text_SetMetrics, Font_DrawTextLine, __ftol
+ provider-specific; not original source
+void __cdecl FUN_004b0300(void *param_1)
+{
+  uint *puVar1;
+  uint *puVar2;
+  ushort uVar3;
+  void *this;
+  void *pvVar4;
+  int iVar5;
+  uint uVar6;
+  longlong lVar7;
+  longlong lVar8;
+  int local_38;
+  int local_34;
+  float local_30;
+  float local_2c;
+  int local_28;
+  uint local_24;
+  void *local_20;
+  float local_1c;
+  int local_18;
+  float local_14;
+  float local_10;
+  int local_c;
+  int local_8;
+  int *local_4;
+========================================================================================
+0x4b0d80 layer=13 indeg=1 bytes=4077
+calls: Stats_GetOrSumSeries, UI_RealizeSprite, UI_DrawChildSprite, UI_GetChildSize, Object_GetActiveValue, UI_ClipChildRect, UI_CreateWindowFromRect, FUN_0052f9b0, FUN_00531cf0, Set_Field9B8, Text_SetMetrics, Font_DrawTextLine, FUN_0054dd83, __ftol
+ provider-specific; not original source
+void __cdecl FUN_004b0d80(void *param_1,undefined4 *param_2,int param_3,float param_4,float param_5)
+{
+  uint *puVar1;
+  uint *puVar2;
+  ushort uVar3;
+  float fVar4;
+  float fVar5;
+  int iVar6;
+  void *this;
+  void *this_00;
+  void *pvVar7;
+  uint uVar8;
+  int iVar9;
+  longlong lVar10;
+  longlong lVar11;
+  int local_3c;
+  int local_38;
+  uint *local_34;
+  undefined1 local_20 [32];
+  this = param_1;
+  uVar3 = *(ushort *)(*(int *)(DAT_0057c670 + 0x94) + 10);
+  uVar8 = (uint)uVar3;
+  this_00 = (void *)FUN_00531cf0(param_1,param_3);
+  FUN_00521380((int)this_00);
+  if (param_2 == (undefined4 *)0x0) {
+========================================================================================
+0x4b3d80 layer=13 indeg=1 bytes=3772
+calls: IDMap_Lookup, Game_GetGlobalTableValue, Game_GetActiveCompanyOrdinal, Stats_SumMaskedMapFloats, AI_CountPlanSteps, Stats_AverageActiveCategories, FUN_0052f910, FUN_0052f9b0, FUN_0052ff50, FUN_0054dd83
+ provider-specific; not original source
+void __cdecl FUN_004b3d80(void *param_1,int param_2)
+{
+  void *this;
+  void *this_00;
+  int iVar1;
+  undefined4 uVar2;
+  uint uVar3;
+  int iVar4;
+  float10 fVar5;
+  undefined1 *puVar6;
+  int *local_40;
+  int local_3c;
+  int local_38;
+  int local_34;
+  undefined1 local_28 [36];
+  local_34 = 0;
+  uVar3 = (uint)*(ushort *)(*(int *)(DAT_0057c670 + 0x94) + 10);
+  local_38 = *(int *)((int)DAT_0057d6a4 + 0x14);
+  this = *(void **)(DAT_0057c670 + 0x200 + *(int *)(DAT_0057c670 + 0x2ec) * 4);
+  if (DAT_0056a7d4 != -1) {
+    local_34 = IDMap_Lookup((void *)((int)this + 0x148),DAT_0056a7d4,(int *)0x0);
+  }
+  if (local_38 < 9) {
+    param_2 = 0;
+  }
+========================================================================================
+0x4b4280 layer=13 indeg=1 bytes=3234
+calls: List_Construct, FUN_004014b0, IDMap_Lookup, CompanyOverview_SortCompanyIndices, Game_CountActiveCompanies, Game_GetActiveCompanyById, FUN_0052ff50, FUN_0054dd78, operator_new
+ provider-specific; not original source
+void __thiscall FUN_004b4280(void *this,void *param_1)
+{
+  undefined4 *puVar1;
+  void *pvVar2;
+  int iVar3;
+  int iVar4;
+  int iVar5;
+  void *pvStack_c;
+  undefined1 *puStack_8;
+  undefined4 uStack_4;
+  uStack_4 = 0xffffffff;
+  puStack_8 = &LAB_005589bb;
+  pvStack_c = ExceptionList;
+  ExceptionList = &pvStack_c;
+  if (DAT_0057d6a0 != (LPVOID)0x0) {
+    ExceptionList = &pvStack_c;
+    Mem_Free(DAT_0057d6a0);
+    DAT_0057d6a0 = (LPVOID)0x0;
+  }
+  if (DAT_0057d6a4 != (undefined4 *)0x0) {
+    (**(code **)*DAT_0057d6a4)(1,this);
+    DAT_0057d6a4 = (undefined4 *)0x0;
+  }
+  pvVar2 = operator_new(0x1c);
+  uStack_4 = 0;
+========================================================================================
+0x4b4630 layer=13 indeg=1 bytes=8130
+calls: IDMap_Lookup, Game_GetGlobalTableValue, Game_GetActiveCompanyOrdinal, Game_FindTopScoringCompany, Stats_GetLeadingCompanyForCategory, Stats_SumMaskedMapFloats, AI_CountPlanSteps, Stats_GetMaxTimelineCount, Stats_GetMaxTimelineCategoryValue, Stats_AverageActiveCategories, UI_RealizeSprite, UI_DrawChildSprite, Sprite_FillRectColor, UI_GetChildSize, Object_GetActiveValue, UI_ClipChildRect, UI_CreateWindowFromRect, RefCounted_Free, FUN_0052f9b0, FUN_00531cf0, Set_Field9B8, Text_SetMetrics, Font_DrawTextLine, FUN_0054dd83, __ftol
+ provider-specific; not original source
+void __cdecl FUN_004b4630(void *param_1)
+{
+  uint *puVar1;
+  uint *puVar2;
+  ushort uVar3;
+  void *pvVar4;
+  void *pvVar5;
+  uint uVar6;
+  int iVar7;
+  int iVar8;
+  int iVar9;
+  float fVar10;
+  undefined4 unaff_EDI;
+  int iVar11;
+  float10 fVar12;
+  longlong lVar13;
+  longlong lVar14;
+  float local_8c;
+  int local_88;
+  float local_84;
+  float local_80;
+  int local_7c;
+  float local_78;
+  float local_74;
+  int local_70;
+========================================================================================
+0x4b5a40 layer=13 indeg=0 bytes=1909
+calls: IDMap_Lookup, FUN_0052f9b0, UI_QueueControlCommand, Sound_SelectCurrentTrack
+ provider-specific; not original source
+void __cdecl FUN_004b5a40(void *param_1,char param_2)
+{
+  int iVar1;
+  iVar1 = IDMap_Lookup((void *)(DAT_0057d6ac + 0x148),DAT_0057d6a8,(int *)0x0);
+  *(int *)(DAT_0057c670 + 0x9c) = iVar1;
+  FUN_00547e70(DAT_0057ba0c);
+  DAT_0057d6a8 = *(undefined4 *)(iVar1 + 0x3c);
+  FUN_0052f9b0(param_1,0x40f,iVar1 + 4);
+  if (param_2 != '\0') {
+    FUN_005301c0(*(void **)(DAT_0057c670 + 0x264),-0x1864e,0x23,*(int *)(iVar1 + 0x3c));
+  }
+  return;
+}
+========================================================================================
+0x4bade0 layer=13 indeg=1 bytes=4223
+calls: IDMap_Lookup, Game_GetPlayerBySlot, Stats_GetPlayerSharePercent, FUN_0052f080, FUN_0052f9b0, FUN_0052fd70, Sound_ProcessEvent
+ provider-specific; not original source
+void __cdecl FUN_004bade0(void *param_1,char param_2)
+{
+  void *this;
+  int iVar1;
+  int iVar2;
+  int iVar3;
+  int iVar4;
+  undefined4 uVar5;
+  undefined4 local_c [3];
+  local_c[0] = DAT_00581fe8;
+  local_c[1] = DAT_00582aec;
+  local_c[2] = DAT_00582fbc;
+  if (param_2 != '\0') {
+    FUN_005499f0(DAT_0057ba0c,10,0,'\x01');
+  }
+  this = (void *)IDMap_Lookup((void *)((int)DAT_0057c670 + 4),*(int *)((int)DAT_0057c670 + 0x2f4),
+                              (int *)0x0);
+  iVar4 = *(int *)((int)DAT_0057c670 + 0x21c);
+  iVar1 = *(int *)((int)DAT_0057c670 + *(int *)((int)DAT_0057c670 + 0x2ec) * 4 + 0x200);
+  iVar3 = *(int *)((int)this + *(int *)(iVar1 + 0x48) * 4 + 0xd40);
+  FUN_0052fd70(param_1,0x1fa8,iVar3,0);
+  iVar3 = (100 - iVar3) / 3;
+  if (iVar3 == 0) {
+    FUN_0052f9b0(param_1,0x1fb0,&DAT_00569308);
+  }

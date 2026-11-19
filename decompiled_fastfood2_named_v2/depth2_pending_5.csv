@@ -1,0 +1,58 @@
+address,proposed_name,confidence,evidence
+0x4dc720,Game_PlaceObjectInPlayerCity,medium,"Calls MapObject_SetCityFromPlayer(object, this+0xfa8, slot), sets field +0xf4 of the object at this+0xfa8 to 1, and clears object+0x38 when slot is -1."
+0x50b100,UI_ComputeObjectDirection,medium,"Subtracts the camera offsets at this+0xc4+0xf8/0xfc from Record_GetTwoFloats48 coordinates, then atan2 and &7 produce an 8-way direction."
+0x486e20,Game_CountRecordsForSelectedPlayer,high,Selects player -1 (this+0x2ec slot) or Game_GetPlayerBySlot and forwards to Game_CountRecordsByField34.
+0x533c90,Record_AdvanceFrameSequence,medium,"Walks a stride-0x48 record through its 0x98-byte variant table using +0x32/+0x36, calls Record_SetVariant/Record_ClearFlags48 and accumulates the cell step."
+0x5219a0,Sprite_FillRectColor,high,"Clips a rectangle to Sprite_GetSize, converts the color with Color_RGBTo16FromDword, then fills rows via Memory_FillWords16."
+0x47ccd0,Game_CountRecordsByByteC,high,Iterates IDMap this+0x16f8 and counts records whose Game_GetRecordByteC equals the argument.
+0x4ffeb0,Game_AdjustPlayerObjectPercent,medium,"Resolves the player by slot, checks this+slot*0x168+0x114, then applies Object_AdjustShortPercent with the player index and percent."
+0x523900,UI_ReplaceActiveObject,medium,"Releases this+0x1c4 via Movie_ReleasePlayer, stores the new object, sets this+0x83b8=1 and calls UI_MarkFullRectDirty."
+0x526e80,UI_SetBackgroundSurfaceEnabled,medium,"Under lock, stores the enable flag at +0x284; on enable it derives a surface from the type-2 game object and Gfx_FillSurfaceColor, then redraws."
+0x53d600,Sprite_BlitWithDefaultAlpha,high,"Ensures the sprite is prepared (this+0x39), substitutes DAT_00585518 for a -1 alpha, and calls Sprite_BlitAlphaRLE."
+0x4030f0,Game_FormatObjectName,medium,"Chooses a name variant using Random_Mod on this+0x10/0x12 and writes the ""%s %s"" composite into the object name buffer."
+0x4f1750,AI_ComputeWeightedPath,medium,"Dijkstra-style expansion over up to 12000 records: 8 linked neighbors (+0x14), Object_DistanceWeighted edge costs, then reconstructs the path into a pointer list."
+0x4d32f0,MapSprite_InitializeRecord,medium,"Allocates a 0x7c map-sprite record, initializes its +0x14 record list, binds sprite entries from global arrays 0x2c0cc/0x2c180, allocates two stride-0x48 records and appends it to the active list."
+0x4da390,Game_AdjustPlayerRankingScores,medium,"For six players, adds or subtracts rating points by comparing player counters with Game_GetMostAdvancedCompany and adds city +0x48/+0x60, clamped 0..100."
+0x50b370,Object_HasNearbyType20Object,medium,Scans the map records around this object and returns 1 when another type/subtype 0x20 object lies within the squared-distance radius.
+0x524fd0,UI_SelectObjectRecord,medium,"Validates the object and Array_GetRecordByKey result, releases the previous target, then stores +0x82c8/+0x82d4 and the active +0x224/+0x22c pair."
+0x4e6340,Game_DrawMapObjectSprite,medium,"Resolves the sprite through SparseMap_Lookup48, aligns it with UI_AlignSpriteToRect, then Gfx_BlitRectList blits its hotspot-adjusted rectangle."
+0x47c730,Game_ClearPendingMapObjects,high,"Drains IDMap this+0x19e0: clears map tile fields, removes the key, deletes each object via its vtable slot 0, and resets this+0x1718."
+0x54d2dc,Stream_GetReadPosition,high,"Locks the stream mutex and invokes vtable slot +0xc with (0,1,1); SaveGame_Read compares the returned offset against stored section positions."
+0x4dbf50,Game_GetPlayerSupplyScore,medium,"Base +0xc98[slot] plus 3*(city+0x48+0x60) minus active type 0x1e and 0x1d counts, clamped to 0..100."
+0x4de670,Game_GetMaxMatrixValue,high,"Returns Matrix_Max4x9 for a supplied matrix, otherwise scans all 4x9 Game_SumPlayerMatrixValues entries for the maximum."
+0x4edb70,Object_ClearRecordFirstBytes,medium,Object_GetBufferPair yields a count and buffer; clears byte 0 of each stride-0x28 subrecord.
+0x4d32e0,MapSprite_ReleaseRecordList,medium,Frees the buffer at this+0x14 that 0x54b390 allocates as a 60-entry record-index list; called by the map-sprite destructor 0x4d3280.
+0x538f60,Surface_LockAndMark,high,"Calls Surface_Lock(this,1) and sets this+0x2c=1 only when the lock succeeds."
+0x4df480,Stats_ComputePlayerAggregateStats,medium,"Aggregates Stats_SumFilteredRecordFloats20/Stats_SumFilteredFloats over this+0x148 for up to 6 players and stores totals, maxima and ratios at +0x60..+0x19c."
+0x548af0,Sound_UpdateProximityGain,medium,"Sums 0.333*(1-dist/range) against nearby world objects, then calls vtable +0x7c with the gain or +0x68 to stop the sound."
+0x4d4170,Rating_DecayAndUpdateIndicators,medium,"Moves four signed counters toward zero, then sets UI child states 0x24/0x26/0xffff from Rating_HasNegative/Rating_HasPositive and +0x10/+0xc thresholds."
+0x513100,Stats_ComputeWeightedAverages,medium,"Accumulates +0xac[subtype] weights scaled by byte +0xc8 and chars +0xcc/+0xcd into +0x24c/+0x250/+0x254, then averages and rounds."
+0x47dd00,Game_CollectBuildingHitsAtPoint,medium,"Scans IDMap this+0x16f8, aligns each sprite rectangle, and appends an 8-byte {3,record} entry to the hit list when the point is inside."
+0x47e750,Game_PickFreeConstructionPlot,medium,"Scans IDMap this+0x1998 for entries with +0x1c==0 not already owned by a type-3/subtype-4 building, then returns a Random_Range pick."
+0x4893a0,Input_HandleMapClickAtCell,medium,"For input code 9 stores the click origin; for code 10, when movement is under 10 px, advances the animation frame at the clicked map cell under lock."
+0x4de360,Stats_GetMaxDailyFilteredSum,medium,"For up to 100 days and 9 columns, takes the maximum of Stats_SumFilteredFloats totals across the player records."
+0x4e9d90,Game_ReleaseConstructionSpriteLists,medium,Releases 0x29 pairs of cached sprite lists at +0x2c314 and eight single lists at +0x2c3bc..+0x2c3d4 via List_ReleaseSharedBuffers.
+0x47c9a0,Game_GetAverageRecordValueByByte8,medium,"Averages record +0xc over IDMap this+0x16f8 entries whose Game_GetPlayerByte8 matches, clamps 0..100 and rounds."
+0x549e80,Sound_PlayBuildingSpecialSfx,high,"Maps indices 0..9 to Sfx_City_Building_Special_* globals, formats the resource name and calls Sound_PlayChannel."
+0x47cb70,Game_GetAverageCompanyValueByByte8,medium,"Averages the company +0x70 double looked up in global +0x74 by record+4 for records whose Game_GetPlayerByte8 matches, rounded via Math_RoundFloat."
+0x4803c0,Game_RemoveMapObjectAtPoint,medium,"Removes the object from IDMap this+0x19e0, clears its tile field, computes the cell rectangle and blits the dirty rect via Gfx_BlitRectList."
+0x50d440,Object_PlayStateSound,medium,"Switches on object type +0x30 and player score, selecting Sound_PlayEffectByIndex(0x28) or Sound_PlayTrackIfSelected(0x20/0x23/0x29)."
+0x54d272,Stream_GetWritePosition,high,"Locks the stream mutex and invokes vtable slot +0xc with (0,1,2); SaveGame_Serialize stores the result as a section offset."
+0x4d82b0,Game_PickBestScoredRecord,medium,"Scans the IDMap in param_2 and returns the entry maximizing this+0x5c[type], where type comes from Game_GetPlayerSubmapValue(+8,+0x2c)."
+0x4e29b0,Game_AdvanceProductionCounter,medium,Increments +0x64 and for each +0x1b8 record with +4==0x17 sets map +0xa8=100 and calls Object_GetPlayerValue.
+0x4d4480,Rating_StoreDailyResults,medium,"Writes Rating_GetComposite, Rating_ClampAdjusted, Rating_AdjustA, +0xc and Rating_AdjustB into five per-day arrays indexed by the date day."
+0x480070,Game_CountObjectsType1DSub19,medium,Scans this+0x16f0 records and counts those with +0x30==0x1d and +0xa4==0x19.
+0x4e2c40,AI_GetMaxPlanSteps,high,Iterates the player plan IDMap at +0x110 and returns the maximum AI_CountPlanSteps result.
+0x4e2ca0,AI_SumPlanSteps,high,Iterates the player plan IDMap at +0x110 and sums AI_CountPlanSteps results.
+0x477360,Game_FindMapRecordByTypeE,medium,Scans this+0x16f0 and returns the first Game_MapRecordToGlobal record whose +0x30 equals 0x0e.
+0x4ea400,Game_BlitScaledObjectSprite,medium,Blits the object sprite at +0x2f884 scaled by +0x2f880/+0x2f888 through Gfx_BlitRLEScaled.
+0x4ead50,Game_HideAllLinkedElements,medium,For every entry in IDMap +0x2c3f8 (count +0x2c40c) calls Object_HideLinkedElements.
+0x4e63f0,Game_ComputeRecordCompanyPrice,medium,Looks up the company referenced by this+4 in the global company map and returns Game_ComputePrice for the requested argument.
+0x531f80,UI_ReleaseChildBufferByKey,high,BinarySearch8 resolves the child key and Buffer_ReleaseField0C releases its buffer at +0xc.
+0x483fa0,Game_MapPlayerStatusToAnimation,medium,"Maps Game_GetPlayerByte8: 5->0x20, 7->0x16, otherwise 0x0b when a player is selected in the UI."
+0x4800c0,Game_CountFreeBuildingsTypeD,medium,"Wraps Game_CountFreeBuildingsByType(this+0x16f0,0x0d); sibling wrapper 0x480060 does the same for type 0x17."
+0x546090,Sound_CreateAndEnqueueBuffer,high,"Locks +0xa0, allocates a 0xb4 SoundBuffer, constructs and initializes it (vtable 0x55c8b0), then links the new node into the list at +0x54."
+0x52ad60,UI_BuildListItem,medium,"Fills a list-item struct: selects type 0x6d..0x70 from two flags, copies +0xb4, the +0x1ac name via UI_FindStringRecord and +0xd4..+0xdc."
+0x54d0b1,Stream_TryAttachBuffer,medium,"When +0x4c is -1 or +0x14 is zero, attaches [param_1,param_1+param_2) under the stream lock (sets fail flag +8 when args are invalid); otherwise returns null."
+0x54dca7,Stream_AllocateAttachedBuffer,medium,"Allocates a 0x200-byte buffer and attaches it as owned via Stream_AttachBuffer(...,1)."
+0x545b00,List_ContainerDestroy,medium,Calls List_ContainerDestruct and frees the container when the delete flag is set.

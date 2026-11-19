@@ -1,0 +1,1737 @@
+{
+  "batch": {
+    "acceptance": [
+      "0x4dd300 recovered outside the named export",
+      "0xfffe79f7 consumer found at 0x405ae0",
+      "clock field ordering recorded",
+      "save/load field ordering recorded"
+    ],
+    "entry": "0x4dd300",
+    "name": "clock_worker_quarter_hour",
+    "path": [
+      "GameClock_Construct 0x4dd270",
+      "GameClock_ThreadThunk 0x4dd2d0",
+      "GameClock_Worker 0x4dd300",
+      "UI_QueueChildCommand 0x528190",
+      "Game_WindowProc 0x4058d0",
+      "GameCalendar_Save 0x4dd4f0",
+      "GameCalendar_Load 0x4dd590"
+    ]
+  },
+  "controls": {
+    "0x411": {
+      "animation": "KAKANIM2.ani",
+      "call_instruction": "0x41a5e6",
+      "creation_instruction": "0x41a5df",
+      "family": "cockroach"
+    },
+    "0x412": {
+      "animation": "KAKANIM.ani",
+      "call_instruction": "0x41a694",
+      "creation_instruction": "0x41a68d",
+      "family": "cockroach"
+    },
+    "0x413": {
+      "animation": "KAKANIM1.ani",
+      "call_instruction": "0x41a6af",
+      "creation_instruction": "0x41a6a8",
+      "family": "cockroach"
+    },
+    "0x414": {
+      "animation": "TOMATENANIM.ani",
+      "call_instruction": "0x41a6c7",
+      "creation_instruction": "0x41a6c0",
+      "family": "tomato"
+    },
+    "0x415": {
+      "animation": "SPIDERANIM.ani",
+      "call_instruction": "0x41a50d",
+      "creation_instruction": "0x41a506",
+      "family": "spider"
+    },
+    "owner_field": {
+      "game_field": "Game+0x25c",
+      "source": "0x41a2b0",
+      "write_instruction": "0x485f92"
+    }
+  },
+  "fixtures": [
+    {
+      "command": "0xfffe79f7",
+      "consumer": "0x405ae0",
+      "five_minute_units": [
+        0,
+        3,
+        6,
+        9
+      ],
+      "id": "quarter_hour_command"
+    },
+    {
+      "command": "0xfffe79de",
+      "condition": "(quarter_counter & 3) == 0",
+      "id": "hourly_command",
+      "queue": "0x4dd469"
+    },
+    {
+      "fields": [
+        "+0x07:1",
+        "+0x06:1",
+        "+0x08:1",
+        "+0x04:2",
+        "+0x0a:2",
+        "+0x0c:4",
+        "+0x19:1",
+        "+0x18:1",
+        "+0x14:4",
+        "+0x10:4",
+        "DAT_0057dfbc:4"
+      ],
+      "id": "calendar_save_order"
+    },
+    {
+      "after_field": "+0x14",
+      "hex": "0xc35",
+      "id": "calendar_load_interval_override",
+      "value": 3173
+    },
+    {
+      "command": "0xfffe79de",
+      "handler": "0x486590",
+      "id": "hourly_command_consumer",
+      "index": "0x62",
+      "selector": "4",
+      "target": "0x405aa9"
+    },
+    {
+      "controls": {
+        "0x411": {
+          "animation": "KAKANIM2.ani",
+          "call_instruction": "0x41a5e6",
+          "creation_instruction": "0x41a5df",
+          "family": "cockroach"
+        },
+        "0x412": {
+          "animation": "KAKANIM.ani",
+          "call_instruction": "0x41a694",
+          "creation_instruction": "0x41a68d",
+          "family": "cockroach"
+        },
+        "0x413": {
+          "animation": "KAKANIM1.ani",
+          "call_instruction": "0x41a6af",
+          "creation_instruction": "0x41a6a8",
+          "family": "cockroach"
+        },
+        "0x414": {
+          "animation": "TOMATENANIM.ani",
+          "call_instruction": "0x41a6c7",
+          "creation_instruction": "0x41a6c0",
+          "family": "tomato"
+        },
+        "0x415": {
+          "animation": "SPIDERANIM.ani",
+          "call_instruction": "0x41a50d",
+          "creation_instruction": "0x41a506",
+          "family": "spider"
+        },
+        "owner_field": {
+          "game_field": "Game+0x25c",
+          "source": "0x41a2b0",
+          "write_instruction": "0x485f92"
+        }
+      },
+      "id": "quarter_hour_controls"
+    }
+  ],
+  "imports": {
+    "0x55c090": {
+      "call_instruction": "0x4dd39d",
+      "dll": "KERNEL32.dll",
+      "evidence": "REA inspect_pe_imports",
+      "iat_rva": "0x15c090",
+      "name": "WaitForSingleObject"
+    }
+  },
+  "known_gaps": [
+    {
+      "detail": "No named procedure; body recovered from 0x4dd300-0x4dd49b and callback thunk 0x4dd2d0-0x4dd2d8.",
+      "id": "worker_0x4dd300",
+      "status": "recovered"
+    }
+  ],
+  "method": {
+    "authority": "REA Ghidra provider; REA read_bytes for instruction bytes; bounded objdump for the unnamed worker",
+    "target_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd"
+  },
+  "records": {
+    "0x4034d0": {
+      "dispatch": [
+        {
+          "call": "_rand",
+          "instruction": "0x4034d0",
+          "kind": "call",
+          "name": "CRT _rand",
+          "targets": []
+        }
+      ],
+      "event_order": [
+        {
+          "address": "0x4034d0",
+          "effect": "call _rand"
+        },
+        {
+          "address": "0x4034d0",
+          "effect": "scale into inclusive [low, high]"
+        },
+        {
+          "address": "0x4034d0",
+          "effect": "clamp to high"
+        }
+      ],
+      "fields": [],
+      "signature": {
+        "call_site": "0x405b0c and many gameplay callers",
+        "confidence": "derived from pseudocode and caller use",
+        "recovered": "unsigned int __cdecl Random_RangeFast(int low, unsigned int high)",
+        "return": "inclusive range in EAX"
+      },
+      "unresolved_questions": []
+    },
+    "0x4058d0": {
+      "dispatch": [
+        {
+          "condition": "command == 0xfffe79f7",
+          "instruction": "0x4058f5",
+          "kind": "switch_case",
+          "targets": [
+            "0x405ae0"
+          ]
+        },
+        {
+          "call": "0x4034d0",
+          "instruction": "0x405b0c",
+          "kind": "call",
+          "name": "Random_RangeFast",
+          "targets": [
+            "0x4034d0"
+          ]
+        },
+        {
+          "call": "0x52ff20",
+          "instruction": "0x405b49",
+          "kind": "call",
+          "name": "Array_GetRecordByKeyPtr",
+          "targets": [
+            "0x52ff20"
+          ]
+        },
+        {
+          "call": "0x531b70",
+          "instruction": "0x405b5b",
+          "kind": "call",
+          "name": "UI_SetButtonRecordVariant",
+          "targets": [
+            "0x531b70"
+          ]
+        },
+        {
+          "command": "0xfffe79de",
+          "instruction": "0x40593b",
+          "kind": "switch_table",
+          "selector": "4",
+          "selector_address": "0x406640",
+          "target_table": "0x406618",
+          "targets": [
+            "0x405aa9",
+            "0x486590"
+          ]
+        }
+      ],
+      "event_order": [
+        {
+          "address": "0x4058f5",
+          "effect": "compare command with 0xfffe79f7"
+        },
+        {
+          "address": "0x40591f",
+          "effect": "branch to quarter-hour case 0x405ae0"
+        },
+        {
+          "address": "0x405b0c",
+          "effect": "roll 0..100"
+        },
+        {
+          "address": "0x405b14",
+          "effect": "require roll > 75"
+        },
+        {
+          "address": "0x405b38",
+          "effect": "roll 0..4 to choose one of five control IDs"
+        },
+        {
+          "address": "0x405b49",
+          "effect": "lookup control record"
+        },
+        {
+          "address": "0x405b5b",
+          "effect": "set button record variant"
+        },
+        {
+          "address": "0x405925",
+          "effect": "map command by adding 0x18684"
+        },
+        {
+          "address": "0x40592a",
+          "effect": "range check 0..0x7a"
+        },
+        {
+          "address": "0x405935",
+          "effect": "load selector byte at 0x406640+index"
+        },
+        {
+          "address": "0x40593b",
+          "effect": "jump through target table 0x406618"
+        },
+        {
+          "address": "0x405aa9",
+          "effect": "hourly case target"
+        },
+        {
+          "address": "0x405ab3",
+          "effect": "call Game_EndOfHour 0x486590"
+        }
+      ],
+      "fields": [
+        {
+          "direction": "read",
+          "instruction": "0x4058f5",
+          "name": "command",
+          "role": "queued command 0xfffe79f7",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x405b2a",
+          "direction": "read",
+          "instruction": "0x405b2a",
+          "name": "game+0x25c",
+          "role": "randomized UI target",
+          "type": "UI*",
+          "width": 4
+        },
+        {
+          "direction": "read",
+          "instruction": "0x405b3f",
+          "name": "control_ids",
+          "role": "controls 0x411..0x415 selected at random",
+          "type": "int[5]",
+          "width": 4
+        }
+      ],
+      "signature": {
+        "call_site": "UI command dispatch",
+        "confidence": "derived from [esp+0x150] command load and [esp+0x164] value load; provider signature is noisy",
+        "recovered": "int __cdecl Game_WindowProc(int command, int value)",
+        "return": "int in EAX"
+      },
+      "unresolved_questions": []
+    },
+    "0x41a2b0": {
+      "dispatch": [
+        {
+          "call": "0x531a50",
+          "instruction": "0x41a50d",
+          "kind": "call",
+          "name": "UI_CreateAnimationWindow",
+          "targets": [
+            "0x531a50"
+          ]
+        }
+      ],
+      "event_order": [
+        {
+          "address": "0x41a506",
+          "effect": "create control 0x415 with SPIDERANIM.ani"
+        },
+        {
+          "address": "0x41a5df",
+          "effect": "create control 0x411 with KAKANIM2.ani"
+        },
+        {
+          "address": "0x41a68d",
+          "effect": "create control 0x412 with KAKANIM.ani"
+        },
+        {
+          "address": "0x41a6a8",
+          "effect": "create control 0x413 with KAKANIM1.ani"
+        },
+        {
+          "address": "0x41a6c0",
+          "effect": "create control 0x414 with TOMATENANIM.ani"
+        },
+        {
+          "address": "0x485f92",
+          "effect": "store own-city window at Game+0x25c"
+        }
+      ],
+      "fields": [
+        {
+          "direction": "write",
+          "instruction": "0x41a506",
+          "name": "control_0x415",
+          "role": "SPIDERANIM.ani animation window",
+          "type": "control",
+          "width": 4
+        },
+        {
+          "direction": "write",
+          "instruction": "0x41a5df",
+          "name": "control_0x411",
+          "role": "KAKANIM2.ani animation window",
+          "type": "control",
+          "width": 4
+        },
+        {
+          "direction": "write",
+          "instruction": "0x41a68d",
+          "name": "control_0x412",
+          "role": "KAKANIM.ani animation window",
+          "type": "control",
+          "width": 4
+        },
+        {
+          "direction": "write",
+          "instruction": "0x41a6a8",
+          "name": "control_0x413",
+          "role": "KAKANIM1.ani animation window",
+          "type": "control",
+          "width": 4
+        },
+        {
+          "direction": "write",
+          "instruction": "0x41a6c0",
+          "name": "control_0x414",
+          "role": "TOMATENANIM.ani animation window",
+          "type": "control",
+          "width": 4
+        }
+      ],
+      "signature": {
+        "call_site": "0x485f7b",
+        "confidence": "derived from call site and EAX store at 0x485f92",
+        "recovered": "void *__cdecl CityDetailView_CreateOwnCityWindow(int *window_out)",
+        "return": "window in EAX"
+      },
+      "unresolved_questions": []
+    },
+    "0x4dd270": {
+      "dispatch": [
+        {
+          "call": "0x4dd590",
+          "instruction": "0x4dd28c",
+          "kind": "call",
+          "name": "GameCalendar_Load",
+          "targets": [
+            "0x4dd590"
+          ]
+        },
+        {
+          "call": "0x4dd4a0",
+          "instruction": "0x4dd295",
+          "kind": "call",
+          "name": "GameClock_Reset",
+          "targets": [
+            "0x4dd4a0"
+          ]
+        },
+        {
+          "call": "0x54f167",
+          "instruction": "0x4dd2be",
+          "kind": "call",
+          "name": "CRT_BeginThread",
+          "targets": [
+            "0x54f167"
+          ]
+        }
+      ],
+      "event_order": [
+        {
+          "address": "0x4dd279",
+          "effect": "install GameClock vtable"
+        },
+        {
+          "address": "0x4dd27f",
+          "effect": "set global calendar base 0x57dfbc = 2000"
+        },
+        {
+          "address": "0x4dd28c",
+          "effect": "load calendar from save when load_from_save != 0"
+        },
+        {
+          "address": "0x4dd295",
+          "effect": "reset calendar when load_from_save == 0"
+        },
+        {
+          "address": "0x4dd2a2",
+          "effect": "clear pause flags"
+        },
+        {
+          "address": "0x4dd2b7",
+          "effect": "write 0xc35 ms interval to clock+0x14"
+        },
+        {
+          "address": "0x4dd29d",
+          "effect": "push callback 0x4dd2d0"
+        },
+        {
+          "address": "0x4dd2be",
+          "effect": "CRT_BeginThread(0, callback, this)"
+        }
+      ],
+      "fields": [
+        {
+          "address": "0x4dd2b7",
+          "direction": "write",
+          "instruction": "0x4dd2b7",
+          "name": "clock+0x14",
+          "role": "thread interval 0xc35 (3125 ms)",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x4dd2a2",
+          "direction": "write",
+          "instruction": "0x4dd2a2",
+          "name": "clock+0x1c",
+          "role": "pause flag reset",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x4dd2a9",
+          "direction": "write",
+          "instruction": "0x4dd2a9",
+          "name": "clock+0x24",
+          "role": "worker stopped flag reset",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x4dd2b0",
+          "direction": "write",
+          "instruction": "0x4dd2b0",
+          "name": "clock+0x20",
+          "role": "second pause flag reset",
+          "type": "int",
+          "width": 4
+        }
+      ],
+      "signature": {
+        "call_site": "GameSession_Construct caller",
+        "confidence": "derived from ECX=this, one stack arg and RET 4",
+        "recovered": "GameClock *__thiscall GameClock_Construct(GameClock *this, int load_from_save)",
+        "return": "this in EAX; RET 4"
+      },
+      "unresolved_questions": [
+        "The exact thread API wrapper at 0x54f167 is named CRT_BeginThread by the export; its thread-argument convention is inferred from the callback thunk."
+      ]
+    },
+    "0x4dd2d0": {
+      "body": {
+        "available": false,
+        "pseudocode_path": null,
+        "ranges": [
+          {
+            "end": "0x4dd2d8",
+            "start": "0x4dd2d0"
+          }
+        ],
+        "recovery": "disassembly-only thunk"
+      },
+      "dispatch": [
+        {
+          "instruction": "0x4dd2d4",
+          "kind": "tail_jump",
+          "targets": [
+            "0x4dd300"
+          ]
+        }
+      ],
+      "event_order": [
+        {
+          "address": "0x4dd2d0",
+          "effect": "load clock pointer from [esp+4] into ECX"
+        },
+        {
+          "address": "0x4dd2d4",
+          "effect": "jmp GameClock_Worker 0x4dd300"
+        }
+      ],
+      "fields": [
+        {
+          "direction": "read",
+          "instruction": "0x4dd2d0",
+          "name": "thread_arg",
+          "role": "first stack argument moved into ECX",
+          "type": "GameClock*",
+          "width": 4
+        }
+      ],
+      "name": "GameClock_ThreadThunk",
+      "signature": {
+        "call_site": "thread entry registered at 0x4dd29d",
+        "confidence": "derived from [esp+4] load into ECX and tail jump",
+        "recovered": "void __cdecl GameClock_ThreadThunk(void *clock)",
+        "return": "does not return to caller; jumps to worker"
+      },
+      "symbol": {
+        "in_named_export": false,
+        "provider_name": null,
+        "source": "curated thunk from 0x4dd29d push and bounded disassembly"
+      },
+      "unresolved_questions": [
+        "Thunk has no named procedure; recovered from registration and disassembly."
+      ]
+    },
+    "0x4dd300": {
+      "body": {
+        "available": false,
+        "pseudocode_path": null,
+        "ranges": [
+          {
+            "end": "0x4dd49b",
+            "start": "0x4dd300"
+          }
+        ],
+        "recovery": "disassembly-only thread body"
+      },
+      "dispatch": [
+        {
+          "argument": "0xfffe79f7",
+          "call": "0x528190",
+          "instruction": "0x4dd420",
+          "kind": "call",
+          "name": "UI_QueueChildCommand",
+          "targets": [
+            "0x528190"
+          ]
+        },
+        {
+          "argument": "0xfffe79de",
+          "call": "0x528190",
+          "instruction": "0x4dd469",
+          "kind": "call",
+          "name": "UI_QueueChildCommand",
+          "targets": [
+            "0x528190"
+          ]
+        },
+        {
+          "call": "0x488a10",
+          "instruction": "0x4dd485",
+          "kind": "call",
+          "name": "Game_UpdateDateLabels",
+          "targets": [
+            "0x488a10"
+          ]
+        }
+      ],
+      "event_order": [
+        {
+          "address": "0x4dd30d",
+          "effect": "read current time"
+        },
+        {
+          "address": "0x4dd30f",
+          "effect": "add clock+0x14 interval to wake deadline"
+        },
+        {
+          "address": "0x4dd326",
+          "effect": "derive hour byte from clock+0x19 >> 2"
+        },
+        {
+          "address": "0x4dd3da",
+          "effect": "increment five-minute counter"
+        },
+        {
+          "address": "0x4dd3e0",
+          "effect": "store five-minute counter"
+        },
+        {
+          "address": "0x4dd3e8",
+          "effect": "wrap five-minute counter at 12"
+        },
+        {
+          "address": "0x4dd3f2",
+          "effect": "store five-minute unit at clock+0x06"
+        },
+        {
+          "address": "0x4dd40b",
+          "effect": "enter quarter-hour branch when unit is 0,3,6,9"
+        },
+        {
+          "address": "0x4dd412",
+          "effect": "push command 0xfffe79f7"
+        },
+        {
+          "address": "0x4dd417",
+          "effect": "increment quarter-hour counter"
+        },
+        {
+          "address": "0x4dd420",
+          "effect": "UI_QueueChildCommand(0xfffe79f7)"
+        },
+        {
+          "address": "0x4dd425",
+          "effect": "compare quarter counter with 0x60"
+        },
+        {
+          "address": "0x4dd42e",
+          "effect": "reset quarter counter at day boundary"
+        },
+        {
+          "address": "0x4dd43d",
+          "effect": "increment year word when day counter wraps 4"
+        },
+        {
+          "address": "0x4dd448",
+          "effect": "increment date word"
+        },
+        {
+          "address": "0x4dd456",
+          "effect": "hour = quarter >> 2"
+        },
+        {
+          "address": "0x4dd459",
+          "effect": "store hour at clock+0x07"
+        },
+        {
+          "address": "0x4dd464",
+          "effect": "push hourly command 0xfffe79de"
+        },
+        {
+          "address": "0x4dd469",
+          "effect": "UI_QueueChildCommand(0xfffe79de)"
+        }
+      ],
+      "fields": [
+        {
+          "address": "0x4dd30f",
+          "direction": "read",
+          "instruction": "0x4dd30f",
+          "name": "clock+0x14",
+          "role": "thread wake interval",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x4dd31a",
+          "direction": "read",
+          "instruction": "0x4dd31a",
+          "name": "clock+0x19",
+          "role": "quarter-hour counter",
+          "type": "u8",
+          "width": 1
+        },
+        {
+          "address": "0x4dd326",
+          "direction": "write",
+          "instruction": "0x4dd326",
+          "name": "clock+0x07.loop_top",
+          "role": "hour = quarter >> 2",
+          "type": "u8",
+          "width": 1
+        },
+        {
+          "address": "0x4dd329",
+          "direction": "read",
+          "instruction": "0x4dd329",
+          "name": "clock+0x1c",
+          "role": "pause flag",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x4dd330",
+          "direction": "read",
+          "instruction": "0x4dd330",
+          "name": "clock+0x20",
+          "role": "second pause flag",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x4dd3e0",
+          "direction": "write",
+          "instruction": "0x4dd3e0",
+          "name": "clock+0x10",
+          "role": "five-minute counter 0..11",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x4dd3f2",
+          "direction": "write",
+          "instruction": "0x4dd3f2",
+          "name": "clock+0x06",
+          "role": "minute-of-hour five-minute unit",
+          "type": "u8",
+          "width": 1
+        },
+        {
+          "address": "0x4dd417",
+          "direction": "write",
+          "instruction": "0x4dd417",
+          "name": "clock+0x19",
+          "role": "quarter-hour counter increment",
+          "type": "u8",
+          "width": 1
+        },
+        {
+          "address": "0x4dd436",
+          "direction": "write",
+          "instruction": "0x4dd436",
+          "name": "clock+0x18",
+          "role": "day counter increment",
+          "type": "u8",
+          "width": 1
+        },
+        {
+          "address": "0x4dd43d",
+          "direction": "write",
+          "instruction": "0x4dd43d",
+          "name": "clock+0x04",
+          "role": "year word increment",
+          "type": "u16",
+          "width": 2
+        },
+        {
+          "address": "0x4dd448",
+          "direction": "write",
+          "instruction": "0x4dd448",
+          "name": "clock+0x0a",
+          "role": "date word increment",
+          "type": "u16",
+          "width": 2
+        },
+        {
+          "address": "0x4dd48f",
+          "direction": "write",
+          "instruction": "0x4dd48f",
+          "name": "clock+0x24",
+          "role": "worker stop flag",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x4dd459",
+          "direction": "write",
+          "instruction": "0x4dd459",
+          "name": "clock+0x07.quarter",
+          "role": "hour = quarter >> 2 after quarter update",
+          "type": "u8",
+          "width": 1
+        }
+      ],
+      "name": "GameClock_Worker",
+      "signature": {
+        "call_site": "tail jump 0x4dd2d4",
+        "confidence": "derived from ECX=this and thread loop",
+        "recovered": "void __fastcall GameClock_Worker(GameClock *this)",
+        "return": "sets this+0x24 and returns"
+      },
+      "symbol": {
+        "in_named_export": false,
+        "provider_name": null,
+        "source": "curated worker entry from callback tail jump"
+      },
+      "unresolved_questions": [
+        "The thread body has no named procedure; range is recovered by bounded disassembly and the return site at 0x4dd49b.",
+        "The import called through [0x55c090] was not named in this batch; it blocks the worker between ticks."
+      ]
+    },
+    "0x4dd4f0": {
+      "dispatch": [
+        {
+          "call": "0x54cc2b",
+          "instruction": "0x4dd500",
+          "kind": "call",
+          "name": "CRT_Ostream_Write",
+          "targets": [
+            "0x54cc2b"
+          ]
+        }
+      ],
+      "event_order": [
+        {
+          "address": "0x4dd500",
+          "effect": "write hour"
+        },
+        {
+          "address": "0x4dd50d",
+          "effect": "write minute unit"
+        },
+        {
+          "address": "0x4dd51a",
+          "effect": "write day-of-week"
+        },
+        {
+          "address": "0x4dd527",
+          "effect": "write year word"
+        },
+        {
+          "address": "0x4dd534",
+          "effect": "write date word"
+        },
+        {
+          "address": "0x4dd541",
+          "effect": "write saved hour counter"
+        },
+        {
+          "address": "0x4dd54e",
+          "effect": "write quarter counter"
+        },
+        {
+          "address": "0x4dd55b",
+          "effect": "write day counter"
+        },
+        {
+          "address": "0x4dd568",
+          "effect": "write interval"
+        },
+        {
+          "address": "0x4dd575",
+          "effect": "write five-minute counter"
+        },
+        {
+          "address": "0x4dd583",
+          "effect": "write calendar base DAT_0057dfbc"
+        }
+      ],
+      "fields": [
+        {
+          "address": "0x4dd4f8",
+          "direction": "read",
+          "instruction": "0x4dd500",
+          "name": "clock+0x07",
+          "role": "hour",
+          "type": "u8",
+          "width": 1
+        },
+        {
+          "address": "0x4dd505",
+          "direction": "read",
+          "instruction": "0x4dd50d",
+          "name": "clock+0x06",
+          "role": "minute unit",
+          "type": "u8",
+          "width": 1
+        },
+        {
+          "address": "0x4dd512",
+          "direction": "read",
+          "instruction": "0x4dd51a",
+          "name": "clock+0x08",
+          "role": "day-of-week",
+          "type": "u8",
+          "width": 1
+        },
+        {
+          "address": "0x4dd51f",
+          "direction": "read",
+          "instruction": "0x4dd527",
+          "name": "clock+0x04",
+          "role": "year word",
+          "type": "u16",
+          "width": 2
+        },
+        {
+          "address": "0x4dd52c",
+          "direction": "read",
+          "instruction": "0x4dd534",
+          "name": "clock+0x0a",
+          "role": "date word",
+          "type": "u16",
+          "width": 2
+        },
+        {
+          "address": "0x4dd539",
+          "direction": "read",
+          "instruction": "0x4dd541",
+          "name": "clock+0x0c",
+          "role": "saved hour counter",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x4dd546",
+          "direction": "read",
+          "instruction": "0x4dd54e",
+          "name": "clock+0x19",
+          "role": "quarter counter",
+          "type": "u8",
+          "width": 1
+        },
+        {
+          "address": "0x4dd553",
+          "direction": "read",
+          "instruction": "0x4dd55b",
+          "name": "clock+0x18",
+          "role": "day counter",
+          "type": "u8",
+          "width": 1
+        },
+        {
+          "address": "0x4dd560",
+          "direction": "read",
+          "instruction": "0x4dd568",
+          "name": "clock+0x14",
+          "role": "thread interval",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x4dd56d",
+          "direction": "read",
+          "instruction": "0x4dd575",
+          "name": "clock+0x10",
+          "role": "five-minute counter",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57dfbc",
+          "direction": "read",
+          "instruction": "0x4dd57c",
+          "name": "DAT_0057dfbc",
+          "role": "calendar base year",
+          "type": "u32",
+          "width": 4
+        }
+      ],
+      "signature": {
+        "call_site": "calendar save path",
+        "confidence": "derived from ECX=this, one stack arg and CRT_Ostream_Write calls",
+        "recovered": "void __thiscall GameCalendar_Save(GameClock *this, void *stream)",
+        "return": "void; RET 4"
+      },
+      "unresolved_questions": []
+    },
+    "0x4dd590": {
+      "dispatch": [
+        {
+          "call": "0x54cbc1",
+          "instruction": "0x4dd5a1",
+          "kind": "call",
+          "name": "CRT_Istream_Read",
+          "targets": [
+            "0x54cbc1"
+          ]
+        }
+      ],
+      "event_order": [
+        {
+          "address": "0x4dd5a1",
+          "effect": "read hour"
+        },
+        {
+          "address": "0x4dd5ae",
+          "effect": "read minute unit"
+        },
+        {
+          "address": "0x4dd5bb",
+          "effect": "read day-of-week"
+        },
+        {
+          "address": "0x4dd5c8",
+          "effect": "read year word"
+        },
+        {
+          "address": "0x4dd5d5",
+          "effect": "read date word"
+        },
+        {
+          "address": "0x4dd5e2",
+          "effect": "read saved hour counter"
+        },
+        {
+          "address": "0x4dd5ef",
+          "effect": "read quarter counter"
+        },
+        {
+          "address": "0x4dd5fc",
+          "effect": "read day counter"
+        },
+        {
+          "address": "0x4dd609",
+          "effect": "read interval"
+        },
+        {
+          "address": "0x4dd616",
+          "effect": "force interval to 0xc35"
+        },
+        {
+          "address": "0x4dd61c",
+          "effect": "read five-minute counter"
+        },
+        {
+          "address": "0x4dd621",
+          "effect": "compare save version with 0x2d"
+        },
+        {
+          "address": "0x4dd640",
+          "effect": "old saves set calendar base 0x7d0 (2000)"
+        }
+      ],
+      "fields": [
+        {
+          "address": "0x4dd59b",
+          "direction": "write",
+          "instruction": "0x4dd5a1",
+          "name": "clock+0x07",
+          "role": "hour",
+          "type": "u8",
+          "width": 1
+        },
+        {
+          "address": "0x4dd5a6",
+          "direction": "write",
+          "instruction": "0x4dd5ae",
+          "name": "clock+0x06",
+          "role": "minute unit",
+          "type": "u8",
+          "width": 1
+        },
+        {
+          "address": "0x4dd5b3",
+          "direction": "write",
+          "instruction": "0x4dd5bb",
+          "name": "clock+0x08",
+          "role": "day-of-week",
+          "type": "u8",
+          "width": 1
+        },
+        {
+          "address": "0x4dd5c0",
+          "direction": "write",
+          "instruction": "0x4dd5c8",
+          "name": "clock+0x04",
+          "role": "year word",
+          "type": "u16",
+          "width": 2
+        },
+        {
+          "address": "0x4dd5cd",
+          "direction": "write",
+          "instruction": "0x4dd5d5",
+          "name": "clock+0x0a",
+          "role": "date word",
+          "type": "u16",
+          "width": 2
+        },
+        {
+          "address": "0x4dd5da",
+          "direction": "write",
+          "instruction": "0x4dd5e2",
+          "name": "clock+0x0c",
+          "role": "saved hour counter",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x4dd5e7",
+          "direction": "write",
+          "instruction": "0x4dd5ef",
+          "name": "clock+0x19",
+          "role": "quarter counter",
+          "type": "u8",
+          "width": 1
+        },
+        {
+          "address": "0x4dd5f4",
+          "direction": "write",
+          "instruction": "0x4dd5fc",
+          "name": "clock+0x18",
+          "role": "day counter",
+          "type": "u8",
+          "width": 1
+        },
+        {
+          "address": "0x4dd601",
+          "direction": "write",
+          "instruction": "0x4dd609",
+          "name": "clock+0x14",
+          "role": "interval read then forced to 0xc35",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x4dd60e",
+          "direction": "write",
+          "instruction": "0x4dd616",
+          "name": "clock+0x14",
+          "role": "forced interval 0xc35",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x4dd611",
+          "direction": "write",
+          "instruction": "0x4dd61c",
+          "name": "clock+0x10",
+          "role": "five-minute counter",
+          "type": "int",
+          "width": 4
+        },
+        {
+          "address": "0x57dfbc",
+          "direction": "write",
+          "instruction": "0x4dd640",
+          "name": "DAT_0057dfbc",
+          "role": "calendar base year default 2000 for old saves",
+          "type": "u32",
+          "width": 4
+        }
+      ],
+      "signature": {
+        "call_site": "GameClock_Construct load path",
+        "confidence": "derived from ECX=this, one stack arg and CRT_Istream_Read calls",
+        "recovered": "void __thiscall GameCalendar_Load(GameClock *this, void *stream)",
+        "return": "void; RET 4"
+      },
+      "unresolved_questions": [
+        "Saved-state layout is exact for the clock fields; the stream wrapper version field 0x57c668 is outside this batch."
+      ]
+    },
+    "0x528190": {
+      "dispatch": [
+        {
+          "call": "UI_QueueCommand",
+          "instruction": "0x528190",
+          "kind": "call",
+          "name": "UI_QueueCommand",
+          "note": "provider body calls UI_QueueCommand; exact callee address not resolved in this batch",
+          "targets": []
+        }
+      ],
+      "event_order": [
+        {
+          "address": "0x528190",
+          "effect": "test child window at ui+0x8304"
+        },
+        {
+          "address": "0x528190",
+          "effect": "forward command and value to UI_QueueCommand"
+        },
+        {
+          "address": "0x528190",
+          "effect": "return 1 when queued"
+        }
+      ],
+      "fields": [
+        {
+          "address": "ui+0x8304",
+          "direction": "read",
+          "instruction": "0x528190",
+          "name": "ui+0x8304",
+          "role": "child window that receives the command",
+          "type": "UI*",
+          "width": 4
+        }
+      ],
+      "signature": {
+        "call_site": "0x4dd420 and 0x4dd469",
+        "confidence": "derived from ECX=this, two stack args and return branches",
+        "recovered": "int __thiscall UI_QueueChildCommand(UI *this, int command, int value)",
+        "return": "1 when queued, 0 when no child window"
+      },
+      "unresolved_questions": [
+        "UI_QueueCommand address is not annotated in this batch; the record focuses on the clock command handoff."
+      ]
+    },
+    "0x52ff20": {
+      "dispatch": [
+        {
+          "call": "Array_GetRecordByKey",
+          "instruction": "0x52ff20",
+          "kind": "call",
+          "name": "Array_GetRecordByKey",
+          "targets": []
+        }
+      ],
+      "event_order": [
+        {
+          "address": "0x52ff20",
+          "effect": "delegate to Array_GetRecordByKey"
+        },
+        {
+          "address": "0x52ff20",
+          "effect": "return pointer in EAX"
+        }
+      ],
+      "fields": [],
+      "signature": {
+        "call_site": "0x405b49",
+        "confidence": "derived from call-site EAX test",
+        "recovered": "void *__thiscall Array_GetRecordByKeyPtr(Array *this, int key)",
+        "return": "pointer observed in EAX though provider text says void"
+      },
+      "unresolved_questions": [
+        "Provider pseudocode declares void but the caller tests EAX at 0x405b4e."
+      ]
+    },
+    "0x531b70": {
+      "dispatch": [
+        {
+          "call": "Window_GadgetNotify",
+          "instruction": "0x531b70",
+          "kind": "call",
+          "name": "Window_GadgetNotify",
+          "targets": []
+        }
+      ],
+      "event_order": [
+        {
+          "address": "0x531b70",
+          "effect": "Window_GadgetNotify(this, control_id, 6, 300, variant, 0)"
+        }
+      ],
+      "fields": [],
+      "signature": {
+        "call_site": "0x405b5b",
+        "confidence": "derived from Window_GadgetNotify call",
+        "recovered": "void __thiscall UI_SetButtonRecordVariant(UI *this, int control_id, int variant)",
+        "return": "void"
+      },
+      "unresolved_questions": []
+    }
+  },
+  "resolved_questions": [
+    {
+      "answer": "Game_WindowProc compares it at 0x4058f5 and branches to 0x405ae0; the case rolls 0..100, requires >75, selects one of controls 0x411..0x415, and calls Array_GetRecordByKeyPtr plus UI_SetButtonRecordVariant.",
+      "evidence": [
+        "0x4dd412",
+        "0x4dd420",
+        "0x4058f5",
+        "0x40591f",
+        "0x405ae0",
+        "0x405b0c",
+        "0x405b38",
+        "0x405b49",
+        "0x405b5b"
+      ],
+      "question": "Where does 0xfffe79f7 go?"
+    },
+    {
+      "answer": "Game_WindowProc maps it through index 0x62 and selector 4 of the table at 0x406640/0x406618 to 0x405aa9, which calls Game_EndOfHour 0x486590.",
+      "evidence": [
+        "0x405925",
+        "0x40592a",
+        "0x405935",
+        "0x40593b",
+        "0x405aa9",
+        "0x405ab3",
+        "0x4066a2",
+        "0x406628"
+      ],
+      "question": "Where does 0xfffe79de go?"
+    },
+    {
+      "answer": "They are city-detail animation windows created by CityDetailView_CreateOwnCityWindow: 0x411 KAKANIM2.ani, 0x412 KAKANIM.ani, 0x413 KAKANIM1.ani, 0x414 TOMATENANIM.ani, 0x415 SPIDERANIM.ani. Game+0x25c is assigned that window at 0x485f92.",
+      "evidence": [
+        "0x41a506",
+        "0x41a5df",
+        "0x41a68d",
+        "0x41a6a8",
+        "0x41a6c0",
+        "0x485f92"
+      ],
+      "question": "What are controls 0x411..0x415?"
+    },
+    {
+      "answer": "KERNEL32.dll!WaitForSingleObject, per the PE import table (IAT RVA 0x15c090).",
+      "evidence": [
+        "0x4dd39d",
+        "0x55c090"
+      ],
+      "question": "Which import is called at 0x55c090?"
+    }
+  ],
+  "tables": [
+    {
+      "address": "0x4066a2",
+      "bytes": "04",
+      "consumer": "0x405935",
+      "count": 1,
+      "detail": "command 0xfffe79de maps to index 0x62 and selector 4",
+      "entries": {
+        "0": "0x4"
+      },
+      "id": "hourly_command_selector",
+      "width": 1
+    }
+  ],
+  "trace": [
+    {
+      "address": "0x4dd2b7",
+      "bytes": "c74614350c0000",
+      "instruction": "mov dword ptr [esi+0x14],0xc35",
+      "name": "clock_interval_init",
+      "next": "thread creation",
+      "step": 1,
+      "value": "3125 ms"
+    },
+    {
+      "address": "0x4dd29d",
+      "bytes": "68d0d24d00",
+      "instruction": "push 0x4dd2d0",
+      "name": "clock_callback_push",
+      "next": "0x4dd2be",
+      "step": 2,
+      "value": "thread callback"
+    },
+    {
+      "address": "0x4dd2be",
+      "bytes": "e8a41e0700",
+      "instruction": "call 0x54f167 (CRT_BeginThread)",
+      "name": "clock_thread_start",
+      "next": "0x4dd2d0",
+      "step": 3,
+      "value": "worker thread"
+    },
+    {
+      "address": "0x4dd2d4",
+      "bytes": "e927000000",
+      "instruction": "jmp 0x4dd300",
+      "name": "clock_thunk",
+      "next": "0x4dd300",
+      "step": 4,
+      "value": "GameClock_Worker"
+    },
+    {
+      "address": "0x4dd39d",
+      "bytes": "ff1590c05500",
+      "instruction": "call dword ptr [0x55c090] (WaitForSingleObject)",
+      "name": "worker_wait",
+      "next": "0x4dd30f",
+      "step": 5,
+      "value": "wait for state event"
+    },
+    {
+      "address": "0x4dd30f",
+      "bytes": "034614",
+      "instruction": "add eax,dword ptr [esi+0x14]",
+      "name": "clock_interval_read",
+      "next": "0x4dd3da",
+      "step": 6,
+      "value": "next wake deadline"
+    },
+    {
+      "address": "0x4dd3da",
+      "bytes": "8b4e10",
+      "instruction": "mov ecx,dword ptr [esi+0x10]",
+      "name": "clock_five_minute_read",
+      "next": "0x4dd3e0",
+      "step": 7,
+      "value": "five-minute counter"
+    },
+    {
+      "address": "0x4dd3e0",
+      "bytes": "894e10",
+      "instruction": "mov dword ptr [esi+0x10],ecx",
+      "name": "clock_five_minute_write",
+      "next": "0x4dd3f2",
+      "step": 8,
+      "value": "counter 0..11"
+    },
+    {
+      "address": "0x4dd3f2",
+      "bytes": "884606",
+      "instruction": "mov byte ptr [esi+0x6],al",
+      "name": "clock_minute_unit",
+      "next": "0x4dd40b",
+      "step": 9,
+      "value": "five-minute unit"
+    },
+    {
+      "address": "0x4dd40b",
+      "bytes": "8a4619",
+      "instruction": "mov al,byte ptr [esi+0x19]",
+      "name": "clock_quarter_read",
+      "next": "0x4dd412",
+      "step": 10,
+      "value": "quarter-hour counter"
+    },
+    {
+      "address": "0x4dd412",
+      "bytes": "68f779feff",
+      "instruction": "push 0xfffe79f7",
+      "name": "clock_quarter_command",
+      "next": "0x4dd417",
+      "step": 11,
+      "value": "quarter-hour command"
+    },
+    {
+      "address": "0x4dd417",
+      "bytes": "884619",
+      "instruction": "mov byte ptr [esi+0x19],al",
+      "name": "clock_quarter_increment",
+      "next": "0x4dd420",
+      "step": 12,
+      "value": "quarter counter increment"
+    },
+    {
+      "address": "0x4dd420",
+      "bytes": "e86bad0400",
+      "instruction": "call 0x528190 (UI_QueueChildCommand)",
+      "name": "clock_queue_quarter",
+      "next": "0x4dd425",
+      "step": 13,
+      "value": "0xfffe79f7 queued"
+    },
+    {
+      "address": "0x4dd425",
+      "bytes": "807e1960",
+      "instruction": "cmp byte ptr [esi+0x19],0x60",
+      "name": "clock_quarter_wrap_check",
+      "next": "0x4dd42e",
+      "step": 14,
+      "value": "day boundary after 96 quarters"
+    },
+    {
+      "address": "0x4dd42e",
+      "bytes": "c6461900",
+      "instruction": "mov byte ptr [esi+0x19],0x0",
+      "name": "clock_quarter_reset",
+      "next": "0x4dd43d",
+      "step": 15,
+      "value": "quarter counter reset"
+    },
+    {
+      "address": "0x4dd43d",
+      "bytes": "66ff4604",
+      "instruction": "inc word ptr [esi+0x4]",
+      "name": "clock_year_increment",
+      "next": "0x4dd448",
+      "step": 16,
+      "value": "year word"
+    },
+    {
+      "address": "0x4dd448",
+      "bytes": "66ff460a",
+      "instruction": "inc word ptr [esi+0xa]",
+      "name": "clock_date_increment",
+      "next": "0x4dd456",
+      "step": 17,
+      "value": "date word"
+    },
+    {
+      "address": "0x4dd456",
+      "bytes": "c0e802",
+      "instruction": "shr al,0x2",
+      "name": "clock_hour_derive",
+      "next": "0x4dd459",
+      "step": 18,
+      "value": "quarter >> 2"
+    },
+    {
+      "address": "0x4dd459",
+      "bytes": "884607",
+      "instruction": "mov byte ptr [esi+0x7],al",
+      "name": "clock_hour_write",
+      "next": "0x4dd464",
+      "step": 19,
+      "value": "hour"
+    },
+    {
+      "address": "0x4dd464",
+      "bytes": "68de79feff",
+      "instruction": "push 0xfffe79de",
+      "name": "clock_hour_command",
+      "next": "0x4dd469",
+      "step": 20,
+      "value": "hourly command"
+    },
+    {
+      "address": "0x4dd469",
+      "bytes": "e822ad0400",
+      "instruction": "call 0x528190 (UI_QueueChildCommand)",
+      "name": "clock_queue_hour",
+      "next": "0x4058f5",
+      "step": 21,
+      "value": "0xfffe79de queued"
+    },
+    {
+      "address": "0x405925",
+      "bytes": "0584860100",
+      "instruction": "add eax,0x18684",
+      "name": "hourly_command_index",
+      "next": "0x40592a",
+      "step": 22,
+      "value": "0xfffe79de -> 0x62"
+    },
+    {
+      "address": "0x40592a",
+      "bytes": "83f87a",
+      "instruction": "cmp eax,0x7a",
+      "name": "hourly_command_range",
+      "next": "0x405935",
+      "step": 23,
+      "value": "index in range"
+    },
+    {
+      "address": "0x405935",
+      "bytes": "8a8840664000",
+      "instruction": "mov cl,byte ptr [eax+0x406640]",
+      "name": "hourly_command_selector",
+      "next": "0x40593b",
+      "step": 24,
+      "value": "selector 4"
+    },
+    {
+      "address": "0x40593b",
+      "bytes": "ff248d18664000",
+      "instruction": "jmp dword ptr [ecx*4+0x406618]",
+      "name": "hourly_command_dispatch",
+      "next": "0x405aa9",
+      "step": 25,
+      "value": "0x405aa9"
+    },
+    {
+      "address": "0x405ab3",
+      "bytes": "e8d80a0800",
+      "instruction": "call 0x486590 (Game_EndOfHour)",
+      "name": "hourly_handler_call",
+      "next": "hour handler",
+      "step": 26,
+      "value": "Game_EndOfHour"
+    },
+    {
+      "address": "0x4058f5",
+      "bytes": "3df779feff",
+      "instruction": "cmp eax,0xfffe79f7",
+      "name": "command_compare",
+      "next": "0x40591f",
+      "step": 27,
+      "value": "quarter-hour command"
+    },
+    {
+      "address": "0x40591f",
+      "bytes": "0f84bb010000",
+      "instruction": "je 0x405ae0",
+      "name": "command_branch",
+      "next": "0x405ae0",
+      "step": 28,
+      "value": "quarter-hour consumer"
+    },
+    {
+      "address": "0x405b0c",
+      "bytes": "e8bfd9ffff",
+      "instruction": "call 0x4034d0 (Random_RangeFast)",
+      "name": "consumer_roll",
+      "next": "0x405b14",
+      "step": 29,
+      "value": "roll 0..100"
+    },
+    {
+      "address": "0x405b14",
+      "bytes": "83f84b",
+      "instruction": "cmp eax,0x4b",
+      "name": "consumer_threshold",
+      "next": "0x405b38",
+      "step": 30,
+      "value": "require roll > 75"
+    },
+    {
+      "address": "0x405b38",
+      "bytes": "6a05",
+      "instruction": "push 0x5",
+      "name": "consumer_variant_roll",
+      "next": "0x405b3f",
+      "step": 31,
+      "value": "choose one of five controls"
+    },
+    {
+      "address": "0x405b3f",
+      "bytes": "8b7c8434",
+      "instruction": "mov edi,dword ptr [esp+eax*4+0x34]",
+      "name": "consumer_control_id",
+      "next": "0x405b49",
+      "step": 32,
+      "value": "0x411..0x415"
+    },
+    {
+      "address": "0x405b49",
+      "bytes": "e8d2a31200",
+      "instruction": "call 0x52ff20 (Array_GetRecordByKeyPtr)",
+      "name": "consumer_lookup",
+      "next": "0x405b5b",
+      "step": 33,
+      "value": "UI record"
+    },
+    {
+      "address": "0x405b5b",
+      "bytes": "e810c01200",
+      "instruction": "call 0x531b70 (UI_SetButtonRecordVariant)",
+      "name": "consumer_variant_set",
+      "next": "save/load",
+      "step": 34,
+      "value": "set variant"
+    },
+    {
+      "address": "0x4dd500",
+      "bytes": "e826f70600",
+      "instruction": "call 0x54cc2b (CRT_Ostream_Write)",
+      "name": "clock_save_hour",
+      "next": "0x4dd57c",
+      "step": 35,
+      "value": "save clock+0x07"
+    },
+    {
+      "address": "0x4dd57c",
+      "bytes": "68bcdf5700",
+      "instruction": "push 0x57dfbc",
+      "name": "clock_save_base",
+      "next": "0x4dd5a1",
+      "step": 36,
+      "value": "save calendar base"
+    },
+    {
+      "address": "0x4dd5a1",
+      "bytes": "e81bf60600",
+      "instruction": "call 0x54cbc1 (CRT_Istream_Read)",
+      "name": "clock_load_hour",
+      "next": "0x4dd616",
+      "step": 37,
+      "value": "load clock+0x07"
+    },
+    {
+      "address": "0x4dd616",
+      "bytes": "c703350c0000",
+      "instruction": "mov dword ptr [ebx],0xc35",
+      "name": "clock_load_interval_override",
+      "next": "0x4dd621",
+      "step": 38,
+      "value": "force interval 0xc35"
+    },
+    {
+      "address": "0x4dd621",
+      "bytes": "833d68c657002d",
+      "instruction": "cmp dword ptr [0x57c668],0x2d",
+      "name": "clock_load_version",
+      "next": "0x4dd640",
+      "step": 39,
+      "value": "save version threshold"
+    },
+    {
+      "address": "0x4dd640",
+      "bytes": "c705bcdf5700d0070000",
+      "instruction": "mov dword ptr [0x57dfbc],0x7d0",
+      "name": "clock_load_old_base",
+      "next": "end",
+      "step": 40,
+      "value": "base year 2000 for old saves"
+    }
+  ]
+}

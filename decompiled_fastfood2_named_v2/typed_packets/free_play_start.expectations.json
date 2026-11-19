@@ -1,0 +1,193 @@
+{
+  "addresses": [
+    "0x472da0",
+    "0x4cbcd0",
+    "0x4cc640",
+    "0x4052c0",
+    "0x404af0",
+    "0x481d90",
+    "0x48d3a0",
+    "0x482740",
+    "0x4d44e0",
+    "0x406a90"
+  ],
+  "annotations": "free_play_start.annotations.json",
+  "expected_dispatch_targets": {
+    "0x404af0": [
+      "0x4811b0",
+      "0x481d90"
+    ],
+    "0x4052c0": [
+      "0x40542e",
+      "0x404af0"
+    ],
+    "0x481d90": [
+      "0x4d44e0",
+      "0x482740",
+      "0x48d3a0"
+    ],
+    "0x4cc640": [
+      "0x4cd2b9",
+      "0x4cd33d"
+    ],
+    "0x4d44e0": [
+      "0x4db430",
+      "0x4eb0f0",
+      "0x4eac80"
+    ]
+  },
+  "expected_field_instructions": {
+    "0x406a90": {
+      "DAT_0057b97c": "0x406b90"
+    },
+    "0x481d90": {
+      "DAT_0057bb24": "0x48d3a0",
+      "DAT_0057bb28": "0x481ec3",
+      "DAT_0057bb44": "0x481e7e",
+      "DAT_0057bcd8": "0x48203d",
+      "company+0x108": "0x4820c1"
+    },
+    "0x48d3a0": {
+      "DAT_0057bb24": "0x48d3a0"
+    },
+    "0x4cbcd0": {
+      "DAT_0057b8b4": "0x4cbe16",
+      "DAT_0057b9c8": "0x4cbe4b",
+      "DAT_0057bb24": "0x4cbe26",
+      "DAT_0057bb28": "0x4cbe51",
+      "DAT_0057bcd8": "0x4cbebd"
+    },
+    "0x4cc640": {
+      "DAT_0056386c": "0x4cd342",
+      "DAT_0057bb24": "0x4cd415",
+      "DAT_0057bb40": "0x4cd420",
+      "DAT_0057bb44": "0x4cd490",
+      "DAT_0057bcd8": "0x4cc92e"
+    },
+    "0x4d44e0": {
+      "city_name": "0x4d4557"
+    }
+  },
+  "expected_fixtures": [
+    {
+      "base_capital": 22000,
+      "difficulty": 9,
+      "expected_capital": 22000,
+      "formula": "base * percent / 100",
+      "id": "free_play_difficulty9_ownership100",
+      "ownership_percent": 100
+    },
+    {
+      "base_capital": 22000,
+      "difficulty": 9,
+      "expected_capital": 24200,
+      "formula": "base * percent / 100",
+      "id": "free_play_difficulty9_ownership110",
+      "ownership_percent": 110
+    }
+  ],
+  "expected_signatures": {
+    "0x404af0": "void __cdecl Game_RunSession(void)",
+    "0x4052c0": "void __cdecl GameLoop_DispatchScreens(void)",
+    "0x406a90": "void __cdecl Settings_InitDefaults(void)",
+    "0x472da0": "void *__cdecl Screen_FreePlaySetup(int *state_out)",
+    "0x481d90": "void __thiscall Game_InitScenario(Game *this)",
+    "0x482740": "void __thiscall City_Register(Game *this, City *city, int population, int company_count)",
+    "0x48d3a0": "int __cdecl Game_GetStartingCapital(void)",
+    "0x4cbcd0": "void __cdecl FreePlaySetup_InitWindow(void *window)",
+    "0x4cc640": "int __cdecl FreePlaySetup_ControlCallback(void *window, unsigned message, int control_id, int value)",
+    "0x4d44e0": "City *__thiscall City_ConstructFromName(City *this, const char *city_name, int unused)"
+  },
+  "expected_tables": {
+    "game_get_starting_capital": {
+      "address": "0x48d3f4",
+      "count": 10,
+      "entries": {
+        "0": "0x48d3b1",
+        "1": "0x48d3b7",
+        "2": "0x48d3bd",
+        "3": "0x48d3c3",
+        "4": "0x48d3c9",
+        "5": "0x48d3cf",
+        "6": "0x48d3d5",
+        "7": "0x48d3db",
+        "8": "0x48d3e1",
+        "9": "0x48d3e7"
+      },
+      "width": 4
+    },
+    "game_screen_dispatch": {
+      "address": "0x4055a4",
+      "count": 9,
+      "entries": {
+        "0x15": "0x4053aa",
+        "0x16": "0x405407",
+        "0x17": "0x40542e",
+        "0x18": "0x405463",
+        "0x19": "0x40548f",
+        "0x1a": "0x4054ba",
+        "0x1b": "0x4054e4",
+        "0x1c": "0x4053d8",
+        "0x1d": "0x40552c"
+      },
+      "width": 4
+    }
+  },
+  "markdown": "free_play_start.md",
+  "min_trace_steps": 40,
+  "packet": "free_play_start.json",
+  "required_records": [
+    "0x404af0",
+    "0x4052c0",
+    "0x406a90",
+    "0x472da0",
+    "0x481d90",
+    "0x482740",
+    "0x48d3a0",
+    "0x4cbcd0",
+    "0x4cc640",
+    "0x4d44e0"
+  ],
+  "required_trace": {
+    "capital_difficulty_9": "0x48d3e7",
+    "capital_jump_table": "0x48d3aa",
+    "capital_read_difficulty": "0x48d3a0",
+    "capital_store_return": "0x481f64",
+    "cash_first_write": "0x4820c1",
+    "cash_multiply": "0x482048",
+    "cash_read_ownership": "0x48203d",
+    "city_ini_build": "0x4d4562",
+    "city_ini_format": "0x4d455c",
+    "city_init_population": "0x482779",
+    "city_iso_build": "0x4d46fd",
+    "city_iso_format": "0x4d46f7",
+    "city_population_forward": "0x482771",
+    "dispatch_call_session": "0x405444",
+    "dispatch_jump_case_17": "0x4053a3",
+    "dispatch_read_state": "0x405389",
+    "ownership_decrement_step": "0x4cc8d7",
+    "ownership_decrement_write": "0x4cc8dc",
+    "ownership_increment_step": "0x4cc929",
+    "ownership_increment_write": "0x4cc92e",
+    "population_first_write": "0x4d4a45",
+    "scenario_construct_city": "0x481e85",
+    "scenario_free_flag": "0x481eb5",
+    "scenario_population": "0x481ec3",
+    "scenario_push_city": "0x481e7e",
+    "scenario_register_city": "0x481ecd",
+    "scenario_start_capital_call": "0x481f5f",
+    "session_call_scenario": "0x404dfc",
+    "settings_ownership_default": "0x406b90",
+    "setup_city_copy": "0x4cd498",
+    "setup_city_index": "0x4cd420",
+    "setup_city_short_name": "0x4cd490",
+    "setup_difficulty_commit": "0x4cd415",
+    "setup_difficulty_persist": "0x4cd432",
+    "setup_map_record": "0x4cd44f",
+    "setup_ownership_copy": "0x4cbebd",
+    "setup_population_commit": "0x4cd3e8",
+    "setup_population_persist": "0x4cd3f8",
+    "setup_record_short_name": "0x4cd454",
+    "setup_start_screen_state": "0x4cd342"
+  }
+}

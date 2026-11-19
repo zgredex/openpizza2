@@ -1,0 +1,89 @@
+{
+  "function": "0x47d910",
+  "tables": "PRODUCT_QUALITY_TABLES.json",
+  "confidence": {
+    "formula": "static/direct disassembly",
+    "table_bytes": "verified against pinned executable",
+    "branch_fixture": "controlled branch state; original runtime pending",
+    "staff_fixture": "controlled adjusted-rating bucket; original staff record pending"
+  },
+  "furniture_fixture": {
+    "source_row_address": "0x56f2a0",
+    "type_byte": 5,
+    "type_plus14": 2,
+    "type_plus70": 1.6,
+    "placement_plus0c": 100,
+    "helper_outputs": {
+      "0x47ca80": 2,
+      "0x47c9a0": 100,
+      "0x47cb70": 2
+    }
+  },
+  "branch_staff_fixture": {
+    "name": "row38-counter",
+    "category": 0,
+    "helper_47ca80_low": 2,
+    "helper_47c9a0_low": 100,
+    "helper_47cb70_signed": 2,
+    "staff_average_bucket": 2,
+    "staff_rule": "one eligible staff record with adjusted rating 24 -> 24 / 12 = 2",
+    "expected_return": 95,
+    "batch_average": 10
+  },
+  "cases": [
+    {
+      "name": "empty-branch",
+      "category": 0,
+      "batch_average": 0,
+      "helper_47ca80_low": 0,
+      "helper_47c9a0_low": 0,
+      "helper_47cb70_signed": 0,
+      "staff_average_bucket": 0,
+      "expected_return": 50
+    },
+    {
+      "name": "shortage-adjacent-positive",
+      "category": 0,
+      "batch_average": 10,
+      "helper_47ca80_low": 1,
+      "helper_47c9a0_low": 100,
+      "helper_47cb70_signed": 2,
+      "staff_average_bucket": 2,
+      "expected_return": 95
+    },
+    {
+      "name": "negative-batch-average",
+      "category": 0,
+      "batch_average": -1,
+      "helper_47ca80_low": 1,
+      "helper_47c9a0_low": 100,
+      "helper_47cb70_signed": 2,
+      "staff_average_bucket": 2,
+      "expected_return": 51
+    },
+    {
+      "name": "high-combined-score",
+      "category": 2,
+      "batch_average": 80,
+      "helper_47ca80_low": 2,
+      "helper_47c9a0_low": 100,
+      "helper_47cb70_signed": 6,
+      "staff_average_bucket": 8,
+      "expected_return": 100
+    }
+  ],
+  "mutations": [
+    {
+      "case": "row38-counter",
+      "field": "helper_47c9a0_low",
+      "value": 0,
+      "expected_return": 90
+    },
+    {
+      "case": "row38-counter",
+      "field": "helper_47ca80_low",
+      "value": 0,
+      "expected_return": 85
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+address,proposed_name,confidence,evidence
+0x5301c0,UI_QueueCommandForTarget,high,Forwards the target window id at +0x48 plus three arguments to UI_QueueCommand using the owner's queue at +0x134.
+0x5271d0,ImageCache_ReleaseById,high,"Unlinks the cached-image node whose key +0x104 matches, decrements refcount +0x108 and frees its pixel data and node."
+0x47f420,Game_SetStageAndFlagAll,medium,"Raises the game stage via Game_SetStageIfHigher, then sets byte +0x81 on every record reachable through the +0x16f0 table."
+0x509ff0,AI_PickRandomWalkDestination,medium,"Walks 0x10..0x1c cells in direction 2 from the object's cell, stopping at the first invalid/occupied cell, and returns that cell's record index via Array_GetRecord28."
+0x47ac10,Game_GetRangeBonusFactor,medium,"Halves the +0x14d0..+0x14d4 span, pads it by Rating_GetComposite/20 while negative and returns (value+100)*0.01."
+0x528190,UI_SendCommandToHandler,medium,Queues param_1/param_2 as a command to the handler object at +0x8304 and reports whether a handler is installed.
+0x4f3ce0,Grid_PickUnoccupiedRandomEntry,medium,Retries random entries of the +0x118 table until the mapped cell is valid and no object of param_1 already occupies it.
+0x47e5e0,Building_LoadFloorSprite,high,Formats FILIALE_%s_BODENROH00.spr or FILIALE_%s_BODEN%s%02d.spr from the KLEIN/MITTEL/GROSS/EINF and RUST/MODE/EDEL/ROH labels and loads it into sprite slot +0x14e0.
+0x4e3730,Game_GetBuildingTypeLevelValue,medium,Returns a level-indexed value from tables 0x56d104/0x56d114/0x56d124 for building types 0x1d/0x1e/0x1f; the AI compares it with active counts and the stats screen shows it beside supply.
+0x509130,UI_SetListEntryScale,medium,Passes percent*0.01+0.6 to UI_SetListEntryPosition for the row child sprite at +0x58 of the +200 record.
+0x48c060,Market_ComputeWeightedAveragePrice,medium,Sums 86 category prices weighted by per-company counts and normalizes by the accumulated count and record+4 weight.
+0x5139e0,Game_GetSkillRating,high,"Runs Game_ComputeSkillRatings and returns one index of the +0x2c4/+0x2e4 arrays, or their average over 8 when the index is -1."
+0x50bbf0,Object_ClearAssignedRecord,medium,"When state +0xa4 is 4, looks up the +0x88 record map entry, resets +0xa4 through Object_SetFieldA4Locked and zeroes the entry count."
+0x527c60,UI_AddEffectObject,medium,Appends the object to the growable +0x8324 list whose entries are ticked with elapsed milliseconds through vtable +0x18.
+0x47a000,Rating_ComputeBuildingScore,medium,"Weighted sum of free counts for building types 0x17/0x16/0xf/0x21/0x1a/0x1b/0x1c using the 8-category weight table local_e0, averaged over all 8 categories when the index is -1."
+0x489ea0,UI_IsClickOccluded,medium,"For click-target types 1/2 checks +0x10 and the twelve +/-2/+4 neighbor records, returning 1 when the target overlaps another active one."
+0x4f5990,UI_DrawObjectWithBounds,medium,"Computes a sprite-aligned rect (or centered fallback), expands it by 0x32 when an output rect is supplied, else blits it through Gfx_BlitRectList."
+0x551b47,CRT_FormatExponent,high,"Rewrites the exponent field to 'e+000'/'E+000', adjusting hundreds and tens digits from the printf float state."
+0x5476f0,Sound_InitSpeechVoice,medium,"Copies the current player's +0x44 speech name to +0x174, reloads the speech set and resets voice counters, volume 1.0f and frequency 1000."
+0x50ac30,UI_SetChildIconAndRatingHeight,high,Maps company type byte +0x824 to icon ids 0x2b..0x2e and sets the child height from 0x99-rating clamped to 0x88.
+0x502990,Game_IsObjectStatAbove,medium,Scans the current player's +0x148 objects and returns 1 when any Stats_GetAverage8 value exceeds param_1.
+0x513a90,Company_GenerateNameFromTopProduct,medium,"Finds the 86-category index with the largest count, formats that product name and passes it to Company_GenerateUniqueName."
+0x47ab20,Game_GetMarketBonusFactor,medium,"Halves this+0x14c0, pads it by Rating_GetComposite/20 while negative and returns (value+100)*0.01."
+0x523050,Array_RemoveValueLocked,high,Under critical section 0x584180 scans the array at +4/+8 and removes the first element equal to param_1.
+0x5091c0,UI_SetListEntryHalfScale,low,"Sets the list entry value to half of the record double at +0x28 via UI_SetListEntryPosition, writing 0 for an invalid index."
+0x4e0f10,Game_IsRecordLinked,medium,Returns true when record byte +0x1dc is set or Game_HasRecordField14DC finds the record pointer in the +0x148 map.
+0x4f03f0,Map_DrawTileCursorDiamond,medium,"Saves 13 tilemap cells, paints a 13-pixel diamond cursor at param_1/param_2, and restores the saved cells when param_3 is nonzero."
+0x4defd0,Company_FillStatisticsBlock,medium,"Fills one 0x1a0 company-stat block with building total, value, HQ flag, market share, size and bonus counters."
+0x4da880,Game_PickRandomBuildingType,high,Shuffles candidate type/limit pairs and returns the first building type whose owned count is below its limit.
+0x52d1c0,Surface_DrawFilledCircle,high,"Rasterizes a filled circle by writing horizontal spans of color param_5 into the surface pixel buffer, clipped to the surface rect."
+0x48cc10,Game_CountAssignedAssetSlots,medium,"Counts asset slots 0..0x28 in the other players' +0x148/+0x180/+0x1d8 maps whose object Game_IsValueAssignedToCompany reports as owned by the current company, and outputs the first slot."
+0x4f7cb0,Game_BuildTopRatedObjectList,high,"Collects up to 10 owned objects of type param_3 with record +0x108 != 0xc and +0x74 == 0, inserting them by descending Rating_GetComposite."
+0x4fdbe0,Game_PickRandomIdleObject,medium,Samples a random player subrecord up to 10 times and returns the first whose +0x16f0+0x38 and +0x2c are both zero.
+0x5246e0,Window_BlitToDC,high,"Blits the window surface through Gfx_BlitClipped16 into HDC param_2, or clamps the rect and uses Surface_BlitRectRetry."
+0x4f7a50,Game_SumPlayerAssetValue,high,"Sums +0x3c over objects in the player's +0x148 map, +0x40 over unbuilt +0x180 entries, plus the last iterated object's +0x14b0."
+0x5346a0,RecordList_BlitIndexedRLE,medium,Under critical section 0x5842a0 reads the record's +0x32 sprite index into +6..+0xc and calls Surface_BlitRLESkipToRGB.
+0x479960,Map_ComputeBuildableAverage,high,Averages Map_CountBuildableNeighbors over 0x50x0x50 tiles whose four corner flags are 1 and stores the clamped 0..8 result at +0x1860.
+0x547ac0,Sound_SetVolumeSetting,high,Stores master/music/effect volume settings at +0x1d0/+0x1d4/+0x1d8 through Sound_ConvertVolumeSetting and reports whether the value changed.
+0x54d612,Stream_BeginRead,medium,"Acquires the stream lock, sets state bit 2 and returns 0 when the stream is already busy, otherwise advances the +0x20 iterator and locks the destination."
+0x528510,UI_ScrollChildByVelocity,medium,"Advances +0x2c/+0x30 by param_2 times velocity +0x24/+0x28, moves the child and clips it; returns whether scrolling continues."
+0x4eda60,Map_ScreenToTileCoords,medium,Resolves the map cell at a point through Map_ComputeBlitRect (retrying with the +0xd8/+0xe0 offset) and splits its tile id by map width +0x1c into x/y.
+0x54b320,Array_FindEntryByKeys,high,Scans the +4 array for an entry whose +0x34 equals param_1 and whose +0x30 is the index of param_2 in the current player array.
+0x4f0bd0,Object_FindRecordAtOffset,high,Uses Object_GetBufferPair and returns the stride-0x28 subrecord whose +0xc/+0x10 equal the offsets relative to this+0x24/+0x28.
+0x50b930,Object_IsCompanySiteChanged,medium,Resolves the object's company/player and returns whether Game_GetPlayerSubmapValue at player +0x81c/+0x820 differs from param_1.
+0x54c830,List_FreeContainerValues,high,"Frees every value in the IDMap at *param_1, resets the list and clears the param_1[1]/param_1[2] counters."
+0x50bba0,Game_HasObjectWithSourceId,medium,Scans the global +0x3c map for a type 0x1d object whose +0x10c equals this+0x164.
+0x527250,ImageCache_Clear,high,"Walks the +0x82c4 image cache, freeing each node's pixel data and the node itself until the list is empty."
+0x502c50,Building_GetRandomResidentCount,low,"Returns a random type/level-indexed value from table 0x5727fc, forcing 1 for type 6 when the player count is positive and +0x44 is zero."
+0x501980,Game_GetRandomPlayerRecordValue,medium,Picks a random object in the player's +0x148 map via Random_Mod and returns its +0x3c value.
+0x47ec30,IDMap_FreeValuesAndReset,high,Calls Mem_Free on each IDMap value and resets the container with List_Node_Reset.
+0x4ef0c0,Record_GetScreenSortY,medium,Converts the record's sprite position through Record_GetTwoFloats48 and returns the screen Y used as the linked-list insertion-sort key.
+0x53a020,Window_SetRectAndUpdateChildren,high,Sets the +0x84 rect from x/y plus size +0x1a/+0x1c and propagates renderer state through Renderer_CopyStateToChildren.
+0x403150,Game_FormatObjectNameRandom,medium,Formats '%s %s' into the object name buffer using param_2 and a random 16-byte-stride entry from the +0xc name table.
+0x4ddca0,Player_RemoveObjectReference,medium,Removes the object key from the player's +0x180 ID map.
+0x4a0a60,SaveGameMenu_DestroyList,high,Destroys the global 0x57cdb4 ID map that backs the save-game menu list built from the save_games_*.piz entries.
+0x546440,Sound_UnlinkAndFreeBuffer,high,"Under the +0xa0 lock stops and destroys the buffer, unlinks its node from the +0x68/+0x6c/+0x70 list, decrements the count, frees it and signals +0x48."
+0x544620,SoundBuffer_StopPlaybackLocked,medium,"Under the +0x38 lock clears the playing flags, stops the voice through vtable +0x48, destroys its child list and releases it through vtable +0x34."
+0x5445a0,SoundBuffer_StopPlayback,medium,"Stops the voice through vtable +0x48, destroys the child list when +0x34 is set and releases the voice through vtable +0x34."
+0x547580,Sound_ReloadSpeechSetIfNeeded,high,"When byte +0xfe is set, reloads the speech set and clears the flag."

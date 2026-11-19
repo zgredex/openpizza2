@@ -1,0 +1,37 @@
+// rea decompile_all
+// name: Object_IsVisibleThisFrame
+// address: 0x505e00
+// body: available
+// range: 0x505e00-0x505e51 inclusive
+// non_contiguous: false
+// provider: Ghidra 12.2 (ghidra)
+// analysis_profile: aae5fcbbec95ac3047ec86f28609da356814b1c85770f2c09803aad3607b988d
+// limitations: The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.; Ghidra Program checkpoint mode is disabled: closing discards metadata edits; original executable bytes are unchanged. For stock ELF/PE/Mach-O on Linux/macOS, set REA_GHIDRA_CHECKPOINT_DIR to a private absolute directory before starting REA (restart MCP after changing its startup environment).; Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; This session uses Ghidra 12.2. The bridge is verified against 12.1.4; other 12.x (>=12.1) builds are accepted and the observed version is reported.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+undefined1 __fastcall Object_IsVisibleThisFrame(int param_1)
+
+{
+  int *piVar1;
+  int iVar2;
+  int iVar3;
+  
+                    /* Tests whether a map object has drawable content this frame. */
+  piVar1 = *(int **)(param_1 + 200);
+  if (piVar1 != (int *)0x0) {
+    if (piVar1[0x10] != -1) {
+      iVar3 = MapActor_UpdateLinkedOverlays(*(void **)(param_1 + 0xc4),piVar1);
+      if (iVar3 != 0) {
+        return 1;
+      }
+    }
+    iVar3 = **(int **)(param_1 + 200);
+    iVar2 = (*(int **)(param_1 + 200))[0x16];
+    if ((-1 < iVar3) && (iVar3 < *(int *)(iVar2 + 0x48))) {
+      return *(undefined1 *)(*(int *)(iVar2 + 0x4c) + 0x3e + iVar3 * 0x48);
+    }
+  }
+  return 0;
+}
+

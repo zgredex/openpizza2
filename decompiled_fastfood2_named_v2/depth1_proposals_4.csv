@@ -1,0 +1,102 @@
+address,proposed_name,confidence,evidence
+0x525bc0,UI_AppendRingCommand,high,"Appends a 5-int record to the 1024-entry ring at +0x32bc (stride 0x14, head +0x82c0) under CS +0x1cc, de-duplicating for command ids 0..0x22."
+0x535d70,Palette_Construct,high,"Copies a 0x300-byte 256-color palette into a new buffer, sets index +0x206=-1, then calls Palette_Convert256."
+0x5472a0,Sound_SetBufferPosition,high,Calls sound-object vtable +0x7c with converted position and vtable +0x58 with 0 when object +8 and +0x1d0 are present.
+0x4eacd0,Game_UpdateAndFetchIDMapEntry,high,Calls IDMap_Update on the map at +0x2c3f8 then IDMap_Lookup for the same key.
+0x4f14a0,Map_FindShortestPath,high,"Iterative shortest-path relaxation over 12000 map nodes: distance table, predecessor shorts and Array_GetRecord28/Grid_GetCell edges; writes node path to param_4."
+0x5478c0,Sound_LoadSpeechSet,high,"Rebuilds speech buffers from 'speech_%s_%s' names over the 0x575170..0x575190 table, gated by language flag DAT_00575090[1]."
+0x53f790,SoundBuffer_SeekSample,high,Converts a sample position using block align +0x20 and calls Stream_Seek on data +0xc; stores position +0x30 and marks +0x48.
+0x4ddeb0,Game_GetActiveCompanyOrdinal,medium,Walks map +0x110 (count +0x124) and returns how many active records (+0x1dc==1) precede the pointer param_1.
+0x4ddce0,Game_FindRecordByField4,high,Linear search of map +0x164 (count +0x178) for a record whose +4 field equals param_1.
+0x489850,Game_GetPlayerMapValue,medium,Resolves a player through Game_GetPlayerBySlot then looks up param_2 in the player's +0x180 ID map.
+0x4f96e0,Map_BuildTerrainGrid,medium,"Fills an 80x80 byte grid at +0x28 with terrain codes ('@','+','-','.', then 0x78 for building rects) using Grid_GetCell and object pairs."
+0x538da0,Surface_BlitRectRetry,high,"Clips a rect to surface size +0x1a/+0x1c, blits through vtable +0x14/+0x1c, and retries up to 200 times after Thread_WaitForExit on lost-surface errors."
+0x4e0aa0,Stats_SumFilteredFloats4,high,Sums the 25 floats at record +0x78 across map +0x164 filtered by type +4 and subtype +8 (fourth variant after Stats_SumFilteredFloats3).
+0x52a3a0,UI_SetClampedValue,medium,"Clamps a value to the range at +0x9c/+0xa0, stores it at +0x8c+index*4, then formats a label through callback vtable +0xc(0xe,...)."
+0x4de1a0,Game_SumStatGridAll,medium,Calls Game_SumStatGrid for param_3 directly or sums it over every record in map +0x148 (count +0x15c).
+0x510340,UI_GetMaxChildField10,high,"Scans the map at +0x304 (count at +0x14) and returns the maximum +0x10 field, or -1/0 when empty."
+0x4e0f40,Game_HasRecordField14DC,high,Returns true when any record in map +0x148 (count +0x15c) has +0x14dc equal to param_1.
+0x4da760,Game_ComputeRatingShare,medium,For 6 player slots sums (100 - rating at this+0xc98+i*4) and returns the selected player's percentage of that total.
+0x534c30,UI_SetListEntryPosition,medium,Writes an 8-byte point at record+0x28 (stride 0x48) and a converted short at +0x3a for param_2 in the array at +0x4c.
+0x5238c0,Movie_ReleasePlayer,medium,Releases the player object at +0x1c4 under CS +0x1c8 via virtual slot 0(1) and clears it; FUN_00523900 installs a replacement.
+0x54b390,MessageList_Construct,medium,"Allocates a 0xf0-byte (60-pointer) table, sets capacity +8=0x3c and count +4=0 for a message/text list object."
+0x53b300,Sprite_BlitAlphaRLE,high,"Palette-indexed RLE sprite blitter to 3-byte pixels: skips color key +0x1c, blends via table 0x584594, honors flags +4 and alpha param_7."
+0x4f37d0,Map_CollectObjectIDsByType,medium,Scans grid +0x4c and rebuilds ID arrays at +0x110/+0x114/+0x118 for map object types 0x34d/0x34f/0x352.
+0x4f4f20,Map_PickRandomSpawnCell,medium,"Returns a random type-0x354 object cell, or an empty cell whose neighbors are -1, using Random_Range and grid +0x4c."
+0x479ef0,Game_InitStatBaselines,medium,"Initializes 8 stat slots from player +0x1e0 or +0xe0 fields, clamps to 30/70/100 by +0x186c, stores average or raw at +0x181c."
+0x4f0ab0,Map_LinkCells,high,Validates height/slope between two Array_GetRecord28 cells then inserts each cell index into the other's 8-entry +0x14 link array.
+0x537e00,Surface_InitPixelFormat,high,"Creates the DirectDraw surface, queries format via vtable +0x54 and stores masks +0x34/+0x38/+0x3c plus the 16-bpp flag +0x18."
+0x5390b0,Surface_GetDescription,high,"Calls surface vtable +0x64 with a 0x6c-byte descriptor, then stores width +0x1a, height +0x1c, pitch +0x28 and resets bounds."
+0x427a80,UI_CreateInfoPanel,high,Creates the DUMMYSPRITE window and adds R_INFO/R_BILANZ/R_WERBUNG/R_LUPE/R_CHARAKTER/R_MISSIONEN/R_FILIALBILANZ images.
+0x4e0df0,Stats_GetFilteredFloatDelta,high,Returns sum(Object_SumFloat25) - sum(Record_SumFloatArray26) over map +0x164 records filtered by type +8 and subtype +4.
+0x48c2c0,Game_ApplyPercentChange,medium,"Multiplies each matching record's +0x5c+index*4 value by (param_2+100)/100, filtered by owner/type +0x34 and nonzero +0xa0."
+0x50e550,Game_GetObjectStatusLevel,medium,"Maps the current object to 1..7 using rating +0x81c, money fields +0x14/+0x18/+0x20, +0xc and state +0x30/+0x825."
+0x4dca00,Weather_SelectRandomState,high,"Picks a random weather id 0..7 different from +0x10bc, derives temperature from table 0x56ca28 and the day byte, stores +0x10c0."
+0x522fe0,Array_RemoveAt,high,Removes element param_1 from the dynamic array: decrements counts +8/+0x10 and memmoves the tail via FUN_0054e230 under CS 0x584180.
+0x47cc70,Game_CountRecordsByPair,high,Counts records in map +0x16f8 (count +0x170c) whose +4 and +8 fields both equal the parameters.
+0x54b110,MessageList_FindKeyByValue,medium,"Searches list map +4 (count +0x18) for a record with +8==param_1, returns it and writes the map key through param_2."
+0x4f5c80,Map_GetFirstLinkedCell,medium,"Looks up a grid cell, asserts its link count is at most 1, and returns the cell referenced by the first non -1 entry at +0x14."
+0x4e2370,Game_FindSubrecordIndex,medium,"Returns the index of a pointer in the map at +0x180 (count +0x194), or -1."
+0x4810a0,Game_SetStageIfHigher,medium,"Stores a monotonically increasing stage in +0x2c and calls Game_SetChildField94(this,1) when the value grows."
+0x522ef0,Array_Clear,high,Frees the buffer at +4 and zeroes counts +8/+0xc/+0x10.
+0x531780,Array_GetField20ByKey,high,Binary-searches a key through BinarySearch8 and returns the +0x20 field of the found record.
+0x4858a0,Game_SetLockedField2FC,high,Sets field +0x2fc under the object's critical section +0x240.
+0x47d210,Game_AddObjectToStateList,medium,Adds the object referenced by param+0x164 to the List at +0x1728 via List_Add.
+0x4e2f30,Game_BuildCompanyStatusText,medium,"Counts object states 0x1d/0x1e/0x1f and statuses into param_2[0..7], marks slots, then appends localized problem strings to param_3."
+0x4fbae0,Map_BuildObjectGrid,high,"Builds an 80x80 grid of {object pointer, type} entries at param_2, marking roads/types and filling building footprints from Object_GetPair68."
+0x51fb50,Map_GenerateRandomTiles,high,"Fills a width*height cell array with random tile codes 0..9, including radial and blob patterns driven by _rand."
+0x513760,Game_ComputeSkillRatings,medium,"Reads 8 player stats via FUN_00489070, scales by building level +0x38 (x2/x4), then converts to percentages with caps 40/10/20/30/5/0/40/20."
+0x5133c0,Game_ComputeMarketFactors,medium,"Computes eight +0x284 values from difficulty +0x250/+0x254, thresholds 200/300, the 6x8 table at +0x1c0 times global +0x280, and the +0x5c penalty."
+0x5412e0,Sound_QueryFormatFlags,medium,"Queries sound flags 2..14 through FUN_005414e0 and packs them into bitmask +0xb0, returning whether not all 0x1fff bits are set."
+0x552775,Time_IsInActiveRange,medium,Compares the current time fields param_1[0..2] against global ranges and calls FUN_00552921 with the selected palette/lighting parameters.
+0x4f6bd0,Game_InitDateState,medium,"Initializes a 0xd8-byte date state: time budget +0xc0 from DAT_0057bb2c*0x60, clears fields, copies day +0x33c and three values +0x34c, sets +0xd0 and +0xd4."
+0x48c920,Game_GetCategoryShare,medium,Sums six ints at +0x14c over records (type filter or <8) and returns the selected index as a percentage of the total.
+0x4f0960,Map_LinkObjects,medium,"Links two grid cells by their ushort ids: validates slope, inserts ids into +0x14 neighbor arrays, then calls FUN_004edbc0."
+0x524860,UI_DispatchMouseEvent,high,"Converts screen coordinates with ScreenToClient, hit-tests children via FUN_00532930 and dispatches event 0x2f to the topmost match."
+0x479620,Game_ComputeCityScore,medium,"Aggregates an 80x80 grid into three column counts, finds the best column and computes a 0..100 score at +0x185c from the others."
+0x4f5260,Map_PickRandomType355Cell,medium,Collects cells of object type 0x355 with nonzero +0x28 and returns a Random_Range-selected cell coordinate.
+0x520d90,UI_SetLabelIdText,medium,Stores param_1 at +0x24 and replaces the owned string at +0x10 with a strdup of param_2.
+0x552042,CRT_GetStreamBuffer,medium,"Initializes a CRT stream: allocates a 0x1000 buffer at DAT_00585664/68, sets flags 0x1102 and the buffer pointers/counts."
+0x54b070,MessageList_FindFreeSlot,medium,"Scans the 9 slots starting at +0x2c for an unused +8 key, returning the free index and the current max +0xc value."
+0x520d10,UI_SetTextString,high,Frees the owned string at +0xc and stores a freshly allocated copy of param_1.
+0x427930,UI_CreateInfoPanelGangster,medium,Creates the DUMMYSPRITE panel and adds R_INFO/R_WERBUNG/R_LUPE/R_CHARAKTER/R_MISSIONEN/R_BILANZ/R_GANGSTER/R_SCHUTZ images.
+0x430950,UI_CreateInfoPanelPolice,medium,Creates the DUMMYSPRITE panel and adds R_INFO/R_BILANZ/R_WERBUNG/R_LUPE/R_CHARAKTER/R_MISSIONEN/R_POLIZEI/R_ARBEITSMARKT images.
+0x4dcb70,Random_SwapOneOfFour,medium,"Chooses one of the four arrays at +0x200/+0x220/+0x240/+0x260 (avoiding param_2), swaps in param_3 and returns the old value."
+0x52c400,UI_MeasureTextMaxWidth,high,"Splits the string at +0x74 on CR/LF and measures each line with FUN_005355f0(font at +0x54), returning the maximum width."
+0x430ed0,UI_CreateInfoPanelBranch,high,Creates the DUMMYSPRITE panel and adds R_FILIALEN/R_PERSONAL/R_REZEPTE/R_BILANZ/R_KONKURENT/R_GLOSSAR/R_CHARAKTER images.
+0x548a00,Sound_StopAndReset,medium,"Under CS +0x178 stops the sound object, calls vtable +0x68/+0xa4, clears +0x169/+0x14c and runs FUN_00547fd0."
+0x4e0880,Game_FindDailyStatRecord,medium,Finds a map record by category +4 and item +8 (category derived from the day/global date) and returns record+0xdc+index*0x20.
+0x5334d0,List_ReleaseSharedBuffers,medium,"Under CS 0x584248 and flag +0x34, frees the first non-null pointer in list +0x80, then zeroes all 0x68 entries and clears flag +0x35."
+0x5022d0,Game_GetMarketRank,medium,"Sums player fields +0x70/+0x74/+0x78 over 6 slots, computes the current player's share and returns 3/2/1 above 80/59/39 percent."
+0x4e2860,Game_FindAssignedSubrecord,medium,"Finds a type-0x17 subrecord whose +0x74 owner equals param_2, +0xa4 status is 0x12 and +0x10c matches param_1+0x3c."
+0x404460,ResourceManager_OpenArchivePath,high,"Builds '<datadir>resources\\<name>' (or '<drive>:\\resources\\<name>'), checks GetFileAttributesA and opens it with Pak_Open."
+0x5314f0,Array_GetBoundsByKey,high,Binary-searches a key (BinarySearch8) and outputs the record's +0x28/+0x2c/+0x30/+0x34 bounds as a rect.
+0x481d30,UI_SetChildrenField14,high,Walks all children of window +0x2dac via FUN_005312e0/FUN_005312f0 and stores param_1 at child+0x14.
+0x5141c0,StaffList_AddId,medium,Finds a free slot in the 20-entry stride-0xc table at +0x64 and stores the id (employee +0x3c) with state +0x60=1 and count +0x68=0.
+0x489b60,Game_AdvanceAnimFrame,medium,"Cycles +0x350 through 0..3, indexes the sprite/frame table +0x344/+0x354 and resets to 0 when the frame entry is -1."
+0x4e3f00,Game_ComputeAverageSkill,medium,"Averages Index_Map8To5(record,param_1) over all records in map +0x110 (count +0x124), returning 0 when empty."
+0x4de6c0,Game_CountRecordsByField34,high,Counts records in map +0x148 (count +0x15c) whose +0x34 field equals param_1.
+0x47e1d0,UI_FindObjectByField20,medium,Searches the UI object map +0x19e0 for an entry whose +0x20 field equals param_1.
+0x53f880,Sound_AllocDecompressedBuffer,high,"For IMA ADPCM (format 0x11, 4 channels) allocates blocks*8 bytes at +0x3c and returns DSERR/HRESULT codes."
+0x4eac30,Game_GetNestedArrayEntry,medium,Selects the child map at this+param_1*0x48+0x68 and returns element param_2 when below Game_GetRecordChild14 count.
+0x53a140,Gfx_BuildBlendTable,low,"Fills a 16x32 int lookup table at 0x584518 from an unshown FPU expression, likely a per-alpha blend/scale table."
+0x514690,Language_CopyStringIds,medium,Finds a string id with Language_IndexOfString and copies param_3 consecutive dwords from the ID table at DAT_00580ad4.
+0x508040,UI_ResetChildRecord,medium,Takes child object piVar1[0x16] and calls Record_ClearActive48 with the child's id *piVar1.
+0x403d40,Input_LeaveLock,high,"Releases the critical section embedded at this+0x10, paired with FUN_00403d30 on the input object at +0x2d1c."
+0x5541c7,CRT_InitHeap,high,Creates the process heap with HeapCreate and initializes CRT heap structures via FUN_005548a9.
+0x403b60,Input_CompleteEvent,medium,"Finds an input event node by key with List_FindByKey, clears +0xc and signals the event handle at +0x6c."
+0x54b2c0,MessageList_SetField34,medium,Looks up a record by key in the list's ID map +4 and stores param_2 at +0x34.
+0x483120,UI_SyncSelectedChild,medium,Looks up the object named by +0x280 in map +0x27c and copies its +0x4c field to +0x288.
+0x50f560,Game_GetPlayerTotalValue,medium,"Sums the player's +0x88, +0x78 and +0x74 fields."
+0x4d75d0,Game_UpdateAndFetchMapEntryFAC,medium,Calls IDMap_Update on the map at +0xfac and then IDMap_Lookup for the same key.
+0x47fd70,Game_IsCurrentPlayer,high,Compares Game_GetCurrentPlayerIndex(DAT_0057c670) with the object's +0x30 field.
+0x4d8120,Game_GetOwnedObjectByIndex,medium,Looks up index param_1 in the player's owned-object map at +0xfc8 and returns the record through param_2.
+0x546cd0,SoundStream_CompleteRequest,medium,"Locks +0xa0, releases the completed stream buffer, unlinks its 0xc-byte node from the list at +0x20, frees it and signals event +0x48."
+0x545d70,SoundStream_CreateEntry,medium,"Allocates a 0x4c sound-stream object and a 0xc list node, inserts it into the doubly linked list at +0x54 and returns it through param_3."
+0x54dbdb,CRT_FRead,high,"Buffered fread: calls the stream vtable read slot +0x20, copies through the buffer at +0x28 and returns bytes read."
+0x49a040,Game_IsCompanyNameTaken,high,"Compares param_1 with company name strings at record+4 across current-player records, returning 1 on a match."
+0x48e720,Game_GetPreviousRecordField3C,medium,Scans map +0x148 backwards from the given index until a record passes the +0x38 filter and returns its +0x3c field.
+0x486ec0,Game_GetPreviousPlayerSlot,high,"Walks player slots backwards (wrapping 0 to 5) and returns the first non-null player, optionally skipping the current player."
+0x527170,UI_GetObjectNameById,high,"Walks the object list at +0x82c4 for id +0x104 and copies the basename of its path (after '\\') into param_2, max 0x3f chars."
+0x49d150,Game_GetNthFreePlayerSlot,medium,"Returns the slot of the param_1-th player record whose +0x50 field is zero, or -1."
+0x546730,SoundBuffer_Delete,high,Deleting destructor: calls SoundBuffer_Destructor then Mem_Free when the low bit of param_1 is set.

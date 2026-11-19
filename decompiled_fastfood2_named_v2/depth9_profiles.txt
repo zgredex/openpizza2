@@ -1,0 +1,3508 @@
+==========================================================================================
+0x401190 indeg=1 bytes=1802
+calls: 0x00401190, 0x0054cbc1
+ provider-specific; not original source
+void __thiscall FUN_00401190(void *this,void *param_1)
+{
+  FUN_0054cbc1(param_1,(int)this + 0x10,0x68);
+  FUN_0054cbc1(param_1,(int)this + 0x78,100);
+  FUN_0054cbc1(param_1,(int)this + 0xdc,0x280);
+  FUN_0054cbc1(param_1,(int)this + 4,4);
+  FUN_0054cbc1(param_1,(int)this + 0xc,4);
+  FUN_0054cbc1(param_1,(int)this + 8,4);
+  return;
+}
+==========================================================================================
+0x401200 indeg=2 bytes=1802
+calls: 0x00401200, 0x0054cc2b
+ provider-specific; not original source
+void __thiscall FUN_00401200(void *this,void *param_1)
+{
+  FUN_0054cc2b(param_1,(int)this + 0x10,0x68);
+  FUN_0054cc2b(param_1,(int)this + 0x78,100);
+  FUN_0054cc2b(param_1,(int)this + 0xdc,0x280);
+  FUN_0054cc2b(param_1,(int)this + 4,4);
+  FUN_0054cc2b(param_1,(int)this + 0xc,4);
+  FUN_0054cc2b(param_1,(int)this + 8,4);
+  return;
+}
+==========================================================================================
+0x401380 indeg=0 bytes=1531
+calls: 0x00401380, 0x0054dea3
+ provider-specific; not original source
+void FUN_00401380(void)
+{
+  FUN_0054dea3(0x401390);
+  return;
+}
+==========================================================================================
+0x403510 indeg=9 bytes=1880
+calls: 0x00403510, 0x0054f110, 0x0054f084
+refs: DAT_0057c5d0
+ provider-specific; not original source
+void FUN_00403510(void)
+{
+  undefined1 local_res0;
+  byte *in_stack_00001004;
+  undefined4 auStack_7ffffffc [536870904];
+  FUN_0054f110(local_res0);
+  FUN_0054f084(&local_res0,in_stack_00001004,(undefined4 *)((int)register0x00000010 + 0x1008));
+  MessageBoxA(DAT_0057c5d0,&local_res0,s_Achtung_00563774,0);
+  if (DAT_0057c5d0 != (HWND)0x0) {
+    SetWindowPos(DAT_0057c5d0,(HWND)0x0,0,0,0,0,3);
+  }
+  return;
+}
+==========================================================================================
+0x403960 indeg=1 bytes=1880
+calls: 0x00403960, 0x0054dfe0, 0x0054e978, 0x0054dee4
+refs: DAT_00563184
+ provider-specific; not original source
+undefined4 __cdecl FUN_00403960(LPCSTR param_1,undefined4 *param_2,undefined4 *param_3)
+{
+  FILE *pFVar1;
+  char local_40 [28];
+  undefined4 local_24;
+  undefined4 local_20;
+  pFVar1 = (FILE *)FUN_0054dfe0(param_1,&DAT_00563184);
+  if (pFVar1 == (FILE *)0x0) {
+    return 0;
+  }
+  FUN_0054e978(local_40,1,0x40,(int *)pFVar1);
+  FUN_0054dee4(pFVar1);
+  *param_2 = local_24;
+  *param_3 = local_20;
+  return 1;
+}
+==========================================================================================
+0x403d70 indeg=0 bytes=1531
+calls: 0x00403d70, 0x0054dea3
+ provider-specific; not original source
+void FUN_00403d70(void)
+{
+  FUN_0054dea3(0x403d80);
+  return;
+}
+==========================================================================================
+0x477b80 indeg=2 bytes=1830
+calls: 0x00477b80, 0x00488be0, 0x004ddd20, 0x005301c0, 0x0047edc0
+refs: DAT_0057c670
+ provider-specific; not original source
+void __fastcall FUN_00477b80(int param_1)
+{
+  int iVar1;
+  *(undefined4 *)(param_1 + 0x14dc) = 0;
+  iVar1 = FUN_00488be0(DAT_0057c670,*(int *)(param_1 + 0x30));
+  FUN_004ddd20(iVar1);
+  if (*(void **)((int)DAT_0057c670 + 0x264) != (void *)0x0) {
+    FUN_005301c0(*(void **)((int)DAT_0057c670 + 0x264),-0x18658,0x23,0);
+  }
+  FUN_0047edc0(param_1);
+  return;
+}
+==========================================================================================
+0x477bd0 indeg=1 bytes=1860
+calls: 0x00477bd0, 0x00488be0, 0x004ddd20, 0x005301c0, 0x0047edc0
+refs: DAT_0057c670
+ provider-specific; not original source
+void __thiscall FUN_00477bd0(void *this,undefined4 param_1)
+{
+  int iVar1;
+  *(undefined4 *)((int)this + 0x14dc) = param_1;
+  iVar1 = FUN_00488be0(DAT_0057c670,*(int *)((int)this + 0x30));
+  FUN_004ddd20(iVar1);
+  if (*(void **)((int)DAT_0057c670 + 0x264) != (void *)0x0) {
+    FUN_005301c0(*(void **)((int)DAT_0057c670 + 0x264),-0x18658,0x23,0);
+  }
+  FUN_0047edc0((int)this);
+  return;
+}
+==========================================================================================
+0x47d340 indeg=1 bytes=2587
+calls: 0x0047d340, 0x004d3910, 0x0047d270, 0x0047acf0, 0x004d4000
+refs: DAT_0057c670
+ provider-specific; not original source
+undefined4 __thiscall FUN_0047d340(void *this,int param_1)
+{
+  int iVar1;
+  int *piVar2;
+  undefined4 *this_00;
+  int iVar3;
+  int iVar4;
+  longlong lVar5;
+  int local_c;
+  iVar3 = 0;
+  iVar4 = 0;
+  local_c = 0;
+  if (0 < *(int *)((int)this + 0x1514)) {
+    do {
+      piVar2 = (int *)IDMap_Lookup((void *)((int)this + 0x1500),iVar4,(int *)0x0);
+      iVar1 = *piVar2;
+      if ((*(char *)(iVar1 + 0x824) == '\0') && (iVar1 != param_1)) {
+        FUN_004d3910(iVar1);
+      }
+      iVar4 = iVar4 + 1;
+    } while (iVar4 < *(int *)((int)this + 0x1514));
+  }
+  this_00 = FUN_0047d270(this,5);
+  if (0 < (int)this_00[5]) {
+    do {
+      iVar4 = IDMap_Lookup(this_00,iVar3,(int *)0x0);
+      if (iVar4 != 0) {
+        iVar4 = IDMap_Lookup((void *)(DAT_0057c670 + 0x74),*(int *)(iVar4 + 4),(int *)0x0);
+        FUN_0047acf0(iVar4);
+==========================================================================================
+0x47ea30 indeg=3 bytes=2241
+calls: 0x0047ea30, 0x0047e8c0, 0x005301c0, 0x0047ed20
+refs: DAT_0057c670
+ provider-specific; not original source
+void __fastcall FUN_0047ea30(void *param_1)
+{
+  int *piVar1;
+  int iVar2;
+  int iVar3;
+  iVar2 = 0;
+  iVar3 = *(int *)((int)param_1 + 0x19ac) + -1;
+  if (-1 < iVar3) {
+    do {
+      piVar1 = (int *)IDMap_Lookup((void *)((int)param_1 + 0x1998),iVar3,(int *)0x0);
+      if (*piVar1 < 1) {
+        FUN_0047e8c0(param_1,(int)piVar1);
+      }
+      if (piVar1[7] != 0) {
+        iVar2 = iVar2 + *piVar1;
+      }
+      iVar3 = iVar3 + -1;
+    } while (-1 < iVar3);
+    if (49999 < iVar2) {
+      *(undefined4 *)((int)param_1 + 0x1a24) = 0;
+    }
+  }
+  if ((*(void **)(DAT_0057c670 + 0x9c) == param_1) &&
+     (*(void **)(DAT_0057c670 + 0x264) != (void *)0x0)) {
+    FUN_005301c0(*(void **)(DAT_0057c670 + 0x264),-0x1860c,0x23,0);
+  }
+  FUN_0047ed20((int)param_1);
+  return;
+}
+==========================================================================================
+0x47fd90 indeg=2 bytes=2201
+calls: 0x0047fd90, 0x00488be0, 0x004e23b0, 0x004da630, 0x004e2410
+refs: DAT_0057c670
+ provider-specific; not original source
+float10 __fastcall FUN_0047fd90(int param_1)
+{
+  int iVar1;
+  void *this;
+  void *this_00;
+  void *pvVar2;
+  int iVar3;
+  float10 fVar4;
+  iVar3 = 0;
+  iVar1 = IDMap_Lookup((void *)(param_1 + 0x1998),0,(int *)0x0);
+  if ((iVar1 != 0) && (*(int *)(iVar1 + 0x1c) != 0)) {
+    return (float10)*(float *)(iVar1 + 0x10);
+  }
+  this = (void *)FUN_00488be0(DAT_0057c670,*(int *)(param_1 + 0x30));
+  this_00 = (void *)IDMap_Lookup((void *)((int)DAT_0057c670 + 4),*(int *)(param_1 + 0x34),(int *)0x0
+                                );
+  pvVar2 = FUN_004e23b0(this,param_1);
+  if (pvVar2 != (void *)0x0) {
+    iVar3 = FUN_004da630(this_00,*(int *)((int)pvVar2 + 0x30));
+  }
+  fVar4 = FUN_004e2410((int)this,this_00,iVar3);
+  return fVar4;
+}
+==========================================================================================
+0x481140 indeg=1 bytes=1892
+calls: 0x00481140, 0x004dd130
+refs: DAT_0057c670
+ provider-specific; not original source
+undefined4 __fastcall FUN_00481140(int param_1)
+{
+  void *this;
+  undefined4 *puVar1;
+  if (*(int *)(param_1 + 0x1a28) == 0) {
+    this = (void *)IDMap_Lookup((void *)(DAT_0057c670 + 4),*(int *)(param_1 + 0x34),(int *)0x0);
+    puVar1 = FUN_004dd130(this,*(int *)(param_1 + 0x16f0));
+    *(undefined4 **)(param_1 + 0x1a28) = puVar1;
+    return puVar1[5];
+  }
+  return *(undefined4 *)(*(int *)(param_1 + 0x1a28) + 0x14);
+}
+==========================================================================================
+0x48c6d0 indeg=1 bytes=2744
+calls: 0x0048c6d0, 0x004d59c0
+ provider-specific; not original source
+void __thiscall FUN_0048c6d0(void *this,int param_1)
+{
+  int iVar1;
+  void *this_00;
+  undefined4 *this_01;
+  uint uVar2;
+  int iVar3;
+  int iVar4;
+  int *piVar5;
+  int iVar6;
+  int iVar7;
+  int local_10;
+  iVar1 = *(int *)(param_1 + 0x30);
+  this_00 = (void *)IDMap_Lookup((void *)((int)this + 4),*(int *)((int)this + 0x2f4),(int *)0x0);
+  this_01 = FUN_004d59c0(this_00,iVar1,param_1,'\0');
+  iVar1 = this_01[5];
+  uVar2 = Random_Range(1,iVar1 + 1);
+  local_10 = 0;
+  if (0 < *(int *)((int)this + 0x50)) {
+    do {
+      iVar3 = IDMap_Lookup((void *)((int)this + 0x3c),local_10,(int *)0x0);
+      iVar7 = 0;
+      if (0 < iVar1) {
+        do {
+          iVar4 = IDMap_Lookup(this_01,iVar7,(int *)0x0);
+          iVar6 = 8;
+          piVar5 = (int *)(iVar3 + 0xd4);
+          do {
+            if ((*piVar5 == iVar4) && (uVar2 = uVar2 - 1, uVar2 == 0)) {
+==========================================================================================
+0x4900a0 indeg=1 bytes=1563
+calls: 0x004900a0, 0x0054cbc1
+refs: DAT_0057c6a8
+ provider-specific; not original source
+void __cdecl FUN_004900a0(void *param_1)
+{
+  FUN_0054cbc1(param_1,&DAT_0057c6a8,4);
+  return;
+}
+==========================================================================================
+0x4900c0 indeg=1 bytes=1563
+calls: 0x004900c0, 0x0054cc2b
+refs: DAT_0057c6a8
+ provider-specific; not original source
+void __cdecl FUN_004900c0(void *param_1)
+{
+  FUN_0054cc2b(param_1,&DAT_0057c6a8,4);
+  return;
+}
+==========================================================================================
+0x4919b0 indeg=1 bytes=1566
+calls: 0x004919b0, 0x0054cbc1
+refs: DAT_00568628
+ provider-specific; not original source
+void __cdecl FUN_004919b0(void *param_1)
+{
+  FUN_0054cbc1(param_1,&DAT_00568628,0x10);
+  return;
+}
+==========================================================================================
+0x4919d0 indeg=1 bytes=1566
+calls: 0x004919d0, 0x0054cc2b
+refs: DAT_00568628
+ provider-specific; not original source
+void __cdecl FUN_004919d0(void *param_1)
+{
+  FUN_0054cc2b(param_1,&DAT_00568628,0x10);
+  return;
+}
+==========================================================================================
+0x492230 indeg=1 bytes=1563
+calls: 0x00492230, 0x0054cbc1
+refs: DAT_0057c6bc
+ provider-specific; not original source
+void __cdecl FUN_00492230(void *param_1)
+{
+  FUN_0054cbc1(param_1,&DAT_0057c6bc,4);
+  return;
+}
+==========================================================================================
+0x492250 indeg=1 bytes=1563
+calls: 0x00492250, 0x0054cc2b
+refs: DAT_0057c6bc
+ provider-specific; not original source
+void __cdecl FUN_00492250(void *param_1)
+{
+  FUN_0054cc2b(param_1,&DAT_0057c6bc,4);
+  return;
+}
+==========================================================================================
+0x495500 indeg=1 bytes=2149
+calls: 0x00495500, 0x00401440, 0x004d6af0
+refs: DAT_00568760, DAT_0057c670, DAT_0057c6e0
+ provider-specific; not original source
+void FUN_00495500(void)
+{
+  void *this;
+  uint uVar1;
+  int iVar2;
+  iVar2 = 0;
+  do {
+    if (*(int *)((int)&DAT_0057c6e0 + iVar2) != 0) {
+      FUN_00401440(*(int *)((int)&DAT_0057c6e0 + iVar2));
+      if (*(undefined4 **)((int)&DAT_0057c6e0 + iVar2) != (undefined4 *)0x0) {
+        (**(code **)**(undefined4 **)((int)&DAT_0057c6e0 + iVar2))(1);
+      }
+    }
+    this = (void *)IDMap_Lookup((void *)(DAT_0057c670 + 4),*(int *)(DAT_0057c670 + 0x2f4),(int *)0x0
+                               );
+    uVar1 = FUN_004d6af0(this,*(uint *)((int)&DAT_00568760 + iVar2));
+    *(uint *)((int)&DAT_0057c6e0 + iVar2) = uVar1;
+    iVar2 = iVar2 + 4;
+  } while (iVar2 < 0x10);
+  return;
+}
+==========================================================================================
+0x498100 indeg=1 bytes=1604
+calls: 0x00498100, 0x0054cbc1
+refs: DAT_0057c9fc, DAT_0057ca00
+ provider-specific; not original source
+void __cdecl FUN_00498100(void *param_1)
+{
+  FUN_0054cbc1(param_1,&DAT_0057c9fc,4);
+  FUN_0054cbc1(param_1,&DAT_0057ca00,4);
+  return;
+}
+==========================================================================================
+0x498130 indeg=1 bytes=1604
+calls: 0x00498130, 0x0054cc2b
+refs: DAT_0057c9fc, DAT_0057ca00
+ provider-specific; not original source
+void __cdecl FUN_00498130(void *param_1)
+{
+  FUN_0054cc2b(param_1,&DAT_0057c9fc,4);
+  FUN_0054cc2b(param_1,&DAT_0057ca00,4);
+  return;
+}
+==========================================================================================
+0x499570 indeg=1 bytes=1563
+calls: 0x00499570, 0x0054cbc1
+refs: DAT_00568910
+ provider-specific; not original source
+void __cdecl FUN_00499570(void *param_1)
+{
+  FUN_0054cbc1(param_1,&DAT_00568910,4);
+  return;
+}
+==========================================================================================
+0x499590 indeg=1 bytes=1563
+calls: 0x00499590, 0x0054cc2b
+refs: DAT_00568910
+ provider-specific; not original source
+void __cdecl FUN_00499590(void *param_1)
+{
+  FUN_0054cc2b(param_1,&DAT_00568910,4);
+  return;
+}
+==========================================================================================
+0x49acd0 indeg=1 bytes=1604
+calls: 0x0049acd0, 0x0054cbc1
+refs: DAT_0057ca30, DAT_0057ca34
+ provider-specific; not original source
+void __cdecl FUN_0049acd0(void *param_1)
+{
+  FUN_0054cbc1(param_1,&DAT_0057ca30,4);
+  FUN_0054cbc1(param_1,&DAT_0057ca34,4);
+  return;
+}
+==========================================================================================
+0x49ad00 indeg=1 bytes=1604
+calls: 0x0049ad00, 0x0054cc2b
+refs: DAT_0057ca30, DAT_0057ca34
+ provider-specific; not original source
+void __cdecl FUN_0049ad00(void *param_1)
+{
+  FUN_0054cc2b(param_1,&DAT_0057ca30,4);
+  FUN_0054cc2b(param_1,&DAT_0057ca34,4);
+  return;
+}
+==========================================================================================
+0x49b460 indeg=1 bytes=1604
+calls: 0x0049b460, 0x0054cbc1
+refs: DAT_005689f0, DAT_0057ca90
+ provider-specific; not original source
+void __cdecl FUN_0049b460(void *param_1)
+{
+  FUN_0054cbc1(param_1,&DAT_0057ca90,4);
+  FUN_0054cbc1(param_1,&DAT_005689f0,1);
+  return;
+}
+==========================================================================================
+0x49b490 indeg=1 bytes=1604
+calls: 0x0049b490, 0x0054cc2b
+refs: DAT_005689f0, DAT_0057ca90
+ provider-specific; not original source
+void __cdecl FUN_0049b490(void *param_1)
+{
+  FUN_0054cc2b(param_1,&DAT_0057ca90,4);
+  FUN_0054cc2b(param_1,&DAT_005689f0,1);
+  return;
+}
+==========================================================================================
+0x49b880 indeg=0 bytes=1844
+calls: 0x0049b880, 0x0054dfe0, 0x0054dee4
+refs: DAT_00563184
+ provider-specific; not original source
+undefined4 __cdecl FUN_0049b880(undefined4 param_1)
+{
+  FILE *pFVar1;
+  undefined4 uVar2;
+  CHAR local_200 [512];
+  String_Format(local_200,(byte *)s_save_menu__s_men_00568a44,param_1);
+  pFVar1 = (FILE *)FUN_0054dfe0(local_200,&DAT_00563184);
+  if (pFVar1 == (FILE *)0x0) {
+    return 0;
+  }
+  uVar2 = FUN_0054dee4(pFVar1);
+  return CONCAT31((int3)((uint)uVar2 >> 8),1);
+}
+==========================================================================================
+0x4a19e0 indeg=0 bytes=1790
+calls: 0x004a19e0, 0x0054dfe0, 0x0054dee4
+refs: DAT_00563184
+ provider-specific; not original source
+undefined4 __cdecl FUN_004a19e0(LPCSTR param_1)
+{
+  FILE *pFVar1;
+  undefined4 uVar2;
+  if (param_1 != (LPCSTR)0x0) {
+    pFVar1 = (FILE *)FUN_0054dfe0(param_1,&DAT_00563184);
+    if (pFVar1 != (FILE *)0x0) {
+      uVar2 = FUN_0054dee4(pFVar1);
+      return CONCAT31((int3)((uint)uVar2 >> 8),1);
+    }
+  }
+  return 0;
+}
+==========================================================================================
+0x4aa6c0 indeg=1 bytes=1686
+calls: 0x004aa6c0, 0x0054cbc1
+refs: DAT_00569354, DAT_00569358, DAT_0057d5c8, DAT_0057d5d0
+ provider-specific; not original source
+void __cdecl FUN_004aa6c0(void *param_1)
+{
+  FUN_0054cbc1(param_1,&DAT_00569354,4);
+  FUN_0054cbc1(param_1,&DAT_0057d5c8,4);
+  FUN_0054cbc1(param_1,&DAT_0057d5d0,4);
+  FUN_0054cbc1(param_1,&DAT_00569358,4);
+  return;
+}
+==========================================================================================
+0x4aa700 indeg=1 bytes=1686
+calls: 0x004aa700, 0x0054cc2b
+refs: DAT_00569354, DAT_00569358, DAT_0057d5c8, DAT_0057d5d0
+ provider-specific; not original source
+void __cdecl FUN_004aa700(void *param_1)
+{
+  FUN_0054cc2b(param_1,&DAT_00569354,4);
+  FUN_0054cc2b(param_1,&DAT_0057d5c8,4);
+  FUN_0054cc2b(param_1,&DAT_0057d5d0,4);
+  FUN_0054cc2b(param_1,&DAT_00569358,4);
+  return;
+}
+==========================================================================================
+0x4ac3c0 indeg=1 bytes=1645
+calls: 0x004ac3c0, 0x0054cbc1
+refs: DAT_0056951c, DAT_0057d62c, DAT_0057d630
+ provider-specific; not original source
+void __cdecl FUN_004ac3c0(void *param_1)
+{
+  FUN_0054cbc1(param_1,&DAT_0056951c,4);
+  FUN_0054cbc1(param_1,&DAT_0057d62c,4);
+  FUN_0054cbc1(param_1,&DAT_0057d630,4);
+  return;
+}
+==========================================================================================
+0x4ac400 indeg=1 bytes=1645
+calls: 0x004ac400, 0x0054cc2b
+refs: DAT_0056951c, DAT_0057d62c, DAT_0057d630
+ provider-specific; not original source
+void __cdecl FUN_004ac400(void *param_1)
+{
+  FUN_0054cc2b(param_1,&DAT_0056951c,4);
+  FUN_0054cc2b(param_1,&DAT_0057d62c,4);
+  FUN_0054cc2b(param_1,&DAT_0057d630,4);
+  return;
+}
+==========================================================================================
+0x4b0d40 indeg=1 bytes=1563
+calls: 0x004b0d40, 0x0054cbc1
+refs: DAT_0056a6d8
+ provider-specific; not original source
+void __cdecl FUN_004b0d40(void *param_1)
+{
+  FUN_0054cbc1(param_1,&DAT_0056a6d8,4);
+  return;
+}
+==========================================================================================
+0x4b0d60 indeg=1 bytes=1563
+calls: 0x004b0d60, 0x0054cc2b
+refs: DAT_0056a6d8
+ provider-specific; not original source
+void __cdecl FUN_004b0d60(void *param_1)
+{
+  FUN_0054cc2b(param_1,&DAT_0056a6d8,4);
+  return;
+}
+==========================================================================================
+0x4b3ca0 indeg=1 bytes=1645
+calls: 0x004b3ca0, 0x0054cbc1
+refs: DAT_0056a734, DAT_0056a7d4, DAT_0057d69c
+ provider-specific; not original source
+void __cdecl FUN_004b3ca0(void *param_1)
+{
+  FUN_0054cbc1(param_1,&DAT_0056a7d4,4);
+  FUN_0054cbc1(param_1,&DAT_0057d69c,4);
+  FUN_0054cbc1(param_1,&DAT_0056a734,9);
+  return;
+}
+==========================================================================================
+0x4b3ce0 indeg=1 bytes=1645
+calls: 0x004b3ce0, 0x0054cc2b
+refs: DAT_0056a734, DAT_0056a7d4, DAT_0057d69c
+ provider-specific; not original source
+void __cdecl FUN_004b3ce0(void *param_1)
+{
+  FUN_0054cc2b(param_1,&DAT_0056a7d4,4);
+  FUN_0054cc2b(param_1,&DAT_0057d69c,4);
+  FUN_0054cc2b(param_1,&DAT_0056a734,9);
+  return;
+}
+==========================================================================================
+0x4c0d40 indeg=1 bytes=1563
+calls: 0x004c0d40, 0x0054cbc1
+refs: DAT_0057d714
+ provider-specific; not original source
+void __cdecl FUN_004c0d40(void *param_1)
+{
+  FUN_0054cbc1(param_1,&DAT_0057d714,4);
+  return;
+}
+==========================================================================================
+0x4c0d60 indeg=1 bytes=1563
+calls: 0x004c0d60, 0x0054cc2b
+refs: DAT_0057d714
+ provider-specific; not original source
+void __cdecl FUN_004c0d60(void *param_1)
+{
+  FUN_0054cc2b(param_1,&DAT_0057d714,4);
+  return;
+}
+==========================================================================================
+0x4cb3a0 indeg=0 bytes=1531
+calls: 0x004cb3a0, 0x0054dea3
+ provider-specific; not original source
+void FUN_004cb3a0(void)
+{
+  FUN_0054dea3(0x4cb3b0);
+  return;
+}
+==========================================================================================
+0x4d1ba0 indeg=1 bytes=1875
+calls: 0x004d1ba0, 0x0054cc2b
+ provider-specific; not original source
+void __thiscall FUN_004d1ba0(void *this,void *param_1)
+{
+  FUN_0054cc2b(param_1,(int)this + 4,1);
+  FUN_0054cc2b(param_1,(int)this + 5,1);
+  FUN_0054cc2b(param_1,(int)this + 6,1);
+  FUN_0054cc2b(param_1,(int)this + 8,4);
+  FUN_0054cc2b(param_1,(int)this + 0xc,4);
+  FUN_0054cc2b(param_1,(int)this + 0x10,1);
+  FUN_0054cc2b(param_1,(int)this + 0x11,1);
+  FUN_0054cc2b(param_1,(int)this + 0x14,8);
+  return;
+}
+==========================================================================================
+0x4d1c20 indeg=1 bytes=1875
+calls: 0x004d1c20, 0x0054cbc1
+ provider-specific; not original source
+void __thiscall FUN_004d1c20(void *this,void *param_1)
+{
+  FUN_0054cbc1(param_1,(int)this + 4,1);
+  FUN_0054cbc1(param_1,(int)this + 5,1);
+  FUN_0054cbc1(param_1,(int)this + 6,1);
+  FUN_0054cbc1(param_1,(int)this + 8,4);
+  FUN_0054cbc1(param_1,(int)this + 0xc,4);
+  FUN_0054cbc1(param_1,(int)this + 0x10,1);
+  FUN_0054cbc1(param_1,(int)this + 0x11,1);
+  FUN_0054cbc1(param_1,(int)this + 0x14,8);
+  return;
+}
+==========================================================================================
+0x4d3a50 indeg=1 bytes=2550
+calls: 0x004d3a50, 0x0054cbc1
+ provider-specific; not original source
+void __thiscall FUN_004d3a50(void *this,void *param_1)
+{
+  FUN_0054cbc1(param_1,(int)this + 4,4);
+  FUN_0054cbc1(param_1,(int)this + 8,4);
+  FUN_0054cbc1(param_1,(int)this + 0xc,4);
+  FUN_0054cbc1(param_1,(int)this + 0x10,4);
+  FUN_0054cbc1(param_1,(int)this + 0x24,4);
+  FUN_0054cbc1(param_1,(int)this + 0x28,4);
+  FUN_0054cbc1(param_1,(int)this + 0x2c,4);
+  FUN_0054cbc1(param_1,(int)this + 0x30,4);
+  FUN_0054cbc1(param_1,(int)this + 0x34,4);
+  FUN_0054cbc1(param_1,(int)this + 0x38,4);
+  FUN_0054cbc1(param_1,(int)this + 0x3c,4);
+  FUN_0054cbc1(param_1,(int)this + 0x44,2000);
+  FUN_0054cbc1(param_1,(int)this + 0x814,4);
+  FUN_0054cbc1(param_1,(int)this + 0x818,4);
+  FUN_0054cbc1(param_1,(int)this + 0x81c,4);
+  FUN_0054cbc1(param_1,(int)this + 0x820,4);
+  FUN_0054cbc1(param_1,(int)this + 0x824,1);
+  FUN_0054cbc1(param_1,(int)this + 0x40,4);
+  FUN_0054cbc1(param_1,(int)this + 0x825,1);
+  FUN_0054cbc1(param_1,(int)this + 0x14,4);
+  FUN_0054cbc1(param_1,(int)this + 0x18,4);
+  FUN_0054cbc1(param_1,(int)this + 0x1c,4);
+  FUN_0054cbc1(param_1,(int)this + 0x20,4);
+  return;
+}
+==========================================================================================
+0x4d3ba0 indeg=2 bytes=2550
+calls: 0x004d3ba0, 0x0054cc2b
+ provider-specific; not original source
+void __thiscall FUN_004d3ba0(void *this,void *param_1)
+{
+  FUN_0054cc2b(param_1,(int)this + 4,4);
+  FUN_0054cc2b(param_1,(int)this + 8,4);
+  FUN_0054cc2b(param_1,(int)this + 0xc,4);
+  FUN_0054cc2b(param_1,(int)this + 0x10,4);
+  FUN_0054cc2b(param_1,(int)this + 0x24,4);
+  FUN_0054cc2b(param_1,(int)this + 0x28,4);
+  FUN_0054cc2b(param_1,(int)this + 0x2c,4);
+  FUN_0054cc2b(param_1,(int)this + 0x30,4);
+  FUN_0054cc2b(param_1,(int)this + 0x34,4);
+  FUN_0054cc2b(param_1,(int)this + 0x38,4);
+  FUN_0054cc2b(param_1,(int)this + 0x3c,4);
+  FUN_0054cc2b(param_1,(int)this + 0x44,2000);
+  FUN_0054cc2b(param_1,(int)this + 0x814,4);
+  FUN_0054cc2b(param_1,(int)this + 0x818,4);
+  FUN_0054cc2b(param_1,(int)this + 0x81c,4);
+  FUN_0054cc2b(param_1,(int)this + 0x820,4);
+  FUN_0054cc2b(param_1,(int)this + 0x824,1);
+  FUN_0054cc2b(param_1,(int)this + 0x40,4);
+  FUN_0054cc2b(param_1,(int)this + 0x825,1);
+  FUN_0054cc2b(param_1,(int)this + 0x14,4);
+  FUN_0054cc2b(param_1,(int)this + 0x18,4);
+  FUN_0054cc2b(param_1,(int)this + 0x1c,4);
+  FUN_0054cc2b(param_1,(int)this + 0x20,4);
+  return;
+}
+==========================================================================================
+0x4d5940 indeg=2 bytes=2106
+calls: 0x004d5940, 0x004d59c0, 0x004f0cc0, 0x00401440
+ provider-specific; not original source
+void __fastcall FUN_004d5940(void *param_1)
+{
+  undefined4 *this;
+  int iVar1;
+  int iVar2;
+  this = FUN_004d59c0(param_1,0x20,0,'\0');
+  iVar2 = 0;
+  if (0 < (int)this[5]) {
+    do {
+      iVar1 = IDMap_Lookup(this,iVar2,(int *)0x0);
+      iVar1 = FUN_004f0cc0(*(void **)((int)param_1 + 0xfa8),1,*(int *)(iVar1 + 0x54));
+      if ((iVar1 != 0) && (*(char *)(iVar1 + 6) == '\x02')) {
+        List_Add((void *)(*(int *)((int)param_1 + 0xfa8) + 0x11c),iVar1);
+      }
+      iVar2 = iVar2 + 1;
+    } while (iVar2 < (int)this[5]);
+  }
+  FUN_00401440((int)this);
+  if (this != (undefined4 *)0x0) {
+    (**(code **)*this)(1);
+  }
+  return;
+}
+==========================================================================================
+0x4d8650 indeg=1 bytes=3019
+calls: 0x004d8650, 0x004d59c0
+refs: DAT_005630d0, DAT_0056c9d8, DAT_0056c9ec, DAT_0056ca00, DAT_0056ca14, DAT_0058325c
+ provider-specific; not original source
+void __fastcall FUN_004d8650(void *param_1)
+{
+  int iVar1;
+  undefined4 *this;
+  int iVar2;
+  uint uVar3;
+  int *piVar4;
+  int iVar5;
+  int iVar6;
+  int *piVar7;
+  this = FUN_004d59c0(param_1,0x13,0,'\0');
+  iVar5 = 0;
+  iVar1 = this[5];
+  if (0 < iVar1) {
+    piVar4 = (int *)((int)param_1 + 0xdcc);
+    do {
+      iVar2 = IDMap_Lookup(this,iVar5,(int *)0x0);
+      iVar6 = *(int *)(iVar2 + 0x20) + -0x959 >> 2;
+      uVar3 = Random_Range(0,0x46);
+      piVar4[-1] = (uVar3 - 0x46) + *(int *)(&DAT_0056c9d8 + iVar6 * 4);
+      uVar3 = Random_Range(0,7);
+      *piVar4 = (uVar3 - 7) + *(int *)(&DAT_0056c9ec + iVar6 * 4);
+      uVar3 = Random_Range(0,0xf);
+      piVar4[1] = (int)((float)(int)(uVar3 - 0xf) * 0.001 + *(float *)(&DAT_0056ca00 + iVar6 * 4));
+      uVar3 = Random_Range(0,5);
+      piVar4[2] = (int)((float)(int)uVar3 * 0.01 + *(float *)(&DAT_0056ca14 + iVar6 * 4));
+      piVar4[3] = *(int *)(iVar2 + 0x24);
+      piVar7 = piVar4 + 4;
+      for (iVar2 = 6; iVar2 != 0; iVar2 = iVar2 + -1) {
+==========================================================================================
+0x4dcd00 indeg=1 bytes=2888
+calls: 0x004dcd00, 0x0048c340, 0x004d59c0
+refs: DAT_0057c670
+ provider-specific; not original source
+void __fastcall FUN_004dcd00(void *param_1)
+{
+  undefined4 *this;
+  int iVar1;
+  uint uVar2;
+  undefined4 *this_00;
+  int *piVar3;
+  int iVar4;
+  int local_8;
+  int local_4;
+  this = FUN_0048c340(DAT_0057c670);
+  local_4 = 0;
+  if (0 < (int)this[5]) {
+    do {
+      iVar1 = IDMap_Lookup(this,local_4,(int *)0x0);
+      uVar2 = Random_Range(1,100);
+      if (0x50 < (int)uVar2) {
+        piVar3 = (int *)(iVar1 + 0xd4);
+        local_8 = 7;
+        do {
+          iVar1 = *piVar3;
+          if (*(int *)(iVar1 + 4) != 0) {
+            if ((*(int *)(iVar1 + 4) == 0xc) && (uVar2 = Random_Range(1,100), 0x32 < (int)uVar2)) {
+              iVar4 = 3;
+            }
+            else {
+              iVar4 = *(int *)(iVar1 + 4);
+            }
+            this_00 = FUN_004d59c0(param_1,iVar4,iVar1,'\0');
+==========================================================================================
+0x4dd4f0 indeg=1 bytes=2002
+calls: 0x004dd4f0, 0x0054cc2b
+refs: DAT_0057dfbc
+ provider-specific; not original source
+void __thiscall FUN_004dd4f0(void *this,void *param_1)
+{
+  FUN_0054cc2b(param_1,(int)this + 7,1);
+  FUN_0054cc2b(param_1,(int)this + 6,1);
+  FUN_0054cc2b(param_1,(int)this + 8,1);
+  FUN_0054cc2b(param_1,(int)this + 4,2);
+  FUN_0054cc2b(param_1,(int)this + 10,2);
+  FUN_0054cc2b(param_1,(int)this + 0xc,4);
+  FUN_0054cc2b(param_1,(int)this + 0x19,1);
+  FUN_0054cc2b(param_1,(int)this + 0x18,1);
+  FUN_0054cc2b(param_1,(int)this + 0x14,4);
+  FUN_0054cc2b(param_1,(int)this + 0x10,4);
+  FUN_0054cc2b(param_1,&DAT_0057dfbc,4);
+  return;
+}
+==========================================================================================
+0x4dd590 indeg=2 bytes=2133
+calls: 0x004dd590, 0x0054cbc1
+refs: DAT_0057c668, DAT_0057dfbc
+ provider-specific; not original source
+void __thiscall FUN_004dd590(void *this,void *param_1)
+{
+  FUN_0054cbc1(param_1,(int)this + 7,1);
+  FUN_0054cbc1(param_1,(int)this + 6,1);
+  FUN_0054cbc1(param_1,(int)this + 8,1);
+  FUN_0054cbc1(param_1,(int)this + 4,2);
+  FUN_0054cbc1(param_1,(int)this + 10,2);
+  FUN_0054cbc1(param_1,(int)this + 0xc,4);
+  FUN_0054cbc1(param_1,(int)this + 0x19,1);
+  FUN_0054cbc1(param_1,(int)this + 0x18,1);
+  FUN_0054cbc1(param_1,(undefined4 *)((int)this + 0x14),4);
+  *(undefined4 *)((int)this + 0x14) = 0xc35;
+  FUN_0054cbc1(param_1,(int)this + 0x10,4);
+  if (DAT_0057c668 < 0x2e) {
+    DAT_0057dfbc = 2000;
+    return;
+  }
+  FUN_0054cbc1(param_1,&DAT_0057dfbc,4);
+  return;
+}
+==========================================================================================
+0x4ddd60 indeg=3 bytes=2117
+calls: 0x004ddd60, 0x0049f190, 0x004ddd20, 0x004016b0
+ provider-specific; not original source
+void __thiscall FUN_004ddd60(void *this,undefined4 *param_1)
+{
+  int iVar1;
+  undefined4 *puVar2;
+  int iVar3;
+  FUN_0049f190((int)param_1);
+  iVar1 = *(int *)((int)this + 0x124);
+  iVar3 = 0;
+  if (0 < iVar1) {
+    while( true ) {
+      puVar2 = (undefined4 *)IDMap_Lookup((void *)((int)this + 0x110),iVar3,(int *)0x0);
+      if (puVar2 == param_1) break;
+      iVar3 = iVar3 + 1;
+      if (iVar1 <= iVar3) {
+        FUN_004ddd20((int)this);
+        return;
+      }
+    }
+    FUN_004016b0((void *)((int)this + 0x110),iVar3);
+    if (param_1 != (undefined4 *)0x0) {
+      (**(code **)*param_1)(1);
+    }
+  }
+  FUN_004ddd20((int)this);
+  return;
+}
+==========================================================================================
+0x4decf0 indeg=1 bytes=5387
+calls: 0x004decf0, 0x00513fd0, 0x004d59c0, 0x00488be0, 0x004e2280
+refs: DAT_0057c670
+ provider-specific; not original source
+void __thiscall FUN_004decf0(void *this,int *param_1)
+{
+  int *piVar1;
+  int *piVar2;
+  int iVar3;
+  void *pvVar4;
+  undefined4 *this_00;
+  int iVar5;
+  undefined4 uVar6;
+  int iVar7;
+  int local_c;
+  int local_4;
+  piVar2 = param_1;
+  iVar7 = 0;
+  *(undefined4 *)*param_1 = 0;
+  *(undefined4 *)(*param_1 + 4) = 0;
+  *(undefined4 *)(*param_1 + 0x120) = 0;
+  if (0 < *(int *)((int)this + 0x15c)) {
+    do {
+      iVar3 = IDMap_Lookup((void *)((int)this + 0x148),iVar7,(int *)0x0);
+      piVar1 = (int *)*param_1;
+      if (*(char *)(iVar3 + 0x16f4) == '\0') {
+        piVar1[1] = piVar1[1] + 1;
+        *(int *)(*param_1 + 0x120) = *(int *)(*param_1 + 0x120) + (*(int *)(iVar3 + 0x38) + 1) * 600
+        ;
+      }
+      else {
+        *piVar1 = *piVar1 + 1;
+        *(int *)(*param_1 + 0x120) =
+==========================================================================================
+0x4e3460 indeg=6 bytes=1791
+calls: 0x004e3460, 0x004ddd20, 0x005301c0
+refs: DAT_0057c670
+ provider-specific; not original source
+void __thiscall FUN_004e3460(void *this,int param_1,undefined1 param_2)
+{
+  if (param_1 != 0) {
+    *(undefined1 *)(param_1 + 0x1dc) = param_2;
+    FUN_004ddd20((int)this);
+    if (*(void **)(DAT_0057c670 + 0x264) != (void *)0x0) {
+      FUN_005301c0(*(void **)(DAT_0057c670 + 0x264),-0x18658,0x23,0);
+    }
+  }
+  return;
+}
+==========================================================================================
+0x4e43f0 indeg=1 bytes=1752
+calls: 0x004e43f0, 0x0054cc2b
+ provider-specific; not original source
+void __thiscall FUN_004e43f0(void *this,void *param_1)
+{
+  FUN_0054cc2b(param_1,(int)this + 0xc,4);
+  FUN_0054cc2b(param_1,(int)this + 8,4);
+  FUN_0054cc2b(param_1,(int)this + 0x10,8);
+  FUN_0054cc2b(param_1,(int)this + 0x18,4);
+  FUN_0054cc2b(param_1,(int)this + 0x1c,1);
+  return;
+}
+==========================================================================================
+0x4e4440 indeg=1 bytes=1752
+calls: 0x004e4440, 0x0054cbc1
+ provider-specific; not original source
+void __thiscall FUN_004e4440(void *this,void *param_1)
+{
+  FUN_0054cbc1(param_1,(int)this + 0xc,4);
+  FUN_0054cbc1(param_1,(int)this + 8,4);
+  FUN_0054cbc1(param_1,(int)this + 0x10,8);
+  FUN_0054cbc1(param_1,(int)this + 0x18,4);
+  FUN_0054cbc1(param_1,(int)this + 0x1c,1);
+  return;
+}
+==========================================================================================
+0x4e5e30 indeg=1 bytes=1881
+calls: 0x004e5e30, 0x0054cc2b
+ provider-specific; not original source
+void __thiscall FUN_004e5e30(void *this,void *param_1)
+{
+  FUN_0054cc2b(param_1,(int)this + 4,4);
+  FUN_0054cc2b(param_1,(int)this + 8,4);
+  FUN_0054cc2b(param_1,(int)this + 0xc,4);
+  FUN_0054cc2b(param_1,(int)this + 0x10,4);
+  FUN_0054cc2b(param_1,(int)this + 0x14,4);
+  FUN_0054cc2b(param_1,(int)this + 0x18,4);
+  FUN_0054cc2b(param_1,(int)this + 0x1c,4);
+  FUN_0054cc2b(param_1,(int)this + 0x20,4);
+  return;
+}
+==========================================================================================
+0x4e5eb0 indeg=1 bytes=1969
+calls: 0x004e5eb0, 0x0054cbc1
+ provider-specific; not original source
+void __thiscall FUN_004e5eb0(void *this,void *param_1)
+{
+  int *piVar1;
+  FUN_0054cbc1(param_1,(int)this + 4,4);
+  FUN_0054cbc1(param_1,(int)this + 8,4);
+  FUN_0054cbc1(param_1,(int)this + 0xc,4);
+  piVar1 = (int *)((int)this + 0x10);
+  FUN_0054cbc1(param_1,piVar1,4);
+  FUN_0054cbc1(param_1,(int)this + 0x14,4);
+  FUN_0054cbc1(param_1,(int)this + 0x18,4);
+  FUN_0054cbc1(param_1,(int)this + 0x1c,4);
+  FUN_0054cbc1(param_1,(int)this + 0x20,4);
+  if (*piVar1 < 3) {
+    *piVar1 = 0;
+  }
+  return;
+}
+==========================================================================================
+0x4e6420 indeg=1 bytes=3593
+calls: 0x004e6420, 0x0054f775
+refs: DAT_0057ca0c
+ provider-specific; not original source
+void __cdecl FUN_004e6420(char *param_1)
+{
+  char cVar1;
+  char *pcVar2;
+  uint uVar3;
+  uint uVar4;
+  char *pcVar5;
+  char *pcVar6;
+  uint *puVar7;
+  uint *puVar8;
+  uint local_64 [25];
+  uVar3 = 0xffffffff;
+  pcVar2 = param_1;
+  do {
+    pcVar5 = pcVar2;
+    if (uVar3 == 0) break;
+    uVar3 = uVar3 - 1;
+    pcVar5 = pcVar2 + 1;
+    cVar1 = *pcVar2;
+    pcVar2 = pcVar5;
+  } while (cVar1 != '\0');
+  uVar3 = ~uVar3;
+  pcVar2 = pcVar5 + -uVar3;
+  puVar7 = local_64;
+  for (uVar4 = uVar3 >> 2; uVar4 != 0; uVar4 = uVar4 - 1) {
+    *puVar7 = *(undefined4 *)pcVar2;
+    pcVar2 = pcVar2 + 4;
+    puVar7 = (uint *)((int)puVar7 + 4);
+  }
+==========================================================================================
+0x4ea230 indeg=2 bytes=3941
+calls: 0x004ea230, 0x0053d090, 0x00535160, 0x00534d60, 0x0053c710, 0x00539ea0, 0x0053d480, 0x00539280
+refs: DAT_0058072c, LAB_00559e86
+ provider-specific; not original source
+void __thiscall
+FUN_004ea230(void *this,void *param_1,uint param_2,uint param_3,int param_4,undefined4 param_5,
+            undefined4 param_6)
+{
+  void *pvVar1;
+  undefined4 *puVar2;
+  undefined4 uVar3;
+  int iVar4;
+  uint uVar5;
+  uint uVar6;
+  void *pvStack_c;
+  undefined1 *puStack_8;
+  undefined4 uStack_4;
+  uVar6 = param_3;
+  uVar5 = param_2;
+  uStack_4 = 0xffffffff;
+  puStack_8 = &LAB_00559e86;
+  pvStack_c = ExceptionList;
+  ExceptionList = &pvStack_c;
+  if ((*(void **)((int)this + 0x2f884) != (void *)0x0) &&
+     ((ExceptionList = &pvStack_c,
+      FUN_0053d090(*(void **)((int)this + 0x2f884),(int *)&param_3,(int *)&param_2),
+      param_3 != uVar5 || (param_2 != uVar6)))) {
+    if (*(undefined4 **)((int)this + 0x2f884) != (undefined4 *)0x0) {
+      (**(code **)**(undefined4 **)((int)this + 0x2f884))(1);
+    }
+    *(undefined4 *)((int)this + 0x2f884) = 0;
+  }
+  if ((DAT_0058072c != (undefined4 *)0x0) &&
+==========================================================================================
+0x4eaaa0 indeg=1 bytes=2498
+calls: 0x004eaaa0, 0x0054cc2b
+ provider-specific; not original source
+void __thiscall FUN_004eaaa0(void *this,void *param_1)
+{
+  char cVar1;
+  uint uVar2;
+  uint uVar3;
+  char *pcVar4;
+  int iVar5;
+  char *pcVar6;
+  char *pcVar7;
+  char local_34 [52];
+  pcVar4 = (char *)((int)this + 0x25);
+  iVar5 = 0x9c4;
+  do {
+    uVar2 = 0xffffffff;
+    pcVar6 = pcVar4;
+    do {
+      pcVar7 = pcVar6;
+      if (uVar2 == 0) break;
+      uVar2 = uVar2 - 1;
+      pcVar7 = pcVar6 + 1;
+      cVar1 = *pcVar6;
+      pcVar6 = pcVar7;
+    } while (cVar1 != '\0');
+    uVar2 = ~uVar2;
+    pcVar6 = pcVar7 + -uVar2;
+    pcVar7 = local_34;
+    for (uVar3 = uVar2 >> 2; uVar3 != 0; uVar3 = uVar3 - 1) {
+      *(undefined4 *)pcVar7 = *(undefined4 *)pcVar6;
+      pcVar6 = pcVar6 + 4;
+==========================================================================================
+0x4eab00 indeg=1 bytes=1896
+calls: 0x004eab00, 0x0054cbc1, 0x004eaa40
+ provider-specific; not original source
+void __thiscall FUN_004eab00(void *this,void *param_1)
+{
+  int iVar1;
+  int iVar2;
+  undefined2 *puVar3;
+  byte local_64 [100];
+  iVar2 = 0x9c4;
+  puVar3 = (undefined2 *)((int)this + 0x2e4f4);
+  do {
+    FUN_0054cbc1(param_1,local_64,0x32);
+    iVar1 = FUN_004eaa40(this,local_64);
+    if (iVar1 != -1) {
+      *puVar3 = (short)iVar1;
+    }
+    puVar3 = puVar3 + 1;
+    iVar2 = iVar2 + -1;
+  } while (iVar2 != 0);
+  return;
+}
+==========================================================================================
+0x4eab80 indeg=1 bytes=2640
+calls: 0x004eab80, 0x0054f775
+refs: LAB_004eabd6, LAB_004eabdb
+ provider-specific; not original source
+uint __thiscall FUN_004eab80(void *this,uint *param_1)
+{
+  byte bVar1;
+  byte *extraout_EAX;
+  byte *extraout_EAX_00;
+  int iVar2;
+  byte *pbVar3;
+  uint uVar4;
+  byte *pbVar5;
+  uint *puVar6;
+  bool bVar7;
+  FUN_0054f775(param_1);
+  iVar2 = *(int *)((int)this + 0x20);
+  uVar4 = 0;
+  if (0 < iVar2) {
+    puVar6 = (uint *)((int)this + 0x25);
+    do {
+      FUN_0054f775(puVar6);
+      pbVar3 = extraout_EAX;
+      pbVar5 = extraout_EAX_00;
+      do {
+        bVar1 = *pbVar3;
+        bVar7 = bVar1 < *pbVar5;
+        if (bVar1 != *pbVar5) {
+LAB_004eabd6:
+          iVar2 = (1 - (uint)bVar7) - (uint)(bVar7 != 0);
+          goto LAB_004eabdb;
+        }
+        if (bVar1 == 0) break;
+==========================================================================================
+0x4ec4f0 indeg=1 bytes=9587
+calls: 0x004ec4f0, 0x0054cc2b
+refs: LAB_004ec86f
+ provider-specific; not original source
+void __thiscall FUN_004ec4f0(void *this,void *param_1,int param_2)
+{
+  char cVar1;
+  int iVar2;
+  uint uVar3;
+  uint uVar4;
+  int iVar5;
+  int iVar6;
+  int iVar7;
+  char *pcVar8;
+  int *piVar9;
+  char *pcVar10;
+  undefined1 local_7d;
+  int local_7c;
+  int local_78;
+  int local_74;
+  int local_70 [3];
+  char local_64 [100];
+  local_7d = 0;
+  local_70[1] = 0x11;
+  FUN_0054cc2b(param_1,local_70 + 1,4);
+  FUN_0054cc2b(param_1,&param_2,4);
+  FUN_0054cc2b(param_1,(int)this + 0xc,4);
+  FUN_0054cc2b(param_1,(int)this + 0x10,4);
+  FUN_0054cc2b(param_1,(int)this + 0x14,4);
+  FUN_0054cc2b(param_1,(int)this + 0x18,4);
+  FUN_0054cc2b(param_1,(int)this + 0x1c,4);
+  FUN_0054cc2b(param_1,(int)this + 0x20,4);
+  FUN_0054cc2b(param_1,(int)this + 0x24,4);
+==========================================================================================
+0x4ecb30 indeg=2 bytes=3687
+calls: 0x004ecb30, 0x0054cc2b, 0x00534370, 0x00534830, 0x0054b440
+ provider-specific; not original source
+void FUN_004ecb30(void *param_1,int *param_2)
+{
+  void *this;
+  int *piVar1;
+  char cVar2;
+  int iVar3;
+  void **ppvVar4;
+  longlong lVar5;
+  undefined4 uVar6;
+  undefined4 local_1c;
+  int local_18;
+  int local_14;
+  int local_10 [2];
+  undefined4 local_8 [2];
+  piVar1 = param_2;
+  this = param_1;
+  iVar3 = *param_2;
+  if ((iVar3 < 0) || (*(int *)(param_2[0x16] + 0x48) <= iVar3)) {
+    cVar2 = '\0';
+  }
+  else {
+    cVar2 = *(char *)(*(int *)(param_2[0x16] + 0x4c) + 0x3e + iVar3 * 0x48);
+  }
+  param_2 = (int *)CONCAT31(param_2._1_3_,cVar2 == '\x01');
+  FUN_0054cc2b(param_1,&param_2,1);
+  FUN_00534370((void *)piVar1[0x16],*piVar1,&param_1,&local_1c);
+  FUN_0054cc2b(this,&param_1,4);
+  FUN_0054cc2b(this,&local_1c,4);
+  FUN_00534830((void *)piVar1[0x16],*piVar1,local_10,local_8);
+==========================================================================================
+0x4f2e50 indeg=7 bytes=3783
+calls: 0x004f2e50, 0x004ef4b0, 0x004e5df0, 0x004e42c0, 0x004f2b60, 0x00401440
+refs: DAT_0057c670, LAB_004f2f49
+ provider-specific; not original source
+void __thiscall FUN_004f2e50(void *this,int param_1)
+{
+  short sVar1;
+  char cVar2;
+  void *this_00;
+  int iVar3;
+  undefined4 *this_01;
+  int iVar4;
+  int iVar5;
+  int local_4;
+  iVar5 = 0;
+  if (0 < *(int *)((int)this + 0x1c) * *(int *)((int)this + 0x20)) {
+    iVar4 = 0;
+    do {
+      iVar3 = *(int *)(iVar4 + 8 + *(int *)((int)this + 0x4c));
+      if ((iVar3 != 0) && (*(int *)(iVar3 + 0x10) == -2)) {
+        *(undefined4 *)(iVar3 + 0x10) = 0xffffffff;
+      }
+      iVar5 = iVar5 + 1;
+      iVar4 = iVar4 + 0xc;
+    } while (iVar5 < *(int *)((int)this + 0x1c) * *(int *)((int)this + 0x20));
+  }
+  local_4 = 0;
+  if (0 < *(int *)(param_1 + 0x170c)) {
+    do {
+      iVar5 = IDMap_Lookup((void *)(param_1 + 0x16f8),local_4,(int *)0x0);
+      if (((iVar5 != 0) &&
+          (this_00 = (void *)IDMap_Lookup((void *)(DAT_0057c670 + 0x74),*(int *)(iVar5 + 4),
+                                          (int *)0x0), this_00 != (void *)0x0)) &&
+==========================================================================================
+0x4f4400 indeg=3 bytes=8686
+calls: 0x004f4400, 0x00539ea0, 0x005377d0, 0x00537c30, 0x00540000, 0x004f4cf0, 0x004f4960
+refs: DAT_00571950, DAT_00571954, DAT_00571960, DAT_00571964, DAT_0057bb44, LAB_0055a06e
+ provider-specific; not original source
+void __thiscall FUN_004f4400(void *this,void *param_1,int *param_2)
+{
+  byte bVar1;
+  byte bVar2;
+  byte bVar3;
+  uint uVar4;
+  int iVar5;
+  int iVar6;
+  void *pvVar7;
+  undefined4 *puVar8;
+  int iVar9;
+  uint uVar10;
+  uint uVar11;
+  int *piVar12;
+  int iVar13;
+  uint uVar14;
+  int iVar15;
+  int iVar16;
+  uint uVar17;
+  uint uVar18;
+  uint uVar19;
+  byte *pbVar20;
+  char *pcVar21;
+  int local_184;
+  int local_180;
+  int local_17c;
+  int local_178;
+  int local_174;
+  int local_170;
+==========================================================================================
+0x4f5310 indeg=2 bytes=4902
+calls: 0x004f5310, 0x004013a0, 0x00534370, 0x004e5df0, 0x004f34c0, 0x004ed570, 0x00480d20, 0x00401440, 0x004f2b60, 0x004f3e10, 0x004018c0, 0x004f0cc0
+refs: LAB_0055a08b
+ provider-specific; not original source
+int __thiscall
+FUN_004f5310(void *this,int param_1,void *param_2,undefined4 *param_3,undefined4 *param_4)
+{
+  int *piVar1;
+  byte bVar2;
+  void *this_00;
+  int iVar3;
+  int iVar4;
+  undefined4 *this_01;
+  uint uVar5;
+  int iVar6;
+  int iVar7;
+  undefined4 *puVar8;
+  int local_834;
+  int local_830;
+  int local_82c;
+  int local_828;
+  int local_824;
+  int local_820;
+  int local_81c;
+  undefined4 local_818 [5];
+  int local_804;
+  undefined4 local_7fc [508];
+  void *pvStack_c;
+  undefined1 *puStack_8;
+  undefined4 local_4;
+  local_4 = 0xffffffff;
+  puStack_8 = &LAB_0055a08b;
+  pvStack_c = ExceptionList;
+==========================================================================================
+0x4f5e50 indeg=1 bytes=1889
+calls: 0x004f5e50, 0x0054cbc1
+ provider-specific; not original source
+void __thiscall FUN_004f5e50(void *this,void *param_1)
+{
+  FUN_0054cbc1(param_1,(int)this + 4,0xc);
+  FUN_0054cbc1(param_1,(int)this + 0x10,0xb0);
+  FUN_0054cbc1(param_1,(int)this + 0xc0,4);
+  FUN_0054cbc1(param_1,(int)this + 0xc4,3);
+  FUN_0054cbc1(param_1,(int)this + 200,4);
+  FUN_0054cbc1(param_1,(int)this + 0xcc,1);
+  FUN_0054cbc1(param_1,(int)this + 0xd0,4);
+  FUN_0054cbc1(param_1,(int)this + 0xd4,4);
+  return;
+}
+==========================================================================================
+0x4f5ee0 indeg=1 bytes=1889
+calls: 0x004f5ee0, 0x0054cc2b
+ provider-specific; not original source
+void __thiscall FUN_004f5ee0(void *this,void *param_1)
+{
+  FUN_0054cc2b(param_1,(int)this + 4,0xc);
+  FUN_0054cc2b(param_1,(int)this + 0x10,0xb0);
+  FUN_0054cc2b(param_1,(int)this + 0xc0,4);
+  FUN_0054cc2b(param_1,(int)this + 0xc4,3);
+  FUN_0054cc2b(param_1,(int)this + 200,4);
+  FUN_0054cc2b(param_1,(int)this + 0xcc,1);
+  FUN_0054cc2b(param_1,(int)this + 0xd0,4);
+  FUN_0054cc2b(param_1,(int)this + 0xd4,4);
+  return;
+}
+==========================================================================================
+0x4f6dd0 indeg=1 bytes=1974
+calls: 0x004f6dd0, 0x0054cbc1
+ provider-specific; not original source
+void __thiscall FUN_004f6dd0(void *this,void *param_1)
+{
+  void *this_00;
+  int iVar1;
+  undefined4 *puVar2;
+  undefined4 *puVar3;
+  this_00 = param_1;
+  puVar2 = (undefined4 *)((int)this + 0x3c);
+  puVar3 = puVar2;
+  for (iVar1 = 0x21c; iVar1 != 0; iVar1 = iVar1 + -1) {
+    *puVar3 = 0;
+    puVar3 = puVar3 + 1;
+  }
+  FUN_0054cbc1(param_1,&param_1,4);
+  iVar1 = 6;
+  do {
+    FUN_0054cbc1(this_00,puVar2,param_1);
+    puVar2 = puVar2 + 0x5a;
+    iVar1 = iVar1 + -1;
+  } while (iVar1 != 0);
+  return;
+}
+==========================================================================================
+0x4f6e20 indeg=1 bytes=1804
+calls: 0x004f6e20, 0x0054cc2b
+ provider-specific; not original source
+void __thiscall FUN_004f6e20(void *this,void *param_1)
+{
+  int iVar1;
+  int iVar2;
+  undefined4 local_4;
+  local_4 = 0x168;
+  FUN_0054cc2b(param_1,&local_4,4);
+  iVar1 = (int)this + 0x3c;
+  iVar2 = 6;
+  do {
+    FUN_0054cc2b(param_1,iVar1,0x168);
+    iVar1 = iVar1 + 0x168;
+    iVar2 = iVar2 + -1;
+  } while (iVar2 != 0);
+  return;
+}
+==========================================================================================
+0x4f8240 indeg=2 bytes=4838
+calls: 0x004f8240, 0x004d5b90, 0x004d59c0, 0x004d7e90, 0x004d8320, 0x00488be0, 0x004d2320, 0x004d2360
+refs: DAT_0057c670, LAB_004f84b1
+ provider-specific; not original source
+int __thiscall FUN_004f8240(void *this,int param_1,void *param_2,int param_3,int *param_4)
+{
+  int iVar1;
+  double dVar2;
+  int iVar3;
+  uint uVar4;
+  int iVar5;
+  int iVar6;
+  int iVar7;
+  int iVar8;
+  int iVar9;
+  int iVar10;
+  int iVar11;
+  longlong lVar12;
+  int *piVar13;
+  int local_34;
+  undefined4 *local_30;
+  uint local_28;
+  int local_20;
+  int local_1c;
+  uint local_18;
+  int local_14;
+  *param_4 = 0;
+  local_14 = 0;
+  if (param_3 == 0) {
+    local_30 = FUN_004d5b90((int)param_2);
+    iVar3 = local_30[5];
+  }
+  else {
+==========================================================================================
+0x4f8510 indeg=1 bytes=3600
+calls: 0x004f8510, 0x004d59c0, 0x004d2320, 0x004d2360, 0x004f7b90
+ provider-specific; not original source
+int __thiscall FUN_004f8510(void *this,int param_1,void *param_2)
+{
+  int iVar1;
+  undefined4 *this_00;
+  uint uVar2;
+  int iVar3;
+  int iVar4;
+  int iVar5;
+  int iVar6;
+  int iVar7;
+  int iVar8;
+  longlong lVar9;
+  int *piVar10;
+  int local_58;
+  int local_54;
+  uint local_48;
+  int local_44;
+  int local_40;
+  int local_38;
+  int local_34;
+  int local_20;
+  int local_1c;
+  int local_18 [5];
+  local_34 = 0;
+  iVar1 = *(int *)((int)this + param_1 * 0x168 + 0x70);
+  this_00 = FUN_004d59c0(param_2,0,0,'\x01');
+  local_44 = 0;
+  local_38 = 0;
+  iVar8 = (int)this_00[5] >> 3;
+==========================================================================================
+0x4f8710 indeg=1 bytes=3259
+calls: 0x004f8710, 0x004d59c0, 0x004d2320, 0x004d2360
+ provider-specific; not original source
+int FUN_004f8710(void *param_1)
+{
+  int iVar1;
+  undefined4 *this;
+  undefined4 *this_00;
+  uint uVar2;
+  int iVar3;
+  int iVar4;
+  int iVar5;
+  longlong lVar6;
+  int *piVar7;
+  uint local_20;
+  void *local_1c;
+  int local_18;
+  int local_10;
+  int local_c;
+  local_c = 0;
+  this = FUN_004d59c0(param_1,0,0,'\x01');
+  this_00 = FUN_004d59c0(param_1,0x11,0,'\0');
+  iVar1 = this[5];
+  local_1c = (void *)0x0;
+  local_10 = 0;
+  do {
+    local_18 = 0;
+    if (0 < iVar1 >> 3) {
+      local_20 = 8;
+      do {
+        piVar7 = (int *)0x0;
+        uVar2 = Random_Range(local_18 * 8,local_20);
+==========================================================================================
+0x4f88c0 indeg=3 bytes=2673
+calls: 0x004f88c0, 0x004d59c0, 0x004d5dd0
+ provider-specific; not original source
+int FUN_004f88c0(int param_1,void *param_2,int param_3)
+{
+  int iVar1;
+  undefined4 *this;
+  uint uVar2;
+  int iVar3;
+  uint uVar4;
+  int iVar5;
+  int iVar6;
+  int *piVar7;
+  int local_14;
+  int local_10;
+  int local_c;
+  int local_8;
+  int local_4;
+  this = FUN_004d59c0(param_2,-1,0,'\x01');
+  iVar1 = this[5];
+  local_14 = 0;
+  do {
+    iVar6 = 0;
+    if (local_14 == 8) {
+      param_3 = 0;
+    }
+    iVar5 = 0;
+    local_10 = 0;
+    if (0 < iVar1 >> 3) {
+      uVar4 = 8;
+      do {
+        piVar7 = (int *)0x0;
+==========================================================================================
+0x4f89d0 indeg=1 bytes=2344
+calls: 0x004f89d0, 0x004d59c0, 0x004d5dd0
+ provider-specific; not original source
+int FUN_004f89d0(int param_1,void *param_2)
+{
+  undefined4 *this;
+  int iVar1;
+  int iVar2;
+  int iVar3;
+  int local_14;
+  int local_10;
+  int local_c;
+  int local_8;
+  int local_4;
+  iVar2 = 0;
+  this = FUN_004d59c0(param_2,0x1d,0,'\0');
+  iVar3 = 0;
+  local_10 = 0;
+  local_8 = this[5];
+  if (0 < local_8) {
+    do {
+      iVar1 = IDMap_Lookup(this,iVar2,(int *)0x0);
+      if ((iVar1 != 0) &&
+         (FUN_004d5dd0(param_2,iVar1,3,&local_14,&local_4,param_1,&local_c), local_14 != 0)) {
+        if (local_c != 0) {
+          local_14 = local_14 >> 1;
+        }
+        if ((iVar3 == 0) || (local_14 < iVar3)) {
+          iVar3 = local_14;
+          local_10 = iVar1;
+        }
+      }
+==========================================================================================
+0x501a40 indeg=1 bytes=1618
+calls: 0x00501a40, 0x0054cc2b
+ provider-specific; not original source
+void __thiscall FUN_00501a40(void *this,void *param_1)
+{
+  FUN_0054cc2b(param_1,(int)this + 4,4);
+  FUN_0054cc2b(param_1,(int)this + 8,2);
+  return;
+}
+==========================================================================================
+0x501a70 indeg=1 bytes=1618
+calls: 0x00501a70, 0x0054cbc1
+ provider-specific; not original source
+void __thiscall FUN_00501a70(void *this,void *param_1)
+{
+  FUN_0054cbc1(param_1,(int)this + 4,4);
+  FUN_0054cbc1(param_1,(int)this + 8,2);
+  return;
+}
+==========================================================================================
+0x501b80 indeg=1 bytes=2572
+calls: 0x00501b80, 0x0054cbc1
+ provider-specific; not original source
+void __thiscall FUN_00501b80(void *this,void *param_1)
+{
+  void *this_00;
+  int iVar1;
+  void *local_4;
+  this_00 = param_1;
+  local_4 = this;
+  FUN_0054cbc1(param_1,(int)this + 4,1);
+  FUN_0054cbc1(this_00,(int)this + 0xc,0x34);
+  FUN_0054cbc1(this_00,(int)this + 0x44,4);
+  FUN_0054cbc1(this_00,(int)this + 0x40,4);
+  FUN_0054cbc1(this_00,(int)this + 0x48,4);
+  FUN_0054cbc1(this_00,(int)this + 0x4c,4);
+  FUN_0054cbc1(this_00,(int)this + 0x50,4);
+  FUN_0054cbc1(this_00,(int)this + 0x54,4);
+  FUN_0054cbc1(this_00,(int)this + 0x58,4);
+  FUN_0054cbc1(this_00,(int)this + 0x5c,4);
+  FUN_0054cbc1(this_00,(int)this + 0x60,1);
+  FUN_0054cbc1(this_00,(int)this + 100,4);
+  FUN_0054cbc1(this_00,(int)this + 0x84,4);
+  FUN_0054cbc1(this_00,(int)this + 8,4);
+  FUN_0054cbc1(this_00,(int)this + 0x88,0xe4);
+  FUN_0054cbc1(this_00,(int)this + 0x16c,0xe4);
+  FUN_0054cbc1(this_00,&param_1,4);
+  iVar1 = 0;
+  if (0 < (int)param_1) {
+    do {
+      FUN_0054cbc1(this_00,&local_4,4);
+      List_Add((void *)((int)this + 0x68),local_4);
+==========================================================================================
+0x501cb0 indeg=1 bytes=2645
+calls: 0x00501cb0, 0x0054cc2b
+ provider-specific; not original source
+void __thiscall FUN_00501cb0(void *this,void *param_1)
+{
+  void *this_00;
+  int iVar1;
+  void *local_4;
+  this_00 = param_1;
+  local_4 = this;
+  FUN_0054cc2b(param_1,(int)this + 4,1);
+  FUN_0054cc2b(this_00,(int)this + 0xc,0x34);
+  FUN_0054cc2b(this_00,(int)this + 0x44,4);
+  FUN_0054cc2b(this_00,(int)this + 0x40,4);
+  FUN_0054cc2b(this_00,(int)this + 0x48,4);
+  FUN_0054cc2b(this_00,(int)this + 0x4c,4);
+  FUN_0054cc2b(this_00,(int)this + 0x50,4);
+  FUN_0054cc2b(this_00,(int)this + 0x54,4);
+  FUN_0054cc2b(this_00,(int)this + 0x58,4);
+  FUN_0054cc2b(this_00,(int)this + 0x5c,4);
+  FUN_0054cc2b(this_00,(int)this + 0x60,1);
+  FUN_0054cc2b(this_00,(int)this + 100,4);
+  FUN_0054cc2b(this_00,(int)this + 0x84,4);
+  FUN_0054cc2b(this_00,(int)this + 8,4);
+  FUN_0054cc2b(this_00,(int)this + 0x88,0xe4);
+  FUN_0054cc2b(this_00,(int)this + 0x16c,0xe4);
+  param_1 = *(void **)((int)this + 0x7c);
+  FUN_0054cc2b(this_00,&param_1,4);
+  iVar1 = 0;
+  if (0 < (int)param_1) {
+    do {
+      local_4 = (void *)IDMap_Lookup((void *)((int)this + 0x68),iVar1,(int *)0x0);
+==========================================================================================
+0x50f6b0 indeg=1 bytes=2013
+calls: 0x0050f6b0, 0x0054cc2b
+ provider-specific; not original source
+void __thiscall FUN_0050f6b0(void *this,void *param_1)
+{
+  FUN_0054cc2b(param_1,(int)this + 4,4);
+  FUN_0054cc2b(param_1,(int)this + 8,4);
+  FUN_0054cc2b(param_1,(int)this + 0x10,4);
+  FUN_0054cc2b(param_1,(int)this + 0x14,4);
+  FUN_0054cc2b(param_1,(int)this + 0x18,4);
+  FUN_0054cc2b(param_1,(int)this + 0x1c,4);
+  FUN_0054cc2b(param_1,(int)this + 0x20,4);
+  FUN_0054cc2b(param_1,(int)this + 0x2c,4);
+  FUN_0054cc2b(param_1,(int)this + 0xc,4);
+  FUN_0054cc2b(param_1,(int)this + 0x24,4);
+  FUN_0054cc2b(param_1,(int)this + 0x28,4);
+  return;
+}
+==========================================================================================
+0x50f750 indeg=1 bytes=2013
+calls: 0x0050f750, 0x0054cbc1
+ provider-specific; not original source
+void __thiscall FUN_0050f750(void *this,void *param_1)
+{
+  FUN_0054cbc1(param_1,(int)this + 4,4);
+  FUN_0054cbc1(param_1,(int)this + 8,4);
+  FUN_0054cbc1(param_1,(int)this + 0x10,4);
+  FUN_0054cbc1(param_1,(int)this + 0x14,4);
+  FUN_0054cbc1(param_1,(int)this + 0x18,4);
+  FUN_0054cbc1(param_1,(int)this + 0x1c,4);
+  FUN_0054cbc1(param_1,(int)this + 0x20,4);
+  FUN_0054cbc1(param_1,(int)this + 0x2c,4);
+  FUN_0054cbc1(param_1,(int)this + 0xc,4);
+  FUN_0054cbc1(param_1,(int)this + 0x24,4);
+  FUN_0054cbc1(param_1,(int)this + 0x28,4);
+  return;
+}
+==========================================================================================
+0x511e60 indeg=1 bytes=3209
+calls: 0x00511e60, 0x00488b30, 0x004013a0, 0x004d7640
+refs: DAT_0057c670, LAB_0055a4be
+ provider-specific; not original source
+undefined4 * FUN_00511e60(void *param_1,uint param_2,char param_3)
+{
+  int iVar1;
+  int iVar2;
+  undefined4 *this;
+  void *this_00;
+  int iVar3;
+  int *piVar4;
+  int iVar5;
+  undefined4 *local_2cc;
+  int local_2c8;
+  int local_2c4;
+  uint local_2c0;
+  int local_2bc [172];
+  void *local_c;
+  undefined1 *puStack_8;
+  undefined4 local_4;
+  local_4 = 0xffffffff;
+  puStack_8 = &LAB_0055a4be;
+  local_c = ExceptionList;
+  iVar5 = 0;
+  ExceptionList = &local_c;
+  this = FUN_00488b30(DAT_0057c670,param_3);
+  this_00 = operator_new(0x1c);
+  local_4 = 0;
+  if (this_00 == (void *)0x0) {
+    local_2cc = (undefined4 *)0x0;
+  }
+  else {
+==========================================================================================
+0x512f10 indeg=1 bytes=4305
+calls: 0x00512f10, 0x00512750, 0x00512860, 0x00512c40, 0x00512820, 0x004016b0, 0x00403850
+ provider-specific; not original source
+void __fastcall FUN_00512f10(void *param_1)
+{
+  undefined4 *this;
+  char *pcVar1;
+  int iVar2;
+  int iVar3;
+  int iVar4;
+  float fVar5;
+  int iVar6;
+  longlong lVar7;
+  int *local_14;
+  int local_10;
+  int local_c;
+  int local_8;
+  float local_4;
+  local_c = 0;
+  local_14 = (int *)((int)param_1 + 100);
+  *(undefined4 *)((int)param_1 + 0x25c) = 0;
+  *(undefined4 *)((int)param_1 + 0x260) = 0;
+  *(undefined4 *)((int)param_1 + 600) = 0;
+  *(undefined4 *)((int)param_1 + 0x248) = 0;
+  local_4 = 0.0;
+  do {
+    fVar5 = local_4;
+    if (*local_14 != 0) {
+      local_8 = 0;
+      do {
+        iVar2 = local_8;
+        this = FUN_00512750(param_1,SUB41(fVar5,0),(char)local_8,&local_10);
+==========================================================================================
+0x513d50 indeg=1 bytes=2589
+calls: 0x00513d50, 0x0054cbc1
+refs: DAT_0057c670
+ provider-specific; not original source
+void __thiscall FUN_00513d50(void *this,void *param_1)
+{
+  void *this_00;
+  int iVar1;
+  undefined4 uVar2;
+  void *pvVar3;
+  void *local_4;
+  this_00 = param_1;
+  local_4 = this;
+  FUN_0054cbc1(param_1,(int)this + 4,0x1e);
+  FUN_0054cbc1(this_00,(int)this + 0x24,4);
+  FUN_0054cbc1(this_00,(int *)((int)this + 0x28),4);
+  FUN_0054cbc1(this_00,(int)this + 0x2c,4);
+  FUN_0054cbc1(this_00,(int)this + 0x38,4);
+  FUN_0054cbc1(this_00,(int)this + 0x3c,1);
+  FUN_0054cbc1(this_00,(int)this + 0x40,4);
+  FUN_0054cbc1(this_00,(int)this + 0x30,4);
+  FUN_0054cbc1(this_00,&local_4,4);
+  iVar1 = IDMap_Lookup((void *)(DAT_0057c670 + 4),*(int *)((int)this + 0x28),(int *)0x0);
+  uVar2 = IDMap_Lookup((void *)(iVar1 + 0xfac),(int)local_4,(int *)0x0);
+  *(undefined4 *)((int)this + 0x34) = uVar2;
+  FUN_0054cbc1(this_00,&param_1,4);
+  iVar1 = 0;
+  if (0 < (int)param_1) {
+    do {
+      pvVar3 = operator_new(0x20);
+      FUN_0054cbc1(this_00,pvVar3,0x20);
+      List_Add((void *)((int)this + 0x44),pvVar3);
+      iVar1 = iVar1 + 1;
+==========================================================================================
+0x513e50 indeg=1 bytes=2580
+calls: 0x00513e50, 0x0054cc2b, 0x004d7e90
+refs: DAT_0057c670
+ provider-specific; not original source
+void __thiscall FUN_00513e50(void *this,void *param_1)
+{
+  void *this_00;
+  void *this_01;
+  undefined4 uVar1;
+  int iVar2;
+  void *local_4;
+  this_00 = param_1;
+  local_4 = this;
+  FUN_0054cc2b(param_1,(int)this + 4,0x1e);
+  FUN_0054cc2b(this_00,(int)this + 0x24,4);
+  FUN_0054cc2b(this_00,(int *)((int)this + 0x28),4);
+  FUN_0054cc2b(this_00,(int)this + 0x2c,4);
+  FUN_0054cc2b(this_00,(int)this + 0x38,4);
+  FUN_0054cc2b(this_00,(int)this + 0x3c,1);
+  FUN_0054cc2b(this_00,(int)this + 0x40,4);
+  FUN_0054cc2b(this_00,(int)this + 0x30,4);
+  this_01 = (void *)IDMap_Lookup((void *)(DAT_0057c670 + 4),*(int *)((int)this + 0x28),(int *)0x0);
+  local_4 = (void *)FUN_004d7e90(this_01,*(int *)((int)this + 0x34));
+  FUN_0054cc2b(this_00,&local_4,4);
+  param_1 = *(void **)((int)this + 0x58);
+  FUN_0054cc2b(this_00,&param_1,4);
+  iVar2 = 0;
+  if (0 < (int)param_1) {
+    do {
+      uVar1 = IDMap_Lookup((void *)((int)this + 0x44),iVar2,(int *)0x0);
+      FUN_0054cc2b(this_00,uVar1,0x20);
+      iVar2 = iVar2 + 1;
+    } while (iVar2 < (int)param_1);
+==========================================================================================
+0x514330 indeg=1 bytes=3023
+calls: 0x00514330, 0x00514320, 0x004da630, 0x00488be0, 0x004e2410, 0x00514100, 0x005301c0
+refs: DAT_0057c670
+ provider-specific; not original source
+void __fastcall FUN_00514330(void *param_1)
+{
+  int iVar1;
+  void *this;
+  undefined4 *puVar2;
+  int iVar3;
+  undefined4 *puVar4;
+  undefined4 *puVar5;
+  float10 fVar6;
+  int local_c;
+  iVar1 = FUN_00514320((int)param_1);
+  this = (void *)IDMap_Lookup((void *)((int)DAT_0057c670 + 4),*(int *)((int)param_1 + 0x28),
+                              (int *)0x0);
+  puVar2 = (undefined4 *)FUN_004da630(this,*(int *)((int)param_1 + 0x30));
+  if (puVar2 != (undefined4 *)0x0) {
+    iVar3 = FUN_00488be0(DAT_0057c670,*(int *)((int)param_1 + 0x24));
+    local_c = iVar1 - *(int *)((int)param_1 + 0x58);
+    iVar1 = iVar1 / (*(int *)((int)param_1 + 0x2c) + 1);
+    if (iVar1 < local_c) {
+      local_c = iVar1;
+    }
+    puVar2[*(int *)((int)param_1 + 0x24) + 5] = puVar2[*(int *)((int)param_1 + 0x24) + 5] + local_c;
+    if (0 < local_c) {
+      do {
+        puVar4 = operator_new(0x20);
+        puVar5 = puVar4;
+        for (iVar1 = 8; iVar1 != 0; iVar1 = iVar1 + -1) {
+          *puVar5 = 0;
+          puVar5 = puVar5 + 1;
+==========================================================================================
+0x520e80 indeg=1 bytes=2366
+calls: 0x00520e80, 0x0054fb27
+ provider-specific; not original source
+void __fastcall FUN_00520e80(int *param_1)
+{
+  int iVar1;
+  uint unaff_ESI;
+  int *piVar2;
+  int *unaff_retaddr;
+  char local_458 [4];
+  int local_454 [4];
+  int local_444;
+  int local_440;
+  int local_43c;
+  undefined4 local_434;
+  undefined4 local_32c;
+  int local_14;
+  piVar2 = local_454;
+  for (iVar1 = 0x115; iVar1 != 0; iVar1 = iVar1 + -1) {
+    *piVar2 = 0;
+    piVar2 = piVar2 + 1;
+  }
+  local_444 = param_1[0xf];
+  local_458[0] = 'T';
+  local_458[1] = '\x04';
+  local_458[2] = '\0';
+  local_458[3] = '\0';
+  local_454[0] = 0x454;
+  local_454[3] = param_1[0xe];
+  local_440 = param_1[0xc] - param_1[10];
+  local_43c = param_1[0xd] - param_1[0xb];
+  local_434 = 0xd;
+==========================================================================================
+0x522e60 indeg=0 bytes=1531
+calls: 0x00522e60, 0x0054dea3
+ provider-specific; not original source
+void FUN_00522e60(void)
+{
+  FUN_0054dea3(0x522e70);
+  return;
+}
+==========================================================================================
+0x5273c0 indeg=3 bytes=1754
+calls: 0x005273c0, 0x0054f775
+ provider-specific; not original source
+void FUN_005273c0(char *param_1,uint *param_2)
+{
+  char *pcVar1;
+  pcVar1 = _strrchr(param_1,0x5c);
+  if (pcVar1 != (char *)0x0) {
+    param_1 = pcVar1 + 1;
+  }
+  _strncpy((char *)param_2,param_1,0x3f);
+  *(undefined1 *)((int)param_2 + 0x3f) = 0;
+  FUN_0054f775(param_2);
+  return;
+}
+==========================================================================================
+0x528570 indeg=1 bytes=3680
+calls: 0x00528570, 0x0053d040, 0x00539ea0
+refs: LAB_0055a81e
+ provider-specific; not original source
+undefined4 * __thiscall
+FUN_00528570(void *this,void *param_1,int param_2,undefined4 param_3,int *param_4)
+{
+  void *pvVar1;
+  void *this_00;
+  undefined4 *puVar2;
+  int iVar3;
+  undefined4 *local_11c;
+  CHAR local_110 [260];
+  void *local_c;
+  undefined1 *puStack_8;
+  undefined4 local_4;
+  puStack_8 = &LAB_0055a81e;
+  local_c = ExceptionList;
+  ExceptionList = &local_c;
+  *(undefined ***)this = &PTR_FUN_0055c788;
+  *(int *)((int)this + 100) = param_2;
+  *(undefined4 *)((int)this + 0x50) = 0;
+  *(undefined4 *)((int)this + 0x54) = 0;
+  *(undefined4 *)((int)this + 0x68) = 0;
+  pvVar1 = *(void **)(param_2 + 0x10);
+  local_11c = (undefined4 *)((int)this + 4);
+  puVar2 = local_11c;
+  for (iVar3 = 9; iVar3 != 0; iVar3 = iVar3 + -1) {
+    *puVar2 = 0;
+    puVar2 = puVar2 + 1;
+  }
+  iVar3 = 0;
+  while( true ) {
+==========================================================================================
+0x52a440 indeg=1 bytes=9485
+calls: 0x0052a440, 0x00539ea0, 0x0053cea0, 0x00539280, 0x0053d6c0, 0x0053d570, 0x0053d090, 0x00539660, 0x0053d480, 0x005397e0, 0x0053d430, 0x0054dfe0, 0x0053d160, 0x0054dee4
+refs: DAT_00563114, DAT_0057c5c8, LAB_0052a762, LAB_0052a903, LAB_0052aa83, LAB_0052aaa0, LAB_0052aad6
+ provider-specific; not original source
+void __fastcall FUN_0052a440(int param_1)
+{
+  void *pvVar1;
+  double dVar2;
+  int iVar3;
+  undefined4 *this;
+  FILE *pFVar4;
+  uint uVar5;
+  uint uVar6;
+  int iVar7;
+  uint *puVar8;
+  int iVar9;
+  uint uVar10;
+  longlong lVar11;
+  uint **ppuVar12;
+  uint **ppuVar13;
+  uint uStack_b8;
+  uint *local_b4;
+  uint *local_b0;
+  uint local_ac;
+  uint local_a8;
+  int local_a4;
+  int local_a0;
+  char local_9c [16];
+  int local_8c;
+  int local_88;
+  int iStack_84;
+  double dStack_80;
+  double dStack_78;
+==========================================================================================
+0x52e4b0 indeg=1 bytes=2264
+calls: 0x0052e4b0, 0x00539ea0
+ provider-specific; not original source
+undefined4 * __thiscall FUN_0052e4b0(void *this,void *param_1,undefined4 param_2)
+{
+  undefined4 *puVar1;
+  *(undefined4 *)((int)this + 0xc) = 10;
+  *(undefined4 *)((int)this + 0x10) = 10;
+  *(undefined ***)this = &PTR_FUN_0055c804;
+  *(undefined4 *)((int)this + 0x38) = param_2;
+  *(undefined4 *)((int)this + 0x18) = 0;
+  *(undefined4 *)((int)this + 4) = 0x50;
+  *(undefined4 *)((int)this + 8) = 200;
+  *(undefined4 *)((int)this + 0x14) = 0;
+  *(undefined4 *)((int)this + 0x20) = 0;
+  *(undefined4 *)((int)this + 0x24) = 0;
+  *(undefined4 *)((int)this + 0x28) = 0xe0ffff;
+  *(undefined4 *)((int)this + 0x2c) = 0;
+  *(undefined4 *)((int)this + 0x30) = 0;
+  *(undefined4 *)((int)this + 0x3c) = 0;
+  puVar1 = FUN_00539ea0(param_1);
+  *(undefined4 **)((int)this + 0x1c) = puVar1;
+  return this;
+}
+==========================================================================================
+0x52ee10 indeg=4 bytes=3354
+calls: 0x0052ee10, 0x00539ea0
+ provider-specific; not original source
+void __thiscall FUN_0052ee10(void *this,void *param_1,undefined4 param_2,undefined4 param_3)
+{
+  undefined4 *puVar1;
+  *(undefined4 *)((int)this + 4) = 0;
+  *(undefined4 *)((int)this + 0x2c0) = 0;
+  *(undefined4 *)((int)this + 0x29c) = 0;
+  *(undefined4 *)((int)this + 0xd8) = 0;
+  *(undefined4 *)((int)this + 700) = 0;
+  *(undefined4 *)((int)this + 0x13c) = 0;
+  *(undefined4 *)((int)this + 0xf8) = 0;
+  *(undefined4 *)((int)this + 0x16c) = 0;
+  *(undefined4 *)((int)this + 0x48) = param_3;
+  *(undefined4 *)((int)this + 0xe4) = 1;
+  *(undefined4 *)((int)this + 0x4c) = 0;
+  *(undefined4 *)((int)this + 0x15c) = 0;
+  *(undefined4 *)((int)this + 0x10c) = 0;
+  *(undefined4 *)((int)this + 0x164) = 1;
+  *(undefined1 *)((int)this + 0x178) = 0;
+  *(undefined4 *)((int)this + 0x50) = 0;
+  *(undefined4 *)((int)this + 0x94) = 0;
+  *(undefined1 *)((int)this + 0x54) = 0;
+  *(undefined4 *)((int)this + 0x160) = 0;
+  *(undefined4 *)((int)this + 0xe0) = 1;
+  *(undefined4 *)((int)this + 0xec) = 0;
+  *(undefined4 *)((int)this + 0x170) = 0;
+  *(undefined4 *)((int)this + 0x134) = param_2;
+  *(undefined4 *)((int)this + 0x114) = 0;
+  *(undefined4 *)((int)this + 0xf0) = 0;
+  *(undefined4 *)((int)this + 0xf4) = 0;
+==========================================================================================
+0x5324c0 indeg=3 bytes=1815
+calls: 0x005324c0, 0x005230b0, 0x00522fe0, 0x00532510
+ provider-specific; not original source
+undefined4 __thiscall FUN_005324c0(void *this,int param_1)
+{
+  LPVOID pvVar1;
+  undefined4 uVar2;
+  pvVar1 = (LPVOID)FUN_005230b0((void *)((int)this + 0x148),param_1);
+  if (pvVar1 == (LPVOID)0x0) {
+    return 0;
+  }
+  uVar2 = FUN_00522fe0((void *)((int)this + 0x148),param_1);
+  FUN_00532510((int)pvVar1);
+  Mem_Free(pvVar1);
+  return uVar2;
+}
+==========================================================================================
+0x532520 indeg=15 bytes=1920
+calls: 0x00532520, 0x005230b0, 0x00532510, 0x00522ef0
+ provider-specific; not original source
+undefined4 __fastcall FUN_00532520(int param_1)
+{
+  int iVar1;
+  LPVOID pvVar2;
+  int iVar3;
+  iVar1 = *(int *)(param_1 + 0x158);
+  iVar3 = 0;
+  if (0 < iVar1) {
+    do {
+      pvVar2 = (LPVOID)FUN_005230b0((void *)(param_1 + 0x148),iVar3);
+      if (pvVar2 != (LPVOID)0x0) {
+        FUN_00532510((int)pvVar2);
+        Mem_Free(pvVar2);
+      }
+      iVar3 = iVar3 + 1;
+    } while (iVar3 < iVar1);
+  }
+  FUN_00522ef0(param_1 + 0x148);
+  return 0;
+}
+==========================================================================================
+0x532bc0 indeg=0 bytes=1531
+calls: 0x00532bc0, 0x0054dea3
+ provider-specific; not original source
+void FUN_00532bc0(void)
+{
+  FUN_0054dea3(0x532bd0);
+  return;
+}
+==========================================================================================
+0x532c00 indeg=0 bytes=1531
+calls: 0x00532c00, 0x0054dea3
+ provider-specific; not original source
+void FUN_00532c00(void)
+{
+  FUN_0054dea3(0x532c10);
+  return;
+}
+==========================================================================================
+0x535180 indeg=1 bytes=5436
+calls: 0x00535180, 0x0054dfe0, 0x0048e0a0, 0x00535500, 0x0054e978, 0x0054dee4
+refs: DAT_00563184
+ provider-specific; not original source
+char * __thiscall
+FUN_00535180(void *this,undefined4 param_1,void *param_2,LPCSTR param_3,undefined4 *param_4)
+{
+  uint *puVar1;
+  short sVar2;
+  FILE *pFVar3;
+  byte *pbVar4;
+  short *psVar5;
+  char *pcVar6;
+  int *piVar7;
+  short *psVar8;
+  int iVar9;
+  uint local_4;
+  local_4 = 0;
+  if (param_4 != (undefined4 *)0x0) {
+    *param_4 = 0;
+  }
+  *(undefined4 *)((int)this + 0x460) = 0;
+  if (param_2 == (void *)0x0) {
+    pFVar3 = (FILE *)FUN_0054dfe0(param_3,&DAT_00563184);
+    if (pFVar3 == (FILE *)0x0) {
+      if (param_4 == (undefined4 *)0x0) {
+        FUN_0048e0a0();
+        return this;
+      }
+      *param_4 = 0x321;
+      return this;
+    }
+    FUN_00535500(this,0xffffff);
+==========================================================================================
+0x535e20 indeg=2 bytes=1634
+calls: 0x00535e20, 0x0048e0a0, 0x0054fb27
+ provider-specific; not original source
+void __thiscall FUN_00535e20(void *this,int *param_1)
+{
+  if (*(int *)this == 0) {
+    FUN_0048e0a0();
+  }
+  FUN_0054fb27(*(char **)this,1,0x300,param_1);
+  return;
+}
+==========================================================================================
+0x536160 indeg=1 bytes=4574
+calls: 0x00536160, 0x0054dfe0, 0x0054e978, 0x0054dee4, 0x00540000
+refs: DAT_00563184, LAB_00536325
+ provider-specific; not original source
+undefined4 __thiscall
+FUN_00536160(void *this,undefined4 param_1,FILE *param_2,void *param_3,undefined *param_4)
+{
+  char **ppcVar1;
+  char *pcVar2;
+  int iVar3;
+  uint uVar4;
+  uint uVar5;
+  char *pcVar6;
+  FILE *pFVar7;
+  char *pcVar8;
+  int iVar9;
+  short local_38 [9];
+  undefined4 local_26;
+  undefined4 local_22;
+  short local_1c;
+  int local_1a;
+  uVar4 = 0xffffffff;
+  pcVar2 = (char *)((int)this + 0x1c);
+  do {
+    pFVar7 = param_2;
+    if (uVar4 == 0) break;
+    uVar4 = uVar4 - 1;
+    pFVar7 = (FILE *)((int)&param_2->_ptr + 1);
+    ppcVar1 = &param_2->_ptr;
+    param_2 = pFVar7;
+  } while (*(char *)ppcVar1 != '\0');
+  uVar4 = ~uVar4;
+  pcVar6 = (char *)((int)pFVar7 - uVar4);
+==========================================================================================
+0x53a1c0 indeg=0 bytes=1531
+calls: 0x0053a1c0, 0x0054dea3
+ provider-specific; not original source
+void FUN_0053a1c0(void)
+{
+  FUN_0054dea3(0x53a1d0);
+  return;
+}
+==========================================================================================
+0x53c6f0 indeg=0 bytes=1531
+calls: 0x0053c6f0, 0x0054dea3
+ provider-specific; not original source
+void FUN_0053c6f0(void)
+{
+  FUN_0054dea3(0x53c700);
+  return;
+}
+==========================================================================================
+0x53f0a0 indeg=5 bytes=4972
+calls: 0x0053f0a0, 0x0053f1c0, 0x0054f084
+refs: DAT_00574c10
+ provider-specific; not original source
+void __cdecl FUN_0053f0a0(undefined4 *param_1,char *param_2,int param_3,undefined4 param_4)
+{
+  char cVar1;
+  byte bVar2;
+  char *pcVar3;
+  uint uVar4;
+  uint uVar5;
+  int iVar6;
+  byte *pbVar7;
+  char *pcVar8;
+  byte *pbVar9;
+  char *pcVar10;
+  byte local_800 [1024];
+  char local_400 [1024];
+  pcVar3 = FUN_0053f1c0(param_3);
+  uVar4 = 0xffffffff;
+  do {
+    pcVar8 = pcVar3;
+    if (uVar4 == 0) break;
+    uVar4 = uVar4 - 1;
+    pcVar8 = pcVar3 + 1;
+    cVar1 = *pcVar3;
+    pcVar3 = pcVar8;
+  } while (cVar1 != '\0');
+  uVar4 = ~uVar4;
+  pbVar7 = (byte *)(pcVar8 + -uVar4);
+  pbVar9 = local_800;
+  for (uVar5 = uVar4 >> 2; uVar5 != 0; uVar5 = uVar5 - 1) {
+    *(undefined4 *)pbVar9 = *(undefined4 *)pbVar7;
+==========================================================================================
+0x53fcc0 indeg=1 bytes=2313
+calls: 0x0053fcc0, 0x0054dee4
+refs: LAB_0055ae76
+ provider-specific; not original source
+void __fastcall FUN_0053fcc0(undefined4 *param_1)
+{
+  int iVar1;
+  void *local_c;
+  undefined1 *puStack_8;
+  undefined4 local_4;
+  local_c = ExceptionList;
+  puStack_8 = &LAB_0055ae76;
+  ExceptionList = &local_c;
+  *param_1 = &PTR_LAB_0055c864;
+  iVar1 = param_1[0x8e];
+  local_4 = 1;
+  while (0 < iVar1) {
+    iVar1 = iVar1 + -1;
+    param_1[0x8e] = iVar1;
+    if (param_1[iVar1 * 7 + 8] != 0) {
+      FUN_0054dee4((FILE *)param_1[iVar1 * 7 + 2]);
+    }
+    Mem_Free((LPVOID)param_1[param_1[0x8e] * 7 + 3]);
+    iVar1 = param_1[0x8e];
+  }
+  iVar1 = param_1[0x18a];
+  while (iVar1 != 0) {
+    iVar1 = *(int *)((int)param_1[0x18a] + 0x50);
+    Mem_Free((LPVOID)param_1[0x18a]);
+    param_1[0x18a] = iVar1;
+  }
+  DeleteCriticalSection((LPCRITICAL_SECTION)(param_1 + 0x8f));
+  *param_1 = &PTR_LAB_0055c840;
+==========================================================================================
+0x53fda0 indeg=0 bytes=4411
+calls: 0x0053fda0, 0x0054dfe0, 0x0054e978, 0x00401f30, 0x0053ff90, 0x0054dee4, 0x0048e0a0
+refs: DAT_00563184, LAB_0055ae88
+ provider-specific; not original source
+uint __thiscall FUN_0053fda0(void *this,LPCSTR param_1)
+{
+  LPCRITICAL_SECTION lpCriticalSection;
+  undefined4 *puVar1;
+  char cVar2;
+  uint extraout_EAX;
+  int *piVar3;
+  uint extraout_EAX_00;
+  int iVar4;
+  uint extraout_EAX_01;
+  uint extraout_EAX_02;
+  char *pcVar5;
+  undefined4 extraout_EAX_03;
+  uint uVar6;
+  int iVar7;
+  char local_78 [96];
+  uint local_18;
+  int local_14;
+  int local_10;
+  void *local_c;
+  undefined1 *puStack_8;
+  undefined4 local_4;
+  local_4 = 0xffffffff;
+  puStack_8 = &LAB_0055ae88;
+  local_c = ExceptionList;
+  lpCriticalSection = (LPCRITICAL_SECTION)((int)this + 0x23c);
+  ExceptionList = &local_c;
+  EnterCriticalSection(lpCriticalSection);
+  local_4 = 0;
+==========================================================================================
+0x540260 indeg=4 bytes=1792
+calls: 0x00540260, 0x0054dee4
+ provider-specific; not original source
+void __thiscall FUN_00540260(void *this,int param_1)
+{
+  EnterCriticalSection((LPCRITICAL_SECTION)((int)this + 0x23c));
+  if (*(int *)(param_1 + 0x1c) == 1) {
+    FUN_0054dee4(*(FILE **)(param_1 + 0x18));
+  }
+  *(undefined4 *)(param_1 + 0x14) = 0;
+  LeaveCriticalSection((LPCRITICAL_SECTION)((int)this + 0x23c));
+  return;
+}
+==========================================================================================
+0x54a660 indeg=33 bytes=3642
+calls: 0x0054a660, 0x0054f084
+refs: DAT_0056832c
+ provider-specific; not original source
+void __cdecl FUN_0054a660(int param_1,undefined4 param_2,byte *param_3,undefined4 param_4)
+{
+  char cVar1;
+  HWND pHVar2;
+  uint uVar3;
+  int iVar4;
+  uint uVar5;
+  char *pcVar6;
+  char *pcVar7;
+  char *pcVar8;
+  undefined4 *puVar9;
+  UINT UVar10;
+  WPARAM WVar11;
+  undefined4 local_844;
+  undefined4 local_840;
+  undefined4 local_83c [5];
+  undefined4 local_828;
+  char local_800 [2048];
+  if (*(int *)(param_1 + 4) != 0) {
+    FUN_0054f084(local_800,param_3,&param_4);
+    uVar3 = 0xffffffff;
+    pcVar6 = &DAT_0056832c;
+    do {
+      pcVar8 = pcVar6;
+      if (uVar3 == 0) break;
+      uVar3 = uVar3 - 1;
+      pcVar8 = pcVar6 + 1;
+      cVar1 = *pcVar6;
+      pcVar6 = pcVar8;
+==========================================================================================
+0x54a980 indeg=7 bytes=1875
+calls: 0x0054a980, 0x0054f084, 0x00548070, 0x00548e00, 0x0054aaa0
+refs: DAT_0057ba0c
+ provider-specific; not original source
+void __cdecl
+FUN_0054a980(void *param_1,int param_2,int param_3,int param_4,int param_5,int param_6,char *param_7
+            ,byte *param_8,undefined4 param_9)
+{
+  char local_400 [1024];
+  FUN_0054f084(local_400,param_8,&param_9);
+  FUN_00548070(DAT_0057ba0c,param_3);
+  FUN_00548e00(DAT_0057ba0c,param_2);
+  FUN_0054aaa0(param_1,param_2,param_3,param_4,param_5,param_6,0,param_7,local_400);
+  return;
+}
+==========================================================================================
+0x54aa10 indeg=2 bytes=1875
+calls: 0x0054aa10, 0x0054f084, 0x00548070, 0x00548e00, 0x0054aaa0
+refs: DAT_0057ba0c
+ provider-specific; not original source
+void __cdecl
+FUN_0054aa10(void *param_1,int param_2,int param_3,int param_4,int param_5,int param_6,char *param_7
+            ,byte *param_8,undefined4 param_9)
+{
+  char local_400 [1024];
+  FUN_0054f084(local_400,param_8,&param_9);
+  FUN_00548070(DAT_0057ba0c,param_3);
+  FUN_00548e00(DAT_0057ba0c,param_2);
+  FUN_0054aaa0(param_1,param_2,param_3,param_4,param_5,param_6,1,param_7,local_400);
+  return;
+}
+==========================================================================================
+0x54b1b0 indeg=1 bytes=2061
+calls: 0x0054b1b0, 0x0054cc2b
+ provider-specific; not original source
+void __thiscall FUN_0054b1b0(void *this,void *param_1)
+{
+  void *this_00;
+  undefined4 *puVar1;
+  int iVar2;
+  int local_8;
+  int local_4;
+  this_00 = param_1;
+  local_8 = *(int *)((int)this + 0x18);
+  FUN_0054cc2b(param_1,&local_8,4);
+  iVar2 = 0;
+  if (0 < local_8) {
+    do {
+      puVar1 = (undefined4 *)IDMap_Lookup((void *)((int)this + 4),iVar2,&local_4);
+      param_1 = (void *)*puVar1;
+      FUN_0054cc2b(this_00,&local_4,4);
+      FUN_0054cc2b(this_00,&param_1,4);
+      FUN_0054cc2b(this_00,puVar1,param_1);
+      iVar2 = iVar2 + 1;
+    } while (iVar2 < local_8);
+  }
+  return;
+}
+==========================================================================================
+0x54b230 indeg=1 bytes=2095
+calls: 0x0054b230, 0x0054ad80, 0x0054cbc1, 0x004015b0
+ provider-specific; not original source
+void __thiscall FUN_0054b230(void *this,void *param_1)
+{
+  void *pvVar1;
+  int iVar2;
+  uint local_c;
+  int local_8;
+  int local_4;
+  FUN_0054ad80(this);
+  FUN_0054cbc1(param_1,&local_8,4);
+  iVar2 = 0;
+  if (0 < local_8) {
+    do {
+      FUN_0054cbc1(param_1,&local_4,4);
+      FUN_0054cbc1(param_1,&local_c,4);
+      pvVar1 = operator_new(local_c);
+      *(undefined4 *)((int)pvVar1 + 8) = 0xffffffff;
+      *(void **)((int)pvVar1 + 0x18) = this;
+      FUN_0054cbc1(param_1,pvVar1,local_c);
+      FUN_004015b0((void *)((int)this + 4),pvVar1,local_4);
+      iVar2 = iVar2 + 1;
+    } while (iVar2 < local_8);
+  }
+  return;
+}
+==========================================================================================
+0x54cfd6 indeg=3 bytes=3303
+calls: 0x0054cfd6, 0x0054ff6b, 0x0054e230, 0x0054cf82, 0x00550399
+refs: DAT_00586c20
+ provider-specific; not original source
+undefined4 __fastcall FUN_0054cfd6(int param_1)
+{
+  byte bVar1;
+  uint uVar2;
+  DWORD DVar3;
+  int iVar4;
+  char *pcVar5;
+  DWORD DVar6;
+  if (*(uint *)(param_1 + 0x4c) == 0xffffffff) {
+    return 0xffffffff;
+  }
+  if (*(int *)(param_1 + 8) == 0) {
+    pcVar5 = *(char **)(param_1 + 0x18);
+    if (*(char **)(param_1 + 0x1c) < pcVar5) {
+      DVar6 = 0;
+    }
+    else {
+      DVar6 = (int)*(char **)(param_1 + 0x1c) - (int)pcVar5;
+    }
+    if ((DVar6 != 0) &&
+       (DVar3 = FUN_0054ff6b(*(uint *)(param_1 + 0x4c),pcVar5,DVar6), DVar3 != DVar6)) {
+      if (0 < (int)DVar3) {
+        if (*(int *)(param_1 + 0x20) != 0) {
+          *(int *)(param_1 + 0x1c) = *(int *)(param_1 + 0x1c) - DVar3;
+        }
+        FUN_0054e230(*(undefined4 **)(param_1 + 0x18),
+                     (undefined4 *)(DVar3 + (int)*(undefined4 **)(param_1 + 0x18)),DVar6 - DVar3);
+      }
+      return 0xffffffff;
+==========================================================================================
+0x54e0cc indeg=2 bytes=2529
+calls: 0x0054e0cc, 0x00552b23
+refs: DAT_00576cf0
+ provider-specific; not original source
+int __thiscall FUN_0054e0cc(void *this,byte *param_1)
+{
+  uint uVar1;
+  uint uVar2;
+  int iVar3;
+  uint uVar4;
+  byte *pbVar5;
+  undefined *puVar6;
+  while( true ) {
+    if (DAT_00576cf0 < 2) {
+      uVar1 = (byte)PTR_DAT_00576ae4[(uint)*param_1 * 2] & 8;
+      this = PTR_DAT_00576ae4;
+    }
+    else {
+      puVar6 = (undefined *)0x8;
+      uVar1 = FUN_00552b23(this,(uint)*param_1,8);
+      this = puVar6;
+    }
+    if (uVar1 == 0) break;
+    param_1 = param_1 + 1;
+  }
+  uVar1 = (uint)*param_1;
+  pbVar5 = param_1 + 1;
+  if ((uVar1 == 0x2d) || (uVar4 = uVar1, uVar1 == 0x2b)) {
+    uVar4 = (uint)*pbVar5;
+    pbVar5 = param_1 + 2;
+  }
+  iVar3 = 0;
+  while( true ) {
+==========================================================================================
+0x54ec7f indeg=2 bytes=4161
+calls: 0x0054ec7f, 0x00550399, 0x00553606
+refs: DAT_00586c20, LAB_0054ed0d
+ provider-specific; not original source
+int __cdecl FUN_0054ec7f(char *param_1)
+{
+  uint uVar1;
+  uint uVar2;
+  byte bVar3;
+  DWORD *pDVar4;
+  char *pcVar5;
+  DWORD DVar6;
+  char *pcVar7;
+  char *pcVar8;
+  char *pcVar9;
+  int iVar10;
+  int local_c;
+  DWORD local_8;
+  pcVar8 = param_1;
+  uVar1 = *(uint *)(param_1 + 0x10);
+  if (*(int *)(param_1 + 4) < 0) {
+    param_1[4] = '\0';
+    param_1[5] = '\0';
+    param_1[6] = '\0';
+    param_1[7] = '\0';
+  }
+  local_8 = FUN_00550399(uVar1,0,1);
+  if ((int)local_8 < 0) {
+LAB_0054ed0d:
+    local_c = -1;
+  }
+  else {
+    uVar2 = *(uint *)(param_1 + 0xc);
+==========================================================================================
+0x54ee99 indeg=6 bytes=3192
+calls: 0x0054ee99, 0x0055395d, 0x005539be, 0x00553710, 0x00553620, 0x00551005
+refs: DAT_005857cc, DAT_00585be4, DAT_00585be8
+ provider-specific; not original source
+/* WARNING: Variable defined which should be unmapped: param_1 */
+uint * __cdecl FUN_0054ee99(uint *param_1)
+{
+  char cVar1;
+  size_t _Size;
+  int iVar2;
+  uint *puVar3;
+  bool bVar4;
+  LPWSTR local_c;
+  local_c = (LPWSTR)0x0;
+  if (DAT_005857cc == 0) {
+    cVar1 = (char)*param_1;
+    puVar3 = param_1;
+    while (cVar1 != '\0') {
+      cVar1 = (char)*puVar3;
+      if (('@' < cVar1) && (cVar1 < '[')) {
+        *(char *)puVar3 = cVar1 + ' ';
+      }
+      puVar3 = (uint *)((int)puVar3 + 1);
+      cVar1 = *(char *)puVar3;
+    }
+  }
+  else {
+    InterlockedIncrement((LONG *)&DAT_00585be8);
+    bVar4 = DAT_00585be4 == 0;
+    if (!bVar4) {
+      InterlockedDecrement((LONG *)&DAT_00585be8);
+      FUN_0055395d(0x13);
+    }
+==========================================================================================
+0x54f0d5 indeg=3 bytes=1592
+calls: 0x0054f0d5, 0x00552398
+ provider-specific; not original source
+void __cdecl FUN_0054f0d5(DWORD param_1)
+{
+  DWORD *pDVar1;
+  pDVar1 = FUN_00552398();
+  pDVar1[5] = param_1;
+  return;
+}
+==========================================================================================
+0x54f3a4 indeg=2 bytes=1526
+calls: 0x0054f3a4, 0x0055395d
+ provider-specific; not original source
+void FUN_0054f3a4(void)
+{
+  FUN_0055395d(0xd);
+  return;
+}
+==========================================================================================
+0x54f3d0 indeg=5 bytes=2563
+calls: 0x0054f3d0, 0x00553620, 0x00553606
+refs: LAB_0054f40e
+ provider-specific; not original source
+HANDLE __cdecl FUN_0054f3d0(LPCSTR param_1,uint *param_2)
+{
+  HANDLE pvVar1;
+  DWORD DVar2;
+  DWORD *pDVar3;
+  uint uVar4;
+  _WIN32_FIND_DATAA local_144;
+  pvVar1 = FindFirstFileA(param_1,&local_144);
+  if (pvVar1 != (HANDLE)0xffffffff) {
+    *param_2 = -(uint)(local_144.dwFileAttributes != 0x80) & local_144.dwFileAttributes;
+    uVar4 = ___timet_from_ft(&local_144.ftCreationTime);
+    param_2[1] = uVar4;
+    uVar4 = ___timet_from_ft(&local_144.ftLastAccessTime);
+    param_2[2] = uVar4;
+    uVar4 = ___timet_from_ft(&local_144.ftLastWriteTime);
+    param_2[3] = uVar4;
+    param_2[4] = local_144.nFileSizeLow;
+    FUN_00553620(param_2 + 5,(uint *)local_144.cFileName);
+    return pvVar1;
+  }
+  DVar2 = GetLastError();
+  if (DVar2 < 2) {
+LAB_0054f40e:
+    pDVar3 = FUN_00553606();
+    *pDVar3 = 0x16;
+  }
+  else {
+    if (3 < DVar2) {
+      if (DVar2 == 8) {
+==========================================================================================
+0x54f49d indeg=4 bytes=2523
+calls: 0x0054f49d, 0x00553620, 0x00553606
+refs: LAB_0054f4d7
+ provider-specific; not original source
+undefined4 __cdecl FUN_0054f49d(HANDLE param_1,uint *param_2)
+{
+  BOOL BVar1;
+  DWORD DVar2;
+  DWORD *pDVar3;
+  uint uVar4;
+  _WIN32_FIND_DATAA local_144;
+  BVar1 = FindNextFileA(param_1,&local_144);
+  if (BVar1 != 0) {
+    *param_2 = -(uint)(local_144.dwFileAttributes != 0x80) & local_144.dwFileAttributes;
+    uVar4 = ___timet_from_ft(&local_144.ftCreationTime);
+    param_2[1] = uVar4;
+    uVar4 = ___timet_from_ft(&local_144.ftLastAccessTime);
+    param_2[2] = uVar4;
+    uVar4 = ___timet_from_ft(&local_144.ftLastWriteTime);
+    param_2[3] = uVar4;
+    param_2[4] = local_144.nFileSizeLow;
+    FUN_00553620(param_2 + 5,(uint *)local_144.cFileName);
+    return 0;
+  }
+  DVar2 = GetLastError();
+  if (DVar2 < 2) {
+LAB_0054f4d7:
+    pDVar3 = FUN_00553606();
+    *pDVar3 = 0x16;
+  }
+  else {
+    if (3 < DVar2) {
+      if (DVar2 == 8) {
+==========================================================================================
+0x54f565 indeg=5 bytes=1691
+calls: 0x0054f565, 0x00553606
+ provider-specific; not original source
+undefined4 __cdecl FUN_0054f565(HANDLE param_1)
+{
+  BOOL BVar1;
+  DWORD *pDVar2;
+  BVar1 = FindClose(param_1);
+  if (BVar1 == 0) {
+    pDVar2 = FUN_00553606();
+    *pDVar2 = 0x16;
+    return 0xffffffff;
+  }
+  return 0;
+}
+==========================================================================================
+0x54f5e9 indeg=1 bytes=1744
+calls: 0x0054f5e9, 0x00553593
+ provider-specific; not original source
+undefined4 __cdecl FUN_0054f5e9(LPCSTR param_1)
+{
+  BOOL BVar1;
+  uint uVar2;
+  BVar1 = DeleteFileA(param_1);
+  if (BVar1 == 0) {
+    uVar2 = GetLastError();
+  }
+  else {
+    uVar2 = 0;
+  }
+  if (uVar2 == 0) {
+    return 0;
+  }
+  FUN_00553593(uVar2);
+  return 0xffffffff;
+}
+==========================================================================================
+0x54f918 indeg=3 bytes=2606
+calls: 0x0054f918, 0x00552b23, 0x00553710
+refs: DAT_00576cf0, DAT_005857cc
+ provider-specific; not original source
+uint __thiscall FUN_0054f918(void *this,uint param_1)
+{
+  uint uVar1;
+  uint uVar2;
+  int iVar3;
+  void *local_8;
+  uVar1 = param_1;
+  if (DAT_005857cc == 0) {
+    if ((int)param_1 < 0x41) {
+      return param_1;
+    }
+    if ((int)param_1 < 0x5b) {
+      return param_1 + 0x20;
+    }
+    return param_1;
+  }
+  iVar3 = 1;
+  local_8 = this;
+  if ((int)param_1 < 0x100) {
+    if (DAT_00576cf0 < 2) {
+      uVar2 = (byte)PTR_DAT_00576ae4[param_1 * 2] & 1;
+    }
+    else {
+      uVar2 = FUN_00552b23(this,param_1,1);
+    }
+    if (uVar2 == 0) {
+      return uVar1;
+    }
+  }
+==========================================================================================
+0x54fa52 indeg=1 bytes=2608
+calls: 0x0054fa52, 0x00552b23, 0x00553710
+refs: DAT_00576cf0, DAT_005857cc
+ provider-specific; not original source
+uint __thiscall FUN_0054fa52(void *this,uint param_1)
+{
+  uint uVar1;
+  uint uVar2;
+  int iVar3;
+  void *local_8;
+  uVar1 = param_1;
+  if (DAT_005857cc == 0) {
+    if ((int)param_1 < 0x61) {
+      return param_1;
+    }
+    if ((int)param_1 < 0x7b) {
+      return param_1 - 0x20;
+    }
+    return param_1;
+  }
+  local_8 = this;
+  if ((int)param_1 < 0x100) {
+    if (DAT_00576cf0 < 2) {
+      uVar2 = (byte)PTR_DAT_00576ae4[param_1 * 2] & 2;
+    }
+    else {
+      uVar2 = FUN_00552b23(this,param_1,2);
+    }
+    if (uVar2 == 0) {
+      return uVar1;
+    }
+  }
+  if ((PTR_DAT_00576ae4[((int)uVar1 >> 8 & 0xffU) * 2 + 1] & 0x80) == 0) {
+==========================================================================================
+0x54fb56 indeg=2 bytes=3502
+calls: 0x0054fb56, 0x005506b2, 0x0054ff6b, 0x0055104d, 0x00550cd0
+refs: LAB_0054fc0e, LAB_0054fc57
+ provider-specific; not original source
+uint __cdecl FUN_0054fb56(char *param_1,uint param_2,uint param_3,int *param_4)
+{
+  int *piVar1;
+  int iVar2;
+  int *piVar3;
+  uint uVar4;
+  int *piVar5;
+  int *piVar6;
+  int *piVar7;
+  piVar1 = param_4;
+  piVar6 = (int *)(param_2 * param_3);
+  if (piVar6 == (int *)0x0) {
+    param_3 = 0;
+  }
+  else {
+    piVar5 = piVar6;
+    if ((*(ushort *)(param_4 + 3) & 0x10c) == 0) {
+      param_4 = (int *)0x1000;
+    }
+    else {
+      param_4 = (int *)param_4[6];
+    }
+    do {
+      if (((piVar1[3] & 0x108U) == 0) || (piVar7 = (int *)piVar1[1], piVar7 == (int *)0x0)) {
+        if (param_4 <= piVar5) {
+          if (((piVar1[3] & 0x108U) != 0) && (iVar2 = FUN_005506b2(piVar1), iVar2 != 0)) {
+LAB_0054fc57:
+            return (uint)((int)piVar6 - (int)piVar5) / param_2;
+          }
+==========================================================================================
+0x54fc60 indeg=1 bytes=1873
+calls: 0x0054fc60, 0x00550877, 0x0055104d, 0x005508c9
+ provider-specific; not original source
+uint __cdecl FUN_0054fc60(uint param_1,int *param_2)
+{
+  int *piVar1;
+  uint uVar2;
+  FUN_00550877((uint)param_2);
+  piVar1 = param_2 + 1;
+  *piVar1 = *piVar1 + -1;
+  if (*piVar1 < 0) {
+    uVar2 = FUN_0055104d(param_1,param_2);
+  }
+  else {
+    uVar2 = param_1 & 0xff;
+    *(undefined1 *)*param_2 = (undefined1)param_1;
+    *param_2 = *param_2 + 1;
+  }
+  FUN_005508c9((uint)param_2);
+  return uVar2;
+}
+==========================================================================================
+0x54fe01 indeg=1 bytes=1969
+calls: 0x0054fe01, 0x00554203, 0x0055423c
+refs: DAT_0058565c
+ provider-specific; not original source
+void __cdecl FUN_0054fe01(DWORD param_1)
+{
+  if (DAT_0058565c == 1) {
+    FUN_00554203();
+  }
+  FUN_0055423c(param_1);
+                    /* WARNING: Subroutine does not return */
+  ExitProcess(0xff);
+}
+==========================================================================================
+0x54fe25 indeg=1 bytes=1694
+calls: 0x0054fe25, 0x0055395d, 0x00551005, 0x005539be
+ provider-specific; not original source
+void __fastcall FUN_0054fe25(undefined4 *param_1)
+{
+  *param_1 = &type_info::vftable;
+  FUN_0055395d(0x1b);
+  if ((LPVOID)param_1[1] != (LPVOID)0x0) {
+    FUN_00551005((LPVOID)param_1[1]);
+  }
+  FUN_005539be(0x1b);
+  return;
+}
+==========================================================================================
+0x54ffd0 indeg=2 bytes=3968
+calls: 0x0054ffd0, 0x005503fe, 0x00553606, 0x0055360f, 0x00553593
+refs: DAT_00586c20, LAB_0054ffe9, LAB_005500b8, LAB_0055012a
+ provider-specific; not original source
+int __cdecl FUN_0054ffd0(DWORD param_1,char *param_2,DWORD param_3)
+{
+  int *piVar1;
+  char *pcVar2;
+  char cVar3;
+  int iVar4;
+  char *pcVar5;
+  BOOL BVar6;
+  DWORD *pDVar7;
+  char local_418 [1028];
+  int local_14;
+  DWORD local_10;
+  DWORD local_c;
+  char *local_8;
+  local_c = 0;
+  local_14 = 0;
+  if (param_3 == 0) {
+LAB_0054ffe9:
+    iVar4 = 0;
+  }
+  else {
+    piVar1 = &DAT_00586c20 + ((int)param_1 >> 5);
+    iVar4 = (param_1 & 0x1f) * 0x24;
+    if ((*(byte *)(*piVar1 + 4 + iVar4) & 0x20) != 0) {
+      FUN_005503fe(param_1,0,2);
+    }
+    if ((*(byte *)((undefined4 *)(*piVar1 + iVar4) + 1) & 0x80) == 0) {
+      BVar6 = WriteFile(*(HANDLE *)(*piVar1 + iVar4),param_2,param_3,&local_10,(LPOVERLAPPED)0x0);
+      if (BVar6 == 0) {
+==========================================================================================
+0x5501c0 indeg=2 bytes=5215
+calls: 0x005501c0, 0x00553606, 0x0055360f, 0x00553593, 0x005503fe
+refs: DAT_00586c20, LAB_0055034b, LAB_00550365, LAB_00550368
+ provider-specific; not original source
+int __cdecl FUN_005501c0(uint param_1,char *param_2,char *param_3)
+{
+  int *piVar1;
+  byte *pbVar2;
+  char cVar3;
+  byte bVar4;
+  BOOL BVar5;
+  DWORD DVar6;
+  DWORD *pDVar7;
+  char *pcVar8;
+  int iVar9;
+  DWORD local_10;
+  char *local_c;
+  char local_5;
+  local_c = (char *)0x0;
+  if (param_3 != (char *)0x0) {
+    piVar1 = &DAT_00586c20 + ((int)param_1 >> 5);
+    iVar9 = (param_1 & 0x1f) * 0x24;
+    bVar4 = *(byte *)((&DAT_00586c20)[(int)param_1 >> 5] + iVar9 + 4);
+    if ((bVar4 & 2) == 0) {
+      pcVar8 = param_2;
+      if (((bVar4 & 0x48) != 0) &&
+         (cVar3 = *(char *)((&DAT_00586c20)[(int)param_1 >> 5] + iVar9 + 5), cVar3 != '\n')) {
+        param_3 = param_3 + -1;
+        *param_2 = cVar3;
+        pcVar8 = param_2 + 1;
+        local_c = (char *)0x1;
+        *(undefined1 *)(*piVar1 + 5 + iVar9) = 10;
+      }
+==========================================================================================
+0x55062d indeg=1 bytes=1679
+calls: 0x0055062d, 0x00552b23
+refs: DAT_00576cf0
+ provider-specific; not original source
+uint __thiscall FUN_0055062d(void *this,int param_1)
+{
+  uint uVar1;
+  if (DAT_00576cf0 < 2) {
+    return (byte)PTR_DAT_00576ae4[param_1 * 2] & 8;
+  }
+  uVar1 = FUN_00552b23(this,param_1,8);
+  return uVar1;
+}
+==========================================================================================
+0x5508a6 indeg=2 bytes=1668
+calls: 0x005508a6, 0x0055395d
+ provider-specific; not original source
+void __cdecl FUN_005508a6(int param_1,int param_2)
+{
+  if (param_1 < 0x14) {
+    FUN_0055395d(param_1 + 0x1c);
+    return;
+  }
+  EnterCriticalSection((LPCRITICAL_SECTION)(param_2 + 0x20));
+  return;
+}
+==========================================================================================
+0x550c6a indeg=1 bytes=2008
+calls: 0x00550c6a, 0x00553606
+refs: DAT_00586c20
+ provider-specific; not original source
+int __cdecl FUN_00550c6a(uint param_1,int param_2)
+{
+  byte bVar1;
+  DWORD *pDVar2;
+  byte bVar3;
+  bVar1 = *(byte *)((&DAT_00586c20)[(int)param_1 >> 5] + 4 + (param_1 & 0x1f) * 0x24);
+  if (param_2 == 0x8000) {
+    bVar3 = bVar1 & 0x7f;
+  }
+  else {
+    if (param_2 != 0x4000) {
+      pDVar2 = FUN_00553606();
+      *pDVar2 = 0x16;
+      return -1;
+    }
+    bVar3 = bVar1 | 0x80;
+  }
+  *(byte *)((&DAT_00586c20)[(int)param_1 >> 5] + 4 + (param_1 & 0x1f) * 0x24) = bVar3;
+  return (-(uint)((bVar1 & 0x80) != 0) & 0xffffc000) + 0x8000;
+}
+==========================================================================================
+0x5518db indeg=1 bytes=1708
+calls: 0x005518db, 0x005518a6
+ provider-specific; not original source
+void __cdecl FUN_005518db(uint param_1,int param_2,int *param_3,int *param_4)
+{
+  do {
+    if (param_2 < 1) {
+      return;
+    }
+    param_2 = param_2 + -1;
+    FUN_005518a6(param_1,param_3,param_4);
+  } while (*param_4 != -1);
+  return;
+}
+==========================================================================================
+0x55190c indeg=1 bytes=1821
+calls: 0x0055190c, 0x005518a6
+ provider-specific; not original source
+void __cdecl FUN_0055190c(char *param_1,int param_2,int *param_3,int *param_4)
+{
+  char cVar1;
+  if (0 < param_2) {
+    do {
+      param_2 = param_2 + -1;
+      cVar1 = *param_1;
+      param_1 = param_1 + 1;
+      FUN_005518a6((int)cVar1,param_3,param_4);
+      if (*param_4 == -1) {
+        return;
+      }
+    } while (0 < param_2);
+  }
+  return;
+}
+==========================================================================================
+0x551e0e indeg=2 bytes=3847
+calls: 0x00551e0e, 0x00551005, 0x0055395d, 0x005548e7, 0x005539be, 0x00550cd0, 0x00554912, 0x005550f2, 0x00554c3d, 0x00555d41
+refs: DAT_00577168, DAT_005858f8, DAT_00585be0, LAB_00551ead
+ provider-specific; not original source
+int * __cdecl FUN_00551e0e(int *param_1,uint *param_2)
+{
+  int *piVar1;
+  uint *puVar2;
+  int iVar3;
+  uint *puVar4;
+  if (param_1 == (int *)0x0) {
+    piVar1 = _malloc((size_t)param_2);
+  }
+  else {
+    if (param_2 == (uint *)0x0) {
+      FUN_00551005(param_1);
+    }
+    else {
+      do {
+        if (param_2 < (uint *)0xffffffe1) {
+          FUN_0055395d(9);
+          puVar2 = (uint *)FUN_005548e7((int)param_1);
+          if (puVar2 == (uint *)0x0) {
+            FUN_005539be(9);
+            if (param_2 == (uint *)0x0) {
+              param_2 = (uint *)0x1;
+            }
+            param_2 = (uint *)((int)param_2 + 0xfU & 0xfffffff0);
+            piVar1 = HeapReAlloc(DAT_00585be0,0,param_1,(SIZE_T)param_2);
+          }
+          else {
+            if (DAT_00577168 < param_2) {
+LAB_00551ead:
+==========================================================================================
+0x551f46 indeg=1 bytes=1792
+calls: 0x00551f46, 0x0055395d, 0x005548e7, 0x005539be
+refs: DAT_00585be0
+ provider-specific; not original source
+SIZE_T __cdecl FUN_00551f46(LPCVOID param_1)
+{
+  uint uVar1;
+  SIZE_T SVar2;
+  FUN_0055395d(9);
+  uVar1 = FUN_005548e7((int)param_1);
+  if (uVar1 == 0) {
+    FUN_005539be(9);
+    SVar2 = HeapSize(DAT_00585be0,0,param_1);
+  }
+  else {
+    SVar2 = *(int *)((int)param_1 + -4) - 9;
+    FUN_005539be(9);
+  }
+  return SVar2;
+}
+==========================================================================================
+0x551fc9 indeg=1 bytes=1856
+calls: 0x00551fc9, 0x0055395d, 0x00554c3d, 0x005539be
+refs: DAT_00577168, DAT_00585be0
+ provider-specific; not original source
+int * __cdecl FUN_00551fc9(uint *param_1)
+{
+  int *piVar1;
+  if (param_1 <= DAT_00577168) {
+    FUN_0055395d(9);
+    piVar1 = FUN_00554c3d(param_1);
+    FUN_005539be(9);
+    if (piVar1 != (int *)0x0) {
+      return piVar1;
+    }
+  }
+  if (param_1 == (uint *)0x0) {
+    param_1 = (uint *)0x1;
+  }
+  piVar1 = HeapAlloc(DAT_00585be0,0,(int)param_1 + 0xfU & 0xfffffff0);
+  return piVar1;
+}
+==========================================================================================
+0x5520cf indeg=1 bytes=1769
+calls: 0x005520cf, 0x005506b2
+ provider-specific; not original source
+void __cdecl FUN_005520cf(int param_1,int *param_2)
+{
+  if ((param_1 != 0) && ((*(byte *)((int)param_2 + 0xd) & 0x10) != 0)) {
+    FUN_005506b2(param_2);
+    *(byte *)((int)param_2 + 0xd) = *(byte *)((int)param_2 + 0xd) & 0xee;
+    param_2[6] = 0;
+    *param_2 = 0;
+    param_2[2] = 0;
+  }
+  return;
+}
+==========================================================================================
+0x5523ff indeg=1 bytes=2589
+calls: 0x005523ff, 0x00551005
+refs: DAT_00576ac4, DAT_00577040
+ provider-specific; not original source
+void __cdecl FUN_005523ff(LPVOID param_1)
+{
+  if (DAT_00576ac4 == 0xffffffff) {
+    return;
+  }
+  if ((param_1 != (LPVOID)0x0) || (param_1 = TlsGetValue(DAT_00576ac4), param_1 != (LPVOID)0x0)) {
+    if (*(LPVOID *)((int)param_1 + 0x24) != (LPVOID)0x0) {
+      FUN_00551005(*(LPVOID *)((int)param_1 + 0x24));
+    }
+    if (*(LPVOID *)((int)param_1 + 0x28) != (LPVOID)0x0) {
+      FUN_00551005(*(LPVOID *)((int)param_1 + 0x28));
+    }
+    if (*(LPVOID *)((int)param_1 + 0x30) != (LPVOID)0x0) {
+      FUN_00551005(*(LPVOID *)((int)param_1 + 0x30));
+    }
+    if (*(LPVOID *)((int)param_1 + 0x38) != (LPVOID)0x0) {
+      FUN_00551005(*(LPVOID *)((int)param_1 + 0x38));
+    }
+    if (*(LPVOID *)((int)param_1 + 0x40) != (LPVOID)0x0) {
+      FUN_00551005(*(LPVOID *)((int)param_1 + 0x40));
+    }
+    if (*(LPVOID *)((int)param_1 + 0x44) != (LPVOID)0x0) {
+      FUN_00551005(*(LPVOID *)((int)param_1 + 0x44));
+    }
+    if (*(undefined **)((int)param_1 + 0x50) != &DAT_00577040) {
+      FUN_00551005(*(undefined **)((int)param_1 + 0x50));
+    }
+    FUN_00551005(param_1);
+  }
+==========================================================================================
+0x552754 indeg=1 bytes=1619
+calls: 0x00552754, 0x0055395d, 0x00552775, 0x005539be
+ provider-specific; not original source
+bool __cdecl FUN_00552754(int *param_1)
+{
+  bool bVar1;
+  FUN_0055395d(0xb);
+  bVar1 = FUN_00552775(param_1);
+  FUN_005539be(0xb);
+  return bVar1;
+}
+==========================================================================================
+0x552b98 indeg=2 bytes=2836
+calls: 0x00552b98, 0x005553e8, 0x0055015b
+refs: DAT_00576760, DAT_00586c20
+ provider-specific; not original source
+uint __cdecl FUN_00552b98(undefined4 *param_1)
+{
+  byte bVar1;
+  uint uVar2;
+  int iVar3;
+  undefined *puVar4;
+  uVar2 = param_1[3];
+  if (((uVar2 & 0x83) != 0) && ((uVar2 & 0x40) == 0)) {
+    if ((uVar2 & 2) == 0) {
+      param_1[3] = uVar2 | 1;
+      if ((uVar2 & 0x10c) == 0) {
+        FUN_005553e8(param_1);
+      }
+      else {
+        *param_1 = param_1[2];
+      }
+      iVar3 = FUN_0055015b(param_1[4],(char *)param_1[2],(char *)param_1[6]);
+      param_1[1] = iVar3;
+      if ((iVar3 != 0) && (iVar3 != -1)) {
+        if ((param_1[3] & 0x82) == 0) {
+          uVar2 = param_1[4];
+          if (uVar2 == 0xffffffff) {
+            puVar4 = &DAT_00576760;
+          }
+          else {
+            puVar4 = (undefined *)((&DAT_00586c20)[(int)uVar2 >> 5] + (uVar2 & 0x1f) * 0x24);
+          }
+          if ((puVar4[4] & 0x82) == 0x82) {
+            param_1[3] = param_1[3] | 0x2000;
+==========================================================================================
+0x5531c5 indeg=1 bytes=2046
+calls: 0x005531c5, 0x00552398, 0x00553401
+ provider-specific; not original source
+void FUN_005531c5(void)
+{
+  DWORD *pDVar1;
+  int unaff_EBP;
+  int unaff_ESI;
+  int *unaff_EDI;
+  *(undefined4 *)(unaff_ESI + -4) = *(undefined4 *)(unaff_EBP + -0x28);
+  pDVar1 = FUN_00552398();
+  pDVar1[0x1b] = *(DWORD *)(unaff_EBP + -0x1c);
+  pDVar1 = FUN_00552398();
+  pDVar1[0x1c] = *(DWORD *)(unaff_EBP + -0x20);
+  if ((((*unaff_EDI == -0x1f928c9d) && (unaff_EDI[4] == 3)) && (unaff_EDI[5] == 0x19930520)) &&
+     ((*(int *)(unaff_EBP + -0x24) == 0 && (*(int *)(unaff_EBP + -0x2c) != 0)))) {
+    __abnormal_termination();
+    FUN_00553401((int)unaff_EDI);
+  }
+  return;
+}
+==========================================================================================
+0x5534dc indeg=3 bytes=2214
+calls: 0x005534dc, 0x00552398, 0x00555fd6
+refs: DAT_0055ce60, LAB_00553be0
+ provider-specific; not original source
+void FUN_005534dc(void)
+{
+  DWORD *pDVar1;
+  void *pvStack_14;
+  undefined1 *puStack_10;
+  undefined *puStack_c;
+  undefined4 local_8;
+  puStack_c = &DAT_0055ce60;
+  puStack_10 = &LAB_00553be0;
+  pvStack_14 = ExceptionList;
+  local_8 = 0;
+  ExceptionList = &pvStack_14;
+  pDVar1 = FUN_00552398();
+  if (pDVar1[0x18] != 0) {
+    local_8 = 1;
+    pDVar1 = FUN_00552398();
+    (*(code *)pDVar1[0x18])();
+  }
+  local_8 = 0xffffffff;
+  FUN_00555fd6();
+  return;
+}
+==========================================================================================
+0x5539d3 indeg=3 bytes=2362
+calls: 0x005539d3, 0x0055395d, 0x00554c3d, 0x005539be, 0x00555d41
+refs: DAT_00577168, DAT_005858f8, DAT_00585be0
+ provider-specific; not original source
+int * __cdecl FUN_005539d3(int param_1,int param_2)
+{
+  int *piVar1;
+  int iVar2;
+  uint *_Size;
+  uint *puVar3;
+  _Size = (uint *)(param_1 * param_2);
+  puVar3 = _Size;
+  if (_Size < (uint *)0xffffffe1) {
+    if (_Size == (uint *)0x0) {
+      puVar3 = (uint *)0x1;
+    }
+    puVar3 = (uint *)((int)puVar3 + 0xfU & 0xfffffff0);
+  }
+  do {
+    if (puVar3 < (uint *)0xffffffe1) {
+      if (_Size <= DAT_00577168) {
+        FUN_0055395d(9);
+        piVar1 = FUN_00554c3d(_Size);
+        FUN_005539be(9);
+        if (piVar1 != (int *)0x0) {
+          _memset(piVar1,0,(size_t)_Size);
+          return piVar1;
+        }
+      }
+      piVar1 = HeapAlloc(DAT_00585be0,8,(SIZE_T)puVar3);
+      if (piVar1 != (int *)0x0) {
+        return piVar1;
+      }
+==========================================================================================
+0x553a60 indeg=1 bytes=3262
+calls: 0x00553a60, 0x00552398, 0x00553b9e
+refs: DAT_005770b8, DAT_005770bc
+ provider-specific; not original source
+LONG __cdecl FUN_00553a60(int param_1,_EXCEPTION_POINTERS *param_2)
+{
+  code *pcVar1;
+  DWORD DVar2;
+  DWORD DVar3;
+  DWORD *pDVar4;
+  int *piVar5;
+  LONG LVar6;
+  int iVar7;
+  int iVar8;
+  pDVar4 = FUN_00552398();
+  piVar5 = FUN_00553b9e(param_1,(int *)pDVar4[0x14]);
+  if ((piVar5 == (int *)0x0) || (pcVar1 = (code *)piVar5[2], pcVar1 == (code *)0x0)) {
+    LVar6 = UnhandledExceptionFilter(param_2);
+  }
+  else if (pcVar1 == (code *)0x5) {
+    piVar5[2] = 0;
+    LVar6 = 1;
+  }
+  else {
+    if (pcVar1 != (code *)0x1) {
+      DVar2 = pDVar4[0x15];
+      pDVar4[0x15] = (DWORD)param_2;
+      if (piVar5[1] == 8) {
+        if (DAT_005770b8 < DAT_005770bc + DAT_005770b8) {
+          iVar7 = DAT_005770b8 * 0xc;
+          iVar8 = DAT_005770b8;
+          do {
+            *(undefined4 *)(iVar7 + 8 + pDVar4[0x14]) = 0;
+==========================================================================================
+0x553d8f indeg=1 bytes=2521
+calls: 0x00553d8f, 0x00556979, 0x00553620, 0x00551005
+refs: DAT_00585630, DAT_00585654, DAT_00586d28, DAT_00586d2c
+ provider-specific; not original source
+void FUN_00553d8f(void)
+{
+  char cVar1;
+  size_t sVar2;
+  undefined4 *puVar3;
+  void *pvVar4;
+  int iVar5;
+  uint *puVar6;
+  if (DAT_00586d2c == 0) {
+    FUN_00556979();
+  }
+  iVar5 = 0;
+  for (puVar6 = DAT_00585654; (char)*puVar6 != '\0'; puVar6 = (uint *)((int)puVar6 + sVar2 + 1)) {
+    if ((char)*puVar6 != '=') {
+      iVar5 = iVar5 + 1;
+    }
+    sVar2 = _strlen((char *)puVar6);
+  }
+  puVar3 = _malloc(iVar5 * 4 + 4);
+  DAT_00585630 = puVar3;
+  if (puVar3 == (undefined4 *)0x0) {
+    __amsg_exit(9);
+  }
+  cVar1 = (char)*DAT_00585654;
+  puVar6 = DAT_00585654;
+  while (cVar1 != '\0') {
+    sVar2 = _strlen((char *)puVar6);
+    if ((char)*puVar6 != '=') {
+      pvVar4 = _malloc(sVar2 + 1);
+==========================================================================================
+0x554095 indeg=1 bytes=3740
+calls: 0x00554095, 0x00551005, 0x00550cd0
+refs: DAT_005858e8, LAB_005540ec
+ provider-specific; not original source
+LPSTR FUN_00554095(void)
+{
+  char cVar1;
+  WCHAR WVar2;
+  WCHAR *pWVar3;
+  WCHAR *pWVar4;
+  int iVar5;
+  size_t _Size;
+  LPSTR pCVar6;
+  char *pcVar8;
+  char *pcVar7;
+  LPWCH lpWideCharStr;
+  LPCH pCVar9;
+  LPSTR local_8;
+  local_8 = (LPSTR)0x0;
+  lpWideCharStr = (LPWCH)0x0;
+  pCVar9 = (LPCH)0x0;
+  if (DAT_005858e8 == 0) {
+    lpWideCharStr = GetEnvironmentStringsW();
+    if (lpWideCharStr != (LPWCH)0x0) {
+      DAT_005858e8 = 1;
+      goto LAB_005540ec;
+    }
+    pCVar9 = GetEnvironmentStrings();
+    if (pCVar9 == (LPCH)0x0) {
+      return (LPSTR)0x0;
+    }
+    DAT_005858e8 = 2;
+  }
+==========================================================================================
+0x55438f indeg=1 bytes=3213
+calls: 0x0055438f, 0x0055395d, 0x005539be, 0x005545ef
+refs: DAT_00586c20, DAT_00586d20, LAB_005544a1
+ provider-specific; not original source
+uint FUN_0055438f(void)
+{
+  undefined4 *puVar1;
+  undefined4 *puVar2;
+  int *piVar3;
+  uint uVar4;
+  int local_8;
+  int local_4;
+  uVar4 = 0xffffffff;
+  FUN_0055395d(0x12);
+  local_8 = 0;
+  local_4 = 0;
+  piVar3 = &DAT_00586c20;
+  while (puVar2 = (undefined4 *)*piVar3, puVar1 = puVar2, puVar2 != (undefined4 *)0x0) {
+    for (; puVar2 < puVar1 + 0x120; puVar2 = puVar2 + 9) {
+      if ((*(byte *)(puVar2 + 1) & 1) == 0) {
+        if (puVar2[2] == 0) {
+          FUN_0055395d(0x11);
+          if (puVar2[2] == 0) {
+            InitializeCriticalSection((LPCRITICAL_SECTION)(puVar2 + 3));
+            puVar2[2] = puVar2[2] + 1;
+          }
+          FUN_005539be(0x11);
+        }
+        EnterCriticalSection((LPCRITICAL_SECTION)(puVar2 + 3));
+        if ((*(byte *)(puVar2 + 1) & 1) == 0) {
+          *puVar2 = 0xffffffff;
+          uVar4 = ((int)puVar2 - *piVar3) / 0x24 + local_4;
+          if (uVar4 != 0xffffffff) goto LAB_005544a1;
+==========================================================================================
+0x5544b2 indeg=1 bytes=2281
+calls: 0x005544b2, 0x00553606, 0x0055360f
+refs: DAT_00576744, DAT_00586c20, DAT_00586d20, LAB_0055450b
+ provider-specific; not original source
+undefined4 __cdecl FUN_005544b2(uint param_1,HANDLE param_2)
+{
+  DWORD *pDVar1;
+  int iVar2;
+  DWORD nStdHandle;
+  if (param_1 < DAT_00586d20) {
+    iVar2 = (param_1 & 0x1f) * 0x24;
+    if (*(int *)((&DAT_00586c20)[(int)param_1 >> 5] + iVar2) == -1) {
+      if (DAT_00576744 == 1) {
+        if (param_1 == 0) {
+          nStdHandle = 0xfffffff6;
+        }
+        else if (param_1 == 1) {
+          nStdHandle = 0xfffffff5;
+        }
+        else {
+          if (param_1 != 2) goto LAB_0055450b;
+          nStdHandle = 0xfffffff4;
+        }
+        SetStdHandle(nStdHandle,param_2);
+      }
+LAB_0055450b:
+      *(HANDLE *)((&DAT_00586c20)[(int)param_1 >> 5] + iVar2) = param_2;
+      return 0;
+    }
+  }
+  pDVar1 = FUN_00553606();
+  *pDVar1 = 9;
+  pDVar1 = FUN_0055360f();
+==========================================================================================
+0x55452e indeg=1 bytes=2353
+calls: 0x0055452e, 0x00553606, 0x0055360f
+refs: DAT_00576744, DAT_00586c20, DAT_00586d20, LAB_0055458a
+ provider-specific; not original source
+undefined4 __cdecl FUN_0055452e(uint param_1)
+{
+  int *piVar1;
+  DWORD *pDVar2;
+  int iVar3;
+  DWORD nStdHandle;
+  if (param_1 < DAT_00586d20) {
+    iVar3 = (param_1 & 0x1f) * 0x24;
+    piVar1 = (int *)((&DAT_00586c20)[(int)param_1 >> 5] + iVar3);
+    if (((*(byte *)(piVar1 + 1) & 1) != 0) && (*piVar1 != -1)) {
+      if (DAT_00576744 == 1) {
+        if (param_1 == 0) {
+          nStdHandle = 0xfffffff6;
+        }
+        else if (param_1 == 1) {
+          nStdHandle = 0xfffffff5;
+        }
+        else {
+          if (param_1 != 2) goto LAB_0055458a;
+          nStdHandle = 0xfffffff4;
+        }
+        SetStdHandle(nStdHandle,(HANDLE)0x0);
+      }
+LAB_0055458a:
+      *(undefined4 *)((&DAT_00586c20)[(int)param_1 >> 5] + iVar3) = 0xffffffff;
+      return 0;
+    }
+  }
+  pDVar2 = FUN_00553606();
+==========================================================================================
+0x554670 indeg=1 bytes=2367
+calls: 0x00554670, 0x00553606, 0x005545ef, 0x005545ad, 0x0055360f, 0x0055464e
+refs: DAT_00586c20, DAT_00586d20, LAB_005546e6, LAB_005546f1
+ provider-specific; not original source
+undefined4 __cdecl FUN_00554670(uint param_1)
+{
+  HANDLE hFile;
+  BOOL BVar1;
+  DWORD DVar2;
+  DWORD *pDVar3;
+  int iVar4;
+  undefined4 uVar5;
+  if (DAT_00586d20 <= param_1) {
+LAB_005546f1:
+    pDVar3 = FUN_00553606();
+    *pDVar3 = 9;
+    return 0xffffffff;
+  }
+  iVar4 = (param_1 & 0x1f) * 0x24;
+  if ((*(byte *)((&DAT_00586c20)[(int)param_1 >> 5] + 4 + iVar4) & 1) == 0) goto LAB_005546f1;
+  FUN_005545ef(param_1);
+  if ((*(byte *)((&DAT_00586c20)[(int)param_1 >> 5] + 4 + iVar4) & 1) != 0) {
+    hFile = (HANDLE)FUN_005545ad(param_1);
+    BVar1 = FlushFileBuffers(hFile);
+    if (BVar1 == 0) {
+      DVar2 = GetLastError();
+    }
+    else {
+      DVar2 = 0;
+    }
+    uVar5 = 0;
+    if (DVar2 == 0) goto LAB_005546e6;
+    pDVar3 = FUN_0055360f();
+==========================================================================================
+0x5554ae indeg=1 bytes=2107
+calls: 0x005554ae, 0x00553606
+refs: DAT_00576cf0, DAT_005857cc, DAT_005857dc
+ provider-specific; not original source
+int __cdecl FUN_005554ae(LPSTR param_1,WCHAR param_2)
+{
+  LPSTR lpMultiByteStr;
+  int iVar1;
+  DWORD *pDVar2;
+  lpMultiByteStr = param_1;
+  if (param_1 == (LPSTR)0x0) {
+    return 0;
+  }
+  if (DAT_005857cc == 0) {
+    if ((ushort)param_2 < 0x100) {
+      *param_1 = (CHAR)param_2;
+      return 1;
+    }
+  }
+  else {
+    param_1 = (LPSTR)0x0;
+    iVar1 = WideCharToMultiByte(DAT_005857dc,0x220,&param_2,1,lpMultiByteStr,DAT_00576cf0,
+                                (LPCSTR)0x0,(LPBOOL)&param_1);
+    if ((iVar1 != 0) && (param_1 == (LPSTR)0x0)) {
+      return iVar1;
+    }
+  }
+  pDVar2 = FUN_00553606();
+  *pDVar2 = 0x2a;
+  return -1;
+}

@@ -1,0 +1,106 @@
+[
+ {
+  "address": "0x54cc2b",
+  "name": "CRT_Ostream_Write"
+ },
+ {
+  "address": "0x54cbc1",
+  "name": "CRT_Istream_Read"
+ },
+ {
+  "address": "0x55395d",
+  "name": "CRT_Lock"
+ },
+ {
+  "address": "0x54dea3",
+  "name": "CRT_Atexit"
+ },
+ {
+  "address": "0x551005",
+  "name": "CRT_FreeInternal"
+ },
+ {
+  "address": "0x552398",
+  "name": "CRT_GetThreadData"
+ },
+ {
+  "address": "0x553606",
+  "name": "CRT_GetErrnoPtr"
+ },
+ {
+  "address": "0x54f084",
+  "name": "CRT_Vsprintf"
+ },
+ {
+  "address": "0x55360f",
+  "name": "CRT_GetDosErrnoPtr"
+ },
+ {
+  "address": "0x552b23",
+  "name": "CRT_Mbtowc"
+ },
+ {
+  "address": "0x54dfe0",
+  "name": "CRT_Fopen"
+ },
+ {
+  "address": "0x54e978",
+  "name": "CRT_FreadLocked"
+ },
+ {
+  "address": "0x54fb27",
+  "name": "CRT_FwriteLocked"
+ },
+ {
+  "address": "0x553593",
+  "name": "CRT_MapWin32Error"
+ },
+ {
+  "address": "0x5545ef",
+  "name": "CRT_LockFileHandle"
+ },
+ {
+  "address": "0x5503fe",
+  "name": "CRT_LseekLocked"
+ },
+ {
+  "address": "0x5506b2",
+  "name": "CRT_FlushStream"
+ },
+ {
+  "address": "0x5545ad",
+  "name": "CRT_GetOsHandle"
+ },
+ {
+  "address": "0x550399",
+  "name": "CRT_Lseek"
+ },
+ {
+  "address": "0x54ff6b",
+  "name": "CRT_Write"
+ },
+ {
+  "address": "0x55015b",
+  "name": "CRT_Read"
+ },
+ {
+  "address": "0x5518a6",
+  "name": "CRT_StreamPutc"
+ },
+ {
+  "address": "0x54dee4",
+  "name": "CRT_Fclose"
+ },
+ {
+  "address": "0x550877",
+  "name": "CRT_LockFile"
+ },
+ {
+  "address": "0x54f775",
+  "name": "CRT_Strupr"
+ },
+ {
+  "address": "0x55104d",
+  "name": "CRT_FlushStreamBuffer"
+ }
+]

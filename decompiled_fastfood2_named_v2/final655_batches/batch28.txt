@@ -1,0 +1,547 @@
+========================================================================================
+0x4a9320 layer=[9, 10, 11, 12, 13, 14] indeg=4 bytes=5620
+calls: 0x4017f0, 0x482820, Game_DestroyRootWindow, 0x482b70, 0x482f40, SubMenu_SetSelection, 0x484650, Game_SetViewMode, 0x488be0, Game_CenterViewOnObject, Game_GetPlayerFieldC20, Window_ShowWindowById, UI_QueueControlCommand, Sound_SelectCurrentTrack
+ provider-specific; not original source
+void __cdecl FUN_004a9320(int param_1,int param_2)
+{
+  int iVar1;
+  void *pvVar2;
+  int iVar3;
+  undefined4 uVar4;
+  if (*(int *)(param_1 + 4) == 0x19) {
+    if (*(int *)((int)DAT_0057c670 + 0x2e4) != 0xc) {
+      *(int *)((int)DAT_0057c670 + 0x218) = param_1;
+      FUN_004d23b0(param_1);
+      *(undefined4 *)((int)DAT_0057c670 + 0x2e4) = 0xc;
+      pvVar2 = DAT_0057c670;
+      *(undefined4 *)((int)DAT_0057c670 + 0x2c4) = *(undefined4 *)((int)DAT_0057c670 + 0x2a4);
+      *(undefined4 *)((int)pvVar2 + 0x2a4) = 0xc;
+      FUN_004850a0(DAT_0057c670,3,0);
+      iVar3 = *(int *)(*(int *)((int)DAT_0057c670 + 0x224) + 0xac);
+      if ((*(int *)(iVar3 + 0xd0) == 0) && (*(int *)(iVar3 + 0xd4) == 2)) {
+        *(undefined4 *)(iVar3 + 0xd4) = 3;
+        FUN_00482f40(DAT_0057c670,'\0');
+        return;
+      }
+    }
+  }
+  else {
+    if ((*(int *)(param_1 + 4) == 0x1c) &&
+       (iVar3 = *(int *)(param_1 + 8), iVar1 = FUN_00482820((int)DAT_0057c670), iVar3 == iVar1)) {
+      if (*(int *)((int)DAT_0057c670 + 0x2e4) == 10) {
+========================================================================================
+0x503b20 layer=[9, 10, 11, 12, 13, 14] indeg=3 bytes=11135
+calls: 0x4017f0, Game_CountObjectsByType, 0x482820, Game_ApplyPercentChange, 0x48c400, Person_SetMotivation, Person_SetSkill, Person_SetSpeed, Person_SetHealth, Person_SetPerformance, 0x4daaf0, Game_GetPlayerSupplyScore, 0x4ddcc0, Company_InvalidateAllBranchRatings, Game_CanAffordWithCurrency, Game_GetMostCommonTypeIndex, UI_QueueControlCommand
+ provider-specific; not original source
+void __fastcall FUN_00503b20(int param_1)
+{
+  void *pvVar1;
+  void *pvVar2;
+  int iVar3;
+  undefined4 *puVar4;
+  int iVar5;
+  int iVar6;
+  int iVar7;
+  int iVar8;
+  int local_4;
+  iVar5 = *(int *)(param_1 + 0x54);
+  switch(iVar5) {
+  case 1:
+  case 2:
+  case 3:
+  case 5:
+  case 6:
+  case 7:
+  case 8:
+  case 0xd:
+  case 0xe:
+  case 0xf:
+  case 0x13:
+  case 0x17:
+  case 0x19:
+  case 0x1d:
+========================================================================================
+0x4e3900 layer=[9, 10, 11, 12, 13, 14] indeg=2 bytes=3841
+calls: 0x4017f0, Branch_RemoveStaffMember, IDMap_FindIndexByValue, 0x482820, Game_AcquireStateLock, Window_UnlockState, 0x4d77b0, 0x4dc9a0, Game_CountActiveObjectsByType, 0x4e2110, 0x4e3ab0, Game_CompleteMissionStage, UI_QueueControlCommand
+ provider-specific; not original source
+void __thiscall FUN_004e3900(void *this,int param_1)
+{
+  int iVar1;
+  int *piVar2;
+  undefined4 *puVar3;
+  void *pvVar4;
+  int iVar5;
+  void *this_00;
+  int iVar6;
+  iVar1 = FUN_004e1d40(this,-1);
+  iVar1 = iVar1 + -1;
+  if (-1 < iVar1) {
+    do {
+      piVar2 = (int *)IDMap_Lookup((void *)((int)this + 0x1b8),iVar1,(int *)0x0);
+      FUN_004e2110(this,*piVar2);
+      iVar1 = iVar1 + -1;
+    } while (-1 < iVar1);
+  }
+  iVar1 = *(int *)((int)this + 0x140) + -1;
+  if (-1 < iVar1) {
+    do {
+      puVar3 = (undefined4 *)IDMap_Lookup((void *)((int)this + 300),iVar1,(int *)0x0);
+      FUN_004e3ab0(this,puVar3,0);
+      iVar1 = iVar1 + -1;
+    } while (-1 < iVar1);
+  }
+  iVar1 = *(int *)((int)this + 0x15c);
+========================================================================================
+0x4d8d50 layer=[9, 10, 11, 12, 13, 14] indeg=1 bytes=14642
+calls: 0x4017f0, IDMap_GetRandomName, Game_FormatObjectName, 0x4034d0, Branch_EndConstructionMode, Branch_RefreshConstructionButtons, 0x482720, Game_AddObjectToRegistry, 0x482820, Game_DestroyRootWindow, 0x482910, 0x484650, 0x488be0, Game_CountFreeSlots, 0x48c400, Game_RedirectPersonDestination, 0x48e0a0, 0x4d2420, Person_RemoveFromStaff, City_SpawnPerson, Game_CountObjectsByType2, City_RemovePersonAndMaintainPopulation, Game_GetMostAdvancedCompany, Game_GetLowestValuePlayer, 0x4d8d30, 0x4da550, 0x4daaf0, 0x4dae90, Game_SelectRandomPlayerCompany, Array_MoveActiveSlotToRandom, Weather_SelectRandomState, 0x4dca80, Game_IncrementPlayerCounterC20, Game_ShuffleProductMarketValues, Person_RefreshShopChoices, 0x4dce70, 0x4ddcc0, Game_FindRecordByField34, 0x4f7420, 0x4f7710, Game_TryBuyCompletedHouse, MissionGoal_HandleEvent, Object_Construct, 0x50dbd0, 0x50e520, 0x50e540, Window_ShowWindowById, Window_GadgetNotify_Button_SetState, UI_QueueControlCommand, Array_ToggleObjectActive, 0x5316f0, Sound_PlaySpeechStatement, DebugConsole_Printf, 0x54dd78, 0x54e221, 0x54f0e2, 0x54f140
+ provider-specific; not original source
+int __thiscall FUN_004d8d50(void *this,int param_1)
+{
+  bool bVar1;
+  bool bVar2;
+  int iVar3;
+  int *piVar4;
+  void *pvVar5;
+  int iVar6;
+  int iVar7;
+  void *pvVar8;
+  uint uVar9;
+  int *piVar10;
+  uint uVar11;
+  undefined4 *puVar12;
+  undefined4 uVar13;
+  int iVar14;
+  int *piVar15;
+  undefined4 unaff_EDI;
+  longlong lVar16;
+  void *local_1c;
+  uint local_18;
+  void *local_14;
+  void *local_c;
+  undefined1 *puStack_8;
+  undefined4 local_4;
+  local_4 = 0xffffffff;
+  puStack_8 = &LAB_005591cc;
+========================================================================================
+0x4fd610 layer=[9, 10, 11, 12, 13, 14] indeg=1 bytes=6150
+calls: 0x4034d0, 0x488be0, 0x489b10, Game_GetPlayerFieldC20, Object_AdjustShortPercent, 0x4fd9b0, 0x4fdb20, Game_PickRandomIdleObject, 0x4fde00, 0x4fdf00, 0x4fee30, 0x4fefb0, 0x4ff080, 0x4ff200, DebugConsole_Printf, 0x54f0e2
+ provider-specific; not original source
+/* WARNING: Switch with 1 destination removed at 0x004fd78e */
+undefined4 __thiscall FUN_004fd610(void *this,int param_1)
+{
+  int iVar1;
+  void *pvVar2;
+  int iVar3;
+  uint uVar4;
+  void *pvVar5;
+  undefined4 unaff_EDI;
+  char *pcVar6;
+  undefined4 uVar7;
+  byte *pbVar8;
+  iVar1 = FUN_00489b10((int)DAT_0057c670);
+  if (iVar1 < *(int *)((int)this + param_1 * 0x168 + 0x48)) {
+    return 1;
+  }
+  *(int *)((int)this + param_1 * 0x168 + 0x48) =
+       (100 - *(short *)((int)this + param_1 * 0x168 + 0x130) >> 1) + 1 + iVar1;
+  pvVar2 = (void *)FUN_00488be0(DAT_0057c670,*(int *)((int)this + param_1 * 0x168 + 0x40));
+  iVar3 = FUN_004e2280((int)pvVar2);
+  if (iVar3 == 0) {
+    return 1;
+  }
+  if (*(int *)((int)this + param_1 * 0x168 + 0x11c) == -1) {
+    uVar4 = FUN_004e2280((int)pvVar2);
+    uVar4 = Random_Range(1,uVar4);
+    *(uint *)((int)this + param_1 * 0x168 + 0x11c) = uVar4;
+========================================================================================
+0x4f7ed0 layer=[9, 10, 11, 12, 13, 14] indeg=1 bytes=5254
+calls: 0x4017f0, Game_CanAfford, 0x4d2e40, Game_ComputeTradeOffers, 0x4ddcc0, 0x4f7420, Map_PickObject, Game_SumPlayerAssetValue, AI_ComputePlanScores, AI_FindBestBranchSite, Game_UpdateCompanyAdvancementScore, DebugConsole_Printf, 0x54f140
+ provider-specific; not original source
+undefined4 __thiscall FUN_004f7ed0(void *this,int param_1)
+{
+  int iVar1;
+  bool bVar2;
+  int iVar3;
+  void *pvVar4;
+  int iVar5;
+  int iVar6;
+  int *piVar7;
+  longlong lVar8;
+  char *pcVar9;
+  int local_58;
+  int local_54;
+  int local_50;
+  int local_4c;
+  void *local_48;
+  int local_44;
+  int local_40;
+  int local_3c;
+  int local_38 [4];
+  int local_28;
+  int local_24;
+  int local_20;
+  int local_1c;
+  int local_18;
+  int local_14;
+  int local_10;
+========================================================================================
+0x4fce20 layer=[9, 10, 11, 12, 13, 14] indeg=1 bytes=4451
+calls: 0x4017f0, 0x482720, 0x488be0, Game_ComputeTradeOffers, Stats_GetCombinedValue, 0x4d77b0, Game_CanAffordWithCurrency, Game_GetPlayerFieldC20, AI_FindCheapestShop, 0x4fd0f0, 0x54f140
+ provider-specific; not original source
+undefined8 __thiscall FUN_004fce20(void *this,int param_1)
+{
+  int iVar1;
+  int iVar2;
+  void *this_00;
+  int iVar3;
+  void *pvVar4;
+  int iVar5;
+  void *pvVar6;
+  undefined4 extraout_EDX;
+  undefined4 extraout_EDX_00;
+  undefined4 extraout_EDX_01;
+  undefined4 extraout_EDX_02;
+  undefined4 extraout_EDX_03;
+  undefined4 extraout_EDX_04;
+  undefined4 extraout_EDX_05;
+  undefined4 uVar7;
+  int iVar8;
+  longlong lVar9;
+  longlong lVar10;
+  int local_1c;
+  int local_4;
+  iVar2 = param_1;
+  iVar1 = *(int *)((int)this + param_1 * 0x168 + 0x40);
+  this_00 = (void *)FUN_00488be0(DAT_0057c670,iVar1);
+  iVar8 = 0;
+  pvVar6 = *(void **)((int)this_00 + 0x1d8);
+========================================================================================
+0x4fd310 layer=[9, 10, 11, 12, 13, 14] indeg=1 bytes=3914
+calls: 0x4017f0, 0x488be0, Game_ComputeTradeOffers, Stats_GetCombinedValue, 0x4d77b0, Game_CanAffordWithCurrency, Game_CompleteStaffAssignment, 0x4f7710, AI_FindCheapestShop, AI_FindNearestHouse, 0x513fd0, Storage_GetFillPercent, 0x54f140
+ provider-specific; not original source
+undefined4 __thiscall FUN_004fd310(void *this,uint param_1,int param_2)
+{
+  void *this_00;
+  void *pvVar1;
+  int iVar2;
+  void *this_01;
+  undefined4 uVar3;
+  int iVar4;
+  void *pvVar5;
+  int iVar6;
+  bool bVar7;
+  longlong lVar8;
+  int local_c;
+  int local_8;
+  int local_4;
+  iVar4 = *(int *)((int)this + param_1 * 0x168 + 0x40);
+  this_00 = (void *)FUN_00488be0(DAT_0057c670,iVar4);
+  if (*(int *)((int)this_00 + 0x194) < 1) {
+    local_8 = *(int *)(param_2 + 0x34);
+    pvVar1 = (void *)IDMap_Lookup((void *)((int)DAT_0057c670 + 4),local_8,(int *)0x0);
+    pvVar5 = (void *)FUN_004f89d0(iVar4,pvVar1);
+    bVar7 = pvVar5 == (void *)0x0;
+    if (bVar7) {
+      pvVar5 = (void *)FUN_004f88c0(iVar4,pvVar1,1);
+    }
+    param_1 = (uint)!bVar7;
+    if (pvVar5 == (void *)0x0) {
+========================================================================================
+0x500070 layer=[9, 10, 11, 12, 13, 14] indeg=1 bytes=3168
+calls: 0x4017f0, Branch_GetCachedBillboards, Game_GetPlayerFieldC20, Game_GetAdjustedValue, 0x5001f0
+ provider-specific; not original source
+void __thiscall FUN_00500070(void *this,int param_1)
+{
+  int iVar1;
+  int iVar2;
+  int iVar3;
+  int iVar4;
+  int iVar5;
+  int *piVar6;
+  void *pvVar7;
+  int iVar8;
+  int local_24;
+  int local_1c;
+  iVar2 = IDMap_Lookup((void *)(DAT_0057c670 + 4),*(int *)(DAT_0057c670 + 0x2f4),(int *)0x0);
+  iVar1 = *(int *)((int)this + param_1 * 0x168 + 0x70);
+  iVar3 = FUN_004e2280(iVar1);
+  if (1 < iVar3) {
+    iVar3 = *(int *)(iVar1 + 0x15c);
+    local_1c = 0;
+    if (0 < iVar3) {
+      do {
+        iVar4 = IDMap_Lookup((void *)(iVar1 + 0x148),local_1c,(int *)0x0);
+        iVar5 = *(int *)(*(int *)(iVar4 + 0x16f0) + 0x74);
+        if (iVar5 == 0) {
+          local_24 = -1;
+        }
+        else {
+          local_24 = FUN_004e4490(iVar5);
+========================================================================================
+0x47f470 layer=[9, 10, 11, 12, 13, 14] indeg=1 bytes=3164
+calls: 0x47c5e0, 0x47f780, 0x4808a0, Game_SetStageIfHigher, 0x488be0, 0x4f7020, 0x4f7080, 0x4fb660, 0x4ffcb0, UI_QueueControlCommand
+ provider-specific; not original source
+void __fastcall FUN_0047f470(void *param_1)
+{
+  undefined4 uVar1;
+  int iVar2;
+  int iVar3;
+  int unaff_ESI;
+  int unaff_EDI;
+  int iVar4;
+  void *pvVar5;
+  int iVar6;
+  undefined4 *puVar7;
+  uVar1 = *(undefined4 *)((int)param_1 + 0x2c);
+  FUN_004810a0(param_1,0);
+  switch(uVar1) {
+  case 1:
+    FUN_0047c5e0(param_1,0);
+    break;
+  case 2:
+    FUN_004ffcb0();
+    break;
+  case 3:
+    iVar4 = *(int *)((int)DAT_0057c670 + 0x90);
+    iVar2 = FUN_00488be0(DAT_0057c670,*(int *)((int)param_1 + 0x30));
+    FUN_004f7020(iVar4);
+    FUN_0047c5e0(param_1,0);
+    iVar3 = *(int *)(iVar2 + 0x4c);
+    puVar7 = (undefined4 *)0xffffffff;
+========================================================================================
+0x4f8a80 layer=[9, 10, 11, 12, 13, 14] indeg=1 bytes=3027
+calls: 0x4017f0, Game_ComputeTradeOffers, 0x4f7420, 0x4f7c30, AI_FindBestBranchSite, 0x4fb660, DebugConsole_Printf
+ provider-specific; not original source
+undefined4 __thiscall FUN_004f8a80(void *this,int param_1,int param_2,int param_3,void *param_4)
+{
+  int iVar1;
+  int iVar2;
+  void *pvVar3;
+  void *pvVar4;
+  int iVar5;
+  int unaff_ESI;
+  int unaff_EDI;
+  int local_8;
+  int local_4;
+  iVar2 = param_1;
+  iVar1 = *(int *)((int)this + param_1 * 0x168 + 0x70);
+  iVar5 = param_1 * 0x168;
+  pvVar3 = (void *)IDMap_Lookup((void *)(DAT_0057c670 + 4),*(int *)(DAT_0057c670 + 0x2f4),(int *)0x0
+                               );
+  if (pvVar3 == (void *)0x0) {
+    return 0;
+  }
+  pvVar4 = (void *)FUN_004f8240(this,iVar2,pvVar3,param_3,&local_4);
+  if (pvVar4 == (void *)0x0) {
+    return 0;
+  }
+  if (param_2 == -1) {
+    param_2 = 0;
+  }
+  FUN_004d5dd0(pvVar3,(int)pvVar4,1,&param_1,&local_8,*(int *)((int)this + iVar5 + 0x40),(int *)0x0)
+========================================================================================
+0x4fd0a0 layer=[9, 10, 11, 12, 13, 14] indeg=1 bytes=1898
+calls: Game_GetPlayerFieldC20, AI_FindCheapestShop, 0x4fd0f0
+ provider-specific; not original source
+void FUN_004fd0a0(int param_1,void *param_2,int param_3)
+{
+  int iVar1;
+  int iVar2;
+  void *pvVar3;
+  iVar1 = *(int *)(param_1 + 0x48);
+  iVar2 = FUN_004e2280(param_1);
+  if (iVar2 == 0) {
+    pvVar3 = (void *)FUN_004f88c0(*(int *)(param_1 + 0x48),param_2,0);
+    if (pvVar3 != (void *)0x0) {
+      FUN_004fd0f0(iVar1,param_2,pvVar3,param_3,1);
+      *(int *)((int)param_2 + iVar1 * 4 + 0xc20) = param_3;
+    }
+  }
+  return;
+}
+========================================================================================
+0x486f30 layer=[9, 10, 11, 12, 13, 14] indeg=0 bytes=4380
+calls: 0x401320, 0x401340, 0x4017f0, 0x47a920, 0x47c5e0, Branch_ClearConstructionSites, Game_DestroyRootWindow, 0x484650, Game_SetViewMode, Game_SetLockedField2FC, Game_AcquireStateLock, Window_UnlockState, 0x488be0, Game_EnterBranchInterior, Map_DrawMinimap, 0x4d2420, Game_PlaceObjectInPlayerCity, 0x4ddc10, Window_ShowWindowById, UI_QueueControlCommand, Sound_SelectCurrentTrack
+ provider-specific; not original source
+void __thiscall FUN_00486f30(void *this,undefined4 *param_1)
+{
+  int iVar1;
+  void *this_00;
+  int iVar2;
+  void *this_01;
+  void *pvVar3;
+  void *this_02;
+  int iVar4;
+  undefined4 uVar5;
+  iVar1 = param_1[0xb];
+  pvVar3 = (void *)FUN_00488be0(this,param_1[0xc]);
+  this_02 = (void *)IDMap_Lookup((void *)((int)this + 4),param_1[0xd],(int *)0x0);
+  this_00 = (void *)param_1[0x5bc];
+  iVar2 = param_1[0xe];
+  iVar4 = *(int *)((int)this_00 + 0x48);
+  if ((-1 < iVar4) && (iVar4 < 4)) {
+    iVar4 = *(int *)(&DAT_00568188 + iVar4 * 4);
+  }
+  this_01 = *(void **)((int)this + 0x25c);
+  FUN_00486be0(this,1);
+  FUN_0047c5e0(param_1,(uint)(iVar1 == 7));
+  FUN_0047a920(param_1);
+  FUN_004ddc10(pvVar3,(int)param_1);
+  FUN_0047fd20(param_1);
+  if (*(undefined4 **)((int)this + 0x9c) != param_1) goto LAB_00487059;
+  if (*(int *)((int)this + 0x290) == 4) {
+========================================================================================
+0x485bb0 layer=[9, 10, 11, 12, 13, 14] indeg=1 bytes=15584
+calls: 0x4017f0, CS_EnterObject, Input_LeaveLock, Screen_BuildGameSidebar, 0x41a2b0, Screen_RecipeInfoPanel, 0x4258c0, Screen_BuildOptionsSidebar, 0x4275a0, UI_CreateInfoPanelGangster, UI_CreateInfoPanel, UI_CreateInfoPanelPolice, 0x430a80, UI_CreateInfoPanelBranch, 0x443520, UI_CreateRestaurantInfoPanel, 0x44d4a0, 0x46ee80, 0x46f9c0, 0x474df0, 0x4756e0, 0x475f90, Game_IsCurrentPlayer, UI_DestroyWindowAt, Game_CloseSelectionDialog, SubMenu_SetSelection, SubMenu_CreateBuildingPage, 0x4844c0, 0x484650, 0x4848b0, 0x484a90, 0x484c50, 0x484de0, 0x484f60, 0x4859c0, Game_SuspendSimulation, Game_ShowBranchInteriorDefaultZoom, Game_EnterBranchInterior, 0x48e800, 0x49f6e0, 0x4a24a0, 0x4a90a0, 0x4a9320, 0x4b5110, 0x4ba0d0, EndResultGraph_Fill, EndResults_RefreshScreen, 0x4cdac0, 0x4ce450, Movie_PlayGameOverMovie, Movie_Play, 0x4cec60, 0x4cefe0, 0x4cf380, 0x4cf690, 0x4cfa20, 0x4cfc80, 0x4d0040, 0x4d01c0, Window_ShowWindowById, Window_HideWindowById, Window_ProcessMessageQueue, Window_DestroyChild, UI_RemoveWindowByID, 0x528040, 0x528090, Sound_StopCurrentBuffer
+ provider-specific; not original source
+void __thiscall
+FUN_00485bb0(void *this,char *param_1,undefined4 param_2,int param_3,undefined4 param_4,
+            char *param_5,undefined4 param_6,int param_7,undefined4 param_8,char *param_9,
+            undefined4 param_10,int param_11,undefined4 param_12,char *param_13,undefined4 param_14,
+            int param_15,undefined4 param_16,char *param_17,undefined4 param_18,int param_19,
+            undefined4 param_20,undefined *param_21,undefined4 param_22,int param_23,
+            undefined4 param_24,char *param_25,undefined4 param_26,int param_27,undefined4 param_28,
+            undefined *param_29,undefined4 param_30,int param_31,undefined4 param_32,char *param_33,
+            undefined4 param_34,int param_35,undefined4 param_36,char *param_37,undefined4 param_38,
+            int param_39,undefined4 param_40,char *param_41,undefined4 param_42,int param_43,
+            undefined4 param_44,char *param_45,undefined4 param_46,int param_47,undefined4 param_48,
+            char *param_49,undefined4 param_50,int param_51,undefined4 param_52,char *param_53,
+            undefined4 param_54,int param_55,undefined4 param_56,char *param_57,undefined4 param_58,
+            int param_59,undefined4 param_60,char *param_61,undefined4 param_62,int param_63,
+            undefined4 param_64,char *param_65,undefined4 param_66,int param_67,undefined4 param_68,
+            char *param_69,undefined4 param_70,int param_71,undefined4 param_72,char *param_73,
+            undefined4 param_74,int param_75,undefined4 param_76,char *param_77,undefined4 param_78,
+            int param_79,undefined4 param_80,char *param_81,undefined4 param_82,int param_83,
+            undefined4 param_84,char *param_85,undefined4 param_86,int param_87)
+{
+  undefined4 uVar1;
+  bool bVar2;
+  int iVar3;
+  void *pvVar4;
+  int iVar5;
+  void *pvVar6;
+  undefined4 *puVar7;
+========================================================================================
+0x40b400 layer=[9, 10, 11, 12, 13, 14] indeg=1 bytes=8529
+calls: 0x4017f0, Debug_WarningMessageBox, 0x4871a0, 0x488be0, Game_GetPlayerMapValue, 0x4d77b0, 0x4e3900, 0x505e00, Person_DecideWaitOrLeaveHouse, Person_DebugPrintLocation, 0x507b40, 0x507c90, 0x507e20, 0x508300, 0x508d90, 0x509060, UI_DetachChildRecord, 0x50a110, 0x50a280, 0x50a3c0, 0x50a580, 0x50a7e0, Object_SetWorkState, 0x50a950, Object_Activate, Object_Deactivate, 0x50dd10, 0x50e710, Object_SetState, UI_QueueControlCommand, Sound_PlayEffectByIndex
+ provider-specific; not original source
+void __thiscall FUN_0040b400(void *this,void *param_1)
+{
+  int iVar1;
+  undefined1 uVar2;
+  undefined3 extraout_var;
+  undefined4 *puVar3;
+  void *pvVar4;
+  int iVar5;
+  uint extraout_EDX;
+  uint uVar6;
+  uint extraout_EDX_00;
+  uint extraout_EDX_01;
+  void *pvVar7;
+  undefined4 uVar8;
+  int iVar9;
+  uVar2 = FUN_00505e00((int)param_1);
+  iVar9 = *(int *)((int)param_1 + 0x90);
+  iVar1 = *(int *)((int)param_1 + 0x78);
+  FUN_00507170((int)param_1);
+  iVar5 = *(int *)((int)param_1 + 0x30);
+  if (iVar5 != 0x2e) {
+    if (CONCAT31(extraout_var,uVar2) != 0) goto LAB_0040b821;
+    uVar6 = extraout_EDX;
+    if (iVar5 - 0xcU < 0x17) {
+      uVar6 = (uint)*(byte *)((int)&PTR_caseD_1e_0040b8a4 + iVar5);
+      switch(iVar5) {
+      case 0xc:
+========================================================================================
+0x50efe0 layer=[9, 10, 11, 12, 13, 14] indeg=1 bytes=7236
+calls: 0x4034d0, Game_CloseSelectionDialog, 0x488be0, Player_CountObjectsByType, Stats_SumRecordFloatsByType, Mission_TickGoalDeadline, AI_InitActionPlan, MissionGoal_HandleEvent, UI_AppendCommandIfActive, BuildingProject_ResetState, 0x503b20, 0x504430, Game_GetPlayerTotalValue, UI_Briefing_AddMessage, UI_Briefing_AddPinnedMessage, Sound_GetChannelObject, 0x54dd83, 0x54f140
+ provider-specific; not original source
+void __thiscall FUN_0050efe0(void *this,int param_1)
+{
+  void *this_00;
+  undefined4 uVar1;
+  uint uVar2;
+  void *pvVar3;
+  int iVar4;
+  int iVar5;
+  undefined4 unaff_EBX;
+  undefined4 unaff_EDI;
+  bool bVar6;
+  longlong lVar7;
+  byte local_200 [512];
+  this_00 = (void *)((int)DAT_0057c670 + 0x304);
+  if (*(void **)((int)this + 0xac) != (void *)0x0) {
+    FUN_004f6b80(*(void **)((int)this + 0xac),param_1);
+  }
+  if (*(void **)((int)this + 0xa8) != (void *)0x0) {
+    FUN_00504430(*(void **)((int)this + 0xa8),param_1);
+    pvVar3 = *(void **)((int)this + 0xa8);
+    if (*(char *)((int)pvVar3 + 4) == '\0') {
+      iVar5 = *(int *)((int)this + 0xac);
+      if (((*(char *)(iVar5 + 0xcc) == '\0') && (DAT_0057bb3c._2_1_ == '\x01')) &&
+         ((*(int *)(iVar5 + 0xd0) != 0 || (9 < *(int *)(iVar5 + 0xd4))))) {
+        if (*(int *)((int)pvVar3 + 0x5c) == 0) {
+          FUN_00502ce0(pvVar3,0xffffffff,0xffffffff,-1,-1,-1,-1,-1);
+          uVar1 = FUN_0054aa10(this_00,0x21,1,-1,-1,0,DAT_00580d60,DAT_00582e4c,unaff_EDI);
+========================================================================================
+0x4fca30 layer=[9, 10, 11, 12, 13, 14] indeg=1 bytes=3984
+calls: 0x4017f0, 0x482820, 0x4871a0, UI_Briefing_Printf, 0x4e3900, 0x4f5fa0, 0x4f7020, 0x4f7080, UI_ShiftRowData
+ provider-specific; not original source
+void __thiscall FUN_004fca30(void *this,void *param_1)
+{
+  DWORD DVar1;
+  int iVar2;
+  undefined4 *puVar3;
+  void *pvVar4;
+  int iVar5;
+  int iVar6;
+  bool bVar7;
+  int iVar8;
+  iVar8 = *(int *)((int)param_1 + 0x48);
+  iVar2 = *(int *)((int)param_1 + 0x4c);
+  *(undefined4 *)((int)this + iVar2 * 0x168 + 0x198) = 1;
+  DVar1 = GetCurrentThreadId();
+  if (DVar1 == *(DWORD *)((int)this + 0x10)) {
+    puVar3 = (undefined4 *)((int)this + iVar2 * 0x168 + 0x74);
+    iVar6 = 10;
+    do {
+      puVar3[3] = 0;
+      *puVar3 = 0xffffffff;
+      puVar3 = puVar3 + 4;
+      iVar6 = iVar6 + -1;
+    } while (iVar6 != 0);
+    bVar7 = *(int *)((int)this + iVar2 * 0x168 + 300) != 0x18;
+    *(undefined4 *)((int)this + iVar2 * 0x168 + 300) = 0x18;
+  }
+  else {
+========================================================================================
+0x4fd190 layer=[9, 10, 11, 12, 13, 14] indeg=1 bytes=2855
+calls: 0x4017f0, 0x488be0, 0x4da630, BuildingValue_Compute, 0x4fd310, Game_GetPlayerSubrecord, Storage_SetSupplierBuilding, 0x54f140
+ provider-specific; not original source
+undefined4 __thiscall FUN_004fd190(void *this,uint param_1)
+{
+  int iVar1;
+  void *this_00;
+  void *this_01;
+  int iVar2;
+  int iVar3;
+  int iVar4;
+  longlong lVar5;
+  int local_8;
+  iVar3 = 0;
+  if (0 < *(int *)(*(int *)((int)this + param_1 * 0x168 + 0x70) + 0x15c)) {
+    do {
+      iVar1 = FUN_00500e80(this,param_1,iVar3,1);
+      if (iVar1 != 0) {
+        FUN_004fd310(this,param_1,iVar1);
+        switch(*(undefined4 *)(iVar1 + 0x24)) {
+        case 0:
+          break;
+        case 1:
+          break;
+        case 2:
+          break;
+        case 3:
+        }
+      }
+      iVar3 = iVar3 + 1;

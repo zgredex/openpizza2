@@ -1,0 +1,97 @@
+// rea decompile_all
+// name: FUN_00527090
+// address: 0x527090
+// body: available
+// range: 0x527090-0x52716c inclusive
+// non_contiguous: false
+// provider: Ghidra 12.2 (ghidra)
+// analysis_profile: aae5fcbbec95ac3047ec86f28609da356814b1c85770f2c09803aad3607b988d
+// limitations: The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.; Ghidra Program checkpoint mode is disabled: closing discards metadata edits; original executable bytes are unchanged. For stock ELF/PE/Mach-O on Linux/macOS, set REA_GHIDRA_CHECKPOINT_DIR to a private absolute directory before starting REA (restart MCP after changing its startup environment).; Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; This session uses Ghidra 12.2. The bridge is verified against 12.1.4; other 12.x (>=12.1) builds are accepted and the observed version is reported.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+uint __thiscall FUN_00527090(void *this,char *param_1)
+
+{
+  char cVar1;
+  char *pcVar2;
+  uint *puVar3;
+  uint uVar4;
+  uint uVar5;
+  int iVar6;
+  char *pcVar7;
+  char *pcVar8;
+  char local_208 [260];
+  uint local_104 [65];
+  
+  uVar4 = 0xffffffff;
+  do {
+    pcVar2 = param_1;
+    if (uVar4 == 0) break;
+    uVar4 = uVar4 - 1;
+    pcVar2 = param_1 + 1;
+    cVar1 = *param_1;
+    param_1 = pcVar2;
+  } while (cVar1 != '\0');
+  uVar4 = ~uVar4;
+  pcVar2 = pcVar2 + -uVar4;
+  pcVar8 = local_208;
+  for (uVar5 = uVar4 >> 2; uVar5 != 0; uVar5 = uVar5 - 1) {
+    *(undefined4 *)pcVar8 = *(undefined4 *)pcVar2;
+    pcVar2 = pcVar2 + 4;
+    pcVar8 = pcVar8 + 4;
+  }
+  for (uVar4 = uVar4 & 3; uVar4 != 0; uVar4 = uVar4 - 1) {
+    *pcVar8 = *pcVar2;
+    pcVar2 = pcVar2 + 1;
+    pcVar8 = pcVar8 + 1;
+  }
+  pcVar2 = _strrchr(local_208,0x2e);
+  if (pcVar2 != (char *)0x0) {
+    *pcVar2 = '\0';
+  }
+  uVar4 = 0xffffffff;
+  pcVar2 = &DAT_005742a4;
+  do {
+    pcVar8 = pcVar2;
+    if (uVar4 == 0) break;
+    uVar4 = uVar4 - 1;
+    pcVar8 = pcVar2 + 1;
+    cVar1 = *pcVar2;
+    pcVar2 = pcVar8;
+  } while (cVar1 != '\0');
+  uVar4 = ~uVar4;
+  iVar6 = -1;
+  pcVar2 = local_208;
+  do {
+    pcVar7 = pcVar2;
+    if (iVar6 == 0) break;
+    iVar6 = iVar6 + -1;
+    pcVar7 = pcVar2 + 1;
+    cVar1 = *pcVar2;
+    pcVar2 = pcVar7;
+  } while (cVar1 != '\0');
+  pcVar2 = pcVar8 + -uVar4;
+  pcVar8 = pcVar7 + -1;
+  for (uVar5 = uVar4 >> 2; uVar5 != 0; uVar5 = uVar5 - 1) {
+    *(undefined4 *)pcVar8 = *(undefined4 *)pcVar2;
+    pcVar2 = pcVar2 + 4;
+    pcVar8 = pcVar8 + 4;
+  }
+  for (uVar4 = uVar4 & 3; uVar4 != 0; uVar4 = uVar4 - 1) {
+    *pcVar8 = *pcVar2;
+    pcVar2 = pcVar2 + 1;
+    pcVar8 = pcVar8 + 1;
+  }
+  SpriteCache_MakeKey(local_208,local_104);
+  puVar3 = (uint *)FUN_00526f60(this,(byte *)local_104);
+  if (puVar3 == (uint *)0x0) {
+    puVar3 = FUN_00526fa0(this,local_208);
+    if (puVar3 == (uint *)0x0) {
+      return 0;
+    }
+  }
+  puVar3[0x42] = puVar3[0x42] + 1;
+  return puVar3[0x41];
+}
+

@@ -1,0 +1,259 @@
+========================================================================================
+0x4e3df0 indeg=1 bytes=2298
+calls: IDMap_Lookup, Game_CountObjectsByState, FUN_0050bc40, Object_SetFieldA4Locked
+ provider-specific; not original source
+void FUN_004e3df0(int param_1,int param_2)
+{
+  int iVar1;
+  void *this;
+  int iVar2;
+  iVar2 = 0;
+  iVar1 = FUN_00486910(DAT_0057c670,-1);
+  if (0 < iVar1) {
+    do {
+      this = (void *)IDMap_Lookup((void *)((int)DAT_0057c670 + 0x3c),iVar2,(int *)0x0);
+      if ((*(int *)((int)this + 0x30) == 0x1d) &&
+         (((*(int *)((int)this + 0xa4) == 0x19 || (*(int *)((int)this + 0xa4) == 0x1a)) &&
+          (*(int *)(*(int *)((int)this + 0xfc) + 8) == param_1)))) {
+        if (param_2 == 0) {
+          FUN_0050e850(this,0x1a);
+        }
+        else {
+          FUN_0050bc40(this);
+          if (*(int *)((int)this + 0x74) != 0) {
+            *(undefined1 *)((int)this + 0x81) = 1;
+          }
+        }
+      }
+      iVar2 = iVar2 + 1;
+      iVar1 = FUN_00486910(DAT_0057c670,-1);
+    } while (iVar2 < iVar1);
+  }
+  return;
+}
+========================================================================================
+0x502f10 indeg=18 bytes=4616
+calls: IDMap_Lookup, FUN_004034d0, Game_CloseSelectionDialog, Game_HasBuildingForPlayer, BuildingProject_ResetState, FUN_005032c0, FUN_00503b20, UI_Briefing_AddMessage, Sound_GetChannelObject
+ provider-specific; not original source
+void __thiscall FUN_00502f10(void *this,int param_1,int param_2,int param_3)
+{
+  void *this_00;
+  uint uVar1;
+  int iVar2;
+  undefined4 uVar3;
+  int iVar4;
+  int iVar5;
+  if ((param_1 < 0) || (param_1 == *(int *)((int)this + 0x48))) {
+    this_00 = (void *)(DAT_0057c670 + 0x304);
+    if (param_3 == -1) {
+      if ((*(char *)((int)this + 0x60) != '\0') &&
+         (iVar4 = *(int *)((int)this + 0x48), *(int *)((int)this + 8) == iVar4)) {
+        if ((iVar4 == 0x14) || (iVar4 == 0x17)) {
+          iVar4 = *(int *)((int)this + 0x84) - param_2;
+          *(int *)((int)this + 0x84) = iVar4;
+          if (0 < iVar4) {
+            return;
+          }
+        }
+        else {
+          iVar4 = *(int *)((int)this + 0x7c);
+          if (param_2 != -1) {
+            iVar5 = 0;
+            if (0 < iVar4) {
+              do {
+                iVar2 = IDMap_Lookup((void *)((int)this + 0x68),iVar5,(int *)0x0);
+                if (iVar2 == param_2) break;
+                iVar5 = iVar5 + 1;
+              } while (iVar5 < iVar4);
+            }
+========================================================================================
+0x5032c0 indeg=1 bytes=11437
+calls: IDMap_Lookup, Game_CountObjectsByType, Game_GetCurrentPlayerCompanyName, Game_ApplyPercentChange, FUN_0048c400, Person_SetMotivation, Person_SetSkill, Person_SetSpeed, Person_SetHealth, Person_SetPerformance, Game_SetCompanyAdvancementScore, Game_RecordPlayerStat, FUN_004daaf0, Game_SelectRandomPlayerCompany, Game_GetPlayerCity, Company_InvalidateAllBranchRatings, FUN_004e0c40, Game_GetMostCommonTypeIndex, UI_QueueControlCommand
+ provider-specific; not original source
+void __fastcall FUN_005032c0(int param_1)
+{
+  void *pvVar1;
+  void *pvVar2;
+  int iVar3;
+  undefined4 *puVar4;
+  int iVar5;
+  int iVar6;
+  int iVar7;
+  int iVar8;
+  int iVar9;
+  int local_4;
+  iVar5 = *(int *)(param_1 + 0x50);
+  switch(iVar5) {
+  case 1:
+  case 2:
+  case 3:
+  case 5:
+  case 6:
+  case 7:
+  case 8:
+  case 0xd:
+  case 0xe:
+  case 0x10:
+  case 0x13:
+  case 0x17:
+  case 0x19:
+  case 0x1c:
+  case 0x1d:
+  case 0x21:
+  case 0x25:
+========================================================================================
+0x50bc40 indeg=6 bytes=3624
+calls: Game_GetPlayerBySlot, FUN_004e3d80, UI_SetChildState, FUN_00507e20, FUN_00507fd0, Object_SetFieldA4Locked
+ provider-specific; not original source
+void __fastcall FUN_0050bc40(void *param_1)
+{
+  void *pvVar1;
+  int iVar2;
+  if (((*(int *)((int)param_1 + 0xa4) == 0x19) || (*(int *)((int)param_1 + 0xa4) == 0x1a)) &&
+     (iVar2 = *(int *)((int)param_1 + 0xf4), iVar2 != 0)) {
+    pvVar1 = (void *)FUN_00488be0(DAT_0057c670,*(int *)((int)param_1 + 0x110));
+    iVar2 = FUN_00488be0(DAT_0057c670,*(int *)(iVar2 + 8));
+    if ((pvVar1 != (void *)0x0) && (iVar2 != 0)) {
+      FUN_004e3d80(pvVar1,*(int *)(iVar2 + 0x48),*(int *)((int)pvVar1 + 0x48),0);
+    }
+  }
+  if (*(int *)((int)param_1 + 0x30) == 0xd) {
+    pvVar1 = param_1;
+  }
+  else {
+    if (*(int *)((int)param_1 + 0x110) == -1) {
+      return;
+    }
+    iVar2 = FUN_00488be0(DAT_0057c670,*(int *)((int)param_1 + 0x110));
+    pvVar1 = *(void **)(iVar2 + 0x1d8);
+  }
+  switch(*(undefined4 *)((int)param_1 + 0xa4)) {
+  case 1:
+  case 2:
+    if (*(int *)((int)param_1 + 0x74) == 0) {
+      FUN_00507fd0(param_1);
+    }
+    *(undefined4 *)((int)param_1 + 0x110) = 0xffffffff;
+    break;
+  case 3:
+========================================================================================
+0x520e30 indeg=3 bytes=1741
+calls: UI_ClipRect, FUN_00532580
+ provider-specific; not original source
+void __fastcall FUN_00520e30(int param_1)
+{
+  if (*(int *)(param_1 + 0x20) == 0) {
+    *(undefined4 *)(param_1 + 0x20) = 1;
+    FUN_00532580(*(void **)(param_1 + 8),*(int *)(param_1 + 4));
+    FUN_005321f0(*(void **)(param_1 + 8),(int *)(param_1 + 0x28),1);
+  }
+  return;
+}
+========================================================================================
+0x532580 indeg=1 bytes=2299
+calls: Array_GetPtr, Array_IndexOfInt, UI_SelectObjectRecord, UI_SetActiveChild, Array_GetRecordByKeyPtr, FUN_00532620
+ provider-specific; not original source
+void __thiscall FUN_00532580(void *this,int param_1)
+{
+  int *piVar1;
+  int iVar2;
+  int iVar3;
+  int iVar4;
+  iVar3 = *(int *)((int)this + 0x158);
+  iVar4 = 0;
+  if (0 < iVar3) {
+    while( true ) {
+      piVar1 = (int *)FUN_005230b0((void *)((int)this + 0x148),iVar4);
+      iVar2 = FUN_005230d0(piVar1 + 1,param_1);
+      if (iVar2 != -1) break;
+      iVar4 = iVar4 + 1;
+      if (iVar3 <= iVar4) {
+        return;
+      }
+    }
+    if (*piVar1 == 3) {
+      iVar2 = iVar2 + 1;
+      if (piVar1[5] <= iVar2) {
+        iVar2 = 0;
+      }
+      iVar3 = FUN_005230b0(piVar1 + 1,iVar2);
+      piVar1 = (int *)FUN_0052ff20(this,iVar3);
+      FUN_00528200(*(void **)((int)this + 0x134),piVar1);
+      FUN_00524fd0(*(void **)((int)this + 0x134),this,iVar3);
+      return;
+    }
+    FUN_00532620(this,piVar1,param_1);
+  }
+========================================================================================
+0x532620 indeg=3 bytes=4247
+calls: Object_EnsureInit, UI_ClearPendingCommand, FUN_00520e30, UI_ClearPendingClipFlag, Array_GetPtr, Window_GetGadgetChecked
+ provider-specific; not original source
+void __thiscall FUN_00532620(void *this,int *param_1,int param_2)
+{
+  int iVar1;
+  int iVar2;
+  int *piVar3;
+  int iVar4;
+  int iVar5;
+  int unaff_ESI;
+  int iStack_4;
+  iVar1 = param_2;
+joined_r0x0053263c:
+  do {
+    while( true ) {
+      if (iVar1 != -1) {
+        iVar4 = *param_1;
+        if ((iVar4 == 0) || (iVar4 == 1)) {
+          piVar3 = (int *)FUN_0052fef0(this,iVar1);
+          iVar4 = (**(code **)(*piVar3 + 0xc))(2,0,0);
+          if (iVar4 == 0) {
+            FUN_00520cf0(piVar3);
+            return;
+          }
+          iVar4 = param_1[5];
+          iStack_4 = 0;
+          if (0 < iVar4) {
+            do {
+              iVar5 = FUN_005230b0(param_1 + 1,iStack_4);
+              piVar3 = (int *)FUN_0052fef0(this,iVar5);
+              if (iVar5 == iVar1) {
+                if (unaff_ESI != 0) {
+                  FUN_00520cd0(piVar3);
+========================================================================================
+0x533aa0 indeg=10 bytes=1858
+calls: Record_ApplyVariantState, FUN_00534bc0
+ provider-specific; not original source
+bool __thiscall FUN_00533aa0(void *this,int param_1,int param_2)
+{
+  int *piVar1;
+  int iVar2;
+  piVar1 = (int *)(*(int *)((int)this + 0x4c) + param_1 * 0x48);
+  if ((*(char *)((int)piVar1 + 0x3e) == '\x01') && (param_2 == *piVar1)) {
+    return true;
+  }
+  if (param_2 != -1) {
+    FUN_00534bc0(this,param_1,param_2);
+  }
+  iVar2 = FUN_00533af0(this,param_1,0,0);
+  return iVar2 != 0;
+}
+========================================================================================
+0x534bc0 indeg=1 bytes=1991
+calls: Record_ClearFlags48, FUN_00533aa0
+ provider-specific; not original source
+void __thiscall FUN_00534bc0(void *this,int param_1,int param_2)
+{
+  char cVar1;
+  if (((-1 < param_2) && (param_2 < *(int *)((int)this + 100))) &&
+     (*(char *)(*(int *)((int)this + 0x50) + 0x80 + param_2 * 0x98) != '\0')) {
+    cVar1 = *(char *)(*(int *)((int)this + 0x4c) + 0x3e + param_1 * 0x48);
+    if (cVar1 != '\0') {
+      FUN_00533a70(this,param_1);
+    }
+    *(int *)(*(int *)((int)this + 0x4c) + param_1 * 0x48) = param_2;
+    if (cVar1 != '\0') {
+      FUN_00533aa0(this,param_1,-1);
+    }
+  }
+  return;
+}

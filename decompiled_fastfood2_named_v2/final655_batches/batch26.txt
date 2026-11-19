@@ -1,0 +1,36 @@
+========================================================================================
+0x4f7e80 layer=[8] indeg=1 bytes=1754
+calls: Game_CountFreeSlots, Game_FindFreeObjectByType, 0x4e2080
+ provider-specific; not original source
+undefined4 FUN_004f7e80(void *param_1)
+{
+  int iVar1;
+  iVar1 = FUN_0048a200(DAT_0057c670,0x17);
+  if (iVar1 == 0) {
+    return 0;
+  }
+  iVar1 = FUN_0048a270(DAT_0057c670,0x17);
+  if (iVar1 == 0) {
+    return 0;
+  }
+  FUN_004e2080(param_1,*(int *)(iVar1 + 0x164),0x17);
+  return 1;
+}
+========================================================================================
+0x4a4ae0 layer=[8] indeg=0 bytes=1915
+calls: 0x4017f0, 0x482b70, CompanyOverview_UpdateBuildingRows, 0x4fe370
+ provider-specific; not original source
+void __cdecl FUN_004a4ae0(int param_1,void *param_2)
+{
+  void *pvVar1;
+  int iVar2;
+  pvVar1 = *(void **)((int)DAT_0057c670 + *(int *)((int)DAT_0057c670 + 0x2ec) * 4 + 0x200);
+  iVar2 = IDMap_Lookup((void *)((int)pvVar1 + 0x148),param_1,(int *)0x0);
+  iVar2 = FUN_004fe370(pvVar1,iVar2);
+  if (iVar2 == 0) {
+    FUN_00482b70(DAT_0057c670,0xfffe79af,DAT_005825a4,DAT_00581224,0);
+    return;
+  }
+  FUN_004a47e0(param_2,DAT_0057d264);
+  return;
+}

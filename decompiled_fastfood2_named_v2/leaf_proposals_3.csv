@@ -1,0 +1,95 @@
+address,proposed_name,confidence,evidence
+0x535500,Text_SetColor,high,Stores the text color at +0x9b8; renderer 0x5358d0 reads it and extracts 5-bit R/G/B channels.
+0x48d110,Name_GetLocalizedById,medium,38-case switch maps IDs 0..0x22 to language string globals filled by Language_MapStrings; default is empty &DAT_00568310.
+0x5374b0,Window_ClearPixels,high,Zeroes width*height*bpp/8 bytes at Window +0x18; callers pass Window_Construct (0x537230) results.
+0x5396e0,Surface_ResetCursor,medium,Resets draw x/y +4/+0xc to 0 and extents +8/+0x10 to the stored +0x1a/+0x1c sizes.
+0x53fd90,CriticalSection_Delete,high,Direct DeleteCriticalSection wrapper; called from CRT teardown paths.
+0x53a3f0,Sprite_TestPixel,high,Masked pixel lookup with RLE spans and transparency key +0x1c; used for sprite hit testing.
+0x520b60,UI_WindowHitTest,high,"Skips when overlay +0x18 is set, checks bounds +0x28..+0x34, then calls virtual +0x10 with offset coordinates."
+0x4018c0,IDMap_TranslateIdToIndex,high,For IDs >=100000 replaces the value with its index in the key array this+8; callers immediately call IDMap_Lookup.
+0x534960,Record_GetIndex48,high,Bounds-checked stride-0x48 record lookup returning the 16-bit index at +0x32.
+0x533a50,Record_Release48,high,"Sets the first dword of a stride-0x48 record to -1, freeing the slot."
+0x526d00,UI_ClearActiveDialog,high,"Clears +0x228, the modal dialog pointer set by FUN_00526cf0 in the 0x406d70 dialog loop."
+0x527400,StringTable_FindIndex,high,Binary search over table +0x82f8/count +0x82fc with 0x48-byte records and NUL-terminated key; returns index and insertion point.
+0x547400,Sound_PlayWaveOnChannel,medium,Selects buffer +0x1d0/+0x1d4/+0x1d8 and calls the sound vtable load/play sequence; returns the buffer pointer for speech.
+0x547270,Sound_IsBufferPlaying,medium,Calls sound vtable +0xf8 on buffer +0x10; speech code uses the result to decide whether to restart playback.
+0x548070,Sound_StopCurrentSpeech,medium,"When +0xfc is set and the mode is not 7, stops buffer +0x7c; called just before starting a speech wave."
+0x5548e7,CRT_SmallBlockFindRegion,high,Scans 0x14-byte region entries for an address inside their 1 MB VirtualAlloc block; used by _msize/free.
+0x4f7080,Thread_ReleaseWaitFlag,medium,"Clears +8, the wait flag set by paired helper 0x4f7020, when the caller has finished its handoff."
+0x509fa0,State_Is1ATo1C,medium,"Returns 1 when state field +0x30 is 0x1a, 0x1b or 0x1c; callers skip such objects."
+0x4d2e40,Entity_IsType84CTo857,medium,Tests type +0x20 against 0x84c..0x857; caller maps (id-0x84c)>>2 to a drawing variant.
+0x548d70,Sound_StartJingleTimer,medium,Sets 500-tick counter +0x150 that forces music track 0x3ec while counting down.
+0x4f2a80,IsMenuItem351Or355,high,Returns 1 only for IDs 0x351 and 0x355.
+0x48ce70,Color_ConvertRowTo16,medium,"Converts 256 pixels from 24-bit to RGB555/RGB565 selected by param_2, with channel-order variants 0..7."
+0x5474b0,Sound_PlayWaveOnChannelHandle,medium,Same channel buffer selection as 0x547400 but returns the buffer handle; the music path stores it at +0xc.
+0x542b00,List_Unlink,high,Doubly linked list removal with head/tail and count fixups.
+0x47a540,Grid_SumBlock,medium,Sums a filtered 8x8 dword block at +0x44 with 9-dword row stride; used by statistics aggregation.
+0x54a820,Window_MoveSidePanelToDesktop,high,"MoveWindow of child +4 to the right of parent +8, sized from the desktop window rect."
+0x4f1370,Entity_AppendToActiveList,medium,Appends an entity through list head +0xbc and next pointer +0x70.
+0x54ec31,Mem_SwapBytes,high,Byte-wise swap of two buffers.
+0x534a80,Record_GetObjectIndex48,medium,Returns the record index only if linked object +0x50 (stride 0x98) has byte +0x80 set.
+0x539340,Color_Convert555To565,high,In-place 15-bit to 16-bit pixel expansion gated by flag +0x18.
+0x488bc0,Game_FindPlayerSlotIndex,high,"Linear search of the six player pointers at +0x200, returning slot or -1."
+0x4db2e0,Csv_SkipSeparators,high,"Advances *param_2 past spaces, tabs and commas."
+0x547230,Sound_ClampGlobalVolumes,medium,Clamps global mix values 0x575094/0x575098/0x57509c to 10000/5000/5000.
+0x531dd0,UI_ClientToScreen,high,Adds window screen origin +0x18/+0x1c to two coordinates.
+0x480880,City_IsIdle,low,True when player +0x16f0 is null or its +0x94 task pointer is null.
+0x54d484,COM_SetSecondaryVTable,medium,"Writes vtable 0x55cc94 into the secondary base subobject at param-0xc, matching constructor 0x54d40e."
+0x539180,Surface_IsReady,low,"Returns true when virtual method +0x80(obj,0) returns 0."
+0x54d346,CS_Initialize,high,Direct InitializeCriticalSection wrapper.
+0x514320,Storage_GetCapacity,medium,Returns +0x2c * 15 + 36; used as divisor for storage fill percentage.
+0x53de60,Surface_DrawLine,high,Bresenham line with clipping and color conversion using stride +0x20 and pixel base +0x28.
+0x540390,ResourceTable_FindEntry,medium,"Searches the 0x238 groups of 0x1c, entries stride 0x14 by name, returning group and entry index."
+0x553630,CRT_Strcat,high,Scans destination to NUL then copies source; companion of _strcpy at 0x553620.
+0x4e0010,Company_ComputeTotals,high,Sums eight 4-field groups into +0xfc..+0x118 and stores the grand total at +0x11c.
+0x403880,String_CompareLocalizedNoCase,high,Case-insensitive compare with German umlaut folding; used to sort localized names.
+0x50f590,PlayerCompany_InitDefaults,medium,"Copies global default tables into player-company fields +0x3c..+0x68, +0x2c/+0x30 and +0x6c..+0x80."
+0x554f46,CRT_SmallBlockNewRegion,high,Allocates a 0x41c4 region header plus a 1 MB VirtualAlloc block and appends a 0x14-byte region entry.
+0x528820,UI_UpdateHoveredRow,medium,Computes the hovered row from y using row height +0x4c->0x9b0 and updates +0x48 when it changes.
+0x4817c0,System_QueryMemoryInfo,high,"GlobalMemoryStatus total RAM plus DirectDraw +0x2c query, stored in MB at +0x2e1c/+0x2e20."
+0x53a220,Sprite_InitFormat,high,"Initializes sprite flags, bpp, width, height, pitch and color key from constructor arguments."
+0x4d2b40,Entity_ApplyTypeProperties,medium,Stores type +0x20 and copies three properties from the DAT_0056b468 table.
+0x5322a0,UI_GetWindowRect,high,Returns overlay rect +8..+0x14 or window rect +0x38..+0x44; empty rect for sentinel -999.
+0x54d372,Stream_GetChar,high,streambuf sbumpc: returns *gptr++ or falls back to virtual +0x20 (uflow).
+0x4dc080,Mission_ApplySettings,high,Publishes mission game-object difficulty +0x344 and modifiers into globals DAT_0057bb24..0x57bb50.
+0x47a620,Grid_GetMaxValue,medium,Returns the maximum of the 9x9 float grid at +0x410; used for city rating.
+0x545660,Sound_Get3DBufferParams,high,Clears a 0x40-byte DS3DBUFFER and calls vtable +0xc; returns E_INVALIDARG on failure.
+0x4dd4a0,GameClock_Reset,high,Resets date bytes +6/+7/+8 and tick fields of the game clock at game+0x94; +4 holds default year 2000.
+0x549930,Employee_NextSpriteVariant,medium,Cycles the per-role counter at +0x1dc and returns sprite pointer DAT_005762b0 or DAT_005762b4.
+0x5288b0,UI_GetOuterRect,medium,Builds a rect from margins +0x30/+0x34 and size +0x28/+0x2c at position +0x38/+0x3c.
+0x54d574,Stream_PutBackChar,high,"streambuf sputbackc: stores the char at --pptr while pptr>pbase, else calls virtual +0x24."
+0x5230d0,Array_IndexOfInt,high,Linear search of an int array at +4 with count +8.
+0x542ad0,Sound_QueryBufferFlag,medium,Calls sub-object vtable +0x24 and returns its low bit; used in sound streaming checks.
+0x502180,Stats_ComputeCategory7,low,Sums four player-company fields and maps the total to level 0..3; switch case 7 of 0x502430.
+0x50e200,Object_CountMatchingSlots,medium,Counts how many of eight ints at +0xd4 equal the given value.
+0x49c0e0,GlobalArray_FindIndex,medium,"Linear search of global int array DAT_0057ca94 with count param_2, returning index or -1."
+0x401150,Record_SumFloatArray26,high,Sums 26 consecutive floats at +0x10; used when aggregating record values.
+0x54e565,CRT_CallExceptionHandler,medium,Pops ExceptionList and tail-calls the recovered SEH handler pointer.
+0x4ed010,Map_ComputeIsoOffsets,medium,"Derives 2*width, 2*height and 3*height offsets at +0xd8..+0xe4 used by diagonal map stepping."
+0x50f7f0,Company_GetPercentModifier,medium,"Scales a value to percent using mode +8 denominators 10000/5000, otherwise returns 100."
+0x54d3be,Stream_PeekChar,medium,"Returns cached char [3], refilling it via virtual +0x20 when needed."
+0x4d2e10,TileDef_TestFlag,high,Tests flag mask param_2 against per-tile definition +0x4c + index*0xc -> +8 -> +0x1c.
+0x54a7d0,Dialog_SetItemText,medium,"SetWindowTextA(GetDlgItem(hwnd,0x3ef), DAT_00579aec) when the dialog window exists."
+0x553468,CRT_ResolveCatchObject,medium,Computes a catch-object address from the frame offset and pdata/catch info; used by exception handler 0x55323d.
+0x489040,Map_GetTileByte,high,Reads a byte from map buffer +0xa0->+0x18 at x + y*800.
+0x4e3dd0,Player_InitSlotFlags,medium,Sets per-index byte +0xac and clears dwords +0xb4 and +0xcc for a player.
+0x49f190,Game_ClearObjectReferences,medium,Clears DAT_0057cda0 and game+0x98 when the destroyed object matches them.
+0x543e90,Sound_QueryFormatType,medium,"Calls sound vtable +0xc, returning 0 on failure or 0xc; caller branches on the format result."
+0x5355b0,Text_GetPosition,high,Reads text draw x/y at +0x9a0/+0x9a4 set by Text_SetMetrics.
+0x52e830,Renderer_ReleaseTarget,medium,Clears render target +0x14 and marks +0x3c invalidated when a target is present.
+0x527ab0,MapView_GetRotation,high,Returns map-view +0x8310 field +0x24; the window proc uses it as the 0..7 map rotation.
+0x526d10,UI_SetMenuToggle,low,Stores toggle flag +8 and marks +0x234; called for WM_SYSCOMMAND 0x4300.
+0x53f820,StreamBuffer_Reset,medium,Zeroes the four-dword stream buffer state; used by sound stream reader 0x541880.
+0x4a8450,Personnel_GetTrainingLevel,low,Returns DAT_0057d298[index]+1; displayed in the personnel dialog field 0x48b.
+0x527940,UI_SetWindowProc,high,"Stores Game_WindowProc at +0x8304, the callback used by the UI dialog dispatch."
+0x4d3070,Entity_SetTileId,medium,Stores the cell tile id from piVar3[2] at entity +0x24.
+0x551944,CRT_GetVaArg,medium,Returns the dword at *param_1 and advances it by 4; used repeatedly by varargs parser 0x551165.
+0x4f5fc0,Object_ClearField28,medium,Clears +0x28 of the player sub-object at game+0x224->0xac.
+0x52e8e0,Renderer_GetTextObject,medium,"Returns +0x18, the text object the renderer configures with Text_SetColor."
+0x54cb70,NoOp_ReturnArg,high,Identity function whose result is discarded at its only call site 0x54cad0.
+0x5448c0,Sound_QueryStatusLocked,medium,"Enters CS +0xa0, queries buffer param_2->0x48 via vtable +0x24, and writes its low bit."
+0x5484b0,Sound_StopAmbientBuffers,medium,Clears flag +0x16a and stops buffers +0x88/+0x8c/+0xf4.
+0x53ef90,COM_QueryInterfaceGuid,high,"Compares four GUID dwords with DAT_0055cb68, returning this or E_NOINTERFACE."
+0x5396b0,Surface_GetCursorRect,high,Outputs cursor fields +4/+0xc/+8/+0x10.
+0x527cf0,UI_ClearScrollDrag,medium,Clears drag target/object/offset +0x8338/+0x833c/+0x8348 set by 0x527cc0.
+0x54ddec,NoOp_Empty,high,Empty function body with no side effects.

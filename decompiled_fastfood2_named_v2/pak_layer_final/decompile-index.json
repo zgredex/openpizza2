@@ -1,0 +1,305 @@
+{
+  "version": 1,
+  "target_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd",
+  "provider": {
+    "id": "ghidra",
+    "name": "Ghidra",
+    "version": "12.2"
+  },
+  "analysis_profile_digest": "aae5fcbbec95ac3047ec86f28609da356814b1c85770f2c09803aad3607b988d",
+  "layout": "address",
+  "layout_status": "address",
+  "latest_run": {
+    "resume": false,
+    "selected": 9,
+    "excluded": 4081,
+    "selection": {
+      "name": null,
+      "namespace": null,
+      "address_start": "0x401af0",
+      "address_end": "0x402290",
+      "limit": 200
+    },
+    "inventory_limitations": [
+      "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.",
+      "Ghidra Program checkpoint mode is disabled: closing discards metadata edits; original executable bytes are unchanged. For stock ELF/PE/Mach-O on Linux/macOS, set REA_GHIDRA_CHECKPOINT_DIR to a private absolute directory before starting REA (restart MCP after changing its startup environment).",
+      "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+      "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+      "External functions and local thunks are distinct; procedure metadata identifies both and preserves a thunk target when Ghidra resolves one.",
+      "This session uses Ghidra 12.2. The bridge is verified against 12.1.4; other 12.x (>=12.1) builds are accepted and the observed version is reported."
+    ]
+  },
+  "limitations": [],
+  "functions": [
+    {
+      "address": "0x401af0",
+      "name": "Pak_Open",
+      "status": "written",
+      "relative_path": "functions/0x401af0.c",
+      "sha256": "0b4a41432fd66a4aceb5fc7d78f27a4533e5dd4da566baf28b668882cac75f3a",
+      "provider_source": {
+        "status": "unknown",
+        "reason": "source_not_available"
+      },
+      "body": {
+        "available": true,
+        "ranges": [
+          {
+            "start": "0x401af0",
+            "end": "0x401ce0"
+          }
+        ],
+        "non_contiguous": false
+      },
+      "limitations": [
+        "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.",
+        "Ghidra Program checkpoint mode is disabled: closing discards metadata edits; original executable bytes are unchanged. For stock ELF/PE/Mach-O on Linux/macOS, set REA_GHIDRA_CHECKPOINT_DIR to a private absolute directory before starting REA (restart MCP after changing its startup environment).",
+        "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+        "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+        "This session uses Ghidra 12.2. The bridge is verified against 12.1.4; other 12.x (>=12.1) builds are accepted and the observed version is reported.",
+        "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+        "External functions and functions without an analyzable body return null; other decompiler failures remain explicit."
+      ]
+    },
+    {
+      "address": "0x401cf0",
+      "name": "Pak_OpenEmbedded",
+      "status": "written",
+      "relative_path": "functions/0x401cf0.c",
+      "sha256": "9faaeca79d7d3a44d96925a2edc1f44f1bb7001c928928d4c634e876a0b9f550",
+      "provider_source": {
+        "status": "unknown",
+        "reason": "source_not_available"
+      },
+      "body": {
+        "available": true,
+        "ranges": [
+          {
+            "start": "0x401cf0",
+            "end": "0x401f2d"
+          }
+        ],
+        "non_contiguous": false
+      },
+      "limitations": [
+        "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.",
+        "Ghidra Program checkpoint mode is disabled: closing discards metadata edits; original executable bytes are unchanged. For stock ELF/PE/Mach-O on Linux/macOS, set REA_GHIDRA_CHECKPOINT_DIR to a private absolute directory before starting REA (restart MCP after changing its startup environment).",
+        "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+        "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+        "This session uses Ghidra 12.2. The bridge is verified against 12.1.4; other 12.x (>=12.1) builds are accepted and the observed version is reported.",
+        "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+        "External functions and functions without an analyzable body return null; other decompiler failures remain explicit."
+      ]
+    },
+    {
+      "address": "0x401f30",
+      "name": "Pak_DecodeIndex",
+      "status": "written",
+      "relative_path": "functions/0x401f30.c",
+      "sha256": "338b1358a7a8abb6062134584b11fd61e92a93f191c9435c6d10c2e20123dc34",
+      "provider_source": {
+        "status": "unknown",
+        "reason": "source_not_available"
+      },
+      "body": {
+        "available": true,
+        "ranges": [
+          {
+            "start": "0x401f30",
+            "end": "0x401f52"
+          }
+        ],
+        "non_contiguous": false
+      },
+      "limitations": [
+        "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.",
+        "Ghidra Program checkpoint mode is disabled: closing discards metadata edits; original executable bytes are unchanged. For stock ELF/PE/Mach-O on Linux/macOS, set REA_GHIDRA_CHECKPOINT_DIR to a private absolute directory before starting REA (restart MCP after changing its startup environment).",
+        "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+        "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+        "This session uses Ghidra 12.2. The bridge is verified against 12.1.4; other 12.x (>=12.1) builds are accepted and the observed version is reported.",
+        "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+        "External functions and functions without an analyzable body return null; other decompiler failures remain explicit."
+      ]
+    },
+    {
+      "address": "0x401f60",
+      "name": "ResourceIterator_Init",
+      "status": "written",
+      "relative_path": "functions/0x401f60.c",
+      "sha256": "1d72f2e8c0ba62a047b6b4ae22f4fd084afe56e6608718204e9e5db21468d829",
+      "provider_source": {
+        "status": "unknown",
+        "reason": "source_not_available"
+      },
+      "body": {
+        "available": true,
+        "ranges": [
+          {
+            "start": "0x401f60",
+            "end": "0x401f80"
+          }
+        ],
+        "non_contiguous": false
+      },
+      "limitations": [
+        "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.",
+        "Ghidra Program checkpoint mode is disabled: closing discards metadata edits; original executable bytes are unchanged. For stock ELF/PE/Mach-O on Linux/macOS, set REA_GHIDRA_CHECKPOINT_DIR to a private absolute directory before starting REA (restart MCP after changing its startup environment).",
+        "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+        "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+        "This session uses Ghidra 12.2. The bridge is verified against 12.1.4; other 12.x (>=12.1) builds are accepted and the observed version is reported.",
+        "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+        "External functions and functions without an analyzable body return null; other decompiler failures remain explicit."
+      ]
+    },
+    {
+      "address": "0x401f90",
+      "name": "ResourceIterator_Next",
+      "status": "written",
+      "relative_path": "functions/0x401f90.c",
+      "sha256": "f2d757d5f532b0b714b5576e93dffba9b1f1dcf0356e40191b42340e938c0aee",
+      "provider_source": {
+        "status": "unknown",
+        "reason": "source_not_available"
+      },
+      "body": {
+        "available": true,
+        "ranges": [
+          {
+            "start": "0x401f90",
+            "end": "0x40205d"
+          }
+        ],
+        "non_contiguous": false
+      },
+      "limitations": [
+        "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.",
+        "Ghidra Program checkpoint mode is disabled: closing discards metadata edits; original executable bytes are unchanged. For stock ELF/PE/Mach-O on Linux/macOS, set REA_GHIDRA_CHECKPOINT_DIR to a private absolute directory before starting REA (restart MCP after changing its startup environment).",
+        "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+        "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+        "This session uses Ghidra 12.2. The bridge is verified against 12.1.4; other 12.x (>=12.1) builds are accepted and the observed version is reported.",
+        "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+        "External functions and functions without an analyzable body return null; other decompiler failures remain explicit."
+      ]
+    },
+    {
+      "address": "0x402060",
+      "name": "Pak_FindEntry",
+      "status": "written",
+      "relative_path": "functions/0x402060.c",
+      "sha256": "b4492b309942cba5319fd7d8fdd48ccac6c7221a5b02064763503ee4b40cf86f",
+      "provider_source": {
+        "status": "unknown",
+        "reason": "source_not_available"
+      },
+      "body": {
+        "available": true,
+        "ranges": [
+          {
+            "start": "0x402060",
+            "end": "0x4021e7"
+          }
+        ],
+        "non_contiguous": false
+      },
+      "limitations": [
+        "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.",
+        "Ghidra Program checkpoint mode is disabled: closing discards metadata edits; original executable bytes are unchanged. For stock ELF/PE/Mach-O on Linux/macOS, set REA_GHIDRA_CHECKPOINT_DIR to a private absolute directory before starting REA (restart MCP after changing its startup environment).",
+        "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+        "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+        "This session uses Ghidra 12.2. The bridge is verified against 12.1.4; other 12.x (>=12.1) builds are accepted and the observed version is reported.",
+        "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+        "External functions and functions without an analyzable body return null; other decompiler failures remain explicit."
+      ]
+    },
+    {
+      "address": "0x402240",
+      "name": "Pak_SortEntries",
+      "status": "written",
+      "relative_path": "functions/0x402240.c",
+      "sha256": "1cf5ceddd9829db7cba1921a0a190ff881ae8fd7e48f5501f17b356c7c1c5704",
+      "provider_source": {
+        "status": "unknown",
+        "reason": "source_not_available"
+      },
+      "body": {
+        "available": true,
+        "ranges": [
+          {
+            "start": "0x402240",
+            "end": "0x40225b"
+          }
+        ],
+        "non_contiguous": false
+      },
+      "limitations": [
+        "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.",
+        "Ghidra Program checkpoint mode is disabled: closing discards metadata edits; original executable bytes are unchanged. For stock ELF/PE/Mach-O on Linux/macOS, set REA_GHIDRA_CHECKPOINT_DIR to a private absolute directory before starting REA (restart MCP after changing its startup environment).",
+        "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+        "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+        "This session uses Ghidra 12.2. The bridge is verified against 12.1.4; other 12.x (>=12.1) builds are accepted and the observed version is reported.",
+        "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+        "External functions and functions without an analyzable body return null; other decompiler failures remain explicit."
+      ]
+    },
+    {
+      "address": "0x402260",
+      "name": "ResourceHandle_Alloc",
+      "status": "written",
+      "relative_path": "functions/0x402260.c",
+      "sha256": "6a0da1cac809030f625898dcc07052bc2f8a4092d0b8610d30584da19fd29261",
+      "provider_source": {
+        "status": "unknown",
+        "reason": "source_not_available"
+      },
+      "body": {
+        "available": true,
+        "ranges": [
+          {
+            "start": "0x402260",
+            "end": "0x40228e"
+          }
+        ],
+        "non_contiguous": false
+      },
+      "limitations": [
+        "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.",
+        "Ghidra Program checkpoint mode is disabled: closing discards metadata edits; original executable bytes are unchanged. For stock ELF/PE/Mach-O on Linux/macOS, set REA_GHIDRA_CHECKPOINT_DIR to a private absolute directory before starting REA (restart MCP after changing its startup environment).",
+        "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+        "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+        "This session uses Ghidra 12.2. The bridge is verified against 12.1.4; other 12.x (>=12.1) builds are accepted and the observed version is reported.",
+        "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+        "External functions and functions without an analyzable body return null; other decompiler failures remain explicit."
+      ]
+    },
+    {
+      "address": "0x402290",
+      "name": "Resource_Open",
+      "status": "written",
+      "relative_path": "functions/0x402290.c",
+      "sha256": "3da0a60a413b3bfe2c371000c7e88068d99bfd6091b37eef4c60952264f78489",
+      "provider_source": {
+        "status": "unknown",
+        "reason": "source_not_available"
+      },
+      "body": {
+        "available": true,
+        "ranges": [
+          {
+            "start": "0x402290",
+            "end": "0x4025d7"
+          }
+        ],
+        "non_contiguous": false
+      },
+      "limitations": [
+        "The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.",
+        "Ghidra Program checkpoint mode is disabled: closing discards metadata edits; original executable bytes are unchanged. For stock ELF/PE/Mach-O on Linux/macOS, set REA_GHIDRA_CHECKPOINT_DIR to a private absolute directory before starting REA (restart MCP after changing its startup environment).",
+        "Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.",
+        "Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.",
+        "This session uses Ghidra 12.2. The bridge is verified against 12.1.4; other 12.x (>=12.1) builds are accepted and the observed version is reported.",
+        "Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.",
+        "External functions and functions without an analyzable body return null; other decompiler failures remain explicit."
+      ]
+    }
+  ]
+}

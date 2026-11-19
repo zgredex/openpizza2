@@ -1,0 +1,51 @@
+// rea decompile_all
+// name: UI_ClearTransientEntries
+// address: 0x528090
+// body: available
+// range: 0x528090-0x528153 inclusive
+// non_contiguous: false
+// provider: Ghidra 12.2 (ghidra)
+// analysis_profile: aae5fcbbec95ac3047ec86f28609da356814b1c85770f2c09803aad3607b988d
+// limitations: The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.; Ghidra Program checkpoint mode is disabled: closing discards metadata edits; original executable bytes are unchanged. For stock ELF/PE/Mach-O on Linux/macOS, set REA_GHIDRA_CHECKPOINT_DIR to a private absolute directory before starting REA (restart MCP after changing its startup environment).; Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; This session uses Ghidra 12.2. The bridge is verified against 12.1.4; other 12.x (>=12.1) builds are accepted and the observed version is reported.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+void __thiscall UI_ClearTransientEntries(void *this,int param_1,int param_2)
+
+{
+  uint uVar1;
+  bool bVar2;
+  bool bVar3;
+  uint uVar4;
+  
+                    /* Leaf reversal proposal batch 2. */
+  if ((param_1 != 0) || (param_2 != 0)) {
+    if ((*(uint *)((int)this + 0x32b4) != *(uint *)((int)this + 0x32b8)) &&
+       (uVar4 = *(uint *)((int)this + 0x32b4) + 1 & 0x3ff, uVar4 != *(uint *)((int)this + 0x32b8)))
+    {
+      do {
+        bVar2 = false;
+        bVar3 = false;
+        uVar1 = *(uint *)((int)this + uVar4 * 0xc + 0x2b4);
+        if (uVar1 < 0x203) {
+          if (uVar1 < 0x201) {
+            if (((uVar1 == 0x100) || (uVar1 == 0x102)) || (uVar1 == 0x104)) {
+              bVar2 = true;
+            }
+          }
+          else {
+LAB_0052811d:
+            bVar3 = true;
+          }
+        }
+        else if ((0x203 < uVar1) && ((uVar1 < 0x206 || (uVar1 == 0x20a)))) goto LAB_0052811d;
+        if (((param_1 != 0) && (bVar2)) || ((param_2 != 0 && (bVar3)))) {
+          *(undefined4 *)((int)this + uVar4 * 0xc + 0x2b4) = 0;
+        }
+        uVar4 = uVar4 + 1 & 0x3ff;
+      } while (uVar4 != *(uint *)((int)this + 0x32b8));
+    }
+  }
+  return;
+}
+

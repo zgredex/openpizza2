@@ -1,0 +1,118 @@
+// rea decompile_all
+// name: Branch_ComputeAdvisorTipId
+// address: 0x509a20
+// body: available
+// range: 0x509a20-0x509bd5 inclusive
+// non_contiguous: false
+// provider: Ghidra 12.2 (ghidra)
+// analysis_profile: aae5fcbbec95ac3047ec86f28609da356814b1c85770f2c09803aad3607b988d
+// limitations: The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.; Ghidra Program checkpoint mode is disabled: closing discards metadata edits; original executable bytes are unchanged. For stock ELF/PE/Mach-O on Linux/macOS, set REA_GHIDRA_CHECKPOINT_DIR to a private absolute directory before starting REA (restart MCP after changing its startup environment).; Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; This session uses Ghidra 12.2. The bridge is verified against 12.1.4; other 12.x (>=12.1) builds are accepted and the observed version is reported.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+void __fastcall
+Branch_ComputeAdvisorTipId(int param_1,undefined4 param_2,void *param_3,void *param_4,int param_5)
+
+{
+  int iVar1;
+  int iVar2;
+  undefined4 extraout_EDX;
+  bool bVar3;
+  bool bVar4;
+  
+                    /* Chooses the advisor tip id for a branch from its ratings and turnover. */
+  iVar2 = *(int *)(param_1 + 0x34);
+  if ((*(void **)((int)param_3 + 0x16f0) != (void *)0x0) &&
+     (iVar1 = Game_CountFreeBuildingsByType(*(void **)((int)param_3 + 0x16f0),0x16),
+     param_2 = extraout_EDX, 0 < iVar1)) {
+    switch(iVar2) {
+    case 0:
+      bVar4 = SBORROW4(iVar1,3);
+      bVar3 = iVar1 + -3 < 0;
+      break;
+    case 1:
+      goto switchD_00509a46_caseD_1;
+    case 2:
+      bVar4 = SBORROW4(iVar1,4);
+      bVar3 = iVar1 + -4 < 0;
+      break;
+    case 3:
+      bVar4 = SBORROW4(iVar1,5);
+      bVar3 = iVar1 + -5 < 0;
+      break;
+    default:
+      goto switchD_00509a46_default;
+    }
+    if (bVar4 == bVar3) {
+switchD_00509a46_default:
+      *(undefined4 *)(param_1 + 0x9c) = 100;
+      return;
+    }
+  }
+switchD_00509a46_caseD_1:
+  iVar1 = Branch_ComputeBuildingRating(param_3,param_2,iVar2);
+  if (iVar1 < 0x1e) {
+    *(undefined4 *)(param_1 + 0x9c) = 0x66;
+    return;
+  }
+  iVar1 = Stats_GetAverage8(param_3,iVar2);
+  if (iVar1 < 0x14) {
+    *(undefined4 *)(param_1 + 0x9c) = 0x68;
+    return;
+  }
+  iVar1 = Index_Map8To5(param_4,iVar2);
+  if (iVar1 < 0x1e) {
+    *(undefined4 *)(param_1 + 0x9c) = 0x65;
+    return;
+  }
+  Game_InitStatBaselines(param_3,iVar2,'\x01');
+  if (*(int *)((int)param_3 + iVar2 * 4 + 0x181c) < 0x14) {
+    *(undefined4 *)(param_1 + 0x9c) = 0x67;
+    return;
+  }
+  Game_InitStatBaselines(param_3,iVar2,'\0');
+  iVar2 = City_HasRoomForBuilding(param_3);
+  if (iVar2 != 0) {
+    *(undefined4 *)(param_1 + 0x9c) = 0x6a;
+    return;
+  }
+  if (param_5 < 0x55) {
+    if (param_5 < 0x46) {
+      if (param_5 < 0x37) {
+        if (param_5 < 0x2d) {
+          if (param_5 < 0x1e) {
+            if (param_5 < 0xf) {
+              *(undefined4 *)(param_1 + 0x9c) = 0x72;
+            }
+            else {
+              *(undefined4 *)(param_1 + 0x9c) = 0x6d;
+            }
+          }
+          else {
+            *(undefined4 *)(param_1 + 0x9c) = 0x71;
+          }
+        }
+        else {
+          *(undefined4 *)(param_1 + 0x9c) = 0x70;
+        }
+      }
+      else {
+        *(undefined4 *)(param_1 + 0x9c) = 0x6f;
+      }
+    }
+    else {
+      *(undefined4 *)(param_1 + 0x9c) = 0x6e;
+    }
+  }
+  else {
+    *(undefined4 *)(param_1 + 0x9c) = 0x6d;
+  }
+  if ((0x45 < param_5) &&
+     (iVar2 = *(int *)((int)param_3 + 0x30), iVar1 = Game_GetCurrentPlayerCompanyName(DAT_0057c670),
+     iVar2 == iVar1)) {
+    UI_AppendCommandIfActive(*(void **)(*(int *)(DAT_0057c670 + 0x224) + 0xa8),0x1d,1);
+    MissionGoal_HandleEvent(*(void **)(*(int *)(DAT_0057c670 + 0x224) + 0xa8),0x1d,-1,-1);
+  }
+  return;
+}
+

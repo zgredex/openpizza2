@@ -1,0 +1,409 @@
+========================================================================================
+0x54dfaf layer=14 indeg=1 bytes=1797
+calls: CS_LeaveObject, FUN_005520f9, CRT_GetStream
+ provider-specific; not original source
+undefined4 * __cdecl FUN_0054dfaf(LPCSTR param_1,char *param_2,uint param_3)
+{
+  undefined4 *puVar1;
+  undefined4 *puVar2;
+  puVar1 = FUN_00552269();
+  if (puVar1 == (undefined4 *)0x0) {
+    return (undefined4 *)0x0;
+  }
+  puVar2 = FUN_005520f9(param_1,param_2,param_3,puVar1);
+  FUN_005508c9((uint)puVar1);
+  return puVar2;
+}
+========================================================================================
+0x54e7d0 layer=11 indeg=2 bytes=2331
+calls: CRT_Inconsistency
+ provider-specific; not original source
+int __cdecl FUN_0054e7d0(uint param_1,int param_2,int param_3,uint *param_4,uint *param_5)
+{
+  int iVar1;
+  uint uVar2;
+  uint uVar3;
+  uint local_8;
+  uVar2 = param_1;
+  local_8 = *(uint *)(param_1 + 0xc);
+  iVar1 = *(int *)(param_1 + 0x10);
+  uVar3 = local_8;
+  param_1 = local_8;
+  if (-1 < param_2) {
+    do {
+      if (uVar3 == 0xffffffff) {
+        FUN_0055353d();
+      }
+      uVar3 = uVar3 - 1;
+      if (((*(int *)(iVar1 + 4 + uVar3 * 0x14) < param_3) &&
+          (param_3 <= *(int *)(iVar1 + uVar3 * 0x14 + 8))) || (uVar3 == 0xffffffff)) {
+        param_2 = param_2 + -1;
+        local_8 = param_1;
+        param_1 = uVar3;
+      }
+    } while (-1 < param_2);
+  }
+========================================================================================
+0x54ede0 layer=11 indeg=6 bytes=1679
+calls: CRT_FseekLocked, CRT_LockFile, CS_LeaveObject
+ provider-specific; not original source
+int __cdecl FUN_0054ede0(int *param_1,int param_2,DWORD param_3)
+{
+  int iVar1;
+  FUN_00550877((uint)param_1);
+  iVar1 = FUN_0054ee0c(param_1,param_2,param_3);
+  FUN_005508c9((uint)param_1);
+  return iVar1;
+}
+========================================================================================
+0x54f167 layer=12 indeg=5 bytes=2207
+calls: FUN_0054f1de, CRT_FreeInternal, FileObject_InitBase, CRT_MapWin32Error, CRT_Calloc
+ provider-specific; not original source
+HANDLE __cdecl FUN_0054f167(int param_1,SIZE_T param_2,int param_3)
+{
+  int *lpThreadId;
+  HANDLE hThread;
+  DWORD DVar1;
+  DVar1 = 0;
+  lpThreadId = FUN_005539d3(1,0x74);
+  if (lpThreadId != (int *)0x0) {
+    FUN_00552385((int)lpThreadId);
+    lpThreadId[0x12] = param_1;
+    lpThreadId[0x13] = param_3;
+    hThread = CreateThread((LPSECURITY_ATTRIBUTES)0x0,param_2,FUN_0054f1de,lpThreadId,4,
+                           (LPDWORD)lpThreadId);
+    lpThreadId[1] = (int)hThread;
+    if ((hThread != (HANDLE)0x0) && (DVar1 = ResumeThread(hThread), DVar1 != 0xffffffff)) {
+      return hThread;
+    }
+    DVar1 = GetLastError();
+  }
+  FUN_00551005(lpThreadId);
+  if (DVar1 != 0) {
+    FUN_00553593(DVar1);
+  }
+  return (HANDLE)0xffffffff;
+}
+========================================================================================
+0x54f1de layer=11 indeg=1 bytes=2084
+calls: CRT_EndThread, __amsg_exit, 0x57671c
+ provider-specific; not original source
+undefined4 FUN_0054f1de(LPVOID param_1)
+{
+  BOOL BVar1;
+  void *local_14;
+  undefined1 *puStack_10;
+  undefined *puStack_c;
+  undefined4 local_8;
+  local_8 = 0xffffffff;
+  puStack_c = &DAT_0055ccf8;
+  puStack_10 = &LAB_00553be0;
+  local_14 = ExceptionList;
+  ExceptionList = &local_14;
+  BVar1 = TlsSetValue(DAT_00576ac4,param_1);
+  if (BVar1 == 0) {
+    __amsg_exit(0x10);
+  }
+  if (PTR_FUN_0057671c != (undefined *)0x0) {
+    (*(code *)PTR_FUN_0057671c)();
+  }
+  local_8 = 0;
+  (**(code **)((int)param_1 + 0x48))(*(undefined4 *)((int)param_1 + 0x4c));
+  FUN_0054f271();
+  ExceptionList = local_14;
+  return 0;
+}
+========================================================================================
+0x54f2dd layer=11 indeg=3 bytes=1550
+calls: CRT_DoExit
+ provider-specific; not original source
+void __cdecl FUN_0054f2dd(UINT param_1)
+{
+  FUN_0054f2ff(param_1,0,0);
+  return;
+}
+========================================================================================
+0x54fe8b layer=11 indeg=3 bytes=1904
+calls: CRT_CloseLocked, CRT_GetErrnoPtr, CRT_GetDosErrnoPtr, CRT_LockFileHandle, CS_LeaveSlot
+ provider-specific; not original source
+undefined4 __cdecl FUN_0054fe8b(uint param_1)
+{
+  undefined4 uVar1;
+  DWORD *pDVar2;
+  if ((param_1 < DAT_00586d20) &&
+     ((*(byte *)((&DAT_00586c20)[(int)param_1 >> 5] + 4 + (param_1 & 0x1f) * 0x24) & 1) != 0)) {
+    FUN_005545ef(param_1);
+    uVar1 = FUN_0054fee8(param_1);
+    FUN_0055464e(param_1);
+    return uVar1;
+  }
+  pDVar2 = FUN_00553606();
+  *pDVar2 = 9;
+  pDVar2 = FUN_0055360f();
+  *pDVar2 = 0;
+  return 0xffffffff;
+}
+========================================================================================
+0x550655 layer=12 indeg=1 bytes=1719
+calls: CRT_FflushLocked, FUN_00550717, CRT_LockFile, CS_LeaveObject
+ provider-specific; not original source
+int __cdecl FUN_00550655(int *param_1)
+{
+  int iVar1;
+  if (param_1 == (int *)0x0) {
+    iVar1 = FUN_00550717(0);
+    return iVar1;
+  }
+  FUN_00550877((uint)param_1);
+  iVar1 = FUN_00550684(param_1);
+  FUN_005508c9((uint)param_1);
+  return iVar1;
+}
+========================================================================================
+0x550717 layer=11 indeg=1 bytes=2497
+calls: CRT_FflushLocked, CRT_LockFile2, CRT_UnlockHandle, CRT_Lock, CS_LeaveIndexed
+ provider-specific; not original source
+int __cdecl FUN_00550717(int param_1)
+{
+  int *piVar1;
+  int iVar2;
+  int iVar3;
+  int iVar4;
+  int iVar5;
+  iVar3 = 0;
+  iVar5 = 0;
+  FUN_0055395d(2);
+  iVar4 = 0;
+  if (0 < DAT_00586c00) {
+    do {
+      iVar2 = *(int *)(DAT_00585bec + iVar4 * 4);
+      if ((iVar2 != 0) && ((*(byte *)(iVar2 + 0xc) & 0x83) != 0)) {
+        FUN_005508a6(iVar4,iVar2);
+        piVar1 = *(int **)(DAT_00585bec + iVar4 * 4);
+        if ((piVar1[3] & 0x83U) != 0) {
+          if (param_1 == 1) {
+            iVar2 = FUN_00550684(piVar1);
+            if (iVar2 != -1) {
+              iVar3 = iVar3 + 1;
+            }
+          }
+          else if ((param_1 == 0) && ((piVar1[3] & 2U) != 0)) {
+========================================================================================
+0x55099b layer=12 indeg=2 bytes=5470
+calls: FUN_0054fe8b, CRT_ReadCore, CRT_LseekLocked, CRT_MapWin32Error, CRT_GetErrnoPtr, CRT_GetDosErrnoPtr, CRT_AllocOsfHandle, CRT_SetOsfHandle, CS_LeaveSlot, CRT_Chsize
+ provider-specific; not original source
+uint __cdecl FUN_0055099b(LPCSTR param_1,uint param_2,uint param_3,uint param_4)
+{
+  byte *pbVar1;
+  uint uVar2;
+  uint uVar3;
+  DWORD *pDVar4;
+  HANDLE hFile;
+  DWORD DVar5;
+  int iVar6;
+  int iVar7;
+  bool bVar8;
+  _SECURITY_ATTRIBUTES local_20;
+  DWORD local_14;
+  DWORD local_10;
+  DWORD local_c;
+  byte local_5;
+  bVar8 = (param_2 & 0x80) == 0;
+  local_20.nLength = 0xc;
+  local_20.lpSecurityDescriptor = (LPVOID)0x0;
+  if (bVar8) {
+    local_5 = 0;
+  }
+  else {
+    local_5 = 0x10;
+  }
+========================================================================================
+0x551165 layer=11 indeg=2 bytes=14835
+calls: _strlen, CRT_StreamPutc, CRT_WriteMultiChar, CRT_WriteString, CRT_GetVaArg, CRT_ReadArg64, CRT_ReadArg16, CRT_Wctomb, __aulldiv, __aullrem, 0x576a18, 0x576a1c, 0x576a24
+ provider-specific; not original source
+int __cdecl FUN_00551165(int *param_1,byte *param_2,undefined4 *param_3)
+{
+  WCHAR WVar1;
+  byte *pbVar2;
+  uint uVar3;
+  undefined4 uVar4;
+  short *psVar5;
+  undefined1 *puVar6;
+  WCHAR *pWVar7;
+  int *piVar8;
+  int iVar9;
+  byte bVar10;
+  int iVar11;
+  ulonglong uVar12;
+  undefined8 uVar13;
+  longlong lVar14;
+  undefined1 local_24c [511];
+  undefined1 local_4d;
+  undefined4 local_4c;
+  undefined4 local_48;
+  uint local_44;
+  uint local_40;
+  CHAR local_3c [4];
+  undefined4 local_38;
+  int local_34;
+========================================================================================
+0x5519e8 layer=11 indeg=1 bytes=2205
+calls: CRT_Tolower, CRT_Mbtowc
+ provider-specific; not original source
+void __cdecl FUN_005519e8(char *param_1)
+{
+  char cVar1;
+  char cVar2;
+  undefined *this;
+  uint uVar3;
+  undefined *puVar4;
+  this = (undefined *)(int)*param_1;
+  uVar3 = FUN_0054f8a9((uint)this);
+  if (uVar3 != 0x65) {
+    do {
+      param_1 = param_1 + 1;
+      if (DAT_00576cf0 < 2) {
+        uVar3 = (byte)PTR_DAT_00576ae4[*param_1 * 2] & 4;
+        this = PTR_DAT_00576ae4;
+      }
+      else {
+        puVar4 = (undefined *)0x4;
+        uVar3 = FUN_00552b23(this,(int)*param_1,4);
+        this = puVar4;
+      }
+    } while (uVar3 != 0);
+  }
+  cVar2 = *param_1;
+  *param_1 = DAT_00576cf4;
+========================================================================================
+0x5520f9 layer=13 indeg=1 bytes=3877
+calls: FUN_0055099b
+ provider-specific; not original source
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+undefined4 * __cdecl FUN_005520f9(LPCSTR param_1,char *param_2,uint param_3,undefined4 *param_4)
+{
+  char cVar1;
+  bool bVar2;
+  bool bVar3;
+  bool bVar4;
+  uint uVar5;
+  uint uVar6;
+  bVar4 = false;
+  bVar3 = false;
+  cVar1 = *param_2;
+  if (cVar1 == 'a') {
+    uVar5 = 0x109;
+  }
+  else {
+    if (cVar1 == 'r') {
+      uVar5 = 0;
+      uVar6 = DAT_005858fc | 1;
+      goto LAB_0055213a;
+    }
+    if (cVar1 != 'w') {
+      return (undefined4 *)0x0;
+    }
+    uVar5 = 0x301;
+========================================================================================
+0x55249f layer=11 indeg=1 bytes=1678
+calls: CRT_Tzset, CRT_Lock, CS_LeaveIndexed
+ provider-specific; not original source
+void FUN_0055249f(void)
+{
+  if (DAT_00585728 == 0) {
+    FUN_0055395d(0xb);
+    if (DAT_00585728 == 0) {
+      FUN_005524cd();
+      DAT_00585728 = DAT_00585728 + 1;
+    }
+    FUN_005539be(0xb);
+  }
+  return;
+}
+========================================================================================
+0x552a61 layer=12 indeg=1 bytes=2533
+calls: FUN_0055249f, CRT_IsIndst
+ provider-specific; not original source
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+int __cdecl
+FUN_00552a61(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6,int param_7)
+{
+  bool bVar1;
+  undefined3 extraout_var;
+  int iVar2;
+  uint uVar3;
+  int iVar4;
+  int local_28 [2];
+  int local_20;
+  int local_18;
+  uint local_14;
+  int local_c;
+  uVar3 = param_1 - 0x76c;
+  if (((int)uVar3 < 0x46) || (0x8a < (int)uVar3)) {
+    return -1;
+  }
+  iVar4 = *(int *)(&DAT_005771d0 + param_2 * 4) + param_3;
+  if (((uVar3 & 3) == 0) && (2 < param_2)) {
+    iVar4 = iVar4 + 1;
+  }
+  FUN_0055249f();
+  local_20 = param_4;
+  local_18 = param_2 + -1;
+========================================================================================
+0x552fc9 layer=11 indeg=2 bytes=2282
+calls: CRT_Inconsistency
+ provider-specific; not original source
+void __cdecl FUN_00552fc9(int param_1,undefined4 param_2,int param_3,int param_4)
+{
+  int iVar1;
+  int iVar2;
+  void *local_14;
+  undefined1 *puStack_10;
+  undefined *puStack_c;
+  undefined4 local_8;
+  puStack_c = &DAT_0055ce18;
+  puStack_10 = &LAB_00553be0;
+  local_14 = ExceptionList;
+  ExceptionList = &local_14;
+  for (iVar2 = *(int *)(param_1 + 8); local_8 = 0xffffffff, iVar2 != param_4;
+      iVar2 = *(int *)(*(int *)(param_3 + 8) + iVar2 * 8)) {
+    if ((iVar2 < 0) || (*(int *)(param_3 + 4) <= iVar2)) {
+      FUN_0055353d();
+    }
+    local_8 = 0;
+    iVar1 = *(int *)(*(int *)(param_3 + 8) + 4 + iVar2 * 8);
+    if (iVar1 != 0) {
+      __CallSettingFrame_12(iVar1,param_1,0x103);
+    }
+  }
+  *(int *)(param_1 + 8) = iVar2;
+  ExceptionList = local_14;
+========================================================================================
+0x55323d layer=11 indeg=1 bytes=4829
+calls: _memmove, CRT_LockStub, CRT_UnlockHelper, CRT_ResolveCatchObject, CRT_Inconsistency, FUN_00555f86, FUN_00555fa2, FUN_00555fbe
+ provider-specific; not original source
+void __cdecl FUN_0055323d(int param_1,int param_2,byte *param_3,byte *param_4)
+{
+  int *piVar1;
+  bool bVar2;
+  undefined3 extraout_var;
+  undefined3 extraout_var_00;
+  int iVar3;
+  undefined3 extraout_var_01;
+  undefined3 extraout_var_02;
+  undefined3 extraout_var_03;
+  undefined3 extraout_var_04;
+  undefined4 *puVar4;
+  undefined3 extraout_var_05;
+  undefined3 extraout_var_06;
+  undefined3 extraout_var_07;
+  uint uVar5;
+  void *local_14;
+  undefined1 *puStack_10;
+  undefined *puStack_c;
+  undefined4 local_8;
+  puStack_c = &DAT_0055ce40;
+  puStack_10 = &LAB_00553be0;
+  local_14 = ExceptionList;
+  if (*(int *)(param_3 + 4) == 0) {
+    return;

@@ -1,0 +1,52 @@
+address,proposed_name,confidence,evidence
+0x48d530,Game_BuildPlayerRankingData,medium,"Allocates six 0x1a0 blocks, tracks per-record maxima, derives weighted category scores and 8-column totals at +0xfc/+0x11c."
+0x4eac80,Game_RegisterWorldObject,high,"Appends the object to the global registry at +0x2c3f8, or inserts it at the given index through IDMap_InsertGrow."
+0x47f230,Game_ComputeCityPriceShare,medium,"Resolves the player city and calls Game_ComputePrice, then returns a quarter after the record+0xc percent discount."
+0x4f0c60,Object_FindRecordByKey28,high,Scans the 0x28-stride buffer pair from Object_GetBufferPair for a record whose +2 ushort equals the key.
+0x4f4e90,Map_ScreenToGridCell,high,Projects screen x/y through Map_ComputeBlitRect and splits the cell index by map width into x and y.
+0x51fda0,Screen_AnimateTileWipe,medium,"Per-frame tile-wipe blits in 10 orientation modes using Map_GenerateRandomTiles, Surface_BlitOriented and Rect_Union, then frees the masks."
+0x4fccb0,Game_UpdateMusicTheme,high,"Aggregates 8 building categories through the player 8x9 matrix at +0xe0, stores the best column at +0x14d8 and calls Sound_SelectCurrentTrack."
+0x5395a0,Surface_FillClippedRect,high,"Clips the rect to +4/+8/+0xc/+0x10 and fills 16-bit pixels with the color, optionally converted by Color_RGBTo16FromDword."
+0x5387d0,Renderer_ReleaseTargets,high,"Releases two child render objects via vtable+8, resets +0x40, then calls Renderer_InitOrCopyState and Renderer_CopyStateToChildren."
+0x527950,UI_LoadChildSprite,high,"Clears the old child extent, loads the named sprite into +0x8314 with Sprite_Load and releases it on failure."
+0x551c5e,CRT_InsertDecimalPoint,high,"Writes the sign and digits, inserts the decimal separator DAT_00576cf4 and zero-fills the fraction via String_MakeRoomAtFront/_memset."
+0x5104f0,Stats_AverageActiveCategories,high,Averages Game_MapInputIndex over the 8 active mask bytes and returns 0 when none are set.
+0x47e400,Game_CountOperatingObjectsByType,medium,"Scans the +0x1500 object map, filters type byte +0x824 and counts records whose linked +0x814 record has +0x74 set."
+0x50ad80,Game_MoveTypeBObjectsToStateList,medium,"Walks list +0x114, passes type 0xb records to Game_AddObjectToStateList, then resets the list with List_Node_Reset."
+0x510460,Stats_GetMaxTimelineCategoryValue,high,Takes the maximum Stats_SumMaskedMapFloats over the min..max timeline span from Stats_GetMinMapField10/UI_GetMaxChildField10.
+0x4e3890,Game_ComputePlayerTax,medium,"Tier 1/2 with player field c20 above 4/5 selects a 30000/60000 base, scaled by 10 minus city fields +0x58/+0x40."
+0x510400,Stats_GetMaxTimelineCount,high,Takes the maximum AI_CountPlanSteps integer sum over the min..max timeline span.
+0x548040,Sound_TriggerSoundById,medium,"When sound is enabled and the index is valid, forwards the id at +0x24+index*4 to Sound_SetPosition for playback."
+0x500580,Font_DrawGlyphPattern,low,Copies 6- or 12-byte glyph rows from pattern table 0x572214 into the 0x50-stride glyph sheet at x/y in 4 orientations.
+0x54bd10,UI_UpdateAnimatedSprites,medium,"Advances up to nine 0x23-stride timers, wraps at 160.0, picks one of three sprite sets by absolute value and draws via 0x53d570."
+0x4050e0,Game_GenerateRandomPlayers,high,"Shuffles name/appearance pools, then fills five 0xc0-stride player blocks with random gender, name id, face indices and a 100 starting value."
+0x512860,Map_FindObjectOnApproachLine,low,"Walks a line from (266,274) toward (0x10a,0x112) with Map_GetTileByte and returns another object within 15 units."
+0x4d7d60,Game_CountNearbyObjectTypes,high,Bins the linked building types of nearby objects (distance^2 < 160000) into the 8-slot output array for the player.
+0x483d10,Game_GetRecordActionState,medium,Maps record +0x30 state and player ownership at +0x50/+0x110 to UI/action codes 2..0x1d.
+0x479290,Game_ComputeCategoryDominance,high,"Counts buildings by type, finds the largest group, stores 100 minus the other groups share at +0x1854 and clamps to 0..100."
+0x4e0920,Stats_SumRecordFloatsByType,high,"Sums 26 floats (or one index) from +0x164 records whose +4 equals the type, plus +0x148 rows through Stats_SumFilteredFloats."
+0x4dcc20,Game_ShuffleProductMarketValues,medium,Picks a random product 0..7 and moves its largest of the four +0x200/+0x220/+0x240/+0x260 values into a randomly chosen other array.
+0x534880,RecordList_BlitRecordSprite,high,"Validates the record index, ensures the list is loaded, converts its position to ints, sets four shorts and calls Sprite_BlitClipped."
+0x48ca10,Game_GetPlayerValueSharePercent,high,Sums each players Stats_SumFilteredFloats3 total over six slots and returns the requested players rounded percentage share.
+0x47cd80,Game_FindBestPlayerRecordPair,medium,"Scans +0x16f8 records matching the player byte and maximizes Game_CountRecordsByPair(field+4,field+8), returning that pair."
+0x4edbf0,Map_DrawRecordLinkSprites,high,"For the 8 link slots at record+0x14, blits a sprite from its coordinates to the target through Surface_BlitFormat."
+0x4e3550,Game_FindNearestObjectByPosition,high,Returns the +0x148 record minimizing squared center/bottom distance to the supplied object.
+0x4de120,Stats_GetMaxCityMatrixValue,medium,"Uses Matrix_Max100x8 for an object, else takes the max Stats_SumMatrixCells over 8 rows and up to 100 cities."
+0x4edaf0,Map_RecordPointToGridCell,high,"Converts record +4/+8 to a cell through Map_ComputeBlitRect, retrying with +0xdc/+0xe0 scroll offsets and splitting by map width."
+0x532af0,UI_NotifyObjectsByKey,medium,"Scans the +0x2a8 pair array for entries whose key matches and invokes vtable+0xc(0x3b,key,0) on each resolved record."
+0x508ff0,Map_DetachObjectFromTile,medium,"Resolves the player submap cell, finds the record at x%width,y/width and clears +0x10 when it equals +0x164."
+0x4de300,Stats_GetMaxObjectMatrixValue,high,"Uses Grid_GetMaxValue for an object, else takes the maximum of an 8x9 Stats_SumRecordFloatMatrix scan."
+0x4d4070,Game_SetRecordOpenState,medium,"Stores the flag at +0x825 and sets the linked UI object state to 0x11 when 1, otherwise 0x10."
+0x5315d0,UI_CenterChildVertically,high,Finds the child by key with BinarySearch8 and centers it vertically in the parent through UI_MoveChildToPosition.
+0x510600,Stats_FreeRecordMap,high,Frees every value in the +0x304 IDMap with Mem_Free and releases the map container.
+0x532aa0,UI_FreeObjectPairs,high,Frees every object pointer in the +0x2a8 pair array and clears the array with Array_Clear.
+0x54c7d0,Memory_FreeField4,high,Calls Memory_FreeAndClear on the pointer stored at +4.
+0x480010,Stats_HasCurrentSales,low,Returns 6 when Stats_SumFilteredFloats index 0x19 for the current city/day is positive.
+0x4f5730,UI_AlignSpriteToObject,high,Gets the linked object extent with Game_GetLinkedObjectExtent and passes it to UI_AlignSpriteToRect.
+0x482590,Game_AddScreenTimer,medium,Registers LAB_00481190 as a 200 ms timer on +0x2d1c and stores the returned handle at +0x2d8c.
+0x544ae0,List_UnlinkNode,high,Tail-forwards to List_RemoveNodeLocked for the given node pointers.
+0x4cde30,SaveGame_DestroyList,medium,"Cleanup callback that destroys the global saved-game list at 0x57df84 with IDMap_DestroyAllObjects; adjacent setup uses the ""No games available!"" string."
+0x543ec0,SoundStream_ScheduleRefill,medium,"Under two critical sections, computes the remaining/100 refill size, stores the playback rate and timestamps, and signals event +0x48."
+0x54ac40,UI_AdvanceChildProgress,high,"Advances +0x1c by elapsed_ms*rate*0.001, clamps to +0xc and moves the child with UI_MoveChildToPosition."
+0x53a1b0,Gfx_InitBlendTable,high,Calls Gfx_BuildBlendTable on the global table at 0x584518.
+0x541f10,SoundTrack_Delete,high,Destroys the sound track through SoundTrack_Destruct and frees this when the low delete flag is set.

@@ -1,0 +1,41 @@
+// rea decompile_all
+// name: FUN_004e0880
+// address: 0x4e0880
+// body: available
+// range: 0x4e0880-0x4e091e inclusive
+// non_contiguous: false
+// provider: Ghidra 12.2 (ghidra)
+// analysis_profile: aae5fcbbec95ac3047ec86f28609da356814b1c85770f2c09803aad3607b988d
+// limitations: The session serves operations only after Ghidra reports default auto-analysis complete; incomplete analysis does not expose partial results.; Ghidra Program checkpoint mode is disabled: closing discards metadata edits; original executable bytes are unchanged. For stock ELF/PE/Mach-O on Linux/macOS, set REA_GHIDRA_CHECKPOINT_DIR to a private absolute directory before starting REA (restart MCP after changing its startup environment).; Cancelling an active Ghidra request terminates its ephemeral database and discards session annotations. The selected target remains open; the next provider query imports the original artifact again.; Default-space addresses use lowercase 0x-prefixed hexadecimal; other address spaces use <percent-encoded-space>:0x<hex>.; This session uses Ghidra 12.2. The bridge is verified against 12.1.4; other 12.x (>=12.1) builds are accepted and the observed version is reported.; Pseudocode is Ghidra decompiler output, not original source and not text-equivalent to Hopper output.; External functions and functions without an analyzable body return null; other decompiler failures remain explicit.
+// pseudocode: provider-specific; not original source
+
+
+int __thiscall FUN_004e0880(void *this,int param_1,uint param_2,int param_3)
+
+{
+  int iVar1;
+  int iVar2;
+  int iVar3;
+  
+  iVar1 = *(int *)((int)this + 0x178);
+  if (param_3 == -1) {
+    if (param_2 == *(ushort *)(*(int *)(DAT_0057c670 + 0x94) + 4)) {
+      param_3 = (uint)*(byte *)(*(int *)(DAT_0057c670 + 0x94) + 8) + (param_2 - DAT_0057dfbc) * 4;
+    }
+    else {
+      param_3 = (param_2 - DAT_0057dfbc) * 4 + 3;
+    }
+  }
+  iVar3 = 0;
+  if (0 < iVar1) {
+    do {
+      iVar2 = FUN_004017f0((void *)((int)this + 0x164),iVar3,(int *)0x0);
+      if ((*(uint *)(iVar2 + 8) == param_2) && (param_3 == *(int *)(iVar2 + 4))) {
+        return param_1 * 0x20 + 0xdc + iVar2;
+      }
+      iVar3 = iVar3 + 1;
+    } while (iVar3 < iVar1);
+  }
+  return 0;
+}
+

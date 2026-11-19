@@ -1,0 +1,318 @@
+[
+ {
+  "address": "0x54fe4e",
+  "name": "CRT_TypeInfo_Delete"
+ },
+ {
+  "address": "0x53fca0",
+  "name": "SoundPakManager_Delete"
+ },
+ {
+  "address": "0x54f613",
+  "name": "CRT_Remove"
+ },
+ {
+  "address": "0x4d3450",
+  "name": "Car_Save"
+ },
+ {
+  "address": "0x5052e0",
+  "name": "Person_Save"
+ },
+ {
+  "address": "0x4e4370",
+  "name": "BuildingValue_StreamConstruct"
+ },
+ {
+  "address": "0x50f690",
+  "name": "GamePlan_StreamConstruct"
+ },
+ {
+  "address": "0x4e5dc0",
+  "name": "ConstructionOrder_StreamConstruct"
+ },
+ {
+  "address": "0x4d36f0",
+  "name": "Character_StreamConstruct"
+ },
+ {
+  "address": "0x401000",
+  "name": "StatsPeriodReport_StreamConstruct"
+ },
+ {
+  "address": "0x5019d0",
+  "name": "Player_Event_StreamConstruct"
+ },
+ {
+  "address": "0x501aa0",
+  "name": "Player_AIState_StreamConstruct"
+ },
+ {
+  "address": "0x4d1b30",
+  "name": "RecipeTopping_StreamConstruct"
+ },
+ {
+  "address": "0x513c90",
+  "name": "Storage_Construct"
+ },
+ {
+  "address": "0x4d1fe0",
+  "name": "MapObject_Save"
+ },
+ {
+  "address": "0x50ea90",
+  "name": "Player_Save"
+ },
+ {
+  "address": "0x47b9e0",
+  "name": "Branch_Save"
+ },
+ {
+  "address": "0x5377f0",
+  "name": "Surface_SaveTga"
+ },
+ {
+  "address": "0x53ed70",
+  "name": "SoundDevice_Construct"
+ },
+ {
+  "address": "0x53f5d0",
+  "name": "SoundSample_Destruct"
+ },
+ {
+  "address": "0x540510",
+  "name": "SoundPakManager_FindExtensionEntry"
+ },
+ {
+  "address": "0x5406a0",
+  "name": "SoundBuffer_CreateDSBuffer"
+ },
+ {
+  "address": "0x540a80",
+  "name": "SoundBuffer_LockSample"
+ },
+ {
+  "address": "0x540b50",
+  "name": "SoundBuffer_UnlockSample"
+ },
+ {
+  "address": "0x546fd0",
+  "name": "Random_Range"
+ },
+ {
+  "address": "0x54ce81",
+  "name": "CRT_Filebuf_Overflow"
+ },
+ {
+  "address": "0x54cef2",
+  "name": "CRT_Filebuf_Underflow"
+ },
+ {
+  "address": "0x54d599",
+  "name": "CRT_Istream_SkipWhitespace"
+ },
+ {
+  "address": "0x54de25",
+  "name": "CRT_Onexit"
+ },
+ {
+  "address": "0x54df61",
+  "name": "CRT_Fputs"
+ },
+ {
+  "address": "0x54e157",
+  "name": "CRT_AtoiThunk"
+ },
+ {
+  "address": "0x54e1f0",
+  "name": "CRT_Fgetc"
+ },
+ {
+  "address": "0x54e9a7",
+  "name": "CRT_FreadCore"
+ },
+ {
+  "address": "0x402ad0",
+  "name": "ResourceManager_FindExtensionAlias"
+ },
+ {
+  "address": "0x47de40",
+  "name": "Game_PickTopmostObjectAtPoint"
+ },
+ {
+  "address": "0x47eb30",
+  "name": "Branch_PayConstructionOrder"
+ },
+ {
+  "address": "0x486be0",
+  "name": "Game_AcquireStateLock"
+ },
+ {
+  "address": "0x48bf90",
+  "name": "UI_Briefing_Printf"
+ },
+ {
+  "address": "0x48c860",
+  "name": "Game_HandleObjectDeath"
+ },
+ {
+  "address": "0x49bd50",
+  "name": "Player_AddRecipeToMenu"
+ },
+ {
+  "address": "0x4c2ed0",
+  "name": "Branch_PlaceBuildPreview"
+ },
+ {
+  "address": "0x4d6570",
+  "name": "Map_CollectCompanyObjectsAtPoint"
+ },
+ {
+  "address": "0x4d74c0",
+  "name": "Map_GetRandomBuildingOfType"
+ },
+ {
+  "address": "0x4eb8e0",
+  "name": "Map_MissingNameFallback"
+ },
+ {
+  "address": "0x4ef9e0",
+  "name": "IsoMap_RenderFrame"
+ },
+ {
+  "address": "0x4f08e0",
+  "name": "Map_UnlinkCells"
+ },
+ {
+  "address": "0x4f3200",
+  "name": "Grid_RebuildStreetNodes"
+ },
+ {
+  "address": "0x4f57f0",
+  "name": "Grid_GetDirectionBetweenNodes"
+ },
+ {
+  "address": "0x4f5df0",
+  "name": "Player_MissionState_Construct"
+ },
+ {
+  "address": "0x54ec5d",
+  "name": "CRT_Ftell"
+ },
+ {
+  "address": "0x54ee0c",
+  "name": "CRT_FseekLocked"
+ },
+ {
+  "address": "0x54f271",
+  "name": "CRT_EndThread"
+ },
+ {
+  "address": "0x54f2ff",
+  "name": "CRT_DoExit"
+ },
+ {
+  "address": "0x54f8a9",
+  "name": "CRT_Tolower"
+ },
+ {
+  "address": "0x54f9e3",
+  "name": "CRT_Toupper"
+ },
+ {
+  "address": "0x54fee8",
+  "name": "CRT_CloseLocked"
+ },
+ {
+  "address": "0x550684",
+  "name": "CRT_FflushLocked"
+ },
+ {
+  "address": "0x552269",
+  "name": "CRT_GetStream"
+ },
+ {
+  "address": "0x552331",
+  "name": "CRT_MtInit"
+ },
+ {
+  "address": "0x5524cd",
+  "name": "CRT_Tzset"
+ },
+ {
+  "address": "0x55353d",
+  "name": "CRT_Inconsistency"
+ },
+ {
+  "address": "0x554784",
+  "name": "CRT_Chsize"
+ },
+ {
+  "address": "0x555455",
+  "name": "CRT_Wctomb"
+ },
+ {
+  "address": "0x4fc3b0",
+  "name": "Game_AutoFillCompanyMenu"
+ },
+ {
+  "address": "0x4fc470",
+  "name": "Game_RecomputeCompanyMenuSales"
+ },
+ {
+  "address": "0x4fc560",
+  "name": "Game_PurgeUnusedCompanyRecipes"
+ },
+ {
+  "address": "0x4fc720",
+  "name": "Game_CompanyManager_Destructor"
+ },
+ {
+  "address": "0x506c00",
+  "name": "Person_DecideWaitOrLeaveHouse"
+ },
+ {
+  "address": "0x507170",
+  "name": "Person_DebugPrintLocation"
+ },
+ {
+  "address": "0x510640",
+  "name": "Recipe_SaveToStream"
+ },
+ {
+  "address": "0x512620",
+  "name": "Recipe_RecomputeAllStats"
+ },
+ {
+  "address": "0x513bf0",
+  "name": "Branch_ComputeRecipePrice"
+ },
+ {
+  "address": "0x513c40",
+  "name": "Branch_GetRecipePriceParts"
+ },
+ {
+  "address": "0x523800",
+  "name": "UI_CreateContextMenu"
+ },
+ {
+  "address": "0x526f20",
+  "name": "DebugConsole_Errorf"
+ },
+ {
+  "address": "0x526fa0",
+  "name": "UI_LoadFont"
+ },
+ {
+  "address": "0x52e9d0",
+  "name": "Dialog_ConstructFixed"
+ },
+ {
+  "address": "0x52f0f0",
+  "name": "Dialog_Destructor"
+ },
+ {
+  "address": "0x531fe0",
+  "name": "Dialog_SaveToFile"
+ }
+]

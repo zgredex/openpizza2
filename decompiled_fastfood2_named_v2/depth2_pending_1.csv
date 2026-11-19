@@ -1,0 +1,58 @@
+address,proposed_name,confidence,evidence
+0x531fb0,UI_SetChildLabelText,high,"Looks up a child by ID and forwards (id,text) to UI_SetLabelIdText on that child."
+0x504e90,MapObject_InitRenderRecord,medium,"Allocates a 0x7c render record, resolves its sprite/record ids from the map table by type/state and links it into the object list at +0xc4."
+0x509e20,MapObject_ComputeBlitRect,high,Reads the object's two map floats and calls Map_ComputeBlitRect with map screen offsets +0xf8/+0xfc or the +0xa0/+0xd0 origin.
+0x527a50,UI_ReleasePendingSprite,medium,Clears the UI pending-sprite helper at +0x8310 via UI_ClearChildExtent and releases the optional object at +0x8314 through its vtable.
+0x479db0,Stats_ComputeAverageGroupScore,medium,"Buckets record +0xc values by city group, averages each bucket, then returns round(mean of groups 1..5)*100 clamped to 0..100."
+0x503280,BuildingProject_ResetState,low,Resets project fields to -1/0 and clears the +0x68 node list; called by the constructor and after a build project completes.
+0x4e23b0,Player_FindRecordByCityId,high,Scans player subrecords at +0x180 for one whose lookup table contains the city id stored at +0x3c.
+0x4d3990,Rating_GetCompositeTruncated,medium,"Calls Rating_GetComposite and returns its truncated integer, with a switch on person type +0x824 that has no remaining cases."
+0x48c000,Game_HasQueuedEventType,medium,Looks up the message queue at +0x304 by event type +0x34; callers use it before creating a matching message.
+0x4e3780,Player_ComputeNetStatTotal,medium,For four periods sums Stats_SumFilteredFloats minus Stats_SumFilteredFloats2 over all player subrecords.
+0x505ef0,MapObject_GetScreenPosition,high,Returns the object's map position plus the +0xa0/+0xd0 screen origin through two output pointers.
+0x4f1250,Object_GetBufferCount,high,Selects buffer 1 through Object_GetBufferPair and returns the record count stored in that buffer's second field.
+0x51ebf0,Renderer_ComposeSpriteScaled,medium,"Composes primary and mask sprites with hotspots, allocates an intermediate sprite, blits scaled 16-bit rows and unions the dirty rect."
+0x47ce50,Game_HasAdjacentOccupiedCell,medium,"For a record at +0x18/+0x1c, checks the target cell and two neighbors in its facing direction for records with +0xc > 0."
+0x480130,Game_CountGoalTargets,medium,"Counts map records matching mission categories 0x16/0x17/0x1b, excluding +0x108==6 and subtypes 0x19/0x1a."
+0x4f9df0,MapObject_CreateFromTile,high,"Allocates a 0x24 map-object record from a tile type and coordinates, resolves city and building price, then appends it to the object list."
+0x4d5cf0,Map_CountNearbyObjects,high,"Counts objects within a 300-unit radius by +4 type, flags type 0x20 and counts entries whose +0x48 field is not -1."
+0x4f58e0,Map_DrawSelectedObjectSprite,medium,"Looks up the selected object's sprite, aligns it with UI_AlignSpriteToRect and blits the resulting rectangle."
+0x502810,Game_IsInputIndexUsed,medium,"Scans all player input objects for a Game_MapInputIndex value greater than the argument, returning 0/1."
+0x4800d0,Game_CountAvailableBusinessBuildings,medium,Counts records of type 0x1d (excluding subtypes 0xe/0x19/0x1a) plus all type 0x1e records.
+0x548510,Sound_UpdatePositionCountdown,medium,"When active, updates the 3D position and counts down or refreshes the +0x144 re-trigger timer."
+0x510390,Stats_GetMaxCategoryValue,high,Iterates the map field range and returns the largest Stats_SumValuesByCategory result.
+0x4e0830,Player_CountObjectsByType,high,Sums Game_CountObjectsByType over every subrecord in the player's +0x148 map.
+0x485a80,Sound_SetVolumePreset,high,"Stores a 0..2 preset at +0x2da0, calls Sound_ApplyVolumePreset and mirrors it to +0x384 when +0x33c is clear."
+0x5358d0,Font_DrawGlyphClipped,high,"Renders one clipped 8-bit glyph bitmap into a surface with palette/color remap; the caller supplies glyph width, height and offsets."
+0x502610,AI_SelectExpansionAction,medium,"Selects a 0..2 action from state +0x44 and player building counts, stores a table value at +0x4c and adjusts +0x84 for types 2/3."
+0x4f2020,Object_MoveToMapCell,high,"Moves an object record to a new map cell, releases old cell references, links the new cell/neighbor and updates occupancy counters."
+0x4f0e30,Object_AppendBufferRecord,high,"Grows the object's +0x9c buffer by one 0x28 record, fills position/type fields and returns the new record."
+0x548ed0,Sound_PlayStatusAdvisory,medium,Scans player object status flags and plays one of speech ids 8/0x1b-0x20 as a city advisory.
+0x4f1070,Object_UpdateBufferRecord,high,"Updates the indexed 0x28 record in the object's +0x9c/+0xa4 buffer with new position, sprite cell and type fields."
+0x480e80,Game_FindNearestServiceBuilding,medium,Finds the nearest map record of type 0x1a/0x1b/0x1c to the message position using Manhattan distance.
+0x542630,Sound_UpdateBufferFade,medium,"Advances the +0x8c fade state using timeGetTime, clamps +0x9c and applies the value through Sound_SetBufferVolume."
+0x480460,Game_FindNearestRecordAndAngle,medium,Finds the nearest record by Map_FindShortestPath and derives an 8-way angle from its +0xc/+0x10 position.
+0x502030,Game_GetBuildingQualityBand,medium,"Averages each player's building ratings and returns band 3/2/1 when the maximum exceeds 0x50/0x3b/0x28, else 0."
+0x51ee80,Renderer_ApplySpriteTint,medium,"Recolors the pending sprite via 0x53d840 and Sprite_FillColor8, then unions the old and new extents as dirty rectangles."
+0x4e2d00,Player_ComputeAverageRating,high,"Averages Rating_ClampAdjusted plus Rating_AdjustA over all player objects, divided by the object count."
+0x502220,Game_GetGlobalStatsBand,medium,Sums Stats_SumFilteredFloats3 over all six players and returns band 3/2/1 above 0x3c/0x31/0x27.
+0x4d3600,Gfx_BlitShiftedRect,high,Offsets the object's rect by its +0x24/+0x28 origin under the game lock and blits it with Gfx_BlitRectList.
+0x47ff10,Game_GetConstructionPriority,medium,"Returns 2 for free 0x1a/1b/1c buildings, 3 for low rating, 1 for shortage records and 0 otherwise."
+0x501040,UI_RemoveListEntryByType,high,Scans the 10-entry list at +param1*0x168+0x74 for a matching type/value and removes it with UI_RemoveListEntryAt.
+0x4de470,Stats_SumForPlayer,high,"Sums Stats_SumFilteredFloats over a supplied record, or across every player subrecord when the +0x15c map is used."
+0x4ad2d0,Stats_SumByStorageMode,high,"Dispatches on DAT_0057d62c to sum stat grids, record float matrices or player matrices, returning -3 for modes 3-5."
+0x5477a0,Sound_ApplySettings,high,"Writes the four speech/volume settings to globals, loads the speech set and converts/applies volumes at +0x1d4/+0x1d8."
+0x4de0d0,Stats_GetMaxMatrixValue,high,Returns Matrix_MaxByRow9x8 for a supplied object or scans the 8x9 stat grid for the maximum.
+0x480ba0,Game_CountRecordsWithFieldA0,medium,Counts map records whose +0xa0 field is nonzero; the sound code scales ambient volume by this count over 40.
+0x480760,Game_GetContextCompanyRating,medium,"If +0x14c4 exists and the context type is 0x11/0x13/0x14, returns the composite rating; otherwise returns param_2 shifted into the high dword."
+0x54b930,IDMap_DeleteContents,medium,"Iterates an ID map, releases each object through vtable slot 0 and then resets the list."
+0x501e40,Game_GetActivityVolumeBand,medium,Counts active objects of types 0x1d/0x1e/0x1f and returns bands 3/2/1/0 at thresholds 20/11/5.
+0x4da650,Game_CollectAllOwnedObjects,high,Clears the list and collects objects by owner for all six player slots.
+0x4d31b0,UI_GetCenteredRectForRecord,high,Resolves the current player and calls UI_GetRecordCenteredRect with this+0x24 through the player's +0xfa8 UI.
+0x47ec00,Game_RemoveTrackedRecord,medium,Finds a record by its +0x164 id and removes it from the +0x19c4 tracked-object list.
+0x548d90,Sound_PlayPoliceSfx,high,Plays s_Sfx_Sfx_City_Police_wav when the sound object is active.
+0x538f90,Surface_LockPrimary,medium,"Convenience wrapper around Surface_Lock(surface,0)."
+0x543d10,SoundBuffer_CommitVolume,medium,"Validates volume under two critical sections, sets the buffer volume through SoundBuffer_SetVolume and signals the +0x48 event."
+0x543c00,SoundBuffer_SetVolumeClamped,high,"Validates the requested volume against the buffer range or 100..100000, then calls SoundBuffer_SetVolume."
+0x48cbb0,Sound_RefreshMusicSelection,medium,Rebuilds the current music object from the current player's first record when the owning company changes and calls Sound_SelectCurrentTrack.
+0x482f10,UI_RemoveWindowForObject,high,Gets the object's ID and removes the matching window from the UI manager with UI_RemoveWindowByID.
