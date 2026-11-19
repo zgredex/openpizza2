@@ -14,6 +14,7 @@
 #include "warehouse_layout.h"
 #include "building_project_layout.h"
 #include "end_results_layout.h"
+#include "personnel_record_layout.h"
 #include "office_desk_layout.h"
 #include "statistics_balance_layout.h"
 
@@ -263,24 +264,35 @@ bool screen_render_office_desk(RenderSurface *surface, const uint8_t *tga_data,
                                uint8_t *decode_buffer,
                                size_t decode_capacity);
 
+typedef struct PersonnelRecordFont {
+    const uint8_t *data;
+    size_t size;
+    const FntInfo *info;
+} PersonnelRecordFont;
+
+typedef struct PersonnelRecordAssets {
+    const RgbaSprite *panel;
+    const RgbaSprite *sprites[PERSONNEL_RECORD_ASSET_COUNT];
+    PersonnelRecordFont fonts[PERSONNEL_RECORD_FONT_COUNT];
+} PersonnelRecordAssets;
+
 typedef struct PersonnelRecordData {
     const char *employee_name;
     const char *profession;
     uint32_t age;
+    int32_t performance;
+    uint32_t salary;
     int32_t cooking;
     int32_t speed;
     int32_t motivation;
     int32_t health;
-    const RgbaSprite *ratings[8];
 } PersonnelRecordData;
 
-/* Composes Screen_PersonnelRecord (0x4632C0): PERSOPLAN staff record, stat
- * rows, seven PERSOPLANLIGHT bars and eight customer-group rating strips. */
+/* Composes Screen_PersonnelRecord (0x4632C0): SUBMENUE window at (561,218)
+ * plus all 231 constructor controls and 39 shipped sprites. */
 bool screen_render_personnel_record(
-    RenderSurface *surface, const RgbaSprite *panel,
-    const RgbaSprite *plan_sprite, const RgbaSprite *plan_light,
-    const RgbaSprite *separator, const uint8_t *font_data, size_t font_size,
-    const FntInfo *font, const PersonnelRecordData *data);
+    RenderSurface *surface, const PersonnelRecordAssets *assets,
+    const PersonnelRecordData *data);
 
 typedef struct PersonnelOverviewSprites {
     const RgbaSprite *panel;

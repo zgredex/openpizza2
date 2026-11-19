@@ -777,84 +777,123 @@ static void test_personnel_overview_composition(void) {
 
 static void test_personnel_record_composition(void) {
     uint8_t *panel_pixels = NULL;
-    uint8_t *plan_pixels = NULL;
-    uint8_t *light_pixels = NULL;
-    uint8_t *separator_pixels = NULL;
-    uint8_t *rating_pixels = NULL;
     RgbaSprite panel;
-    RgbaSprite plan;
-    RgbaSprite light;
-    RgbaSprite separator;
-    RgbaSprite rating;
     assert(load_spr("../extracted/sprites/submenue.spr", &panel_pixels, &panel));
-    assert(load_spr("../extracted/sprites/persoplan.spr", &plan_pixels, &plan));
-    assert(load_spr("../extracted/sprites/persoplanlight.spr", &light_pixels,
-                    &light));
-    assert(load_spr("../extracted/sprites/trennzeile.spr", &separator_pixels,
-                    &separator));
-    assert(load_spr("../extracted/sprites/bewertung__08.spr", &rating_pixels,
-                    &rating));
+    uint8_t *sprite_pixels[PERSONNEL_RECORD_ASSET_COUNT] = {NULL};
+    RgbaSprite sprites[PERSONNEL_RECORD_ASSET_COUNT];
+    for (int index = 0; index < PERSONNEL_RECORD_ASSET_COUNT; index++) {
+        char path[128];
+        snprintf(path, sizeof(path), "../extracted/sprites/%s",
+                 kPersonnelRecordAssetNames[index]);
+        assert(load_spr(path, &sprite_pixels[index], &sprites[index]));
+    }
+    static const char *const font_paths[PERSONNEL_RECORD_FONT_COUNT] = {
+        "../extracted/fonts/timesfont.fnt",
+        "../extracted/fonts/verdana7.fnt",
+        "../extracted/fonts/verdana8.fnt",
+    };
+    uint8_t *font_data[PERSONNEL_RECORD_FONT_COUNT] = {NULL};
+    size_t font_sizes[PERSONNEL_RECORD_FONT_COUNT] = {0};
+    FntInfo font_infos[PERSONNEL_RECORD_FONT_COUNT];
+    for (int index = 0; index < PERSONNEL_RECORD_FONT_COUNT; index++) {
+        font_data[index] = load_file(font_paths[index], &font_sizes[index]);
+        assert(font_data[index] != NULL);
+        assert(fnt_read_info(font_data[index], font_sizes[index],
+                             &font_infos[index]));
+    }
+    PersonnelRecordAssets assets = {0};
+    assets.panel = &panel;
+    for (int index = 0; index < PERSONNEL_RECORD_ASSET_COUNT; index++) {
+        assets.sprites[index] = &sprites[index];
+    }
+    for (int index = 0; index < PERSONNEL_RECORD_FONT_COUNT; index++) {
+        assets.fonts[index] = (PersonnelRecordFont){
+            font_data[index], font_sizes[index], &font_infos[index]};
+    }
+    assert(kPersonnelRecordControlCount == 231);
+    const PersonnelRecordControl *control = NULL;
+    for (size_t index = 0; index < kPersonnelRecordControlCount; index++) {
+        if (kPersonnelRecordControls[index].id == 1135) {
+            control = &kPersonnelRecordControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 44 && control->y == 5);
+    assert(control->font == 0 && control->align == 2 && control->width == 190);
+    assert(strcmp(control->text, "Staff") == 0);
+    control = NULL;
+    for (size_t index = 0; index < kPersonnelRecordControlCount; index++) {
+        if (kPersonnelRecordControls[index].id == 1114) {
+            control = &kPersonnelRecordControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->kind == PERSONNEL_RECORD_KIND_SPRITE);
+    assert(control->x == 48 && control->y == 224);
+    assert(control->asset == 21);
+    control = NULL;
+    for (size_t index = 0; index < kPersonnelRecordControlCount; index++) {
+        if (kPersonnelRecordControls[index].id == 1305) {
+            control = &kPersonnelRecordControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 39 && control->y == 304);
+    assert(strcmp(control->text, "Kids") == 0);
+    control = NULL;
+    for (size_t index = 0; index < kPersonnelRecordControlCount; index++) {
+        if (kPersonnelRecordControls[index].id == 1323) {
+            control = &kPersonnelRecordControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 126 && control->y == 37);
+    assert(control->font == 2 && control->width == 108);
+    assert(strcmp(control->text, "#Carlos Estarda") == 0);
+    control = NULL;
+    for (size_t index = 0; index < kPersonnelRecordControlCount; index++) {
+        if (kPersonnelRecordControls[index].id == 1143) {
+            control = &kPersonnelRecordControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 67 && control->y == 214);
+    assert(strcmp(control->text, "3") == 0);
 
-    size_t font_size = 0;
-    uint8_t *font_data = load_file("../extracted/fonts/timesfont.fnt", &font_size);
-    assert(font_data != NULL);
-    FntInfo font;
-    assert(fnt_read_info(font_data, font_size, &font));
-
-    PersonnelRecordData data = {
+    const PersonnelRecordData data = {
         .employee_name = "Carlos Estarda",
-        .profession = "Cook",
+        .profession = "Koch",
         .age = 45,
+        .performance = 56,
+        .salary = 5656,
         .cooking = 70,
         .speed = 60,
         .motivation = 75,
         .health = 90,
     };
-    for (int index = 0; index < 8; index++) {
-        data.ratings[index] = &rating;
-    }
     size_t frame_size = 800 * 600 * 4;
     uint8_t *frame = malloc(frame_size);
     assert(frame != NULL);
     RenderSurface surface;
     assert(render_surface_init(&surface, frame, frame_size, 800, 600));
-    assert(screen_render_personnel_record(&surface, &panel, &plan, &light,
-                                          &separator, font_data, font_size,
-                                          &font, &data));
+    assert(screen_render_personnel_record(&surface, &assets, &data));
     size_t panel_offset = ((size_t)218 * 800 + 561) * 4;
     assert(memcmp(frame + panel_offset, panel.pixels, 4) == 0);
-    bool plan_opaque = false;
-    for (size_t index = 0; index + 3 < (size_t)plan.width * plan.height * 4;
+    bool photo_opaque = false;
+    RgbaSprite *photo = &sprites[17];
+    for (size_t index = 0; index + 3 < (size_t)photo->width * photo->height * 4;
          index += 4) {
-        if (plan.pixels[index + 3] == 255) {
-            size_t px = (index / 4) % plan.width;
-            size_t py = (index / 4) / plan.width;
-            size_t target = ((size_t)(218 + 224 + (int)py) * 800 +
-                             (561 + 48 + (int)px)) * 4;
-            assert(memcmp(frame + target, plan.pixels + index, 4) == 0);
-            plan_opaque = true;
+        if (photo->pixels[index + 3] == 255) {
+            size_t px = (index / 4) % photo->width;
+            size_t py = (index / 4) / photo->width;
+            size_t target = ((size_t)(218 + 42 + (int)py) * 800 +
+                             (561 + 57 + (int)px)) * 4;
+            assert(memcmp(frame + target, photo->pixels + index, 4) == 0);
+            photo_opaque = true;
             break;
         }
     }
-    assert(plan_opaque);
-
-    bool opaque = false;
-    size_t opaque_index = 0;
-    for (size_t index = 0; index + 3 < (size_t)rating.width * rating.height * 4;
-         index += 4) {
-        if (rating.pixels[index + 3] == 255) {
-            opaque = true;
-            opaque_index = index;
-            break;
-        }
-    }
-    assert(opaque);
-    size_t rating_x = (opaque_index / 4) % rating.width;
-    size_t rating_y = (opaque_index / 4) / rating.width;
-    size_t rating_offset = ((size_t)(218 + 315 + (int)rating_y) * 800 +
-                            (561 + 49 + (int)rating_x)) * 4;
-    assert(memcmp(frame + rating_offset, rating.pixels + opaque_index, 4) == 0);
-
+    assert(photo_opaque);
     bool title_ink = false;
     for (int y = 220; y < 245; y++) {
         for (int x = 600; x < 760; x++) {
@@ -865,17 +904,16 @@ static void test_personnel_record_composition(void) {
         }
     }
     assert(title_ink);
-    assert(!screen_render_personnel_record(&surface, &panel, &plan, &light,
-                                           &separator, font_data, font_size,
-                                           &font, NULL));
+    assert(!screen_render_personnel_record(&surface, NULL, &data));
 
-    free(font_data);
-    free(frame);
+    for (int index = 0; index < PERSONNEL_RECORD_FONT_COUNT; index++) {
+        free(font_data[index]);
+    }
+    for (int index = 0; index < PERSONNEL_RECORD_ASSET_COUNT; index++) {
+        free(sprite_pixels[index]);
+    }
     free(panel_pixels);
-    free(plan_pixels);
-    free(light_pixels);
-    free(separator_pixels);
-    free(rating_pixels);
+    free(frame);
 }
 
 static void test_statistics_balance_composition(void) {

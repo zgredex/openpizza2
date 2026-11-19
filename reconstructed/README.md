@@ -64,7 +64,8 @@ Current batches:
   drawing decoded raw/RLE 16bpp frames, the exact 185-control warehouse
   deliveries page with 27 sprites, the exact 172-control town-advertising
   page with 28 sprites and its five rating rows, and the exact 208-control
-  end-results points page over PE_ENDERGEBNIS_PUNKTE.TGA.
+  end-results points page over PE_ENDERGEBNIS_PUNKTE.TGA, and the exact
+  231-control personnel-record page with 39 shipped sprites.
 - `rating/` — `Branch_GetCustomerGroupRating` composition, city adjustment,
   `Stats_GetAverage8`/`Branch_GetMenuRating`, the baseline branch-score table
   rule and `Game_GetMarketBonusFactor`.

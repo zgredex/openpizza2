@@ -1132,52 +1132,68 @@ int main(void) {
 
 
     uint8_t *pr_panel_pixels = NULL;
-    uint8_t *pr_plan_pixels = NULL;
-    uint8_t *pr_light_pixels = NULL;
-    uint8_t *pr_separator_pixels = NULL;
-    uint8_t *pr_rating_pixels = NULL;
     RgbaSprite pr_panel;
-    RgbaSprite pr_plan;
-    RgbaSprite pr_light;
-    RgbaSprite pr_separator;
-    RgbaSprite pr_rating;
     assert(load_spr_asset("../extracted/sprites/submenue.spr", &pr_panel_pixels,
                           &pr_panel));
-    assert(load_spr_asset("../extracted/sprites/persoplan.spr", &pr_plan_pixels,
-                          &pr_plan));
-    assert(load_spr_asset("../extracted/sprites/persoplanlight.spr",
-                          &pr_light_pixels, &pr_light));
-    assert(load_spr_asset("../extracted/sprites/trennzeile.spr",
-                          &pr_separator_pixels, &pr_separator));
-    assert(load_spr_asset("../extracted/sprites/bewertung__08.spr",
-                          &pr_rating_pixels, &pr_rating));
-    PersonnelRecordData pr_data = {
+    uint8_t *pr_sprite_pixels[PERSONNEL_RECORD_ASSET_COUNT] = {NULL};
+    RgbaSprite pr_sprites[PERSONNEL_RECORD_ASSET_COUNT];
+    for (int index = 0; index < PERSONNEL_RECORD_ASSET_COUNT; index++) {
+        char path[128];
+        snprintf(path, sizeof(path), "../extracted/sprites/%s",
+                 kPersonnelRecordAssetNames[index]);
+        assert(load_spr_asset(path, &pr_sprite_pixels[index],
+                              &pr_sprites[index]));
+    }
+    static const char *const pr_font_paths[PERSONNEL_RECORD_FONT_COUNT] = {
+        "../extracted/fonts/timesfont.fnt",
+        "../extracted/fonts/verdana7.fnt",
+        "../extracted/fonts/verdana8.fnt",
+    };
+    uint8_t *pr_font_data[PERSONNEL_RECORD_FONT_COUNT] = {NULL};
+    size_t pr_font_sizes[PERSONNEL_RECORD_FONT_COUNT] = {0};
+    FntInfo pr_font_infos[PERSONNEL_RECORD_FONT_COUNT];
+    for (int index = 0; index < PERSONNEL_RECORD_FONT_COUNT; index++) {
+        pr_font_data[index] = load_font_asset(pr_font_paths[index],
+                                              &pr_font_sizes[index]);
+        assert(pr_font_data[index] != NULL);
+        assert(fnt_read_info(pr_font_data[index], pr_font_sizes[index],
+                             &pr_font_infos[index]));
+    }
+    PersonnelRecordAssets pr_assets = {0};
+    pr_assets.panel = &pr_panel;
+    for (int index = 0; index < PERSONNEL_RECORD_ASSET_COUNT; index++) {
+        pr_assets.sprites[index] = &pr_sprites[index];
+    }
+    for (int index = 0; index < PERSONNEL_RECORD_FONT_COUNT; index++) {
+        pr_assets.fonts[index] = (PersonnelRecordFont){
+            pr_font_data[index], pr_font_sizes[index], &pr_font_infos[index]};
+    }
+    const PersonnelRecordData pr_data = {
         .employee_name = "Ada",
         .profession = "Cook",
         .age = 30,
+        .performance = personnel_average_skill(&personnel),
+        .salary = (uint32_t)personnel.staff[0].wage,
         .cooking = personnel.staff[0].skill,
         .speed = personnel.staff[0].speed,
         .motivation = personnel.staff[0].motivation,
         .health = personnel.staff[0].health,
     };
-    for (int index = 0; index < 8; index++) {
-        pr_data.ratings[index] = &pr_rating;
-    }
     uint8_t *pr_frame = malloc(800 * 600 * 4);
     assert(pr_frame != NULL);
     RenderSurface pr_surface;
     assert(render_surface_init(&pr_surface, pr_frame, 800 * 600 * 4, 800, 600));
-    assert(screen_render_personnel_record(&pr_surface, &pr_panel, &pr_plan,
-                                           &pr_light, &pr_separator, font_data,
-                                           font_size, &font_info, &pr_data));
+    assert(screen_render_personnel_record(&pr_surface, &pr_assets, &pr_data));
     size_t pr_panel_offset = ((size_t)218 * 800 + 561) * 4;
     assert(memcmp(pr_frame + pr_panel_offset, pr_panel.pixels, 4) == 0);
     free(pr_frame);
+    for (int index = 0; index < PERSONNEL_RECORD_FONT_COUNT; index++) {
+        free(pr_font_data[index]);
+    }
+    for (int index = 0; index < PERSONNEL_RECORD_ASSET_COUNT; index++) {
+        free(pr_sprite_pixels[index]);
+    }
     free(pr_panel_pixels);
-    free(pr_plan_pixels);
-    free(pr_light_pixels);
-    free(pr_separator_pixels);
-    free(pr_rating_pixels);
 
     static const char *const sb_sprite_paths[BALANCE_ASSET_COUNT] = {
         "../extracted/sprites/tab09.spr",
