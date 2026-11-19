@@ -804,11 +804,29 @@ int main(void) {
     piz.companies[0].recipe_count = 1;
     piz.companies[0].recipes[0].id = 42;
     strcpy(piz.companies[0].recipes[0].name, "Margherita");
+    piz.companies[0].recipes[0].topping_count = 1;
+    piz.companies[0].recipes[0].toppings[0] = (PizRecipeTopping){
+        .ingredient = 5,
+        .category = 1,
+        .tier = 2,
+        .x = 10,
+        .y = 20,
+        .variant = 1,
+        .flag = 1,
+    };
     piz.companies[0].branch_count = 1;
     piz.companies[0].branches[0].id = city.branches[0].tile_index;
+    strcpy(piz.companies[0].branches[0].name, "London branch");
+    piz.companies[0].branches[0].style = 2;
+    piz.companies[0].branches[0].flags = 0x24;
+    piz.companies[0].branches[0].company_slot = 0;
     piz.companies[0].report_count = 1;
+    piz.companies[0].reports[0].income[0] = 100.5f;
+    piz.companies[0].reports[0].income[4] = 50.25f;
+    piz.companies[0].reports[0].expense[12] = 30.75f;
     piz.companies[0].storage_count = 1;
     piz.companies[0].storage[0].id = 7;
+    strcpy(piz.companies[0].storage[0].name, "London storage");
     piz.companies[0].pair_count = 1;
     piz.companies[0].pairs[0].id = 9;
     piz.companies[0].pairs[0].value = 0x1122334455667788ull;
@@ -833,11 +851,22 @@ int main(void) {
     assert(piz_loaded.companies[0].recipe_count == 1);
     assert(piz_loaded.companies[0].recipes[0].id == 42);
     assert(strcmp(piz_loaded.companies[0].recipes[0].name, "Margherita") == 0);
+    assert(piz_loaded.companies[0].recipes[0].topping_count == 1);
+    assert(piz_loaded.companies[0].recipes[0].toppings[0].ingredient == 5);
+    assert(piz_loaded.companies[0].recipes[0].toppings[0].x == 10);
+    assert(piz_loaded.companies[0].recipes[0].toppings[0].y == 20);
     assert(piz_loaded.companies[0].branch_count == 1);
     assert(piz_loaded.companies[0].branches[0].id == city.branches[0].tile_index);
+    assert(strcmp(piz_loaded.companies[0].branches[0].name, "London branch") == 0);
+    assert(piz_loaded.companies[0].branches[0].style == 2);
+    assert(piz_loaded.companies[0].branches[0].flags == 0x24);
     assert(piz_loaded.companies[0].report_count == 1);
+    assert(piz_loaded.companies[0].reports[0].income[0] == 100.5f);
+    assert(piz_loaded.companies[0].reports[0].income[4] == 50.25f);
+    assert(piz_loaded.companies[0].reports[0].expense[12] == 30.75f);
     assert(piz_loaded.companies[0].storage_count == 1);
     assert(piz_loaded.companies[0].storage[0].id == 7);
+    assert(strcmp(piz_loaded.companies[0].storage[0].name, "London storage") == 0);
     assert(piz_loaded.companies[0].pair_count == 1);
     assert(piz_loaded.companies[0].pairs[0].id == 9);
     assert(piz_loaded.companies[0].pairs[0].value == 0x1122334455667788ull);

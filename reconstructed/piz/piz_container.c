@@ -84,8 +84,12 @@ static size_t company_region_size(const PizContainer *container) {
         if (container->companies[slot].present) {
             total += COMPANY_BODY_SIZE + COMPANY_NESTED_SIZE;
             total += (size_t)container->companies[slot].plan_count * PLAN_BODY_SIZE;
-            total += (size_t)container->companies[slot].recipe_count *
-                     (4 + RECIPE_BODY_SIZE);
+            for (uint32_t recipe = 0; recipe < container->companies[slot].recipe_count;
+                 recipe++) {
+                total += 4 + RECIPE_BODY_SIZE +
+                         21 * (size_t)container->companies[slot].recipes[recipe]
+                                  .topping_count;
+            }
             total += (size_t)container->companies[slot].branch_count *
                      (4 + BRANCH_BODY_SIZE + BRANCH_TAIL_SIZE);
             total += (size_t)container->companies[slot].report_count *
@@ -307,11 +311,30 @@ size_t piz_container_encode(const PizContainer *container, uint8_t *buffer,
         put_u32(buffer, offset, recipe_count);
         offset += 4;
         for (uint32_t recipe = 0; recipe < recipe_count; recipe++) {
-            put_u32(buffer, offset, company->recipes[recipe].id);
+            const PizRecipeRecord *record = &company->recipes[recipe];
+            uint32_t topping_count = record->topping_count;
+            if (topping_count > PIZ_MAX_TOPPINGS_PER_RECIPE) {
+                return 0;
+            }
+            size_t body_size = RECIPE_BODY_SIZE + 21 * (size_t)topping_count;
+            put_u32(buffer, offset, record->id);
             offset += 4;
-            memset(buffer + offset, 0, RECIPE_BODY_SIZE);
-            put_text(buffer, offset, company->recipes[recipe].name, 64);
-            offset += RECIPE_BODY_SIZE;
+            memset(buffer + offset, 0, body_size);
+            put_text(buffer, offset, record->name, 64);
+            put_u32(buffer, offset + 64, record->id); /* +0x44 */
+            put_u32(buffer, offset + 68, topping_count);
+            for (uint32_t topping = 0; topping < topping_count; topping++) {
+                const PizRecipeTopping *value = &record->toppings[topping];
+                size_t target = offset + 72 + 21 * (size_t)topping;
+                buffer[target + 0] = value->ingredient;
+                buffer[target + 1] = value->category;
+                buffer[target + 2] = value->tier;
+                put_u32(buffer, target + 4, (uint32_t)value->x);
+                put_u32(buffer, target + 8, (uint32_t)value->y);
+                buffer[target + 12] = value->variant;
+                buffer[target + 13] = value->flag;
+            }
+            offset += body_size;
         }
         put_u32(buffer, offset, 0); /* featured recipe flag */
         offset += 4;
@@ -322,9 +345,14 @@ size_t piz_container_encode(const PizContainer *container, uint8_t *buffer,
         put_u32(buffer, offset, branch_count);
         offset += 4;
         for (uint32_t branch = 0; branch < branch_count; branch++) {
-            put_u32(buffer, offset, company->branches[branch].id);
+            const PizBranchRecord *record = &company->branches[branch];
+            put_u32(buffer, offset, record->id);
             offset += 4;
             memset(buffer + offset, 0, BRANCH_BODY_SIZE + BRANCH_TAIL_SIZE);
+            put_text(buffer, offset, record->name, 32);
+            put_u32(buffer, offset + 36, record->style);       /* +0x24 */
+            put_u32(buffer, offset + 40, record->flags);       /* +0x28 */
+            put_u32(buffer, offset + 44, record->company_slot);/* +0x30 */
             offset += BRANCH_BODY_SIZE + BRANCH_TAIL_SIZE;
         }
         uint32_t report_count = company->report_count;
@@ -334,7 +362,12 @@ size_t piz_container_encode(const PizContainer *container, uint8_t *buffer,
         put_u32(buffer, offset, report_count);
         offset += 4;
         for (uint32_t report = 0; report < report_count; report++) {
+            const PizReportRecord *record = &company->reports[report];
             memset(buffer + offset, 0, REPORT_BODY_SIZE);
+            memcpy(buffer + offset, record->income,
+                   sizeof(record->income));
+            memcpy(buffer + offset + 104, record->expense,
+                   sizeof(record->expense));
             offset += REPORT_BODY_SIZE;
         }
         uint32_t storage_count = company->storage_count;
@@ -347,6 +380,7 @@ size_t piz_container_encode(const PizContainer *container, uint8_t *buffer,
             put_u32(buffer, offset, company->storage[storage].id);
             offset += 4;
             memset(buffer + offset, 0, STORAGE_BODY_SIZE);
+            put_text(buffer, offset, company->storage[storage].name, 32);
             offset += STORAGE_BODY_SIZE;
         }
         uint32_t pair_count = company->pair_count;
@@ -615,10 +649,28 @@ bool piz_container_decode(PizContainer *container, const uint8_t *buffer,
             if (offset + 4 + RECIPE_BODY_SIZE > length) {
                 return false;
             }
-            company->recipes[recipe].id = get_u32(buffer, offset);
+            PizRecipeRecord *record = &company->recipes[recipe];
+            record->id = get_u32(buffer, offset);
             offset += 4;
-            get_text(company->recipes[recipe].name, 64, buffer, offset);
-            offset += RECIPE_BODY_SIZE;
+            get_text(record->name, 64, buffer, offset);
+            uint32_t topping_count = get_u32(buffer, offset + 68);
+            if (topping_count > PIZ_MAX_TOPPINGS_PER_RECIPE ||
+                offset + RECIPE_BODY_SIZE + 21 * (size_t)topping_count > length) {
+                return false;
+            }
+            record->topping_count = topping_count;
+            for (uint32_t topping = 0; topping < topping_count; topping++) {
+                size_t source = offset + 72 + 21 * (size_t)topping;
+                PizRecipeTopping *value = &record->toppings[topping];
+                value->ingredient = buffer[source + 0];
+                value->category = buffer[source + 1];
+                value->tier = buffer[source + 2];
+                value->x = (int32_t)get_u32(buffer, source + 4);
+                value->y = (int32_t)get_u32(buffer, source + 8);
+                value->variant = buffer[source + 12];
+                value->flag = buffer[source + 13];
+            }
+            offset += RECIPE_BODY_SIZE + 21 * (size_t)topping_count;
         }
         if (get_u32(buffer, offset) != 0) { /* featured recipe flag */
             return false;
@@ -634,7 +686,12 @@ bool piz_container_decode(PizContainer *container, const uint8_t *buffer,
             if (offset + 4 + BRANCH_BODY_SIZE + BRANCH_TAIL_SIZE > length) {
                 return false;
             }
-            company->branches[branch].id = get_u32(buffer, offset);
+            PizBranchRecord *record = &company->branches[branch];
+            record->id = get_u32(buffer, offset);
+            get_text(record->name, 32, buffer, offset + 4);
+            record->style = get_u32(buffer, offset + 4 + 36);
+            record->flags = get_u32(buffer, offset + 4 + 40);
+            record->company_slot = get_u32(buffer, offset + 4 + 44);
             offset += 4 + BRANCH_BODY_SIZE + BRANCH_TAIL_SIZE;
         }
         uint32_t report_count = get_u32(buffer, offset);
@@ -646,7 +703,13 @@ bool piz_container_decode(PizContainer *container, const uint8_t *buffer,
         if (offset + (size_t)report_count * REPORT_BODY_SIZE > length) {
             return false;
         }
-        offset += (size_t)report_count * REPORT_BODY_SIZE;
+        for (uint32_t report = 0; report < report_count; report++) {
+            PizReportRecord *record = &company->reports[report];
+            memcpy(record->income, buffer + offset, sizeof(record->income));
+            memcpy(record->expense, buffer + offset + 104,
+                   sizeof(record->expense));
+            offset += REPORT_BODY_SIZE;
+        }
         uint32_t storage_count = get_u32(buffer, offset);
         offset += 4;
         if (storage_count > PIZ_MAX_STORAGE_PER_COMPANY) {
@@ -658,6 +721,7 @@ bool piz_container_decode(PizContainer *container, const uint8_t *buffer,
                 return false;
             }
             company->storage[storage].id = get_u32(buffer, offset);
+            get_text(company->storage[storage].name, 32, buffer, offset + 4);
             offset += 4 + STORAGE_BODY_SIZE;
         }
         uint32_t pair_count = get_u32(buffer, offset);

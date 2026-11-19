@@ -51,6 +51,8 @@ def main() -> int:
                                        if companies["slots"] else None),
         "company_slot0_recipes": (companies["slots"][0].get("recipes")
                                   if companies["slots"] else None),
+        "company_slot0_reports": (companies["slots"][0].get("reports")
+                                  if companies["slots"] else None),
         "company_slot0_branch_count": (companies["slots"][0].get("branch_count")
                                        if companies["slots"] else None),
         "company_slot0_branches": (companies["slots"][0].get("branches")
@@ -73,13 +75,21 @@ def main() -> int:
           and result["company_slot0_cash"] == 494270.0
           and result["company_slot0_plan_count"] == 1
           and result["company_slot0_recipe_count"] == 1
-          and result["company_slot0_recipes"] == [
-              {"id": 42, "name": "Margherita", "toppings": 0}]
+          and result["company_slot0_recipes"][0]["topping_count"] == 1
+          and result["company_slot0_recipes"][0]["toppings"] == [
+              {"ingredient": 5, "category": 1, "tier": 2, "x": 10, "y": 20,
+               "variant": 1, "flag": 1}]
           and result["company_slot0_branch_count"] == 1
-          and result["company_slot0_branches"] == [
-              {"id": 13694, "record_size": 6412}]
+          and result["company_slot0_branches"][0]["id"] == 13694
+          and result["company_slot0_branches"][0]["name"] == "London branch"
+          and result["company_slot0_branches"][0]["style"] == 2
+          and result["company_slot0_branches"][0]["flags"] == 0x24
           and result["company_slot0_report_count"] == 1
-          and result["company_slot0_storage"] == [{"id": 7}]
+          and result["company_slot0_reports"][0]["income"][0] == 100.5
+          and result["company_slot0_reports"][0]["income"][4] == 50.25
+          and result["company_slot0_reports"][0]["expense"][12] == 30.75
+          and result["company_slot0_storage"] == [
+              {"id": 7, "name": "London storage"}]
           and result["company_slot0_pairs"] == [
               {"id": 9, "value": 0x1122334455667788}]
           and result["company_slot0_big_count"] == 1)

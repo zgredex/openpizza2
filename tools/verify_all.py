@@ -1262,13 +1262,21 @@ def check_piz_records():
           and payload.get("company_slot0_cash") == 494270.0
           and payload.get("company_slot0_plan_count") == 1
           and payload.get("company_slot0_recipe_count") == 1
-          and payload.get("company_slot0_recipes") == [
-              {"id": 42, "name": "Margherita", "toppings": 0}]
+          and payload.get("company_slot0_recipes")[0]["topping_count"] == 1
+          and payload.get("company_slot0_recipes")[0]["toppings"] == [
+              {"ingredient": 5, "category": 1, "tier": 2, "x": 10, "y": 20,
+               "variant": 1, "flag": 1}]
           and payload.get("company_slot0_branch_count") == 1
-          and payload.get("company_slot0_branches") == [
-              {"id": 13694, "record_size": 6412}]
+          and payload.get("company_slot0_branches")[0]["id"] == 13694
+          and payload.get("company_slot0_branches")[0]["name"] == "London branch"
+          and payload.get("company_slot0_branches")[0]["style"] == 2
+          and payload.get("company_slot0_branches")[0]["flags"] == 0x24
           and payload.get("company_slot0_report_count") == 1
-          and payload.get("company_slot0_storage") == [{"id": 7}]
+          and payload.get("company_slot0_reports")[0]["income"][0] == 100.5
+          and payload.get("company_slot0_reports")[0]["income"][4] == 50.25
+          and payload.get("company_slot0_reports")[0]["expense"][12] == 30.75
+          and payload.get("company_slot0_storage") == [
+              {"id": 7, "name": "London storage"}]
           and payload.get("company_slot0_pairs") == [
               {"id": 9, "value": 0x1122334455667788}]
           and payload.get("company_slot0_big_count") == 1)
@@ -1277,7 +1285,8 @@ def check_piz_records():
         "ok": ok,
         "detail": ("piz_payload.py accepts 1 character (2086-byte record), "
                    "6 player slots and 1 company with plan, recipe, branch, "
-                   "report, storage, pair and 0x1A0 lists with no errors") if ok else output[-1200:],
+                   "report, storage, pair and 0x1A0 lists with populated "
+                   "recipe/branch/report/storage fields with no errors") if ok else output[-1200:],
     }
 
 def check_rust_tests():

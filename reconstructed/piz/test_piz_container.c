@@ -72,11 +72,29 @@ static PizContainer make_container(void) {
     container.companies[0].recipe_count = 1;
     container.companies[0].recipes[0].id = 42;
     strcpy(container.companies[0].recipes[0].name, "Margherita");
+    container.companies[0].recipes[0].topping_count = 1;
+    container.companies[0].recipes[0].toppings[0] = (PizRecipeTopping){
+        .ingredient = 5,
+        .category = 1,
+        .tier = 2,
+        .x = 10,
+        .y = 20,
+        .variant = 1,
+        .flag = 1,
+    };
     container.companies[0].branch_count = 1;
     container.companies[0].branches[0].id = 13694;
+    strcpy(container.companies[0].branches[0].name, "London branch");
+    container.companies[0].branches[0].style = 2;
+    container.companies[0].branches[0].flags = 0x24;
+    container.companies[0].branches[0].company_slot = 0;
     container.companies[0].report_count = 1;
+    container.companies[0].reports[0].income[0] = 100.5f;
+    container.companies[0].reports[0].income[4] = 50.25f;
+    container.companies[0].reports[0].expense[12] = 30.75f;
     container.companies[0].storage_count = 1;
     container.companies[0].storage[0].id = 7;
+    strcpy(container.companies[0].storage[0].name, "London storage");
     container.companies[0].pair_count = 1;
     container.companies[0].pairs[0].id = 9;
     container.companies[0].pairs[0].value = 0x1122334455667788ull;
@@ -151,11 +169,27 @@ static void test_round_trip(const char *write_path) {
     assert(restored.companies[0].recipe_count == 1);
     assert(restored.companies[0].recipes[0].id == 42);
     assert(strcmp(restored.companies[0].recipes[0].name, "Margherita") == 0);
+    assert(restored.companies[0].recipes[0].topping_count == 1);
+    assert(restored.companies[0].recipes[0].toppings[0].ingredient == 5);
+    assert(restored.companies[0].recipes[0].toppings[0].category == 1);
+    assert(restored.companies[0].recipes[0].toppings[0].tier == 2);
+    assert(restored.companies[0].recipes[0].toppings[0].x == 10);
+    assert(restored.companies[0].recipes[0].toppings[0].y == 20);
+    assert(restored.companies[0].recipes[0].toppings[0].variant == 1);
+    assert(restored.companies[0].recipes[0].toppings[0].flag == 1);
     assert(restored.companies[0].branch_count == 1);
     assert(restored.companies[0].branches[0].id == 13694);
+    assert(strcmp(restored.companies[0].branches[0].name, "London branch") == 0);
+    assert(restored.companies[0].branches[0].style == 2);
+    assert(restored.companies[0].branches[0].flags == 0x24);
+    assert(restored.companies[0].branches[0].company_slot == 0);
     assert(restored.companies[0].report_count == 1);
+    assert(restored.companies[0].reports[0].income[0] == 100.5f);
+    assert(restored.companies[0].reports[0].income[4] == 50.25f);
+    assert(restored.companies[0].reports[0].expense[12] == 30.75f);
     assert(restored.companies[0].storage_count == 1);
     assert(restored.companies[0].storage[0].id == 7);
+    assert(strcmp(restored.companies[0].storage[0].name, "London storage") == 0);
     assert(restored.companies[0].pair_count == 1);
     assert(restored.companies[0].pairs[0].id == 9);
     assert(restored.companies[0].pairs[0].value == 0x1122334455667788ull);

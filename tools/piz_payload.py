@@ -384,6 +384,18 @@ class PizSave:
                     pos += 4
                     recipe_name = decode_text(self.data[pos:pos + 64]).rstrip("\0")
                     topping_count = self._u32(pos + 68)
+                    toppings = []
+                    for topping_index in range(topping_count):
+                        base = pos + 72 + topping_index * 21
+                        toppings.append({
+                            "ingredient": self.data[base + 0],
+                            "category": self.data[base + 1],
+                            "tier": self.data[base + 2],
+                            "x": struct.unpack_from("<i", self.data, base + 4)[0],
+                            "y": struct.unpack_from("<i", self.data, base + 8)[0],
+                            "variant": self.data[base + 12],
+                            "flag": self.data[base + 13],
+                        })
                     pos += 72 + topping_count * 21 + 629
                     linked = self._u32(pos)
                     pos += 4
@@ -394,7 +406,8 @@ class PizSave:
                     if pos > end:
                         raise ValueError(f"recipe {recipe_index} past region")
                     recipes.append({"id": recipe_id, "name": recipe_name,
-                                    "toppings": topping_count})
+                                    "topping_count": topping_count,
+                                    "toppings": toppings})
                 featured = self._u32(pos)
                 pos += 4
                 if featured:
@@ -406,6 +419,10 @@ class PizSave:
                     if pos + 4 + branch_size > end:
                         raise ValueError(f"branch {branch_index} past region")
                     branch_id = self._u32(pos)
+                    branch_name = decode_text(self.data[pos + 4:pos + 36]).rstrip("\0")
+                    branch_style = self._u32(pos + 4 + 36)
+                    branch_flags = self._u32(pos + 4 + 40)
+                    branch_company = self._u32(pos + 4 + 44)
                     pos += 4 + branch_size
                     has_asset = self._u32(pos)
                     pos += 4
@@ -431,17 +448,31 @@ class PizSave:
                     if pos > end:
                         raise ValueError(f"branch {branch_index} past region")
                     branches.append({"id": branch_id,
+                                     "name": branch_name,
+                                     "style": branch_style,
+                                     "flags": branch_flags,
+                                     "company_slot": branch_company,
                                      "record_size": branch_size})
                 stats_reports = self._u32(pos)
                 pos += 4
-                pos += stats_reports * 856
+                reports = []
+                for report_index in range(stats_reports):
+                    if pos + 856 > end:
+                        raise ValueError(f"report {report_index} past region")
+                    income = list(struct.unpack_from("<26f", self.data, pos))
+                    expense = list(struct.unpack_from("<25f", self.data, pos + 104))
+                    reports.append({"income": income, "expense": expense})
+                    pos += 856
                 storage_count = self._u32(pos)
                 pos += 4
                 storage = []
                 for storage_index in range(storage_count):
                     if pos + 4 + 303 > end:
                         raise ValueError(f"storage {storage_index} past region")
-                    storage.append({"id": self._u32(pos)})
+                    storage.append({
+                        "id": self._u32(pos),
+                        "name": decode_text(self.data[pos + 4:pos + 36]).rstrip("\0"),
+                    })
                     pos += 4 + 303
                 pair_count = self._u32(pos)
                 pos += 4
@@ -478,6 +509,7 @@ class PizSave:
                 "branch_count": branch_count,
                 "branches": branches,
                 "report_count": stats_reports,
+                "reports": reports,
                 "storage_count": storage_count,
                 "storage": storage,
                 "pair_count": pair_count,
