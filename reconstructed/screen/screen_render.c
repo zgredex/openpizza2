@@ -998,8 +998,27 @@ bool screen_render_personnel_overview(
         draw_label(surface, font_data, font_size, font, window_x + scale_x[index],
                    window_y + 213, scale_labels[index], label_color);
     }
-    blend_rect(surface, window_x + 58, window_y + 231, 140, 6,
-               (const uint8_t[4]){80, 70, 60, 180});
+    static const int32_t on_off_x[4] = {48, 120, 156, 84};
+    for (int index = 0; index < 4; index++) {
+        if (sprites->on_off[index] != NULL) {
+            render_blit(surface, sprites->on_off[index], window_x + on_off_x[index],
+                        window_y + 124);
+        }
+    }
+    static const int32_t deco_x[4] = {39, 74, 40, 71};
+    static const int32_t deco_y[4] = {9, 9, 20, 20};
+    for (int index = 0; index < 4; index++) {
+        if (sprites->slider_bars[index] != NULL) {
+            render_blit(surface, sprites->slider_bars[index], window_x + deco_x[index],
+                        window_y + deco_y[index]);
+        }
+    }
+    for (int index = 0; index < 4; index++) {
+        if (sprites->lower_sliders[index] != NULL) {
+            render_blit(surface, sprites->lower_sliders[index], window_x + 58,
+                        window_y + 231);
+        }
+    }
     return true;
 }
 

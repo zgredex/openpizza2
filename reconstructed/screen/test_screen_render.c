@@ -454,6 +454,9 @@ static void test_personnel_overview_composition(void) {
     uint8_t *slider_pixels = NULL;
     uint8_t *left_pixels = NULL;
     uint8_t *right_pixels = NULL;
+    uint8_t *on_off_pixels[4] = {NULL, NULL, NULL, NULL};
+    uint8_t *lower_slider_pixels[4] = {NULL, NULL, NULL, NULL};
+    uint8_t *slider_bar_pixels[4] = {NULL, NULL, NULL, NULL};
     uint8_t *tab_pixels[4] = {NULL, NULL, NULL, NULL};
     RgbaSprite panel;
     RgbaSprite separator;
@@ -467,6 +470,9 @@ static void test_personnel_overview_composition(void) {
     RgbaSprite arrow_left;
     RgbaSprite arrow_right;
     RgbaSprite tabs[4];
+    RgbaSprite on_off[4];
+    RgbaSprite lower_sliders[4];
+    RgbaSprite slider_bars[4];
     assert(load_spr("../extracted/sprites/submenue.spr", &panel_pixels, &panel));
     assert(load_spr("../extracted/sprites/trennzeile.spr", &separator_pixels,
                     &separator));
@@ -493,6 +499,32 @@ static void test_personnel_overview_composition(void) {
                     &tabs[2]));
     assert(load_spr("../extracted/sprites/persoueber_03.spr", &tab_pixels[3],
                     &tabs[3]));
+    const char *on_off_paths[4] = {
+        "../extracted/sprites/pb16_onoff_00.spr",
+        "../extracted/sprites/pb18_onoff_00.spr",
+        "../extracted/sprites/pb23_onoff_00.spr",
+        "../extracted/sprites/pb21_onoff_00.spr",
+    };
+    const char *lower_paths[4] = {
+        "../extracted/sprites/persosliderblue_00.spr",
+        "../extracted/sprites/persoslidergreen_00.spr",
+        "../extracted/sprites/persosliderred_00.spr",
+        "../extracted/sprites/persoslideryellow_00.spr",
+    };
+    const char *bar_paths[4] = {
+        "../extracted/sprites/persosliderblau_00.spr",
+        "../extracted/sprites/persosliderblau_01.spr",
+        "../extracted/sprites/persoslidergelb_00.spr",
+        "../extracted/sprites/persoslidergelb_01.spr",
+    };
+    for (int index = 0; index < 4; index++) {
+        assert(load_spr(on_off_paths[index], &on_off_pixels[index],
+                        &on_off[index]));
+        assert(load_spr(lower_paths[index], &lower_slider_pixels[index],
+                        &lower_sliders[index]));
+        assert(load_spr(bar_paths[index], &slider_bar_pixels[index],
+                        &slider_bars[index]));
+    }
 
     size_t font_size = 0;
     uint8_t *font_data = load_file("../extracted/fonts/timesfont.fnt", &font_size);
@@ -513,6 +545,11 @@ static void test_personnel_overview_composition(void) {
         .plan_light = &plan_light,
         .slider = &slider,
     };
+    for (int index = 0; index < 4; index++) {
+        sprites.on_off[index] = &on_off[index];
+        sprites.lower_sliders[index] = &lower_sliders[index];
+        sprites.slider_bars[index] = &slider_bars[index];
+    }
     for (int index = 0; index < 8; index++) {
         sprites.ratings[index] = &rating;
     }
@@ -583,6 +620,9 @@ static void test_personnel_overview_composition(void) {
     free(right_pixels);
     for (int index = 0; index < 4; index++) {
         free(tab_pixels[index]);
+        free(on_off_pixels[index]);
+        free(lower_slider_pixels[index]);
+        free(slider_bar_pixels[index]);
     }
 }
 

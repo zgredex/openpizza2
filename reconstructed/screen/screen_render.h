@@ -234,6 +234,9 @@ typedef struct PersonnelOverviewSprites {
     const RgbaSprite *photo_dummy;
     const RgbaSprite *plan_light;
     const RgbaSprite *slider;
+    const RgbaSprite *on_off[4];
+    const RgbaSprite *lower_sliders[4];
+    const RgbaSprite *slider_bars[4];
     const RgbaSprite *ratings[8];
 } PersonnelOverviewSprites;
 

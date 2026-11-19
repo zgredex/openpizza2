@@ -1234,7 +1234,7 @@ def check_reconstructed_c():
                    "list window, exact options sidebar, exact options page, "
                    "exact load/save page, exact enterprise comparison, exact game sidebar, "
                    "exact branch-details page, exact branch-offer page, exact "
-                   "personnel overview main page, personnel record, mission goals, statistics "
+                   "personnel overview, personnel record, mission goals, statistics "
                    "balance, branch-balance statistics, AI plan scoring, "
                    "advertising value/plan effects, "
                    "category metrics and budget allocation, customer-group "

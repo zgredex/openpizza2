@@ -857,6 +857,9 @@ int main(void) {
     uint8_t *po_left_pixels = NULL;
     uint8_t *po_right_pixels = NULL;
     uint8_t *po_tab_pixels[4] = {NULL, NULL, NULL, NULL};
+    uint8_t *po_on_off_pixels[4] = {NULL, NULL, NULL, NULL};
+    uint8_t *po_lower_pixels[4] = {NULL, NULL, NULL, NULL};
+    uint8_t *po_bar_pixels[4] = {NULL, NULL, NULL, NULL};
     RgbaSprite po_panel;
     RgbaSprite po_separator;
     RgbaSprite po_rating;
@@ -869,6 +872,9 @@ int main(void) {
     RgbaSprite po_arrow_left;
     RgbaSprite po_arrow_right;
     RgbaSprite po_tabs[4];
+    RgbaSprite po_on_off[4];
+    RgbaSprite po_lower[4];
+    RgbaSprite po_bars[4];
     assert(load_spr_asset("../extracted/sprites/submenue.spr", &po_panel_pixels,
                           &po_panel));
     assert(load_spr_asset("../extracted/sprites/trennzeile.spr",
@@ -899,6 +905,32 @@ int main(void) {
                           &po_tab_pixels[2], &po_tabs[2]));
     assert(load_spr_asset("../extracted/sprites/persoueber_03.spr",
                           &po_tab_pixels[3], &po_tabs[3]));
+    static const char *po_on_off_paths[4] = {
+        "../extracted/sprites/pb16_onoff_00.spr",
+        "../extracted/sprites/pb18_onoff_00.spr",
+        "../extracted/sprites/pb23_onoff_00.spr",
+        "../extracted/sprites/pb21_onoff_00.spr",
+    };
+    static const char *po_lower_paths[4] = {
+        "../extracted/sprites/persosliderblue_00.spr",
+        "../extracted/sprites/persoslidergreen_00.spr",
+        "../extracted/sprites/persosliderred_00.spr",
+        "../extracted/sprites/persoslideryellow_00.spr",
+    };
+    static const char *po_bar_paths[4] = {
+        "../extracted/sprites/persosliderblau_00.spr",
+        "../extracted/sprites/persosliderblau_01.spr",
+        "../extracted/sprites/persoslidergelb_00.spr",
+        "../extracted/sprites/persoslidergelb_01.spr",
+    };
+    for (int index = 0; index < 4; index++) {
+        assert(load_spr_asset(po_on_off_paths[index], &po_on_off_pixels[index],
+                              &po_on_off[index]));
+        assert(load_spr_asset(po_lower_paths[index], &po_lower_pixels[index],
+                              &po_lower[index]));
+        assert(load_spr_asset(po_bar_paths[index], &po_bar_pixels[index],
+                              &po_bars[index]));
+    }
     PersonnelOverviewSprites po_sprites = {
         .panel = &po_panel,
         .tabs = po_tabs,
@@ -912,6 +944,11 @@ int main(void) {
         .plan_light = &po_plan_light,
         .slider = &po_slider,
     };
+    for (int index = 0; index < 4; index++) {
+        po_sprites.on_off[index] = &po_on_off[index];
+        po_sprites.lower_sliders[index] = &po_lower[index];
+        po_sprites.slider_bars[index] = &po_bars[index];
+    }
     for (int index = 0; index < 8; index++) {
         po_sprites.ratings[index] = &po_rating;
     }
