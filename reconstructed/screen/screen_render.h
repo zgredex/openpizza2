@@ -71,6 +71,37 @@ bool screen_render_game_sidebar(RenderSurface *surface,
 
 #define LOAD_SAVE_ROW_COUNT 13
 
+#define COMPARISON_ROW_COUNT 6
+
+typedef struct ComparisonRow {
+    const char *name;
+    uint32_t points;
+} ComparisonRow;
+
+typedef struct StatisticsBackdropSprites {
+    const RgbaSprite *background;
+    const RgbaSprite *icons[8];
+    const RgbaSprite *logos[6];
+    const RgbaSprite *row_marker;
+    const RgbaSprite *help_button;
+    const RgbaSprite *button_background;
+} StatisticsBackdropSprites;
+
+typedef struct StatisticsBackdropData {
+    const ComparisonRow *rows;
+    size_t row_count;
+    const char *total_text;
+    const char *period_text;
+    int selected_button;
+} StatisticsBackdropData;
+
+/* Composes Screen_StatisticsBackdrop (0x43E430): enterprise comparison
+ * background, eight area icons, six logos and six company rows. */
+bool screen_render_statistics_backdrop(
+    RenderSurface *surface, const StatisticsBackdropSprites *sprites,
+    const uint8_t *font_data, size_t font_size, const FntInfo *font,
+    const StatisticsBackdropData *data);
+
 typedef struct LoadSavePageData {
     const char *names[LOAD_SAVE_ROW_COUNT];
     size_t count;

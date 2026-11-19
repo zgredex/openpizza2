@@ -1419,3 +1419,87 @@ bool screen_render_load_save_page(RenderSurface *surface,
     }
     return true;
 }
+
+bool screen_render_statistics_backdrop(
+    RenderSurface *surface, const StatisticsBackdropSprites *sprites,
+    const uint8_t *font_data, size_t font_size, const FntInfo *font,
+    const StatisticsBackdropData *data) {
+    if (surface == NULL || sprites == NULL || font == NULL || data == NULL) {
+        return false;
+    }
+    const uint8_t background_color[4] = {22, 26, 34, 255};
+    render_clear(surface, background_color);
+    if (sprites->background == NULL ||
+        !render_blit(surface, sprites->background, 0, 0)) {
+        return false;
+    }
+    const uint8_t title_color[4] = {120, 20, 20, 255};
+    const uint8_t label_color[4] = {40, 28, 20, 255};
+    const uint8_t value_color[4] = {20, 20, 90, 255};
+    char value_text[64];
+
+    draw_label(surface, font_data, font_size, font, 605, 225,
+               "Comparison of enterprises", title_color);
+    draw_label(surface, font_data, font_size, font, 605, 254,
+               "Comparable areas", label_color);
+    static const int32_t icon_x[8] = {614, 658, 702, 702, 614, 658, 746, 746};
+    static const int32_t icon_y[8] = {270, 270, 270, 313, 313, 313, 270, 313};
+    for (int index = 0; index < 8; index++) {
+        if (sprites->icons[index] != NULL) {
+            render_blit(surface, sprites->icons[index], icon_x[index],
+                        icon_y[index]);
+        }
+    }
+    static const int32_t logo_x[6] = {768, 767, 767, 767, 767, 767};
+    static const int32_t logo_y[6] = {559, 416, 451, 486, 525, 383};
+    for (int index = 0; index < 6; index++) {
+        if (sprites->logos[index] != NULL) {
+            render_blit(surface, sprites->logos[index], logo_x[index],
+                        logo_y[index]);
+        }
+    }
+    static const int32_t row_y[COMPARISON_ROW_COUNT] = {385, 420, 455, 490,
+                                                        525, 560};
+    for (int index = 0; index < COMPARISON_ROW_COUNT; index++) {
+        if (sprites->row_marker != NULL) {
+            render_blit(surface, sprites->row_marker, 608, row_y[index] + 1);
+        }
+        if (index < (int)data->row_count && data->rows != NULL) {
+            const ComparisonRow *row = &data->rows[index];
+            if (row->name != NULL) {
+                draw_label(surface, font_data, font_size, font, 631,
+                           row_y[index], row->name, value_color);
+            }
+            draw_label(surface, font_data, font_size, font, 631,
+                       row_y[index] + 12, "Points", label_color);
+            snprintf(value_text, sizeof(value_text), "%u", row->points);
+            uint32_t width = ui_measure_text(font, value_text);
+            draw_label(surface, font_data, font_size, font,
+                       686 + 85 - (int32_t)width, row_y[index] + 12,
+                       value_text, value_color);
+        }
+    }
+    if (data->total_text != NULL) {
+        draw_label(surface, font_data, font_size, font, 32, 66,
+                   data->total_text, value_color);
+    }
+    if (data->period_text != NULL) {
+        draw_label(surface, font_data, font_size, font, 403, 516,
+                   data->period_text, label_color);
+    }
+    if (sprites->help_button != NULL) {
+        render_blit(surface, sprites->help_button, 572, 217);
+    }
+    if (sprites->button_background != NULL) {
+        for (int32_t tile = 0; tile < 160; tile += sprites->button_background->width) {
+            render_blit(surface, sprites->button_background, 615 + tile, 356);
+        }
+    }
+    if (data->selected_button == 0) {
+        blend_rect(surface, 615, 356, 160, 21,
+                   (const uint8_t[4]){255, 225, 120, 150});
+    }
+    draw_label(surface, font_data, font_size, font, 630, 358,
+               "Total evaluation", label_color);
+    return true;
+}

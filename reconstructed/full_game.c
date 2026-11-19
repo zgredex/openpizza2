@@ -1246,6 +1246,96 @@ int main(void) {
     free(ls_row_pixels);
     free(ls_scroll_pixels);
 
+    uint8_t *sb2_background_pixels = NULL;
+    RgbaSprite sb2_background;
+    assert(load_spr_asset("../extracted/sprites/statistikbackspriteneutral.spr",
+                          &sb2_background_pixels, &sb2_background));
+    static const char *sb2_icon_paths[8] = {
+        "../extracted/sprites/skfiliale_00.spr",
+        "../extracted/sprites/skstern_00.spr",
+        "../extracted/sprites/skperso_00.spr",
+        "../extracted/sprites/sksyndicate_00.spr",
+        "../extracted/sprites/skwerbung_00.spr",
+        "../extracted/sprites/skrezept_00.spr",
+        "../extracted/sprites/skbilanz_00.spr",
+        "../extracted/sprites/skbewertung_00.spr",
+    };
+    uint8_t *sb2_icon_pixels[8] = {NULL};
+    RgbaSprite sb2_icons[8];
+    for (int index = 0; index < 8; index++) {
+        assert(load_spr_asset(sb2_icon_paths[index], &sb2_icon_pixels[index],
+                              &sb2_icons[index]));
+    }
+    static const char *sb2_logo_paths[6] = {
+        "../extracted/sprites/logos__08.spr",
+        "../extracted/sprites/logos__01.spr",
+        "../extracted/sprites/logos__02.spr",
+        "../extracted/sprites/logos__05.spr",
+        "../extracted/sprites/logos__06.spr",
+        "../extracted/sprites/logos__07.spr",
+    };
+    uint8_t *sb2_logo_pixels[6] = {NULL};
+    RgbaSprite sb2_logos[6];
+    for (int index = 0; index < 6; index++) {
+        assert(load_spr_asset(sb2_logo_paths[index], &sb2_logo_pixels[index],
+                              &sb2_logos[index]));
+    }
+    uint8_t *sb2_marker_pixels = NULL;
+    uint8_t *sb2_help_pixels = NULL;
+    uint8_t *sb2_button_pixels = NULL;
+    RgbaSprite sb2_marker;
+    RgbaSprite sb2_help;
+    RgbaSprite sb2_button;
+    assert(load_spr_asset("../extracted/sprites/pb14_00.spr",
+                          &sb2_marker_pixels, &sb2_marker));
+    assert(load_spr_asset("../extracted/sprites/hilfebuttonsnip_00.spr",
+                          &sb2_help_pixels, &sb2_help));
+    assert(load_spr_asset("../extracted/sprites/textpb01__00.spr",
+                          &sb2_button_pixels, &sb2_button));
+    StatisticsBackdropSprites sb2_sprites = {
+        .background = &sb2_background,
+        .row_marker = &sb2_marker,
+        .help_button = &sb2_help,
+        .button_background = &sb2_button,
+    };
+    for (int index = 0; index < 8; index++) {
+        sb2_sprites.icons[index] = &sb2_icons[index];
+    }
+    for (int index = 0; index < 6; index++) {
+        sb2_sprites.logos[index] = &sb2_logos[index];
+    }
+    const ComparisonRow sb2_rows[6] = {
+        {"Ada Pizza", 16000000}, {"Rival One", 12000000},
+        {"Rival Two", 9000000},  {"Rival Three", 7000000},
+        {"Rival Four", 5000000}, {"Rival Five", 3000000},
+    };
+    const StatisticsBackdropData sb2_data = {
+        .rows = sb2_rows,
+        .row_count = 6,
+        .total_text = "23000$",
+        .period_text = "Aktuelles Quartal",
+        .selected_button = 0,
+    };
+    uint8_t *sb2_frame = malloc(800 * 600 * 4);
+    assert(sb2_frame != NULL);
+    RenderSurface sb2_surface;
+    assert(render_surface_init(&sb2_surface, sb2_frame, 800 * 600 * 4, 800, 600));
+    assert(screen_render_statistics_backdrop(&sb2_surface, &sb2_sprites,
+                                             font_data, font_size, &font_info,
+                                             &sb2_data));
+    free(sb2_frame);
+    free(sb2_background_pixels);
+    for (int index = 0; index < 8; index++) {
+        free(sb2_icon_pixels[index]);
+    }
+    for (int index = 0; index < 6; index++) {
+        free(sb2_logo_pixels[index]);
+    }
+    free(sb2_marker_pixels);
+    free(sb2_help_pixels);
+    free(sb2_button_pixels);
+
+
 
 
 

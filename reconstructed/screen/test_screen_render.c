@@ -1195,6 +1195,129 @@ static void test_load_save_page_composition(void) {
     free(scroll_pixels);
 }
 
+static void test_statistics_backdrop_composition(void) {
+    uint8_t *background_pixels = NULL;
+    RgbaSprite background;
+    assert(load_spr("../extracted/sprites/statistikbackspriteneutral.spr",
+                    &background_pixels, &background));
+    const char *icon_paths[8] = {
+        "../extracted/sprites/skfiliale_00.spr",
+        "../extracted/sprites/skstern_00.spr",
+        "../extracted/sprites/skperso_00.spr",
+        "../extracted/sprites/sksyndicate_00.spr",
+        "../extracted/sprites/skwerbung_00.spr",
+        "../extracted/sprites/skrezept_00.spr",
+        "../extracted/sprites/skbilanz_00.spr",
+        "../extracted/sprites/skbewertung_00.spr",
+    };
+    uint8_t *icon_pixels[8] = {NULL};
+    RgbaSprite icons[8];
+    for (int index = 0; index < 8; index++) {
+        assert(load_spr(icon_paths[index], &icon_pixels[index], &icons[index]));
+    }
+    const char *logo_paths[6] = {
+        "../extracted/sprites/logos__08.spr",
+        "../extracted/sprites/logos__01.spr",
+        "../extracted/sprites/logos__02.spr",
+        "../extracted/sprites/logos__05.spr",
+        "../extracted/sprites/logos__06.spr",
+        "../extracted/sprites/logos__07.spr",
+    };
+    uint8_t *logo_pixels[6] = {NULL};
+    RgbaSprite logos[6];
+    for (int index = 0; index < 6; index++) {
+        assert(load_spr(logo_paths[index], &logo_pixels[index], &logos[index]));
+    }
+    uint8_t *marker_pixels = NULL;
+    uint8_t *help_pixels = NULL;
+    uint8_t *button_pixels = NULL;
+    RgbaSprite marker;
+    RgbaSprite help;
+    RgbaSprite button;
+    assert(load_spr("../extracted/sprites/pb14_00.spr", &marker_pixels, &marker));
+    assert(load_spr("../extracted/sprites/hilfebuttonsnip_00.spr",
+                    &help_pixels, &help));
+    assert(load_spr("../extracted/sprites/textpb01__00.spr", &button_pixels,
+                    &button));
+    size_t font_size = 0;
+    uint8_t *font_data = load_file("../extracted/fonts/timesfont.fnt", &font_size);
+    assert(font_data != NULL);
+    FntInfo font;
+    assert(fnt_read_info(font_data, font_size, &font));
+
+    StatisticsBackdropSprites sprites = {
+        .background = &background,
+        .row_marker = &marker,
+        .help_button = &help,
+        .button_background = &button,
+    };
+    for (int index = 0; index < 8; index++) {
+        sprites.icons[index] = &icons[index];
+    }
+    for (int index = 0; index < 6; index++) {
+        sprites.logos[index] = &logos[index];
+    }
+    const ComparisonRow rows[6] = {
+        {"Ada Pizza", 16000000},
+        {"Rival One", 12000000},
+        {"Rival Two", 9000000},
+        {"Rival Three", 7000000},
+        {"Rival Four", 5000000},
+        {"Rival Five", 3000000},
+    };
+    const StatisticsBackdropData data = {
+        .rows = rows,
+        .row_count = 6,
+        .total_text = "23000$",
+        .period_text = "Aktuelles Quartal",
+        .selected_button = 0,
+    };
+    size_t frame_size = 800 * 600 * 4;
+    uint8_t *frame = malloc(frame_size);
+    assert(frame != NULL);
+    RenderSurface surface;
+    assert(render_surface_init(&surface, frame, frame_size, 800, 600));
+    assert(screen_render_statistics_backdrop(&surface, &sprites, font_data,
+                                             font_size, &font, &data));
+    bool title_ink = false;
+    for (int y = 220; y < 245; y++) {
+        for (int x = 600; x < 780; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] < 180 && frame[offset + 1] < 120) {
+                title_ink = true;
+            }
+        }
+    }
+    assert(title_ink);
+    bool marker_ink = false;
+    for (size_t index = 0; index + 3 < (size_t)marker.width * marker.height * 4;
+         index += 4) {
+        if (marker.pixels[index + 3] == 255) {
+            size_t px = (index / 4) % marker.width;
+            size_t py = (index / 4) / marker.width;
+            size_t target = ((size_t)(386 + (int)py) * 800 + (608 + (int)px)) * 4;
+            assert(memcmp(frame + target, marker.pixels + index, 4) == 0);
+            marker_ink = true;
+            break;
+        }
+    }
+    assert(marker_ink);
+    assert(!screen_render_statistics_backdrop(&surface, &sprites, font_data,
+                                              font_size, &font, NULL));
+    free(font_data);
+    free(frame);
+    free(background_pixels);
+    for (int index = 0; index < 8; index++) {
+        free(icon_pixels[index]);
+    }
+    for (int index = 0; index < 6; index++) {
+        free(logo_pixels[index]);
+    }
+    free(marker_pixels);
+    free(help_pixels);
+    free(button_pixels);
+}
+
 static void test_statistics_composition(void) {
     size_t tga_size = 0;
     size_t font_size = 0;
@@ -1447,6 +1570,7 @@ int main(void) {
     test_statistics_branch_balance_composition();
     test_options_page_composition();
     test_load_save_page_composition();
+    test_statistics_backdrop_composition();
     test_mission_goals_composition();
     test_recipe_info_panel_composition();
     test_options_sidebar_composition();

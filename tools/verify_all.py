@@ -1232,7 +1232,7 @@ def check_reconstructed_c():
                    "composition, exact main menu, character-select, exact London "
                    "briefing, free-play setup, statistics view, exact branch-"
                    "list window, exact options sidebar, exact options page, "
-                   "exact load/save page, exact game sidebar, "
+                   "exact load/save page, exact enterprise comparison, exact game sidebar, "
                    "exact branch-details page, exact branch-offer page, personnel "
                    "overview, personnel record, mission goals, statistics "
                    "balance, branch-balance statistics, AI plan scoring, "
