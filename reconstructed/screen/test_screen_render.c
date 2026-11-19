@@ -913,6 +913,49 @@ static void test_recipe_info_panel_composition(void) {
     }
 }
 
+static void test_options_sidebar_composition(void) {
+    uint8_t *panel_pixels = NULL;
+    RgbaSprite panel;
+    assert(load_spr("../extracted/sprites/dummysprite.spr", &panel_pixels, &panel));
+    const char *paths[5] = {
+        "../extracted/sprites/r_grafik__00.spr",
+        "../extracted/sprites/r_laden__00.spr",
+        "../extracted/sprites/r_sound__00.spr",
+        "../extracted/sprites/r_speichern__00.spr",
+        "../extracted/sprites/r_help__00.spr",
+    };
+    uint8_t *pixels[5] = {NULL};
+    RgbaSprite buttons[5];
+    for (int index = 0; index < 5; index++) {
+        assert(load_spr(paths[index], &pixels[index], &buttons[index]));
+    }
+    size_t frame_size = 800 * 600 * 4;
+    uint8_t *frame = malloc(frame_size);
+    assert(frame != NULL);
+    RenderSurface surface;
+    assert(render_surface_init(&surface, frame, frame_size, 800, 600));
+    assert(screen_render_options_sidebar(&surface, &panel, buttons, 0));
+    size_t panel_offset = ((size_t)248 * 800 + 567) * 4;
+    assert(memcmp(frame + panel_offset, panel.pixels, 4) == 0);
+    bool ink = false;
+    for (int y = 251; y < 282; y++) {
+        for (int x = 568; x < 605; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] != 22 || frame[offset + 1] != 26 ||
+                frame[offset + 2] != 34) {
+                ink = true;
+            }
+        }
+    }
+    assert(ink);
+    assert(!screen_render_options_sidebar(&surface, &panel, NULL, 0));
+    free(frame);
+    free(panel_pixels);
+    for (int index = 0; index < 5; index++) {
+        free(pixels[index]);
+    }
+}
+
 static void test_statistics_composition(void) {
     size_t tga_size = 0;
     size_t font_size = 0;
@@ -1140,6 +1183,7 @@ int main(void) {
     test_statistics_branch_balance_composition();
     test_mission_goals_composition();
     test_recipe_info_panel_composition();
+    test_options_sidebar_composition();
     test_statistics_composition();
     test_free_play_composition();
     test_briefing_composition();

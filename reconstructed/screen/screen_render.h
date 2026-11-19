@@ -59,6 +59,13 @@ typedef struct StatisticsBalanceRow {
 
 /* Composes Screen_RecipeInfoPanel (0x41A6D0): the 39x303 DUMMYSPRITE sidebar
  * at (567,248) with its nine 37x31 image buttons at the original y offsets. */
+/* Composes Screen_BuildOptionsSidebar (0x425E70): DUMMYSPRITE window at
+ * (567,248) and the five option image buttons at exact offsets. */
+bool screen_render_options_sidebar(RenderSurface *surface,
+                                   const RgbaSprite *panel,
+                                   const RgbaSprite *buttons,
+                                   int selected);
+
 bool screen_render_recipe_info_panel(RenderSurface *surface,
                                      const RgbaSprite *panel,
                                      const RgbaSprite *buttons,

@@ -1037,6 +1037,37 @@ int main(void) {
         free(ri_pixels[index]);
     }
 
+    uint8_t *os_panel_pixels = NULL;
+    RgbaSprite os_panel;
+    assert(load_spr_asset("../extracted/sprites/dummysprite.spr",
+                          &os_panel_pixels, &os_panel));
+    static const char *os_paths[5] = {
+        "../extracted/sprites/r_grafik__00.spr",
+        "../extracted/sprites/r_laden__00.spr",
+        "../extracted/sprites/r_sound__00.spr",
+        "../extracted/sprites/r_speichern__00.spr",
+        "../extracted/sprites/r_help__00.spr",
+    };
+    uint8_t *os_pixels[5] = {NULL};
+    RgbaSprite os_buttons[5];
+    for (int index = 0; index < 5; index++) {
+        assert(load_spr_asset(os_paths[index], &os_pixels[index],
+                              &os_buttons[index]));
+    }
+    uint8_t *os_frame = malloc(800 * 600 * 4);
+    assert(os_frame != NULL);
+    RenderSurface os_surface;
+    assert(render_surface_init(&os_surface, os_frame, 800 * 600 * 4, 800, 600));
+    assert(screen_render_options_sidebar(&os_surface, &os_panel, os_buttons, 0));
+    size_t os_panel_offset = ((size_t)248 * 800 + 567) * 4;
+    assert(memcmp(os_frame + os_panel_offset, os_panel.pixels, 4) == 0);
+    free(os_frame);
+    free(os_panel_pixels);
+    for (int index = 0; index < 5; index++) {
+        free(os_pixels[index]);
+    }
+
+
 
 
 

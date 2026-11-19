@@ -1231,7 +1231,7 @@ def check_reconstructed_c():
                    "personnel, render, operations, SPR/FNT assets and UI "
                    "composition, startscreen menu, character-select, London "
                    "briefing, free-play setup, statistics view, exact branch-"
-                   "list window, branch-details page, branch-offer page, personnel "
+                   "list window, exact options sidebar, branch-details page, branch-offer page, personnel "
                    "overview, personnel record, mission goals, statistics "
                    "balance, branch-balance statistics, AI plan scoring, "
                    "advertising value/plan effects, "
