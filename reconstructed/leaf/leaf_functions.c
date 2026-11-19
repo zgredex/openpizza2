@@ -893,3 +893,69 @@ const void *array_get_ptr_checked(const void *const *values, size_t count,
                                   int32_t index) {
     return array_get_pointer(values, count, index);
 }
+
+uint8_t font_get_char_width(const FntInfo *font, uint8_t character) {
+    if (font == NULL || character < 0x20) {
+        return 0;
+    }
+    uint32_t index = (uint32_t)character - 0x20u;
+    if (index >= FNT_GLYPH_COUNT) {
+        return 0;
+    }
+    return font->advances[index];
+}
+
+int32_t font_measure_text(const FntInfo *font, const char *text) {
+    if (font == NULL || text == NULL) {
+        return 0;
+    }
+    int32_t width = 0;
+    for (size_t index = 0; text[index] != '\0'; index++) {
+        uint8_t character = (uint8_t)text[index];
+        uint32_t glyph = (uint32_t)character - 0x20u;
+        width += glyph < FNT_GLYPH_COUNT ? font->advances[glyph]
+                                         : font->advances[0];
+    }
+    return width;
+}
+
+int32_t font_measure_range(const FntInfo *font, const char *text,
+                           int32_t start, int32_t end) {
+    if (font == NULL || text == NULL || start < 0 || end <= start) {
+        return 0;
+    }
+    int32_t width = 0;
+    for (int32_t index = start; index < end && text[index] != '\0'; index++) {
+        uint8_t character = (uint8_t)text[index];
+        uint32_t glyph = (uint32_t)character - 0x20u;
+        width += glyph < FNT_GLYPH_COUNT ? font->advances[glyph]
+                                         : font->advances[0];
+    }
+    return width;
+}
+
+void game_clock_reset(uint8_t *clock, uint16_t calendar_state) {
+    if (clock == NULL) {
+        return;
+    }
+    uint16_t state = calendar_state;
+    memcpy(clock + 4, &state, sizeof(state));
+    clock[6] = 0;
+    clock[7] = 0;
+    clock[8] = 0;
+    clock[0x18] = 0;
+    clock[0x19] = 0;
+    uint16_t zero16 = 0;
+    memcpy(clock + 10, &zero16, sizeof(zero16));
+    int32_t zero32 = 0;
+    memcpy(clock + 0x0c, &zero32, sizeof(zero32));
+    memcpy(clock + 0x10, &zero32, sizeof(zero32));
+}
+
+int32_t economy_apply_table_percent(const int32_t *table, int32_t row,
+                                    int32_t index, int32_t value) {
+    if (table == NULL) {
+        return 0;
+    }
+    return (table[row * 9 + index] * value) / 100;
+}

@@ -5,6 +5,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "../assets/assets.h"
+
 /* Leaf routines recovered from the original executable. Addresses refer to
  * decompiled_fastfood2_named_v2/functions_readable. */
 
@@ -233,5 +235,19 @@ const void *array_get_ptr4(const void *const *values, size_t count,
                            int32_t index);
 const void *array_get_ptr_checked(const void *const *values, size_t count,
                                   int32_t index);
+
+/* Font_GetCharWidth / Font_MeasureText / Font_MeasureRange
+ * (0x535650 / 0x5355F0 / 0x5356C0). */
+uint8_t font_get_char_width(const FntInfo *font, uint8_t character);
+int32_t font_measure_text(const FntInfo *font, const char *text);
+int32_t font_measure_range(const FntInfo *font, const char *text,
+                           int32_t start, int32_t end);
+
+/* GameClock_Reset (0x4DD4A0). */
+void game_clock_reset(uint8_t *clock, uint16_t calendar_state);
+
+/* Economy_ApplyTablePercent (0x4DD0F0). */
+int32_t economy_apply_table_percent(const int32_t *table, int32_t row,
+                                    int32_t index, int32_t value);
 
 #endif

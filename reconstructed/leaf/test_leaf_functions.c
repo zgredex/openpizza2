@@ -528,6 +528,52 @@ static void test_stride_entity_city(void) {
     assert(array_get_ptr(NULL, 3, 0) == NULL);
 }
 
+static void test_font_clock_economy(void) {
+    FntInfo font;
+    memset(&font, 0, sizeof(font));
+    font.advances[0] = 3;
+    font.advances['A' - 0x20] = 7;
+    font.advances['B' - 0x20] = 5;
+    assert(font_get_char_width(&font, 'A') == 7);
+    assert(font_get_char_width(&font, 'B') == 5);
+    assert(font_get_char_width(&font, 'Z') == 0);
+    assert(font_get_char_width(&font, 0x1f) == 0);
+    assert(font_get_char_width(NULL, 'A') == 0);
+    assert(font_measure_text(&font, "AB") == 12);
+    assert(font_measure_text(&font, "A B") == 15);
+    assert(font_measure_text(&font, "\t") == 3);
+    assert(font_measure_text(&font, "") == 0);
+    assert(font_measure_text(NULL, "AB") == 0);
+    assert(font_measure_range(&font, "AB", 0, 1) == 7);
+    assert(font_measure_range(&font, "AB", 1, 2) == 5);
+    assert(font_measure_range(&font, "AB", 1, 9) == 5);
+    assert(font_measure_range(&font, "AB", -1, 2) == 0);
+
+    uint8_t clock[0x20];
+    memset(clock, 0xff, sizeof(clock));
+    game_clock_reset(clock, 0x1234);
+    uint16_t state = 0;
+    memcpy(&state, clock + 4, sizeof(state));
+    assert(state == 0x1234);
+    assert(clock[6] == 0 && clock[7] == 0 && clock[8] == 0);
+    assert(clock[0x18] == 0 && clock[0x19] == 0);
+    uint16_t zero16 = 1;
+    memcpy(&zero16, clock + 10, sizeof(zero16));
+    assert(zero16 == 0);
+    int32_t zero32 = 1;
+    memcpy(&zero32, clock + 0x0c, sizeof(zero32));
+    assert(zero32 == 0);
+    memcpy(&zero32, clock + 0x10, sizeof(zero32));
+    assert(zero32 == 0);
+    game_clock_reset(NULL, 0);
+
+    int32_t table[18] = {0};
+    table[1 * 9 + 2] = 250;
+    assert(economy_apply_table_percent(table, 1, 2, 200) == 500);
+    assert(economy_apply_table_percent(table, 0, 0, 200) == 0);
+    assert(economy_apply_table_percent(NULL, 0, 0, 200) == 0);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -548,6 +594,7 @@ int main(void) {
     test_setters_and_tables();
     test_leaf_queue_and_inventory();
     test_stride_entity_city();
+    test_font_clock_economy();
     puts("leaf function reconstruction: OK");
     return 0;
 }
