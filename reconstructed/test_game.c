@@ -6,6 +6,8 @@
 #include "mission/mission_goals.h"
 #include "settings/settings.h"
 #include "save/save_state.h"
+#include "statistics/statistics_state.h"
+#include "options/options_state.h"
 #include "ui_screen/ui_screen.h"
 
 #include <assert.h>
@@ -32,6 +34,17 @@ int main(void) {
     settings_init_defaults(&settings, load_fails, random_low);
     assert(settings.language_index == 3);
     assert(settings.autosave_interval == 5);
+
+    OptionsState options;
+    options_state_init(&options, &settings);
+    options_open(&options, OPTIONS_PAGE_AUTOSAVE);
+    options_set_autosave_interval_index(&options, 8);
+    options_set_language(&options, 2);
+    options_toggle_autosave(&options);
+    options_apply(&options, &settings);
+    assert(settings.autosave_interval == 45);
+    assert(settings.language_index == 2);
+    assert(settings.autosave_enabled == 1);
 
     Ingredient ingredient;
     memset(&ingredient, 0, sizeof(ingredient));
@@ -78,6 +91,21 @@ int main(void) {
     assert(site.object.owned);
     assert(site.object.player_controlled);
     assert(site.order.cell_index == 3290);
+
+    StatisticsState stats;
+    statistics_state_init(&stats);
+    const StatisticsBuilding buildings[] = {{1, true, true}, {1, false, true}};
+    const StatisticsWarehouse warehouses[] = {{2, true}};
+    const CompanyInput companies[] = {
+        {0, 3, 40, 1000, true},
+        {1, 5, 30, 600, true},
+    };
+    statistics_fill_company_overview(&stats, buildings, 2, warehouses, 1,
+                                     companies, 2, 0);
+    statistics_add_branch_balance(&stats, 13694, 100, 60);
+    assert(stats.overview.player_c20 == 3);
+    assert(stats.overview.share_x100 == 6200);
+    assert(statistics_total_branch_profit(&stats) == 40);
 
     SaveState save;
     memset(&save, 0, sizeof(save));

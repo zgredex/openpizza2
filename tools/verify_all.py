@@ -1203,6 +1203,8 @@ def check_reconstructed_c():
           and "branch economy reconstruction: OK" in output
           and "menu state reconstruction: OK" in output
           and "UI screen reconstruction: OK" in output
+          and "options state reconstruction: OK" in output
+          and "statistics state reconstruction: OK" in output
           and "save state reconstruction: OK" in output
           and "construction state reconstruction: OK" in output
           and "city branch state reconstruction: OK" in output
@@ -1212,7 +1214,8 @@ def check_reconstructed_c():
         "name": "reconstructed C build",
         "ok": ok,
         "detail": ("module tests, unified target and pc2-reconstructed full-game "
-                   "target compile with gcc -std=c11 -Werror and pass")
+                   "target compile with gcc -std=c11 -Werror and pass; options/"
+                   "autosave and statistics states included")
         if ok else output[-1200:],
     }
 

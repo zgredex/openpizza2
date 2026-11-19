@@ -23,6 +23,10 @@ Current batches:
 - `ui_screen/` — screen ids and transitions from `GameLoop_DispatchScreens`:
   main menu 0x15, briefing 0x16, session 0x17, free-play setup 0x18,
   sub-start menus 0x19/0x1B and character select 0x1C.
+- `options/` — options/autosave page state, sound values, language 0..3 and the
+  0x568D88 autosave interval table (1..120).
+- `statistics/` — company overview counts/rank/share and branch-balance
+  entries from `Stats_Report_FillCompanyOverview` and the statistics screens.
 - `save/` — packed save blob: "PC2S" header, the 0x164-byte settings block,
   and the 0xD0 bytes emitted by `Player_MissionState_Save`.
 - `construction/` — `ConstructionOrder` 0x24 layout, enqueue cell index and
@@ -34,7 +38,8 @@ Current batches:
   save, construction, mission, branch and city modules through the full London
   loop.
 - `pc2-reconstructed` — full-game build target (`make full-game`) running the
-  menu → character select → mission briefing → London mission → save round trip.
+  menu → character select → mission briefing → options/autosave → London
+  mission → save round trip.
 
 Build and run:
 
