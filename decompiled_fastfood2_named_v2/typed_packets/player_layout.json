@@ -13,7 +13,8 @@
     "address": "0x55C684",
     "constructor_store": "0x50E8E0 Player_Construct",
     "slot_count": 1,
-    "slot_0": "Player_Delete 0x50E9C0"
+    "slot_0": "Player_Delete 0x50E9C0",
+    "next_vtable": "0x55C688 is the GamePlan vtable, installed by 0x50F630, 0x50F690 and 0x50FB30; it is not a second Player slot."
   },
   "constructor": "Player_Construct 0x50E8E0",
   "destructor": "Player_Delete 0x50E9C0",
@@ -24,23 +25,203 @@
     "pair_status": "exact same scalar/array sequence; Character_Save/StreamConstruct nested"
   },
   "fields": [
-    {"offset": "0x000", "width": 4, "name": "vtable", "evidence": "Player_Construct installs 0x55C684"},
-    {"offset": "0x004", "width": 4, "name": "character", "evidence": "Player_Save calls Character_Save(*(this+4)); Player_Load allocates 0x828 and Character_StreamConstruct stores it here"},
-    {"offset": "0x008", "width": 4, "name": "slot", "evidence": "Player_Construct writes -1; Game_InitScenario Object_SetField8 writes the player slot; saved"},
-    {"offset": "0x00C", "width": 32, "name": "player_name", "evidence": "Game_InitScenario copies the profile player name into this 32-byte buffer; saved as 0x20 bytes"},
-    {"offset": "0x02C", "width": 4, "name": "field_2c", "evidence": "Player_Construct writes 0; saved; semantic role unresolved"},
-    {"offset": "0x030", "width": 4, "name": "field_30", "evidence": "Player_Construct writes 0; saved; semantic role unresolved"},
-    {"offset": "0x034", "width": 4, "name": "field_34", "evidence": "Player_Construct writes 0; saved; semantic role unresolved"},
-    {"offset": "0x038", "width": 4, "name": "field_38", "evidence": "Player_Construct writes 0; saved; semantic role unresolved"},
-    {"offset": "0x03C", "width": 24, "name": "character_values", "evidence": "Game_InitScenario 0x482144..0x482187 copies Buyer/Gangsters/Specialist/Politicians/Seller/Guard"},
-    {"offset": "0x054", "width": 24, "name": "extra_character_values", "evidence": "CompanyOverview_FillTotals 0x4BD750 adds Player+0x54..+0x68 to base +0x3C..+0x50 for the Extra/Total columns"},
-    {"offset": "0x06C", "width": 24, "name": "field_6c", "evidence": "Player_Construct zeros six dwords; saved as 0x18 bytes; semantic role unresolved"},
-    {"offset": "0x084", "width": 4, "name": "field_84", "evidence": "Player_Construct writes 1; saved"},
-    {"offset": "0x088", "width": 4, "name": "field_88", "evidence": "Player_Construct writes 1; saved"},
-    {"offset": "0x08C", "width": 28, "name": "events", "evidence": "Player_Construct calls List_Construct(+0x8C); Player_Save writes count at +0xA0 and serializes each event; size 0x1C"},
-    {"offset": "0x0A8", "width": 4, "name": "ai_state", "evidence": "Player_AIState_Init stores 0x250-byte object; Player_Save/Load write an optional flag and AI state"},
-    {"offset": "0x0AC", "width": 4, "name": "mission_state", "evidence": "Player_MissionState_Construct stores 0xD8-byte object; Player_Save/Load write an optional flag and mission state"}
+    {
+      "offset": "0x000",
+      "width": 4,
+      "name": "vtable",
+      "evidence": "Player_Construct installs 0x55C684"
+    },
+    {
+      "offset": "0x004",
+      "width": 4,
+      "name": "character",
+      "evidence": "Player_Save calls Character_Save(*(this+4)); Player_Load allocates 0x828 and Character_StreamConstruct stores it here"
+    },
+    {
+      "offset": "0x008",
+      "width": 4,
+      "name": "slot",
+      "evidence": "Player_Construct writes -1; Game_InitScenario Object_SetField8 writes the player slot; saved"
+    },
+    {
+      "offset": "0x00C",
+      "width": 32,
+      "name": "player_name",
+      "evidence": "Game_InitScenario copies the profile player name into this 32-byte buffer; saved as 0x20 bytes"
+    },
+    {
+      "offset": "0x02C",
+      "width": 4,
+      "name": "reserved_2c",
+      "evidence": "Game_CacheCurrentCityGlobals 0x48E0B0 reads it into cached global 0x57C240; PlayerCompany_InitDefaults 0x50F590 copies that global back; constructor/load/save. No gameplay consumer exists in the decompiled functions."
+    },
+    {
+      "offset": "0x030",
+      "width": 4,
+      "name": "reserved_30",
+      "evidence": "Game_CacheCurrentCityGlobals 0x48E0B0 reads it into cached global 0x57C244; PlayerCompany_InitDefaults 0x50F590 copies that global back; constructor/load/save. No gameplay consumer exists in the decompiled functions."
+    },
+    {
+      "offset": "0x034",
+      "width": 4,
+      "name": "reserved_34",
+      "evidence": "Player_Construct zeroes it and Player_Save/Load serialize it; no other reader or writer exists in the decompiled functions."
+    },
+    {
+      "offset": "0x038",
+      "width": 4,
+      "name": "attacks_fended_off",
+      "evidence": "Player_MissionState_Tick 0x50EFE0 compares it with threshold table 0x5730A4 (1/10/50/100) and posts language strings 0x2FB..0x2FE ('fended off an attack / 10 / 50 / 100 attacks'). Writers: Person_ApplyAttackOutcome 0x50C0F0, Person_ResolveGroupFight 0x50C2E0, Object_ActionRemove 0x50A580, Character_OnArriveAtDestination 0x50D930."
+    },
+    {
+      "offset": "0x03C",
+      "width": 24,
+      "name": "character_values",
+      "evidence": "Game_InitScenario 0x482144..0x482187 copies Buyer/Gangsters/Specialist/Politicians/Seller/Guard"
+    },
+    {
+      "offset": "0x054",
+      "width": 24,
+      "name": "achievement_bonus_values",
+      "evidence": "Player_MissionState_Tick increments one bonus value alongside each corresponding achievement tier; CompanyOverview adds them to base character values for Extra/Total."
+    },
+    {
+      "offset": "0x06C",
+      "width": 24,
+      "name": "achievement_tiers",
+      "evidence": "Six 0..4 tier counters advanced by Player_MissionState_Tick 0x50EFE0; see achievement_tiers below."
+    },
+    {
+      "offset": "0x084",
+      "width": 4,
+      "name": "reserved_84",
+      "evidence": "Player_Construct writes 1 and Player_ResetAiState 0x50EFC0 writes 1 for AI slots; load/save. No reader exists in the decompiled functions."
+    },
+    {
+      "offset": "0x088",
+      "width": 4,
+      "name": "award_briefing_enabled",
+      "evidence": "Player_Construct writes 1; Player_ResetAiState 0x50EFC0 writes 0 for AI slots; City_GenerateRatingNews 0x4D9780 reads it at 0x4D988A and 0x4D99C0 to gate the best-restaurant/best-building medal briefing. Load/save."
+    },
+    {
+      "offset": "0x08C",
+      "width": 28,
+      "name": "events",
+      "evidence": "Player_Construct calls List_Construct(+0x8C); Player_Save writes count at +0xA0 and serializes each event; size 0x1C"
+    },
+    {
+      "offset": "0x0A8",
+      "width": 4,
+      "name": "ai_state",
+      "evidence": "Player_AIState_Init stores 0x250-byte object; Player_Save/Load write an optional flag and AI state"
+    },
+    {
+      "offset": "0x0AC",
+      "width": 4,
+      "name": "mission_state",
+      "evidence": "Player_MissionState_Construct stores 0xD8-byte object; Player_Save/Load write an optional flag and mission state"
+    }
   ],
+  "field_access": {
+    "0x02C": {
+      "readers": ["Game_CacheCurrentCityGlobals 0x48E0B0"],
+      "writers": ["Player_Construct 0x50E8E0", "Player_Load 0x50ECA0", "PlayerCompany_InitDefaults 0x50F590"],
+      "gameplay_consumer": "none found"
+    },
+    "0x030": {
+      "readers": ["Game_CacheCurrentCityGlobals 0x48E0B0"],
+      "writers": ["Player_Construct 0x50E8E0", "Player_Load 0x50ECA0", "PlayerCompany_InitDefaults 0x50F590"],
+      "gameplay_consumer": "none found"
+    },
+    "0x034": {
+      "readers": [],
+      "writers": ["Player_Construct 0x50E8E0", "Player_Load 0x50ECA0"],
+      "gameplay_consumer": "none found"
+    },
+    "0x038": {
+      "readers": ["Player_MissionState_Tick 0x50EFE0"],
+      "writers": [
+        "Person_ApplyAttackOutcome 0x50C0F0",
+        "Person_ResolveGroupFight 0x50C2E0",
+        "Object_ActionRemove 0x50A580",
+        "Character_OnArriveAtDestination 0x50D930",
+        "Player_Load 0x50ECA0"
+      ],
+      "gameplay_consumer": "sixth achievement tier (attacks fended off)"
+    },
+    "0x084": {
+      "readers": [],
+      "writers": ["Player_Construct 0x50E8E0", "Player_ResetAiState 0x50EFC0", "Player_Load 0x50ECA0"],
+      "gameplay_consumer": "none found"
+    },
+    "0x088": {
+      "readers": ["City_GenerateRatingNews 0x4D9780 (0x4D988A, 0x4D99C0)"],
+      "writers": ["Player_Construct 0x50E8E0", "Player_ResetAiState 0x50EFC0", "Player_Load 0x50ECA0"],
+      "gameplay_consumer": "gates award/briefing messages; 0 for AI slots"
+    }
+  },
+  "achievement_tiers": [
+    {
+      "offset": "0x06C",
+      "index": 0,
+      "metric": "employees in restaurants",
+      "thresholds": [25, 50, 100, 150],
+      "threshold_table": "0x573054",
+      "message_strings": ["0x2E7", "0x2E8", "0x2E9", "0x2EA"],
+      "message_array": "0x583048"
+    },
+    {
+      "offset": "0x070",
+      "index": 1,
+      "metric": "attacks carried out in one city",
+      "thresholds": [10, 50, 100, 150],
+      "threshold_table": "0x573064",
+      "message_strings": ["0x2EB", "0x2EC", "0x2ED", "0x2EE"],
+      "message_array": "0x583038"
+    },
+    {
+      "offset": "0x074",
+      "index": 2,
+      "metric": "medals / awards",
+      "thresholds": [1, 5, 10, 15],
+      "threshold_table": "0x573074",
+      "message_strings": ["0x2EF", "0x2F0", "0x2F1", "0x2F2"],
+      "message_array": "0x583008"
+    },
+    {
+      "offset": "0x078",
+      "index": 3,
+      "metric": "restaurants opened",
+      "thresholds": [2, 4, 6, 8],
+      "threshold_table": "0x573084",
+      "message_strings": ["0x2F3", "0x2F4", "0x2F5", "0x2F6"],
+      "message_array": "0x582FF8"
+    },
+    {
+      "offset": "0x07C",
+      "index": 4,
+      "metric": "quarterly sales",
+      "thresholds": [100000, 200000, 300000, 400000],
+      "threshold_table": "0x573094",
+      "message_strings": ["0x2F7", "0x2F8", "0x2F9", "0x2FA"],
+      "message_array": "0x583028"
+    },
+    {
+      "offset": "0x080",
+      "index": 5,
+      "metric": "attacks fended off in one city",
+      "thresholds": [1, 10, 50, 100],
+      "threshold_table": "0x5730A4",
+      "message_strings": ["0x2FB", "0x2FC", "0x2FD", "0x2FE"],
+      "message_array": "0x583018"
+    }
+  ],
+  "achievement_routine": {
+    "name": "Player_MissionState_Tick 0x50EFE0",
+    "this_object": "Player (Game_EndOfHour 0x486590 iterates g_Game+0x224 and passes each Player)",
+    "bonus_offsets": "+0x54/+0x58/+0x5C/+0x60/+0x64/+0x68 increment with tiers 0..5",
+    "notification_string": "0x2E6 'Your character rating has improved!'"
+  },
   "event_list": {
     "vtable": "+0x8C",
     "entries": "+0x90",
@@ -51,12 +232,87 @@
     "next_key": "+0xA4",
     "size": "0x1C"
   },
+  "player_event": {
+    "size": "0x0C",
+    "vtable": "0x55C660",
+    "constructor": "Player_Event_StreamConstruct 0x5019D0",
+    "save": "Player_Event_Save 0x501A40",
+    "load": "Player_Event_Load 0x501A70",
+    "fields": [
+      {
+        "offset": "0x00",
+        "width": 4,
+        "name": "vtable",
+        "evidence": "constructor stores 0x55C660 at 0x5019D9"
+      },
+      {
+        "offset": "0x04",
+        "width": 4,
+        "name": "event_type",
+        "evidence": "every creation site writes a PlayerEventType value before List_Add"
+      },
+      {
+        "offset": "0x08",
+        "width": 2,
+        "name": "date_word",
+        "evidence": "constructor copies the 16-bit value at g_Game+0x94+4; save/load use 2 bytes"
+      },
+      {
+        "offset": "0x0A",
+        "width": 2,
+        "name": "padding_a",
+        "evidence": "not touched by constructor/save/load"
+      }
+    ],
+    "types": [
+      {
+        "value": 0,
+        "name": "PLAYER_EVENT_CITY_PRIZE",
+        "evidence": "City_SettleAdvertisingCampaign 0x4DCE70 writes puVar3[1]=0 before List_Add((Player+0x8C)); message g_Text_1684_s_has_won_the_prize"
+      },
+      {
+        "value": 1,
+        "name": "PLAYER_EVENT_BEST_RESTAURANT",
+        "evidence": "City_GenerateRatingNews 0x4D9780 writes puVar6[1]=1 after Game_FindBestCompositeRatedBranch; medal briefing g_Text_0140_You_had_the_best_restauran"
+      },
+      {
+        "value": 2,
+        "name": "PLAYER_EVENT_BEST_BUILDING",
+        "evidence": "City_GenerateRatingNews 0x4D9780 writes local_14[1]=2 after Game_FindBestQualityBuilding; medal briefing follows"
+      }
+    ],
+    "creation_sites": [
+      "0x4D9780 type 1",
+      "0x4D9780 type 2",
+      "0x4DCE70 type 0",
+      "0x50ECA0 Player_Load restores serialized events"
+    ]
+  },
   "save_order": [
-    "+0x84", "+0x88", "+0x08", "+0x0C (32 bytes)",
-    "+0x2C", "+0x30", "+0x3C", "+0x40", "+0x44", "+0x48",
-    "+0x4C", "+0x50", "+0x54", "+0x58", "+0x5C", "+0x60",
-    "+0x64", "+0x68", "+0x6C (24 bytes)", "+0x34", "+0x38",
-    "Character_Save(+0x04)", "event count + events", "optional AI state",
+    "+0x84",
+    "+0x88",
+    "+0x08",
+    "+0x0C (32 bytes)",
+    "+0x2C",
+    "+0x30",
+    "+0x3C",
+    "+0x40",
+    "+0x44",
+    "+0x48",
+    "+0x4C",
+    "+0x50",
+    "+0x54",
+    "+0x58",
+    "+0x5C",
+    "+0x60",
+    "+0x64",
+    "+0x68",
+    "+0x6C (24 bytes)",
+    "+0x34",
+    "+0x38",
+    "Character_Save(+0x04)",
+    "event count + events",
+    "optional AI state",
     "optional mission state"
   ],
   "constructor_initialization": [
@@ -70,17 +326,20 @@
     "+0x2C/+0x30/+0x34/+0x38 = 0",
     "+0xA8/+0xAC = 0"
   ],
+  "ai_slot_initialization": [
+    "Player_ResetAiState 0x50EFC0: Player+0x84 = 1, Player+0x88 = 0",
+    "Game_InitScenario calls Player_AIState_Init for slot 0 and Player_ResetAiState for slots 1..5"
+  ],
   "reconstruction": {
     "header": "reconstructed/player/player_state.h",
     "implementation": "reconstructed/player/player_state.c",
     "tests": "reconstructed/player/test_player_state.c",
-    "asserts": 19
+    "asserts": 25
   },
   "open_questions": [
-    "Player +0x2C/+0x30/+0x34/+0x38 are saved and zero-initialized but their semantic roles are unresolved.",
-    "Player +0x6C..+0x83 is a six-dword zeroed/saved block with no recovered meaning yet.",
-    "Player +0x84/+0x88 are initialized to 1 and saved; they may be flags but no caller semantics are established.",
-    "The event list's entries/keys/capacity fields are mapped structurally; event record semantics live in Player_Event_*.",
-    "The vtable has one recovered slot (Player_Delete)."
+    "Player +0x2C/+0x30 are only moved through the cached-profile transplant (Game_CacheCurrentCityGlobals -> PlayerCompany_InitDefaults) and save/load; no gameplay consumer exists in the decompiled functions.",
+    "Player +0x34 is constructor/save/load only; no other reader or writer exists.",
+    "Player +0x84 is written as 1 by both initialization paths and save/load only; no reader exists.",
+    "All other former gaps are resolved: +0x38 is attacks fended off, +0x6C..+0x80 are six achievement tiers, the event payload and type enum are known, and the vtable boundary is proven."
   ]
 }
