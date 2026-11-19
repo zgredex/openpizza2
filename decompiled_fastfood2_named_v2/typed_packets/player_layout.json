@@ -1,0 +1,86 @@
+{
+  "schema": "pc2.evidence.object_layout.v1",
+  "class": "Player",
+  "executable": {
+    "path": "game/fastfood2.exe",
+    "sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd"
+  },
+  "allocation": {
+    "size": "0xB0",
+    "site": "Game_InitScenario 0x4820C7: push 0xB0; constructor called at 0x4820E8"
+  },
+  "vtable": {
+    "address": "0x55C684",
+    "constructor_store": "0x50E8E0 Player_Construct",
+    "slot_count": 1,
+    "slot_0": "Player_Delete 0x50E9C0"
+  },
+  "constructor": "Player_Construct 0x50E8E0",
+  "destructor": "Player_Delete 0x50E9C0",
+  "stream_constructor": "Player_Load 0x50ECA0",
+  "save_load": {
+    "save": "Player_Save 0x50EA90",
+    "load": "Player_Load 0x50ECA0",
+    "pair_status": "exact same scalar/array sequence; Character_Save/StreamConstruct nested"
+  },
+  "fields": [
+    {"offset": "0x000", "width": 4, "name": "vtable", "evidence": "Player_Construct installs 0x55C684"},
+    {"offset": "0x004", "width": 4, "name": "character", "evidence": "Player_Save calls Character_Save(*(this+4)); Player_Load allocates 0x828 and Character_StreamConstruct stores it here"},
+    {"offset": "0x008", "width": 4, "name": "slot", "evidence": "Player_Construct writes -1; Game_InitScenario Object_SetField8 writes the player slot; saved"},
+    {"offset": "0x00C", "width": 32, "name": "player_name", "evidence": "Game_InitScenario copies the profile player name into this 32-byte buffer; saved as 0x20 bytes"},
+    {"offset": "0x02C", "width": 4, "name": "field_2c", "evidence": "Player_Construct writes 0; saved; semantic role unresolved"},
+    {"offset": "0x030", "width": 4, "name": "field_30", "evidence": "Player_Construct writes 0; saved; semantic role unresolved"},
+    {"offset": "0x034", "width": 4, "name": "field_34", "evidence": "Player_Construct writes 0; saved; semantic role unresolved"},
+    {"offset": "0x038", "width": 4, "name": "field_38", "evidence": "Player_Construct writes 0; saved; semantic role unresolved"},
+    {"offset": "0x03C", "width": 24, "name": "character_values", "evidence": "Game_InitScenario 0x482144..0x482187 copies Buyer/Gangsters/Specialist/Politicians/Seller/Guard"},
+    {"offset": "0x054", "width": 24, "name": "extra_character_values", "evidence": "CompanyOverview_FillTotals 0x4BD750 adds Player+0x54..+0x68 to base +0x3C..+0x50 for the Extra/Total columns"},
+    {"offset": "0x06C", "width": 24, "name": "field_6c", "evidence": "Player_Construct zeros six dwords; saved as 0x18 bytes; semantic role unresolved"},
+    {"offset": "0x084", "width": 4, "name": "field_84", "evidence": "Player_Construct writes 1; saved"},
+    {"offset": "0x088", "width": 4, "name": "field_88", "evidence": "Player_Construct writes 1; saved"},
+    {"offset": "0x08C", "width": 28, "name": "events", "evidence": "Player_Construct calls List_Construct(+0x8C); Player_Save writes count at +0xA0 and serializes each event; size 0x1C"},
+    {"offset": "0x0A8", "width": 4, "name": "ai_state", "evidence": "Player_AIState_Init stores 0x250-byte object; Player_Save/Load write an optional flag and AI state"},
+    {"offset": "0x0AC", "width": 4, "name": "mission_state", "evidence": "Player_MissionState_Construct stores 0xD8-byte object; Player_Save/Load write an optional flag and mission state"}
+  ],
+  "event_list": {
+    "vtable": "+0x8C",
+    "entries": "+0x90",
+    "keys": "+0x94",
+    "count": "+0x98",
+    "capacity": "+0x9C",
+    "total_added": "+0xA0, serialized event count",
+    "next_key": "+0xA4",
+    "size": "0x1C"
+  },
+  "save_order": [
+    "+0x84", "+0x88", "+0x08", "+0x0C (32 bytes)",
+    "+0x2C", "+0x30", "+0x3C", "+0x40", "+0x44", "+0x48",
+    "+0x4C", "+0x50", "+0x54", "+0x58", "+0x5C", "+0x60",
+    "+0x64", "+0x68", "+0x6C (24 bytes)", "+0x34", "+0x38",
+    "Character_Save(+0x04)", "event count + events", "optional AI state",
+    "optional mission state"
+  ],
+  "constructor_initialization": [
+    "+0x00 = 0x55C684",
+    "List_Construct(+0x8C)",
+    "+0x84 = 1",
+    "+0x88 = 1",
+    "+0x08 = -1",
+    "+0x3C..+0x68 = 0",
+    "+0x6C..+0x83 = 0",
+    "+0x2C/+0x30/+0x34/+0x38 = 0",
+    "+0xA8/+0xAC = 0"
+  ],
+  "reconstruction": {
+    "header": "reconstructed/player/player_state.h",
+    "implementation": "reconstructed/player/player_state.c",
+    "tests": "reconstructed/player/test_player_state.c",
+    "asserts": 19
+  },
+  "open_questions": [
+    "Player +0x2C/+0x30/+0x34/+0x38 are saved and zero-initialized but their semantic roles are unresolved.",
+    "Player +0x6C..+0x83 is a six-dword zeroed/saved block with no recovered meaning yet.",
+    "Player +0x84/+0x88 are initialized to 1 and saved; they may be flags but no caller semantics are established.",
+    "The event list's entries/keys/capacity fields are mapped structurally; event record semantics live in Player_Event_*.",
+    "The vtable has one recovered slot (Player_Delete)."
+  ]
+}

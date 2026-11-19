@@ -71,6 +71,9 @@ Current batches:
   percent modifiers, building level/area/sprite-variant mapping, direction
   mapping, calendar interpolation, array counters/search/pair access,
   8-byte-record binary search, game stat counters and trivial pointer clears.
+- `player/` — the 0xB0-byte Player object: Character pointer, 32-byte name,
+  slot, six character values plus six extras, event list, AI/mission-state
+  pointers and the exact save/load order with 19 layout asserts.
 - `character/` — the full 0x828-byte Character object: constructor fields,
   save/load order, skill/age/performance fields, five 100-dword rating blocks,
   registry/object/player/branch IDs and 29 compile-time layout asserts.

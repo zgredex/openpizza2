@@ -14,6 +14,10 @@ CHARACTER_SRC = character/character_state.c character/test_character_state.c
 CHARACTER_HDR = character/character_state.h
 CHARACTER_BIN = $(BUILD)/test_character_state
 
+PLAYER_SRC = player/player_state.c player/test_player_state.c
+PLAYER_HDR = player/player_state.h character/character_state.h
+PLAYER_BIN = $(BUILD)/test_player_state
+
 RATING_SRC = rating/rating_state.c rating/test_rating_state.c
 RATING_HDR = rating/rating_state.h
 RATING_BIN = $(BUILD)/test_rating_state
@@ -108,7 +112,7 @@ CITY_HDR = city/city_state.h $(MISSION_STATE_HDR) branch/branch_economy.h
 CITY_BIN = $(BUILD)/test_city_state
 
 GAME_MODULES = settings/settings.c ingredient/ingredient.c menu/menu_state.c \
-               ui_screen/ui_screen.c options/options_state.c statistics/statistics_state.c ai/ai_state.c recipes/recipe_state.c personnel/personnel_state.c render/render_state.c operations/branch_operations.c advertising/value_state.c rating/rating_state.c assets/assets.c assets/ani.c leaf/leaf_functions.c freeplay/freeplay_profiles.c character/character_state.c map/iso_map.c map/map_render.c ui_render/ui_render.c screen/screen_render.c screen/statistics_balance_layout.c screen/office_desk_layout.c screen/character_select_layout.c screen/free_play_layout.c screen/warehouse_layout.c screen/building_project_layout.c screen/end_results_layout.c screen/personnel_record_layout.c save/save_state.c piz/piz_container.c \
+               ui_screen/ui_screen.c options/options_state.c statistics/statistics_state.c ai/ai_state.c recipes/recipe_state.c personnel/personnel_state.c render/render_state.c operations/branch_operations.c advertising/value_state.c rating/rating_state.c assets/assets.c assets/ani.c leaf/leaf_functions.c freeplay/freeplay_profiles.c character/character_state.c player/player_state.c map/iso_map.c map/map_render.c ui_render/ui_render.c screen/screen_render.c screen/statistics_balance_layout.c screen/office_desk_layout.c screen/character_select_layout.c screen/free_play_layout.c screen/warehouse_layout.c screen/building_project_layout.c screen/end_results_layout.c screen/personnel_record_layout.c save/save_state.c piz/piz_container.c \
                construction/construction_state.c mission/mission_state.c \
                mission/mission_goals.c branch/branch_economy.c city/city_state.c
 GAME_SRC = $(GAME_MODULES) test_game.c
@@ -132,6 +136,10 @@ $(FREEPLAY_BIN): $(FREEPLAY_SRC) $(FREEPLAY_HDR)
 $(CHARACTER_BIN): $(CHARACTER_SRC) $(CHARACTER_HDR)
 	@mkdir -p $(BUILD)
 	$(CC) $(CFLAGS) $(CHARACTER_SRC) -o $@
+
+$(PLAYER_BIN): $(PLAYER_SRC) $(PLAYER_HDR)
+	@mkdir -p $(BUILD)
+	$(CC) $(CFLAGS) $(PLAYER_SRC) -o $@
 
 $(RATING_BIN): $(RATING_SRC) $(RATING_HDR)
 	@mkdir -p $(BUILD)
@@ -248,7 +256,7 @@ $(FULL_GAME_BIN): $(FULL_GAME_SRC) $(CITY_HDR) $(BRANCH_HDR) $(INGREDIENT_HDR) $
 full-game: $(FULL_GAME_BIN)
 	./$(FULL_GAME_BIN)
 
-check: $(SETTINGS_BIN) $(INGREDIENT_BIN) $(MISSION_STATE_BIN) $(MISSION_GOALS_BIN) $(BRANCH_BIN) $(CONSTRUCTION_BIN) $(SAVE_BIN) $(PIZ_BIN) $(AI_BIN) $(RECIPE_BIN) $(PERSONNEL_BIN) $(RENDER_BIN) $(OPERATIONS_BIN) $(ADVERTISING_BIN) $(RATING_BIN) $(LEAF_BIN) $(FREEPLAY_BIN) $(CHARACTER_BIN) $(ASSETS_BIN) $(ANI_BIN) $(MAP_BIN) $(UI_RENDER_BIN) $(SCREEN_BIN) $(MENU_BIN) $(UI_BIN) $(OPTIONS_BIN) $(STATISTICS_BIN) $(CITY_BIN) $(GAME_BIN)
+check: $(SETTINGS_BIN) $(INGREDIENT_BIN) $(MISSION_STATE_BIN) $(MISSION_GOALS_BIN) $(BRANCH_BIN) $(CONSTRUCTION_BIN) $(SAVE_BIN) $(PIZ_BIN) $(AI_BIN) $(RECIPE_BIN) $(PERSONNEL_BIN) $(RENDER_BIN) $(OPERATIONS_BIN) $(ADVERTISING_BIN) $(RATING_BIN) $(LEAF_BIN) $(FREEPLAY_BIN) $(CHARACTER_BIN) $(PLAYER_BIN) $(ASSETS_BIN) $(ANI_BIN) $(MAP_BIN) $(UI_RENDER_BIN) $(SCREEN_BIN) $(MENU_BIN) $(UI_BIN) $(OPTIONS_BIN) $(STATISTICS_BIN) $(CITY_BIN) $(GAME_BIN)
 	./$(SETTINGS_BIN)
 	./$(INGREDIENT_BIN)
 	./$(MISSION_STATE_BIN)
@@ -267,6 +275,7 @@ check: $(SETTINGS_BIN) $(INGREDIENT_BIN) $(MISSION_STATE_BIN) $(MISSION_GOALS_BI
 	./$(LEAF_BIN)
 	./$(FREEPLAY_BIN)
 	./$(CHARACTER_BIN)
+	./$(PLAYER_BIN)
 	./$(ASSETS_BIN) $(ANI_BIN)
 	./$(MAP_BIN)
 	./$(UI_RENDER_BIN)

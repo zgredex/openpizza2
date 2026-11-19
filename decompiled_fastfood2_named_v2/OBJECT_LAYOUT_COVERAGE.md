@@ -24,8 +24,9 @@
 | `reconstructed/mission/mission_goals.c` | 1 |
 | `reconstructed/mission/mission_state.c` | 14 |
 | `reconstructed/piz/piz_container.c` | 6 |
+| `reconstructed/player/player_state.h` | 19 |
 | `reconstructed/settings/settings.c` | 24 |
-| **Total** | **121** |
+| **Total** | **140** |
 
 ## Remaining gaps
 
