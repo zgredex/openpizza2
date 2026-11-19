@@ -1767,6 +1767,62 @@ static void test_game_setters(void) {
     assert(read_i16_at(object, 0x16c2 + 16) == 0);
 }
 
+static uint32_t leaf_sprite_params[27];
+static int leaf_sprite_set_called;
+static void test_sprite_set_params(void *sprite, const uint32_t params[27]) {
+    (void)sprite;
+    memcpy(leaf_sprite_params, params, sizeof(leaf_sprite_params));
+    leaf_sprite_set_called++;
+}
+
+static uint32_t leaf_clear_params[25];
+static int leaf_sprite_clear_called;
+static void test_sprite_clear(void *sprite, const uint32_t params[25]) {
+    (void)sprite;
+    memcpy(leaf_clear_params, params, sizeof(leaf_clear_params));
+    leaf_sprite_clear_called++;
+}
+
+static void test_sprite_player_defaults(void) {
+    int sprite = 0;
+    const SpriteClearCallbacks callbacks = {
+        .set_params = test_sprite_set_params,
+        .clear_buffers = test_sprite_clear,
+    };
+    sprite_clear_buffers(&sprite, &callbacks);
+    assert(leaf_sprite_set_called == 1);
+    assert(leaf_sprite_clear_called == 1);
+    assert(leaf_sprite_params[0] == 0x6c);
+    assert(leaf_sprite_params[1] == 6);
+    assert(leaf_clear_params[0] == 100);
+    sprite_clear_buffers(NULL, &callbacks);
+
+    uint8_t player[0x200] = {0};
+    player_init_slot_flags(player, 2);
+    assert(player[0xac + 2] == 1);
+    assert(read_i32_at(player, 0xb4 + 2 * 4) == 0);
+    assert(read_i32_at(player, 0xcc + 2 * 4) == 0);
+
+    int32_t defaults[21];
+    for (int index = 0; index < 21; index++) {
+        defaults[index] = index + 1;
+    }
+    uint8_t company[0x100] = {0};
+    uint8_t child[0x60] = {0};
+    uintptr_t child_pointer = (uintptr_t)child;
+    memcpy(company + 4, &child_pointer, sizeof(child_pointer));
+    player_company_init_defaults(company, defaults);
+    for (int index = 0; index < 12; index++) {
+        assert(read_i32_at(company, 0x3c + index * 4) == defaults[index]);
+    }
+    assert(read_i32_at(company, 0x2c) == defaults[12]);
+    assert(read_i32_at(company, 0x30) == defaults[13]);
+    assert(read_i32_at(child, 0x40) == defaults[14]);
+    for (int index = 0; index < 6; index++) {
+        assert(read_i32_at(company, 0x6c + index * 4) == defaults[15 + index]);
+    }
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -1806,6 +1862,7 @@ int main(void) {
     test_misc_getters();
     test_stream_object_init();
     test_game_setters();
+    test_sprite_player_defaults();
     puts("leaf function reconstruction: OK");
     return 0;
 }

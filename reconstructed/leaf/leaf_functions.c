@@ -2893,3 +2893,50 @@ void game_increment_visit_counter(uint8_t *object, int32_t index) {
         memcpy(object + offset, &value, sizeof(value));
     }
 }
+
+void sprite_clear_buffers(void *sprite,
+                          const SpriteClearCallbacks *callbacks) {
+    if (sprite == NULL || callbacks == NULL) {
+        return;
+    }
+    uint32_t first[27] = {0};
+    first[0] = 0x6c;
+    first[1] = 6;
+    if (callbacks->set_params != NULL) {
+        callbacks->set_params(sprite, first);
+    }
+    uint32_t second[25] = {0};
+    second[0] = 100;
+    if (callbacks->clear_buffers != NULL) {
+        callbacks->clear_buffers(sprite, second);
+    }
+}
+
+void player_init_slot_flags(uint8_t *player, size_t index) {
+    if (player == NULL) {
+        return;
+    }
+    player[0xac + index] = 1;
+    write_i32(player + 0xcc + index * 4, 0);
+    write_i32(player + 0xb4 + index * 4, 0);
+}
+
+void player_company_init_defaults(uint8_t *company,
+                                  const int32_t defaults[21]) {
+    if (company == NULL || defaults == NULL) {
+        return;
+    }
+    for (size_t index = 0; index < 12; index++) {
+        write_i32(company + 0x3c + index * 4, defaults[index]);
+    }
+    write_i32(company + 0x2c, defaults[12]);
+    write_i32(company + 0x30, defaults[13]);
+    uintptr_t child;
+    memcpy(&child, company + 4, sizeof(child));
+    if (child != 0) {
+        write_i32((uint8_t *)child + 0x40, defaults[14]);
+    }
+    for (size_t index = 0; index < 6; index++) {
+        write_i32(company + 0x6c + index * 4, defaults[15 + index]);
+    }
+}

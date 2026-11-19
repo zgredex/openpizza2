@@ -564,6 +564,22 @@ void game_set_global_word16(uint8_t *object, uint16_t value,
                             uint32_t *calendar_state);
 void game_increment_visit_counter(uint8_t *object, int32_t index);
 
+typedef struct SpriteClearCallbacks {
+    void (*set_params)(void *sprite, const uint32_t params[27]);
+    void (*clear_buffers)(void *sprite, const uint32_t params[25]);
+} SpriteClearCallbacks;
+
+/* Sprite_ClearBuffers (0x53A060), callback-backed virtual calls. */
+void sprite_clear_buffers(void *sprite,
+                          const SpriteClearCallbacks *callbacks);
+
+/* Player_InitSlotFlags (0x4E3DD0). */
+void player_init_slot_flags(uint8_t *player, size_t index);
+
+/* PlayerCompany_InitDefaults (0x50F590), 21 default values. */
+void player_company_init_defaults(uint8_t *company,
+                                  const int32_t defaults[21]);
+
 /* Game_GetActiveScreenOrFallback (0x482910). */
 int32_t game_get_active_screen_or_fallback(const uint8_t *game);
 
