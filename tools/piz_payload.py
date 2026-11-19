@@ -330,11 +330,11 @@ class PizSave:
         """Parse the six company slots.
 
         Each present slot is CompanyData_Save's 270-byte fixed prefix followed
-        by the company index, GamePlan/recipe/featured counts, the nested
-        Branch_Save list (u32 id + 6412-byte fixed body + variable tail), and
-        the StatsPeriodReport, Storage, pair and 0x1A0-byte counts. Populated
-        lists other than branches are reported as unsupported rather than
-        misparsed.
+        by the company index, GamePlan_SaveRecord list (44 bytes each), the
+        recipe list, the nested Branch_Save list (u32 id + 6412-byte fixed body
+        + variable tail), StatsPeriodReport records (856 bytes), Storage
+        records (303-byte body), the pair list (u32 id + 8 bytes) and the
+        0x1A0-byte record list.
         """
         start, end = self.directory[3], self.directory[5]
         owner = self._owner("CompanyData_Save")
@@ -363,12 +363,19 @@ class PizSave:
                 fields, pos = self._decode_sequential(pos, owner)
                 company_index = self._u32(pos)
                 pos += 4
-                plans = self._u32(pos)
+                plan_count = self._u32(pos)
                 pos += 4
+                plans = []
+                for plan_index in range(plan_count):
+                    if pos + 44 > end:
+                        raise ValueError(f"plan {plan_index} past region")
+                    fields_plan = []
+                    for field in range(11):
+                        fields_plan.append(self._u32(pos))
+                        pos += 4
+                    plans.append({"fields": fields_plan})
                 recipe_count = self._u32(pos)
                 pos += 4
-                if plans:
-                    raise ValueError(f"nested GamePlan list not supported: {plans}")
                 recipes = []
                 for recipe_index in range(recipe_count):
                     if pos + 4 + 713 > end:
@@ -436,14 +443,21 @@ class PizSave:
                         raise ValueError(f"storage {storage_index} past region")
                     storage.append({"id": self._u32(pos)})
                     pos += 4 + 303
-                pairs = self._u32(pos)
+                pair_count = self._u32(pos)
                 pos += 4
-                big_records = self._u32(pos)
+                pairs = []
+                for pair_index in range(pair_count):
+                    if pos + 12 > end:
+                        raise ValueError(f"pair {pair_index} past region")
+                    pair_id = self._u32(pos)
+                    pair_value = struct.unpack_from("<Q", self.data, pos + 4)[0]
+                    pos += 12
+                    pairs.append({"id": pair_id, "value": pair_value})
+                big_count = self._u32(pos)
                 pos += 4
-                if pairs or big_records:
-                    raise ValueError(
-                        f"nested company lists not supported: "
-                        f"{pairs},{big_records}")
+                if pos + big_count * 0x1a0 > end:
+                    raise ValueError("0x1A0 record list past region")
+                pos += big_count * 0x1a0
             except ValueError as exc:
                 result["errors"].append(f"slot {slot}: {exc}")
                 break
@@ -457,6 +471,8 @@ class PizSave:
                 "company_slot": fields["0x48"],
                 "cash": cash,
                 "company_index": company_index,
+                "plan_count": plan_count,
+                "plans": plans,
                 "recipe_count": recipe_count,
                 "recipes": recipes,
                 "branch_count": branch_count,
@@ -464,9 +480,12 @@ class PizSave:
                 "report_count": stats_reports,
                 "storage_count": storage_count,
                 "storage": storage,
-                "nested_counts": [company_index, plans, recipe_count, featured,
-                                  branch_count, stats_reports, storage_count,
-                                  pairs, big_records],
+                "pair_count": pair_count,
+                "pairs": pairs,
+                "big_count": big_count,
+                "nested_counts": [company_index, plan_count, recipe_count,
+                                  featured, branch_count, stats_reports,
+                                  storage_count, pair_count, big_count],
                 "fields": fields,
             })
             result["count"] += 1
@@ -949,9 +968,11 @@ def cmd_companies(args):
         recipe_names = [r["name"] for r in slot["recipes"]]
         storage_ids = [s["id"] for s in slot["storage"]]
         print(f"slot {slot['slot']}: present=1 name={slot['name']!r} "
-              f"cash={slot['cash']:.2f} recipes={recipe_names} "
-              f"branches={branch_ids} reports={slot['report_count']} "
-              f"storage={storage_ids} nested={slot['nested_counts']}")
+              f"cash={slot['cash']:.2f} plans={slot['plan_count']} "
+              f"recipes={recipe_names} branches={branch_ids} "
+              f"reports={slot['report_count']} storage={storage_ids} "
+              f"pairs={len(slot['pairs'])} big={slot['big_count']} "
+              f"nested={slot['nested_counts']}")
     if data["errors"]:
         print("errors: " + "; ".join(data["errors"]))
     return 0 if not data["errors"] else 2

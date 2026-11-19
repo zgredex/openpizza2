@@ -66,6 +66,9 @@ static PizContainer make_container(void) {
     container.companies[0].slot = 0;
     strcpy(container.companies[0].name, "Ada Pizza");
     container.companies[0].cash = 494270.0;
+    container.companies[0].plan_count = 1;
+    container.companies[0].plans[0].fields[0] = 3;
+    container.companies[0].plans[0].fields[10] = 11;
     container.companies[0].recipe_count = 1;
     container.companies[0].recipes[0].id = 42;
     strcpy(container.companies[0].recipes[0].name, "Margherita");
@@ -74,6 +77,12 @@ static PizContainer make_container(void) {
     container.companies[0].report_count = 1;
     container.companies[0].storage_count = 1;
     container.companies[0].storage[0].id = 7;
+    container.companies[0].pair_count = 1;
+    container.companies[0].pairs[0].id = 9;
+    container.companies[0].pairs[0].value = 0x1122334455667788ull;
+    container.companies[0].big_count = 1;
+    container.companies[0].big[0].data[0] = 0xab;
+    container.companies[0].big[0].data[0x1a0 - 1] = 0xcd;
     container.companies[0].share_x100 = 10000;
 
     settings_init_defaults(&container.save.settings, load_fails, random_low);
@@ -136,6 +145,9 @@ static void test_round_trip(const char *write_path) {
     assert(strcmp(restored.companies[0].name, "Ada Pizza") == 0);
     assert(restored.companies[0].slot == 0);
     assert(restored.companies[0].cash == 494270.0);
+    assert(restored.companies[0].plan_count == 1);
+    assert(restored.companies[0].plans[0].fields[0] == 3);
+    assert(restored.companies[0].plans[0].fields[10] == 11);
     assert(restored.companies[0].recipe_count == 1);
     assert(restored.companies[0].recipes[0].id == 42);
     assert(strcmp(restored.companies[0].recipes[0].name, "Margherita") == 0);
@@ -144,6 +156,12 @@ static void test_round_trip(const char *write_path) {
     assert(restored.companies[0].report_count == 1);
     assert(restored.companies[0].storage_count == 1);
     assert(restored.companies[0].storage[0].id == 7);
+    assert(restored.companies[0].pair_count == 1);
+    assert(restored.companies[0].pairs[0].id == 9);
+    assert(restored.companies[0].pairs[0].value == 0x1122334455667788ull);
+    assert(restored.companies[0].big_count == 1);
+    assert(restored.companies[0].big[0].data[0] == 0xab);
+    assert(restored.companies[0].big[0].data[0x1a0 - 1] == 0xcd);
     assert(memcmp(&restored.save.settings, &original.save.settings,
                   sizeof(Settings)) == 0);
     assert(restored.save.mission.deadline == 120);

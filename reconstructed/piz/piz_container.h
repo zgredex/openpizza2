@@ -26,6 +26,9 @@
 #define PIZ_MAX_PLAYERS 6
 #define PIZ_MAX_COMPANIES 6
 #define PIZ_MAX_BRANCHES_PER_COMPANY 4
+#define PIZ_MAX_PLANS_PER_COMPANY 2
+#define PIZ_MAX_PAIRS_PER_COMPANY 2
+#define PIZ_MAX_BIG_PER_COMPANY 1
 #define PIZ_MAX_RECIPES_PER_COMPANY 4
 #define PIZ_MAX_REPORTS_PER_COMPANY 2
 #define PIZ_MAX_STORAGE_PER_COMPANY 2
@@ -87,6 +90,19 @@ typedef struct PizBranchRecord {
     uint32_t id;
 } PizBranchRecord;
 
+typedef struct PizPlanRecord {
+    uint32_t fields[11];
+} PizPlanRecord;
+
+typedef struct PizPairRecord {
+    uint32_t id;
+    uint64_t value;
+} PizPairRecord;
+
+typedef struct PizBigRecord {
+    uint8_t data[0x1a0];
+} PizBigRecord;
+
 typedef struct PizRecipeRecord {
     uint32_t id;
     char name[64];
@@ -101,6 +117,8 @@ typedef struct PizCompany {
     uint32_t slot;
     char name[32];
     double cash;
+    uint32_t plan_count;
+    PizPlanRecord plans[PIZ_MAX_PLANS_PER_COMPANY];
     uint32_t recipe_count;
     PizRecipeRecord recipes[PIZ_MAX_RECIPES_PER_COMPANY];
     uint32_t branch_count;
@@ -108,6 +126,10 @@ typedef struct PizCompany {
     uint32_t report_count;
     uint32_t storage_count;
     PizStorageRecord storage[PIZ_MAX_STORAGE_PER_COMPANY];
+    uint32_t pair_count;
+    PizPairRecord pairs[PIZ_MAX_PAIRS_PER_COMPANY];
+    uint32_t big_count;
+    PizBigRecord big[PIZ_MAX_BIG_PER_COMPANY];
     uint32_t share_x100;
 } PizCompany;
 

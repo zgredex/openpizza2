@@ -69,10 +69,11 @@ Current batches:
   sections. Character and player bodies use the schema field sequences
   (Character_Save 2082 bytes, Player_Save 132 bytes) and are validated by
   `piz_payload.py parse_characters`/`parse_players` with no errors.
-  Company slots use CompanyData_Save's 270-byte fixed prefix, nested Recipe
-  records (u32 id + 713-byte body), a Branch_Save list (u32 id + 6412-byte
-  fixed body + zero variable tail), StatsPeriodReport records (856 bytes) and
-  Storage records (u32 id + 303-byte body). Validated by
+  Company slots use CompanyData_Save's 270-byte fixed prefix, GamePlan records
+  (11 u32), Recipe records (u32 id + 713-byte body), a Branch_Save list
+  (u32 id + 6412-byte fixed body + zero variable tail), StatsPeriodReport
+  records (856 bytes), Storage records (u32 id + 303-byte body), pair records
+  (u32 id + 8 bytes) and 0x1A0-byte records. Validated by
   `piz_payload.py companies`.
 - `construction/` — `ConstructionOrder` 0x24 layout, enqueue cell index and
   completion ownership derived from `Branch_EnqueueConstructionOrder` and

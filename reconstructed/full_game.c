@@ -504,6 +504,8 @@ int main(void) {
     piz.companies[0].slot = 0;
     strcpy(piz.companies[0].name, "Ada Pizza");
     piz.companies[0].cash = city.economy.cash;
+    piz.companies[0].plan_count = 1;
+    piz.companies[0].plans[0].fields[0] = 3;
     piz.companies[0].recipe_count = 1;
     piz.companies[0].recipes[0].id = 42;
     strcpy(piz.companies[0].recipes[0].name, "Margherita");
@@ -512,6 +514,11 @@ int main(void) {
     piz.companies[0].report_count = 1;
     piz.companies[0].storage_count = 1;
     piz.companies[0].storage[0].id = 7;
+    piz.companies[0].pair_count = 1;
+    piz.companies[0].pairs[0].id = 9;
+    piz.companies[0].pairs[0].value = 0x1122334455667788ull;
+    piz.companies[0].big_count = 1;
+    piz.companies[0].big[0].data[0] = 0xab;
     uint8_t piz_buffer[PIZ_MAX_CONTAINER_SIZE];
     size_t piz_written = piz_container_encode(&piz, piz_buffer, sizeof(piz_buffer));
     assert(piz_written == piz_container_size(&piz));
@@ -526,6 +533,8 @@ int main(void) {
     assert(piz_loaded.companies[0].slot == 0);
     assert(strcmp(piz_loaded.companies[0].name, "Ada Pizza") == 0);
     assert(piz_loaded.companies[0].cash == city.economy.cash);
+    assert(piz_loaded.companies[0].plan_count == 1);
+    assert(piz_loaded.companies[0].plans[0].fields[0] == 3);
     assert(piz_loaded.companies[0].recipe_count == 1);
     assert(piz_loaded.companies[0].recipes[0].id == 42);
     assert(strcmp(piz_loaded.companies[0].recipes[0].name, "Margherita") == 0);
@@ -534,6 +543,11 @@ int main(void) {
     assert(piz_loaded.companies[0].report_count == 1);
     assert(piz_loaded.companies[0].storage_count == 1);
     assert(piz_loaded.companies[0].storage[0].id == 7);
+    assert(piz_loaded.companies[0].pair_count == 1);
+    assert(piz_loaded.companies[0].pairs[0].id == 9);
+    assert(piz_loaded.companies[0].pairs[0].value == 0x1122334455667788ull);
+    assert(piz_loaded.companies[0].big_count == 1);
+    assert(piz_loaded.companies[0].big[0].data[0] == 0xab);
 
     printf("pc2 reconstructed full game: OK\n");
     printf("screen=%d goals=%u/%u hq=%u rats=%u branches=%u cash=%.6f\n",

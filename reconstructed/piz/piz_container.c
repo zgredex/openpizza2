@@ -15,6 +15,9 @@ _Static_assert(offsetof(PizHeader, magic) == 0xec, "magic offset");
 #define COMPANY_NESTED_SIZE 36u
 #define BRANCH_BODY_SIZE 6412u
 #define BRANCH_TAIL_SIZE 48u
+#define PLAN_BODY_SIZE 44u
+#define PAIR_BODY_SIZE 12u
+#define BIG_BODY_SIZE 416u
 #define RECIPE_BODY_SIZE 713u
 #define REPORT_BODY_SIZE 856u
 #define STORAGE_BODY_SIZE 303u
@@ -80,6 +83,7 @@ static size_t company_region_size(const PizContainer *container) {
         total += 4;
         if (container->companies[slot].present) {
             total += COMPANY_BODY_SIZE + COMPANY_NESTED_SIZE;
+            total += (size_t)container->companies[slot].plan_count * PLAN_BODY_SIZE;
             total += (size_t)container->companies[slot].recipe_count *
                      (4 + RECIPE_BODY_SIZE);
             total += (size_t)container->companies[slot].branch_count *
@@ -88,6 +92,8 @@ static size_t company_region_size(const PizContainer *container) {
                      REPORT_BODY_SIZE;
             total += (size_t)container->companies[slot].storage_count *
                      (4 + STORAGE_BODY_SIZE);
+            total += (size_t)container->companies[slot].pair_count * PAIR_BODY_SIZE;
+            total += (size_t)container->companies[slot].big_count * BIG_BODY_SIZE;
         }
     }
     return total;
@@ -282,8 +288,18 @@ size_t piz_container_encode(const PizContainer *container, uint8_t *buffer,
         offset += COMPANY_BODY_SIZE;
         put_u32(buffer, offset, 0); /* company list index */
         offset += 4;
-        put_u32(buffer, offset, 0); /* GamePlan count */
+        uint32_t plan_count = company->plan_count;
+        if (plan_count > PIZ_MAX_PLANS_PER_COMPANY) {
+            return 0;
+        }
+        put_u32(buffer, offset, plan_count);
         offset += 4;
+        for (uint32_t plan = 0; plan < plan_count; plan++) {
+            for (int field = 0; field < 11; field++) {
+                put_u32(buffer, offset, company->plans[plan].fields[field]);
+                offset += 4;
+            }
+        }
         uint32_t recipe_count = company->recipe_count;
         if (recipe_count > PIZ_MAX_RECIPES_PER_COMPANY) {
             return 0;
@@ -333,10 +349,28 @@ size_t piz_container_encode(const PizContainer *container, uint8_t *buffer,
             memset(buffer + offset, 0, STORAGE_BODY_SIZE);
             offset += STORAGE_BODY_SIZE;
         }
-        put_u32(buffer, offset, 0); /* pair-list count */
+        uint32_t pair_count = company->pair_count;
+        if (pair_count > PIZ_MAX_PAIRS_PER_COMPANY) {
+            return 0;
+        }
+        put_u32(buffer, offset, pair_count);
         offset += 4;
-        put_u32(buffer, offset, 0); /* 0x1A0-record count */
+        for (uint32_t pair = 0; pair < pair_count; pair++) {
+            put_u32(buffer, offset, company->pairs[pair].id);
+            offset += 4;
+            memcpy(buffer + offset, &company->pairs[pair].value, 8);
+            offset += 8;
+        }
+        uint32_t big_count = company->big_count;
+        if (big_count > PIZ_MAX_BIG_PER_COMPANY) {
+            return 0;
+        }
+        put_u32(buffer, offset, big_count);
         offset += 4;
+        for (uint32_t big = 0; big < big_count; big++) {
+            memcpy(buffer + offset, company->big[big].data, BIG_BODY_SIZE);
+            offset += BIG_BODY_SIZE;
+        }
     }
     size_t tail_start = offset;
     offset += 2160;
@@ -556,10 +590,21 @@ bool piz_container_decode(PizContainer *container, const uint8_t *buffer,
             return false;
         }
         offset += 4;
-        if (get_u32(buffer, offset) != 0) { /* GamePlan count */
+        uint32_t plan_count = get_u32(buffer, offset);
+        offset += 4;
+        if (plan_count > PIZ_MAX_PLANS_PER_COMPANY) {
             return false;
         }
-        offset += 4;
+        company->plan_count = plan_count;
+        for (uint32_t plan = 0; plan < plan_count; plan++) {
+            if (offset + PLAN_BODY_SIZE > length) {
+                return false;
+            }
+            for (int field = 0; field < 11; field++) {
+                company->plans[plan].fields[field] = get_u32(buffer, offset);
+                offset += 4;
+            }
+        }
         uint32_t recipe_count = get_u32(buffer, offset);
         offset += 4;
         if (recipe_count > PIZ_MAX_RECIPES_PER_COMPANY) {
@@ -615,10 +660,33 @@ bool piz_container_decode(PizContainer *container, const uint8_t *buffer,
             company->storage[storage].id = get_u32(buffer, offset);
             offset += 4 + STORAGE_BODY_SIZE;
         }
-        if (get_u32(buffer, offset) != 0 || get_u32(buffer, offset + 4) != 0) {
+        uint32_t pair_count = get_u32(buffer, offset);
+        offset += 4;
+        if (pair_count > PIZ_MAX_PAIRS_PER_COMPANY) {
             return false;
         }
-        offset += 8;
+        company->pair_count = pair_count;
+        for (uint32_t pair = 0; pair < pair_count; pair++) {
+            if (offset + PAIR_BODY_SIZE > length) {
+                return false;
+            }
+            company->pairs[pair].id = get_u32(buffer, offset);
+            memcpy(&company->pairs[pair].value, buffer + offset + 4, 8);
+            offset += PAIR_BODY_SIZE;
+        }
+        uint32_t big_count = get_u32(buffer, offset);
+        offset += 4;
+        if (big_count > PIZ_MAX_BIG_PER_COMPANY) {
+            return false;
+        }
+        company->big_count = big_count;
+        for (uint32_t big = 0; big < big_count; big++) {
+            if (offset + BIG_BODY_SIZE > length) {
+                return false;
+            }
+            memcpy(company->big[big].data, buffer + offset, BIG_BODY_SIZE);
+            offset += BIG_BODY_SIZE;
+        }
         company->share_x100 = 0;
     }
 

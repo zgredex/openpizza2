@@ -45,6 +45,8 @@ def main() -> int:
                                if companies["slots"] else None),
         "company_slot0_cash": (companies["slots"][0].get("cash")
                                if companies["slots"] else None),
+        "company_slot0_plan_count": (companies["slots"][0].get("plan_count")
+                                     if companies["slots"] else None),
         "company_slot0_recipe_count": (companies["slots"][0].get("recipe_count")
                                        if companies["slots"] else None),
         "company_slot0_recipes": (companies["slots"][0].get("recipes")
@@ -57,6 +59,10 @@ def main() -> int:
                                        if companies["slots"] else None),
         "company_slot0_storage": (companies["slots"][0].get("storage")
                                   if companies["slots"] else None),
+        "company_slot0_pairs": (companies["slots"][0].get("pairs")
+                                if companies["slots"] else None),
+        "company_slot0_big_count": (companies["slots"][0].get("big_count")
+                                    if companies["slots"] else None),
     }
     ok = (not characters["errors"] and not players["errors"]
           and not companies["errors"]
@@ -65,6 +71,7 @@ def main() -> int:
           and companies["count"] == 1 and companies["record_size"] == 270
           and result["company_slot0_name"] == "Ada Pizza"
           and result["company_slot0_cash"] == 494270.0
+          and result["company_slot0_plan_count"] == 1
           and result["company_slot0_recipe_count"] == 1
           and result["company_slot0_recipes"] == [
               {"id": 42, "name": "Margherita", "toppings": 0}]
@@ -72,7 +79,10 @@ def main() -> int:
           and result["company_slot0_branches"] == [
               {"id": 13694, "record_size": 6412}]
           and result["company_slot0_report_count"] == 1
-          and result["company_slot0_storage"] == [{"id": 7}])
+          and result["company_slot0_storage"] == [{"id": 7}]
+          and result["company_slot0_pairs"] == [
+              {"id": 9, "value": 0x1122334455667788}]
+          and result["company_slot0_big_count"] == 1)
     result["ok"] = ok
     print(json.dumps(result, separators=(",", ":")))
     return 0 if ok else 1
