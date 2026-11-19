@@ -111,8 +111,20 @@ static PizContainer make_container(void) {
     container.companies[0].pairs[0].type = 0x17;
     container.companies[0].pairs[0].state = 1;
     container.companies[0].big_count = 1;
-    container.companies[0].big[0].data[0] = 0xab;
-    container.companies[0].big[0].data[0x1a0 - 1] = 0xcd;
+    container.companies[0].big[0] = (PizBigRecord){
+        .total_customers = 120,
+        .max_customers = 40,
+        .total_profit = 100,
+        .max_profit = 50,
+        .total_ratio = 2,
+        .max_ratio = 1,
+        .value_78 = 7,
+        .value_7c = 3,
+        .score_customers = 5001,
+        .score_profit = 5010,
+        .score_ratio = 6000,
+        .score_value = 700,
+    };
     container.companies[0].share_x100 = 10000;
 
     settings_init_defaults(&container.save.settings, load_fails, random_low);
@@ -215,8 +227,18 @@ static void test_round_trip(const char *write_path) {
     assert(restored.companies[0].pairs[0].type == 0x17);
     assert(restored.companies[0].pairs[0].state == 1);
     assert(restored.companies[0].big_count == 1);
-    assert(restored.companies[0].big[0].data[0] == 0xab);
-    assert(restored.companies[0].big[0].data[0x1a0 - 1] == 0xcd);
+    assert(restored.companies[0].big[0].total_customers == 120);
+    assert(restored.companies[0].big[0].max_customers == 40);
+    assert(restored.companies[0].big[0].total_profit == 100);
+    assert(restored.companies[0].big[0].max_profit == 50);
+    assert(restored.companies[0].big[0].total_ratio == 2);
+    assert(restored.companies[0].big[0].max_ratio == 1);
+    assert(restored.companies[0].big[0].value_78 == 7);
+    assert(restored.companies[0].big[0].value_7c == 3);
+    assert(restored.companies[0].big[0].score_customers == 5001);
+    assert(restored.companies[0].big[0].score_profit == 5010);
+    assert(restored.companies[0].big[0].score_ratio == 6000);
+    assert(restored.companies[0].big[0].score_value == 700);
     assert(memcmp(&restored.save.settings, &original.save.settings,
                   sizeof(Settings)) == 0);
     assert(restored.save.mission.deadline == 120);

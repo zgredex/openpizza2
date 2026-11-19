@@ -411,7 +411,20 @@ size_t piz_container_encode(const PizContainer *container, uint8_t *buffer,
         put_u32(buffer, offset, big_count);
         offset += 4;
         for (uint32_t big = 0; big < big_count; big++) {
-            memcpy(buffer + offset, company->big[big].data, BIG_BODY_SIZE);
+            const PizBigRecord *record = &company->big[big];
+            memset(buffer + offset, 0, BIG_BODY_SIZE);
+            put_u32(buffer, offset + 0x60, record->total_customers);
+            put_u32(buffer, offset + 0x64, record->max_customers);
+            put_u32(buffer, offset + 0x68, record->total_profit);
+            put_u32(buffer, offset + 0x6c, record->max_profit);
+            put_u32(buffer, offset + 0x70, record->total_ratio);
+            put_u32(buffer, offset + 0x74, record->max_ratio);
+            put_u32(buffer, offset + 0x78, record->value_78);
+            put_u32(buffer, offset + 0x7c, record->value_7c);
+            put_u32(buffer, offset + 0x190, record->score_customers);
+            put_u32(buffer, offset + 0x194, record->score_profit);
+            put_u32(buffer, offset + 0x198, record->score_ratio);
+            put_u32(buffer, offset + 0x19c, record->score_value);
             offset += BIG_BODY_SIZE;
         }
     }
@@ -767,7 +780,20 @@ bool piz_container_decode(PizContainer *container, const uint8_t *buffer,
             if (offset + BIG_BODY_SIZE > length) {
                 return false;
             }
-            memcpy(company->big[big].data, buffer + offset, BIG_BODY_SIZE);
+            PizBigRecord *record = &company->big[big];
+            memset(record, 0, sizeof(*record));
+            record->total_customers = get_u32(buffer, offset + 0x60);
+            record->max_customers = get_u32(buffer, offset + 0x64);
+            record->total_profit = get_u32(buffer, offset + 0x68);
+            record->max_profit = get_u32(buffer, offset + 0x6c);
+            record->total_ratio = get_u32(buffer, offset + 0x70);
+            record->max_ratio = get_u32(buffer, offset + 0x74);
+            record->value_78 = get_u32(buffer, offset + 0x78);
+            record->value_7c = get_u32(buffer, offset + 0x7c);
+            record->score_customers = get_u32(buffer, offset + 0x190);
+            record->score_profit = get_u32(buffer, offset + 0x194);
+            record->score_ratio = get_u32(buffer, offset + 0x198);
+            record->score_value = get_u32(buffer, offset + 0x19c);
             offset += BIG_BODY_SIZE;
         }
         company->share_x100 = 0;

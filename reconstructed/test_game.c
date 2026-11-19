@@ -1041,7 +1041,20 @@ int main(void) {
     piz.companies[0].pairs[0].type = 0x17;
     piz.companies[0].pairs[0].state = 1;
     piz.companies[0].big_count = 1;
-    piz.companies[0].big[0].data[0] = 0xab;
+    piz.companies[0].big[0] = (PizBigRecord){
+        .total_customers = 120,
+        .max_customers = 40,
+        .total_profit = 100,
+        .max_profit = 50,
+        .total_ratio = 2,
+        .max_ratio = 1,
+        .value_78 = 7,
+        .value_7c = 3,
+        .score_customers = 5001,
+        .score_profit = 5010,
+        .score_ratio = 6000,
+        .score_value = 700,
+    };
     uint8_t piz_buffer[PIZ_MAX_CONTAINER_SIZE];
     size_t piz_written = piz_container_encode(&piz, piz_buffer, sizeof(piz_buffer));
     assert(piz_written == piz_container_size(&piz));
@@ -1087,7 +1100,10 @@ int main(void) {
     assert(piz_loaded.companies[0].pairs[0].type == 0x17);
     assert(piz_loaded.companies[0].pairs[0].state == 1);
     assert(piz_loaded.companies[0].big_count == 1);
-    assert(piz_loaded.companies[0].big[0].data[0] == 0xab);
+    assert(piz_loaded.companies[0].big[0].total_customers == 120);
+    assert(piz_loaded.companies[0].big[0].total_profit == 100);
+    assert(piz_loaded.companies[0].big[0].score_customers == 5001);
+    assert(piz_loaded.companies[0].big[0].score_value == 700);
 
     puts("unified game reconstruction: OK");
     return 0;

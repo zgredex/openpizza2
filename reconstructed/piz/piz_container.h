@@ -133,7 +133,19 @@ typedef struct PizPairRecord {
 } PizPairRecord;
 
 typedef struct PizBigRecord {
-    uint8_t data[0x1a0];
+    uint32_t total_customers;  /* +0x60 */
+    uint32_t max_customers;    /* +0x64 */
+    uint32_t total_profit;     /* +0x68 */
+    uint32_t max_profit;       /* +0x6C */
+    uint32_t total_ratio;      /* +0x70 */
+    uint32_t max_ratio;        /* +0x74 */
+    uint32_t value_78;         /* +0x78 */
+    uint32_t value_7c;         /* +0x7C */
+    uint32_t score_customers;  /* +0x190 */
+    uint32_t score_profit;     /* +0x194 */
+    uint32_t score_ratio;      /* +0x198 */
+    uint32_t score_value;      /* +0x19C */
+    uint32_t reserved[92];
 } PizBigRecord;
 
 typedef struct PizRecipeRecord {

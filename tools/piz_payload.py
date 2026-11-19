@@ -497,9 +497,25 @@ class PizSave:
                                   "state": pair_state})
                 big_count = self._u32(pos)
                 pos += 4
-                if pos + big_count * 0x1a0 > end:
-                    raise ValueError("0x1A0 record list past region")
-                pos += big_count * 0x1a0
+                big_records = []
+                for big_index in range(big_count):
+                    if pos + 0x1a0 > end:
+                        raise ValueError(f"0x1A0 record {big_index} past region")
+                    big_records.append({
+                        "total_customers": self._u32(pos + 0x60),
+                        "max_customers": self._u32(pos + 0x64),
+                        "total_profit": self._u32(pos + 0x68),
+                        "max_profit": self._u32(pos + 0x6c),
+                        "total_ratio": self._u32(pos + 0x70),
+                        "max_ratio": self._u32(pos + 0x74),
+                        "value_78": self._u32(pos + 0x78),
+                        "value_7c": self._u32(pos + 0x7c),
+                        "score_customers": self._u32(pos + 0x190),
+                        "score_profit": self._u32(pos + 0x194),
+                        "score_ratio": self._u32(pos + 0x198),
+                        "score_value": self._u32(pos + 0x19c),
+                    })
+                    pos += 0x1a0
             except ValueError as exc:
                 result["errors"].append(f"slot {slot}: {exc}")
                 break
@@ -526,6 +542,7 @@ class PizSave:
                 "pair_count": pair_count,
                 "pairs": pairs,
                 "big_count": big_count,
+                "big_records": big_records,
                 "nested_counts": [company_index, plan_count, recipe_count,
                                   featured, branch_count, stats_reports,
                                   storage_count, pair_count, big_count],

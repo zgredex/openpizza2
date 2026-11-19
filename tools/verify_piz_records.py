@@ -67,6 +67,8 @@ def main() -> int:
                                 if companies["slots"] else None),
         "company_slot0_big_count": (companies["slots"][0].get("big_count")
                                     if companies["slots"] else None),
+        "company_slot0_big_records": (companies["slots"][0].get("big_records")
+                                      if companies["slots"] else None),
     }
     ok = (not characters["errors"] and not players["errors"]
           and not companies["errors"]
@@ -99,7 +101,14 @@ def main() -> int:
               {"id": 7, "name": "London storage"}]
           and result["company_slot0_pairs"] == [
               {"id": 9, "type": 0x17, "state": 1}]
-          and result["company_slot0_big_count"] == 1)
+          and result["company_slot0_big_count"] == 1
+          and result["company_slot0_big_records"] == [{
+              "total_customers": 120, "max_customers": 40,
+              "total_profit": 100, "max_profit": 50,
+              "total_ratio": 2, "max_ratio": 1,
+              "value_78": 7, "value_7c": 3,
+              "score_customers": 5001, "score_profit": 5010,
+              "score_ratio": 6000, "score_value": 700}])
     result["ok"] = ok
     print(json.dumps(result, separators=(",", ":")))
     return 0 if ok else 1
