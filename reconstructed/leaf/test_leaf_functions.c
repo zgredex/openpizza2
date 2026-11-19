@@ -1730,6 +1730,43 @@ static void test_stream_object_init(void) {
     assert(leaf_init_count == 1);
 }
 
+static void test_game_setters(void) {
+    uint8_t object[0x2000] = {0};
+    game_set_difficulty(object, 1);
+    assert(read_i32_at(object, 8) == 1);
+    assert(read_i32_at(object, 0x20) == 10000);
+    game_set_difficulty(object, 2);
+    assert(read_i32_at(object, 0x20) == 5000);
+    game_set_difficulty(object, 3);
+    assert(read_i32_at(object, 0x20) == 0xdac);
+    game_set_difficulty(object, 4);
+    assert(read_i32_at(object, 8) == 4);
+    assert(read_i32_at(object, 0x20) == 0xdac);
+
+    game_set_hq_level(object, 0);
+    assert(read_i32_at(object, 8) == 0x78);
+    game_set_hq_level(object, 1);
+    assert(read_i32_at(object, 8) == 0x8c);
+    game_set_hq_level(object, 2);
+    assert(read_i32_at(object, 8) == 0xa0);
+    game_set_hq_level(object, 3);
+    assert(read_i32_at(object, 8) == 0);
+
+    uint32_t calendar = 0;
+    game_set_global_word16(object, 0x1234, &calendar);
+    assert(read_i16_at(object, 4) == 0x1234);
+    assert(calendar == 0x1234);
+
+    game_increment_visit_counter(object, -1);
+    assert(read_i16_at(object, 0x16c0) == 1);
+    game_increment_visit_counter(object, 2);
+    assert(read_i16_at(object, 0x16c0) == 2);
+    assert(read_i16_at(object, 0x16c2 + 4) == 1);
+    game_increment_visit_counter(object, 8);
+    assert(read_i16_at(object, 0x16c0) == 3);
+    assert(read_i16_at(object, 0x16c2 + 16) == 0);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -1768,6 +1805,7 @@ int main(void) {
     test_surface_sprite_stream();
     test_misc_getters();
     test_stream_object_init();
+    test_game_setters();
     puts("leaf function reconstruction: OK");
     return 0;
 }

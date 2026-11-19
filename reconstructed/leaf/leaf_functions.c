@@ -2832,3 +2832,64 @@ void object_ensure_init(ObjectInitState *state) {
         state->initialize(state->context, 0x34, 0, 0);
     }
 }
+
+void game_set_difficulty(uint8_t *object, int32_t difficulty) {
+    if (object == NULL) {
+        return;
+    }
+    write_i32(object + 8, difficulty);
+    if (difficulty == 1) {
+        write_i32(object + 0x20, 10000);
+    } else if (difficulty == 2) {
+        write_i32(object + 0x20, 5000);
+    } else if (difficulty == 3) {
+        write_i32(object + 0x20, 0xdac);
+    }
+}
+
+void game_set_hq_level(uint8_t *object, int32_t level) {
+    if (object == NULL) {
+        return;
+    }
+    switch (level) {
+    case 0:
+        write_i32(object + 8, 0x78);
+        break;
+    case 1:
+        write_i32(object + 8, 0x8c);
+        break;
+    case 2:
+        write_i32(object + 8, 0xa0);
+        break;
+    default:
+        write_i32(object + 8, 0);
+        break;
+    }
+}
+
+void game_set_global_word16(uint8_t *object, uint16_t value,
+                            uint32_t *calendar_state) {
+    if (object != NULL) {
+        memcpy(object + 4, &value, sizeof(value));
+    }
+    if (calendar_state != NULL) {
+        *calendar_state = value;
+    }
+}
+
+void game_increment_visit_counter(uint8_t *object, int32_t index) {
+    if (object == NULL) {
+        return;
+    }
+    int16_t total;
+    memcpy(&total, object + 0x16c0, sizeof(total));
+    total++;
+    memcpy(object + 0x16c0, &total, sizeof(total));
+    if (index >= 0 && index < 8) {
+        size_t offset = 0x16c2 + (size_t)index * 2;
+        int16_t value;
+        memcpy(&value, object + offset, sizeof(value));
+        value++;
+        memcpy(object + offset, &value, sizeof(value));
+    }
+}

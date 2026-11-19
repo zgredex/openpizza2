@@ -557,6 +557,13 @@ typedef struct ObjectInitState {
 /* Object_EnsureInit (0x520CD0). */
 void object_ensure_init(ObjectInitState *state);
 
+/* Game setting/counter setters. */
+void game_set_difficulty(uint8_t *object, int32_t difficulty);
+void game_set_hq_level(uint8_t *object, int32_t level);
+void game_set_global_word16(uint8_t *object, uint16_t value,
+                            uint32_t *calendar_state);
+void game_increment_visit_counter(uint8_t *object, int32_t index);
+
 /* Game_GetActiveScreenOrFallback (0x482910). */
 int32_t game_get_active_screen_or_fallback(const uint8_t *game);
 
