@@ -82,6 +82,26 @@ static bool load_spr_asset(const char *path, uint8_t **pixels,
     return true;
 }
 
+static uint8_t *load_font_asset(const char *path, size_t *size) {
+    FILE *file = fopen(path, "rb");
+    if (file == NULL) {
+        return NULL;
+    }
+    fseek(file, 0, SEEK_END);
+    long length = ftell(file);
+    fseek(file, 0, SEEK_SET);
+    if (length <= 0) {
+        fclose(file);
+        return NULL;
+    }
+    uint8_t *data = malloc((size_t)length);
+    if (data != NULL) {
+        *size = fread(data, 1, (size_t)length, file);
+    }
+    fclose(file);
+    return data;
+}
+
 int main(void) {
     MenuState menu;
     menu_state_init(&menu);
@@ -1053,14 +1073,49 @@ int main(void) {
     free(pr_separator_pixels);
     free(pr_rating_pixels);
 
-    uint8_t *sb_background_pixels = NULL;
-    uint8_t *sb_row_pixels = NULL;
-    RgbaSprite sb_background;
-    RgbaSprite sb_row_plate;
-    assert(load_spr_asset("../extracted/sprites/statistikbilanzback.spr",
-                          &sb_background_pixels, &sb_background));
-    assert(load_spr_asset("../extracted/sprites/tab09.spr", &sb_row_pixels,
-                          &sb_row_plate));
+    static const char *const sb_sprite_paths[BALANCE_ASSET_COUNT] = {
+        "../extracted/sprites/tab09.spr",
+        "../extracted/sprites/tabpb01__00.spr",
+        "../extracted/sprites/sl01_00.spr",
+        "../extracted/sprites/trennzeile.spr",
+        "../extracted/sprites/pb33_00.spr",
+        "../extracted/sprites/pb22_00.spr",
+        "../extracted/sprites/pb24_00.spr",
+        "../extracted/sprites/textpb05__00.spr",
+        "../extracted/sprites/hilfebuttonsnip_00.spr",
+        "../extracted/sprites/statistikbilanzback.spr",
+    };
+    static const char *const sb_font_paths[6] = {
+        "../extracted/fonts/timesfont.fnt",
+        "../extracted/fonts/verdana7.fnt",
+        "../extracted/fonts/verdana8.fnt",
+        "../extracted/fonts/vedana11.fnt",
+        "../extracted/fonts/verdana10.fnt",
+        "../extracted/fonts/verdana14.fnt",
+    };
+    uint8_t *sb_sprite_pixels[BALANCE_ASSET_COUNT] = {NULL};
+    RgbaSprite sb_sprites[BALANCE_ASSET_COUNT];
+    for (int index = 0; index < BALANCE_ASSET_COUNT; index++) {
+        assert(load_spr_asset(sb_sprite_paths[index], &sb_sprite_pixels[index],
+                              &sb_sprites[index]));
+    }
+    uint8_t *sb_font_data[6] = {NULL};
+    size_t sb_font_sizes[6] = {0};
+    FntInfo sb_font_infos[6];
+    for (int index = 0; index < 6; index++) {
+        sb_font_data[index] = load_font_asset(sb_font_paths[index], &sb_font_sizes[index]);
+        assert(sb_font_data[index] != NULL);
+        assert(fnt_read_info(sb_font_data[index], sb_font_sizes[index],
+                             &sb_font_infos[index]));
+    }
+    StatisticsBalanceAssets sb_assets = {0};
+    for (int index = 0; index < BALANCE_ASSET_COUNT; index++) {
+        sb_assets.sprites[index] = &sb_sprites[index];
+    }
+    for (int index = 0; index < 6; index++) {
+        sb_assets.fonts[index] = (StatisticsBalanceFont){
+            sb_font_data[index], sb_font_sizes[index], &sb_font_infos[index]};
+    }
     const StatisticsBalanceRow sb_expenses[3] = {
         {"Stocks", operations.ingredient_cost},
         {"Rent", operations.rent},
@@ -1082,13 +1137,15 @@ int main(void) {
     assert(sb_frame != NULL);
     RenderSurface sb_surface;
     assert(render_surface_init(&sb_surface, sb_frame, 800 * 600 * 4, 800, 600));
-    assert(screen_render_statistics_balance(&sb_surface, &sb_background,
-                                             &sb_row_plate, font_data,
-                                             font_size, &font_info, &sb_data));
-    assert(memcmp(sb_frame, sb_background.pixels, 4) == 0);
+    assert(screen_render_statistics_balance(&sb_surface, &sb_assets, &sb_data));
+    assert(memcmp(sb_frame, sb_sprites[BALANCE_ASSET_BACKGROUND].pixels, 4) == 0);
     free(sb_frame);
-    free(sb_background_pixels);
-    free(sb_row_pixels);
+    for (int index = 0; index < 6; index++) {
+        free(sb_font_data[index]);
+    }
+    for (int index = 0; index < BALANCE_ASSET_COUNT; index++) {
+        free(sb_sprite_pixels[index]);
+    }
 
     uint8_t *sbb_background_pixels = NULL;
     uint8_t *sbb_row_pixels = NULL;

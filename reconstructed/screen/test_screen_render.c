@@ -730,19 +730,132 @@ static void test_personnel_record_composition(void) {
 }
 
 static void test_statistics_balance_composition(void) {
-    uint8_t *background_pixels = NULL;
-    uint8_t *row_pixels = NULL;
-    RgbaSprite background;
-    RgbaSprite row_plate;
-    assert(load_spr("../extracted/sprites/statistikbilanzback.spr",
-                    &background_pixels, &background));
-    assert(load_spr("../extracted/sprites/tab09.spr", &row_pixels, &row_plate));
-
-    size_t font_size = 0;
-    uint8_t *font_data = load_file("../extracted/fonts/timesfont.fnt", &font_size);
-    assert(font_data != NULL);
-    FntInfo font;
-    assert(fnt_read_info(font_data, font_size, &font));
+    static const char *const sprite_paths[BALANCE_ASSET_COUNT] = {
+        "../extracted/sprites/tab09.spr",
+        "../extracted/sprites/tabpb01__00.spr",
+        "../extracted/sprites/sl01_00.spr",
+        "../extracted/sprites/trennzeile.spr",
+        "../extracted/sprites/pb33_00.spr",
+        "../extracted/sprites/pb22_00.spr",
+        "../extracted/sprites/pb24_00.spr",
+        "../extracted/sprites/textpb05__00.spr",
+        "../extracted/sprites/hilfebuttonsnip_00.spr",
+        "../extracted/sprites/statistikbilanzback.spr",
+    };
+    static const char *const font_paths[6] = {
+        "../extracted/fonts/timesfont.fnt",
+        "../extracted/fonts/verdana7.fnt",
+        "../extracted/fonts/verdana8.fnt",
+        "../extracted/fonts/vedana11.fnt",
+        "../extracted/fonts/verdana10.fnt",
+        "../extracted/fonts/verdana14.fnt",
+    };
+    uint8_t *sprite_pixels[BALANCE_ASSET_COUNT] = {NULL};
+    RgbaSprite sprites[BALANCE_ASSET_COUNT];
+    for (int index = 0; index < BALANCE_ASSET_COUNT; index++) {
+        assert(load_spr(sprite_paths[index], &sprite_pixels[index],
+                        &sprites[index]));
+    }
+    uint8_t *font_data[6] = {NULL};
+    size_t font_sizes[6] = {0};
+    FntInfo font_infos[6];
+    for (int index = 0; index < 6; index++) {
+        font_data[index] = load_file(font_paths[index], &font_sizes[index]);
+        assert(font_data[index] != NULL);
+        assert(fnt_read_info(font_data[index], font_sizes[index],
+                             &font_infos[index]));
+    }
+    StatisticsBalanceAssets assets = {0};
+    for (int index = 0; index < BALANCE_ASSET_COUNT; index++) {
+        assets.sprites[index] = &sprites[index];
+    }
+    for (int index = 0; index < 6; index++) {
+        assets.fonts[index] = (StatisticsBalanceFont){
+            font_data[index], font_sizes[index], &font_infos[index]};
+    }
+    assert(kBalanceControlCount == 162);
+    const BalanceControl *control = NULL;
+    for (size_t index = 0; index < kBalanceControlCount; index++) {
+        if (kBalanceControls[index].id == 1000) {
+            control = &kBalanceControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 605 && control->y == 223);
+    assert(control->kind == BALANCE_KIND_TEXT);
+    assert(control->font == 0 && control->align == 2 && control->width == 190);
+    assert(strcmp(control->text, "Balance") == 0);
+    control = NULL;
+    for (size_t index = 0; index < kBalanceControlCount; index++) {
+        if (kBalanceControls[index].id == 1016) {
+            control = &kBalanceControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 614 && control->y == 282);
+    assert(control->font == 1 && control->align == 0 && control->width == 60);
+    assert(strcmp(control->text, "Total:") == 0);
+    control = NULL;
+    for (size_t index = 0; index < kBalanceControlCount; index++) {
+        if (kBalanceControls[index].id == 1043) {
+            control = &kBalanceControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 46 && control->y == 90);
+    assert(control->font == 2 && control->width == 160);
+    assert(strcmp(control->text, "Warehouse rent") == 0);
+    control = NULL;
+    for (size_t index = 0; index < kBalanceControlCount; index++) {
+        if (kBalanceControls[index].id == 1041) {
+            control = &kBalanceControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 456 && control->y == 66);
+    assert(control->font == 3 && control->width == 100);
+    assert(strcmp(control->text, "Income") == 0);
+    control = NULL;
+    for (size_t index = 0; index < kBalanceControlCount; index++) {
+        if (kBalanceControls[index].id == 1223) {
+            control = &kBalanceControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 612 && control->y == 279);
+    assert(control->kind == BALANCE_KIND_SPRITE);
+    assert(control->asset == BALANCE_ASSET_TAB09);
+    control = NULL;
+    for (size_t index = 0; index < kBalanceControlCount; index++) {
+        if (kBalanceControls[index].id == 1010) {
+            control = &kBalanceControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 782 && control->y == 316);
+    assert(control->kind == BALANCE_KIND_SLIDER);
+    assert(control->asset == BALANCE_ASSET_SLIDER && control->width == 160);
+    control = NULL;
+    for (size_t index = 0; index < kBalanceControlCount; index++) {
+        if (kBalanceControls[index].id == 1204) {
+            control = &kBalanceControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 626 && control->y == 520);
+    assert(control->kind == BALANCE_KIND_BUTTON);
+    assert(control->asset == BALANCE_ASSET_BUTTON && control->width == 147);
+    assert(strcmp(control->text, "#Alle Quartale") == 0);
+    control = NULL;
+    for (size_t index = 0; index < kBalanceControlCount; index++) {
+        if (kBalanceControls[index].id == 8000) {
+            control = &kBalanceControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 572 && control->y == 217);
+    assert(control->kind == BALANCE_KIND_IMAGE);
+    assert(control->asset == BALANCE_ASSET_HELP);
 
     const StatisticsBalanceRow expenses[] = {
         {"Stocks", 30.75},
@@ -767,31 +880,28 @@ static void test_statistics_balance_composition(void) {
     assert(frame != NULL);
     RenderSurface surface;
     assert(render_surface_init(&surface, frame, frame_size, 800, 600));
-    assert(screen_render_statistics_balance(&surface, &background, &row_plate,
-                                             font_data, font_size, &font,
-                                             &data));
-    assert(memcmp(frame, background.pixels, 4) == 0);
+    assert(screen_render_statistics_balance(&surface, &assets, &data));
+    assert(memcmp(frame, sprites[BALANCE_ASSET_BACKGROUND].pixels, 4) == 0);
 
-    bool opaque = false;
-    size_t opaque_index = 0;
-    for (size_t index = 0; index + 3 < (size_t)row_plate.width * row_plate.height * 4;
-         index += 4) {
-        if (row_plate.pixels[index + 3] == 255) {
-            opaque = true;
-            opaque_index = index;
-            break;
+    bool row_ink = false;
+    for (int y = 278; y < 299; y++) {
+        for (int x = 611; x < 771; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset + 3] == 255 &&
+                (frame[offset] != sprites[BALANCE_ASSET_BACKGROUND].pixels[offset] ||
+                 frame[offset + 1] !=
+                     sprites[BALANCE_ASSET_BACKGROUND].pixels[offset + 1] ||
+                 frame[offset + 2] !=
+                     sprites[BALANCE_ASSET_BACKGROUND].pixels[offset + 2])) {
+                row_ink = true;
+            }
         }
     }
-    assert(opaque);
-    size_t row_x = (opaque_index / 4) % row_plate.width;
-    size_t row_y = (opaque_index / 4) / row_plate.width;
-    size_t row_offset = ((size_t)(279 + (int)row_y) * 800 +
-                         (612 + (int)row_x)) * 4;
-    assert(memcmp(frame + row_offset, row_plate.pixels + opaque_index, 4) == 0);
+    assert(row_ink);
 
     bool title_ink = false;
-    for (int y = 220; y < 245; y++) {
-        for (int x = 600; x < 760; x++) {
+    for (int y = 223; y < 247; y++) {
+        for (int x = 605; x < 700; x++) {
             size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
             if (frame[offset] < 180 && frame[offset + 1] < 120) {
                 title_ink = true;
@@ -799,14 +909,48 @@ static void test_statistics_balance_composition(void) {
         }
     }
     assert(title_ink);
-    assert(!screen_render_statistics_balance(&surface, &background, &row_plate,
-                                              font_data, font_size, &font,
-                                              NULL));
+    bool label_ink = false;
+    for (int y = 90; y < 104; y++) {
+        for (int x = 46; x < 170; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] < 120 && frame[offset + 1] < 120) {
+                label_ink = true;
+            }
+        }
+    }
+    assert(label_ink);
+    bool income_ink = false;
+    for (int y = 66; y < 86; y++) {
+        for (int x = 456; x < 540; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] < 120 && frame[offset + 1] < 120) {
+                income_ink = true;
+            }
+        }
+    }
+    assert(income_ink);
+    bool button_ink = false;
+    for (int y = 520; y < 541; y++) {
+        for (int x = 626; x < 773; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] < 200 && frame[offset + 1] < 200) {
+                button_ink = true;
+            }
+        }
+    }
+    assert(button_ink);
+    size_t slider_offset = ((size_t)316 * 800 + 782) * 4;
+    assert(frame[slider_offset] != 22 || frame[slider_offset + 1] != 26 ||
+           frame[slider_offset + 2] != 34);
+    assert(!screen_render_statistics_balance(&surface, &assets, NULL));
 
-    free(font_data);
+    for (int index = 0; index < 6; index++) {
+        free(font_data[index]);
+    }
     free(frame);
-    free(background_pixels);
-    free(row_pixels);
+    for (int index = 0; index < BALANCE_ASSET_COUNT; index++) {
+        free(sprite_pixels[index]);
+    }
 }
 
 static void test_statistics_branch_balance_composition(void) {

@@ -52,7 +52,9 @@ Current batches:
   and the exact London briefing page over
   `extracted/pictures/pe_missionsbriefing_lon.tga` with the exact Mission
   title/city/description/help controls, LOGOFENSTER, slider and Back/Start
-  Mission buttons.
+  Mission buttons, and the exact 162-control StatisticsBalance layout over
+  STATISTIKBILANZBACK.spr with TAB09/TABPB01 rows, six shipped fonts, the
+  SL01_00 slider and the PB22/PB24/PB33/TEXTPB05 controls.
 - `rating/` — `Branch_GetCustomerGroupRating` composition, city adjustment,
   `Stats_GetAverage8`/`Branch_GetMenuRating`, the baseline branch-score table
   rule and `Game_GetMarketBonusFactor`.

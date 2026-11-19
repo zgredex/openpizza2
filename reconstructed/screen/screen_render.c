@@ -1106,67 +1106,27 @@ bool screen_render_personnel_record(
     return true;
 }
 
+static bool balance_format_amount(char *buffer, size_t capacity, double amount) {
+    if (capacity == 0) {
+        return false;
+    }
+    long long whole = (long long)(amount < 0 ? amount - 0.5 : amount + 0.5);
+    snprintf(buffer, capacity, "%+lld$", whole);
+    return true;
+}
+
 bool screen_render_statistics_balance(
-    RenderSurface *surface, const RgbaSprite *background,
-    const RgbaSprite *row_plate, const uint8_t *font_data, size_t font_size,
-    const FntInfo *font, const StatisticsBalanceData *data) {
-    if (surface == NULL || background == NULL || font == NULL || data == NULL) {
+    RenderSurface *surface, const StatisticsBalanceAssets *assets,
+    const StatisticsBalanceData *data) {
+    if (surface == NULL || assets == NULL || data == NULL ||
+        assets->sprites[BALANCE_ASSET_BACKGROUND] == NULL) {
         return false;
     }
     const uint8_t background_color[4] = {22, 26, 34, 255};
+    const uint8_t text_color[4] = {0, 0, 0, 255};
     render_clear(surface, background_color);
-    if (!render_blit(surface, background, 0, 0)) {
+    if (!render_blit(surface, assets->sprites[BALANCE_ASSET_BACKGROUND], 0, 0)) {
         return false;
-    }
-    const uint8_t title_color[4] = {120, 20, 20, 255};
-    const uint8_t label_color[4] = {40, 28, 20, 255};
-    const uint8_t value_color[4] = {20, 20, 90, 255};
-    char value_text[64];
-
-    draw_label(surface, font_data, font_size, font, 605, 223, "Balance",
-               title_color);
-    draw_label(surface, font_data, font_size, font, 43, 66, "Expenditures",
-               title_color);
-    draw_label(surface, font_data, font_size, font, 456, 66, "Income",
-               title_color);
-    if (data->validity != NULL) {
-        draw_label(surface, font_data, font_size, font, 609, 258, data->validity,
-                   label_color);
-    }
-    if (data->period != NULL) {
-        draw_label(surface, font_data, font_size, font, 609, 498, data->period,
-                   label_color);
-    }
-
-    for (size_t index = 0; index < data->expense_count && index < 8; index++) {
-        int32_t y = 92 + (int32_t)index * 24;
-        draw_label(surface, font_data, font_size, font, 43, y,
-                   data->expenses[index].label, label_color);
-        snprintf(value_text, sizeof(value_text), "%.2f",
-                 data->expenses[index].amount);
-        draw_label(surface, font_data, font_size, font, 210, y, value_text,
-                   value_color);
-    }
-    for (size_t index = 0; index < data->income_count && index < 8; index++) {
-        int32_t y = 92 + (int32_t)index * 24;
-        draw_label(surface, font_data, font_size, font, 456, y,
-                   data->incomes[index].label, label_color);
-        snprintf(value_text, sizeof(value_text), "%.2f",
-                 data->incomes[index].amount);
-        draw_label(surface, font_data, font_size, font, 620, y, value_text,
-                   value_color);
-    }
-
-    draw_label(surface, font_data, font_size, font, 614, 282, "Total",
-               title_color);
-    if (data->branch_name != NULL) {
-        draw_label(surface, font_data, font_size, font, 614, 314,
-                   data->branch_name, value_color);
-    }
-    for (int index = 0; index < 8; index++) {
-        if (row_plate != NULL) {
-            render_blit(surface, row_plate, 612, 279 + index * 21);
-        }
     }
     double total = 0.0;
     for (size_t index = 0; index < data->income_count; index++) {
@@ -1175,9 +1135,104 @@ bool screen_render_statistics_balance(
     for (size_t index = 0; index < data->expense_count; index++) {
         total -= data->expenses[index].amount;
     }
-    snprintf(value_text, sizeof(value_text), "%.2f", total);
-    draw_label(surface, font_data, font_size, font, 696, 282, value_text,
-               value_color);
+    size_t expense_index = 0;
+    size_t income_index = 0;
+    char value_text[64];
+    char total_text[64];
+    (void)balance_format_amount(total_text, sizeof(total_text), total);
+
+    for (size_t index = 0; index < kBalanceControlCount; index++) {
+        const BalanceControl *control = &kBalanceControls[index];
+        if (control->kind == BALANCE_KIND_TEXT) {
+            const StatisticsBalanceFont *font = &assets->fonts[control->font];
+            if (font->data == NULL || font->info == NULL) {
+                return false;
+            }
+            const char *text = control->text;
+            if (control->id == 1017 && data->branch_name != NULL) {
+                text = data->branch_name;
+            } else if (control->id == 1019) {
+                text = total_text;
+            } else if (strncmp(control->text, "#1.000.000$", 12) == 0 &&
+                       (control->x == 201 || control->x == 200)) {
+                if (expense_index < data->expense_count) {
+                    balance_format_amount(value_text, sizeof(value_text),
+                                          data->expenses[expense_index].amount);
+                    text = value_text;
+                }
+                expense_index++;
+            } else if (strncmp(control->text, "#1.000.000$", 12) == 0 &&
+                       control->x == 455) {
+                if (income_index < data->income_count) {
+                    balance_format_amount(value_text, sizeof(value_text),
+                                          data->incomes[income_index].amount);
+                    text = value_text;
+                }
+                income_index++;
+            }
+            uint32_t width = ui_measure_text(font->info, text);
+            int32_t draw_x = control->x;
+            if (control->align == 1) {
+                draw_x = control->x + control->width - (int32_t)width;
+            } else if (control->align == 2) {
+                draw_x = control->x + ((int32_t)control->width - (int32_t)width) / 2;
+            }
+            if (!ui_draw_text(surface, font->data, font->size, font->info,
+                              draw_x, control->y, text, text_color)) {
+                return false;
+            }
+            if (control->id == 1040 && data->validity != NULL) {
+                uint32_t label_width = ui_measure_text(font->info, text);
+                draw_label(surface, font->data, font->size, font->info,
+                           control->x + (int32_t)label_width + 4, control->y,
+                           data->validity, text_color);
+            } else if (control->id == 1034 && data->period != NULL) {
+                uint32_t label_width = ui_measure_text(font->info, text);
+                draw_label(surface, font->data, font->size, font->info,
+                           control->x + (int32_t)label_width + 4, control->y,
+                           data->period, text_color);
+            }
+        } else {
+            const RgbaSprite *sprite = assets->sprites[control->asset];
+            if (sprite == NULL) {
+                continue;
+            }
+            if (control->kind == BALANCE_KIND_SLIDER) {
+                for (int32_t offset = 0; offset < (int32_t)control->width;
+                     offset += (int32_t)sprite->height) {
+                    if (!render_blit(surface, sprite, control->x,
+                                     control->y + offset)) {
+                        return false;
+                    }
+                }
+            } else if (control->kind == BALANCE_KIND_BUTTON) {
+                const StatisticsBalanceFont *font = &assets->fonts[control->font];
+                if (font->data == NULL || font->info == NULL) {
+                    return false;
+                }
+                for (int32_t offset = 0; offset < (int32_t)control->width;
+                     offset += (int32_t)sprite->width) {
+                    if (!render_blit(surface, sprite, control->x + offset,
+                                     control->y)) {
+                        return false;
+                    }
+                }
+                uint32_t width = ui_measure_text(font->info, control->text);
+                int32_t text_x = control->x +
+                                 ((int32_t)control->width - (int32_t)width) / 2;
+                int32_t text_y = control->y +
+                                 ((int32_t)sprite->height -
+                                  (int32_t)font->info->line_height) /
+                                     2;
+                if (!ui_draw_text(surface, font->data, font->size, font->info,
+                                  text_x, text_y, control->text, text_color)) {
+                    return false;
+                }
+            } else if (!render_blit(surface, sprite, control->x, control->y)) {
+                return false;
+            }
+        }
+    }
     return true;
 }
 

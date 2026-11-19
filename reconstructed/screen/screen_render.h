@@ -9,6 +9,7 @@
 #include "../menu/menu_state.h"
 #include "../render/render_state.h"
 #include "../statistics/statistics_state.h"
+#include "statistics_balance_layout.h"
 
 /*
  * Map/UI screen composition: decode a shipped TGA background into the RGBA
@@ -186,6 +187,17 @@ bool screen_render_statistics_branch_balance(
     const uint8_t *font_data, size_t font_size, const FntInfo *font,
     const StatisticsBranchBalanceData *data);
 
+typedef struct StatisticsBalanceFont {
+    const uint8_t *data;
+    size_t size;
+    const FntInfo *info;
+} StatisticsBalanceFont;
+
+typedef struct StatisticsBalanceAssets {
+    const RgbaSprite *sprites[BALANCE_ASSET_COUNT];
+    StatisticsBalanceFont fonts[6];
+} StatisticsBalanceAssets;
+
 typedef struct StatisticsBalanceData {
     const char *branch_name;
     const char *period;
@@ -196,12 +208,12 @@ typedef struct StatisticsBalanceData {
     size_t income_count;
 } StatisticsBalanceData;
 
-/* Composes Screen_StatisticsBalance (0x430FD0) over the shipped
- * STATISTIKBILANZBACK.spr, with TAB09 row plates and expense/income columns. */
+/* Composes Screen_StatisticsBalance (0x430FD0) exactly: the shipped
+ * STATISTIKBILANZBACK background plus all 162 constructor controls, their
+ * original positions, alignments, fonts and strings. */
 bool screen_render_statistics_balance(
-    RenderSurface *surface, const RgbaSprite *background,
-    const RgbaSprite *row_plate, const uint8_t *font_data, size_t font_size,
-    const FntInfo *font, const StatisticsBalanceData *data);
+    RenderSurface *surface, const StatisticsBalanceAssets *assets,
+    const StatisticsBalanceData *data);
 
 typedef struct PersonnelRecordData {
     const char *employee_name;
