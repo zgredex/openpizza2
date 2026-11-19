@@ -7,6 +7,7 @@
 #include "settings/settings.h"
 #include "save/save_state.h"
 #include "piz/piz_container.h"
+#include "personnel/personnel_state.h"
 #include "statistics/statistics_state.h"
 #include "options/options_state.h"
 #include "ui_screen/ui_screen.h"
@@ -119,6 +120,17 @@ int main(void) {
     assert(save_state_decode(&loaded, buffer, written));
     assert(memcmp(&loaded.settings, &settings, sizeof(Settings)) == 0);
     assert(mission_all_goals_complete(&loaded.mission));
+
+    PersonnelState personnel;
+    personnel_state_init(&personnel);
+    personnel_add(&personnel, 1, STAFF_COOK, 70, 60, 80, 90, 100, 13694);
+    personnel_add(&personnel, 2, STAFF_SERVER, 60, 70, 75, 85, 80, 13694);
+    personnel_add(&personnel, 3, STAFF_ERRAND_BOY, 50, 90, 65, 95, 60, 13694);
+    assert(personnel.count == 3);
+    assert(personnel_total_wage(&personnel) == 240);
+    assert(personnel_average_skill(&personnel) == 60);
+    personnel_set_branch(&personnel, 2, 13694);
+    assert(personnel_find(&personnel, 2)->branch_id == 13694);
 
     PizContainer piz;
     piz_container_init(&piz, "My Save", "Ada Pizza", "London");

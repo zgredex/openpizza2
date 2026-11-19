@@ -27,6 +27,8 @@ Current batches:
   0x568D88 autosave interval table (1..120).
 - `statistics/` — company overview counts/rank/share and branch-balance
   entries from `Stats_Report_FillCompanyOverview` and the statistics screens.
+- `personnel/` — staff roster, profession, skill/speed/motivation/health,
+  wage totals, average skill, branch assignment and training level.
 - `save/` — packed save blob: "PC2S" header, the 0x164-byte settings block,
   and the 0xD0 bytes emitted by `Player_MissionState_Save`.
 - `piz/` — minimal `.piz` container: 0xF0 header, 0x20 directory, start/end
