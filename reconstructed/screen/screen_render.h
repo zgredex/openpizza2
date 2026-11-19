@@ -11,6 +11,7 @@
 #include "../statistics/statistics_state.h"
 #include "character_select_layout.h"
 #include "free_play_layout.h"
+#include "warehouse_layout.h"
 #include "office_desk_layout.h"
 #include "statistics_balance_layout.h"
 
@@ -439,6 +440,31 @@ bool screen_render_free_play(RenderSurface *surface, const uint8_t *tga_data,
                              size_t tga_size, const FreePlayAssets *assets,
                              const FreePlayScenario *scenario,
                              uint8_t *decode_buffer, size_t decode_capacity);
+
+typedef struct WarehouseFont {
+    const uint8_t *data;
+    size_t size;
+    const FntInfo *info;
+} WarehouseFont;
+
+typedef struct WarehouseAssets {
+    const RgbaSprite *panel;
+    const RgbaSprite *sprites[WAREHOUSE_ASSET_COUNT];
+    WarehouseFont fonts[WAREHOUSE_FONT_COUNT];
+} WarehouseAssets;
+
+typedef struct WarehouseScreenData {
+    const char *warehouse_name;
+    const char *branch_names[8];
+    uint32_t supplies[8];
+    int selected_button; /* 0 = warehouse name, 1 = Give notice, -1 none */
+} WarehouseScreenData;
+
+/* Composes Screen_Warehouse (0x45D3E0): SUBMENUE window at (561,218) plus all
+ * 185 constructor controls at their original relative positions. */
+bool screen_render_warehouse(RenderSurface *surface,
+                             const WarehouseAssets *assets,
+                             const WarehouseScreenData *data);
 
 typedef struct MissionBriefingData {
     const char *city;

@@ -1345,6 +1345,129 @@ static void test_office_desk_composition(void) {
     free(frame);
 }
 
+static void test_warehouse_composition(void) {
+    uint8_t *panel_pixels = NULL;
+    RgbaSprite panel;
+    assert(load_spr("../extracted/sprites/submenue.spr", &panel_pixels, &panel));
+    uint8_t *sprite_pixels[WAREHOUSE_ASSET_COUNT] = {NULL};
+    RgbaSprite sprites[WAREHOUSE_ASSET_COUNT];
+    for (int index = 0; index < WAREHOUSE_ASSET_COUNT; index++) {
+        char path[128];
+        snprintf(path, sizeof(path), "../extracted/sprites/%s",
+                 kWarehouseAssetNames[index]);
+        assert(load_spr(path, &sprite_pixels[index], &sprites[index]));
+    }
+    static const char *const font_paths[WAREHOUSE_FONT_COUNT] = {
+        "../extracted/fonts/timesfont.fnt",
+        "../extracted/fonts/verdana7.fnt",
+        "../extracted/fonts/verdana8.fnt",
+    };
+    uint8_t *font_data[WAREHOUSE_FONT_COUNT] = {NULL};
+    size_t font_sizes[WAREHOUSE_FONT_COUNT] = {0};
+    FntInfo font_infos[WAREHOUSE_FONT_COUNT];
+    for (int index = 0; index < WAREHOUSE_FONT_COUNT; index++) {
+        font_data[index] = load_file(font_paths[index], &font_sizes[index]);
+        assert(font_data[index] != NULL);
+        assert(fnt_read_info(font_data[index], font_sizes[index],
+                             &font_infos[index]));
+    }
+    WarehouseAssets assets = {0};
+    assets.panel = &panel;
+    for (int index = 0; index < WAREHOUSE_ASSET_COUNT; index++) {
+        assets.sprites[index] = &sprites[index];
+    }
+    for (int index = 0; index < WAREHOUSE_FONT_COUNT; index++) {
+        assets.fonts[index] = (WarehouseFont){
+            font_data[index], font_sizes[index], &font_infos[index]};
+    }
+    assert(kWarehouseControlCount == 185);
+    const WarehouseControl *control = NULL;
+    for (size_t index = 0; index < kWarehouseControlCount; index++) {
+        if (kWarehouseControls[index].id == 1069) {
+            control = &kWarehouseControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 44 && control->y == 5);
+    assert(control->font == 0 && control->align == 2 && control->width == 190);
+    assert(strcmp(control->text, "Deliveries") == 0);
+    control = NULL;
+    for (size_t index = 0; index < kWarehouseControlCount; index++) {
+        if (kWarehouseControls[index].id == 1077) {
+            control = &kWarehouseControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->kind == WAREHOUSE_KIND_SLIDER);
+    assert(control->x == 221 && control->y == 57 && control->width == 145);
+    control = NULL;
+    for (size_t index = 0; index < kWarehouseControlCount; index++) {
+        if (kWarehouseControls[index].id == 8173) {
+            control = &kWarehouseControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->kind == WAREHOUSE_KIND_BUTTON);
+    assert(control->x == 64 && control->y == 250 && control->width == 147);
+    assert(strcmp(control->text, "#Lagername") == 0);
+    control = NULL;
+    for (size_t index = 0; index < kWarehouseControlCount; index++) {
+        if (kWarehouseControls[index].id == 8177) {
+            control = &kWarehouseControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 142 && control->y == 274 && control->width == 84);
+    assert(strcmp(control->text, "Give notice") == 0);
+
+    const WarehouseScreenData data = {
+        .warehouse_name = "Nordlager",
+        .branch_names = {"London 1", "London 2", "London 3", "London 4",
+                         "London 5", "London 6", "London 7", "London 8"},
+        .supplies = {100, 80, 60, 40, 20, 10, 5, 0},
+        .selected_button = 0,
+    };
+    size_t frame_size = 800 * 600 * 4;
+    uint8_t *frame = malloc(frame_size);
+    assert(frame != NULL);
+    RenderSurface surface;
+    assert(render_surface_init(&surface, frame, frame_size, 800, 600));
+    assert(screen_render_warehouse(&surface, &assets, &data));
+    size_t panel_offset = ((size_t)218 * 800 + 561) * 4;
+    assert(memcmp(frame + panel_offset, panel.pixels, 4) == 0);
+    bool title_ink = false;
+    for (int y = 220; y < 245; y++) {
+        for (int x = 600; x < 780; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] < 180 && frame[offset + 1] < 120) {
+                title_ink = true;
+            }
+        }
+    }
+    assert(title_ink);
+    bool notice_ink = false;
+    for (int y = 492; y < 512; y++) {
+        for (int x = 700; x < 790; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] < 80 && frame[offset + 1] < 80 &&
+                frame[offset + 2] < 80) {
+                notice_ink = true;
+            }
+        }
+    }
+    assert(notice_ink);
+    assert(!screen_render_warehouse(&surface, NULL, &data));
+
+    for (int index = 0; index < WAREHOUSE_FONT_COUNT; index++) {
+        free(font_data[index]);
+    }
+    for (int index = 0; index < WAREHOUSE_ASSET_COUNT; index++) {
+        free(sprite_pixels[index]);
+    }
+    free(panel_pixels);
+    free(frame);
+}
+
 static void test_statistics_branch_balance_composition(void) {
     uint8_t *background_pixels = NULL;
     uint8_t *row_pixels = NULL;
@@ -2327,6 +2450,7 @@ int main(void) {
     test_personnel_overview_composition();
     test_personnel_record_composition();
     test_statistics_balance_composition();
+    test_warehouse_composition();
     test_office_desk_composition();
     test_statistics_branch_balance_composition();
     test_options_page_composition();

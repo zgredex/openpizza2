@@ -1771,3 +1771,101 @@ bool screen_render_office_desk(RenderSurface *surface, const uint8_t *tga_data,
     }
     return true;
 }
+
+bool screen_render_warehouse(RenderSurface *surface,
+                             const WarehouseAssets *assets,
+                             const WarehouseScreenData *data) {
+    if (surface == NULL || assets == NULL) {
+        return false;
+    }
+    const uint8_t text_color[4] = {0, 0, 0, 255};
+    const uint8_t highlight[4] = {255, 225, 120, 120};
+    char value_text[32];
+    if (assets->panel != NULL &&
+        !render_blit(surface, assets->panel, WAREHOUSE_WINDOW_X,
+                     WAREHOUSE_WINDOW_Y)) {
+        return false;
+    }
+    for (size_t index = 0; index < kWarehouseControlCount; index++) {
+        const WarehouseControl *control = &kWarehouseControls[index];
+        int32_t x = WAREHOUSE_WINDOW_X + control->x;
+        int32_t y = WAREHOUSE_WINDOW_Y + control->y;
+        if (control->kind == WAREHOUSE_KIND_TEXT) {
+            const WarehouseFont *font = &assets->fonts[control->font];
+            if (font->data == NULL || font->info == NULL) {
+                return false;
+            }
+            const char *text = control->text;
+            if (data != NULL) {
+                if (control->id >= 1200 && control->id <= 1207) {
+                    const char *branch = data->branch_names[control->id - 1200];
+                    if (branch != NULL) {
+                        text = branch;
+                    }
+                } else if (control->id >= 1300 && control->id <= 1307) {
+                    snprintf(value_text, sizeof(value_text), "%u%%",
+                             data->supplies[control->id - 1300]);
+                    text = value_text;
+                }
+            }
+            uint32_t width = ui_measure_text(font->info, text);
+            int32_t draw_x = x;
+            if (control->align == 1) {
+                draw_x = x + control->width - (int32_t)width;
+            } else if (control->align == 2) {
+                draw_x = x + ((int32_t)control->width - (int32_t)width) / 2;
+            }
+            if (!ui_draw_text(surface, font->data, font->size, font->info,
+                              draw_x, y, text, text_color)) {
+                return false;
+            }
+        } else if (control->kind == WAREHOUSE_KIND_SPRITE) {
+            const RgbaSprite *sprite = assets->sprites[control->asset];
+            if (sprite != NULL && !render_blit(surface, sprite, x, y)) {
+                return false;
+            }
+        } else if (control->kind == WAREHOUSE_KIND_SLIDER) {
+            const RgbaSprite *sprite = assets->sprites[control->asset];
+            if (sprite != NULL &&
+                !render_blit(surface, sprite, x, y)) {
+                return false;
+            }
+        } else if (control->kind == WAREHOUSE_KIND_BUTTON) {
+            const RgbaSprite *sprite = assets->sprites[control->asset];
+            const WarehouseFont *font = &assets->fonts[control->font];
+            if (sprite == NULL || font->data == NULL || font->info == NULL) {
+                continue;
+            }
+            bool selected =
+                (control->id == 8173 && data != NULL &&
+                 data->selected_button == 0) ||
+                (control->id == 8177 && data != NULL &&
+                 data->selected_button == 1);
+            for (int32_t tile = 0; tile < (int32_t)control->width;
+                 tile += (int32_t)sprite->width) {
+                if (!render_blit(surface, sprite, x + tile, y)) {
+                    return false;
+                }
+            }
+            if (selected) {
+                blend_rect(surface, x, y, (int32_t)control->width,
+                           (int32_t)sprite->height, highlight);
+            }
+            const char *text = control->text;
+            if (control->id == 8173 && data != NULL &&
+                data->warehouse_name != NULL) {
+                text = data->warehouse_name;
+            }
+            uint32_t width = ui_measure_text(font->info, text);
+            int32_t text_x = x + ((int32_t)control->width - (int32_t)width) / 2;
+            int32_t text_y = y + ((int32_t)sprite->height -
+                                  (int32_t)font->info->line_height) /
+                                     2;
+            if (!ui_draw_text(surface, font->data, font->size, font->info,
+                              text_x, text_y, text, text_color)) {
+                return false;
+            }
+        }
+    }
+    return true;
+}

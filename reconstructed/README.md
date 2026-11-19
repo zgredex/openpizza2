@@ -61,7 +61,8 @@ Current batches:
   SL01_00 slider and the PB22/PB24/PB33/TEXTPB05 controls, and the exact
   42-control office-desk layout over BG002.tga with its five fonts, desk
   sprites and button/status controls, with the six ANI animation windows
-  drawing decoded raw/RLE 16bpp frames.
+  drawing decoded raw/RLE 16bpp frames, and the exact 185-control warehouse
+  deliveries page over SUBMENUE with its 27 shipped sprites.
 - `rating/` — `Branch_GetCustomerGroupRating` composition, city adjustment,
   `Stats_GetAverage8`/`Branch_GetMenuRating`, the baseline branch-score table
   rule and `Game_GetMarketBonusFactor`.

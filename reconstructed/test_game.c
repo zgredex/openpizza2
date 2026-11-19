@@ -1401,6 +1401,66 @@ int main(void) {
     }
     free(od_tga_data);
 
+    uint8_t *wh_panel_pixels = NULL;
+    RgbaSprite wh_panel;
+    assert(load_spr_asset("../extracted/sprites/submenue.spr", &wh_panel_pixels,
+                          &wh_panel));
+    uint8_t *wh_sprite_pixels[WAREHOUSE_ASSET_COUNT] = {NULL};
+    RgbaSprite wh_sprites[WAREHOUSE_ASSET_COUNT];
+    for (int index = 0; index < WAREHOUSE_ASSET_COUNT; index++) {
+        char path[128];
+        snprintf(path, sizeof(path), "../extracted/sprites/%s",
+                 kWarehouseAssetNames[index]);
+        assert(load_spr_asset(path, &wh_sprite_pixels[index],
+                              &wh_sprites[index]));
+    }
+    static const char *const wh_font_paths[WAREHOUSE_FONT_COUNT] = {
+        "../extracted/fonts/timesfont.fnt",
+        "../extracted/fonts/verdana7.fnt",
+        "../extracted/fonts/verdana8.fnt",
+    };
+    uint8_t *wh_font_data[WAREHOUSE_FONT_COUNT] = {NULL};
+    size_t wh_font_sizes[WAREHOUSE_FONT_COUNT] = {0};
+    FntInfo wh_font_infos[WAREHOUSE_FONT_COUNT];
+    for (int index = 0; index < WAREHOUSE_FONT_COUNT; index++) {
+        wh_font_data[index] = load_font_asset(wh_font_paths[index],
+                                              &wh_font_sizes[index]);
+        assert(wh_font_data[index] != NULL);
+        assert(fnt_read_info(wh_font_data[index], wh_font_sizes[index],
+                             &wh_font_infos[index]));
+    }
+    WarehouseAssets wh_assets = {0};
+    wh_assets.panel = &wh_panel;
+    for (int index = 0; index < WAREHOUSE_ASSET_COUNT; index++) {
+        wh_assets.sprites[index] = &wh_sprites[index];
+    }
+    for (int index = 0; index < WAREHOUSE_FONT_COUNT; index++) {
+        wh_assets.fonts[index] = (WarehouseFont){
+            wh_font_data[index], wh_font_sizes[index], &wh_font_infos[index]};
+    }
+    const WarehouseScreenData wh_data = {
+        .warehouse_name = "Nordlager",
+        .branch_names = {"London 1", "London 2", "London 3", "London 4",
+                         "London 5", "London 6", "London 7", "London 8"},
+        .supplies = {100, 80, 60, 40, 20, 10, 5, 0},
+        .selected_button = 0,
+    };
+    uint8_t *wh_frame = malloc(800 * 600 * 4);
+    assert(wh_frame != NULL);
+    RenderSurface wh_surface;
+    assert(render_surface_init(&wh_surface, wh_frame, 800 * 600 * 4, 800, 600));
+    assert(screen_render_warehouse(&wh_surface, &wh_assets, &wh_data));
+    size_t wh_panel_offset = ((size_t)218 * 800 + 561) * 4;
+    assert(memcmp(wh_frame + wh_panel_offset, wh_panel.pixels, 4) == 0);
+    free(wh_frame);
+    for (int index = 0; index < WAREHOUSE_FONT_COUNT; index++) {
+        free(wh_font_data[index]);
+    }
+    for (int index = 0; index < WAREHOUSE_ASSET_COUNT; index++) {
+        free(wh_sprite_pixels[index]);
+    }
+    free(wh_panel_pixels);
+
     uint8_t *sbb_background_pixels = NULL;
     uint8_t *sbb_row_pixels = NULL;
     uint8_t *sbb_rating_pixels = NULL;
