@@ -8,6 +8,7 @@
 #include "save/save_state.h"
 #include "piz/piz_container.h"
 #include "personnel/personnel_state.h"
+#include "recipes/recipe_state.h"
 #include "statistics/statistics_state.h"
 #include "settings/settings.h"
 #include "ui_screen/ui_screen.h"
@@ -104,6 +105,15 @@ int main(void) {
     SaveState loaded;
     assert(save_state_decode(&loaded, buffer, written));
     assert(mission_all_goals_complete(&loaded.mission));
+
+    BranchMenu menu_state;
+    branch_menu_init(&menu_state, 1);
+    Recipe recipe;
+    recipe_init(&recipe, 42, "Margherita", 12.0, 1);
+    recipe_add_topping(&recipe, 487, 2, 0, 0);
+    assert(branch_menu_add(&menu_state, &recipe));
+    assert(menu_state.count == 1);
+    assert(fabs(recipe_compute_price(&recipe, 100.0, 1.0, 0.0) - 12.0) < 1e-12);
 
     PersonnelState personnel;
     personnel_state_init(&personnel);

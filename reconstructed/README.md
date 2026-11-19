@@ -27,6 +27,8 @@ Current batches:
   0x568D88 autosave interval table (1..120).
 - `statistics/` — company overview counts/rank/share and branch-balance
   entries from `Stats_Report_FillCompanyOverview` and the statistics screens.
+- `recipes/` — recipe toppings, base price, branch-menu assignment and the
+  `Branch_ComputeRecipePrice` formula.
 - `personnel/` — staff roster, profession, skill/speed/motivation/health,
   wage totals, average skill, branch assignment and training level.
 - `save/` — packed save blob: "PC2S" header, the 0x164-byte settings block,
