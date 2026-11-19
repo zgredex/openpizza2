@@ -1,6 +1,7 @@
 #include "branch/branch_economy.h"
 #include "city/city_state.h"
 #include "ingredient/ingredient.h"
+#include "menu/menu_state.h"
 #include "mission/mission_goals.h"
 #include "settings/settings.h"
 
@@ -35,6 +36,14 @@ int main(void) {
                            0, 0xff, 1, 0, 0, 0);
     assert(strcmp(ingredient.name, "Olives") == 0);
     assert(ingredient.kind == 1);
+
+    MenuState menu;
+    menu_state_init(&menu);
+    assert(menu_button_at(&menu, 650, 12) == 0);
+    assert(menu_button_at(&menu, 650, 566) == 5);
+    menu_set_selected(&menu, 2);
+    assert(menu_activate(&menu) == MENU_CONTINUE_GAME);
+    assert(strcmp(menu.status, "No saved games found.") == 0);
 
     CityState city;
     city_state_init(&city, "London", "lon.iso", 4096, 2048, 280, 500000.0, 2);
