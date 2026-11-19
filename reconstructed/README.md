@@ -50,6 +50,8 @@ Current batches:
   `extracted/pictures/pe_freies_spiel.tga` with the Berlin scenario fields,
   and the London briefing page over
   `extracted/pictures/pe_missionsbriefing_lon.tga` with wrapped body text.
+- `rating/` — `Branch_GetCustomerGroupRating` composition, city adjustment,
+  and the baseline branch-score table rule.
 - `advertising/` — `Value_Approach`, hourly value decay and
   `Game_GetAdjustedValue` customer-radius conversion, with the original
   positive/negative target and clamp rules.

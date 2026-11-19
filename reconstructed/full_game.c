@@ -13,6 +13,7 @@
 #include "render/render_state.h"
 #include "operations/branch_operations.h"
 #include "advertising/value_state.h"
+#include "rating/rating_state.h"
 #include "assets/assets.h"
 #include "ui_render/ui_render.h"
 #include "screen/screen_render.h"
@@ -542,6 +543,11 @@ int main(void) {
            65);
     assert(game_adjusted_value(10, 50, 5, true, 1, false, -1, 100, 0, 0) ==
            97);
+    assert(rating_city_adjust(80, 5, 5) == 56);
+    assert(rating_branch_score(10, 40) == 10);
+    assert(branch_customer_group_rating(60, 70, 80, 90, true, 10) == 85);
+    assert(branch_customer_group_rating(30, 30, 30, 0, false, 20) == 50);
+
 
 
 
