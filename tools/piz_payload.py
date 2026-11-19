@@ -365,16 +365,35 @@ class PizSave:
                 pos += 4
                 plans = self._u32(pos)
                 pos += 4
-                recipes = self._u32(pos)
+                recipe_count = self._u32(pos)
                 pos += 4
+                if plans:
+                    raise ValueError(f"nested GamePlan list not supported: {plans}")
+                recipes = []
+                for recipe_index in range(recipe_count):
+                    if pos + 4 + 713 > end:
+                        raise ValueError(f"recipe {recipe_index} past region")
+                    recipe_id = self._u32(pos)
+                    pos += 4
+                    recipe_name = decode_text(self.data[pos:pos + 64]).rstrip("\0")
+                    topping_count = self._u32(pos + 68)
+                    pos += 72 + topping_count * 21 + 629
+                    linked = self._u32(pos)
+                    pos += 4
+                    if linked:
+                        linked_count = self._u32(pos)
+                        pos += 4 + linked_count * 28
+                    pos += 8
+                    if pos > end:
+                        raise ValueError(f"recipe {recipe_index} past region")
+                    recipes.append({"id": recipe_id, "name": recipe_name,
+                                    "toppings": topping_count})
                 featured = self._u32(pos)
                 pos += 4
+                if featured:
+                    raise ValueError("featured recipe flag not supported")
                 branch_count = self._u32(pos)
                 pos += 4
-                if plans or recipes or featured:
-                    raise ValueError(
-                        f"nested plans/recipes not supported: "
-                        f"{plans},{recipes},{featured}")
                 branches = []
                 for branch_index in range(branch_count):
                     if pos + 4 + branch_size > end:
@@ -408,16 +427,23 @@ class PizSave:
                                      "record_size": branch_size})
                 stats_reports = self._u32(pos)
                 pos += 4
-                storage = self._u32(pos)
+                pos += stats_reports * 856
+                storage_count = self._u32(pos)
                 pos += 4
+                storage = []
+                for storage_index in range(storage_count):
+                    if pos + 4 + 303 > end:
+                        raise ValueError(f"storage {storage_index} past region")
+                    storage.append({"id": self._u32(pos)})
+                    pos += 4 + 303
                 pairs = self._u32(pos)
                 pos += 4
                 big_records = self._u32(pos)
                 pos += 4
-                if stats_reports or storage or pairs or big_records:
+                if pairs or big_records:
                     raise ValueError(
                         f"nested company lists not supported: "
-                        f"{stats_reports},{storage},{pairs},{big_records}")
+                        f"{pairs},{big_records}")
             except ValueError as exc:
                 result["errors"].append(f"slot {slot}: {exc}")
                 break
@@ -431,11 +457,16 @@ class PizSave:
                 "company_slot": fields["0x48"],
                 "cash": cash,
                 "company_index": company_index,
+                "recipe_count": recipe_count,
+                "recipes": recipes,
                 "branch_count": branch_count,
                 "branches": branches,
-                "nested_counts": [company_index, plans, recipes, featured,
-                                  branch_count, stats_reports, storage, pairs,
-                                  big_records],
+                "report_count": stats_reports,
+                "storage_count": storage_count,
+                "storage": storage,
+                "nested_counts": [company_index, plans, recipe_count, featured,
+                                  branch_count, stats_reports, storage_count,
+                                  pairs, big_records],
                 "fields": fields,
             })
             result["count"] += 1
@@ -915,9 +946,12 @@ def cmd_companies(args):
             print(f"slot {slot['slot']}: present=0")
             continue
         branch_ids = [b["id"] for b in slot["branches"]]
+        recipe_names = [r["name"] for r in slot["recipes"]]
+        storage_ids = [s["id"] for s in slot["storage"]]
         print(f"slot {slot['slot']}: present=1 name={slot['name']!r} "
-              f"cash={slot['cash']:.2f} branches={branch_ids} "
-              f"nested={slot['nested_counts']}")
+              f"cash={slot['cash']:.2f} recipes={recipe_names} "
+              f"branches={branch_ids} reports={slot['report_count']} "
+              f"storage={storage_ids} nested={slot['nested_counts']}")
     if data["errors"]:
         print("errors: " + "; ".join(data["errors"]))
     return 0 if not data["errors"] else 2

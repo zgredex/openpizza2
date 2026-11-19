@@ -1259,15 +1259,20 @@ def check_piz_records():
           and payload.get("company_branch_record_size") == 6412
           and payload.get("company_slot0_name") == "Ada Pizza"
           and payload.get("company_slot0_cash") == 494270.0
+          and payload.get("company_slot0_recipe_count") == 1
+          and payload.get("company_slot0_recipes") == [
+              {"id": 42, "name": "Margherita", "toppings": 0}]
           and payload.get("company_slot0_branch_count") == 1
           and payload.get("company_slot0_branches") == [
-              {"id": 13694, "record_size": 6412}])
+              {"id": 13694, "record_size": 6412}]
+          and payload.get("company_slot0_report_count") == 1
+          and payload.get("company_slot0_storage") == [{"id": 7}])
     return {
         "name": "piz record parse",
         "ok": ok,
         "detail": ("piz_payload.py accepts 1 character (2086-byte record), "
-                   "6 player slots and 1 company with 1 nested branch "
-                   "(6412-byte Branch_Save body) with no errors") if ok else output[-1200:],
+                   "6 player slots and 1 company with recipe, branch, report "
+                   "and storage lists with no errors") if ok else output[-1200:],
     }
 
 def check_rust_tests():

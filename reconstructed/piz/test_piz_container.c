@@ -66,8 +66,14 @@ static PizContainer make_container(void) {
     container.companies[0].slot = 0;
     strcpy(container.companies[0].name, "Ada Pizza");
     container.companies[0].cash = 494270.0;
+    container.companies[0].recipe_count = 1;
+    container.companies[0].recipes[0].id = 42;
+    strcpy(container.companies[0].recipes[0].name, "Margherita");
     container.companies[0].branch_count = 1;
     container.companies[0].branches[0].id = 13694;
+    container.companies[0].report_count = 1;
+    container.companies[0].storage_count = 1;
+    container.companies[0].storage[0].id = 7;
     container.companies[0].share_x100 = 10000;
 
     settings_init_defaults(&container.save.settings, load_fails, random_low);
@@ -130,8 +136,14 @@ static void test_round_trip(const char *write_path) {
     assert(strcmp(restored.companies[0].name, "Ada Pizza") == 0);
     assert(restored.companies[0].slot == 0);
     assert(restored.companies[0].cash == 494270.0);
+    assert(restored.companies[0].recipe_count == 1);
+    assert(restored.companies[0].recipes[0].id == 42);
+    assert(strcmp(restored.companies[0].recipes[0].name, "Margherita") == 0);
     assert(restored.companies[0].branch_count == 1);
     assert(restored.companies[0].branches[0].id == 13694);
+    assert(restored.companies[0].report_count == 1);
+    assert(restored.companies[0].storage_count == 1);
+    assert(restored.companies[0].storage[0].id == 7);
     assert(memcmp(&restored.save.settings, &original.save.settings,
                   sizeof(Settings)) == 0);
     assert(restored.save.mission.deadline == 120);

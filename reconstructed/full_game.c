@@ -504,8 +504,14 @@ int main(void) {
     piz.companies[0].slot = 0;
     strcpy(piz.companies[0].name, "Ada Pizza");
     piz.companies[0].cash = city.economy.cash;
+    piz.companies[0].recipe_count = 1;
+    piz.companies[0].recipes[0].id = 42;
+    strcpy(piz.companies[0].recipes[0].name, "Margherita");
     piz.companies[0].branch_count = 1;
     piz.companies[0].branches[0].id = city.branches[0].tile_index;
+    piz.companies[0].report_count = 1;
+    piz.companies[0].storage_count = 1;
+    piz.companies[0].storage[0].id = 7;
     uint8_t piz_buffer[PIZ_MAX_CONTAINER_SIZE];
     size_t piz_written = piz_container_encode(&piz, piz_buffer, sizeof(piz_buffer));
     assert(piz_written == piz_container_size(&piz));
@@ -520,8 +526,14 @@ int main(void) {
     assert(piz_loaded.companies[0].slot == 0);
     assert(strcmp(piz_loaded.companies[0].name, "Ada Pizza") == 0);
     assert(piz_loaded.companies[0].cash == city.economy.cash);
+    assert(piz_loaded.companies[0].recipe_count == 1);
+    assert(piz_loaded.companies[0].recipes[0].id == 42);
+    assert(strcmp(piz_loaded.companies[0].recipes[0].name, "Margherita") == 0);
     assert(piz_loaded.companies[0].branch_count == 1);
     assert(piz_loaded.companies[0].branches[0].id == city.branches[0].tile_index);
+    assert(piz_loaded.companies[0].report_count == 1);
+    assert(piz_loaded.companies[0].storage_count == 1);
+    assert(piz_loaded.companies[0].storage[0].id == 7);
 
     printf("pc2 reconstructed full game: OK\n");
     printf("screen=%d goals=%u/%u hq=%u rats=%u branches=%u cash=%.6f\n",
