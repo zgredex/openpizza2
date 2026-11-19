@@ -48,9 +48,22 @@ shipped bytes, not reimplementations.
 
 | Confidence | Count | Meaning |
 |---|---:|---|
-| high | 2508 | semantic name pinned by a code path, save schema, or string table |
-| medium | 1103 | owning function and role observed; full reader/type audit pending |
+| high | 3046 | semantic name, type and decompiled reader/writer set audited |
+| medium | 565 | owning function and role observed; type/readers still pending |
 | low | 0 | address-only alias removed |
+
+The first audit pass promoted 451 medium rows (12 settings globals plus 439
+type/reader-audited globals). Settings globals were verified with Unicorn by
+calling `Settings_InitDefaults` (`0x406a90`) with the registry loader stubbed to
+fail; the probe reads back 17 globals, including autosave interval `5`, slot
+count `4`, language index `3`, and free-play length `0xb`.
+
+The ingredient pass promoted 87 entries. `Language_CopyStringIds` fills
+`0x583544..0x58369c` with 86 consecutive `language.ldf` strings, indices
+487..572 (Tomatoes..Garlic), and `Ingredient_LoadMarketTable` passes entry `i`
+to `Game_SetBuildingDesc` for ingredient object `i`. Unicorn calls
+`Game_SetBuildingDesc` with the Olives descriptor and reads back the name at
+object `+0x88` and the numeric fields at `+0xa8..+0xc8`.
 
 Promotion rules used in this pass:
 

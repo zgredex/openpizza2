@@ -1142,6 +1142,54 @@ def check_crt_helpers_emulation():
                    "strnlen and 32-bit carry") if ok else output[-1200:],
     }
 
+def check_settings_defaults_emulation():
+    result = subprocess.run(
+        ["python3", "tools/emulate_settings_defaults.py"],
+        cwd=ROOT, text=True, capture_output=True, timeout=180)
+    output = (result.stdout + result.stderr).strip()
+    try:
+        payload = json.loads(result.stdout)
+    except json.JSONDecodeError:
+        return {
+            "name": "settings defaults emulation",
+            "ok": False,
+            "detail": output[-1200:],
+        }
+    ok = (result.returncode == 0
+          and payload.get("case_count") == 17
+          and payload.get("matches") == 17
+          and payload.get("first_mismatch") is None)
+    return {
+        "name": "settings defaults emulation",
+        "ok": ok,
+        "detail": ("17/17 globals: autosave interval/counter/slots, language index, "
+                   "free-play length/max HQ and sentinels") if ok else output[-1200:],
+    }
+
+def check_ingredient_desc_emulation():
+    result = subprocess.run(
+        ["python3", "tools/emulate_ingredient_desc.py"],
+        cwd=ROOT, text=True, capture_output=True, timeout=180)
+    output = (result.stdout + result.stderr).strip()
+    try:
+        payload = json.loads(result.stdout)
+    except json.JSONDecodeError:
+        return {
+            "name": "ingredient descriptor emulation",
+            "ok": False,
+            "detail": output[-1200:],
+        }
+    ok = (result.returncode == 0
+          and payload.get("case_count") == 9
+          and payload.get("matches") == 9
+          and payload.get("first_mismatch") is None)
+    return {
+        "name": "ingredient descriptor emulation",
+        "ok": ok,
+        "detail": ("9/9 fields: Olives name copied to +0x88 and descriptor "
+                   "values stored at +0xa8..+0xc8") if ok else output[-1200:],
+    }
+
 def check_rust_tests():
     result = subprocess.run(
         ["cargo", "test", "--quiet", "--all"],
@@ -1387,6 +1435,8 @@ def main(argv=None):
     checks.append(check_clock_command_emulation())
     checks.append(check_mission_goals_emulation())
     checks.append(check_crt_helpers_emulation())
+    checks.append(check_settings_defaults_emulation())
+    checks.append(check_ingredient_desc_emulation())
     checks.append(check_rust_tests())
     checks.append(check_iso())
     checks.append(check_isodaten())
