@@ -1164,17 +1164,40 @@ static void test_briefing_composition(void) {
     uint8_t *font_data = load_file("../extracted/fonts/timesfont.fnt", &font_size);
     assert(tga != NULL);
     assert(font_data != NULL);
+    uint8_t *logo_pixels = NULL;
+    uint8_t *back_pixels = NULL;
+    uint8_t *start_pixels = NULL;
+    uint8_t *scroll_pixels = NULL;
+    RgbaSprite logo;
+    RgbaSprite back;
+    RgbaSprite start;
+    RgbaSprite scrollbar;
+    assert(load_spr("../extracted/sprites/logofenster.spr", &logo_pixels, &logo));
+    assert(load_spr("../extracted/sprites/textpbtranspgelb_00.spr",
+                    &back_pixels, &back));
+    assert(load_spr("../extracted/sprites/textpbtranspgruen_00.spr",
+                    &start_pixels, &start));
+    assert(load_spr("../extracted/sprites/sl01_00.spr", &scroll_pixels,
+                    &scrollbar));
 
     FntInfo font;
     assert(fnt_read_info(font_data, font_size, &font));
-    const char *title = "London";
     const char *body =
         "You begin your life as - hopefully - a successful pizza chef. Your boss "
         "sits in New York and has selected you from the many applications to be "
         "his new regional manager. Since the English are infamous for having no "
         "taste where food is concerned, you shouldn't have too much of a problem "
         "conquering the city with your tasty pizzas.";
-    const char *prompt = "Press any key to continue";
+    const MissionBriefingData data = {
+        .city = "London",
+        .description = body,
+        .help_text = "Online-Hilfetext",
+        .logo_window = &logo,
+        .back_button = &back,
+        .start_button = &start,
+        .scrollbar = &scrollbar,
+        .selected_button = 1,
+    };
 
     size_t frame_size = 800 * 600 * 4;
     uint8_t *frame = malloc(frame_size);
@@ -1183,30 +1206,25 @@ static void test_briefing_composition(void) {
     assert(decoded != NULL);
     RenderSurface surface;
     assert(render_surface_init(&surface, frame, frame_size, 800, 600));
-
-    int lines = screen_render_briefing(&surface, tga, tga_size, font_data,
-                                       font_size, &font, title, body, prompt,
-                                       decoded, frame_size);
-    assert(lines >= 4);
+    assert(screen_render_briefing(&surface, tga, tga_size, font_data,
+                                  font_size, &font, &data, decoded, frame_size));
     assert(memcmp(frame, decoded, frame_size) != 0);
-    uint32_t light = 0;
-    for (int y = 130; y < 300; y++) {
-        for (int x = 90; x < 700; x++) {
-            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
-            if (frame[offset] > 200 && frame[offset + 1] > 200 &&
-                frame[offset + 2] > 200) {
-                light += 1;
-            }
-        }
-    }
-    assert(light > 500);
-
-    assert(screen_render_briefing(&surface, tga, tga_size, font_data, font_size,
-                                  &font, NULL, body, prompt, decoded,
-                                  frame_size) == -1);
+    size_t logo_offset = ((size_t)54 * 800 + 626) * 4;
+    assert(frame[logo_offset] != 0 || frame[logo_offset + 1] != 0 ||
+           frame[logo_offset + 2] != 0);
+    size_t start_offset = ((size_t)552 * 800 + 700) * 4;
+    assert(frame[start_offset] != 0 || frame[start_offset + 1] != 0 ||
+           frame[start_offset + 2] != 0);
+    assert(!screen_render_briefing(&surface, tga, tga_size, font_data,
+                                   font_size, &font, NULL, decoded,
+                                   frame_size));
 
     free(tga);
     free(font_data);
+    free(logo_pixels);
+    free(back_pixels);
+    free(start_pixels);
+    free(scroll_pixels);
     free(decoded);
     free(frame);
 }

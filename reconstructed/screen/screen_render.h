@@ -287,13 +287,23 @@ bool screen_render_free_play(RenderSurface *surface, const uint8_t *tga_data,
                              const FreePlayScenario *scenario,
                              uint8_t *decode_buffer, size_t decode_capacity);
 
-/* Draws the London briefing page over the shipped briefing TGA. Returns the
- * number of wrapped body lines drawn, or -1 on failure. */
-int screen_render_briefing(RenderSurface *surface, const uint8_t *tga_data,
-                           size_t tga_size, const uint8_t *font_data,
-                           size_t font_size, const FntInfo *font,
-                           const char *title, const char *body,
-                           const char *prompt, uint8_t *decode_buffer,
-                           size_t decode_capacity);
+typedef struct MissionBriefingData {
+    const char *city;
+    const char *description;
+    const char *help_text;
+    const RgbaSprite *logo_window;
+    const RgbaSprite *back_button;
+    const RgbaSprite *start_button;
+    const RgbaSprite *scrollbar;
+    int selected_button; /* 0 = Back, 1 = Start Mission */
+} MissionBriefingData;
+
+/* Composes Screen_MissionBriefing (0x474DF0): mission TGA, city/title,
+ * description, help text, logo window, scrollbar and the two buttons. */
+bool screen_render_briefing(RenderSurface *surface, const uint8_t *tga_data,
+                            size_t tga_size, const uint8_t *font_data,
+                            size_t font_size, const FntInfo *font,
+                            const MissionBriefingData *data,
+                            uint8_t *decode_buffer, size_t decode_capacity);
 
 #endif

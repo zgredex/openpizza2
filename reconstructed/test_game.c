@@ -533,6 +533,22 @@ int main(void) {
         }
         fclose(tga_file);
     }
+    uint8_t *mb_logo_pixels = NULL;
+    uint8_t *mb_back_pixels = NULL;
+    uint8_t *mb_start_pixels = NULL;
+    uint8_t *mb_scroll_pixels = NULL;
+    RgbaSprite mb_logo;
+    RgbaSprite mb_back;
+    RgbaSprite mb_start;
+    RgbaSprite mb_scroll;
+    assert(load_spr_asset("../extracted/sprites/logofenster.spr", &mb_logo_pixels,
+                          &mb_logo));
+    assert(load_spr_asset("../extracted/sprites/textpbtranspgelb_00.spr",
+                          &mb_back_pixels, &mb_back));
+    assert(load_spr_asset("../extracted/sprites/textpbtranspgruen_00.spr",
+                          &mb_start_pixels, &mb_start));
+    assert(load_spr_asset("../extracted/sprites/sl01_00.spr", &mb_scroll_pixels,
+                          &mb_scroll));
     if (tga_data != NULL && font_size > 0) {
         size_t briefing_frame_size = 800 * 600 * 4;
         uint8_t *briefing_frame = malloc(briefing_frame_size);
@@ -542,22 +558,35 @@ int main(void) {
         RenderSurface briefing_surface;
         assert(render_surface_init(&briefing_surface, briefing_frame,
                                    briefing_frame_size, 800, 600));
-        int briefing_lines = screen_render_briefing(
-            &briefing_surface, tga_data, tga_size, font_data, font_size,
-            &font_info, "London",
-            "You begin your life as - hopefully - a successful pizza chef. Your "
-            "boss sits in New York and has selected you from the many "
-            "applications to be his new regional manager. Since the English are "
-            "infamous for having no taste where food is concerned, you shouldn't "
-            "have too much of a problem conquering the city with your tasty "
-            "pizzas.",
-            "Press any key to continue", briefing_decoded, briefing_frame_size);
-        assert(briefing_lines >= 4);
+        const MissionBriefingData briefing_data = {
+            .city = "London",
+            .description =
+                "You begin your life as - hopefully - a successful pizza chef. "
+                "Your boss sits in New York and has selected you from the many "
+                "applications to be his new regional manager. Since the English "
+                "are infamous for having no taste where food is concerned, you "
+                "shouldn't have too much of a problem conquering the city with "
+                "your tasty pizzas.",
+            .help_text = "Online-Hilfetext",
+            .logo_window = &mb_logo,
+            .back_button = &mb_back,
+            .start_button = &mb_start,
+            .scrollbar = &mb_scroll,
+            .selected_button = 1,
+        };
+        assert(screen_render_briefing(&briefing_surface, tga_data, tga_size,
+                                      font_data, font_size, &font_info,
+                                      &briefing_data, briefing_decoded,
+                                      briefing_frame_size));
         assert(memcmp(briefing_frame, briefing_decoded, briefing_frame_size) != 0);
         free(briefing_decoded);
         free(briefing_frame);
         free(tga_data);
     }
+    free(mb_logo_pixels);
+    free(mb_back_pixels);
+    free(mb_start_pixels);
+    free(mb_scroll_pixels);
 
     BranchOperations operations;
     branch_operations_init(&operations, 5730.0);

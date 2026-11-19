@@ -5,6 +5,12 @@
 
 #include "../ui_render/ui_render.h"
 
+static void draw_label(RenderSurface *surface, const uint8_t *font_data,
+                       size_t font_size, const FntInfo *font, int32_t x,
+                       int32_t y, const char *text, const uint8_t rgba[4]) {
+    ui_draw_text(surface, font_data, font_size, font, x, y, text, rgba);
+}
+
 static void blend_rect(RenderSurface *surface, int32_t x, int32_t y, int32_t w,
                        int32_t h, const uint8_t rgba[4]) {
     if (surface == NULL) {
@@ -159,50 +165,70 @@ bool screen_render_menu(RenderSurface *surface, const uint8_t *tga_data,
     return true;
 }
 
-int screen_render_briefing(RenderSurface *surface, const uint8_t *tga_data,
-                           size_t tga_size, const uint8_t *font_data,
-                           size_t font_size, const FntInfo *font,
-                           const char *title, const char *body,
-                           const char *prompt, uint8_t *decode_buffer,
-                           size_t decode_capacity) {
-    if (font == NULL || title == NULL || body == NULL) {
-        return -1;
+bool screen_render_briefing(RenderSurface *surface, const uint8_t *tga_data,
+                            size_t tga_size, const uint8_t *font_data,
+                            size_t font_size, const FntInfo *font,
+                            const MissionBriefingData *data,
+                            uint8_t *decode_buffer, size_t decode_capacity) {
+    if (surface == NULL || font == NULL || data == NULL) {
+        return false;
     }
     if (!screen_render_background(surface, tga_data, tga_size, decode_buffer,
                                   decode_capacity)) {
-        return -1;
+        return false;
     }
-    const uint8_t panel[4] = {10, 12, 24, 190};
-    const uint8_t title_color[4] = {255, 225, 120, 255};
-    const uint8_t body_color[4] = {245, 245, 245, 255};
-    const uint8_t prompt_color[4] = {180, 200, 255, 255};
-    int32_t panel_x = 60;
-    int32_t panel_y = 70;
-    int32_t panel_w = (int32_t)surface->width - 120;
-    int32_t panel_h = (int32_t)surface->height - 180;
-    blend_rect(surface, panel_x, panel_y, panel_w, panel_h, panel);
+    const uint8_t title_color[4] = {120, 20, 20, 255};
+    const uint8_t label_color[4] = {40, 28, 20, 255};
+    const uint8_t value_color[4] = {20, 20, 90, 255};
 
-    if (!ui_draw_text(surface, font_data, font_size, font, panel_x + 24,
-                      panel_y + 18, title, title_color)) {
-        return -1;
+    draw_label(surface, font_data, font_size, font, 608, 5, "Mission:",
+               title_color);
+    if (data->city != NULL) {
+        draw_label(surface, font_data, font_size, font, 608, 33, data->city,
+                   value_color);
     }
-    int lines = draw_wrapped_text(surface, font_data, font_size, font,
-                                  panel_x + 24, panel_y + 60,
-                                  (uint32_t)panel_w - 48, body, body_color);
-    if (lines < 0) {
-        return -1;
+    if (data->help_text != NULL) {
+        draw_wrapped_text(surface, font_data, font_size, font, 224, 510, 345,
+                          data->help_text, label_color);
     }
-    if (prompt != NULL) {
-        ui_draw_text(surface, font_data, font_size, font, panel_x + 24,
-                     panel_y + panel_h - 38, prompt, prompt_color);
+    if (data->description != NULL) {
+        draw_wrapped_text(surface, font_data, font_size, font, 611, 203, 155,
+                          data->description, label_color);
     }
-    return lines;
-}
+    if (data->logo_window != NULL) {
+        render_blit(surface, data->logo_window, 626, 54);
+    }
+    if (data->scrollbar != NULL) {
+        for (int32_t tile = 0; tile < 285; tile += data->scrollbar->height) {
+            render_blit(surface, data->scrollbar, 780, 212 + tile);
+        }
+    }
 
-static void draw_label(RenderSurface *surface, const uint8_t *font_data,
-                       size_t font_size, const FntInfo *font, int32_t x, int32_t y,
-                       const char *text, const uint8_t rgba[4]) {
-    ui_draw_text(surface, font_data, font_size, font, x, y, text, rgba);
+    if (data->back_button != NULL) {
+        for (int32_t tile = 0; tile < 204; tile += data->back_button->width) {
+            render_blit(surface, data->back_button, 595 + tile, 509);
+        }
+    }
+    if (data->start_button != NULL) {
+        for (int32_t tile = 0; tile < 204; tile += data->start_button->width) {
+            render_blit(surface, data->start_button, 595 + tile, 550);
+        }
+    }
+    const uint8_t highlight[4] = {255, 225, 120, 120};
+    if (data->selected_button == 0) {
+        blend_rect(surface, 595, 509, 204, 38, highlight);
+    } else if (data->selected_button == 1) {
+        blend_rect(surface, 595, 550, 204, 38, highlight);
+    }
+    uint32_t width = ui_measure_text(font, "Back");
+    draw_label(surface, font_data, font_size, font, 595 + (204 - (int32_t)width) / 2,
+               509 + (38 - (int32_t)font->line_height) / 2, "Back",
+               label_color);
+    width = ui_measure_text(font, "Start Mission");
+    draw_label(surface, font_data, font_size, font, 595 + (204 - (int32_t)width) / 2,
+               550 + (38 - (int32_t)font->line_height) / 2, "Start Mission",
+               label_color);
+    return true;
 }
 
 bool screen_render_character_select(RenderSurface *surface,

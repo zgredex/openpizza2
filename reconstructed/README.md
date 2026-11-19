@@ -48,8 +48,10 @@ Current batches:
   `extracted/pictures/pe_charakterauswahl.tga` at the documented control
   positions, the free-play setup page over
   `extracted/pictures/pe_freies_spiel.tga` with the Berlin scenario fields,
-  and the London briefing page over
-  `extracted/pictures/pe_missionsbriefing_lon.tga` with wrapped body text.
+  and the exact London briefing page over
+  `extracted/pictures/pe_missionsbriefing_lon.tga` with the exact Mission
+  title/city/description/help controls, LOGOFENSTER, slider and Back/Start
+  Mission buttons.
 - `rating/` — `Branch_GetCustomerGroupRating` composition, city adjustment,
   the baseline branch-score table rule and `Game_GetMarketBonusFactor`.
 - `advertising/` — `Value_Approach`, hourly value decay,
