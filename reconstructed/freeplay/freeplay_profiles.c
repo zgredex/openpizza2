@@ -26,3 +26,15 @@ int32_t freeplay_profile_cash_multiplier(const FreePlayProfile *profile) {
 bool freeplay_profile_is_active(const FreePlayProfile *profile) {
     return profile != NULL && profile->active != 0;
 }
+
+void freeplay_profile_copy_appearance(const FreePlayProfile *profile,
+                                      FreePlayCharacterAppearance *character) {
+    if (profile == NULL || character == NULL) {
+        return;
+    }
+    character->gender = profile->gender;
+    character->hair = profile->hair;
+    character->eyes = profile->eyes;
+    character->mouth = profile->mouth;
+    character->head = profile->head;
+}

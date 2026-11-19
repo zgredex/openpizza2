@@ -72,19 +72,55 @@
           "offset": "0x04",
           "width": 4,
           "name": "field_04",
-          "evidence": "0x4CBEBD writes the second settings array; 0x405220 writes 0 for AI profiles; UI range -6..6 at 0x4CC973/0x4CC9C4"
+          "evidence": "0x4CBEBD copy; 0x405220 AI reset; UI range -6..6 (still unresolved)"
         },
         {
           "offset": "0x08",
           "width": 20,
           "name": "field_08_1c",
-          "evidence": "0x40522A clears six dwords at profile+0x08..+0x1C for AI profiles"
+          "evidence": "0x4C7B65 copies six character attributes from 0x57DD48; 0x482144..0x482187 copies them into Player +0x3C..+0x50"
         },
         {
           "offset": "0x20",
-          "width": 28,
-          "name": "field_20_38",
-          "evidence": "0x4051B5..0x40520C fill random player fields at profile+0x20..+0x38"
+          "width": 4,
+          "name": "gender",
+          "evidence": "0x4051B5 Random_RangeFast(0,1); 0x4822E5 writes Character +0x24; IDMap_GetRandomName call at 0x40523D uses it; UI_DrawOverlaySprites 0x54B770 param_2==0 selects HEAD_M/AUGEN_M/HAARE_M/MUND_M lists, else the _F lists; SubStartMenu 0x4C7B9D copies the character-select gender into 0x57B938 which FreePlaySetup copies here"
+        },
+        {
+          "offset": "0x24",
+          "width": 4,
+          "name": "hair",
+          "evidence": "0x4051CC Random_RangeFast(0,0x58557C-1); 0x58557C is min(HAARE_M list count at +0x88, HAARE_F at +0xA4) from EmployeeAvatar_Construct 0x54B460; 0x4822EB writes Character +0x28; UI_DrawOverlaySprites param_5 selects +0x74/+0x90"
+        },
+        {
+          "offset": "0x28",
+          "width": 4,
+          "name": "eyes",
+          "evidence": "0x4051DE Random_RangeFast(0,0x585580-1); 0x585580 is min(AUGEN_M +0x50, AUGEN_F +0x6C); 0x4822F4 writes Character +0x2C; UI_DrawOverlaySprites param_4 selects +0x3C/+0x58"
+        },
+        {
+          "offset": "0x2C",
+          "width": 4,
+          "name": "mouth",
+          "evidence": "0x4051E9 Random_RangeFast(0,0x585584-1); 0x585584 is min(MUND_M +0xC0, MUND_F +0xDC); 0x4822FD writes Character +0x30; UI_DrawOverlaySprites param_6 selects +0xAC/+0xC8"
+        },
+        {
+          "offset": "0x30",
+          "width": 4,
+          "name": "head",
+          "evidence": "0x405206 Random_RangeFast(0,0x585588-1); 0x585588 is min(HEAD_M +0x18, HEAD_F +0x34); 0x482306 writes Character +0x34; UI_DrawOverlaySprites param_3 selects +0x04/+0x20"
+        },
+        {
+          "offset": "0x34",
+          "width": 4,
+          "name": "logo",
+          "evidence": "0x405209 reads shuffled permutation 0x57B76C and stores here; 0x482029/0x48202C writes Company +0x1E0; 0x4A28F0 formats LOGOS__%d.spr with this +1; 0x4C7B7C copies the selected logo into profile 0"
+        },
+        {
+          "offset": "0x38",
+          "width": 4,
+          "name": "color",
+          "evidence": "0x40520C reads shuffled permutation 0x57C25C and stores here; 0x48200C/0x48201C indexes the 8-entry color table 0x563874 and writes Company +0x1DC; UI uses it in SetTextColor; 0x4C7B81 copies the selected color into profile 0"
         },
         {
           "offset": "0x3C",
@@ -221,8 +257,20 @@
     "static_asserts": [
       "sizeof(FreePlayProfile) == 0xC0",
       "offsetof(FreePlayProfile, cash_multiplier) == 0x00",
+      "offsetof(FreePlayProfile, gender) == 0x20",
+      "offsetof(FreePlayProfile, hair) == 0x24",
+      "offsetof(FreePlayProfile, eyes) == 0x28",
+      "offsetof(FreePlayProfile, mouth) == 0x2C",
+      "offsetof(FreePlayProfile, head) == 0x30",
+      "offsetof(FreePlayProfile, logo) == 0x34",
+      "offsetof(FreePlayProfile, color) == 0x38",
       "offsetof(FreePlayProfile, active) == 0x3C",
-      "FREEPLAY_PROFILE_COUNT == 6"
+      "sizeof(FreePlayCharacterAppearance) == 0x828",
+      "offsetof(FreePlayCharacterAppearance, gender) == 0x24",
+      "offsetof(FreePlayCharacterAppearance, hair) == 0x28",
+      "offsetof(FreePlayCharacterAppearance, eyes) == 0x2C",
+      "offsetof(FreePlayCharacterAppearance, mouth) == 0x30",
+      "offsetof(FreePlayCharacterAppearance, head) == 0x34"
     ],
     "unknown_fields_remain_offset_named": [
       "unknown_04[0x38]",
@@ -272,14 +320,21 @@
     {
       "path": "decompiled_fastfood2_named_v2/typed_packets/fixtures/freeplay_cash_multiplier.result.json",
       "producer": "tools/emulate_freeplay_profiles.py",
-      "coverage": "9/9 cases: initializer loop, six-profile copy, default/half/1.5x/zero/negative multipliers and two 32-bit wrap boundaries"
+      "coverage": "11/11 cases: initializer loop, six-profile copy, default/half/1.5x/zero/negative multipliers, two 32-bit wrap boundaries, profile-to-Character appearance copy and logo/color mapping"
     }
   ],
   "raw_scan": "decompiled_fastfood2_named_v2/typed_packets/freeplay_cash_multiplier.scan.json",
   "open_questions": [
     "The UI read/write sites at 0x4CC8CB/0x4CC91D/0x4CC973/0x4CC9C4 and the reverse copy at 0x4CD4AE belong to a function whose entry is absent from the retained decompile index.",
-    "Profile fields +0x20..+0x38 are random values written by Game_GenerateRandomPlayers; their individual meanings are not established.",
     "No save/load pair for 0x57BCD8 was found. Confirm by tracing the save writer set before declaring the array session-only.",
     "The three vtable-style calls at 0x4CD30B/0x4CD376/0x4CD38B need receiver and slot resolution before the UI path can be reconstructed."
-  ]
+  ],
+  "field_mapping_evidence": {
+    "avatar_sprite_families": "EmployeeAvatar_Construct 0x54B460 loads HEAD_M +0x04, HEAD_F +0x20, AUGEN_M +0x3C, AUGEN_F +0x58, HAARE_M +0x74, HAARE_F +0x90, MUND_M +0xAC, MUND_F +0xC8",
+    "max_limits": "0x585588=head, 0x585580=eyes, 0x585584=mouth, 0x58557C=hair, each min(male,female) list count",
+    "gender_argument": "IDMap_GetRandomName at 0x4050E0 uses profile+0x20; UI_DrawOverlaySprites 0x54B770 selects male on param_2==0",
+    "character_copy": "Game_InitScenario 0x4822E5..0x48230C writes profile +0x20..+0x30 into Character +0x24..+0x34",
+    "ui_record_mapping": "UI_ComposeOverlayWindowFromRecord 0x54BB00 passes record +0x24 gender, +0x34 head, +0x2C eyes, +0x28 hair, +0x30 mouth",
+    "logo_and_color": "profile +0x34 and +0x38 come from shuffled 0..7 permutations 0x57B76C/0x57C25C; Game_InitScenario 0x48200C..0x48202C writes Company +0x1DC/+0x1E0; LOGOS__%d.spr and SetTextColor consume them"
+  }
 }

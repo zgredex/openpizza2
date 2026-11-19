@@ -32,6 +32,10 @@
 #define COPY_STOP 0x4cbed8
 #define CASH_START 0x48203d
 #define CASH_STOP 0x482063
+#define APPEARANCE_START 0x4822df
+#define APPEARANCE_STOP 0x48230f
+#define LOGO_COLOR_START 0x48200c
+#define LOGO_COLOR_STOP 0x482032
 #define SETTINGS_MULTIPLIERS 0x57b97c
 #define SETTINGS_SECOND 0x57b994
 #define SETTINGS_ACTIVE 0x57b9ac
@@ -144,16 +148,18 @@ static int setup(uc_engine **out, const char *exe) {
 }
 
 static int run_fragment(uc_engine *uc, uint32_t start, uint32_t stop,
-                        uint32_t eax, uint32_t ecx, uint32_t esi,
-                        uint32_t ebp, uint32_t esp, run_state *state) {
+                        uint32_t eax, uint32_t ecx, uint32_t edx,
+                        uint32_t esi, uint32_t ebp, uint32_t esp,
+                        run_state *state) {
     uc_hook hook;
     memset(state, 0, sizeof(*state));
     state->stop_at = stop;
     if (uc_reg_write(uc, UC_X86_REG_EAX, &eax) != UC_ERR_OK ||
         uc_reg_write(uc, UC_X86_REG_ECX, &ecx) != UC_ERR_OK ||
-        uc_reg_write(uc, UC_X86_REG_EDX, &(uint32_t){0}) != UC_ERR_OK ||
+        uc_reg_write(uc, UC_X86_REG_EDX, &edx) != UC_ERR_OK ||
         uc_reg_write(uc, UC_X86_REG_ESI, &esi) != UC_ERR_OK ||
         uc_reg_write(uc, UC_X86_REG_EDI, &(uint32_t){0}) != UC_ERR_OK ||
+        uc_reg_write(uc, UC_X86_REG_EBX, &(uint32_t){0}) != UC_ERR_OK ||
         uc_reg_write(uc, UC_X86_REG_EBP, &ebp) != UC_ERR_OK ||
         uc_reg_write(uc, UC_X86_REG_ESP, &esp) != UC_ERR_OK) {
         return 0;
@@ -181,7 +187,7 @@ static int mode_init(uc_engine *uc) {
     run_state state;
     memset(zero, 0, sizeof(zero));
     if (uc_mem_write(uc, 0x57b900, zero, sizeof(zero)) != UC_ERR_OK) return 0;
-    if (!run_fragment(uc, INIT_START, INIT_STOP, 0, 0, 0, 0,
+    if (!run_fragment(uc, INIT_START, INIT_STOP, 0, 0, 0, 0, 0,
                       STACK_BASE + STACK_SIZE - 0x40, &state)) return 0;
     for (int index = 0; index < 6; index++) {
         uint32_t multiplier, second, active;
@@ -209,7 +215,7 @@ static int mode_copy(uc_engine *uc) {
             uc_mem_write(uc, SETTINGS_SECOND + index * 4, &second, 4) != UC_ERR_OK ||
             uc_mem_write(uc, SETTINGS_ACTIVE + index * 4, &active, 4) != UC_ERR_OK) return 0;
     }
-    if (!run_fragment(uc, COPY_START, COPY_STOP, 0, 0x57bcdc, 0, 0,
+    if (!run_fragment(uc, COPY_START, COPY_STOP, 0, 0x57bcdc, 0, 0, 0,
                       STACK_BASE + STACK_SIZE - 0x40, &state)) return 0;
     for (int index = 0; index < 6; index++) {
         uint32_t multiplier, second, active;
@@ -234,11 +240,68 @@ static int mode_cash(uc_engine *uc, int32_t multiplier, int32_t capital) {
     uint32_t edx = 0;
     if (uc_mem_write(uc, PROFILE_BASE, &multiplier_value, 4) != UC_ERR_OK ||
         uc_mem_write(uc, esp + 0x18, &capital_value, 4) != UC_ERR_OK) return 0;
-    if (!run_fragment(uc, CASH_START, CASH_STOP, 0, 0, 0, ebp, esp, &state)) return 0;
+    if (!run_fragment(uc, CASH_START, CASH_STOP, 0, 0, 0, 0, ebp, esp,
+                      &state)) return 0;
     if (uc_reg_read(uc, UC_X86_REG_EDX, &edx) != UC_ERR_OK) return 0;
     printf("multiplier=%d\n", multiplier);
     printf("capital=%d\n", capital);
     printf("starting_cash=%d\n", (int32_t)edx);
+    printf("instructions=%d\n", state.instructions);
+    return 1;
+}
+
+static int mode_logo_color(uc_engine *uc) {
+    run_state state;
+    uint32_t company_base = SCRATCH_BASE + 0x3000;
+    uint32_t company_pointer = company_base;
+    uint32_t logo = 5;
+    uint32_t color = 3;
+    uint8_t zero[0x40];
+    memset(zero, 0, sizeof(zero));
+    if (uc_mem_write(uc, company_base, zero, sizeof(zero)) != UC_ERR_OK ||
+        uc_mem_write(uc, SCRATCH_BASE, &company_pointer, 4) != UC_ERR_OK ||
+        uc_mem_write(uc, 0x57bd0c, &logo, 4) != UC_ERR_OK ||
+        uc_mem_write(uc, 0x57bd10, &color, 4) != UC_ERR_OK) return 0;
+    if (!run_fragment(uc, LOGO_COLOR_START, LOGO_COLOR_STOP, 0, 0, 0x57bd10,
+                      0, SCRATCH_BASE - 0x200,
+                      STACK_BASE + STACK_SIZE - 0x40, &state)) return 0;
+    uint32_t company_color = 0;
+    uint32_t company_logo = 0;
+    if (!read_u32_mem(uc, company_base + 0x1dc, &company_color) ||
+        !read_u32_mem(uc, company_base + 0x1e0, &company_logo)) return 0;
+    printf("company_color=0x%x\n", company_color);
+    printf("company_logo=%u\n", company_logo);
+    printf("instructions=%d\n", state.instructions);
+    return 1;
+}
+
+static int mode_appearance(uc_engine *uc) {
+    run_state state;
+    uint32_t character_base = SCRATCH_BASE + 0x2000;
+    uint8_t initial[0x40];
+    uint32_t values[5] = {1, 2, 3, 4, 5};
+    memset(initial, 0xAA, sizeof(initial));
+    if (uc_mem_write(uc, character_base, initial, sizeof(initial)) != UC_ERR_OK ||
+        uc_mem_write(uc, 0x57bcf8, values, sizeof(values) * 4) != UC_ERR_OK) {
+        /* Only five dwords exist, but keep the write explicit. */
+        for (int index = 0; index < 5; index++) {
+            if (uc_mem_write(uc, 0x57bcf8 + (uint32_t)index * 4,
+                             &values[index], 4) != UC_ERR_OK) return 0;
+        }
+    }
+    if (!run_fragment(uc, APPEARANCE_START, APPEARANCE_STOP, character_base,
+                      0, 0x57bd10, 0, 0, STACK_BASE + STACK_SIZE - 0x40,
+                      &state)) return 0;
+    const char *names[5] = {"gender", "hair", "eyes", "mouth", "head"};
+    for (int index = 0; index < 5; index++) {
+        uint32_t value;
+        if (!read_u32_mem(uc, character_base + 0x24 + (uint32_t)index * 4,
+                          &value)) return 0;
+        printf("%s=%u\n", names[index], value);
+    }
+    uint32_t untouched;
+    if (!read_u32_mem(uc, character_base + 0x20, &untouched)) return 0;
+    printf("sentinel=%u\n", untouched);
     printf("instructions=%d\n", state.instructions);
     return 1;
 }
@@ -259,6 +322,10 @@ int main(int argc, char **argv) {
     } else if (strcmp(argv[2], "cash") == 0 && argc == 5) {
         status = mode_cash(uc, (int32_t)strtol(argv[3], NULL, 0),
                            (int32_t)strtol(argv[4], NULL, 0)) ? 0 : 1;
+    } else if (strcmp(argv[2], "appearance") == 0) {
+        status = mode_appearance(uc) ? 0 : 1;
+    } else if (strcmp(argv[2], "logo-color") == 0) {
+        status = mode_logo_color(uc) ? 0 : 1;
     } else {
         fprintf(stderr, "unknown mode or arguments\n");
         status = 2;

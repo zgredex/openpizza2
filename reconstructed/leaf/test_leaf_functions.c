@@ -394,10 +394,10 @@ static void test_setters_and_tables(void) {
     assert(game_get_global_table_value(20) == 0);
     assert(game_get_global_table_value(21) == 0);
 
-    assert(game_find_city_index(200) == 0);
-    assert(game_find_city_index(16711680) == 2);
-    assert(game_find_city_index(26111) == 6);
-    assert(game_find_city_index(1234) == 7);
+    assert(game_find_color_index(200) == 0);
+    assert(game_find_color_index(16711680) == 2);
+    assert(game_find_color_index(26111) == 6);
+    assert(game_find_color_index(1234) == 7);
 
     assert(strcmp(game_get_data_by_index(0), "Kids") == 0);
     assert(strcmp(game_get_data_by_index(5), "Big shots") == 0);

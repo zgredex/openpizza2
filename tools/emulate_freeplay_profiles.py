@@ -60,7 +60,7 @@ def parse_output(text: str) -> dict:
         if "=" not in line:
             continue
         key, value = line.split("=", 1)
-        values[key.strip()] = int(value.strip())
+        values[key.strip()] = int(value.strip(), 0)
     return values
 
 
@@ -123,6 +123,19 @@ CASES = [
         "id": "cash_large_wrap",
         "args": ["cash", "65536", "50000"],
         "expect": {"starting_cash": -10181672},
+    },
+    {
+        "id": "appearance_copy",
+        "args": ["appearance"],
+        "expect": {
+            "gender": 1, "hair": 2, "eyes": 3, "mouth": 4, "head": 5,
+            "sentinel": 2863311530,
+        },
+    },
+    {
+        "id": "logo_color_mapping",
+        "args": ["logo-color"],
+        "expect": {"company_color": 0xA600, "company_logo": 5},
     },
 ]
 

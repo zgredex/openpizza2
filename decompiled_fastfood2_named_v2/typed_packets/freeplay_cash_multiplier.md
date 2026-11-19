@@ -41,8 +41,14 @@ The six profiles start at `0x57BCD8` with stride `0xC0`.
 |---|---:|---|---|
 | `0x00` | 4 | `cash_multiplier` | `0x48203D` direct read; `0x482089` indexed read; `0x481F01` default 100; UI range 70..990 |
 | `0x04` | 4 | `field_04` | `0x4CBEBD` copy; `0x405220` AI reset; UI range -6..6 |
-| `0x08` | 20 | `field_08_1c` | `0x40522A` clears six dwords for AI profiles |
-| `0x20` | 28 | `field_20_38` | `0x4051B5..0x40520C` random AI fields |
+| `0x08` | 20 | `field_08_1c` | `0x4C7B65` copies six character attributes from `0x57DD48`; `0x482144..0x482187` copies them into Player `+0x3C..+0x50` |
+| `0x20` | 4 | `gender` | `0x4051B5` `Random_RangeFast(0,1)`; `0x40523D` `IDMap_GetRandomName`; `0x4822E5` writes Character `+0x24`; `UI_DrawOverlaySprites` `param_2==0` selects male sprite lists |
+| `0x24` | 4 | `hair` | `0x4051CC` range `0x58557C-1`; `0x58557C` = min(HAARE_M `+0x88`, HAARE_F `+0xA4`); `0x4822EB` Character `+0x28`; UI `param_5` selects `+0x74/+0x90` |
+| `0x28` | 4 | `eyes` | `0x4051DE` range `0x585580-1`; `0x585580` = min(AUGEN_M `+0x50`, AUGEN_F `+0x6C`); `0x4822F4` Character `+0x2C`; UI `param_4` selects `+0x3C/+0x58` |
+| `0x2C` | 4 | `mouth` | `0x4051E9` range `0x585584-1`; `0x585584` = min(MUND_M `+0xC0`, MUND_F `+0xDC`); `0x4822FD` Character `+0x30`; UI `param_6` selects `+0xAC/+0xC8` |
+| `0x30` | 4 | `head` | `0x405206` range `0x585588-1`; `0x585588` = min(HEAD_M `+0x18`, HEAD_F `+0x34`); `0x482306` Character `+0x34`; UI `param_3` selects `+0x04/+0x20` |
+| `0x34` | 4 | `logo` | `0x405209` reads shuffled permutation `0x57B76C`; `0x482029/0x48202C` writes Company `+0x1E0`; `0x4A28F0` formats `LOGOS__%d.spr` with this `+1`; `0x4C7B7C` copies the selected logo |
+| `0x38` | 4 | `color` | `0x40520C` reads shuffled permutation `0x57C25C`; `0x48200C/0x48201C` indexes the 8-entry color table `0x563874` and writes Company `+0x1DC`; `SetTextColor` consumes it; `0x4C7B81` copies the selected color |
 | `0x3C` | 4 | `active` | `0x4CBEC8`, `0x40525C`, `0x481EFE` write; `0x481EA3`, `0x4CB494` compare |
 
 Recovered C layout and asserts:
@@ -60,6 +66,30 @@ _Static_assert(FREEPLAY_PROFILE_COUNT == 6, ...);
 
 No save/load pair was found for this array; the packet keeps that as an open
 question rather than assuming session-only state.
+
+### Field semantics proof
+
+The `+0x20..+0x38` fields are not opaque random values:
+
+- `EmployeeAvatar_Construct` (`0x54B460`) loads the eight sprite families:
+  `HEAD_M +0x04`, `HEAD_F +0x20`, `AUGEN_M +0x3C`, `AUGEN_F +0x58`,
+  `HAARE_M +0x74`, `HAARE_F +0x90`, `MUND_M +0xAC`, `MUND_F +0xC8`.
+- It sets the four random limits from the male/female list counts:
+  - `0x585588` = head count
+  - `0x585580` = eyes count
+  - `0x585584` = mouth count
+  - `0x58557C` = hair count
+- `UI_DrawOverlaySprites` (`0x54B770`) branches on gender:
+  - `param_2 == 0` male lists; otherwise female lists.
+  - `param_3` = head, `param_4` = eyes, `param_5` = hair, `param_6` = mouth.
+- `UI_ComposeOverlayWindowFromRecord` (`0x54BB00`) reads the same order from a
+  character record: `+0x24` gender, `+0x34` head, `+0x2C` eyes, `+0x28` hair,
+  `+0x30` mouth.
+- `Game_InitScenario` (`0x4822E5..0x48230C`) copies profile
+  `+0x20..+0x30` into Character `+0x24..+0x34`.
+- `0x57B76C` and `0x57C25C` are eight-entry permutations initialized to `0..7`
+  and shuffled before AI generation. Profile `+0x34` becomes Company `+0x1E0`
+  (logo) and `+0x38` indexes the color table `0x563874` for Company `+0x1DC`.
 
 ### Copy and UI rings
 
@@ -118,8 +148,10 @@ original byte ranges:
 - `init`: `0x406B7F..0x406BA7`
 - `copy`: `0x4CBEB2..0x4CBED8`
 - `cash`: `0x48203D..0x482063`
+- `appearance`: `0x4822DF..0x48230F`
+- `logo-color`: `0x48200C..0x482032`
 
-Result: 9/9 cases matched.
+Result: 11/11 cases matched.
 
 ```sh
 python3 tools/emulate_freeplay_profiles.py \
@@ -127,11 +159,11 @@ python3 tools/emulate_freeplay_profiles.py \
 ```
 
 Cases cover the initializer, all six profile copies, the default/half/1.5x/zero
-and negative multipliers, and two 32-bit wrap boundaries.
+and negative multipliers, two 32-bit wrap boundaries, the profile-to-Character
+appearance copy, and the logo/color mapping into Company `+0x1E0/+0x1DC`.
 
 ## Open questions
 
 - The UI command procedure entry is absent from the retained decompile index.
-- Profile `+0x20..+0x38` are random AI fields with no recovered meaning yet.
 - No save/load pair was found for `0x57BCD8`.
 - The three vtable-style calls in the UI procedure are unresolved.

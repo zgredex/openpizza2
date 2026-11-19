@@ -661,7 +661,7 @@ uint32_t game_get_global_table_value(size_t index) {
     return index < 21 ? table[index] : 0;
 }
 
-int32_t game_find_city_index(int32_t city_id) {
+int32_t game_find_color_index(int32_t city_id) {
     static const int32_t table[7] = {
         200, 60927, 16711680, 42496, 13435085, 15197952, 26111,
     };

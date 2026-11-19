@@ -65,6 +65,25 @@ def main() -> int:
         0x4CC938: "c7 00 de 03 00 00",  # mov [eax],0x3de
         0x4CC989: "c7 00 fa ff ff ff",  # mov [eax],0xfffffffa
         0x4CC9DA: "c7 00 06 00 00 00",  # mov [eax],0x6
+        0x4051B5: "89 46 f8",          # gender -> profile+0x20
+        0x4051CC: "89 46 fc",          # hair -> profile+0x24
+        0x4051DE: "89 06",             # eyes -> profile+0x28
+        0x4051E9: "89 46 04",          # mouth -> profile+0x2C
+        0x405206: "89 46 08",          # head -> profile+0x30
+        0x405209: "89 4e 0c",          # logo -> profile+0x34
+        0x40520C: "89 56 10",          # color -> profile+0x38
+        0x48200C: "8b 0a",             # color index
+        0x48201C: "89 81 dc 01 00 00",  # Company+0x1DC color
+        0x482029: "8b 42 fc",          # logo index
+        0x48202C: "89 81 e0 01 00 00",  # Company+0x1E0 logo
+        0x4822E5: "8b 52 e8",          # profile+0x20 -> Character+0x24
+        0x4822EB: "8b 91 a4 00 00 00",  # profile+0x24 -> Character+0x28
+        0x4822F4: "8b 91 a8 00 00 00",  # profile+0x28 -> Character+0x2C
+        0x4822FD: "8b 91 ac 00 00 00",  # profile+0x2C -> Character+0x30
+        0x482306: "8b 89 b0 00 00 00",  # profile+0x30 -> Character+0x34
+        0x4C7B7C: "a3 0c bd 57 00",    # logo -> profile+0x34
+        0x4C7B81: "89 0d 10 bd 57 00",  # color -> profile+0x38
+        0x4C7B9D: "a3 38 b9 57 00",    # gender -> settings 0x57B938
     }
     for address, expected_bytes in expected.items():
         actual = bytes_at(image, address, len(expected_bytes.split()))
@@ -105,6 +124,13 @@ def main() -> int:
         "0x4cc973": "0x57bcdc",
         "0x4cc9c4": "0x57bcdc",
         "0x4ff9fc": "0x57bcd8",
+        "0x4051b5": "0x57bdb8",
+        "0x4051cc": "0x57bdbc",
+        "0x4051de": "0x57bdc0",
+        "0x4051e9": "0x57bdc4",
+        "0x405206": "0x57bdc8",
+        "0x405209": "0x57bdcc",
+        "0x40520c": "0x57bdd0",
     }
     for address, resolved in profile_sites.items():
         site = scan_sites.get(address)
@@ -115,8 +141,8 @@ def main() -> int:
                 f"profile site {address} resolves to "
                 f"{site['resolved_address']} != {resolved}")
 
-    if fixture.get("case_count") != 9 or fixture.get("matches") != 9:
-        failures.append("fixture is not 9/9")
+    if fixture.get("case_count") != 11 or fixture.get("matches") != 11:
+        failures.append("fixture is not 11/11")
     if fixture.get("first_mismatch") is not None:
         failures.append("fixture reports a mismatch")
     by_id = {case["id"]: case for case in fixture.get("cases", [])}
@@ -126,18 +152,56 @@ def main() -> int:
     if by_id.get("cash_32bit_product_wrap", {}).get(
             "actual", {}).get("starting_cash") != 0:
         failures.append("32-bit wrap fixture mismatch")
+    appearance = by_id.get("appearance_copy", {}).get("actual", {})
+    if (appearance.get("gender"), appearance.get("hair"),
+        appearance.get("eyes"), appearance.get("mouth"),
+        appearance.get("head")) != (1, 2, 3, 4, 5):
+        failures.append("appearance-copy fixture mismatch")
+    logo_color = by_id.get("logo_color_mapping", {}).get("actual", {})
+    if (logo_color.get("company_color"), logo_color.get("company_logo")) != \
+            (0xA600, 5):
+        failures.append("logo/color mapping fixture mismatch")
 
     header = open(HEADER, encoding="utf-8").read()
     for needle in ("sizeof(FreePlayProfile) == FREEPLAY_PROFILE_STRIDE",
                    "offsetof(FreePlayProfile, cash_multiplier)",
+                   "offsetof(FreePlayProfile, gender)",
+                   "offsetof(FreePlayProfile, hair)",
+                   "offsetof(FreePlayProfile, eyes)",
+                   "offsetof(FreePlayProfile, mouth)",
+                   "offsetof(FreePlayProfile, head)",
+                   "offsetof(FreePlayProfile, logo)",
+                   "offsetof(FreePlayProfile, color)",
                    "offsetof(FreePlayProfile, active)",
+                   "sizeof(FreePlayCharacterAppearance) == 0x828",
+                   "offsetof(FreePlayCharacterAppearance, gender)",
+                   "offsetof(FreePlayCharacterAppearance, head)",
                    "FREEPLAY_PROFILE_COUNT == 6"):
         if needle not in header:
             failures.append(f"header missing static assert: {needle}")
     for needle in ("freeplay_compute_starting_cash",
-                   "freeplay_profile_apply_defaults"):
+                   "freeplay_profile_apply_defaults",
+                   "freeplay_profile_copy_appearance"):
         if needle not in header:
             failures.append(f"header missing declaration: {needle}")
+
+    expected_fields = {
+        "0x00": "cash_multiplier",
+        "0x04": "field_04",
+        "0x08": "field_08_1c",
+        "0x20": "gender",
+        "0x24": "hair",
+        "0x28": "eyes",
+        "0x2C": "mouth",
+        "0x30": "head",
+        "0x34": "logo",
+        "0x38": "color",
+        "0x3C": "active",
+    }
+    actual_fields = {field["offset"]: field["name"]
+                     for field in packet["globals"][1]["fields"]}
+    if actual_fields != expected_fields:
+        failures.append("profile field map differs from recovered layout")
 
     if failures:
         for failure in failures:
@@ -145,7 +209,7 @@ def main() -> int:
         return 1
     print(
         "Free-play cash multiplier evidence: 3 multiplier sites, "
-        "15 profile sites, 2 static-assert offsets, fixture 9/9")
+        "22 profile sites, 8 appearance/logo/color fields, fixture 11/11")
     return 0
 
 

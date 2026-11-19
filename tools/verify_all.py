@@ -1140,8 +1140,9 @@ def check_freeplay_cash_multiplier_evidence():
     output = (result.stdout + result.stderr).strip()
     ok = (result.returncode == 0
           and "3 multiplier sites" in output
-          and "15 profile sites" in output
-          and "fixture 9/9" in output)
+          and "22 profile sites" in output
+          and "8 appearance/logo/color fields" in output
+          and "fixture 11/11" in output)
     return {
         "name": "free-play multiplier evidence",
         "ok": ok,

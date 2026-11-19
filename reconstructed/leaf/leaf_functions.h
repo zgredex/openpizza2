@@ -168,8 +168,9 @@ void dialog_set_result(uint8_t *dialog, int32_t result);
 /* Game_GetGlobalTableValue (0x482710): 21-entry colour table. */
 uint32_t game_get_global_table_value(size_t index);
 
-/* Game_FindCityIndex (0x4E2250): seven-entry city-id table. */
-int32_t game_find_city_index(int32_t city_id);
+/* Game_FindCityIndex (0x4E2250): maps a company color value back to its
+ * index in the eight-entry table at 0x563874; returns 7 for the default. */
+int32_t game_find_color_index(int32_t city_id);
 
 /* Game_GetDataByIndex (0x48D110): customer/staff labels. */
 const char *game_get_data_by_index(int32_t index);
