@@ -580,6 +580,42 @@ void player_init_slot_flags(uint8_t *player, size_t index);
 void player_company_init_defaults(uint8_t *company,
                                   const int32_t defaults[21]);
 
+typedef struct BuildingDescData {
+    const char *name;
+    uint8_t byte_a8;
+    int32_t value_ac;
+    int32_t value_b0;
+    int32_t value_b4;
+    int32_t value_b8;
+    int32_t value_c0;
+    int32_t value_c4;
+    uint8_t byte_cc;
+    uint8_t byte_cd;
+    uint8_t byte_c8;
+    uint8_t byte_c9;
+    uint8_t byte_ca;
+    uint8_t byte_cb;
+} BuildingDescData;
+
+/* Game_SetBuildingDesc (0x4E4860). */
+void leaf_game_set_building_desc(uint8_t *object, const BuildingDescData *data);
+
+typedef struct GameDateTimeState {
+    int32_t year;
+    int32_t day_of_year;
+    int32_t milliseconds;
+    int32_t current_year;
+    int32_t current_day_of_year;
+    int32_t current_milliseconds;
+} GameDateTimeState;
+
+/* Game_SetDateTime (0x552921). */
+void game_set_datetime(GameDateTimeState *state, int32_t mode,
+                       int32_t selector, int32_t year, int32_t month,
+                       int32_t week, int32_t weekday, int32_t day_offset,
+                       int32_t hour, int32_t minute, int32_t second,
+                       int32_t millisecond, int32_t timezone_offset);
+
 /* Game_GetActiveScreenOrFallback (0x482910). */
 int32_t game_get_active_screen_or_fallback(const uint8_t *game);
 

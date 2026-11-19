@@ -1823,6 +1823,62 @@ static void test_sprite_player_defaults(void) {
     }
 }
 
+static void test_building_datetime(void) {
+    uint8_t object[0x200] = {0};
+    const BuildingDescData desc = {
+        .name = "Test building",
+        .byte_a8 = 0x12,
+        .value_ac = 0x11111111,
+        .value_b0 = 0x22222222,
+        .value_b4 = 0x33333333,
+        .value_b8 = 0x44444444,
+        .value_c0 = 0x55555555,
+        .value_c4 = 0x66666666,
+        .byte_cc = 0x77,
+        .byte_cd = 0x88,
+        .byte_c8 = 0x99,
+        .byte_c9 = 0xaa,
+        .byte_ca = 0xbb,
+        .byte_cb = 0xcc,
+    };
+    leaf_game_set_building_desc(object, &desc);
+    assert(strcmp((char *)object + 0x88, "Test building") == 0);
+    assert(object[0xa8] == 0x12);
+    assert(read_i32_at(object, 0xac) == 0x11111111);
+    assert(read_i32_at(object, 0xb0) == 0x22222222);
+    assert(read_i32_at(object, 0xb4) == 0x33333333);
+    assert(read_i32_at(object, 0xb8) == 0x44444444);
+    assert(read_i32_at(object, 0xc0) == 0x55555555);
+    assert(read_i32_at(object, 0xc4) == 0x66666666);
+    assert(object[0xcc] == 0x77 && object[0xcd] == 0x88);
+    assert(object[0xc8] == 0x99 && object[0xc9] == 0xaa);
+    assert(object[0xca] == 0xbb && object[0xcb] == 0xcc);
+    leaf_game_set_building_desc(NULL, &desc);
+
+    GameDateTimeState state = {0};
+    game_set_datetime(&state, 1, 1, 2000, 3, 2, 1, 0, 12, 34, 56, 789, 0);
+    assert(state.year == 2000);
+    assert(state.day_of_year == 70);
+    assert(state.milliseconds == 45296789);
+
+    GameDateTimeState state2 = {0};
+    game_set_datetime(&state2, 0, 0, 2001, 3, 0, 0, 10, 1, 2, 3, 4, 5);
+    assert(state2.current_year == 2001);
+    assert(state2.current_day_of_year == 68);
+    assert(state2.current_milliseconds == 3728004);
+
+    GameDateTimeState state3 = {0};
+    game_set_datetime(&state3, 0, 0, 2001, 3, 0, 0, 10, 24, 0, 0, 0, 0);
+    assert(state3.current_day_of_year == 69);
+    assert(state3.current_milliseconds == 0);
+
+    GameDateTimeState state4 = {0};
+    game_set_datetime(&state4, 0, 0, 2001, 3, 0, 0, 10, 0, 0, 0, 0, -1);
+    assert(state4.current_day_of_year == 67);
+    assert(state4.current_milliseconds == 86399000);
+    game_set_datetime(NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -1863,6 +1919,7 @@ int main(void) {
     test_stream_object_init();
     test_game_setters();
     test_sprite_player_defaults();
+    test_building_datetime();
     puts("leaf function reconstruction: OK");
     return 0;
 }

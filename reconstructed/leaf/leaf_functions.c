@@ -2940,3 +2940,87 @@ void player_company_init_defaults(uint8_t *company,
         write_i32(company + 0x6c + index * 4, defaults[15 + index]);
     }
 }
+
+void leaf_game_set_building_desc(uint8_t *object, const BuildingDescData *data) {
+    if (object == NULL || data == NULL || data->name == NULL) {
+        return;
+    }
+    strcpy((char *)object + 0x88, data->name);
+    write_i32(object + 0xac, data->value_ac);
+    object[0xa8] = data->byte_a8;
+    write_i32(object + 0xb4, data->value_b4);
+    write_i32(object + 0xb0, data->value_b0);
+    write_i32(object + 0xc0, data->value_c0);
+    write_i32(object + 0xb8, data->value_b8);
+    object[0xcc] = data->byte_cc;
+    write_i32(object + 0xc4, data->value_c4);
+    object[0xc8] = data->byte_c8;
+    object[0xcd] = data->byte_cd;
+    object[0xc9] = data->byte_c9;
+    object[0xca] = data->byte_ca;
+    object[0xcb] = data->byte_cb;
+}
+
+void game_set_datetime(GameDateTimeState *state, int32_t mode,
+                       int32_t selector, int32_t year, int32_t month,
+                       int32_t week, int32_t weekday, int32_t day_offset,
+                       int32_t hour, int32_t minute, int32_t second,
+                       int32_t millisecond, int32_t timezone_offset) {
+    if (state == NULL) {
+        return;
+    }
+    static const int32_t leap_cumulative[12] = {
+        127, -1, 30, 59, 90, 120, 151, 181, 212, 243, 273, 304,
+    };
+    static const int32_t common_cumulative[12] = {
+        365, -1, 30, 58, 89, 119, 150, 180, 211, 242, 272, 303,
+    };
+    static const int32_t leap_lengths[12] = {
+        -1, 30, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334,
+    };
+    static const int32_t common_lengths[12] = {
+        -1, 30, 58, 89, 119, 150, 180, 211, 242, 272, 303, 333,
+    };
+    bool leap = (year & 3) == 0;
+    int32_t result = leap ? leap_cumulative[month] : common_cumulative[month];
+    if (selector == 1) {
+        int32_t january_first =
+            (year * 0x16d - 0x63db + result + 1 + ((year - 1) >> 2)) % 7;
+        if (weekday < january_first) {
+            result = result + 1 + (week * 7 - january_first) + weekday;
+        } else {
+            result = result - 6 + (week * 7 - january_first) + weekday;
+        }
+        if (week == 5) {
+            int32_t length = leap ? leap_lengths[month]
+                                  : common_lengths[month];
+            if (length < result) {
+                result -= 7;
+            }
+        }
+    } else {
+        result += day_offset;
+    }
+    if (mode == 1) {
+        state->year = year;
+        state->day_of_year = result;
+        state->milliseconds =
+            ((hour * 0x3c + minute) * 0x3c + second) * 1000 + millisecond;
+        return;
+    }
+    state->current_milliseconds =
+        ((hour * 0x3c + minute) * 0x3c + timezone_offset + second) * 1000 +
+        millisecond;
+    if (state->current_milliseconds < 0) {
+        state->current_milliseconds += 86400000;
+        state->current_day_of_year = result - 1;
+    } else if (state->current_milliseconds < 86400000) {
+        state->current_year = year;
+        state->current_day_of_year = result;
+        return;
+    } else {
+        state->current_milliseconds -= 86400000;
+        state->current_day_of_year = result + 1;
+    }
+    state->current_year = year;
+}
