@@ -22,10 +22,13 @@ Current batches:
   status restored from `Screen_MainMenu`.
 - `save/` — packed save blob: "PC2S" header, the 0x164-byte settings block,
   and the 0xD0 bytes emitted by `Player_MissionState_Save`.
+- `construction/` — `ConstructionOrder` 0x24 layout, enqueue cell index and
+  completion ownership derived from `Branch_EnqueueConstructionOrder` and
+  `Branch_CompleteConstruction`.
 - `city/` — city/branch state, London lease, HQ/rat mission actions and branch
   sale integration.
 - `test_game` — one executable linking settings, ingredient, menu, save,
-  mission, branch and city modules through the full London loop.
+  construction, mission, branch and city modules through the full London loop.
 
 Build and run:
 

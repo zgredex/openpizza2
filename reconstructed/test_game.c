@@ -1,5 +1,6 @@
 #include "branch/branch_economy.h"
 #include "city/city_state.h"
+#include "construction/construction_state.h"
 #include "ingredient/ingredient.h"
 #include "menu/menu_state.h"
 #include "mission/mission_goals.h"
@@ -59,6 +60,14 @@ int main(void) {
     assert_close(city.economy.cash, 494283.420524712365806, 1e-9);
     assert(city.branches[0].sales == 1);
     assert_close(city.branches[0].revenue, 13.80, 1e-12);
+
+    ConstructionSite site;
+    construction_site_begin(&site, 7, 0, 13694, 10, 20, 164, 1);
+    assert(!site.complete);
+    assert(construction_site_tick(&site, 10));
+    assert(site.object.owned);
+    assert(site.object.player_controlled);
+    assert(site.order.cell_index == 3290);
 
     SaveState save;
     memset(&save, 0, sizeof(save));
