@@ -1138,3 +1138,100 @@ const void *game_get_city_data(const void *const *table, size_t count,
     }
     return table[index];
 }
+
+void object_get_pair10(const uint8_t *object, int32_t *field10,
+                       int32_t *field14) {
+    if (object == NULL || field10 == NULL || field14 == NULL) {
+        return;
+    }
+    *field10 = read_i32(object + 0x10);
+    *field14 = read_i32(object + 0x14);
+}
+
+void object_get_pair4(const uint8_t *object, int32_t *field4,
+                      int32_t *field8) {
+    if (object == NULL || field4 == NULL || field8 == NULL) {
+        return;
+    }
+    *field4 = read_i32(object + 4);
+    *field8 = read_i32(object + 8);
+}
+
+int32_t record_get_value48(const uint8_t *records, size_t count,
+                           size_t index) {
+    if (records == NULL || index >= count) {
+        return 0;
+    }
+    const uint8_t *record = records + index * 0x48u;
+    if (read_i32(record) == -1) {
+        return 0;
+    }
+    int16_t value = 0;
+    memcpy(&value, record + 0x32, sizeof(value));
+    return value;
+}
+
+bool record_set_index48(uint8_t *records, size_t count, size_t index,
+                        int32_t value, size_t value_limit) {
+    if (records == NULL || index >= count || value < 0 ||
+        (size_t)value >= value_limit) {
+        return false;
+    }
+    uint8_t *record = records + index * 0x48u;
+    if (read_i32(record) == -1) {
+        return false;
+    }
+    int16_t short_value = (int16_t)value;
+    memcpy(record + 0x32, &short_value, sizeof(short_value));
+    return true;
+}
+
+bool record_get_rect98(const uint8_t *records, size_t index,
+                       int32_t pairs[8]) {
+    if (records == NULL || pairs == NULL) {
+        return false;
+    }
+    const uint8_t *record = records + index * 0x98u;
+    pairs[0] = read_i32(record + 0x70);
+    pairs[1] = read_i32(record + 0x74);
+    pairs[2] = read_i32(record + 0x78);
+    pairs[3] = read_i32(record + 0x7c);
+    pairs[4] = read_i32(record + 0x60);
+    pairs[5] = read_i32(record + 0x64);
+    pairs[6] = read_i32(record + 0x68);
+    pairs[7] = read_i32(record + 0x6c);
+    return true;
+}
+
+int32_t game_get_active_screen_or_fallback(const uint8_t *game) {
+    if (game == NULL) {
+        return 0;
+    }
+    int32_t active = read_i32(game + 0x270);
+    if (active == 0) {
+        active = read_i32(game + 0x264);
+    }
+    return active;
+}
+
+void palette_convert256(const uint8_t *rgb, uint16_t *output, bool rgb565) {
+    if (rgb == NULL || output == NULL) {
+        return;
+    }
+    for (size_t index = 0; index < 256; index++) {
+        uint8_t red = rgb[index * 3 + 0];
+        uint8_t green = rgb[index * 3 + 1];
+        uint8_t blue = rgb[index * 3 + 2];
+        if (rgb565) {
+            output[index] = (uint16_t)((((uint16_t)(red & 0xf8u) << 5) |
+                                        (uint16_t)(green & 0xf8u))
+                                       << 3 |
+                                       (uint16_t)(blue >> 3));
+        } else {
+            output[index] = (uint16_t)((((uint16_t)(red & 0xf8u) << 5) |
+                                        (uint16_t)(green & 0xf8u))
+                                       << 2 |
+                                       (uint16_t)(blue >> 3));
+        }
+    }
+}

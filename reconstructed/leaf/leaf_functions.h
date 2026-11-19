@@ -318,4 +318,26 @@ size_t game_count_group_slots(const int16_t slots[6]);
 const void *game_get_city_data(const void *const *table, size_t count,
                                int32_t index);
 
+/* Object_GetPair10 / Object_GetPair4 (0x535150 / 0x535160). */
+void object_get_pair10(const uint8_t *object, int32_t *field10,
+                       int32_t *field14);
+void object_get_pair4(const uint8_t *object, int32_t *field4,
+                      int32_t *field8);
+
+/* Record_GetValue48 / Record_SetIndex48 (0x534960 / 0x534990). */
+int32_t record_get_value48(const uint8_t *records, size_t count,
+                           size_t index);
+bool record_set_index48(uint8_t *records, size_t count, size_t index,
+                        int32_t value, size_t value_limit);
+
+/* Record_GetRect98 (0x534AC0): four uint32 pairs at +0x70/+0x78/+0x60/+0x68. */
+bool record_get_rect98(const uint8_t *records, size_t index,
+                       int32_t pairs[8]);
+
+/* Game_GetActiveScreenOrFallback (0x482910). */
+int32_t game_get_active_screen_or_fallback(const uint8_t *game);
+
+/* Palette_Convert256 (0x535E50). */
+void palette_convert256(const uint8_t *rgb, uint16_t *output, bool rgb565);
+
 #endif

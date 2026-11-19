@@ -673,6 +673,74 @@ static void test_furniture_and_game_accessors(void) {
     assert(game_get_city_data(NULL, 2, 0) == NULL);
 }
 
+static void test_object_record_palette(void) {
+    uint8_t object[0x20] = {0};
+    write_i32_at(object, 0x10, 11);
+    write_i32_at(object, 0x14, 22);
+    write_i32_at(object, 4, 33);
+    write_i32_at(object, 8, 44);
+    int32_t first = 0;
+    int32_t second = 0;
+    object_get_pair10(object, &first, &second);
+    assert(first == 11 && second == 22);
+    object_get_pair4(object, &first, &second);
+    assert(first == 33 && second == 44);
+    object_get_pair10(NULL, &first, &second);
+
+    uint8_t records[2 * 0x48] = {0};
+    write_i32_at(records, 0, 123);
+    write_i32_at(records, 0x48, -1);
+    int16_t index_value = 7;
+    memcpy(records + 0x32, &index_value, sizeof(index_value));
+    assert(record_get_value48(records, 2, 0) == 7);
+    assert(record_get_value48(records, 2, 1) == 0);
+    assert(record_get_value48(records, 2, 2) == 0);
+    assert(record_set_index48(records, 2, 0, 5, 6));
+    memcpy(&index_value, records + 0x32, sizeof(index_value));
+    assert(index_value == 5);
+    assert(!record_set_index48(records, 2, 0, 6, 6));
+    assert(!record_set_index48(records, 2, 1, 5, 6));
+
+    uint8_t rect_records[0x98] = {0};
+    const int32_t values[8] = {1, 2, 3, 4, 5, 6, 7, 8};
+    const size_t offsets[8] = {0x70, 0x74, 0x78, 0x7c,
+                               0x60, 0x64, 0x68, 0x6c};
+    for (size_t index = 0; index < 8; index++) {
+        write_i32_at(rect_records, offsets[index], values[index]);
+    }
+    int32_t pairs[8] = {0};
+    assert(record_get_rect98(rect_records, 0, pairs));
+    for (size_t index = 0; index < 8; index++) {
+        assert(pairs[index] == values[index]);
+    }
+    assert(!record_get_rect98(NULL, 0, pairs));
+    assert(!record_get_rect98(rect_records, 0, NULL));
+
+    uint8_t game[0x280] = {0};
+    write_i32_at(game, 0x264, 4);
+    write_i32_at(game, 0x270, 0);
+    assert(game_get_active_screen_or_fallback(game) == 4);
+    write_i32_at(game, 0x270, 9);
+    assert(game_get_active_screen_or_fallback(game) == 9);
+    assert(game_get_active_screen_or_fallback(NULL) == 0);
+
+    uint8_t palette[256 * 3] = {0};
+    palette[0] = 255;
+    palette[1] = 255;
+    palette[2] = 255;
+    palette[3] = 255;
+    palette[4] = 0;
+    palette[5] = 0;
+    uint16_t output[256] = {0};
+    palette_convert256(palette, output, false);
+    assert(output[0] == 0x7fff);
+    assert(output[1] == 0x7c00);
+    palette_convert256(palette, output, true);
+    assert(output[0] == 0xffdf);
+    assert(output[1] == 0xf800);
+    palette_convert256(NULL, output, true);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -696,6 +764,7 @@ int main(void) {
     test_font_clock_economy();
     test_economy_plan_order();
     test_furniture_and_game_accessors();
+    test_object_record_palette();
     puts("leaf function reconstruction: OK");
     return 0;
 }
