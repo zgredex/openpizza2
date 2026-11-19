@@ -1289,7 +1289,7 @@ def check_piz_records():
           and payload.get("company_slot0_storage") == [
               {"id": 7, "name": "London storage"}]
           and payload.get("company_slot0_pairs") == [
-              {"id": 9, "value": 0x1122334455667788}]
+              {"id": 9, "type": 0x17, "state": 1}]
           and payload.get("company_slot0_big_count") == 1)
     return {
         "name": "piz record parse",
@@ -1297,8 +1297,8 @@ def check_piz_records():
         "detail": ("piz_payload.py accepts 1 character (2086-byte record), "
                    "6 player slots and 1 company with plan, recipe, branch, "
                    "report, storage, pair and 0x1A0 lists with populated "
-                   "recipe/branch/report/storage and named GamePlan fields with "
-                   "no errors") if ok else output[-1200:],
+                   "recipe/branch/report/storage, GamePlan and company-object "
+                   "fields with no errors") if ok else output[-1200:],
     }
 
 def check_rust_tests():

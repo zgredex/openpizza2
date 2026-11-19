@@ -400,9 +400,9 @@ size_t piz_container_encode(const PizContainer *container, uint8_t *buffer,
         offset += 4;
         for (uint32_t pair = 0; pair < pair_count; pair++) {
             put_u32(buffer, offset, company->pairs[pair].id);
-            offset += 4;
-            memcpy(buffer + offset, &company->pairs[pair].value, 8);
-            offset += 8;
+            put_u32(buffer, offset + 4, company->pairs[pair].type);
+            put_u32(buffer, offset + 8, company->pairs[pair].state);
+            offset += 12;
         }
         uint32_t big_count = company->big_count;
         if (big_count > PIZ_MAX_BIG_PER_COMPANY) {
@@ -753,7 +753,8 @@ bool piz_container_decode(PizContainer *container, const uint8_t *buffer,
                 return false;
             }
             company->pairs[pair].id = get_u32(buffer, offset);
-            memcpy(&company->pairs[pair].value, buffer + offset + 4, 8);
+            company->pairs[pair].type = get_u32(buffer, offset + 4);
+            company->pairs[pair].state = get_u32(buffer, offset + 8);
             offset += PAIR_BODY_SIZE;
         }
         uint32_t big_count = get_u32(buffer, offset);

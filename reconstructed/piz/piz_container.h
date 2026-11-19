@@ -127,8 +127,9 @@ typedef struct PizPlanRecord {
 } PizPlanRecord;
 
 typedef struct PizPairRecord {
-    uint32_t id;
-    uint64_t value;
+    uint32_t id;    /* company object ID */
+    uint32_t type;  /* object type, e.g. 0x17 */
+    uint32_t state; /* object state */
 } PizPairRecord;
 
 typedef struct PizBigRecord {

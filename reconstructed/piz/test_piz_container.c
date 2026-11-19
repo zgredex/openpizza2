@@ -108,7 +108,8 @@ static PizContainer make_container(void) {
     strcpy(container.companies[0].storage[0].name, "London storage");
     container.companies[0].pair_count = 1;
     container.companies[0].pairs[0].id = 9;
-    container.companies[0].pairs[0].value = 0x1122334455667788ull;
+    container.companies[0].pairs[0].type = 0x17;
+    container.companies[0].pairs[0].state = 1;
     container.companies[0].big_count = 1;
     container.companies[0].big[0].data[0] = 0xab;
     container.companies[0].big[0].data[0x1a0 - 1] = 0xcd;
@@ -211,7 +212,8 @@ static void test_round_trip(const char *write_path) {
     assert(strcmp(restored.companies[0].storage[0].name, "London storage") == 0);
     assert(restored.companies[0].pair_count == 1);
     assert(restored.companies[0].pairs[0].id == 9);
-    assert(restored.companies[0].pairs[0].value == 0x1122334455667788ull);
+    assert(restored.companies[0].pairs[0].type == 0x17);
+    assert(restored.companies[0].pairs[0].state == 1);
     assert(restored.companies[0].big_count == 1);
     assert(restored.companies[0].big[0].data[0] == 0xab);
     assert(restored.companies[0].big[0].data[0x1a0 - 1] == 0xcd);

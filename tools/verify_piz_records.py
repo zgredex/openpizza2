@@ -98,7 +98,7 @@ def main() -> int:
           and result["company_slot0_storage"] == [
               {"id": 7, "name": "London storage"}]
           and result["company_slot0_pairs"] == [
-              {"id": 9, "value": 0x1122334455667788}]
+              {"id": 9, "type": 0x17, "state": 1}]
           and result["company_slot0_big_count"] == 1)
     result["ok"] = ok
     print(json.dumps(result, separators=(",", ":")))

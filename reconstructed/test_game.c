@@ -1038,7 +1038,8 @@ int main(void) {
     strcpy(piz.companies[0].storage[0].name, "London storage");
     piz.companies[0].pair_count = 1;
     piz.companies[0].pairs[0].id = 9;
-    piz.companies[0].pairs[0].value = 0x1122334455667788ull;
+    piz.companies[0].pairs[0].type = 0x17;
+    piz.companies[0].pairs[0].state = 1;
     piz.companies[0].big_count = 1;
     piz.companies[0].big[0].data[0] = 0xab;
     uint8_t piz_buffer[PIZ_MAX_CONTAINER_SIZE];
@@ -1083,7 +1084,8 @@ int main(void) {
     assert(strcmp(piz_loaded.companies[0].storage[0].name, "London storage") == 0);
     assert(piz_loaded.companies[0].pair_count == 1);
     assert(piz_loaded.companies[0].pairs[0].id == 9);
-    assert(piz_loaded.companies[0].pairs[0].value == 0x1122334455667788ull);
+    assert(piz_loaded.companies[0].pairs[0].type == 0x17);
+    assert(piz_loaded.companies[0].pairs[0].state == 1);
     assert(piz_loaded.companies[0].big_count == 1);
     assert(piz_loaded.companies[0].big[0].data[0] == 0xab);
 

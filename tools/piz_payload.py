@@ -490,9 +490,11 @@ class PizSave:
                     if pos + 12 > end:
                         raise ValueError(f"pair {pair_index} past region")
                     pair_id = self._u32(pos)
-                    pair_value = struct.unpack_from("<Q", self.data, pos + 4)[0]
+                    pair_type = self._u32(pos + 4)
+                    pair_state = self._u32(pos + 8)
                     pos += 12
-                    pairs.append({"id": pair_id, "value": pair_value})
+                    pairs.append({"id": pair_id, "type": pair_type,
+                                  "state": pair_state})
                 big_count = self._u32(pos)
                 pos += 4
                 if pos + big_count * 0x1a0 > end:
