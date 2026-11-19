@@ -719,18 +719,19 @@ bool screen_render_branch_details(RenderSurface *surface,
     return true;
 }
 
-bool screen_render_branch_offer(RenderSurface *surface, const RgbaSprite *panel,
-                                const RgbaSprite *separator,
+bool screen_render_branch_offer(RenderSurface *surface,
+                                const BranchOfferSprites *sprites,
                                 const uint8_t *font_data, size_t font_size,
                                 const FntInfo *font, const BranchOfferData *data) {
-    if (surface == NULL || font == NULL || data == NULL) {
+    if (surface == NULL || sprites == NULL || font == NULL || data == NULL) {
         return false;
     }
     const uint8_t background[4] = {22, 26, 34, 255};
     render_clear(surface, background);
     const int32_t window_x = 561;
     const int32_t window_y = 218;
-    if (panel != NULL && !render_blit(surface, panel, window_x, window_y)) {
+    if (sprites->panel != NULL &&
+        !render_blit(surface, sprites->panel, window_x, window_y)) {
         return false;
     }
     const uint8_t title_color[4] = {120, 20, 20, 255};
@@ -740,13 +741,6 @@ bool screen_render_branch_offer(RenderSurface *surface, const RgbaSprite *panel,
 
     draw_label(surface, font_data, font_size, font, window_x + 44, window_y + 5,
                "Expand stocks", title_color);
-    if (data->branch_name != NULL) {
-        draw_label(surface, font_data, font_size, font, window_x + 44,
-                   window_y + 24, data->branch_name, value_color);
-    }
-    draw_label(surface, font_data, font_size, font, window_x + 49,
-               window_y + 134, "Advantages", title_color);
-
     static const char *const group_names[8] = {
         "Kids", "Teens", "Students", "Louts",
         "Yuppies", "Big shots", "Gothics", "Tourist",
@@ -760,37 +754,60 @@ bool screen_render_branch_offer(RenderSurface *surface, const RgbaSprite *panel,
         int row = group / 4;
         draw_label(surface, font_data, font_size, font, window_x + group_x[column],
                    window_y + group_y[row], group_names[group], label_color);
-        if (data->ratings[group] != NULL) {
-            render_blit(surface, data->ratings[group],
+        if (sprites->ratings[group] != NULL) {
+            render_blit(surface, sprites->ratings[group],
                         window_x + rating_x[column], window_y + rating_y[row]);
         }
     }
 
-    if (separator != NULL) {
-        render_blit(surface, separator, window_x + 39, window_y + 242);
-        render_blit(surface, separator, window_x + 39, window_y + 297);
+    if (sprites->separator != NULL) {
+        render_blit(surface, sprites->separator, window_x + 39, window_y + 242);
+        render_blit(surface, sprites->separator, window_x + 39, window_y + 297);
     }
     draw_label(surface, font_data, font_size, font, window_x + 47,
-               window_y + 258, "Costs", label_color);
-    snprintf(value_text, sizeof(value_text), "%u", data->cost);
-    draw_label(surface, font_data, font_size, font, window_x + 102,
-               window_y + 258, value_text, value_color);
+               window_y + 258, "Costs:", label_color);
+    snprintf(value_text, sizeof(value_text), "%u$", data->cost);
+    uint32_t width = ui_measure_text(font, value_text);
+    draw_label(surface, font_data, font_size, font,
+               window_x + 102 + 80 - (int32_t)width, window_y + 258,
+               value_text, value_color);
     draw_label(surface, font_data, font_size, font, window_x + 47,
-               window_y + 279, "Length", label_color);
-    snprintf(value_text, sizeof(value_text), "%u days", data->expand_days);
-    draw_label(surface, font_data, font_size, font, window_x + 87,
-               window_y + 279, value_text, value_color);
-    snprintf(value_text, sizeof(value_text), "Capacity %u -> %u", data->capacity,
-             data->new_capacity);
-    draw_label(surface, font_data, font_size, font, window_x + 49,
-               window_y + 158, value_text, value_color);
+               window_y + 279, "Length:", label_color);
+    snprintf(value_text, sizeof(value_text), "%uTage", data->expand_days);
+    width = ui_measure_text(font, value_text);
+    draw_label(surface, font_data, font_size, font,
+               window_x + 87 + 55 - (int32_t)width, window_y + 279,
+               value_text, value_color);
 
-    const uint8_t button_idle[4] = {140, 180, 140, 220};
-    const uint8_t button_active[4] = {130, 230, 130, 235};
-    blend_rect(surface, window_x + 142, window_y + 272, 84, 24,
-               data->selected_button == 0 ? button_active : button_idle);
-    draw_label(surface, font_data, font_size, font, window_x + 158,
-               window_y + 276, "Expand", label_color);
+    if (sprites->button_background != NULL) {
+        for (int32_t tile = 0; tile < 84; tile += sprites->button_background->width) {
+            render_blit(surface, sprites->button_background,
+                        window_x + 142 + tile, window_y + 274);
+        }
+    }
+    if (data->selected_button == 0) {
+        blend_rect(surface, window_x + 142, window_y + 274, 84, 21,
+                   (const uint8_t[4]){255, 225, 120, 150});
+    }
+    width = ui_measure_text(font, "Expand");
+    draw_label(surface, font_data, font_size, font,
+               window_x + 142 + (84 - (int32_t)width) / 2, window_y + 276,
+               "Expand", label_color);
+
+    draw_label(surface, font_data, font_size, font, window_x + 49,
+               window_y + 134, "Advantages:", title_color);
+    draw_wrapped_text(surface, font_data, font_size, font, window_x + 49,
+                      window_y + 152, 180,
+                      " - greater capacity - better refrigeration - lower "
+                      "transport costs",
+                      label_color);
+    if (sprites->help_button != NULL) {
+        render_blit(surface, sprites->help_button, window_x + 11, window_y - 1);
+    }
+    if (sprites->storage_icon != NULL) {
+        render_blit(surface, sprites->storage_icon, window_x + 93,
+                    window_y + 48);
+    }
     return true;
 }
 

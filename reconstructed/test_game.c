@@ -776,39 +776,57 @@ int main(void) {
     uint8_t *bo_panel_pixels = NULL;
     uint8_t *bo_separator_pixels = NULL;
     uint8_t *bo_rating_pixels = NULL;
+    uint8_t *bo_help_pixels = NULL;
+    uint8_t *bo_button_pixels = NULL;
+    uint8_t *bo_storage_pixels = NULL;
     RgbaSprite bo_panel;
     RgbaSprite bo_separator;
     RgbaSprite bo_rating;
+    RgbaSprite bo_help;
+    RgbaSprite bo_button;
+    RgbaSprite bo_storage;
     assert(load_spr_asset("../extracted/sprites/submenue.spr", &bo_panel_pixels,
                           &bo_panel));
     assert(load_spr_asset("../extracted/sprites/trennzeile.spr",
                           &bo_separator_pixels, &bo_separator));
     assert(load_spr_asset("../extracted/sprites/bewertung__08.spr",
                           &bo_rating_pixels, &bo_rating));
-    BranchOfferData bo_data = {
-        .branch_name = "London branch",
-        .expand_days = 3,
-        .cost = 3422,
-        .capacity = 100,
-        .new_capacity = 150,
-        .selected_button = 0,
+    assert(load_spr_asset("../extracted/sprites/hilfebuttonsnip_00.spr",
+                          &bo_help_pixels, &bo_help));
+    assert(load_spr_asset("../extracted/sprites/textpb01__00.spr",
+                          &bo_button_pixels, &bo_button));
+    assert(load_spr_asset("../extracted/sprites/mg_h_lager_b4.spr",
+                          &bo_storage_pixels, &bo_storage));
+    BranchOfferSprites bo_sprites = {
+        .panel = &bo_panel,
+        .separator = &bo_separator,
+        .button_background = &bo_button,
+        .help_button = &bo_help,
+        .storage_icon = &bo_storage,
     };
     for (int index = 0; index < 8; index++) {
-        bo_data.ratings[index] = &bo_rating;
+        bo_sprites.ratings[index] = &bo_rating;
     }
+    const BranchOfferData bo_data = {
+        .expand_days = 3,
+        .cost = 3422,
+        .selected_button = 0,
+    };
     uint8_t *bo_frame = malloc(800 * 600 * 4);
     assert(bo_frame != NULL);
     RenderSurface bo_surface;
     assert(render_surface_init(&bo_surface, bo_frame, 800 * 600 * 4, 800, 600));
-    assert(screen_render_branch_offer(&bo_surface, &bo_panel, &bo_separator,
-                                      font_data, font_size, &font_info,
-                                      &bo_data));
+    assert(screen_render_branch_offer(&bo_surface, &bo_sprites, font_data,
+                                      font_size, &font_info, &bo_data));
     size_t bo_panel_offset = ((size_t)218 * 800 + 561) * 4;
     assert(memcmp(bo_frame + bo_panel_offset, bo_panel.pixels, 4) == 0);
     free(bo_frame);
     free(bo_panel_pixels);
     free(bo_separator_pixels);
     free(bo_rating_pixels);
+    free(bo_help_pixels);
+    free(bo_button_pixels);
+    free(bo_storage_pixels);
 
     uint8_t *po_panel_pixels = NULL;
     uint8_t *po_separator_pixels = NULL;

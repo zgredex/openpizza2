@@ -347,14 +347,26 @@ static void test_branch_offer_composition(void) {
     uint8_t *panel_pixels = NULL;
     uint8_t *separator_pixels = NULL;
     uint8_t *rating_pixels = NULL;
+    uint8_t *help_pixels = NULL;
+    uint8_t *button_pixels = NULL;
+    uint8_t *storage_pixels = NULL;
     RgbaSprite panel;
     RgbaSprite separator;
     RgbaSprite rating;
+    RgbaSprite help;
+    RgbaSprite button;
+    RgbaSprite storage;
     assert(load_spr("../extracted/sprites/submenue.spr", &panel_pixels, &panel));
     assert(load_spr("../extracted/sprites/trennzeile.spr", &separator_pixels,
                     &separator));
     assert(load_spr("../extracted/sprites/bewertung__08.spr", &rating_pixels,
                     &rating));
+    assert(load_spr("../extracted/sprites/hilfebuttonsnip_00.spr",
+                    &help_pixels, &help));
+    assert(load_spr("../extracted/sprites/textpb01__00.spr", &button_pixels,
+                    &button));
+    assert(load_spr("../extracted/sprites/mg_h_lager_b4.spr", &storage_pixels,
+                    &storage));
 
     size_t font_size = 0;
     uint8_t *font_data = load_file("../extracted/fonts/timesfont.fnt", &font_size);
@@ -362,23 +374,27 @@ static void test_branch_offer_composition(void) {
     FntInfo font;
     assert(fnt_read_info(font_data, font_size, &font));
 
-    BranchOfferData data = {
-        .branch_name = "London branch",
-        .expand_days = 3,
-        .cost = 3422,
-        .capacity = 100,
-        .new_capacity = 150,
-        .selected_button = 0,
+    BranchOfferSprites sprites = {
+        .panel = &panel,
+        .separator = &separator,
+        .button_background = &button,
+        .help_button = &help,
+        .storage_icon = &storage,
     };
     for (int index = 0; index < 8; index++) {
-        data.ratings[index] = &rating;
+        sprites.ratings[index] = &rating;
     }
+    const BranchOfferData data = {
+        .expand_days = 3,
+        .cost = 3422,
+        .selected_button = 0,
+    };
     size_t frame_size = 800 * 600 * 4;
     uint8_t *frame = malloc(frame_size);
     assert(frame != NULL);
     RenderSurface surface;
     assert(render_surface_init(&surface, frame, frame_size, 800, 600));
-    assert(screen_render_branch_offer(&surface, &panel, &separator, font_data,
+    assert(screen_render_branch_offer(&surface, &sprites, font_data,
                                       font_size, &font, &data));
     size_t panel_offset = ((size_t)218 * 800 + 561) * 4;
     assert(memcmp(frame + panel_offset, panel.pixels, 4) == 0);
@@ -410,9 +426,10 @@ static void test_branch_offer_composition(void) {
         }
     }
     assert(title_ink);
-    size_t button_offset = ((size_t)(218 + 274) * 800 + (561 + 215)) * 4;
-    assert(frame[button_offset + 1] > frame[button_offset]);
-    assert(!screen_render_branch_offer(&surface, &panel, &separator, font_data,
+    size_t button_offset = ((size_t)(218 + 276) * 800 + (561 + 220)) * 4;
+    assert(frame[button_offset] != 22 || frame[button_offset + 1] != 26 ||
+           frame[button_offset + 2] != 34);
+    assert(!screen_render_branch_offer(&surface, &sprites, font_data,
                                        font_size, &font, NULL));
 
     free(font_data);
@@ -420,6 +437,9 @@ static void test_branch_offer_composition(void) {
     free(panel_pixels);
     free(separator_pixels);
     free(rating_pixels);
+    free(help_pixels);
+    free(button_pixels);
+    free(storage_pixels);
 }
 
 static void test_personnel_overview_composition(void) {
