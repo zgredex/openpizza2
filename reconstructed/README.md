@@ -29,6 +29,9 @@ Current batches:
   entries from `Stats_Report_FillCompanyOverview` and the statistics screens.
 - `save/` — packed save blob: "PC2S" header, the 0x164-byte settings block,
   and the 0xD0 bytes emitted by `Player_MissionState_Save`.
+- `piz/` — minimal `.piz` container: 0xF0 header, 0x20 directory, start/end
+  markers and the SaveState payload. The header is recognised by
+  `tools/piz_payload.py` (magic 0x13738317, version 0x11, payload end 0x354).
 - `construction/` — `ConstructionOrder` 0x24 layout, enqueue cell index and
   completion ownership derived from `Branch_EnqueueConstructionOrder` and
   `Branch_CompleteConstruction`.
@@ -39,7 +42,7 @@ Current batches:
   loop.
 - `pc2-reconstructed` — full-game build target (`make full-game`) running the
   menu → character select → mission briefing → options/autosave → London
-  mission → save round trip.
+  mission → save and `.piz` container round trip.
 
 Build and run:
 
