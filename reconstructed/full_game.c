@@ -12,6 +12,7 @@
 #include "ai/ai_state.h"
 #include "render/render_state.h"
 #include "operations/branch_operations.h"
+#include "assets/assets.h"
 #include "statistics/statistics_state.h"
 #include "settings/settings.h"
 #include "ui_screen/ui_screen.h"
@@ -108,6 +109,17 @@ int main(void) {
     SaveState loaded;
     assert(save_state_decode(&loaded, buffer, written));
     assert(mission_all_goals_complete(&loaded.mission));
+
+    FntInfo font_info;
+    FILE *font_file = fopen("../extracted/fonts/timesfont.fnt", "rb");
+    if (font_file != NULL) {
+        uint8_t font_data[32768];
+        size_t font_size = fread(font_data, 1, sizeof(font_data), font_file);
+        fclose(font_file);
+        assert(fnt_read_info(font_data, font_size, &font_info));
+        assert(font_info.line_height == 23);
+        assert(font_info.max_width == 18);
+    }
 
     BranchOperations operations;
     branch_operations_init(&operations, 5730.0);

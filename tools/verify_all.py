@@ -1210,6 +1210,7 @@ def check_reconstructed_c():
           and "personnel state reconstruction: OK" in output
           and "render state reconstruction: OK" in output
           and "branch operations reconstruction: OK" in output
+          and "SPR/FNT asset reconstruction: OK" in output
           and "save state reconstruction: OK" in output
           and "piz container reconstruction: OK" in output
           and "construction state reconstruction: OK" in output
@@ -1222,7 +1223,7 @@ def check_reconstructed_c():
         "detail": ("module tests, unified target and pc2-reconstructed full-game "
                    "target compile with gcc -std=c11 -Werror and pass; piz "
                    "container, options/autosave, statistics, AI, recipes, "
-                   "personnel, render and operations included")
+                   "personnel, render, operations and SPR/FNT assets included")
         if ok else output[-1200:],
     }
 

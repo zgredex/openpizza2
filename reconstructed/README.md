@@ -30,6 +30,9 @@ Current batches:
 - `render/` — RGBA render surface, clipped fill/blit with alpha, and TGA
   decoding for uncompressed and RLE 24/32-bit true-colour plus 8-bit
   grayscale images.
+- `assets/` — SPR 8/16bpp alpha/RLE/raw decoder and FNT glyph decoder,
+  exercised against `extracted/sprites/pb24_01.spr` and
+  `extracted/fonts/timesfont.fnt`.
 - `operations/` — branch period accounting: sale revenue, ingredient cost,
   payroll, rent, advertising, profit and period close.
 - `ai/` — customer visit state machine (walk 260, production 180, service 80)
