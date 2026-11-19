@@ -194,6 +194,47 @@ int main(void) {
         free(tga_data);
     }
 
+    tga_data = NULL;
+    tga_size = 0;
+    tga_file = fopen("../extracted/pictures/pe_missionsbriefing_lon.tga", "rb");
+    if (tga_file != NULL) {
+        fseek(tga_file, 0, SEEK_END);
+        long briefing_length = ftell(tga_file);
+        fseek(tga_file, 0, SEEK_SET);
+        if (briefing_length > 0) {
+            tga_data = malloc((size_t)briefing_length);
+            if (tga_data != NULL) {
+                tga_size = fread(tga_data, 1, (size_t)briefing_length, tga_file);
+            }
+        }
+        fclose(tga_file);
+    }
+    if (tga_data != NULL && font_size > 0) {
+        size_t briefing_frame_size = 800 * 600 * 4;
+        uint8_t *briefing_frame = malloc(briefing_frame_size);
+        uint8_t *briefing_decoded = malloc(briefing_frame_size);
+        assert(briefing_frame != NULL);
+        assert(briefing_decoded != NULL);
+        RenderSurface briefing_surface;
+        assert(render_surface_init(&briefing_surface, briefing_frame,
+                                   briefing_frame_size, 800, 600));
+        int briefing_lines = screen_render_briefing(
+            &briefing_surface, tga_data, tga_size, font_data, font_size,
+            &font_info, "London",
+            "You begin your life as - hopefully - a successful pizza chef. Your "
+            "boss sits in New York and has selected you from the many "
+            "applications to be his new regional manager. Since the English are "
+            "infamous for having no taste where food is concerned, you shouldn't "
+            "have too much of a problem conquering the city with your tasty "
+            "pizzas.",
+            "Press any key to continue", briefing_decoded, briefing_frame_size);
+        assert(briefing_lines >= 4);
+        assert(memcmp(briefing_frame, briefing_decoded, briefing_frame_size) != 0);
+        free(briefing_decoded);
+        free(briefing_frame);
+        free(tga_data);
+    }
+
     BranchOperations operations;
     branch_operations_init(&operations, 5730.0);
     branch_operations_record_sale(&operations, 13.80, 0.3794752876341939);

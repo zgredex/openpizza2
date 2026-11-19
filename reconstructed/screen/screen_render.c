@@ -1,5 +1,6 @@
 #include "screen_render.h"
 
+#include <stdio.h>
 #include <string.h>
 
 #include "../ui_render/ui_render.h"
@@ -53,6 +54,72 @@ bool screen_render_background(RenderSurface *surface, const uint8_t *tga_data,
     return true;
 }
 
+static int draw_wrapped_text(RenderSurface *surface, const uint8_t *font_data,
+                             size_t font_size, const FntInfo *font, int32_t x,
+                             int32_t y, uint32_t max_width, const char *text,
+                             const uint8_t rgba[4]) {
+    if (surface == NULL || font == NULL || text == NULL) {
+        return -1;
+    }
+    char line[256];
+    size_t line_length = 0;
+    int lines = 0;
+    const char *cursor = text;
+    while (*cursor != 0) {
+        while (*cursor == ' ') {
+            cursor += 1;
+        }
+        if (*cursor == 0) {
+            break;
+        }
+        size_t word_length = 0;
+        while (cursor[word_length] != 0 && cursor[word_length] != ' ') {
+            word_length += 1;
+        }
+        char candidate[256];
+        size_t copy = line_length;
+        if (copy > sizeof(candidate) - 1) {
+            copy = sizeof(candidate) - 1;
+        }
+        memcpy(candidate, line, copy);
+        if (copy > 0 && copy < sizeof(candidate) - 1) {
+            candidate[copy++] = ' ';
+        }
+        size_t take = word_length;
+        if (copy + take > sizeof(candidate) - 1) {
+            take = sizeof(candidate) - 1 - copy;
+        }
+        memcpy(candidate + copy, cursor, take);
+        copy += take;
+        candidate[copy] = 0;
+        if (line_length > 0 && ui_measure_text(font, candidate) > max_width) {
+            if (!ui_draw_text(surface, font_data, font_size, font, x, y, line, rgba)) {
+                return -1;
+            }
+            lines += 1;
+            y += font->line_height;
+            line_length = 0;
+            copy = 0;
+            if (take > sizeof(candidate) - 1) {
+                take = sizeof(candidate) - 1;
+            }
+            memcpy(candidate, cursor, take);
+            copy = take;
+            candidate[copy] = 0;
+        }
+        memcpy(line, candidate, copy + 1);
+        line_length = copy;
+        cursor += word_length;
+    }
+    if (line_length > 0) {
+        if (!ui_draw_text(surface, font_data, font_size, font, x, y, line, rgba)) {
+            return -1;
+        }
+        lines += 1;
+    }
+    return lines;
+}
+
 bool screen_render_menu(RenderSurface *surface, const uint8_t *tga_data,
                         size_t tga_size, const uint8_t *font_data,
                         size_t font_size, const FntInfo *font,
@@ -88,4 +155,44 @@ bool screen_render_menu(RenderSurface *surface, const uint8_t *tga_data,
                      (int32_t)surface->height - 30, menu->status, status_color);
     }
     return true;
+}
+
+int screen_render_briefing(RenderSurface *surface, const uint8_t *tga_data,
+                           size_t tga_size, const uint8_t *font_data,
+                           size_t font_size, const FntInfo *font,
+                           const char *title, const char *body,
+                           const char *prompt, uint8_t *decode_buffer,
+                           size_t decode_capacity) {
+    if (font == NULL || title == NULL || body == NULL) {
+        return -1;
+    }
+    if (!screen_render_background(surface, tga_data, tga_size, decode_buffer,
+                                  decode_capacity)) {
+        return -1;
+    }
+    const uint8_t panel[4] = {10, 12, 24, 190};
+    const uint8_t title_color[4] = {255, 225, 120, 255};
+    const uint8_t body_color[4] = {245, 245, 245, 255};
+    const uint8_t prompt_color[4] = {180, 200, 255, 255};
+    int32_t panel_x = 60;
+    int32_t panel_y = 70;
+    int32_t panel_w = (int32_t)surface->width - 120;
+    int32_t panel_h = (int32_t)surface->height - 180;
+    blend_rect(surface, panel_x, panel_y, panel_w, panel_h, panel);
+
+    if (!ui_draw_text(surface, font_data, font_size, font, panel_x + 24,
+                      panel_y + 18, title, title_color)) {
+        return -1;
+    }
+    int lines = draw_wrapped_text(surface, font_data, font_size, font,
+                                  panel_x + 24, panel_y + 60,
+                                  (uint32_t)panel_w - 48, body, body_color);
+    if (lines < 0) {
+        return -1;
+    }
+    if (prompt != NULL) {
+        ui_draw_text(surface, font_data, font_size, font, panel_x + 24,
+                     panel_y + panel_h - 38, prompt, prompt_color);
+    }
+    return lines;
 }

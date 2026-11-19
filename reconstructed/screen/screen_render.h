@@ -21,5 +21,13 @@ bool screen_render_menu(RenderSurface *surface, const uint8_t *tga_data,
                         size_t font_size, const FntInfo *font,
                         const MenuState *menu, uint8_t *decode_buffer,
                         size_t decode_capacity);
+/* Draws the London briefing page over the shipped briefing TGA. Returns the
+ * number of wrapped body lines drawn, or -1 on failure. */
+int screen_render_briefing(RenderSurface *surface, const uint8_t *tga_data,
+                           size_t tga_size, const uint8_t *font_data,
+                           size_t font_size, const FntInfo *font,
+                           const char *title, const char *body,
+                           const char *prompt, uint8_t *decode_buffer,
+                           size_t decode_capacity);
 
 #endif

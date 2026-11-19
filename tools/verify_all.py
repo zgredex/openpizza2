@@ -1226,7 +1226,8 @@ def check_reconstructed_c():
                    "target compile with gcc -std=c11 -Werror and pass; piz "
                    "container, options/autosave, statistics, AI, recipes, "
                    "personnel, render, operations, SPR/FNT assets and UI "
-                   "composition and screen render included")
+                   "composition, startscreen menu and London briefing screens "
+                   "included")
         if ok else output[-1200:],
     }
 
