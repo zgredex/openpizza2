@@ -172,4 +172,32 @@ int32_t game_find_city_index(int32_t city_id);
 /* Game_GetDataByIndex (0x48D110): customer/staff labels. */
 const char *game_get_data_by_index(int32_t index);
 
+/* Array_FindEmptySlot8 (0x4E4180): first slot with id -1, or -1. */
+int32_t array_find_empty_slot8(const int16_t slots[8][6]);
+
+typedef struct EventQueueEntry {
+    int32_t id;
+    int32_t field4;
+    int32_t state;
+    int32_t field12;
+    int32_t field16;
+} EventQueueEntry;
+
+typedef struct EventQueueState {
+    uint32_t head;
+    uint32_t tail;
+    EventQueueEntry entries[1024];
+} EventQueueState;
+
+/* EventQueue_SetEntryState22 (0x525B70). */
+void event_queue_set_entry_state22(EventQueueState *queue, int32_t id);
+
+/* Employee_NextSpriteVariant (0x549930); returns '1' or '2'. */
+char employee_next_sprite_variant(int32_t *variants, size_t index,
+                                  int32_t minimum, int32_t maximum);
+
+/* Building_ResetInventory (0x4FF9E0). */
+void building_reset_inventory(uint8_t *building, uint8_t *inventory,
+                              const int32_t *scenario_table);
+
 #endif

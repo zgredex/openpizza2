@@ -402,6 +402,80 @@ static void test_setters_and_tables(void) {
     assert(strcmp(game_get_data_by_index(99), "???") == 0);
 }
 
+static void test_leaf_queue_and_inventory(void) {
+    int16_t slots[8][6] = {{0}};
+    slots[3][0] = -1;
+    assert(array_find_empty_slot8(slots) == 3);
+    for (int index = 0; index < 8; index++) {
+        slots[index][0] = -1;
+    }
+    assert(array_find_empty_slot8(slots) == 0);
+    for (int index = 0; index < 8; index++) {
+        slots[index][0] = 1;
+    }
+    assert(array_find_empty_slot8(slots) == -1);
+    assert(array_find_empty_slot8(NULL) == -1);
+
+    EventQueueState queue;
+    memset(&queue, 0, sizeof(queue));
+    queue.head = 1023;
+    queue.tail = 2;
+    queue.entries[1023].id = 5;
+    queue.entries[0].id = 6;
+    queue.entries[1].id = 5;
+    event_queue_set_entry_state22(&queue, 5);
+    assert(queue.entries[1023].state == 0x22);
+    assert(queue.entries[1].state == 0x22);
+    assert(queue.entries[0].state == 0);
+    queue.head = 0;
+    queue.tail = 0;
+    event_queue_set_entry_state22(&queue, 5);
+    event_queue_set_entry_state22(NULL, 5);
+
+    int32_t variants[1] = {1};
+    assert(employee_next_sprite_variant(variants, 0, 0, 3) == '1');
+    assert(variants[0] == 2);
+    assert(employee_next_sprite_variant(variants, 0, 0, 3) == '2');
+    assert(variants[0] == 3);
+    assert(employee_next_sprite_variant(variants, 0, 0, 3) == '1');
+    assert(variants[0] == 0);
+    variants[0] = 2;
+    assert(employee_next_sprite_variant(variants, 0, 3, 3) == '2');
+    assert(employee_next_sprite_variant(NULL, 0, 0, 3) == '1');
+
+    size_t building_size = 2 * 0x168 + 0x200;
+    uint8_t *building = calloc(building_size, 1);
+    uint8_t *inventory = calloc(0x120, 1);
+    int32_t *scenario_table = calloc(0x100, sizeof(int32_t));
+    assert(building != NULL && inventory != NULL && scenario_table != NULL);
+    int32_t index = 2;
+    memcpy(inventory + 0x4c, &index, sizeof(index));
+    int32_t scenario_index = 1;
+    memcpy(building + 2 * 0x168 + 0x40, &scenario_index,
+           sizeof(scenario_index));
+    scenario_table[0x30] = 1000;
+    memset(building + 2 * 0x168 + 0x74, 0xff, 10 * 16);
+    building_reset_inventory(building, inventory, scenario_table);
+    double amount = 0.0;
+    memcpy(&amount, inventory + 0x108, sizeof(amount));
+    assert(amount == 500000.0);
+    for (int slot = 0; slot < 10; slot++) {
+        int32_t first = 0;
+        int32_t last = 0;
+        memcpy(&first, building + 2 * 0x168 + 0x74 + slot * 16, 4);
+        memcpy(&last, building + 2 * 0x168 + 0x74 + slot * 16 + 12, 4);
+        assert(first == -1);
+        assert(last == 0);
+    }
+    int32_t state = 0;
+    memcpy(&state, building + 2 * 0x168 + 0x12c, sizeof(state));
+    assert(state == 3);
+    building_reset_inventory(NULL, inventory, scenario_table);
+    free(building);
+    free(inventory);
+    free(scenario_table);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -420,6 +494,7 @@ int main(void) {
     test_game_leafs();
     test_more_leafs();
     test_setters_and_tables();
+    test_leaf_queue_and_inventory();
     puts("leaf function reconstruction: OK");
     return 0;
 }

@@ -739,3 +739,76 @@ const char *game_get_data_by_index(int32_t index) {
         return "???";
     }
 }
+
+int32_t array_find_empty_slot8(const int16_t slots[8][6]) {
+    if (slots == NULL) {
+        return -1;
+    }
+    for (int32_t index = 0; index < 8; index++) {
+        if (slots[index][0] == -1) {
+            return index;
+        }
+    }
+    return -1;
+}
+
+void event_queue_set_entry_state22(EventQueueState *queue, int32_t id) {
+    if (queue == NULL) {
+        return;
+    }
+    uint32_t index = queue->head;
+    if (index != queue->tail) {
+        do {
+            if (queue->entries[index].id == id) {
+                queue->entries[index].state = 0x22;
+            }
+            index = (index + 1) & 0x3ffu;
+        } while (index != queue->tail);
+    }
+}
+
+char employee_next_sprite_variant(int32_t *variants, size_t index,
+                                  int32_t minimum, int32_t maximum) {
+    if (variants == NULL) {
+        return '1';
+    }
+    int32_t previous = variants[index];
+    if (minimum < maximum) {
+        int32_t next = minimum;
+        if (previous != maximum) {
+            next = previous + 1;
+        }
+        variants[index] = next;
+    }
+    if (previous == 1 || previous != 2) {
+        return '1';
+    }
+    return '2';
+}
+
+void building_reset_inventory(uint8_t *building, uint8_t *inventory,
+                              const int32_t *scenario_table) {
+    if (building == NULL || inventory == NULL || scenario_table == NULL) {
+        return;
+    }
+    int32_t index = 0;
+    memcpy(&index, inventory + 0x4c, sizeof(index));
+    size_t base = (size_t)index * 0x168u;
+    int32_t scenario_index = 0;
+    memcpy(&scenario_index, building + base + 0x40, sizeof(scenario_index));
+    int32_t value = (scenario_table[(size_t)scenario_index * 0x30u] * 50000) /
+                    100;
+    double amount = (double)value;
+    memcpy(inventory + 0x108, &amount, sizeof(amount));
+
+    uint8_t *record = building + base + 0x74;
+    for (size_t slot = 0; slot < 10; slot++) {
+        int32_t first = -1;
+        int32_t last = 0;
+        memcpy(record + 0, &first, sizeof(first));
+        memcpy(record + 12, &last, sizeof(last));
+        record += 16;
+    }
+    int32_t state = 3;
+    memcpy(building + base + 0x12c, &state, sizeof(state));
+}
