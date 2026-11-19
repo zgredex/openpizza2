@@ -1928,6 +1928,46 @@ static void test_lookup_initializers(void) {
     free(neighbors);
 }
 
+static void test_reference_list_window(void) {
+    uint8_t object[0x1700] = {0};
+    uint8_t child[0xa0] = {0};
+    uintptr_t child_pointer = (uintptr_t)child;
+    memcpy(object + 0x16f0, &child_pointer, sizeof(child_pointer));
+    game_set_child_field94(object, 77);
+    assert(read_i32_at(child, 0x94) == 77);
+
+    int32_t slot = 42;
+    assert(game_clear_object_references(&slot, 42));
+    assert(slot == 0);
+    slot = 7;
+    assert(!game_clear_object_references(&slot, 42));
+    assert(slot == 7);
+    assert(!game_clear_object_references(NULL, 42));
+
+    const char *names[3] = {"London", "Paris", "Berlin"};
+    assert(city_get_localized_name(names, 3, 1) == names[1]);
+    assert(city_get_localized_name(names, 3, 3) == NULL);
+    assert(city_get_localized_name(NULL, 3, 0) == NULL);
+
+    const int32_t nodes[8] = {
+        0, 0,
+        11, 2,
+        22, 3,
+        33, 0,
+    };
+    assert(list_find_by_key(nodes, 1, 33) == 3);
+    assert(list_find_by_key(nodes, 1, 22) == 2);
+    assert(list_find_by_key(nodes, 1, 44) == 0);
+    assert(list_find_by_key(nodes, 3, 11) == 0);
+
+    uint8_t window[0x1b0] = {0};
+    write_i32_at(window, 0x1a8, 5);
+    write_i32_at(window, 4, 6);
+    window_clear_state(window);
+    assert(read_i32_at(window, 0x1a8) == 0);
+    assert(read_i32_at(window, 4) == 0);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -1970,6 +2010,7 @@ int main(void) {
     test_sprite_player_defaults();
     test_building_datetime();
     test_lookup_initializers();
+    test_reference_list_window();
     puts("leaf function reconstruction: OK");
     return 0;
 }

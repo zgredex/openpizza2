@@ -3151,3 +3151,53 @@ int32_t map_count_buildable_neighbors(const uint8_t *base, int32_t first,
     }
     return count;
 }
+
+void game_set_child_field94(uint8_t *object, int32_t value) {
+    if (object == NULL) {
+        return;
+    }
+    uintptr_t child;
+    memcpy(&child, object + 0x16f0, sizeof(child));
+    if (child != 0) {
+        write_i32((uint8_t *)child + 0x94, value);
+    }
+}
+
+bool game_clear_object_references(int32_t *slot, int32_t value) {
+    if (slot == NULL || *slot != value) {
+        return false;
+    }
+    *slot = 0;
+    return true;
+}
+
+const char *city_get_localized_name(const char *const *names, size_t count,
+                                    int32_t index) {
+    if (names == NULL || index < 0 || (size_t)index >= count) {
+        return NULL;
+    }
+    return names[index];
+}
+
+int32_t list_find_by_key(const int32_t *nodes, int32_t head, int32_t key) {
+    if (nodes == NULL) {
+        return -1;
+    }
+    int32_t current = head;
+    while (current != 0 && current != -1) {
+        int32_t node_key = nodes[current * 2];
+        if (node_key == key) {
+            return current;
+        }
+        current = nodes[current * 2 + 1];
+    }
+    return 0;
+}
+
+void window_clear_state(uint8_t *window) {
+    if (window == NULL) {
+        return;
+    }
+    write_i32(window + 0x1a8, 0);
+    write_i32(window + 4, 0);
+}

@@ -628,6 +628,14 @@ void file_object_init_base(uint8_t *object, const void *vtable);
 int32_t map_count_buildable_neighbors(const uint8_t *base, int32_t first,
                                       int32_t second, int32_t offset);
 
+/* Small reference/list/window helpers. */
+void game_set_child_field94(uint8_t *object, int32_t value);
+bool game_clear_object_references(int32_t *slot, int32_t value);
+const char *city_get_localized_name(const char *const *names, size_t count,
+                                    int32_t index);
+int32_t list_find_by_key(const int32_t *nodes, int32_t head, int32_t key);
+void window_clear_state(uint8_t *window);
+
 /* Game_GetActiveScreenOrFallback (0x482910). */
 int32_t game_get_active_screen_or_fallback(const uint8_t *game);
 
