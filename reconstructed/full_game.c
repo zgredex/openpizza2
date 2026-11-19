@@ -9,6 +9,7 @@
 #include "piz/piz_container.h"
 #include "personnel/personnel_state.h"
 #include "recipes/recipe_state.h"
+#include "ai/ai_state.h"
 #include "statistics/statistics_state.h"
 #include "settings/settings.h"
 #include "ui_screen/ui_screen.h"
@@ -105,6 +106,20 @@ int main(void) {
     SaveState loaded;
     assert(save_state_decode(&loaded, buffer, written));
     assert(mission_all_goals_complete(&loaded.mission));
+
+    CustomerAIState customer_ai;
+    customer_ai_init(&customer_ai);
+    assert(customer_ai_enqueue(&customer_ai, 1));
+    CustomerAIEvents ai_events = customer_ai_advance_ticks(
+        &customer_ai, CUSTOMER_WALK_TICKS + CUSTOMER_PRODUCTION_TICKS +
+                          CUSTOMER_SERVICE_TICKS);
+    assert(ai_events.sales == 1);
+    assert(ai_events.departures == 1);
+    CompetitorAIState rival_ai;
+    competitor_ai_init(&rival_ai, 1);
+    competitor_ai_update(&rival_ai, 250000.0, 4, 12, 3250, 7);
+    assert(rival_ai.branch_count == 4);
+    assert(rival_ai.plan_steps == 7);
 
     BranchMenu menu_state;
     branch_menu_init(&menu_state, 1);

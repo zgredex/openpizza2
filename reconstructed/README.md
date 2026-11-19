@@ -27,6 +27,8 @@ Current batches:
   0x568D88 autosave interval table (1..120).
 - `statistics/` — company overview counts/rank/share and branch-balance
   entries from `Stats_Report_FillCompanyOverview` and the statistics screens.
+- `ai/` — customer visit state machine (walk 260, production 180, service 80)
+  and competitor AI plan snapshot.
 - `recipes/` — recipe toppings, base price, branch-menu assignment and the
   `Branch_ComputeRecipePrice` formula.
 - `personnel/` — staff roster, profession, skill/speed/motivation/health,
