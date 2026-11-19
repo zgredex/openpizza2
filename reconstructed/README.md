@@ -18,6 +18,10 @@ Current batches:
 - `branch/` — one-serving branch economy, price formula and sale arithmetic
   using the Rust-verified constants (`13.420524712365806` cash delta at price
   `12`).
+- `city/` — city/branch state, London lease, HQ/rat mission actions and branch
+  sale integration.
+- `test_game` — one executable linking settings, ingredient, mission, branch and
+  city modules through the full London loop.
 
 Build and run:
 

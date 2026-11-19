@@ -19,6 +19,14 @@ BRANCH_SRC = branch/branch_economy.c branch/test_branch_economy.c
 BRANCH_HDR = branch/branch_economy.h
 BRANCH_BIN = $(BUILD)/test_branch_economy
 
+CITY_SRC = city/city_state.c city/test_city_state.c $(MISSION_STATE_SRC) branch/branch_economy.c
+CITY_HDR = city/city_state.h $(MISSION_STATE_HDR) branch/branch_economy.h
+CITY_BIN = $(BUILD)/test_city_state
+
+GAME_SRC = settings/settings.c ingredient/ingredient.c mission/mission_state.c \
+           mission/mission_goals.c branch/branch_economy.c city/city_state.c test_game.c
+GAME_BIN = $(BUILD)/test_game
+
 .PHONY: all check clean
 
 all: check
@@ -43,12 +51,22 @@ $(BRANCH_BIN): $(BRANCH_SRC) $(BRANCH_HDR)
 	@mkdir -p $(BUILD)
 	$(CC) $(CFLAGS) $(BRANCH_SRC) -lm -o $@
 
-check: $(SETTINGS_BIN) $(INGREDIENT_BIN) $(MISSION_STATE_BIN) $(MISSION_GOALS_BIN) $(BRANCH_BIN)
+$(CITY_BIN): $(CITY_SRC) $(CITY_HDR)
+	@mkdir -p $(BUILD)
+	$(CC) $(CFLAGS) $(CITY_SRC) -lm -o $@
+
+$(GAME_BIN): $(GAME_SRC) $(CITY_HDR) $(BRANCH_HDR) $(INGREDIENT_HDR) $(SETTINGS_HDR)
+	@mkdir -p $(BUILD)
+	$(CC) $(CFLAGS) $(GAME_SRC) -lm -o $@
+
+check: $(SETTINGS_BIN) $(INGREDIENT_BIN) $(MISSION_STATE_BIN) $(MISSION_GOALS_BIN) $(BRANCH_BIN) $(CITY_BIN) $(GAME_BIN)
 	./$(SETTINGS_BIN)
 	./$(INGREDIENT_BIN)
 	./$(MISSION_STATE_BIN)
 	./$(MISSION_GOALS_BIN)
 	./$(BRANCH_BIN)
+	./$(CITY_BIN)
+	./$(GAME_BIN)
 
 clean:
 	rm -rf $(BUILD)

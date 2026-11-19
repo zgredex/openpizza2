@@ -1200,13 +1200,14 @@ def check_reconstructed_c():
           and "ingredient descriptor reconstruction: OK" in output
           and "mission state reconstruction: OK" in output
           and "mission goals reconstruction: OK" in output
-          and "branch economy reconstruction: OK" in output)
+          and "branch economy reconstruction: OK" in output
+          and "city branch state reconstruction: OK" in output
+          and "unified game reconstruction: OK" in output)
     return {
         "name": "reconstructed C build",
         "ok": ok,
-        "detail": ("settings defaults, ingredient descriptor, mission state, "
-                   "mission goals and branch economy compile with gcc -std=c11 "
-                   "-Werror and pass their assertions")
+        "detail": ("six module tests plus the unified city/mission/branch "
+                   "target compile with gcc -std=c11 -Werror and pass")
         if ok else output[-1200:],
     }
 
