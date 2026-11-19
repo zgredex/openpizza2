@@ -1,0 +1,451 @@
+{
+  "schema": "pc2.evidence.routines.v1",
+  "path": "London ownership goal (branch +0x16F4)",
+  "executable": {
+    "path": "game/fastfood2.exe",
+    "sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd"
+  },
+  "field": {
+    "offset": "0x16F4",
+    "width": 1,
+    "meaning": "branch ownership flag: 1 = owned/bought, 0 = rented",
+    "goal_gate": {
+      "goal_4": "byte == 1 and branch +0x38 > 0",
+      "goal_0x1B": "byte == 1 and branch +0x38 > 1"
+    }
+  },
+  "routines": [
+    {
+      "address": "0x476b60",
+      "name": "Branch_Construct",
+      "signature": "undefined4 *__thiscall Branch_Construct(void *this, int param_1, undefined4 param_2, undefined4 param_3)",
+      "callers": ["Branch_ConstructFromStream", "Company_Load", "Player_CreateBranch"],
+      "reads": [
+        "construction arguments param_1/param_2/param_3"
+      ],
+      "writes": [
+        "+0x16F4 byte = 1 (default owned flag)"
+      ],
+      "calls": [
+        "Branch_ApplyBuildingStyleVariant",
+        "Game_GetSizeName",
+        "Game_RegisterWorldObject",
+        "Grid_RebuildStreetNodes",
+        "IsoMap_Construct",
+        "List_Add",
+        "List_Construct",
+        "Map_CollectType351ToList",
+        "Object_GetBufferCount",
+        "Stats_Report_ConstructEmpty",
+        "Stats_ResetAverages"
+      ],
+      "instruction_sites": [
+        {
+          "address": "0x476d54",
+          "access": "write",
+          "width": 1,
+          "value": 1,
+          "evidence": "mov BYTE PTR [esi+0x16f4],0x1"
+        }
+      ],
+      "initializers": [
+        "Default constructor value: every newly constructed branch begins owned."
+      ],
+      "assumptions": []
+    },
+    {
+      "address": "0x4f7ed0",
+      "name": "AI_Action_BuyOrRentBranch",
+      "signature": "undefined4 __thiscall AI_Action_BuyOrRentBranch(void *this, int param_1)",
+      "callers": ["Company_ExecuteAction"],
+      "reads": [
+        "AI branch-site candidates and trade offers",
+        "new branch record resolved with IDMap_Lookup"
+      ],
+      "writes": [
+        "+0x16F4 byte = 0 on the rent path",
+        "+0x16F4 byte = 1 on the buy path",
+        "+0x14B0 32-bit lease/price field",
+        "candidate site +0x3C"
+      ],
+      "calls": [
+        "AI_ComputePlanScores",
+        "AI_FindBestBranchSite",
+        "DebugConsole_Printf",
+        "Game_CanAfford",
+        "Game_ComputeTradeOffers",
+        "Game_GetPlayerCity",
+        "Game_SumPlayerAssetValue",
+        "Game_UpdateCompanyAdvancementScore",
+        "IDMap_Lookup",
+        "IsSpecialIdRange",
+        "Map_PickObject",
+        "Player_CreateBranch"
+      ],
+      "instruction_sites": [
+        {
+          "address": "0x4f8189",
+          "access": "write",
+          "width": 1,
+          "value": 0,
+          "evidence": "mov BYTE PTR [esi+0x16f4],0x0"
+        },
+        {
+          "address": "0x4f81c8",
+          "access": "write",
+          "width": 1,
+          "value": 1,
+          "evidence": "mov BYTE PTR [esi+0x16f4],0x1"
+        }
+      ],
+      "initializers": [],
+      "assumptions": [
+        "The target record is the branch returned by Player_CreateBranch and looked up by its new ID."
+      ]
+    },
+    {
+      "address": "0x4f8a80",
+      "name": "Company_OpenStartingBranch",
+      "signature": "undefined4 __thiscall Company_OpenStartingBranch(void *this, int param_1, int param_2, int param_3, void *param_4)",
+      "callers": ["Company_PlaceScenarioBranches"],
+      "reads": [
+        "param_3 selects rent (0) versus buy (non-zero)",
+        "trade offer cost/lease values"
+      ],
+      "writes": [
+        "+0x16F4 byte = 0 on the rent path",
+        "+0x16F4 byte = 1 on the buy path",
+        "+0x14B0 32-bit lease/price field",
+        "candidate site +0x3C on the buy path"
+      ],
+      "calls": [
+        "AI_FindBestBranchSite",
+        "Branch_ValidateMenuAndRecalculate",
+        "Customer_VisitBranch",
+        "DebugConsole_Printf",
+        "Game_ComputeTradeOffers",
+        "IDMap_Lookup",
+        "Player_CreateBranch"
+      ],
+      "instruction_sites": [
+        {
+          "address": "0x4f8b4b",
+          "access": "write",
+          "width": 1,
+          "value": 1,
+          "evidence": "mov BYTE PTR [esi+0x16f4],0x1"
+        },
+        {
+          "address": "0x4f8b90",
+          "access": "write",
+          "width": 1,
+          "value": 0,
+          "evidence": "mov BYTE PTR [esi+0x16f4],0x0"
+        }
+      ],
+      "initializers": [],
+      "assumptions": [
+        "param_3 is the buy/rent selector; the rent branch also stores param_1 as the lease, while the buy branch stores param_1 >> 2."
+      ]
+    },
+    {
+      "address": "0x4f5fd0",
+      "name": "Mission_EvaluateGoals",
+      "signature": "void __thiscall Mission_EvaluateGoals(void *this, int param_1, char param_2)",
+      "callers": ["Game_WindowProc", "Mission_TickGoalDeadline"],
+      "reads": [
+        "+0x16F4 byte in goal 4",
+        "+0x16F4 byte in goal 0x1B",
+        "branch +0x38 32-bit level/capacity in both ownership checks",
+        "player/company statistics used by all other goals"
+      ],
+      "writes": [
+        "mission goal completion/progress state"
+      ],
+      "calls": [
+        "AI_GetMaxPlanSteps",
+        "AI_SumPlanSteps",
+        "Game_CountObjectsByState",
+        "Game_CountRecordsByOwner",
+        "Game_CountRecordsWithFlag16F4",
+        "Game_GetCategoryShare",
+        "Game_GetCurrentPlayerCompanyName",
+        "Game_GetPlayerBySlot",
+        "Game_GetPlayerCity",
+        "Game_GetPlayerFieldC20",
+        "Game_GetPlayerValueSharePercent",
+        "IDMap_Lookup",
+        "LookupTable_HasKey",
+        "Player_ComputeAverageRating",
+        "Stats_SumFilteredFloats",
+        "Stats_SumFilteredFloats2",
+        "UI_Briefing_Printf"
+      ],
+      "instruction_sites": [
+        {
+          "address": "0x4f60f4",
+          "access": "read",
+          "width": 1,
+          "compare": 1,
+          "evidence": "cmp BYTE PTR [eax+0x16f4],0x1 (goal 4)"
+        },
+        {
+          "address": "0x4f6760",
+          "access": "read",
+          "width": 1,
+          "compare": 1,
+          "evidence": "cmp BYTE PTR [eax+0x16f4],0x1 (goal 0x1B)"
+        }
+      ],
+      "initializers": [],
+      "assumptions": [
+        "Goal 4 completes only when the flag is exactly 1 and +0x38 > 0; goal 0x1B only when the flag is exactly 1 and +0x38 > 1."
+      ]
+    },
+    {
+      "address": "0x4de710",
+      "name": "Game_CountRecordsWithFlag16F4",
+      "signature": "int __fastcall Game_CountRecordsWithFlag16F4(int param_1)",
+      "callers": ["Mission_EvaluateGoals"],
+      "reads": [
+        "record count +0x15C",
+        "ID map +0x148 through IDMap_Lookup",
+        "branch +0x16F4 byte"
+      ],
+      "writes": [
+        "return value only"
+      ],
+      "calls": ["IDMap_Lookup"],
+      "instruction_sites": [
+        {
+          "address": "0x4de734",
+          "access": "read",
+          "width": 1,
+          "test": "nonzero",
+          "evidence": "mov cl,BYTE PTR [eax+0x16f4]"
+        }
+      ],
+      "initializers": [],
+      "assumptions": [
+        "This is the ownership counter used by Mission_EvaluateGoals goal 2."
+      ]
+    },
+    {
+      "address": "0x4decf0",
+      "name": "Stats_Report_FillCompanyOverview",
+      "signature": "void __thiscall Stats_Report_FillCompanyOverview(void *this, int *param_1)",
+      "callers": ["Company_RecordDailyStatistics"],
+      "reads": [
+        "record count +0x15C and ID map +0x148",
+        "branch +0x16F4 byte",
+        "branch +0x38 32-bit level/capacity"
+      ],
+      "writes": [
+        "report +0x00 owned count and +0x04 rented count",
+        "report +0x120 capacity total: owned adds (level+1)*0x5DC, rented adds (level+1)*600",
+        "later report sections for buildings, staff and other collections"
+      ],
+      "calls": [
+        "City_CollectBuildingsByType",
+        "Game_GetPlayerBySlot",
+        "Game_GetPlayerFieldC20",
+        "Get_Field2C",
+        "IDMap_Lookup"
+      ],
+      "instruction_sites": [
+        {
+          "address": "0x4ded2c",
+          "access": "read",
+          "width": 1,
+          "test": "zero selects rented, nonzero selects owned",
+          "evidence": "mov cl,BYTE PTR [eax+0x16f4]"
+        }
+      ],
+      "initializers": [],
+      "assumptions": [
+        "Only the branch section of the report is described here; the routine also fills building, personnel and company sections."
+      ]
+    },
+    {
+      "address": "0x47b000",
+      "name": "Branch_Load",
+      "signature": "void __thiscall Branch_Load(void *this, void *param_1, undefined4 *param_2)",
+      "callers": ["Branch_ConstructFromStream"],
+      "reads": [
+        "one byte from the save stream"
+      ],
+      "writes": [
+        "+0x16F4 byte from the save stream"
+      ],
+      "calls": [
+        "Branch_ApplyBuildingStyleVariant",
+        "CRT_Istream_Read",
+        "ConstructionOrder_StreamConstruct",
+        "Game_GetSizeName",
+        "Game_ShowBuildingOverlay",
+        "Game_UpdateIDMapEntry",
+        "IDMap_InsertGrow",
+        "IDMap_Lookup",
+        "IsoMap_MarkPlayerFootprints",
+        "List_Add",
+        "StatsPeriodReport_StreamConstruct"
+      ],
+      "instruction_sites": [
+        {
+          "address": "0x47b1c6",
+          "access": "save-stream-read",
+          "width": 1,
+          "transfer": "CRT_Istream_Read",
+          "evidence": "lea edx,[edi+0x16f4] immediately before the one-byte CRT_Istream_Read call"
+        }
+      ],
+      "initializers": [],
+      "assumptions": []
+    },
+    {
+      "address": "0x47b9e0",
+      "name": "Branch_Save",
+      "signature": "void __thiscall Branch_Save(void *this, void *param_1)",
+      "callers": ["CompanyData_Save"],
+      "reads": [
+        "+0x16F4 byte"
+      ],
+      "writes": [
+        "one byte to the save stream from +0x16F4"
+      ],
+      "calls": [
+        "Array_FindIndexByPtr",
+        "CRT_Ostream_Write",
+        "ConstructionOrder_Save",
+        "Game_FindCompanyIndex",
+        "Game_GetPlayerBySlot",
+        "Game_RemoveIDMapEntry",
+        "IDMap_Lookup",
+        "Map_LookupLinear",
+        "StatsPeriodReport_Save"
+      ],
+      "instruction_sites": [
+        {
+          "address": "0x47bba9",
+          "access": "save-stream-write",
+          "width": 1,
+          "transfer": "CRT_Ostream_Write",
+          "evidence": "lea ecx,[edi+0x16f4] immediately before the one-byte CRT_Ostream_Write call"
+        }
+      ],
+      "initializers": [],
+      "assumptions": []
+    },
+    {
+      "address": "0x491d40",
+      "name": "BranchStats_UpdateRatingPage",
+      "signature": "void __cdecl BranchStats_UpdateRatingPage(void *param_1)",
+      "callers": ["BuildingInfoMenu_Init"],
+      "reads": [
+        "g_Game + 0x9C selects the current branch object",
+        "branch +0x16F4 byte",
+        "branch +0x14B0 lease value on the rented path",
+        "branch +0x38 level and +0x16F0 site/object index on the owned path"
+      ],
+      "writes": [
+        "rating-page child visibility and button text",
+        "rented path shows money/terminate controls; owned path shows sell revenue"
+      ],
+      "calls": [
+        "Branch_GetCustomerGroupRating",
+        "Building_ComputeOperatingRevenue",
+        "Chart_DrawGroupMatrix",
+        "Chart_DrawRatingMatrix",
+        "Gadget_SetText",
+        "Gadget_SetTextf",
+        "Game_GetCurrentPlayerCompanyName",
+        "IDMap_Lookup",
+        "Rating_UpdateBarByKey",
+        "UI_RemoveObjectByKey",
+        "UI_ShowChildByID",
+        "Window_GadgetNotify_Button_SetState"
+      ],
+      "instruction_sites": [
+        {
+          "address": "0x491d7f",
+          "access": "read",
+          "width": 1,
+          "test": "zero selects rented UI, nonzero selects owned UI",
+          "evidence": "mov al,BYTE PTR [ebx+0x16f4]"
+        }
+      ],
+      "initializers": [],
+      "assumptions": []
+    }
+  ],
+  "unresolved_sites": [
+    {
+      "address": "0x491fd2",
+      "access": "read",
+      "width": 1,
+      "function": "unnamed UI command handler (~0x491EF0-0x49222F)",
+      "evidence": "mov al,BYTE PTR [esi+0x16f4] then nonzero test",
+      "note": "Same rented/owned branch semantics as the rating page, but no procedure entry is present in the retained decompile index."
+    },
+    {
+      "address": "0x4920c7",
+      "access": "read",
+      "width": 1,
+      "function": "unnamed UI command handler (~0x491EF0-0x49222F)",
+      "evidence": "mov dl,BYTE PTR [eax+0x16f4] then two command-selection paths",
+      "note": "Second reader in the same unnamed handler."
+    },
+    {
+      "address": "0x4a7694",
+      "access": "write",
+      "width": 1,
+      "value": 0,
+      "function": "unnamed (~0x4A76xx)",
+      "evidence": "mov BYTE PTR [esi+0x16f4],0x0",
+      "note": "Writer is real but the enclosing procedure is absent from the retained decompile index; caller path unresolved."
+    }
+  ],
+  "excluded_sites": [
+    {
+      "address": "0x4019d0",
+      "access": "address",
+      "width": 4,
+      "function": "ResourceManager_Construct",
+      "reason": "lea eax,[ebp+0x16f4] on the resource-manager object; different record family."
+    },
+    {
+      "address": "0x402262",
+      "access": "read",
+      "width": 4,
+      "function": "ResourceHandle_Alloc",
+      "reason": "DWORD check in a 20-slot resource-handle pool with stride 0x24; overlapping offset, not a branch."
+    },
+    {
+      "address": "0x40227f",
+      "access": "write",
+      "width": 4,
+      "value": 1,
+      "function": "ResourceHandle_Alloc",
+      "reason": "DWORD 1 marks a free resource-handle slot; overlapping offset, not a branch."
+    },
+    {
+      "address": "0x51a9ee",
+      "access": "read",
+      "width": 4,
+      "function": "Language_MapStrings",
+      "reason": "DWORD read from a language string-table structure; overlapping offset."
+    }
+  ],
+  "open_questions": [
+    "The two unnamed byte readers at 0x491FD2 and 0x4920C7 need their function boundary and callers recovered before their UI command paths can be reconstructed.",
+    "0x4A7694 clears +0x16F4 but has no named procedure; its caller and UI/gameplay context are unresolved.",
+    "The AI and starting-branch writer paths are statically traced but not yet covered by a Unicorn fixture; the existing 9-case fixture covers Mission_EvaluateGoals only."
+  ],
+  "fixtures": [
+    {
+      "path": "decompiled_fastfood2_named_v2/typed_packets/fixtures/london_ownership.result.json",
+      "producer": "tools/emulate_mission_goals.py",
+      "coverage": "Mission_EvaluateGoals: 9/9 cases; goal 2 completes only when the flagged-record count is 1."
+    }
+  ]
+}

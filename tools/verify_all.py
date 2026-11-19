@@ -1118,6 +1118,21 @@ def check_mission_goals_emulation():
                    "goal 2 needs flag 0x16f4; rat action writes slot 1") if ok else output[-1200:],
     }
 
+def check_london_ownership_evidence():
+    result = subprocess.run(
+        ["python3", "tools/verify_london_ownership.py"],
+        cwd=ROOT, text=True, capture_output=True, timeout=180)
+    output = (result.stdout + result.stderr).strip()
+    ok = (result.returncode == 0
+          and "9 routines" in output
+          and "19 +0x16F4 sites classified" in output
+          and "fixture 9/9" in output)
+    return {
+        "name": "London ownership evidence",
+        "ok": ok,
+        "detail": output[-1200:],
+    }
+
 def check_crt_helpers_emulation():
     result = subprocess.run(
         ["python3", "tools/emulate_crt_helpers.py"],
@@ -1561,6 +1576,7 @@ def main(argv=None):
     checks.append(check_starting_capital_emulation())
     checks.append(check_clock_command_emulation())
     checks.append(check_mission_goals_emulation())
+    checks.append(check_london_ownership_evidence())
     checks.append(check_crt_helpers_emulation())
     checks.append(check_settings_defaults_emulation())
     checks.append(check_ingredient_desc_emulation())
