@@ -48,8 +48,8 @@ shipped bytes, not reimplementations.
 
 | Confidence | Count | Meaning |
 |---|---:|---|
-| high | 3046 | semantic name, type and decompiled reader/writer set audited |
-| medium | 565 | owning function and role observed; type/readers still pending |
+| high | 3060 | semantic name, type and decompiled reader/writer set audited |
+| medium | 551 | owning function and role observed; type/readers still pending |
 | low | 0 | address-only alias removed |
 
 The first audit pass promoted 451 medium rows (12 settings globals plus 439
@@ -64,6 +64,11 @@ The ingredient pass promoted 87 entries. `Language_CopyStringIds` fills
 to `Game_SetBuildingDesc` for ingredient object `i`. Unicorn calls
 `Game_SetBuildingDesc` with the Olives descriptor and reads back the name at
 object `+0x88` and the numeric fields at `+0xa8..+0xc8`.
+
+The UI-string pass promoted 14 entries whose identity is the literal bytes:
+the `"24".."0"` default labels at `0x564200..0x564220`, the two German UI
+format strings at `0x5641A8/0x5641C4`, and the CRT file-mode strings
+`"wb"`, `"rb"` and `"w"` at `0x563114/0x563184/0x563788`.
 
 Promotion rules used in this pass:
 
