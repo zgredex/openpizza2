@@ -982,6 +982,41 @@ int main(void) {
     free(mg_panel_pixels);
     free(mg_separator_pixels);
 
+    uint8_t *ri_panel_pixels = NULL;
+    RgbaSprite ri_panel;
+    assert(load_spr_asset("../extracted/sprites/dummysprite.spr",
+                          &ri_panel_pixels, &ri_panel));
+    static const char *ri_paths[9] = {
+        "../extracted/sprites/r_info__00.spr",
+        "../extracted/sprites/r_neurezept__00.spr",
+        "../extracted/sprites/r_zutaten__00.spr",
+        "../extracted/sprites/r_speisekarte__00.spr",
+        "../extracted/sprites/r_rezautomatik__00.spr",
+        "../extracted/sprites/r_lupe__00.spr",
+        "../extracted/sprites/r_infowett__00.spr",
+        "../extracted/sprites/r_neurezeptwett__00.spr",
+        "../extracted/sprites/r_zutatenwett__00.spr",
+    };
+    uint8_t *ri_pixels[9] = {NULL};
+    RgbaSprite ri_buttons[9];
+    for (int index = 0; index < 9; index++) {
+        assert(load_spr_asset(ri_paths[index], &ri_pixels[index],
+                              &ri_buttons[index]));
+    }
+    uint8_t *ri_frame = malloc(800 * 600 * 4);
+    assert(ri_frame != NULL);
+    RenderSurface ri_surface;
+    assert(render_surface_init(&ri_surface, ri_frame, 800 * 600 * 4, 800, 600));
+    assert(screen_render_recipe_info_panel(&ri_surface, &ri_panel, ri_buttons, 0));
+    size_t ri_panel_offset = ((size_t)248 * 800 + 567) * 4;
+    assert(memcmp(ri_frame + ri_panel_offset, ri_panel.pixels, 4) == 0);
+    free(ri_frame);
+    free(ri_panel_pixels);
+    for (int index = 0; index < 9; index++) {
+        free(ri_pixels[index]);
+    }
+
+
 
 
 

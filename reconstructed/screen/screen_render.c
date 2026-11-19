@@ -1120,3 +1120,29 @@ bool screen_render_mission_goals(RenderSurface *surface, const RgbaSprite *panel
                window_y + 351, "Complete mission", label_color);
     return true;
 }
+
+bool screen_render_recipe_info_panel(RenderSurface *surface,
+                                     const RgbaSprite *panel,
+                                     const RgbaSprite *buttons,
+                                     int selected) {
+    if (surface == NULL || buttons == NULL) {
+        return false;
+    }
+    const uint8_t background[4] = {22, 26, 34, 255};
+    render_clear(surface, background);
+    if (panel != NULL) {
+        render_blit(surface, panel, 567, 248);
+    }
+    static const int32_t button_y[9] = {3, 33, 63, 93, 123, 273, 183, 213, 243};
+    for (int index = 0; index < 9; index++) {
+        if (buttons[index].pixels == NULL) {
+            continue;
+        }
+        if (index == selected) {
+            blend_rect(surface, 567, 248 + button_y[index], 39, 31,
+                       (const uint8_t[4]){255, 225, 120, 150});
+        }
+        render_blit(surface, &buttons[index], 568, 251 + button_y[index]);
+    }
+    return true;
+}
