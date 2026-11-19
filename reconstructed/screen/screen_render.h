@@ -52,6 +52,27 @@ bool screen_render_statistics(RenderSurface *surface, const uint8_t *tga_data,
                               const char *date, uint8_t *decode_buffer,
                               size_t decode_capacity);
 
+typedef struct PersonnelOverviewData {
+    const char *candidate_name;
+    const char *profession;
+    uint32_t age;
+    int32_t health;
+    int32_t motivation;
+    int32_t cooking;
+    int32_t speed;
+    const RgbaSprite *ratings[4];
+    int selected_tab;    /* 0..3 */
+    int selected_button; /* 0 = Employ, -1 = none */
+} PersonnelOverviewData;
+
+/* Composes Screen_PersonnelOverview (0x415620): staff tabs, stat gauges,
+ * candidate details, Employ button and rating strips. */
+bool screen_render_personnel_overview(
+    RenderSurface *surface, const RgbaSprite *panel,
+    const RgbaSprite *tabs, const RgbaSprite *separator,
+    const uint8_t *font_data, size_t font_size, const FntInfo *font,
+    const PersonnelOverviewData *data);
+
 typedef struct BranchOfferData {
     const char *branch_name;
     uint32_t expand_days;

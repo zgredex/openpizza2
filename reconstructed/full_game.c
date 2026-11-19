@@ -661,6 +661,60 @@ int main(void) {
     free(bo_separator_pixels);
     free(bo_rating_pixels);
 
+    uint8_t *po_panel_pixels = NULL;
+    uint8_t *po_separator_pixels = NULL;
+    uint8_t *po_rating_pixels = NULL;
+    uint8_t *po_tab_pixels[4] = {NULL, NULL, NULL, NULL};
+    RgbaSprite po_panel;
+    RgbaSprite po_separator;
+    RgbaSprite po_rating;
+    RgbaSprite po_tabs[4];
+    assert(load_spr_asset("../extracted/sprites/submenue.spr", &po_panel_pixels,
+                          &po_panel));
+    assert(load_spr_asset("../extracted/sprites/trennzeile.spr",
+                          &po_separator_pixels, &po_separator));
+    assert(load_spr_asset("../extracted/sprites/bewertung__08.spr",
+                          &po_rating_pixels, &po_rating));
+    assert(load_spr_asset("../extracted/sprites/persoueber_00.spr",
+                          &po_tab_pixels[0], &po_tabs[0]));
+    assert(load_spr_asset("../extracted/sprites/persoueber_01.spr",
+                          &po_tab_pixels[1], &po_tabs[1]));
+    assert(load_spr_asset("../extracted/sprites/persoueber_02.spr",
+                          &po_tab_pixels[2], &po_tabs[2]));
+    assert(load_spr_asset("../extracted/sprites/persoueber_03.spr",
+                          &po_tab_pixels[3], &po_tabs[3]));
+    PersonnelOverviewData po_data = {
+        .candidate_name = "Ada",
+        .profession = "Cook",
+        .age = 30,
+        .health = personnel.staff[0].health,
+        .motivation = personnel.staff[0].motivation,
+        .cooking = personnel.staff[0].skill,
+        .speed = personnel.staff[0].speed,
+        .selected_tab = 0,
+        .selected_button = 0,
+    };
+    for (int index = 0; index < 4; index++) {
+        po_data.ratings[index] = &po_rating;
+    }
+    uint8_t *po_frame = malloc(800 * 600 * 4);
+    assert(po_frame != NULL);
+    RenderSurface po_surface;
+    assert(render_surface_init(&po_surface, po_frame, 800 * 600 * 4, 800, 600));
+    assert(screen_render_personnel_overview(&po_surface, &po_panel, po_tabs,
+                                             &po_separator, font_data,
+                                             font_size, &font_info, &po_data));
+    size_t po_panel_offset = ((size_t)218 * 800 + 561) * 4;
+    assert(memcmp(po_frame + po_panel_offset, po_panel.pixels, 4) == 0);
+    free(po_frame);
+    free(po_panel_pixels);
+    free(po_separator_pixels);
+    free(po_rating_pixels);
+    for (int index = 0; index < 4; index++) {
+        free(po_tab_pixels[index]);
+    }
+
+
 
 
     PizContainer piz;

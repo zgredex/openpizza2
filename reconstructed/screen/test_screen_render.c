@@ -350,6 +350,103 @@ static void test_branch_offer_composition(void) {
     free(rating_pixels);
 }
 
+static void test_personnel_overview_composition(void) {
+    uint8_t *panel_pixels = NULL;
+    uint8_t *separator_pixels = NULL;
+    uint8_t *rating_pixels = NULL;
+    uint8_t *tab_pixels[4] = {NULL, NULL, NULL, NULL};
+    RgbaSprite panel;
+    RgbaSprite separator;
+    RgbaSprite rating;
+    RgbaSprite tabs[4];
+    assert(load_spr("../extracted/sprites/submenue.spr", &panel_pixels, &panel));
+    assert(load_spr("../extracted/sprites/trennzeile.spr", &separator_pixels,
+                    &separator));
+    assert(load_spr("../extracted/sprites/bewertung__08.spr", &rating_pixels,
+                    &rating));
+    assert(load_spr("../extracted/sprites/persoueber_00.spr", &tab_pixels[0],
+                    &tabs[0]));
+    assert(load_spr("../extracted/sprites/persoueber_01.spr", &tab_pixels[1],
+                    &tabs[1]));
+    assert(load_spr("../extracted/sprites/persoueber_02.spr", &tab_pixels[2],
+                    &tabs[2]));
+    assert(load_spr("../extracted/sprites/persoueber_03.spr", &tab_pixels[3],
+                    &tabs[3]));
+
+    size_t font_size = 0;
+    uint8_t *font_data = load_file("../extracted/fonts/timesfont.fnt", &font_size);
+    assert(font_data != NULL);
+    FntInfo font;
+    assert(fnt_read_info(font_data, font_size, &font));
+
+    PersonnelOverviewData data = {
+        .candidate_name = "Carlos Estarda",
+        .profession = "Cook",
+        .age = 45,
+        .health = 90,
+        .motivation = 75,
+        .cooking = 70,
+        .speed = 60,
+        .selected_tab = 0,
+        .selected_button = 0,
+    };
+    for (int index = 0; index < 4; index++) {
+        data.ratings[index] = &rating;
+    }
+    size_t frame_size = 800 * 600 * 4;
+    uint8_t *frame = malloc(frame_size);
+    assert(frame != NULL);
+    RenderSurface surface;
+    assert(render_surface_init(&surface, frame, frame_size, 800, 600));
+    assert(screen_render_personnel_overview(&surface, &panel, tabs, &separator,
+                                            font_data, font_size, &font, &data));
+    size_t panel_offset = ((size_t)218 * 800 + 561) * 4;
+    assert(memcmp(frame + panel_offset, panel.pixels, 4) == 0);
+    size_t tab_offset = ((size_t)(218 + 242) * 800 + (561 + 53)) * 4;
+    assert(memcmp(frame + tab_offset, tabs[0].pixels, 4) == 0);
+
+    bool opaque = false;
+    size_t opaque_index = 0;
+    for (size_t index = 0; index + 3 < (size_t)rating.width * rating.height * 4;
+         index += 4) {
+        if (rating.pixels[index + 3] == 255) {
+            opaque = true;
+            opaque_index = index;
+            break;
+        }
+    }
+    assert(opaque);
+    size_t rating_x = (opaque_index / 4) % rating.width;
+    size_t rating_y = (opaque_index / 4) / rating.width;
+    size_t rating_offset = ((size_t)(218 + 315 + (int)rating_y) * 800 +
+                            (561 + 49 + (int)rating_x)) * 4;
+    assert(memcmp(frame + rating_offset, rating.pixels + opaque_index, 4) == 0);
+
+    bool title_ink = false;
+    for (int y = 220; y < 245; y++) {
+        for (int x = 600; x < 760; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] < 180 && frame[offset + 1] < 120) {
+                title_ink = true;
+            }
+        }
+    }
+    assert(title_ink);
+    size_t button_offset = ((size_t)(218 + 100) * 800 + (561 + 215)) * 4;
+    assert(frame[button_offset + 1] > frame[button_offset]);
+    assert(!screen_render_personnel_overview(&surface, &panel, tabs, &separator,
+                                             font_data, font_size, &font, NULL));
+
+    free(font_data);
+    free(frame);
+    free(panel_pixels);
+    free(separator_pixels);
+    free(rating_pixels);
+    for (int index = 0; index < 4; index++) {
+        free(tab_pixels[index]);
+    }
+}
+
 static void test_statistics_composition(void) {
     size_t tga_size = 0;
     size_t font_size = 0;
@@ -571,6 +668,7 @@ int main(void) {
     test_branch_list_composition();
     test_branch_details_composition();
     test_branch_offer_composition();
+    test_personnel_overview_composition();
     test_statistics_composition();
     test_free_play_composition();
     test_briefing_composition();

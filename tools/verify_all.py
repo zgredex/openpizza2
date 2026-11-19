@@ -1229,8 +1229,9 @@ def check_reconstructed_c():
                    "personnel, render, operations, SPR/FNT assets and UI "
                    "composition, startscreen menu, character-select, London "
                    "briefing, free-play setup, statistics view, branch-list "
-                   "window, branch-details page, branch-offer page, iso-map/"
-                   "branch interior render and hourly branch economy included")
+                   "window, branch-details page, branch-offer page, personnel "
+                   "overview, iso-map/branch interior render and hourly branch "
+                   "economy included")
         if ok else output[-1200:],
     }
 

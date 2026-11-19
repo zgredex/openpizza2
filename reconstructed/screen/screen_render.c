@@ -733,3 +733,92 @@ bool screen_render_branch_offer(RenderSurface *surface, const RgbaSprite *panel,
                window_y + 276, "Expand", label_color);
     return true;
 }
+
+bool screen_render_personnel_overview(
+    RenderSurface *surface, const RgbaSprite *panel,
+    const RgbaSprite *tabs, const RgbaSprite *separator,
+    const uint8_t *font_data, size_t font_size, const FntInfo *font,
+    const PersonnelOverviewData *data) {
+    if (surface == NULL || font == NULL || data == NULL) {
+        return false;
+    }
+    const uint8_t background[4] = {22, 26, 34, 255};
+    render_clear(surface, background);
+    const int32_t window_x = 561;
+    const int32_t window_y = 218;
+    if (panel != NULL && !render_blit(surface, panel, window_x, window_y)) {
+        return false;
+    }
+    const uint8_t title_color[4] = {120, 20, 20, 255};
+    const uint8_t label_color[4] = {40, 28, 20, 255};
+    const uint8_t value_color[4] = {20, 20, 90, 255};
+    char value_text[64];
+
+    draw_label(surface, font_data, font_size, font, window_x + 44, window_y + 5,
+               "Hire staff", title_color);
+    static const int32_t tab_x[4] = {53, 97, 141, 185};
+    for (int index = 0; index < 4; index++) {
+        if (tabs != NULL && tabs[index].pixels != NULL) {
+            render_blit(surface, &tabs[index], window_x + tab_x[index],
+                        window_y + 242);
+        }
+    }
+    if (separator != NULL) {
+        render_blit(surface, separator, window_x + 39, window_y + 297);
+    }
+    draw_label(surface, font_data, font_size, font, window_x + 53,
+               window_y + 163, "Cooking", label_color);
+    draw_label(surface, font_data, font_size, font, window_x + 136,
+               window_y + 163, "Speed", label_color);
+    draw_label(surface, font_data, font_size, font, window_x + 53,
+               window_y + 185, "Health", label_color);
+    draw_label(surface, font_data, font_size, font, window_x + 152,
+               window_y + 185, "Motivation", label_color);
+
+    const int32_t gauge_x[4] = {52, 151, 52, 151};
+    const int32_t gauge_y[4] = {180, 180, 202, 202};
+    const int32_t gauge_values[4] = {data->cooking, data->speed, data->health,
+                                     data->motivation};
+    const uint8_t gauge_color[4] = {70, 150, 70, 230};
+    for (int index = 0; index < 4; index++) {
+        int32_t value = gauge_values[index];
+        if (value < 0) {
+            value = 0;
+        }
+        if (value > 100) {
+            value = 100;
+        }
+        blend_rect(surface, window_x + gauge_x[index], window_y + gauge_y[index],
+                   80, 12, (const uint8_t[4]){80, 70, 60, 180});
+        blend_rect(surface, window_x + gauge_x[index], window_y + gauge_y[index],
+                   value * 80 / 100, 12, gauge_color);
+    }
+
+    if (data->candidate_name != NULL) {
+        draw_label(surface, font_data, font_size, font, window_x + 53,
+                   window_y + 62, data->candidate_name, value_color);
+    }
+    if (data->profession != NULL) {
+        draw_label(surface, font_data, font_size, font, window_x + 53,
+                   window_y + 84, data->profession, label_color);
+    }
+    snprintf(value_text, sizeof(value_text), "Age %u", data->age);
+    draw_label(surface, font_data, font_size, font, window_x + 160,
+               window_y + 84, value_text, value_color);
+
+    const uint8_t button_idle[4] = {140, 180, 140, 220};
+    const uint8_t button_active[4] = {130, 230, 130, 235};
+    blend_rect(surface, window_x + 143, window_y + 98, 84, 24,
+               data->selected_button == 0 ? button_active : button_idle);
+    draw_label(surface, font_data, font_size, font, window_x + 155,
+               window_y + 102, "Employ", label_color);
+
+    static const int32_t rating_x[4] = {49, 99, 149, 199};
+    for (int index = 0; index < 4; index++) {
+        if (data->ratings[index] != NULL) {
+            render_blit(surface, data->ratings[index], window_x + rating_x[index],
+                        window_y + 315);
+        }
+    }
+    return true;
+}
