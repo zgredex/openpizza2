@@ -853,6 +853,64 @@ static void test_math_string_text(void) {
     assert(read_i32_at(text, 0x9c4) == 80);
 }
 
+static double read_double_at(const uint8_t *base, size_t offset) {
+    double value;
+    memcpy(&value, base + offset, sizeof(value));
+    return value;
+}
+
+static void test_record_bounds_positions(void) {
+    uint8_t record[0x48] = {0};
+    const int16_t x_points[3] = {10, -8, 30};
+    const int16_t y_points[3] = {20, 40, 60};
+    const uint16_t widths[3] = {100, 200, 300};
+    const uint16_t heights[3] = {50, 60, 70};
+    int16_t point = 1;
+    memcpy(record + 0x32, &point, sizeof(point));
+    int32_t x = 0;
+    int32_t y = 0;
+    uint32_t width = 0;
+    uint32_t height = 0;
+    assert(record_get_bounds48(record, 0, x_points, y_points, widths, heights,
+                               &x, &y, &width, &height));
+    assert(x == -8 && y == 40 && width == 200 && height == 60);
+    assert(!record_get_bounds48(NULL, 0, x_points, y_points, widths, heights,
+                                &x, &y, &width, &height));
+
+    write_i32_at(record, 0x18, 11);
+    write_i32_at(record, 0x1c, 22);
+    write_i32_at(record, 0x20, 33);
+    write_i32_at(record, 0x24, 44);
+    int32_t pairs[4] = {0};
+    assert(record_get_pair_positions(record, 0, pairs));
+    assert(pairs[0] == 11 && pairs[1] == 22 && pairs[2] == 33 &&
+           pairs[3] == 44);
+    write_i32_at(record, 0, -1);
+    assert(!record_get_pair_positions(record, 0, pairs));
+
+    uint8_t records[2 * 0x48] = {0};
+    assert(record_set_rect48(records, 2, 0, 7, 8, 0x1122334455667788ULL));
+    assert(read_i32_at(records, 8) == 7);
+    assert(read_i32_at(records, 12) == 8);
+    uint64_t rect_value = 0;
+    memcpy(&rect_value, records + 0x10, sizeof(rect_value));
+    assert(rect_value == 0x1122334455667788ULL);
+    assert(record_set_doubles48(records, 2, 0, 2.9, -3.9));
+    memcpy(records + 0x32, &point, sizeof(point));
+    assert(read_double_at(records, 8) == 2.9);
+    assert(read_double_at(records, 0x10) == -3.9);
+    assert(record_get_screen_rect48(records, 0, widths, heights, &x, &y));
+    assert(x == 202 && y == 57);
+    assert(record_get_screen_offset(records, 2, 0, x_points, widths, heights,
+                                    &x, &y));
+    assert(x == 200 && y == 57);
+    write_i32_at(records, 0x48, -1);
+    assert(!record_get_screen_offset(records, 2, 1, x_points, widths, heights,
+                                     &x, &y));
+    assert(!record_get_screen_offset(records, 2, 2, x_points, widths, heights,
+                                     &x, &y));
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -879,6 +937,7 @@ int main(void) {
     test_object_record_palette();
     test_destructors_palette_record();
     test_math_string_text();
+    test_record_bounds_positions();
     puts("leaf function reconstruction: OK");
     return 0;
 }

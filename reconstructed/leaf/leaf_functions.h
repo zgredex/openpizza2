@@ -334,6 +334,35 @@ bool record_set_index48(uint8_t *records, size_t count, size_t index,
 bool record_get_rect98(const uint8_t *records, size_t index,
                        int32_t pairs[8]);
 
+/* Record_GetBounds48 (0x534060). */
+bool record_get_bounds48(const uint8_t *records, size_t index,
+                         const int16_t *x_points, const int16_t *y_points,
+                         const uint16_t *widths, const uint16_t *heights,
+                         int32_t *x, int32_t *y, uint32_t *width,
+                         uint32_t *height);
+
+/* Record_GetPairPositions (0x534830). */
+bool record_get_pair_positions(const uint8_t *records, size_t index,
+                               int32_t pairs[4]);
+
+/* Record_SetDoubles48 / Record_SetRect48 (0x5342E0 / 0x534320). */
+bool record_set_doubles48(uint8_t *records, size_t count, size_t index,
+                          double first, double second);
+bool record_set_rect48(uint8_t *records, size_t count, size_t index,
+                       int32_t first, int32_t second, uint64_t value);
+
+/* Record_GetScreenRect48 / Record_GetScreenOffset
+ * (0x5340D0 / 0x534790). */
+bool record_get_screen_rect48(const uint8_t *records, size_t index,
+                              const uint16_t *widths,
+                              const uint16_t *heights, int32_t *x,
+                              int32_t *y);
+bool record_get_screen_offset(const uint8_t *records, size_t count,
+                              size_t index, const int16_t *x_points,
+                              const uint16_t *widths,
+                              const uint16_t *heights, int32_t *x,
+                              int32_t *y);
+
 /* Game_GetActiveScreenOrFallback (0x482910). */
 int32_t game_get_active_screen_or_fallback(const uint8_t *game);
 

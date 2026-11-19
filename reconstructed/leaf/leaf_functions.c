@@ -1379,3 +1379,114 @@ void text_set_metrics2(uint8_t *text, int32_t x, int32_t y, int32_t param3) {
     write_i32(text + 0x9ac, y);
     write_i32(text + 0x9c4, param3);
 }
+
+bool record_get_bounds48(const uint8_t *records, size_t index,
+                         const int16_t *x_points, const int16_t *y_points,
+                         const uint16_t *widths, const uint16_t *heights,
+                         int32_t *x, int32_t *y, uint32_t *width,
+                         uint32_t *height) {
+    if (records == NULL || x_points == NULL || y_points == NULL ||
+        widths == NULL || heights == NULL || x == NULL || y == NULL ||
+        width == NULL || height == NULL) {
+        return false;
+    }
+    int16_t point = 0;
+    memcpy(&point, records + index * 0x48u + 0x32, sizeof(point));
+    *x = x_points[point];
+    *y = y_points[point];
+    *width = widths[point];
+    *height = heights[point];
+    return true;
+}
+
+bool record_get_pair_positions(const uint8_t *records, size_t index,
+                               int32_t pairs[4]) {
+    if (records == NULL || pairs == NULL) {
+        return false;
+    }
+    const uint8_t *record = records + index * 0x48u;
+    if (read_i32(record) == -1) {
+        return false;
+    }
+    pairs[0] = read_i32(record + 0x18);
+    pairs[1] = read_i32(record + 0x1c);
+    pairs[2] = read_i32(record + 0x20);
+    pairs[3] = read_i32(record + 0x24);
+    return true;
+}
+
+bool record_set_doubles48(uint8_t *records, size_t count, size_t index,
+                          double first, double second) {
+    if (records == NULL || index >= count) {
+        return false;
+    }
+    uint8_t *record = records + index * 0x48u;
+    if (read_i32(record) == -1) {
+        return false;
+    }
+    memcpy(record + 8, &first, sizeof(first));
+    memcpy(record + 0x10, &second, sizeof(second));
+    return true;
+}
+
+bool record_set_rect48(uint8_t *records, size_t count, size_t index,
+                       int32_t first, int32_t second, uint64_t value) {
+    if (records == NULL || index >= count) {
+        return false;
+    }
+    uint8_t *record = records + index * 0x48u;
+    if (read_i32(record) == -1) {
+        return false;
+    }
+    write_i32(record + 8, first);
+    write_i32(record + 12, second);
+    memcpy(record + 0x10, &value, sizeof(value));
+    return true;
+}
+
+static double read_double(const uint8_t *pointer) {
+    double value;
+    memcpy(&value, pointer, sizeof(value));
+    return value;
+}
+
+bool record_get_screen_rect48(const uint8_t *records, size_t index,
+                              const uint16_t *widths,
+                              const uint16_t *heights, int32_t *x,
+                              int32_t *y) {
+    if (records == NULL || widths == NULL || heights == NULL || x == NULL ||
+        y == NULL) {
+        return false;
+    }
+    const uint8_t *record = records + index * 0x48u;
+    int16_t point = 0;
+    memcpy(&point, record + 0x32, sizeof(point));
+    int64_t offset_x = math_truncate_double(read_double(record + 8));
+    int64_t offset_y = math_truncate_double(read_double(record + 0x10));
+    *x = (int32_t)widths[point] + (int32_t)offset_x;
+    *y = (int32_t)heights[point] + (int32_t)offset_y;
+    return true;
+}
+
+bool record_get_screen_offset(const uint8_t *records, size_t count,
+                              size_t index, const int16_t *x_points,
+                              const uint16_t *widths,
+                              const uint16_t *heights, int32_t *x,
+                              int32_t *y) {
+    if (records == NULL || x_points == NULL || widths == NULL ||
+        heights == NULL || x == NULL || y == NULL || index >= count) {
+        return false;
+    }
+    const uint8_t *record = records + index * 0x48u;
+    if (read_i32(record) == -1) {
+        return false;
+    }
+    int16_t point = 0;
+    memcpy(&point, record + 0x32, sizeof(point));
+    int64_t offset_x = math_truncate_double(read_double(record + 8));
+    int64_t offset_y = math_truncate_double(read_double(record + 0x10));
+    *x = (int32_t)offset_x + ((int32_t)x_points[point] >> 2) +
+         (int32_t)widths[point];
+    *y = (int32_t)heights[point] + (int32_t)offset_y;
+    return true;
+}
