@@ -93,3 +93,14 @@ int32_t branch_price_comparison_rating(int32_t effect, int32_t city_field_5c,
     }
     return rating_city_adjust(effect, city_field_5c, city_field_44);
 }
+
+int32_t rating_stats_average8(const int32_t ratings[8], int32_t group,
+                              int32_t city_field_5c, int32_t city_field_44) {
+    return rating_city_adjust(rating_group_average8(ratings, group),
+                              city_field_5c, city_field_44);
+}
+
+int32_t rating_menu_rating(const int32_t ratings[8], int32_t group,
+                           int32_t city_field_5c, int32_t city_field_44) {
+    return rating_stats_average8(ratings, group, city_field_5c, city_field_44);
+}

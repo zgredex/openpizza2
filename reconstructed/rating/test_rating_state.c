@@ -56,6 +56,15 @@ static void test_price_rating(void) {
     assert(has_price);
 }
 
+static void test_group_mean_city_adjust(void) {
+    const int32_t ratings[8] = {10, 20, 30, 40, 50, 60, 70, 80};
+    assert(rating_stats_average8(ratings, -1, 0, 0) == 45);
+    assert(rating_stats_average8(ratings, 3, 0, 0) == 40);
+    assert(rating_stats_average8(ratings, -1, 5, 5) == 31);
+    assert(rating_menu_rating(ratings, 3, 5, 5) == 28);
+    assert(rating_stats_average8(NULL, -1, 0, 0) == 0);
+}
+
 static void test_market_bonus(void) {
     assert(rating_market_bonus_factor(false, 0, 0) == 1.0);
     assert(rating_market_bonus_factor(true, 20, 0) == 1.1);
@@ -70,6 +79,7 @@ int main(void) {
     test_group_rating();
     test_branch_scores();
     test_market_bonus();
+    test_group_mean_city_adjust();
     test_price_rating();
     puts("rating state reconstruction: OK");
     return 0;

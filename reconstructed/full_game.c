@@ -642,6 +642,10 @@ int main(void) {
     assert(!has_price);
     assert(branch_price_comparison_rating(80, 5, 5, true, &has_price) == 56);
     assert(has_price);
+    assert(rating_stats_average8(price_ratings, -1, 0, 0) == 45);
+    assert(rating_stats_average8(price_ratings, -1, 5, 5) == 31);
+    assert(rating_menu_rating(price_ratings, 3, 5, 5) == 28);
+
 
 
     assert(company_get_percent_modifier(1, 5000) == 50);

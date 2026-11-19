@@ -54,7 +54,8 @@ Current batches:
   title/city/description/help controls, LOGOFENSTER, slider and Back/Start
   Mission buttons.
 - `rating/` — `Branch_GetCustomerGroupRating` composition, city adjustment,
-  the baseline branch-score table rule and `Game_GetMarketBonusFactor`.
+  `Stats_GetAverage8`/`Branch_GetMenuRating`, the baseline branch-score table
+  rule and `Game_GetMarketBonusFactor`.
 - `advertising/` — `Value_Approach`, hourly value decay,
   `Game_GetAdjustedValue` customer-radius conversion, company budget-percent
   conversion, per-category plan effect bars, the 12×8 media/category table
