@@ -706,10 +706,16 @@ int main(void) {
     uint8_t *bd_separator_pixels = NULL;
     uint8_t *bd_logo_pixels = NULL;
     uint8_t *bd_rating_pixels = NULL;
+    uint8_t *bd_help_pixels = NULL;
+    uint8_t *bd_button_pixels = NULL;
+    uint8_t *bd_slider_pixels = NULL;
     RgbaSprite bd_panel;
     RgbaSprite bd_separator;
     RgbaSprite bd_logo;
     RgbaSprite bd_rating;
+    RgbaSprite bd_help;
+    RgbaSprite bd_button;
+    RgbaSprite bd_slider;
     assert(load_spr_asset("../extracted/sprites/submenue.spr", &bd_panel_pixels,
                           &bd_panel));
     assert(load_spr_asset("../extracted/sprites/trennzeile.spr",
@@ -718,13 +724,30 @@ int main(void) {
                           &bd_logo_pixels, &bd_logo));
     assert(load_spr_asset("../extracted/sprites/bewertung__08.spr",
                           &bd_rating_pixels, &bd_rating));
+    assert(load_spr_asset("../extracted/sprites/hilfebuttonsnip_00.spr",
+                          &bd_help_pixels, &bd_help));
+    assert(load_spr_asset("../extracted/sprites/textpb01__00.spr",
+                          &bd_button_pixels, &bd_button));
+    assert(load_spr_asset("../extracted/sprites/sc_00.spr",
+                          &bd_slider_pixels, &bd_slider));
+    BranchDetailsSprites bd_sprites = {
+        .panel = &bd_panel,
+        .separator = &bd_separator,
+        .logo_frame = &bd_logo,
+        .help_button = &bd_help,
+        .button_background = &bd_button,
+        .slider = &bd_slider,
+    };
+    for (int index = 0; index < 8; index++) {
+        bd_sprites.ratings[index] = &bd_rating;
+    }
     const BranchDetailsData bd_data = {
-        .branch_name = "London branch",
-        .employee_name = "Ada",
-        .employee_role = "Cook",
-        .owner_name = "Ada Pizza",
-        .tile_index = city.branches[0].tile_index,
-        .age = 30,
+        .employee_name = "Carlos Estarda",
+        .employee_role = "Koch",
+        .owner_name = "Pizza Tingeltangel",
+        .working_location = "Pizzeria",
+        .tile_index = 13694,
+        .age = 45,
         .cooking = personnel.staff[0].skill,
         .speed = personnel.staff[0].speed,
         .motivation = personnel.staff[0].motivation,
@@ -737,8 +760,7 @@ int main(void) {
     assert(bd_frame != NULL);
     RenderSurface bd_surface;
     assert(render_surface_init(&bd_surface, bd_frame, 800 * 600 * 4, 800, 600));
-    assert(screen_render_branch_details(&bd_surface, &bd_panel, &bd_separator,
-                                        &bd_logo, &bd_rating, font_data,
+    assert(screen_render_branch_details(&bd_surface, &bd_sprites, font_data,
                                         font_size, &font_info, &bd_data));
     size_t bd_panel_offset = ((size_t)218 * 800 + 561) * 4;
     assert(memcmp(bd_frame + bd_panel_offset, bd_panel.pixels, 4) == 0);
@@ -747,6 +769,9 @@ int main(void) {
     free(bd_separator_pixels);
     free(bd_logo_pixels);
     free(bd_rating_pixels);
+    free(bd_help_pixels);
+    free(bd_button_pixels);
+    free(bd_slider_pixels);
 
     uint8_t *bo_panel_pixels = NULL;
     uint8_t *bo_separator_pixels = NULL;

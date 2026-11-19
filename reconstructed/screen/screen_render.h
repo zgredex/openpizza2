@@ -184,11 +184,21 @@ bool screen_render_branch_offer(RenderSurface *surface, const RgbaSprite *panel,
                                 const uint8_t *font_data, size_t font_size,
                                 const FntInfo *font, const BranchOfferData *data);
 
+typedef struct BranchDetailsSprites {
+    const RgbaSprite *panel;
+    const RgbaSprite *separator;
+    const RgbaSprite *logo_frame;
+    const RgbaSprite *help_button;
+    const RgbaSprite *button_background;
+    const RgbaSprite *slider;
+    const RgbaSprite *ratings[8];
+} BranchDetailsSprites;
+
 typedef struct BranchDetailsData {
-    const char *branch_name;
     const char *employee_name;
     const char *employee_role;
     const char *owner_name;
+    const char *working_location;
     uint32_t tile_index;
     uint32_t age;
     int32_t cooking;
@@ -201,11 +211,9 @@ typedef struct BranchDetailsData {
 } BranchDetailsData;
 
 /* Composes Screen_BranchDetails (0x451DD0): SUBMENUE window, separators,
- * LOGORAHMEN frame, BEWERTUNG rating sprite, staff rows and action buttons. */
-bool screen_render_branch_details(RenderSurface *surface, const RgbaSprite *panel,
-                                  const RgbaSprite *separator,
-                                  const RgbaSprite *logo_frame,
-                                  const RgbaSprite *rating_sprite,
+ * LOGORAHMEN frame, eight customer-group ratings, staff rows and buttons. */
+bool screen_render_branch_details(RenderSurface *surface,
+                                  const BranchDetailsSprites *sprites,
                                   const uint8_t *font_data, size_t font_size,
                                   const FntInfo *font,
                                   const BranchDetailsData *data);
