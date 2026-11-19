@@ -25,8 +25,9 @@ Current batches:
   sub-start menus 0x19/0x1B and character select 0x1C.
 - `options/` — options/autosave page state, sound values, language 0..3 and the
   0x568D88 autosave interval table (1..120).
-- `statistics/` — company overview counts/rank/share and branch-balance
-  entries from `Stats_Report_FillCompanyOverview` and the statistics screens.
+- `statistics/` — company overview counts/rank/share, branch-balance entries
+  and `Stats_ComputePlayerAggregateStats` customer/profit/ratio totals,
+  maxima and leader scores.
 - `render/` — RGBA render surface, clipped fill/blit with alpha, and TGA
   decoding for uncompressed and RLE 24/32-bit true-colour plus 8-bit
   grayscale images.

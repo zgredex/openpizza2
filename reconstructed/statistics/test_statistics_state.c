@@ -55,9 +55,41 @@ static void test_branch_balance(void) {
     assert(statistics_total_branch_profit(&state) == 30);
 }
 
+static void test_player_aggregate(void) {
+    const StatisticsBranchAggregate branches[2] = {
+        {.customers = 100, .profit = 60, .ratio = 2},
+        {.customers = 50, .profit = 40, .ratio = 1},
+    };
+    StatisticsPlayerAggregate aggregate;
+    statistics_compute_player_aggregate(branches, 2, true, true, true,
+                                        &aggregate);
+    assert(aggregate.customer_total == 150);
+    assert(aggregate.customer_max == 100);
+    assert(aggregate.customer_score == 5001);
+    assert(aggregate.profit_total == 100);
+    assert(aggregate.profit_max == 60);
+    assert(aggregate.profit_score == 5010);
+    assert(aggregate.ratio_total == 3);
+    assert(aggregate.ratio_max == 2);
+    assert(aggregate.ratio_score == 6500);
+
+    statistics_compute_player_aggregate(branches, 2, false, false, false,
+                                        &aggregate);
+    assert(aggregate.customer_score == 1);
+    assert(aggregate.profit_score == 10);
+    assert(aggregate.ratio_score == 1500);
+
+    const StatisticsBranchAggregate empty[1] = {{0, 0, 0}};
+    statistics_compute_player_aggregate(empty, 1, true, true, true, &aggregate);
+    assert(aggregate.customer_score == 0);
+    assert(aggregate.profit_score == 0);
+    assert(aggregate.ratio_score == 0);
+}
+
 int main(void) {
     test_company_overview();
     test_branch_balance();
+    test_player_aggregate();
     puts("statistics state reconstruction: OK");
     return 0;
 }

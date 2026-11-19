@@ -230,6 +230,17 @@ int main(void) {
     assert(stats.overview.player_c20 == 3);
     assert(stats.overview.share_x100 == 6200);
     assert(statistics_total_branch_profit(&stats) == 40);
+    const StatisticsBranchAggregate aggregates[2] = {
+        {.customers = 100, .profit = 60, .ratio = 2},
+        {.customers = 50, .profit = 40, .ratio = 1},
+    };
+    StatisticsPlayerAggregate player_aggregate;
+    statistics_compute_player_aggregate(aggregates, 2, true, true, true,
+                                        &player_aggregate);
+    assert(player_aggregate.customer_score == 5001);
+    assert(player_aggregate.profit_score == 5010);
+    assert(player_aggregate.ratio_score == 6500);
+
 
     SaveState save;
     memset(&save, 0, sizeof(save));

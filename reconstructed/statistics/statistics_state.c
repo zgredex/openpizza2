@@ -127,3 +127,36 @@ int32_t statistics_total_branch_profit(const StatisticsState *state) {
     }
     return total;
 }
+
+void statistics_compute_player_aggregate(
+    const StatisticsBranchAggregate *branches, size_t branch_count,
+    bool beats_customers, bool beats_profit, bool beats_ratio,
+    StatisticsPlayerAggregate *aggregate) {
+    if (aggregate == NULL) {
+        return;
+    }
+    memset(aggregate, 0, sizeof(*aggregate));
+    if (branches == NULL) {
+        return;
+    }
+    for (size_t index = 0; index < branch_count; index++) {
+        aggregate->customer_total += branches[index].customers;
+        if (aggregate->customer_max < branches[index].customers) {
+            aggregate->customer_max = branches[index].customers;
+        }
+        aggregate->profit_total += branches[index].profit;
+        if (aggregate->profit_max < branches[index].profit) {
+            aggregate->profit_max = branches[index].profit;
+        }
+        aggregate->ratio_total += branches[index].ratio;
+        if (aggregate->ratio_max < branches[index].ratio) {
+            aggregate->ratio_max = branches[index].ratio;
+        }
+    }
+    int32_t customer_flag = aggregate->customer_total != 0 && beats_customers;
+    int32_t profit_flag = aggregate->profit_total != 0 && beats_profit;
+    int32_t ratio_flag = aggregate->ratio_total != 0 && beats_ratio;
+    aggregate->customer_score = aggregate->customer_total / 100 + customer_flag * 5000;
+    aggregate->profit_score = aggregate->profit_total / 10 + profit_flag * 5000;
+    aggregate->ratio_score = (aggregate->ratio_total + ratio_flag * 10) * 500;
+}

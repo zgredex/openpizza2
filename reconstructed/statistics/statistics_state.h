@@ -2,6 +2,7 @@
 #define PC2_RECONSTRUCTED_STATISTICS_STATE_H
 
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 
 #define STATISTICS_MAX_BRANCHES 8
@@ -52,6 +53,24 @@ typedef struct BranchBalanceEntry {
     int32_t profit;
 } BranchBalanceEntry;
 
+typedef struct StatisticsBranchAggregate {
+    int32_t customers;
+    int32_t profit;
+    int32_t ratio;
+} StatisticsBranchAggregate;
+
+typedef struct StatisticsPlayerAggregate {
+    int32_t customer_total;
+    int32_t customer_max;
+    int32_t customer_score;
+    int32_t profit_total;
+    int32_t profit_max;
+    int32_t profit_score;
+    int32_t ratio_total;
+    int32_t ratio_max;
+    int32_t ratio_score;
+} StatisticsPlayerAggregate;
+
 typedef struct StatisticsState {
     StatisticsPage page;
     int32_t selected_company;
@@ -80,5 +99,12 @@ void statistics_fill_company_overview(StatisticsState *state,
 void statistics_add_branch_balance(StatisticsState *state, uint32_t branch_id,
                                    int32_t revenue, int32_t costs);
 int32_t statistics_total_branch_profit(const StatisticsState *state);
+
+/* Stats_ComputePlayerAggregateStats (0x4DF480): customer/profit/ratio
+ * totals, maxima and leader scores for one player. */
+void statistics_compute_player_aggregate(
+    const StatisticsBranchAggregate *branches, size_t branch_count,
+    bool beats_customers, bool beats_profit, bool beats_ratio,
+    StatisticsPlayerAggregate *aggregate);
 
 #endif
