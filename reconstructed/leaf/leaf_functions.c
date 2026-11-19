@@ -3467,3 +3467,93 @@ const void *ui_find_window_by_id(const void *const *windows, int32_t count,
     }
     return NULL;
 }
+
+void ui_set_active_child(UIActiveChildState *state, void *child) {
+    if (state == NULL || child == state->child) {
+        return;
+    }
+    if (state->child != NULL && state->notify != NULL) {
+        state->notify(state->child, 10, 0, 0);
+    }
+    state->child = child;
+}
+
+void ui_set_modal_handler(UIModalState *state, int32_t value, void *handler) {
+    if (state == NULL) {
+        return;
+    }
+    state->modal_value = value;
+    state->field_8348 = state->field_8340;
+    state->handler = handler;
+    if (handler != NULL && state->notify != NULL) {
+        state->notify(handler, 0x3c, 0, 0);
+    }
+}
+
+void ui_clear_transient_entries(UITransientState *state, bool clear_first,
+                                bool clear_second) {
+    if (state == NULL || (!clear_first && !clear_second)) {
+        return;
+    }
+    if (state->head == state->tail) {
+        return;
+    }
+    uint32_t index = (state->head + 1) & 0x3ffu;
+    if (index == state->tail) {
+        return;
+    }
+    do {
+        bool first = false;
+        bool second = false;
+        int32_t type = state->entries[index][0];
+        if (type < 0x203) {
+            if (type < 0x201) {
+                if (type == 0x100 || type == 0x102 || type == 0x104) {
+                    first = true;
+                }
+            } else {
+                second = true;
+            }
+        } else if (type > 0x203 &&
+                   (type < 0x206 || type == 0x20a)) {
+            second = true;
+        }
+        if ((clear_first && first) || (clear_second && second)) {
+            state->entries[index][0] = 0;
+        }
+        index = (index + 1) & 0x3ffu;
+    } while (index != state->tail);
+}
+
+bool ui_hit_test_child(const UIValidSizeState *state, int32_t x, int32_t y,
+                       bool (*test)(void *context, int32_t x, int32_t y),
+                       void *context) {
+    if (state == NULL) {
+        return false;
+    }
+    if (state->flag18 != 0) {
+        return true;
+    }
+    if (state->flag20 == 0 || x < state->min_x || x >= state->limit_x ||
+        y < state->min_y || y >= state->limit_y) {
+        return false;
+    }
+    if (test == NULL) {
+        return false;
+    }
+    return test(context, x - state->offset_x, y - state->offset_y);
+}
+
+bool ui_set_window_visible(UIVisibleState *state, int32_t visible) {
+    if (state == NULL || state->visible == visible) {
+        return false;
+    }
+    state->visible = visible;
+    if (state->mouse_move != NULL) {
+        state->mouse_move(state);
+    }
+    if (state->queue_command != NULL) {
+        state->queue_command(state, -1, visible != 0 ? 0x1f : 0x1e, 0);
+    }
+    return true;
+}

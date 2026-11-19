@@ -716,6 +716,52 @@ const void *window_get_child_and_notify(
 const void *ui_find_window_by_id(const void *const *windows, int32_t count,
                                  int32_t id, int32_t *index);
 
+typedef struct UIActiveChildState {
+    void *child;
+    void (*notify)(void *context, int32_t command, int32_t arg2,
+                   int32_t arg3);
+} UIActiveChildState;
+
+/* UI_SetActiveChild (0x528200). */
+void ui_set_active_child(UIActiveChildState *state, void *child);
+
+typedef struct UIModalState {
+    int32_t modal_value;
+    void *handler;
+    int32_t field_8340;
+    int32_t field_8348;
+    void (*notify)(void *handler, int32_t command, int32_t arg2,
+                   int32_t arg3);
+} UIModalState;
+
+/* UI_SetModalHandler (0x527CC0). */
+void ui_set_modal_handler(UIModalState *state, int32_t value, void *handler);
+
+typedef struct UITransientState {
+    uint32_t head;
+    uint32_t tail;
+    int32_t entries[1024][3];
+} UITransientState;
+
+/* UI_ClearTransientEntries (0x528090). */
+void ui_clear_transient_entries(UITransientState *state, bool clear_first,
+                                bool clear_second);
+
+/* UI_HitTestChild (0x520BC0). */
+bool ui_hit_test_child(const UIValidSizeState *state, int32_t x, int32_t y,
+                       bool (*test)(void *context, int32_t x, int32_t y),
+                       void *context);
+
+typedef struct UIVisibleState {
+    int32_t visible;
+    void (*mouse_move)(void *context);
+    void (*queue_command)(void *context, int32_t control, int32_t command,
+                          int32_t arg);
+} UIVisibleState;
+
+/* UI_SetWindowVisible (0x532890). */
+bool ui_set_window_visible(UIVisibleState *state, int32_t visible);
+
 /* Game_GetActiveScreenOrFallback (0x482910). */
 int32_t game_get_active_screen_or_fallback(const uint8_t *game);
 

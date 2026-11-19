@@ -2215,6 +2215,113 @@ static void test_ui_validation_pending_child(void) {
     assert(index == -1);
 }
 
+static int leaf_active_child_calls;
+static void leaf_active_child_notify(void *context, int32_t command,
+                                     int32_t arg2, int32_t arg3) {
+    (void)context;
+    (void)arg2;
+    (void)arg3;
+    assert(command == 10);
+    leaf_active_child_calls++;
+}
+
+static int leaf_modal_calls;
+static void leaf_modal_notify(void *handler, int32_t command, int32_t arg2,
+                              int32_t arg3) {
+    (void)handler;
+    (void)arg2;
+    (void)arg3;
+    assert(command == 0x3c);
+    leaf_modal_calls++;
+}
+
+static int leaf_visible_moves;
+static int leaf_visible_queues;
+static int32_t leaf_visible_command;
+static void leaf_mouse_move(void *context) {
+    (void)context;
+    leaf_visible_moves++;
+}
+static void leaf_queue_command(void *context, int32_t control, int32_t command,
+                               int32_t arg) {
+    (void)context;
+    (void)control;
+    (void)arg;
+    leaf_visible_queues++;
+    leaf_visible_command = command;
+}
+
+static void test_ui_child_modal_transient(void) {
+    uint8_t first_child = 0;
+    uint8_t second_child = 0;
+    UIActiveChildState active = {0};
+    active.notify = leaf_active_child_notify;
+    ui_set_active_child(&active, &first_child);
+    assert(active.child == &first_child);
+    assert(leaf_active_child_calls == 0);
+    ui_set_active_child(&active, &second_child);
+    assert(leaf_active_child_calls == 1);
+    ui_set_active_child(&active, &second_child);
+    assert(leaf_active_child_calls == 1);
+
+    UIModalState modal = {0};
+    modal.field_8340 = 17;
+    modal.notify = leaf_modal_notify;
+    ui_set_modal_handler(&modal, 9, &first_child);
+    assert(modal.modal_value == 9);
+    assert(modal.handler == &first_child);
+    assert(modal.field_8348 == 17);
+    assert(leaf_modal_calls == 1);
+
+    UITransientState transient = {0};
+    transient.head = 0;
+    transient.tail = 4;
+    transient.entries[1][0] = 0x100;
+    transient.entries[2][0] = 0x204;
+    transient.entries[3][0] = 0x300;
+    ui_clear_transient_entries(&transient, true, true);
+    assert(transient.entries[1][0] == 0);
+    assert(transient.entries[2][0] == 0);
+    assert(transient.entries[3][0] == 0x300);
+    transient.entries[1][0] = 0x100;
+    transient.entries[2][0] = 0x204;
+    ui_clear_transient_entries(&transient, true, false);
+    assert(transient.entries[1][0] == 0);
+    assert(transient.entries[2][0] == 0x204);
+
+    UIValidSizeState hit = {
+        .flag18 = 0,
+        .flag20 = 1,
+        .min_x = 10,
+        .min_y = 20,
+        .limit_x = 100,
+        .limit_y = 200,
+        .offset_x = 5,
+        .offset_y = 7,
+    };
+    leaf_ui_test_calls = 0;
+    assert(ui_hit_test_child(&hit, 50, 60, leaf_ui_test, NULL));
+    assert(leaf_ui_test_calls == 1);
+    assert(leaf_ui_test_x == 45 && leaf_ui_test_y == 53);
+    assert(!ui_hit_test_child(&hit, 5, 60, leaf_ui_test, NULL));
+    hit.flag18 = 1;
+    assert(ui_hit_test_child(&hit, -1, -1, NULL, NULL));
+
+    UIVisibleState visible = {0};
+    visible.visible = 0;
+    visible.mouse_move = leaf_mouse_move;
+    visible.queue_command = leaf_queue_command;
+    leaf_visible_moves = 0;
+    leaf_visible_queues = 0;
+    assert(ui_set_window_visible(&visible, 1));
+    assert(visible.visible == 1);
+    assert(leaf_visible_moves == 1);
+    assert(leaf_visible_queues == 1 && leaf_visible_command == 0x1f);
+    assert(!ui_set_window_visible(&visible, 1));
+    assert(ui_set_window_visible(&visible, 0));
+    assert(leaf_visible_command == 0x1e);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -2262,6 +2369,7 @@ int main(void) {
     test_window_ui_helpers();
     test_ui_state_helpers();
     test_ui_validation_pending_child();
+    test_ui_child_modal_transient();
     puts("leaf function reconstruction: OK");
     return 0;
 }
