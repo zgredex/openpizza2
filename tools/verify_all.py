@@ -1197,12 +1197,13 @@ def check_reconstructed_c():
     output = (result.stdout + result.stderr).strip()
     ok = (result.returncode == 0
           and "settings reconstruction: OK" in output
-          and "ingredient descriptor reconstruction: OK" in output)
+          and "ingredient descriptor reconstruction: OK" in output
+          and "mission state reconstruction: OK" in output)
     return {
         "name": "reconstructed C build",
         "ok": ok,
-        "detail": ("settings defaults and ingredient descriptor compile with "
-                   "gcc -std=c11 -Werror and pass their assertions")
+        "detail": ("settings defaults, ingredient descriptor and mission state "
+                   "compile with gcc -std=c11 -Werror and pass their assertions")
         if ok else output[-1200:],
     }
 

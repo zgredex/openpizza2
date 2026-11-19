@@ -11,6 +11,9 @@ Current batches:
 - `ingredient/` — `Ingredient` prefix layout and `Game_SetBuildingDesc`, checked
   against the Olives descriptor read back by
   `tools/emulate_ingredient_desc.py`.
+- `mission/` — `MissionState` layout and the campaign branch of
+  `Game_InitDateState`, with the goal/progress/completed offsets used by the
+  existing Unicorn mission probe.
 
 Build and run:
 
