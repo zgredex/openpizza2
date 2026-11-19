@@ -50,8 +50,11 @@ Current batches:
   `extracted/pictures/pe_freies_spiel.tga` with the Berlin scenario fields,
   and the London briefing page over
   `extracted/pictures/pe_missionsbriefing_lon.tga` with wrapped body text.
-- `operations/` — branch period accounting: sale revenue, ingredient cost,
-  payroll, rent, advertising, profit and period close.
+- `operations/` — branch period accounting (sale revenue, ingredient cost,
+  payroll, rent, advertising, profit, period close) plus the hourly path:
+  1/24 wage and advertising shares, 0.4%/hour negative-cash interest, opening
+  hours, `Game_ComputePlayerSalary` and
+  `Company_CollectUnprofitableBranches`.
 - `ai/` — customer visit state machine (walk 260, production 180, service 80)
   and competitor AI plan snapshot.
 - `recipes/` — recipe toppings, base price, branch-menu assignment and the

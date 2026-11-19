@@ -435,6 +435,28 @@ int main(void) {
     assert(branch_profit < 0.0);
     assert(operations.sales == 1);
     assert(operations.staff_count == 3);
+    branch_operations_set_advertising(&operations, 240.0);
+    uint8_t open_hours[BRANCH_OPEN_HOURS] = {0};
+    for (uint32_t hour = 10; hour <= 20; hour++) {
+        open_hours[hour] = 1;
+    }
+    branch_operations_set_open_hours(&operations, open_hours);
+    assert(branch_operations_is_open(&operations, 12));
+    assert(branch_operations_hourly_wages(&operations) == 1.5);
+    double hourly_cash = 1000.0;
+    assert(branch_operations_process_hour(&operations, 12, 50.0, 20.0,
+                                          &hourly_cash) == 1018.5);
+    assert(game_compute_player_salary(1, 5, 3, 2) == 10000);
+    assert(game_compute_player_salary(2, 6, 3, 2) == 20000);
+    assert(game_compute_player_salary(1, 4, 3, 2) == -1);
+    const BranchOperationProfit unprofitable_input[] = {
+        {1, 1000}, {2, 400}, {3, 100}, {4, 500},
+    };
+    BranchOperationProfit unprofitable_result[4];
+    assert(branch_collect_unprofitable(unprofitable_input, 4,
+                                       unprofitable_result, 4) == 1);
+    assert(unprofitable_result[0].branch_id == 3);
+
 
     uint8_t frame[4 * 4 * 4];
     RenderSurface surface;
