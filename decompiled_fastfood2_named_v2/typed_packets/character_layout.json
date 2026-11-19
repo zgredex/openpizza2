@@ -1,0 +1,258 @@
+{
+  "schema": "pc2.evidence.object_layout.v1",
+  "class": "Character",
+  "executable": {
+    "path": "game/fastfood2.exe",
+    "sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd"
+  },
+  "allocation": {
+    "site": "Game_InitScenario 0x4822A2: push 0x828; call operator_new; constructor called at 0x4822C5",
+    "size": "0x828",
+    "evidence": "operator_new(0x828) at 0x482330 (Game_InitScenario) and other Character_Construct call sites"
+  },
+  "vtable": {
+    "address": "0x55C4FC",
+    "constructor_store": "0x4D3752: mov DWORD PTR [esi],0x55C4FC",
+    "slot_count": 1,
+    "slot_0": "Character_Delete 0x4D3710"
+  },
+  "constructor": {
+    "address": "0x4D3730",
+    "name": "Character_Construct",
+    "stream_constructor": "Character_StreamConstruct 0x4D36F0",
+    "destructor": "Character_Destroy 0x4D3F80"
+  },
+  "save_load": {
+    "save": "Character_Save 0x4D3BA0",
+    "load": "Character_Load 0x4D3A50",
+    "pair_status": "exact same field sequence and widths"
+  },
+  "fields": [
+    {
+      "offset": "0x000",
+      "width": 4,
+      "name": "vtable",
+      "evidence": "constructor stores 0x55C4FC at 0x4D3752; not serialized"
+    },
+    {
+      "offset": "0x004",
+      "width": 4,
+      "name": "skill",
+      "evidence": "Person_SetSkill 0x4D4130 writes +0x04; constructor random 0x1E..0x46; saved"
+    },
+    {
+      "offset": "0x008",
+      "width": 4,
+      "name": "speed",
+      "evidence": "Person_SetSpeed 0x4D4140 writes +0x08; constructor random 0x1E..0x46; saved"
+    },
+    {
+      "offset": "0x00C",
+      "width": 4,
+      "name": "motivation",
+      "evidence": "Person_SetMotivation 0x4D4120 writes +0x0C; constructor random 0x1E..0x46; saved"
+    },
+    {
+      "offset": "0x010",
+      "width": 4,
+      "name": "health",
+      "evidence": "Person_SetHealth 0x4D4150 writes +0x10; constructor random 0x1E..0x46; saved"
+    },
+    {
+      "offset": "0x014",
+      "width": 4,
+      "name": "skill_timer",
+      "evidence": "Rating_DecayAndUpdateIndicators 0x4D4170 moves +0x14 toward zero and applies the delta to +0x04; saved"
+    },
+    {
+      "offset": "0x018",
+      "width": 4,
+      "name": "speed_timer",
+      "evidence": "same function applies +0x18 to +0x08; saved"
+    },
+    {
+      "offset": "0x01C",
+      "width": 4,
+      "name": "motivation_timer",
+      "evidence": "same function applies +0x1C to +0x0C; saved"
+    },
+    {
+      "offset": "0x020",
+      "width": 4,
+      "name": "health_timer",
+      "evidence": "same function applies +0x20 to +0x10; saved"
+    },
+    {
+      "offset": "0x024",
+      "width": 4,
+      "name": "gender",
+      "evidence": "Game_InitScenario 0x4822E5 copies profile +0xA0 here; UI_ComposeOverlayWindowFromRecord reads it; saved"
+    },
+    {
+      "offset": "0x028",
+      "width": 4,
+      "name": "hair",
+      "evidence": "Game_InitScenario 0x4822EB; saved"
+    },
+    {
+      "offset": "0x02C",
+      "width": 4,
+      "name": "eyes",
+      "evidence": "Game_InitScenario 0x4822F4; saved"
+    },
+    {
+      "offset": "0x030",
+      "width": 4,
+      "name": "mouth",
+      "evidence": "Game_InitScenario 0x4822FD; saved"
+    },
+    {
+      "offset": "0x034",
+      "width": 4,
+      "name": "head",
+      "evidence": "Game_InitScenario 0x482306; saved"
+    },
+    {
+      "offset": "0x038",
+      "width": 4,
+      "name": "age",
+      "evidence": "constructor Random_RangeFast(0x12,0x3C); used by Rating_ClampAdjusted/AdjustA/AdjustB; saved"
+    },
+    {
+      "offset": "0x03C",
+      "width": 4,
+      "name": "performance",
+      "evidence": "Person_SetPerformance 0x4D4160; constructor stores Rating_GetCompositeTruncated; saved"
+    },
+    {
+      "offset": "0x040",
+      "width": 4,
+      "name": "field_40",
+      "evidence": "constructor writes 0; saved; semantic role not yet recovered"
+    },
+    {
+      "offset": "0x044",
+      "width": 2000,
+      "name": "rating_data",
+      "evidence": "constructor clears 500 dwords; Character_ComputeRatingArray 0x4AF7A0 writes rating matrix; Character_Save writes 2000 bytes"
+    },
+    {
+      "offset": "0x814",
+      "width": 4,
+      "name": "registry_id",
+      "evidence": "constructor stores Game_AddObjectToRegistry result; Game_GetRecordByField814 0x4D3910 looks up g_Game+0x3C; sentinel -1; saved"
+    },
+    {
+      "offset": "0x818",
+      "width": 4,
+      "name": "object_id",
+      "evidence": "constructor stores param_1; Person_ReleaseFromBranch resolves it through g_Game+4; sentinel -1; saved"
+    },
+    {
+      "offset": "0x81C",
+      "width": 4,
+      "name": "player_slot",
+      "evidence": "Game_GetPlayerBySlot calls read it (e.g. Person_RemoveFromStaff 0x4D3E30); set -1 on release; saved"
+    },
+    {
+      "offset": "0x820",
+      "width": 4,
+      "name": "branch_id",
+      "evidence": "Person_RemoveFromStaff uses Game_GetPlayerSubmapValue(..., +0x81C, +0x820); Person_ReleaseFromBranch looks it up in the player branch map; saved"
+    },
+    {
+      "offset": "0x824",
+      "width": 1,
+      "name": "profession_type",
+      "evidence": "constructor stores param_2 (0..3); Person_ReleaseFromBranch switch selects salary code 6/8/7/0xD; saved"
+    },
+    {
+      "offset": "0x825",
+      "width": 1,
+      "name": "activity_state",
+      "evidence": "constructor writes 2; read in Person/AI state switches and personnel UI; saved"
+    },
+    {
+      "offset": "0x826",
+      "width": 2,
+      "name": "padding_826",
+      "evidence": "not read or written by constructor, save or load"
+    }
+  ],
+  "rating_data_blocks": [
+    {
+      "offset": "0x044",
+      "name": "block0",
+      "cached_value": "Rating_GetComposite"
+    },
+    {
+      "offset": "0x1D4",
+      "name": "block1",
+      "cached_value": "Rating_ClampAdjusted"
+    },
+    {
+      "offset": "0x364",
+      "name": "block2",
+      "cached_value": "Rating_AdjustA"
+    },
+    {
+      "offset": "0x4F4",
+      "name": "block3",
+      "cached_value": "motivation"
+    },
+    {
+      "offset": "0x684",
+      "name": "block4",
+      "cached_value": "Rating_AdjustB"
+    }
+  ],
+  "save_order": [
+    "+0x04",
+    "+0x08",
+    "+0x0C",
+    "+0x10",
+    "+0x24",
+    "+0x28",
+    "+0x2C",
+    "+0x30",
+    "+0x34",
+    "+0x38",
+    "+0x3C",
+    "+0x44 (2000 bytes)",
+    "+0x814",
+    "+0x818",
+    "+0x81C",
+    "+0x820",
+    "+0x824 (1 byte)",
+    "+0x40",
+    "+0x825 (1 byte)",
+    "+0x14",
+    "+0x18",
+    "+0x1C",
+    "+0x20"
+  ],
+  "constructor_initialization": [
+    "+0x00 = 0x55C4FC",
+    "+0x814/+0x818/+0x81C/+0x820 = -1",
+    "+0x04/+0x08/+0x0C/+0x10 = Random_RangeFast(0x1E,0x46)",
+    "+0x38 = Random_RangeFast(0x12,0x3C)",
+    "+0x824 = profession type",
+    "+0x40 = 0",
+    "+0x825 = 2",
+    "+0x14/+0x18/+0x1C/+0x20 = 0",
+    "+0x44..+0x813 = 0",
+    "+0x3C = Rating_GetCompositeTruncated"
+  ],
+  "reconstruction": {
+    "header": "reconstructed/character/character_state.h",
+    "implementation": "reconstructed/character/character_state.c",
+    "tests": "reconstructed/character/test_character_state.c",
+    "asserts": 29
+  },
+  "open_questions": [
+    "+0x40 is saved and initialized to 0 but its semantic role is not yet established.",
+    "+0x826..+0x827 are not touched by constructor, save or load.",
+    "The 500-dword rating array is laid out as five 100-dword blocks; only the first dword of each block is directly named by the constructor. Character_ComputeRatingArray fills the first 144 dwords, so the full block semantics remain to be mapped.",
+    "The vtable has one recovered slot (Character_Delete)."
+  ]
+}

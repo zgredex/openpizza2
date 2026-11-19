@@ -17,6 +17,7 @@
 
 | File | Asserts |
 |---|---:|
+| `reconstructed/character/character_state.h` | 29 |
 | `reconstructed/construction/construction_state.c` | 9 |
 | `reconstructed/freeplay/freeplay_profiles.h` | 26 |
 | `reconstructed/ingredient/ingredient.c` | 12 |
@@ -24,7 +25,7 @@
 | `reconstructed/mission/mission_state.c` | 14 |
 | `reconstructed/piz/piz_container.c` | 6 |
 | `reconstructed/settings/settings.c` | 24 |
-| **Total** | **92** |
+| **Total** | **121** |
 
 ## Remaining gaps
 

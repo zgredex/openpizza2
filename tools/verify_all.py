@@ -1118,6 +1118,20 @@ def check_mission_goals_emulation():
                    "goal 2 needs flag 0x16f4; rat action writes slot 1") if ok else output[-1200:],
     }
 
+def check_character_layout_evidence():
+    result = subprocess.run(
+        ["python3", "tools/verify_character_layout.py"],
+        cwd=ROOT, text=True, capture_output=True, timeout=120)
+    output = (result.stdout + result.stderr).strip()
+    ok = (result.returncode == 0
+          and "Character layout: 0x828 bytes" in output
+          and "23-field save/load order" in output)
+    return {
+        "name": "Character layout evidence",
+        "ok": ok,
+        "detail": output[-1200:],
+    }
+
 def check_london_ownership_evidence():
     result = subprocess.run(
         ["python3", "tools/verify_london_ownership.py"],
@@ -1260,7 +1274,7 @@ def check_reconstructed_c():
                    "target compile with gcc -std=c11 -Werror and pass; piz "
                    "container, options/autosave, statistics, AI, recipes, "
                    "personnel, render, operations, leaf functions, "
-                   "free-play profiles, "
+                   "free-play profiles, Character layout, "
                    "SPR/FNT/ANI assets and UI "
                    "composition, exact main menu, exact character-select, exact London "
                    "briefing, exact 157-control free-play setup, statistics view, exact branch-"
@@ -1593,6 +1607,7 @@ def main(argv=None):
     checks.append(check_starting_capital_emulation())
     checks.append(check_clock_command_emulation())
     checks.append(check_mission_goals_emulation())
+    checks.append(check_character_layout_evidence())
     checks.append(check_london_ownership_evidence())
     checks.append(check_freeplay_cash_multiplier_evidence())
     checks.append(check_crt_helpers_emulation())

@@ -71,6 +71,9 @@ Current batches:
   percent modifiers, building level/area/sprite-variant mapping, direction
   mapping, calendar interpolation, array counters/search/pair access,
   8-byte-record binary search, game stat counters and trivial pointer clears.
+- `character/` — the full 0x828-byte Character object: constructor fields,
+  save/load order, skill/age/performance fields, five 100-dword rating blocks,
+  registry/object/player/branch IDs and 29 compile-time layout asserts.
 - `freeplay/` — six 0xC0-byte player setup profiles at 0x57BCD8 with static
   asserts for the recovered offsets, the default multiplier/active writes and
   the `(multiplier * capital) / 100` starting-cash formula.
