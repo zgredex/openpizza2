@@ -1345,6 +1345,140 @@ static void test_office_desk_composition(void) {
     free(frame);
 }
 
+static void test_building_project_composition(void) {
+    uint8_t *panel_pixels = NULL;
+    RgbaSprite panel;
+    assert(load_spr("../extracted/sprites/submenue.spr", &panel_pixels, &panel));
+    uint8_t *sprite_pixels[BUILDING_PROJECT_ASSET_COUNT] = {NULL};
+    RgbaSprite sprites[BUILDING_PROJECT_ASSET_COUNT];
+    for (int index = 0; index < BUILDING_PROJECT_ASSET_COUNT; index++) {
+        char path[128];
+        snprintf(path, sizeof(path), "../extracted/sprites/%s",
+                 kBuildingProjectAssetNames[index]);
+        assert(load_spr(path, &sprite_pixels[index], &sprites[index]));
+    }
+    static const char *const font_paths[BUILDING_PROJECT_FONT_COUNT] = {
+        "../extracted/fonts/timesfont.fnt",
+        "../extracted/fonts/verdana7.fnt",
+        "../extracted/fonts/verdana8.fnt",
+        "../extracted/fonts/verdana10.fnt",
+    };
+    uint8_t *font_data[BUILDING_PROJECT_FONT_COUNT] = {NULL};
+    size_t font_sizes[BUILDING_PROJECT_FONT_COUNT] = {0};
+    FntInfo font_infos[BUILDING_PROJECT_FONT_COUNT];
+    for (int index = 0; index < BUILDING_PROJECT_FONT_COUNT; index++) {
+        font_data[index] = load_file(font_paths[index], &font_sizes[index]);
+        assert(font_data[index] != NULL);
+        assert(fnt_read_info(font_data[index], font_sizes[index],
+                             &font_infos[index]));
+    }
+    BuildingProjectAssets assets = {0};
+    assets.panel = &panel;
+    for (int index = 0; index < BUILDING_PROJECT_ASSET_COUNT; index++) {
+        assets.sprites[index] = &sprites[index];
+    }
+    for (int index = 0; index < BUILDING_PROJECT_FONT_COUNT; index++) {
+        assets.fonts[index] = (BuildingProjectFont){
+            font_data[index], font_sizes[index], &font_infos[index]};
+    }
+    assert(kBuildingProjectControlCount == 172);
+    const BuildingProjectControl *control = NULL;
+    for (size_t index = 0; index < kBuildingProjectControlCount; index++) {
+        if (kBuildingProjectControls[index].id == 1134) {
+            control = &kBuildingProjectControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 42 && control->y == 5);
+    assert(control->font == 0 && control->align == 2 && control->width == 190);
+    assert(strcmp(control->text, "Town advertising") == 0);
+    control = NULL;
+    for (size_t index = 0; index < kBuildingProjectControlCount; index++) {
+        if (kBuildingProjectControls[index].id == 1170) {
+            control = &kBuildingProjectControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->kind == BUILDING_PROJECT_KIND_SPRITE);
+    assert(control->x == 99 && control->y == 315);
+    assert(control->asset == 0);
+    control = NULL;
+    for (size_t index = 0; index < kBuildingProjectControlCount; index++) {
+        if (kBuildingProjectControls[index].id == 1068) {
+            control = &kBuildingProjectControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->kind == BUILDING_PROJECT_KIND_SLIDER);
+    assert(control->x == 55 && control->y == 286 && control->width == 75);
+    control = NULL;
+    for (size_t index = 0; index < kBuildingProjectControlCount; index++) {
+        if (kBuildingProjectControls[index].id == 1154) {
+            control = &kBuildingProjectControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->kind == BUILDING_PROJECT_KIND_BUTTON);
+    assert(control->x == 64 && control->y == 55 && control->width == 147);
+    assert(strcmp(control->text, "#textbutton-default") == 0);
+    control = NULL;
+    for (size_t index = 0; index < kBuildingProjectControlCount; index++) {
+        if (kBuildingProjectControls[index].id == 8003) {
+            control = &kBuildingProjectControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 142 && control->y == 274 && control->width == 84);
+    assert(strcmp(control->text, "#Starten") == 0);
+
+    const BuildingProjectData data = {
+        .cost = 500000,
+        .effect = 53,
+        .option_labels = {"Enterprise image", "Emphasize strengths",
+                          "Discredit competitors"},
+        .selected_button = 3,
+    };
+    size_t frame_size = 800 * 600 * 4;
+    uint8_t *frame = malloc(frame_size);
+    assert(frame != NULL);
+    RenderSurface surface;
+    assert(render_surface_init(&surface, frame, frame_size, 800, 600));
+    assert(screen_render_building_project(&surface, &assets, &data));
+    size_t panel_offset = ((size_t)218 * 800 + 561) * 4;
+    assert(memcmp(frame + panel_offset, panel.pixels, 4) == 0);
+    bool title_ink = false;
+    for (int y = 220; y < 245; y++) {
+        for (int x = 600; x < 780; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] < 180 && frame[offset + 1] < 120) {
+                title_ink = true;
+            }
+        }
+    }
+    assert(title_ink);
+    bool start_ink = false;
+    for (int y = 490; y < 514; y++) {
+        for (int x = 700; x < 790; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] < 80 && frame[offset + 1] < 80 &&
+                frame[offset + 2] < 80) {
+                start_ink = true;
+            }
+        }
+    }
+    assert(start_ink);
+    assert(!screen_render_building_project(&surface, NULL, &data));
+
+    for (int index = 0; index < BUILDING_PROJECT_FONT_COUNT; index++) {
+        free(font_data[index]);
+    }
+    for (int index = 0; index < BUILDING_PROJECT_ASSET_COUNT; index++) {
+        free(sprite_pixels[index]);
+    }
+    free(panel_pixels);
+    free(frame);
+}
+
 static void test_warehouse_composition(void) {
     uint8_t *panel_pixels = NULL;
     RgbaSprite panel;
@@ -2451,6 +2585,7 @@ int main(void) {
     test_personnel_record_composition();
     test_statistics_balance_composition();
     test_warehouse_composition();
+    test_building_project_composition();
     test_office_desk_composition();
     test_statistics_branch_balance_composition();
     test_options_page_composition();

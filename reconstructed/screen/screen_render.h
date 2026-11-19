@@ -12,6 +12,7 @@
 #include "character_select_layout.h"
 #include "free_play_layout.h"
 #include "warehouse_layout.h"
+#include "building_project_layout.h"
 #include "office_desk_layout.h"
 #include "statistics_balance_layout.h"
 
@@ -465,6 +466,31 @@ typedef struct WarehouseScreenData {
 bool screen_render_warehouse(RenderSurface *surface,
                              const WarehouseAssets *assets,
                              const WarehouseScreenData *data);
+
+typedef struct BuildingProjectFont {
+    const uint8_t *data;
+    size_t size;
+    const FntInfo *info;
+} BuildingProjectFont;
+
+typedef struct BuildingProjectAssets {
+    const RgbaSprite *panel;
+    const RgbaSprite *sprites[BUILDING_PROJECT_ASSET_COUNT];
+    BuildingProjectFont fonts[BUILDING_PROJECT_FONT_COUNT];
+} BuildingProjectAssets;
+
+typedef struct BuildingProjectData {
+    uint32_t cost;
+    uint32_t effect;
+    const char *option_labels[3];
+    int selected_button; /* 0..3 start, -1 none */
+} BuildingProjectData;
+
+/* Composes Screen_BuildingProject (0x42DDF0): SUBMENUE window at (561,218)
+ * plus all 172 constructor controls. */
+bool screen_render_building_project(RenderSurface *surface,
+                                    const BuildingProjectAssets *assets,
+                                    const BuildingProjectData *data);
 
 typedef struct MissionBriefingData {
     const char *city;

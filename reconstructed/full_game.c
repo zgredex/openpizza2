@@ -1444,6 +1444,67 @@ int main(void) {
     }
     free(wh_panel_pixels);
 
+    uint8_t *bp_panel_pixels = NULL;
+    RgbaSprite bp_panel;
+    assert(load_spr_asset("../extracted/sprites/submenue.spr", &bp_panel_pixels,
+                          &bp_panel));
+    uint8_t *bp_sprite_pixels[BUILDING_PROJECT_ASSET_COUNT] = {NULL};
+    RgbaSprite bp_sprites[BUILDING_PROJECT_ASSET_COUNT];
+    for (int index = 0; index < BUILDING_PROJECT_ASSET_COUNT; index++) {
+        char path[128];
+        snprintf(path, sizeof(path), "../extracted/sprites/%s",
+                 kBuildingProjectAssetNames[index]);
+        assert(load_spr_asset(path, &bp_sprite_pixels[index],
+                              &bp_sprites[index]));
+    }
+    static const char *const bp_font_paths[BUILDING_PROJECT_FONT_COUNT] = {
+        "../extracted/fonts/timesfont.fnt",
+        "../extracted/fonts/verdana7.fnt",
+        "../extracted/fonts/verdana8.fnt",
+        "../extracted/fonts/verdana10.fnt",
+    };
+    uint8_t *bp_font_data[BUILDING_PROJECT_FONT_COUNT] = {NULL};
+    size_t bp_font_sizes[BUILDING_PROJECT_FONT_COUNT] = {0};
+    FntInfo bp_font_infos[BUILDING_PROJECT_FONT_COUNT];
+    for (int index = 0; index < BUILDING_PROJECT_FONT_COUNT; index++) {
+        bp_font_data[index] = load_font_asset(bp_font_paths[index],
+                                              &bp_font_sizes[index]);
+        assert(bp_font_data[index] != NULL);
+        assert(fnt_read_info(bp_font_data[index], bp_font_sizes[index],
+                             &bp_font_infos[index]));
+    }
+    BuildingProjectAssets bp_assets = {0};
+    bp_assets.panel = &bp_panel;
+    for (int index = 0; index < BUILDING_PROJECT_ASSET_COUNT; index++) {
+        bp_assets.sprites[index] = &bp_sprites[index];
+    }
+    for (int index = 0; index < BUILDING_PROJECT_FONT_COUNT; index++) {
+        bp_assets.fonts[index] = (BuildingProjectFont){
+            bp_font_data[index], bp_font_sizes[index], &bp_font_infos[index]};
+    }
+    const BuildingProjectData bp_data = {
+        .cost = 500000,
+        .effect = 53,
+        .option_labels = {"Enterprise image", "Emphasize strengths",
+                          "Discredit competitors"},
+        .selected_button = 3,
+    };
+    uint8_t *bp_frame = malloc(800 * 600 * 4);
+    assert(bp_frame != NULL);
+    RenderSurface bp_surface;
+    assert(render_surface_init(&bp_surface, bp_frame, 800 * 600 * 4, 800, 600));
+    assert(screen_render_building_project(&bp_surface, &bp_assets, &bp_data));
+    size_t bp_panel_offset = ((size_t)218 * 800 + 561) * 4;
+    assert(memcmp(bp_frame + bp_panel_offset, bp_panel.pixels, 4) == 0);
+    free(bp_frame);
+    for (int index = 0; index < BUILDING_PROJECT_FONT_COUNT; index++) {
+        free(bp_font_data[index]);
+    }
+    for (int index = 0; index < BUILDING_PROJECT_ASSET_COUNT; index++) {
+        free(bp_sprite_pixels[index]);
+    }
+    free(bp_panel_pixels);
+
     uint8_t *sbb_background_pixels = NULL;
     uint8_t *sbb_row_pixels = NULL;
     uint8_t *sbb_rating_pixels = NULL;
