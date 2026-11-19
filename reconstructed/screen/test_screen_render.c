@@ -766,7 +766,10 @@ static void test_mission_goals_composition(void) {
 
     const MissionGoalsData data = {
         .title = "Town aims",
-        .goal_labels = {"C20 > 2", "+0x14 > 0", "flag 0x16f4"},
+        .help_text = "#Hier steht, welches Szenario f\u00fcr diese Stadt vorgesehen ist.",
+        .goal_labels = {"#Retten Sie die Welt.",
+                        "#Verdienen Sie dabei so viel Geld wie m\u00f6glich.",
+                        "#Achten Sie auf eine gesunde Umwelt."},
         .completed = {1, 1, 1},
         .progress = {3, 1, 1},
         .years = 2,

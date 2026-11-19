@@ -1081,31 +1081,30 @@ bool screen_render_mission_goals(RenderSurface *surface, const RgbaSprite *panel
     draw_label(surface, font_data, font_size, font,
                window_x + 44, window_y + 5,
                data->title != NULL ? data->title : "Town aims", title_color);
+    if (data->help_text != NULL) {
+        draw_wrapped_text(surface, font_data, font_size, font,
+                          window_x + 47, window_y + 37, 185,
+                          data->help_text, label_color);
+    }
     draw_label(surface, font_data, font_size, font, window_x + 47,
-               window_y + 200, "Your tasks are therefore", label_color);
+               window_y + 200, "Your tasks are therefore:", label_color);
     static const int32_t goal_y[3] = {214, 240, 267};
+    static const char *const markers[3] = {"1.", "2.", "3."};
     for (int index = 0; index < 3; index++) {
         int32_t y = window_y + goal_y[index];
         draw_label(surface, font_data, font_size, font, window_x + 59, y,
-                   index == 2 ? "!" : ">", label_color);
+                   markers[index], label_color);
         draw_label(surface, font_data, font_size, font, window_x + 72, y,
                    data->goal_labels[index] != NULL ? data->goal_labels[index]
-                                                    : "Goal",
+                                                    : "",
                    label_color);
-        snprintf(value_text, sizeof(value_text), "%s %d",
-                 data->completed[index] ? "done" : "progress",
-                 data->progress[index]);
-        draw_label(surface, font_data, font_size, font, window_x + 210, y,
-                   value_text, data->completed[index] ? title_color : value_color);
     }
     draw_label(surface, font_data, font_size, font, window_x + 47,
-               window_y + 293, "Initial capital so far", label_color);
-    snprintf(value_text, sizeof(value_text), "%u", data->capital);
+               window_y + 293, "Initial capital so far:", label_color);
+    snprintf(value_text, sizeof(value_text), "%u $", data->capital);
     draw_label(surface, font_data, font_size, font, window_x + 140,
                window_y + 293, value_text, value_color);
-    draw_label(surface, font_data, font_size, font, window_x + 47,
-               window_y + 317, "Time limit", label_color);
-    snprintf(value_text, sizeof(value_text), "%u years", data->years);
+    snprintf(value_text, sizeof(value_text), "%u Jahre", data->years);
     draw_label(surface, font_data, font_size, font, window_x + 140,
                window_y + 317, value_text, value_color);
     if (separator != NULL) {
@@ -1116,7 +1115,9 @@ bool screen_render_mission_goals(RenderSurface *surface, const RgbaSprite *panel
     const uint8_t button_active[4] = {130, 230, 130, 235};
     blend_rect(surface, window_x + 48, window_y + 347, 180, 26,
                data->selected_button == 0 ? button_active : button_idle);
-    draw_label(surface, font_data, font_size, font, window_x + 70,
+    uint32_t text_width = ui_measure_text(font, "Complete mission");
+    draw_label(surface, font_data, font_size, font,
+               window_x + 48 + (180 - (int32_t)text_width) / 2,
                window_y + 351, "Complete mission", label_color);
     return true;
 }

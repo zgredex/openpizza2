@@ -66,6 +66,7 @@ bool screen_render_recipe_info_panel(RenderSurface *surface,
 
 typedef struct MissionGoalsData {
     const char *title;
+    const char *help_text;
     const char *goal_labels[3];
     uint8_t completed[3];
     int32_t progress[3];

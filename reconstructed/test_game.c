@@ -958,7 +958,10 @@ int main(void) {
                           &mg_separator_pixels, &mg_separator));
     const MissionGoalsData mg_data = {
         .title = "Town aims",
-        .goal_labels = {"C20 > 2", "+0x14 > 0", "flag 0x16f4"},
+        .help_text = "#Hier steht, welches Szenario f\u00fcr diese Stadt vorgesehen ist.",
+        .goal_labels = {"#Retten Sie die Welt.",
+                        "#Verdienen Sie dabei so viel Geld wie m\u00f6glich.",
+                        "#Achten Sie auf eine gesunde Umwelt."},
         .completed = {(uint8_t)city.mission.completed[0],
                       (uint8_t)city.mission.completed[1],
                       (uint8_t)city.mission.completed[2]},
