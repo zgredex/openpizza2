@@ -20,10 +20,12 @@ Current batches:
   `12`).
 - `menu/` — main-menu controls, hit testing, selection, hover and activation
   status restored from `Screen_MainMenu`.
+- `save/` — packed save blob: "PC2S" header, the 0x164-byte settings block,
+  and the 0xD0 bytes emitted by `Player_MissionState_Save`.
 - `city/` — city/branch state, London lease, HQ/rat mission actions and branch
   sale integration.
-- `test_game` — one executable linking settings, ingredient, menu, mission,
-  branch and city modules through the full London loop.
+- `test_game` — one executable linking settings, ingredient, menu, save,
+  mission, branch and city modules through the full London loop.
 
 Build and run:
 

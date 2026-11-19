@@ -4,6 +4,7 @@
 #include "menu/menu_state.h"
 #include "mission/mission_goals.h"
 #include "settings/settings.h"
+#include "save/save_state.h"
 
 #include <assert.h>
 #include <math.h>
@@ -58,6 +59,18 @@ int main(void) {
     assert_close(city.economy.cash, 494283.420524712365806, 1e-9);
     assert(city.branches[0].sales == 1);
     assert_close(city.branches[0].revenue, 13.80, 1e-12);
+
+    SaveState save;
+    memset(&save, 0, sizeof(save));
+    save.settings = settings;
+    save.mission = city.mission;
+    uint8_t buffer[SAVE_STATE_TOTAL_SIZE];
+    size_t written = save_state_encode(&save, buffer, sizeof(buffer));
+    assert(written == SAVE_STATE_TOTAL_SIZE);
+    SaveState loaded;
+    assert(save_state_decode(&loaded, buffer, written));
+    assert(memcmp(&loaded.settings, &settings, sizeof(Settings)) == 0);
+    assert(mission_all_goals_complete(&loaded.mission));
 
     puts("unified game reconstruction: OK");
     return 0;
