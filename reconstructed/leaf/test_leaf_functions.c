@@ -1520,6 +1520,97 @@ static void test_remaining_setters(void) {
     assert(read_i16_at(pixels, 24 + 16 * 3) == 0);
 }
 
+static void test_surface_sprite_stream(void) {
+    uint8_t pixels[64];
+    memset(pixels, 0xff, sizeof(pixels));
+    uint8_t surface[0x80] = {0};
+    uintptr_t pixel_pointer = (uintptr_t)pixels;
+    memcpy(surface + 0x18, &pixel_pointer, sizeof(pixel_pointer));
+    write_i32_at(surface, 8, 2);
+    write_i32_at(surface, 4, 3);
+    surface[0x10] = 8;
+    surface_clear(surface);
+    for (int index = 0; index < 6; index++) {
+        assert(pixels[index] == 0);
+    }
+    assert(pixels[6] == 0xff);
+
+    memset(pixels, 0xff, sizeof(pixels));
+    memcpy(surface + 0x28, &pixel_pointer, sizeof(pixel_pointer));
+    uint16_t width = 4;
+    uint16_t height = 2;
+    memcpy(surface + 0x1a, &width, sizeof(width));
+    memcpy(surface + 0x1c, &height, sizeof(height));
+    write_i32_at(surface, 0x20, 6);
+    surface_clear_rows(surface);
+    for (int index = 0; index < 4; index++) {
+        assert(pixels[index] == 0);
+        assert(pixels[12 + index] == 0);
+    }
+    assert(pixels[4] == 0xff);
+    assert(pixels[16] == 0xff);
+
+    uint8_t sprite[0x40] = {0};
+    sprite_init_format(sprite, 10, 20, 0x1234, 16, 0x17, 3, 4);
+    assert(read_i16_at(sprite, 10) == 3);
+    assert(sprite[5] == 16);
+    assert(read_i16_at(sprite, 0x0c) == 4);
+    assert(read_i32_at(sprite, 0x18) == 0);
+    assert(sprite[4] == 0x17);
+    assert(read_i32_at(sprite, 0x1c) == 0x1234);
+    assert(read_i16_at(sprite, 8) == 20);
+    assert(read_i16_at(sprite, 0x14) == 20);
+    assert(read_i16_at(sprite, 6) == 20);
+    assert(read_i16_at(sprite, 0x12) == 20);
+
+    uint8_t child[0x20] = {0};
+    write_i32_at(child, 0x0c, 7);
+    write_i32_at(child, 0x10, 8);
+    uint8_t object[0x8400] = {0};
+    uintptr_t child_pointer = (uintptr_t)child;
+    memcpy(object + 0x8310, &child_pointer, sizeof(child_pointer));
+    int32_t x = 0;
+    int32_t y = 0;
+    object_get_child_origin(object, &x, &y);
+    assert(x == 7 && y == 8);
+    write_i32_at(object, 0xd4, 5);
+    write_i32_at(object, 0xd8, 5);
+    write_i32_at(object, 0xdc, 6);
+    assert(object_count_matching_slots(object, 5) == 2);
+
+    uint8_t target0[0x40] = {0};
+    uint8_t target1[0x40] = {0};
+    write_i32_at(target0, 0x38, 99);
+    write_i32_at(target1, 0x38, 88);
+    uint8_t tile_defs[48] = {0};
+    uintptr_t target0_pointer = (uintptr_t)target0;
+    uintptr_t target1_pointer = (uintptr_t)target1;
+    memcpy(tile_defs + 8, &target0_pointer, sizeof(target0_pointer));
+    memcpy(tile_defs + 12 + 8, &target1_pointer, sizeof(target1_pointer));
+    uintptr_t tile_pointer = (uintptr_t)tile_defs;
+    memcpy(object + 0x4c, &tile_pointer, sizeof(tile_pointer));
+    uint8_t slot[0x50] = {0};
+    write_i32_at(slot, 0x44, 0);
+    write_i32_at(slot, 0x48, 1);
+    object_clear_slot_refs(object, slot);
+    assert(read_i32_at(target0, 0x38) == 0);
+    assert(read_i32_at(target1, 0x38) == 0);
+    assert(read_i32_at(slot, 0x44) == -1);
+    assert(read_i32_at(slot, 0x48) == -1);
+
+    uint8_t stream[0x40] = {0};
+    write_i32_at(stream, 4, 1);
+    write_i32_at(stream, 8, 2);
+    assert(stream_buffer_reset(stream));
+    assert(read_i32_at(stream, 4) == 0);
+    assert(read_i32_at(stream, 8) == 0);
+    write_i32_at(stream, 0x28, 10);
+    write_i32_at(stream, 0x2c, 30);
+    assert(stream_get_available(stream) == 20);
+    write_i32_at(stream, 0x28, 30);
+    assert(stream_get_available(stream) == 0);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -1555,6 +1646,7 @@ int main(void) {
     test_scroll_market_rating_player();
     test_tile_product_name_helpers();
     test_remaining_setters();
+    test_surface_sprite_stream();
     puts("leaf function reconstruction: OK");
     return 0;
 }

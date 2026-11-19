@@ -2588,3 +2588,122 @@ void surface_set_pixel(uint8_t *surface, int32_t x, int32_t y,
     uint8_t *target = (uint8_t *)base + (size_t)stride * y + (size_t)x * 3;
     memcpy(target, &value, sizeof(value));
 }
+
+void surface_clear(uint8_t *surface) {
+    if (surface == NULL) {
+        return;
+    }
+    uint32_t size = (uint32_t)(surface[0x10] >> 3) *
+                    (uint32_t)read_i32(surface + 8) *
+                    (uint32_t)read_i32(surface + 4);
+    uintptr_t buffer;
+    memcpy(&buffer, surface + 0x18, sizeof(buffer));
+    memset((void *)buffer, 0, size);
+}
+
+void surface_clear_rows(uint8_t *surface) {
+    if (surface == NULL) {
+        return;
+    }
+    uintptr_t buffer;
+    memcpy(&buffer, surface + 0x28, sizeof(buffer));
+    if (buffer == 0) {
+        return;
+    }
+    uint16_t width;
+    uint16_t height;
+    memcpy(&width, surface + 0x1a, sizeof(width));
+    memcpy(&height, surface + 0x1c, sizeof(height));
+    int32_t stride = read_i32(surface + 0x20);
+    uint8_t *row = (uint8_t *)buffer;
+    for (uint16_t y = 0; y < height; y++) {
+        memset(row, 0, width);
+        row += (size_t)stride * 2u;
+    }
+}
+
+void sprite_init_format(uint8_t *sprite, int16_t width, uint16_t height,
+                        uint32_t color_key, int32_t bpp, uint8_t flags,
+                        uint16_t hotspot_x, uint16_t hotspot_y) {
+    if (sprite == NULL) {
+        return;
+    }
+    memcpy(sprite + 10, &hotspot_x, sizeof(hotspot_x));
+    sprite[5] = (uint8_t)bpp;
+    memcpy(sprite + 0x0c, &hotspot_y, sizeof(hotspot_y));
+    write_i32(sprite + 0x18, 0);
+    int16_t stride = (int16_t)((bpp >> 3) * width);
+    sprite[4] = flags;
+    write_i32(sprite + 0x1c, (int32_t)color_key);
+    memcpy(sprite + 8, &height, sizeof(height));
+    memcpy(sprite + 0x14, &height, sizeof(height));
+    memcpy(sprite + 6, &stride, sizeof(stride));
+    memcpy(sprite + 0x12, &stride, sizeof(stride));
+}
+
+void object_get_child_origin(const uint8_t *object, int32_t *x, int32_t *y) {
+    if (object == NULL || x == NULL || y == NULL) {
+        return;
+    }
+    uintptr_t child;
+    memcpy(&child, object + 0x8310, sizeof(child));
+    if (child == 0) {
+        *x = 0;
+        *y = 0;
+        return;
+    }
+    *x = read_i32((const uint8_t *)child + 0x0c);
+    *y = read_i32((const uint8_t *)child + 0x10);
+}
+
+int32_t object_count_matching_slots(const uint8_t *object, int32_t value) {
+    if (object == NULL) {
+        return 0;
+    }
+    int32_t count = 0;
+    for (size_t index = 0; index < 8; index++) {
+        if (read_i32(object + 0xd4 + index * 4) == value) {
+            count++;
+        }
+    }
+    return count;
+}
+
+void object_clear_slot_refs(uint8_t *object, uint8_t *slot) {
+    if (object == NULL || slot == NULL) {
+        return;
+    }
+    uintptr_t tile_defs;
+    memcpy(&tile_defs, object + 0x4c, sizeof(tile_defs));
+    static const size_t fields[2] = {0x44, 0x48};
+    for (size_t index = 0; index < 2; index++) {
+        int32_t slot_index = read_i32(slot + fields[index]);
+        if (slot_index == -1) {
+            continue;
+        }
+        uint8_t *record = (uint8_t *)tile_defs + (size_t)slot_index * 0x0cu;
+        uintptr_t target;
+        memcpy(&target, record + 8, sizeof(target));
+        if (target != 0) {
+            write_i32((uint8_t *)target + 0x38, 0);
+        }
+        write_i32(slot + fields[index], -1);
+    }
+}
+
+bool stream_buffer_reset(uint8_t *buffer) {
+    if (buffer == NULL) {
+        return false;
+    }
+    memset(buffer, 0, 16);
+    return true;
+}
+
+int32_t stream_get_available(const uint8_t *stream) {
+    if (stream == NULL) {
+        return 0;
+    }
+    uint32_t first = (uint32_t)read_i32(stream + 0x28);
+    uint32_t second = (uint32_t)read_i32(stream + 0x2c);
+    return first < second ? (int32_t)(second - first) : 0;
+}

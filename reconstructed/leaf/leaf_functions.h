@@ -500,6 +500,18 @@ void surface_set_bounds(uint8_t *surface, int32_t left, int32_t top,
 void surface_set_pixel(uint8_t *surface, int32_t x, int32_t y,
                        uint16_t value);
 
+/* Surface/sprite/object/stream helpers. */
+void surface_clear(uint8_t *surface);
+void surface_clear_rows(uint8_t *surface);
+void sprite_init_format(uint8_t *sprite, int16_t width, uint16_t height,
+                        uint32_t color_key, int32_t bpp, uint8_t flags,
+                        uint16_t hotspot_x, uint16_t hotspot_y);
+void object_get_child_origin(const uint8_t *object, int32_t *x, int32_t *y);
+int32_t object_count_matching_slots(const uint8_t *object, int32_t value);
+void object_clear_slot_refs(uint8_t *object, uint8_t *slot);
+bool stream_buffer_reset(uint8_t *buffer);
+int32_t stream_get_available(const uint8_t *stream);
+
 /* Game_GetActiveScreenOrFallback (0x482910). */
 int32_t game_get_active_screen_or_fallback(const uint8_t *game);
 
