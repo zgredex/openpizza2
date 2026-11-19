@@ -476,6 +476,58 @@ static void test_leaf_queue_and_inventory(void) {
     free(scenario_table);
 }
 
+static void test_stride_entity_city(void) {
+    uint8_t stride_base[0xdc8 + 4 * 0x60] = {0};
+    assert(array_find_index_stride60(stride_base,
+                                     stride_base + 0xdc8) == 0);
+    assert(array_find_index_stride60(stride_base,
+                                     stride_base + 0xdc8 + 3 * 0x60) == 3);
+    assert(array_find_index_stride60(stride_base,
+                                     stride_base + 0xdc8 + 4 * 0x60) == -1);
+    assert(array_find_index_stride60(NULL, stride_base) == -1);
+
+    const EntityTypeProperties table[3] = {
+        {2433, 50, -15, 1},
+        {2436, 0, -32, 2},
+        {-1, 0, 0, 0},
+    };
+    EntityProperties entity = {0, 7, 8, 9};
+    entity_apply_type_properties(&entity, 2433, table, 3);
+    assert(entity.type == 2433);
+    assert(entity.field40 == 50 && entity.field44 == -15 &&
+           entity.field48 == 1);
+    entity = (EntityProperties){0, 7, 8, 9};
+    entity_apply_type_properties(&entity, 2436, table, 3);
+    assert(entity.field40 == 0 && entity.field44 == -32 &&
+           entity.field48 == 2);
+    entity = (EntityProperties){0, 7, 8, 9};
+    entity_apply_type_properties(&entity, 999, table, 3);
+    assert(entity.type == 999);
+    assert(entity.field40 == 7 && entity.field44 == 8 &&
+           entity.field48 == 9);
+    entity_apply_type_properties(NULL, 1, table, 3);
+
+    uint8_t city[0x1700] = {0};
+    assert(city_is_idle(city));
+    uint8_t state[0x100] = {0};
+    uintptr_t pointer = (uintptr_t)state;
+    memcpy(city + 0x16f0, &pointer, sizeof(pointer));
+    assert(!city_is_idle(city));
+    write_i32_at(state, 0x94, 1);
+    assert(city_is_idle(city));
+    write_i32_at(state, 0x94, 0);
+    assert(!city_is_idle(city));
+    assert(city_is_idle(NULL));
+
+    const void *values[3] = {state, city, NULL};
+    assert(array_get_ptr(values, 3, 0) == state);
+    assert(array_get_ptr4(values, 3, 1) == city);
+    assert(array_get_ptr_checked(values, 3, 2) == NULL);
+    assert(array_get_ptr(values, 3, -1) == NULL);
+    assert(array_get_ptr(values, 3, 3) == NULL);
+    assert(array_get_ptr(NULL, 3, 0) == NULL);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -495,6 +547,7 @@ int main(void) {
     test_more_leafs();
     test_setters_and_tables();
     test_leaf_queue_and_inventory();
+    test_stride_entity_city();
     puts("leaf function reconstruction: OK");
     return 0;
 }

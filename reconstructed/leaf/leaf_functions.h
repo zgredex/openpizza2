@@ -200,4 +200,38 @@ char employee_next_sprite_variant(int32_t *variants, size_t index,
 void building_reset_inventory(uint8_t *building, uint8_t *inventory,
                               const int32_t *scenario_table);
 
+/* Array_FindIndexStride60 (0x4DA690). */
+int32_t array_find_index_stride60(const uint8_t *base,
+                                   const uint8_t *target);
+
+typedef struct EntityTypeProperties {
+    int32_t id;
+    int32_t field40;
+    int32_t field44;
+    int32_t field48;
+} EntityTypeProperties;
+
+typedef struct EntityProperties {
+    int32_t type;
+    int32_t field40;
+    int32_t field44;
+    int32_t field48;
+} EntityProperties;
+
+/* Entity_ApplyTypeProperties (0x4D2B40). */
+void entity_apply_type_properties(EntityProperties *entity, int32_t type,
+                                  const EntityTypeProperties *table,
+                                  size_t count);
+
+/* City_IsIdle (0x480880). */
+bool city_is_idle(const uint8_t *city);
+
+/* Array_GetPtr / Array_GetPtr4 / Array_GetPtrChecked. */
+const void *array_get_ptr(const void *const *values, size_t count,
+                          int32_t index);
+const void *array_get_ptr4(const void *const *values, size_t count,
+                           int32_t index);
+const void *array_get_ptr_checked(const void *const *values, size_t count,
+                                  int32_t index);
+
 #endif

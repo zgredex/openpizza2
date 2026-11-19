@@ -812,3 +812,84 @@ void building_reset_inventory(uint8_t *building, uint8_t *inventory,
     int32_t state = 3;
     memcpy(building + base + 0x12c, &state, sizeof(state));
 }
+
+int32_t array_find_index_stride60(const uint8_t *base,
+                                   const uint8_t *target) {
+    if (base == NULL || target == NULL) {
+        return -1;
+    }
+    for (int32_t index = 0; index < 4; index++) {
+        if (base + 0xdc8 + (size_t)index * 0x60u == target) {
+            return index;
+        }
+    }
+    return -1;
+}
+
+void entity_apply_type_properties(EntityProperties *entity, int32_t type,
+                                  const EntityTypeProperties *table,
+                                  size_t count) {
+    if (entity == NULL) {
+        return;
+    }
+    entity->type = type;
+    if (table == NULL || count == 0) {
+        return;
+    }
+    const EntityTypeProperties *match = NULL;
+    if (table[0].id == type) {
+        match = &table[0];
+    } else {
+        for (size_t index = 1; index < count; index++) {
+            if (table[index].id == -1) {
+                return;
+            }
+            if (table[index].id == type) {
+                match = &table[index];
+                break;
+            }
+        }
+    }
+    if (match != NULL) {
+        entity->field40 = match->field40;
+        entity->field44 = match->field44;
+        entity->field48 = match->field48;
+    }
+}
+
+bool city_is_idle(const uint8_t *city) {
+    if (city == NULL) {
+        return true;
+    }
+    uintptr_t pointer = 0;
+    memcpy(&pointer, city + 0x16f0, sizeof(pointer));
+    if (pointer == 0) {
+        return true;
+    }
+    int32_t flag = 0;
+    memcpy(&flag, (const void *)pointer + 0x94, sizeof(flag));
+    return flag != 0;
+}
+
+static const void *array_get_pointer(const void *const *values, size_t count,
+                                     int32_t index) {
+    if (values == NULL || index < 0 || (size_t)index >= count) {
+        return NULL;
+    }
+    return values[index];
+}
+
+const void *array_get_ptr(const void *const *values, size_t count,
+                          int32_t index) {
+    return array_get_pointer(values, count, index);
+}
+
+const void *array_get_ptr4(const void *const *values, size_t count,
+                           int32_t index) {
+    return array_get_pointer(values, count, index);
+}
+
+const void *array_get_ptr_checked(const void *const *values, size_t count,
+                                  int32_t index) {
+    return array_get_pointer(values, count, index);
+}
