@@ -432,6 +432,25 @@ int32_t save_list_find_index(const int32_t *values, int32_t count,
 int32_t market_get_price_modifier(const int32_t *values, int32_t row,
                                   int32_t column);
 
+/* Map/object helpers. */
+void map_compute_iso_offsets(uint8_t *map);
+int32_t map_compute_object_distance(const uint8_t *map, int32_t x1, int32_t y1,
+                                    int32_t x2, int32_t y2, int32_t index);
+int32_t object_get_root_type(const uint8_t *object);
+int32_t object_get_child_field14(const uint8_t *object);
+int32_t object_get_child_field2c(const uint8_t *object);
+int32_t object_get_clamped_level(uint8_t *object);
+uint32_t object_get_active_value(const uint8_t *object);
+void object_set_child_field2c(uint8_t *object, int32_t value);
+void object_set_child_short(uint8_t *object);
+void object_set_child_short8(uint8_t *object, int16_t value);
+void object_reset108(uint8_t *object);
+void object_clear_field28(uint8_t *object);
+void object_clear_field4(uint8_t *object);
+void object_clear_field54(uint8_t *object);
+void object_clear_fields_a(uint8_t *object);
+void object_clear_state(uint8_t *object);
+
 /* Game_GetActiveScreenOrFallback (0x482910). */
 int32_t game_get_active_screen_or_fallback(const uint8_t *game);
 

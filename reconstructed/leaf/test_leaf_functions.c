@@ -1155,6 +1155,112 @@ static void test_table_grid_searches(void) {
     assert(market_get_price_modifier(NULL, 0, 0) == 0);
 }
 
+static void write_pointer_at(uint8_t *base, size_t offset, const void *ptr) {
+    uintptr_t value = (uintptr_t)ptr;
+    memcpy(base + offset, &value, sizeof(value));
+}
+
+static void test_map_object_helpers(void) {
+    uint8_t map[0x100] = {0};
+    write_i32_at(map, 0x0c, 4);
+    write_i32_at(map, 0x10, 6);
+    map_compute_iso_offsets(map);
+    assert(read_i32_at(map, 0xd8) == 8);
+    assert(read_i32_at(map, 0xdc) == 8);
+    assert(read_i32_at(map, 0xe0) == 12);
+    assert(read_i32_at(map, 0xe4) == 18);
+
+    uint8_t points[2 * 12] = {0};
+    write_i32_at(points, 0, 2);
+    write_i32_at(points, 4, 3);
+    write_i32_at(map, 0x1c, 10);
+    write_i32_at(map, 0x20, 10);
+    write_pointer_at(map, 0x4c, points);
+    assert(map_compute_object_distance(map, 1, 2, 1, 1, 0) == 42);
+    assert(map_compute_object_distance(map, 0, 0, 0, 0, -1) == 1000000);
+    assert(map_compute_object_distance(map, 0, 0, 0, 0, 101) == 1000000);
+
+    uint8_t child[0x40] = {0};
+    write_i32_at(child, 0, 77);
+    write_i32_at(child, 0x2c, 88);
+    uint8_t object[0x120] = {0};
+    write_pointer_at(object, 0x14, child);
+    write_pointer_at(object, 200, child);
+    assert(object_get_child_field14(object) == 77);
+    assert(object_get_child_field2c(object) == 88);
+    object_set_child_field2c(object, 99);
+    assert(read_i32_at(child, 0x2c) == 99);
+    object_set_child_short(object);
+    assert(read_i16_at(child, 8) == -1);
+    object_set_child_short8(object, 12);
+    assert(read_i16_at(child, 8) == 12);
+    object_set_child_short8(object, 12);
+
+    uint8_t root[0x60] = {0};
+    uint8_t parent[0x60] = {0};
+    uint8_t top[0x60] = {0};
+    write_i32_at(root, 0x4c, 3);
+    write_i32_at(parent, 0x4c, 3);
+    write_i32_at(top, 0x4c, 5);
+    write_pointer_at(root, 0x54, parent);
+    write_pointer_at(parent, 0x54, top);
+    assert(object_get_root_type(root) == 5);
+    assert(object_get_root_type(top) == 5);
+    assert(object_get_root_type(NULL) == -1);
+
+    write_i32_at(object, 0x10c, 0);
+    assert(object_get_clamped_level(object) == 1);
+    assert(read_i32_at(object, 0x10c) == 1);
+    write_i32_at(object, 0x10c, 2);
+    assert(object_get_clamped_level(object) == 2);
+    write_i32_at(object, 0x10c, 4);
+    assert(object_get_clamped_level(object) == 1);
+
+    write_i32_at(object, 0x68, 11);
+    write_i32_at(object, 0x6c, 22);
+    write_i32_at(object, 0x78, 0);
+    assert(object_get_active_value(object) == 0);
+    write_i32_at(object, 0x78, 1);
+    assert(object_get_active_value(object) == 22);
+    write_i32_at(object, 0x6c, 0);
+    write_i32_at(object, 0x68, 33);
+    assert(object_get_active_value(object) == 33);
+
+    object_reset108(object);
+    assert(read_i32_at(object, 0x108) == -1);
+    assert(read_i32_at(object, 0x8c) == -1);
+    write_i32_at(object, 0x28, 5);
+    object_clear_field28(object);
+    assert(read_i32_at(object, 0x28) == 0);
+    write_i32_at(object, 4, 5);
+    object_clear_field4(object);
+    assert(read_i32_at(object, 4) == 0);
+    write_i32_at(object, 0x54, 5);
+    object_clear_field54(object);
+    assert(read_i32_at(object, 0x54) == 0);
+
+    const size_t fields[7] = {0x54, 0x58, 0x70, 0x9c, 0x78, 0x6c, 100};
+    for (size_t index = 0; index < 7; index++) {
+        write_i32_at(object, fields[index], 123);
+    }
+    object_clear_fields_a(object);
+    for (size_t index = 0; index < 7; index++) {
+        assert(read_i32_at(object, fields[index]) == 0);
+    }
+
+    uint8_t state[0x40] = {0};
+    write_pointer_at(object, 8, state);
+    write_i32_at(state, 0x1c, 55);
+    state[0x2c] = 1;
+    state[0x2d] = 2;
+    state[0x2e] = 3;
+    state[0x2f] = 4;
+    object_clear_state(object);
+    assert(read_i32_at(state, 0x1c) == -1);
+    assert(state[0x2c] == 0 && state[0x2d] == 0 && state[0x2e] == 0 &&
+           state[0x2f] == 0);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -1186,6 +1292,7 @@ int main(void) {
     test_state_id_predicates();
     test_small_stats_accessors();
     test_table_grid_searches();
+    test_map_object_helpers();
     puts("leaf function reconstruction: OK");
     return 0;
 }

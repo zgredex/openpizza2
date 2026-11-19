@@ -1922,3 +1922,189 @@ int32_t market_get_price_modifier(const int32_t *values, int32_t row,
     }
     return value != 1 ? -10 : 10;
 }
+
+void map_compute_iso_offsets(uint8_t *map) {
+    if (map == NULL) {
+        return;
+    }
+    int32_t tile_width = read_i32(map + 0x0c);
+    int32_t tile_height = read_i32(map + 0x10);
+    write_i32(map + 0xd8, tile_width << 1);
+    write_i32(map + 0xdc, tile_width << 1);
+    write_i32(map + 0xe0, tile_height * 2);
+    write_i32(map + 0xe4, tile_height * 3);
+}
+
+int32_t map_compute_object_distance(const uint8_t *map, int32_t x1, int32_t y1,
+                                    int32_t x2, int32_t y2, int32_t index) {
+    if (map == NULL || index < 0) {
+        return 1000000;
+    }
+    int32_t width = read_i32(map + 0x1c);
+    int32_t height = read_i32(map + 0x20);
+    if (width * height < index) {
+        return 1000000;
+    }
+    uintptr_t points;
+    memcpy(&points, map + 0x4c, sizeof(points));
+    const uint8_t *point = (const uint8_t *)points + (size_t)index * 0x0c;
+    int32_t point_x = read_i32(point);
+    int32_t point_y = read_i32(point + 4);
+    int32_t tile_width = read_i32(map + 0x0c);
+    int32_t tile_height = read_i32(map + 0x10);
+    int32_t dx = ((tile_width >> 1) - x1 - x2) + point_x;
+    int32_t dy = (((tile_height >> 1) + point_y) - y1 - y2) + tile_height;
+    if (dx < 0) {
+        dx = -dx;
+    }
+    if (dy < 0) {
+        dy = -dy;
+    }
+    return dx * 3 + dy * 4;
+}
+
+int32_t object_get_root_type(const uint8_t *object) {
+    if (object == NULL) {
+        return -1;
+    }
+    int32_t type = read_i32(object + 0x4c);
+    while (type == 3) {
+        uintptr_t parent;
+        memcpy(&parent, object + 0x54, sizeof(parent));
+        object = (const uint8_t *)parent;
+        type = read_i32(object + 0x4c);
+    }
+    return type;
+}
+
+int32_t object_get_child_field14(const uint8_t *object) {
+    if (object == NULL) {
+        return 0;
+    }
+    uintptr_t child;
+    memcpy(&child, object + 0x14, sizeof(child));
+    return child == 0 ? 0 : read_i32((const uint8_t *)child);
+}
+
+int32_t object_get_child_field2c(const uint8_t *object) {
+    if (object == NULL) {
+        return 0;
+    }
+    uintptr_t child;
+    memcpy(&child, object + 200, sizeof(child));
+    return child == 0 ? 0 : read_i32((const uint8_t *)child + 0x2c);
+}
+
+int32_t object_get_clamped_level(uint8_t *object) {
+    if (object == NULL) {
+        return 0;
+    }
+    int32_t level = read_i32(object + 0x10c);
+    if (level < 1 || level > 3) {
+        level = 1;
+        write_i32(object + 0x10c, level);
+    }
+    return level;
+}
+
+uint32_t object_get_active_value(const uint8_t *object) {
+    if (object == NULL) {
+        return 0;
+    }
+    uint32_t active = (uint32_t)read_i32(object + 0x6c);
+    if (active == 0) {
+        return (uint32_t)read_i32(object + 0x68);
+    }
+    return read_i32(object + 0x78) != 0 ? active : 0;
+}
+
+void object_set_child_field2c(uint8_t *object, int32_t value) {
+    if (object == NULL) {
+        return;
+    }
+    uintptr_t child;
+    memcpy(&child, object + 200, sizeof(child));
+    if (child != 0) {
+        write_i32((uint8_t *)child + 0x2c, value);
+    }
+}
+
+void object_set_child_short(uint8_t *object) {
+    if (object == NULL) {
+        return;
+    }
+    uintptr_t child;
+    memcpy(&child, object + 200, sizeof(child));
+    if (child != 0) {
+        int16_t value = -1;
+        memcpy((uint8_t *)child + 8, &value, sizeof(value));
+    }
+}
+
+void object_set_child_short8(uint8_t *object, int16_t value) {
+    if (object == NULL) {
+        return;
+    }
+    uintptr_t child;
+    memcpy(&child, object + 200, sizeof(child));
+    if (child != 0) {
+        int16_t current;
+        memcpy(&current, (uint8_t *)child + 8, sizeof(current));
+        if (current != value) {
+            memcpy((uint8_t *)child + 8, &value, sizeof(value));
+        }
+    }
+}
+
+void object_reset108(uint8_t *object) {
+    if (object == NULL) {
+        return;
+    }
+    write_i32(object + 0x108, -1);
+    write_i32(object + 0x8c, -1);
+}
+
+void object_clear_field28(uint8_t *object) {
+    if (object != NULL) {
+        write_i32(object + 0x28, 0);
+    }
+}
+
+void object_clear_field4(uint8_t *object) {
+    if (object != NULL) {
+        write_i32(object + 4, 0);
+    }
+}
+
+void object_clear_field54(uint8_t *object) {
+    if (object != NULL) {
+        write_i32(object + 0x54, 0);
+    }
+}
+
+void object_clear_fields_a(uint8_t *object) {
+    if (object == NULL) {
+        return;
+    }
+    static const size_t offsets[7] = {0x54, 0x58, 0x70, 0x9c, 0x78, 0x6c, 100};
+    for (size_t index = 0; index < 7; index++) {
+        write_i32(object + offsets[index], 0);
+    }
+}
+
+void object_clear_state(uint8_t *object) {
+    if (object == NULL) {
+        return;
+    }
+    uintptr_t child;
+    memcpy(&child, object + 8, sizeof(child));
+    if (child == 0) {
+        return;
+    }
+    uint8_t *state = (uint8_t *)child;
+    write_i32(state + 0x1c, -1);
+    state[0x2c] = 0;
+    state[0x2d] = 0;
+    state[0x2e] = 0;
+    state[0x2f] = 0;
+}
