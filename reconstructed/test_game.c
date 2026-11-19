@@ -518,8 +518,9 @@ int main(void) {
     strcpy(piz.players[0].name, "Ada");
     piz.players[0].cash = city.economy.cash;
     piz.companies[0].present = 1;
+    piz.companies[0].slot = 0;
     strcpy(piz.companies[0].name, "Ada Pizza");
-    piz.companies[0].branches = 1;
+    piz.companies[0].cash = city.economy.cash;
     uint8_t piz_buffer[PIZ_MAX_CONTAINER_SIZE];
     size_t piz_written = piz_container_encode(&piz, piz_buffer, sizeof(piz_buffer));
     assert(piz_written == piz_container_size(&piz));
@@ -530,6 +531,10 @@ int main(void) {
     assert(mission_all_goals_complete(&piz_loaded.save.mission));
     assert(piz_loaded.character_count == 1);
     assert(strcmp(piz_loaded.tile_names[0], "tile-zero") == 0);
+    assert(piz_loaded.companies[0].present == 1);
+    assert(piz_loaded.companies[0].slot == 0);
+    assert(strcmp(piz_loaded.companies[0].name, "Ada Pizza") == 0);
+    assert(piz_loaded.companies[0].cash == city.economy.cash);
 
     puts("unified game reconstruction: OK");
     return 0;

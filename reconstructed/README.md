@@ -69,6 +69,8 @@ Current batches:
   sections. Character and player bodies use the schema field sequences
   (Character_Save 2082 bytes, Player_Save 132 bytes) and are validated by
   `piz_payload.py parse_characters`/`parse_players` with no errors.
+  Company slots use CompanyData_Save's 270-byte fixed prefix plus nine zero
+  nested-list counts, validated by `piz_payload.py companies`.
 - `construction/` — `ConstructionOrder` 0x24 layout, enqueue cell index and
   completion ownership derived from `Branch_EnqueueConstructionOrder` and
   `Branch_CompleteConstruction`.

@@ -12,6 +12,7 @@ _Static_assert(offsetof(PizHeader, magic) == 0xec, "magic offset");
 #define CHARACTER_BODY_SIZE 2082u
 #define PLAYER_BODY_SIZE 132u
 #define COMPANY_BODY_SIZE 270u
+#define COMPANY_NESTED_SIZE 36u
 #define AI_BODY_SIZE 554u
 #define MISSION_BODY_SIZE 208u
 #define CAR_SIZE 8u
@@ -73,7 +74,7 @@ static size_t company_region_size(const PizContainer *container) {
     for (uint32_t slot = 0; slot < PIZ_MAX_COMPANIES; slot++) {
         total += 4;
         if (container->companies[slot].present) {
-            total += COMPANY_BODY_SIZE;
+            total += COMPANY_BODY_SIZE + COMPANY_NESTED_SIZE;
         }
     }
     return total;
@@ -151,12 +152,18 @@ static void write_player_body(uint8_t *buffer, const PizPlayer *player) {
     memcpy(buffer + 56, &player->cash, 8);
 }
 
+/*
+ * CompanyData_Save fixed prefix (0x4E1540 / save_schema.json): 64-byte name,
+ * then the schema field sequence. Cash is the double stored at serialized
+ * offset 0x56 (object +0x108). The nine trailing counts are GamePlan, recipe,
+ * featured-recipe, branch, StatsPeriodReport, Storage, pair and 0x1A0-byte
+ * record lists; this batch serializes the fixed prefix and zero counts.
+ */
 static void write_company_body(uint8_t *buffer, const PizCompany *company) {
     memset(buffer, 0, COMPANY_BODY_SIZE);
     put_text(buffer, 0, company->name, 64);
+    put_u32(buffer, 64, company->slot);
     memcpy(buffer + 86, &company->cash, 8);
-    put_u32(buffer, 94, company->branches);
-    put_u32(buffer, 98, company->share_x100);
 }
 
 size_t piz_container_encode(const PizContainer *container, uint8_t *buffer,
@@ -260,6 +267,10 @@ size_t piz_container_encode(const PizContainer *container, uint8_t *buffer,
         }
         write_company_body(buffer + offset, company);
         offset += COMPANY_BODY_SIZE;
+        for (int nested = 0; nested < 9; nested++) {
+            put_u32(buffer, offset, 0);
+            offset += 4;
+        }
     }
     size_t tail_start = offset;
     offset += 2160;
@@ -468,14 +479,21 @@ bool piz_container_decode(PizContainer *container, const uint8_t *buffer,
         if (!company->present) {
             continue;
         }
-        if (offset + COMPANY_BODY_SIZE > length) {
+        if (offset + COMPANY_BODY_SIZE + COMPANY_NESTED_SIZE > length) {
             return false;
         }
         get_text(company->name, 64, buffer, offset);
+        company->slot = get_u32(buffer, offset + 64);
         memcpy(&company->cash, buffer + offset + 86, 8);
-        company->branches = get_u32(buffer, offset + 94);
-        company->share_x100 = get_u32(buffer, offset + 98);
         offset += COMPANY_BODY_SIZE;
+        for (int nested = 0; nested < 9; nested++) {
+            if (get_u32(buffer, offset) != 0) {
+                return false;
+            }
+            offset += 4;
+        }
+        company->branches = 0;
+        company->share_x100 = 0;
     }
 
     size_t save_offset = tail_start + TAIL_FIXED_SIZE;

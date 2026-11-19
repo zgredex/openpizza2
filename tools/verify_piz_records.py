@@ -28,6 +28,7 @@ def main() -> int:
         save = PizSave(path)
         characters = save.parse_characters()
         players = save.parse_players()
+        companies = save.parse_companies()
     result = {
         "fixture": "piz_records",
         "character_count": characters["count"],
@@ -36,10 +37,22 @@ def main() -> int:
         "player_errors": players["errors"],
         "player_slots": len(players["slots"]),
         "player_slot0_present": players["slots"][0]["present"] if players["slots"] else 0,
+        "company_count": companies["count"],
+        "company_record_size": companies["record_size"],
+        "company_nested_size": companies["nested_size"],
+        "company_errors": companies["errors"],
+        "company_slot0_name": (companies["slots"][0].get("name")
+                               if companies["slots"] else None),
+        "company_slot0_cash": (companies["slots"][0].get("cash")
+                               if companies["slots"] else None),
     }
     ok = (not characters["errors"] and not players["errors"]
+          and not companies["errors"]
           and characters["count"] == 1 and characters["record_size"] == 2086
-          and result["player_slot0_present"] == 1)
+          and result["player_slot0_present"] == 1
+          and companies["count"] == 1 and companies["record_size"] == 270
+          and result["company_slot0_name"] == "Ada Pizza"
+          and result["company_slot0_cash"] == 494270.0)
     result["ok"] = ok
     print(json.dumps(result, separators=(",", ":")))
     return 0 if ok else 1

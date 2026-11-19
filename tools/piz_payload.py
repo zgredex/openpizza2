@@ -326,6 +326,70 @@ class PizSave:
                                       "fields": fields})
         return result
 
+    def parse_companies(self, limit=None) -> dict:
+        """Parse the six company slots.
+
+        The reconstructed container writes CompanyData_Save's 270-byte fixed
+        prefix followed by nine zero nested-list counts (GamePlan, recipe,
+        featured recipe, branch, StatsPeriodReport, Storage, pair and
+        0x1A0-byte lists). Original saves with populated nested lists are
+        reported as unsupported rather than misparsed.
+        """
+        start, end = self.directory[3], self.directory[5]
+        owner = self._owner("CompanyData_Save")
+        rec_size = owner["fixed_bytes"]
+        nested_count = 9
+        nested_size = nested_count * 4
+        result = {"start": f"0x{start:x}", "end": f"0x{end:x}",
+                  "count": 0, "record_size": rec_size,
+                  "nested_size": nested_size,
+                  "slots": [], "errors": []}
+        pos = start
+        for slot in range(6):
+            if pos + 4 > end:
+                result["errors"].append(f"slot {slot} header past region")
+                break
+            present = self._u32(pos)
+            pos += 4
+            if present == 0:
+                result["slots"].append({"slot": slot, "present": 0})
+                continue
+            if limit is not None and result["count"] >= limit:
+                break
+            if pos + rec_size + nested_size > end:
+                result["errors"].append(f"slot {slot} company body past region")
+                break
+            try:
+                fields, pos = self._decode_sequential(pos, owner)
+            except ValueError as exc:
+                result["errors"].append(f"slot {slot}: {exc}")
+                break
+            nested = []
+            for index in range(nested_count):
+                nested.append(self._u32(pos))
+                pos += 4
+            if any(value != 0 for value in nested):
+                result["errors"].append(
+                    f"slot {slot} nested company lists not supported: {nested}")
+                break
+            name = decode_text(bytes.fromhex(fields["0x8"])).rstrip("\0")
+            cash_bits = fields["0x108"]
+            cash = struct.unpack("<d", struct.pack("<Q", cash_bits))[0]
+            result["slots"].append({
+                "slot": slot,
+                "present": 1,
+                "name": name,
+                "company_slot": fields["0x48"],
+                "cash": cash,
+                "nested_counts": nested,
+                "fields": fields,
+            })
+            result["count"] += 1
+        if pos != end and not result["errors"]:
+            result["errors"].append(
+                f"company region has {end - pos} trailing bytes")
+        return result
+
     def parse_players(self, limit=None) -> dict:
         start, end = self.directory[4], self.directory[3]
         player = self._owner("Player_Save")
@@ -784,6 +848,25 @@ def cmd_players(args):
     return 0 if not data["errors"] else 2
 
 
+def cmd_companies(args):
+    save = PizSave(args.piz)
+    data = save.parse_companies(limit=args.limit)
+    if args.json:
+        print(json.dumps(data, indent=2))
+        return 0
+    print(f"companies: count={data['count']} record={data['record_size']} "
+          f"nested={data['nested_size']}")
+    for slot in data["slots"]:
+        if not slot["present"]:
+            print(f"slot {slot['slot']}: present=0")
+            continue
+        print(f"slot {slot['slot']}: present=1 name={slot['name']!r} "
+              f"cash={slot['cash']:.2f} nested={slot['nested_counts']}")
+    if data["errors"]:
+        print("errors: " + "; ".join(data["errors"]))
+    return 0 if not data["errors"] else 2
+
+
 def cmd_globals(args):
     save = PizSave(args.piz)
     rows = save.global_values()
@@ -878,6 +961,12 @@ def main(argv=None):
     p.add_argument("--json", action="store_true")
     p.add_argument("--limit", type=int, default=None)
     p.set_defaults(func=cmd_characters)
+
+    p = sub.add_parser("companies", help="parse the six company slots")
+    p.add_argument("piz")
+    p.add_argument("--json", action="store_true")
+    p.add_argument("--limit", type=int, default=None)
+    p.set_defaults(func=cmd_companies)
 
     p = sub.add_parser("players", help="parse the six player slots")
     p.add_argument("piz")

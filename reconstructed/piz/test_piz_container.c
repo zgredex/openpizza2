@@ -66,8 +66,8 @@ static PizContainer make_container(void) {
     container.companies[0].slot = 0;
     strcpy(container.companies[0].name, "Ada Pizza");
     container.companies[0].cash = 494270.0;
-    container.companies[0].branches = 1;
-    container.companies[0].share_x100 = 10000;
+    /* Branch/share data lives in CompanyData_Save's variable lists, not in
+     * the fixed 270-byte prefix modelled by this container. */
 
     settings_init_defaults(&container.save.settings, load_fails, random_low);
     container.save.mission.goals[0] = 0;
@@ -127,7 +127,9 @@ static void test_round_trip(const char *write_path) {
     assert(restored.players[0].cash == 494270.0);
     assert(restored.companies[0].present == 1);
     assert(strcmp(restored.companies[0].name, "Ada Pizza") == 0);
-    assert(restored.companies[0].branches == 1);
+    assert(restored.companies[0].slot == 0);
+    assert(restored.companies[0].cash == 494270.0);
+    assert(restored.companies[0].branches == 0);
     assert(memcmp(&restored.save.settings, &original.save.settings,
                   sizeof(Settings)) == 0);
     assert(restored.save.mission.deadline == 120);
