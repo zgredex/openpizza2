@@ -29,6 +29,8 @@ Current batches:
   entries from `Stats_Report_FillCompanyOverview` and the statistics screens.
 - `render/` — RGBA render surface, clipped fill/blit with alpha, and an
   uncompressed 24/32-bit/8-bit TGA decoder matching the Rust asset rules.
+- `operations/` — branch period accounting: sale revenue, ingredient cost,
+  payroll, rent, advertising, profit and period close.
 - `ai/` — customer visit state machine (walk 260, production 180, service 80)
   and competitor AI plan snapshot.
 - `recipes/` — recipe toppings, base price, branch-menu assignment and the

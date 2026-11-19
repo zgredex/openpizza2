@@ -11,6 +11,7 @@
 #include "recipes/recipe_state.h"
 #include "ai/ai_state.h"
 #include "render/render_state.h"
+#include "operations/branch_operations.h"
 #include "statistics/statistics_state.h"
 #include "settings/settings.h"
 #include "ui_screen/ui_screen.h"
@@ -107,6 +108,16 @@ int main(void) {
     SaveState loaded;
     assert(save_state_decode(&loaded, buffer, written));
     assert(mission_all_goals_complete(&loaded.mission));
+
+    BranchOperations operations;
+    branch_operations_init(&operations, 5730.0);
+    branch_operations_record_sale(&operations, 13.80, 0.3794752876341939);
+    branch_operations_set_payroll(&operations, 3, 1.0);
+    branch_operations_set_advertising(&operations, 50.0);
+    double branch_profit = branch_operations_compute_profit(&operations);
+    assert(branch_profit < 0.0);
+    assert(operations.sales == 1);
+    assert(operations.staff_count == 3);
 
     uint8_t frame[4 * 4 * 4];
     RenderSurface surface;
