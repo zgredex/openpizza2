@@ -340,4 +340,18 @@ int32_t game_get_active_screen_or_fallback(const uint8_t *game);
 /* Palette_Convert256 (0x535E50). */
 void palette_convert256(const uint8_t *rgb, uint16_t *output, bool rgb565);
 
+/* Palette_FindIndex (0x535CB0): compares 768-byte palettes. */
+int32_t palette_find_index(const uint8_t *const *palettes, size_t count,
+                           const uint8_t *candidate);
+
+/* Record_GetTypeIndex48 (0x534A80). */
+int32_t record_get_type_index48(const uint8_t *records, size_t count,
+                                size_t index, const uint8_t *sources);
+
+/* Destructor vtables modelled as a cleared vtable marker. */
+void game_plan_destructor(GamePlanState *plan);
+void leaf_construction_order_destructor(ConstructionOrderState *order);
+void award_node_destructor(void *node);
+void building_value_destroy(void *value);
+
 #endif

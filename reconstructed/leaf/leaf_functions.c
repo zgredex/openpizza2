@@ -1235,3 +1235,54 @@ void palette_convert256(const uint8_t *rgb, uint16_t *output, bool rgb565) {
         }
     }
 }
+
+int32_t palette_find_index(const uint8_t *const *palettes, size_t count,
+                           const uint8_t *candidate) {
+    if (palettes == NULL || candidate == NULL) {
+        return -1;
+    }
+    for (size_t index = 0; index < count; index++) {
+        if (palettes[index] != NULL &&
+            memcmp(palettes[index], candidate, 768) == 0) {
+            return (int32_t)index;
+        }
+    }
+    return -1;
+}
+
+int32_t record_get_type_index48(const uint8_t *records, size_t count,
+                                size_t index, const uint8_t *sources) {
+    if (records == NULL || sources == NULL || index >= count) {
+        return -1;
+    }
+    int32_t type_index = read_i32(records + index * 0x48u);
+    if (type_index < 0 ||
+        sources[(size_t)type_index * 0x98u + 0x80] == 0) {
+        return -1;
+    }
+    return type_index;
+}
+
+void game_plan_destructor(GamePlanState *plan) {
+    if (plan != NULL) {
+        plan->fields[0] = 0;
+    }
+}
+
+void leaf_construction_order_destructor(ConstructionOrderState *order) {
+    if (order != NULL) {
+        order->fields[0] = 0;
+    }
+}
+
+void award_node_destructor(void *node) {
+    if (node != NULL) {
+        write_i32(node, 0);
+    }
+}
+
+void building_value_destroy(void *value) {
+    if (value != NULL) {
+        write_i32(value, 0);
+    }
+}

@@ -741,6 +741,56 @@ static void test_object_record_palette(void) {
     palette_convert256(NULL, output, true);
 }
 
+static void test_destructors_palette_record(void) {
+    GamePlanState plan;
+    memset(&plan, 0xff, sizeof(plan));
+    game_plan_destructor(&plan);
+    assert(plan.fields[0] == 0);
+    game_plan_destructor(NULL);
+
+    ConstructionOrderState order;
+    memset(&order, 0xff, sizeof(order));
+    leaf_construction_order_destructor(&order);
+    assert(order.fields[0] == 0);
+    leaf_construction_order_destructor(NULL);
+
+    int32_t node = 123;
+    award_node_destructor(&node);
+    assert(node == 0);
+    award_node_destructor(NULL);
+
+    int32_t building_value = 456;
+    building_value_destroy(&building_value);
+    assert(building_value == 0);
+    building_value_destroy(NULL);
+
+    uint8_t palette0[768] = {0};
+    uint8_t palette1[768] = {0};
+    uint8_t palette2[768] = {0};
+    palette1[0] = 1;
+    palette2[767] = 2;
+    const uint8_t *palettes[3] = {palette0, palette1, palette2};
+    assert(palette_find_index(palettes, 3, palette1) == 1);
+    assert(palette_find_index(palettes, 3, palette2) == 2);
+    uint8_t missing[768] = {0};
+    missing[100] = 9;
+    assert(palette_find_index(palettes, 3, missing) == -1);
+    assert(palette_find_index(NULL, 3, palette0) == -1);
+
+    uint8_t records[2 * 0x48] = {0};
+    write_i32_at(records, 0, 1);
+    write_i32_at(records, 0x48, 0);
+    uint8_t sources[2 * 0x98] = {0};
+    sources[0x98 + 0x80] = 1;
+    assert(record_get_type_index48(records, 2, 0, sources) == 1);
+    sources[0x80] = 1;
+    assert(record_get_type_index48(records, 2, 1, sources) == 0);
+    sources[0x80] = 0;
+    assert(record_get_type_index48(records, 2, 1, sources) == -1);
+    assert(record_get_type_index48(records, 2, 2, sources) == -1);
+    assert(record_get_type_index48(NULL, 2, 0, sources) == -1);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -765,6 +815,7 @@ int main(void) {
     test_economy_plan_order();
     test_furniture_and_game_accessors();
     test_object_record_palette();
+    test_destructors_palette_record();
     puts("leaf function reconstruction: OK");
     return 0;
 }
