@@ -1305,3 +1305,69 @@ bool screen_render_game_sidebar(RenderSurface *surface,
     }
     return true;
 }
+
+static void draw_slider_track(RenderSurface *surface, const RgbaSprite *slider,
+                              int32_t x, int32_t y, int32_t width,
+                              int32_t value) {
+    blend_rect(surface, x, y + 2, width, 4, (const uint8_t[4]){80, 70, 60, 180});
+    if (slider != NULL) {
+        int32_t clamped = value < 0 ? 0 : (value > 100 ? 100 : value);
+        int32_t knob = x + clamped * width / 100 - (int32_t)slider->width / 2;
+        render_blit(surface, slider, knob, y);
+    }
+}
+
+bool screen_render_options_page(RenderSurface *surface,
+                                const RgbaSprite *background,
+                                const RgbaSprite *slider,
+                                const RgbaSprite *separator,
+                                const RgbaSprite *marker,
+                                const uint8_t *font_data, size_t font_size,
+                                const FntInfo *font,
+                                const OptionsPageData *data) {
+    if (surface == NULL || background == NULL || font == NULL || data == NULL) {
+        return false;
+    }
+    const uint8_t background_color[4] = {22, 26, 34, 255};
+    render_clear(surface, background_color);
+    if (!render_blit(surface, background, 0, 0)) {
+        return false;
+    }
+    const uint8_t title_color[4] = {120, 20, 20, 255};
+    const uint8_t label_color[4] = {40, 28, 20, 255};
+
+    draw_label(surface, font_data, font_size, font, 605, 224, "Options",
+               title_color);
+    draw_label(surface, font_data, font_size, font, 604, 255,
+               "Volume of sound", title_color);
+    draw_label(surface, font_data, font_size, font, 626, 275,
+               "General volume", label_color);
+    draw_label(surface, font_data, font_size, font, 626, 307, "Music",
+               label_color);
+    draw_label(surface, font_data, font_size, font, 626, 338, "Language",
+               label_color);
+    draw_slider_track(surface, slider, 635, 297, 140, data->general_volume);
+    draw_slider_track(surface, slider, 635, 327, 140, data->music);
+    draw_slider_track(surface, slider, 635, 358, 140, data->language);
+    if (separator != NULL) {
+        render_blit(surface, separator, 600, 376);
+    }
+    if (marker != NULL) {
+        render_blit(surface, marker, 621, 412);
+    }
+    draw_label(surface, font_data, font_size, font, 647, 410,
+               "People speak the local language", label_color);
+    draw_label(surface, font_data, font_size, font, 604, 387, "Options",
+               title_color);
+    draw_label(surface, font_data, font_size, font, 627, 452,
+               "Graphic level of detail", label_color);
+    draw_slider_track(surface, slider, 638, 473, 140, data->graphic_detail);
+    draw_label(surface, font_data, font_size, font, 628, 479, "damned high",
+               label_color);
+    draw_label(surface, font_data, font_size, font, 628, 508,
+               "Autosave interval", label_color);
+    draw_slider_track(surface, slider, 639, 529, 140, data->autosave);
+    draw_label(surface, font_data, font_size, font, 638, 534, "4 minutes",
+               label_color);
+    return true;
+}

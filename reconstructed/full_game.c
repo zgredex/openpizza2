@@ -1179,6 +1179,43 @@ int main(void) {
         free(gs_pixels[index]);
     }
 
+    uint8_t *op_background_pixels = NULL;
+    uint8_t *op_slider_pixels = NULL;
+    uint8_t *op_separator_pixels = NULL;
+    uint8_t *op_marker_pixels = NULL;
+    RgbaSprite op_background;
+    RgbaSprite op_slider;
+    RgbaSprite op_separator;
+    RgbaSprite op_marker;
+    assert(load_spr_asset("../extracted/sprites/pe_sub_startscreen.spr",
+                          &op_background_pixels, &op_background));
+    assert(load_spr_asset("../extracted/sprites/sl02_00.spr",
+                          &op_slider_pixels, &op_slider));
+    assert(load_spr_asset("../extracted/sprites/trennzeile.spr",
+                          &op_separator_pixels, &op_separator));
+    assert(load_spr_asset("../extracted/sprites/pb14_00.spr",
+                          &op_marker_pixels, &op_marker));
+    const OptionsPageData op_data = {
+        .general_volume = 50,
+        .music = 40,
+        .language = 60,
+        .graphic_detail = 80,
+        .autosave = 70,
+    };
+    uint8_t *op_frame = malloc(800 * 600 * 4);
+    assert(op_frame != NULL);
+    RenderSurface op_surface;
+    assert(render_surface_init(&op_surface, op_frame, 800 * 600 * 4, 800, 600));
+    assert(screen_render_options_page(&op_surface, &op_background, &op_slider,
+                                      &op_separator, &op_marker, font_data,
+                                      font_size, &font_info, &op_data));
+    free(op_frame);
+    free(op_background_pixels);
+    free(op_slider_pixels);
+    free(op_separator_pixels);
+    free(op_marker_pixels);
+
+
 
 
 

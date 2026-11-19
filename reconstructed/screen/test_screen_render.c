@@ -1046,6 +1046,77 @@ static void test_options_sidebar_composition(void) {
     }
 }
 
+static void test_options_page_composition(void) {
+    uint8_t *background_pixels = NULL;
+    uint8_t *slider_pixels = NULL;
+    uint8_t *separator_pixels = NULL;
+    uint8_t *marker_pixels = NULL;
+    RgbaSprite background;
+    RgbaSprite slider;
+    RgbaSprite separator;
+    RgbaSprite marker;
+    assert(load_spr("../extracted/sprites/pe_sub_startscreen.spr",
+                    &background_pixels, &background));
+    assert(load_spr("../extracted/sprites/sl02_00.spr", &slider_pixels, &slider));
+    assert(load_spr("../extracted/sprites/trennzeile.spr", &separator_pixels,
+                    &separator));
+    assert(load_spr("../extracted/sprites/pb14_00.spr", &marker_pixels, &marker));
+
+    size_t font_size = 0;
+    uint8_t *font_data = load_file("../extracted/fonts/timesfont.fnt", &font_size);
+    assert(font_data != NULL);
+    FntInfo font;
+    assert(fnt_read_info(font_data, font_size, &font));
+    const OptionsPageData data = {
+        .general_volume = 50,
+        .music = 40,
+        .language = 60,
+        .graphic_detail = 80,
+        .autosave = 70,
+    };
+    size_t frame_size = 800 * 600 * 4;
+    uint8_t *frame = malloc(frame_size);
+    assert(frame != NULL);
+    RenderSurface surface;
+    assert(render_surface_init(&surface, frame, frame_size, 800, 600));
+    assert(screen_render_options_page(&surface, &background, &slider,
+                                      &separator, &marker, font_data, font_size,
+                                      &font, &data));
+    bool background_ink = false;
+    for (int y = 0; y < 600; y++) {
+        for (int x = 0; x < 800; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] != 22 || frame[offset + 1] != 26 ||
+                frame[offset + 2] != 34) {
+                background_ink = true;
+            }
+        }
+    }
+    assert(background_ink);
+    bool ink = false;
+    for (int y = 250; y < 280; y++) {
+        for (int x = 600; x < 780; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] < 180 && frame[offset + 1] < 120) {
+                ink = true;
+            }
+        }
+    }
+    assert(ink);
+    size_t slider_offset = ((size_t)297 * 800 + 700) * 4;
+    assert(frame[slider_offset] != 80 || frame[slider_offset + 1] != 70 ||
+           frame[slider_offset + 2] != 60);
+    assert(!screen_render_options_page(&surface, &background, &slider,
+                                       &separator, &marker, font_data,
+                                       font_size, &font, NULL));
+    free(font_data);
+    free(frame);
+    free(background_pixels);
+    free(slider_pixels);
+    free(separator_pixels);
+    free(marker_pixels);
+}
+
 static void test_statistics_composition(void) {
     size_t tga_size = 0;
     size_t font_size = 0;
@@ -1296,6 +1367,7 @@ int main(void) {
     test_personnel_record_composition();
     test_statistics_balance_composition();
     test_statistics_branch_balance_composition();
+    test_options_page_composition();
     test_mission_goals_composition();
     test_recipe_info_panel_composition();
     test_options_sidebar_composition();

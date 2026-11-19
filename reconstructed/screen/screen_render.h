@@ -69,6 +69,25 @@ bool screen_render_game_sidebar(RenderSurface *surface,
                                 const RgbaSprite *buttons,
                                 int selected);
 
+typedef struct OptionsPageData {
+    int32_t general_volume;
+    int32_t music;
+    int32_t language;
+    int32_t graphic_detail;
+    int32_t autosave;
+} OptionsPageData;
+
+/* Composes Screen_SubStartMenu_B (0x46E960): PE_SUB_STARTSCREEN background,
+ * volume/music/language sliders and graphics/autosave controls. */
+bool screen_render_options_page(RenderSurface *surface,
+                                const RgbaSprite *background,
+                                const RgbaSprite *slider,
+                                const RgbaSprite *separator,
+                                const RgbaSprite *marker,
+                                const uint8_t *font_data, size_t font_size,
+                                const FntInfo *font,
+                                const OptionsPageData *data);
+
 bool screen_render_options_sidebar(RenderSurface *surface,
                                    const RgbaSprite *panel,
                                    const RgbaSprite *buttons,
