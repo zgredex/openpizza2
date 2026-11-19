@@ -1224,6 +1224,32 @@ def check_reconstructed_c():
         if ok else output[-1200:],
     }
 
+def check_piz_records():
+    result = subprocess.run(
+        ["python3", "tools/verify_piz_records.py"],
+        cwd=ROOT, text=True, capture_output=True, timeout=180)
+    output = (result.stdout + result.stderr).strip()
+    try:
+        payload = json.loads(result.stdout)
+    except json.JSONDecodeError:
+        return {
+            "name": "piz record parse",
+            "ok": False,
+            "detail": output[-1200:],
+        }
+    ok = (result.returncode == 0
+          and payload.get("ok") is True
+          and payload.get("character_count") == 1
+          and payload.get("character_record_size") == 2086
+          and not payload.get("character_errors")
+          and not payload.get("player_errors"))
+    return {
+        "name": "piz record parse",
+        "ok": ok,
+        "detail": ("piz_payload.py accepts 1 character (2086-byte record) "
+                   "and 6 player slots with no errors") if ok else output[-1200:],
+    }
+
 def check_rust_tests():
     result = subprocess.run(
         ["cargo", "test", "--quiet", "--all"],
@@ -1472,6 +1498,7 @@ def main(argv=None):
     checks.append(check_settings_defaults_emulation())
     checks.append(check_ingredient_desc_emulation())
     checks.append(check_reconstructed_c())
+    checks.append(check_piz_records())
     checks.append(check_rust_tests())
     checks.append(check_iso())
     checks.append(check_isodaten())

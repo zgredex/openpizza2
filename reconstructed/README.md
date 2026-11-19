@@ -38,8 +38,9 @@ Current batches:
 - `piz/` — expanded `.piz` container: 0xF0 header, 0x20 directory, fixed
   preamble through the game calendar, briefing list, 2500×50 tile-name table,
   and directory-bounded character/map-object/person/car/player/company
-  sections. `tools/piz_payload.py info` accepts it with 2500 tile names,
-  2 briefings and all list counts.
+  sections. Character and player bodies use the schema field sequences
+  (Character_Save 2082 bytes, Player_Save 132 bytes) and are validated by
+  `piz_payload.py parse_characters`/`parse_players` with no errors.
 - `construction/` — `ConstructionOrder` 0x24 layout, enqueue cell index and
   completion ownership derived from `Branch_EnqueueConstructionOrder` and
   `Branch_CompleteConstruction`.

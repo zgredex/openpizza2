@@ -9,12 +9,14 @@ _Static_assert(offsetof(PizHeader, system_time) == 0xd8, "system time offset");
 _Static_assert(offsetof(PizHeader, version) == 0xe8, "version offset");
 _Static_assert(offsetof(PizHeader, magic) == 0xec, "magic offset");
 
-#define CHARACTER_SIZE 44u
+#define CHARACTER_BODY_SIZE 2082u
+#define PLAYER_BODY_SIZE 132u
+#define COMPANY_BODY_SIZE 270u
+#define AI_BODY_SIZE 554u
+#define MISSION_BODY_SIZE 208u
+#define CAR_SIZE 8u
 #define MAPOBJECT_SIZE 20u
 #define PERSON_SIZE 16u
-#define CAR_SIZE 8u
-#define PLAYER_SIZE 48u
-#define COMPANY_SIZE 56u
 #define TILE_TABLE_SIZE (PIZ_TILE_COUNT * PIZ_TILE_RECORD_SIZE)
 #define TAIL_FIXED_SIZE 2176u
 
@@ -34,7 +36,11 @@ static uint32_t get_u32(const uint8_t *buffer, size_t offset) {
 static void put_text(uint8_t *buffer, size_t offset, const char *text, size_t size) {
     memset(buffer + offset, 0, size);
     if (text != NULL) {
-        strncpy((char *)buffer + offset, text, size - 1);
+        size_t length = strlen(text);
+        if (length >= size) {
+            length = size - 1;
+        }
+        memcpy(buffer + offset, text, length);
     }
 }
 
@@ -51,6 +57,28 @@ static size_t briefing_bytes(const PizContainer *container) {
     return total;
 }
 
+static size_t player_region_size(const PizContainer *container) {
+    size_t total = 0;
+    for (uint32_t slot = 0; slot < PIZ_MAX_PLAYERS; slot++) {
+        total += 4;
+        if (container->players[slot].present) {
+            total += PLAYER_BODY_SIZE + CHARACTER_BODY_SIZE + 4 + 4 + 4;
+        }
+    }
+    return total;
+}
+
+static size_t company_region_size(const PizContainer *container) {
+    size_t total = 0;
+    for (uint32_t slot = 0; slot < PIZ_MAX_COMPANIES; slot++) {
+        total += 4;
+        if (container->companies[slot].present) {
+            total += COMPANY_BODY_SIZE;
+        }
+    }
+    return total;
+}
+
 void piz_container_init(PizContainer *container, const char *title,
                         const char *company, const char *city) {
     if (container == NULL) {
@@ -63,6 +91,7 @@ void piz_container_init(PizContainer *container, const char *title,
     container->header.player_count = 1;
     container->header.version = PIZ_VERSION;
     container->header.magic = PIZ_MAGIC;
+    container->players[0].present = 1;
 }
 
 bool piz_container_add_briefing(PizContainer *container, uint32_t id,
@@ -96,17 +125,38 @@ size_t piz_container_size(const PizContainer *container) {
     size_t total = PIZ_FIXED_PREFIX;
     total += briefing_bytes(container);
     total += TILE_TABLE_SIZE;
-    total += 4; /* isomap count */
-    total += 4 + (size_t)container->character_count * CHARACTER_SIZE;
+    total += 4;
+    total += 4 + (size_t)container->character_count * (4 + CHARACTER_BODY_SIZE);
     total += 4 + (size_t)container->mapobject_count * MAPOBJECT_SIZE;
     total += 4 + (size_t)container->person_count * PERSON_SIZE;
     total += 4 + (size_t)container->car_count * CAR_SIZE;
-    total += PIZ_MAX_PLAYERS * PLAYER_SIZE;
-    total += PIZ_MAX_COMPANIES * COMPANY_SIZE;
+    total += player_region_size(container);
+    total += company_region_size(container);
     total += TAIL_FIXED_SIZE;
     total += save_state_encoded_size();
-    total += 4; /* end marker */
+    total += 4;
     return total;
+}
+
+static void write_character_body(uint8_t *buffer, const PizCharacter *character) {
+    memset(buffer, 0, CHARACTER_BODY_SIZE);
+    put_u32(buffer, 0, (uint32_t)character->skill);
+    put_u32(buffer, 4, (uint32_t)character->motivation);
+    put_text(buffer, 44, character->name, 32);
+}
+
+static void write_player_body(uint8_t *buffer, const PizPlayer *player) {
+    memset(buffer, 0, PLAYER_BODY_SIZE);
+    put_text(buffer, 12, player->name, 32);
+    memcpy(buffer + 56, &player->cash, 8);
+}
+
+static void write_company_body(uint8_t *buffer, const PizCompany *company) {
+    memset(buffer, 0, COMPANY_BODY_SIZE);
+    put_text(buffer, 0, company->name, 64);
+    memcpy(buffer + 86, &company->cash, 8);
+    put_u32(buffer, 94, company->branches);
+    put_u32(buffer, 98, company->share_x100);
 }
 
 size_t piz_container_encode(const PizContainer *container, uint8_t *buffer,
@@ -139,7 +189,6 @@ size_t piz_container_encode(const PizContainer *container, uint8_t *buffer,
     memcpy(buffer + offset, container->tile_names, TILE_TABLE_SIZE);
     offset += TILE_TABLE_SIZE;
 
-    size_t isomap_start = offset;
     put_u32(buffer, offset, 0);
     offset += 4;
     size_t character_start = offset;
@@ -147,10 +196,9 @@ size_t piz_container_encode(const PizContainer *container, uint8_t *buffer,
     offset += 4;
     for (uint32_t index = 0; index < container->character_count; index++) {
         put_u32(buffer, offset, container->characters[index].id);
-        put_text(buffer, offset + 4, container->characters[index].name, 32);
-        put_u32(buffer, offset + 36, (uint32_t)container->characters[index].skill);
-        put_u32(buffer, offset + 40, (uint32_t)container->characters[index].motivation);
-        offset += CHARACTER_SIZE;
+        offset += 4;
+        write_character_body(buffer + offset, &container->characters[index]);
+        offset += CHARACTER_BODY_SIZE;
     }
     size_t mapobject_start = offset;
     put_u32(buffer, offset, container->mapobject_count);
@@ -184,22 +232,34 @@ size_t piz_container_encode(const PizContainer *container, uint8_t *buffer,
     size_t player_start = offset;
     for (uint32_t slot = 0; slot < PIZ_MAX_PLAYERS; slot++) {
         const PizPlayer *player = &container->players[slot];
-        put_u32(buffer, offset, player->present);
-        put_u32(buffer, offset + 4, player->slot);
-        put_text(buffer, offset + 8, player->name, 32);
-        memcpy(buffer + offset + 40, &player->cash, 8);
-        offset += PLAYER_SIZE;
+        uint32_t present = player->present ? 1u : 0u;
+        put_u32(buffer, offset, present);
+        offset += 4;
+        if (!present) {
+            continue;
+        }
+        write_player_body(buffer + offset, player);
+        offset += PLAYER_BODY_SIZE;
+        PizCharacter empty = {0};
+        const PizCharacter *character = container->character_count ? &container->characters[0] : &empty;
+        write_character_body(buffer + offset, character);
+        offset += CHARACTER_BODY_SIZE;
+        put_u32(buffer, offset, 0);
+        put_u32(buffer, offset + 4, 0);
+        put_u32(buffer, offset + 8, 0);
+        offset += 12;
     }
     size_t company_start = offset;
     for (uint32_t slot = 0; slot < PIZ_MAX_COMPANIES; slot++) {
         const PizCompany *company = &container->companies[slot];
-        put_u32(buffer, offset, company->present);
-        put_u32(buffer, offset + 4, company->slot);
-        put_text(buffer, offset + 8, company->name, 32);
-        memcpy(buffer + offset + 40, &company->cash, 8);
-        put_u32(buffer, offset + 48, company->branches);
-        put_u32(buffer, offset + 52, company->share_x100);
-        offset += COMPANY_SIZE;
+        uint32_t present = company->present ? 1u : 0u;
+        put_u32(buffer, offset, present);
+        offset += 4;
+        if (!present) {
+            continue;
+        }
+        write_company_body(buffer + offset, company);
+        offset += COMPANY_BODY_SIZE;
     }
     size_t tail_start = offset;
     offset += 2160;
@@ -229,7 +289,6 @@ size_t piz_container_encode(const PizContainer *container, uint8_t *buffer,
     put_u32(buffer, PIZ_HEADER_SIZE + 5 * 4, (uint32_t)tail_start);
     put_u32(buffer, PIZ_HEADER_SIZE + 6 * 4, (uint32_t)car_start);
     put_u32(buffer, PIZ_HEADER_SIZE + 7 * 4, (uint32_t)total);
-    (void)isomap_start;
     return total;
 }
 
@@ -298,15 +357,16 @@ bool piz_container_decode(PizContainer *container, const uint8_t *buffer,
     }
     offset = character_start + 4;
     for (uint32_t index = 0; index < container->character_count; index++) {
-        if (offset + CHARACTER_SIZE > length) {
+        if (offset + 4 + CHARACTER_BODY_SIZE > length) {
             return false;
         }
         PizCharacter *character = &container->characters[index];
         character->id = get_u32(buffer, offset);
-        get_text(character->name, 32, buffer, offset + 4);
-        character->skill = (int32_t)get_u32(buffer, offset + 36);
-        character->motivation = (int32_t)get_u32(buffer, offset + 40);
-        offset += CHARACTER_SIZE;
+        offset += 4;
+        character->skill = (int32_t)get_u32(buffer, offset);
+        character->motivation = (int32_t)get_u32(buffer, offset + 4);
+        get_text(character->name, 32, buffer, offset + 44);
+        offset += CHARACTER_BODY_SIZE;
     }
 
     container->mapobject_count = get_u32(buffer, mapobject_start);
@@ -358,29 +418,64 @@ bool piz_container_decode(PizContainer *container, const uint8_t *buffer,
 
     offset = player_start;
     for (uint32_t slot = 0; slot < PIZ_MAX_PLAYERS; slot++) {
-        if (offset + PLAYER_SIZE > length) {
+        if (offset + 4 > length) {
             return false;
         }
         PizPlayer *player = &container->players[slot];
         player->present = get_u32(buffer, offset);
-        player->slot = get_u32(buffer, offset + 4);
-        get_text(player->name, 32, buffer, offset + 8);
-        memcpy(&player->cash, buffer + offset + 40, 8);
-        offset += PLAYER_SIZE;
+        offset += 4;
+        if (!player->present) {
+            continue;
+        }
+        if (offset + PLAYER_BODY_SIZE + CHARACTER_BODY_SIZE + 12 > length) {
+            return false;
+        }
+        get_text(player->name, 32, buffer, offset + 12);
+        memcpy(&player->cash, buffer + offset + 56, 8);
+        offset += PLAYER_BODY_SIZE;
+        offset += CHARACTER_BODY_SIZE;
+        uint32_t event_count = get_u32(buffer, offset);
+        offset += 4;
+        if (offset + event_count * 6 > length) {
+            return false;
+        }
+        offset += event_count * 6;
+        uint32_t has_ai = get_u32(buffer, offset);
+        offset += 4;
+        if (has_ai) {
+            if (offset + AI_BODY_SIZE > length) {
+                return false;
+            }
+            offset += AI_BODY_SIZE;
+        }
+        uint32_t has_mission = get_u32(buffer, offset);
+        offset += 4;
+        if (has_mission) {
+            if (offset + MISSION_BODY_SIZE > length) {
+                return false;
+            }
+            offset += MISSION_BODY_SIZE;
+        }
     }
     offset = company_start;
     for (uint32_t slot = 0; slot < PIZ_MAX_COMPANIES; slot++) {
-        if (offset + COMPANY_SIZE > length) {
+        if (offset + 4 > length) {
             return false;
         }
         PizCompany *company = &container->companies[slot];
         company->present = get_u32(buffer, offset);
-        company->slot = get_u32(buffer, offset + 4);
-        get_text(company->name, 32, buffer, offset + 8);
-        memcpy(&company->cash, buffer + offset + 40, 8);
-        company->branches = get_u32(buffer, offset + 48);
-        company->share_x100 = get_u32(buffer, offset + 52);
-        offset += COMPANY_SIZE;
+        offset += 4;
+        if (!company->present) {
+            continue;
+        }
+        if (offset + COMPANY_BODY_SIZE > length) {
+            return false;
+        }
+        get_text(company->name, 64, buffer, offset);
+        memcpy(&company->cash, buffer + offset + 86, 8);
+        company->branches = get_u32(buffer, offset + 94);
+        company->share_x100 = get_u32(buffer, offset + 98);
+        offset += COMPANY_BODY_SIZE;
     }
 
     size_t save_offset = tail_start + TAIL_FIXED_SIZE;
@@ -389,5 +484,6 @@ bool piz_container_decode(PizContainer *container, const uint8_t *buffer,
                            length - save_offset - 4)) {
         return false;
     }
+    (void)offset;
     return piz_container_size(container) == length;
 }
