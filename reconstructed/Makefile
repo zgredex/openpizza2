@@ -10,9 +10,10 @@ INGREDIENT_SRC = ingredient/ingredient.c ingredient/test_ingredient.c
 INGREDIENT_HDR = ingredient/ingredient.h
 INGREDIENT_BIN = $(BUILD)/test_ingredient
 
-MISSION_SRC = mission/mission_state.c mission/test_mission.c
-MISSION_HDR = mission/mission_state.h
-MISSION_BIN = $(BUILD)/test_mission
+MISSION_STATE_SRC = mission/mission_state.c mission/mission_goals.c
+MISSION_STATE_HDR = mission/mission_state.h mission/mission_goals.h
+MISSION_STATE_BIN = $(BUILD)/test_mission
+MISSION_GOALS_BIN = $(BUILD)/test_mission_goals
 
 .PHONY: all check clean
 
@@ -26,14 +27,19 @@ $(INGREDIENT_BIN): $(INGREDIENT_SRC) $(INGREDIENT_HDR)
 	@mkdir -p $(BUILD)
 	$(CC) $(CFLAGS) $(INGREDIENT_SRC) -o $@
 
-$(MISSION_BIN): $(MISSION_SRC) $(MISSION_HDR)
+$(MISSION_STATE_BIN): $(MISSION_STATE_SRC) $(MISSION_STATE_HDR) mission/test_mission.c
 	@mkdir -p $(BUILD)
-	$(CC) $(CFLAGS) $(MISSION_SRC) -o $@
+	$(CC) $(CFLAGS) $(MISSION_STATE_SRC) mission/test_mission.c -o $@
 
-check: $(SETTINGS_BIN) $(INGREDIENT_BIN) $(MISSION_BIN)
+$(MISSION_GOALS_BIN): $(MISSION_STATE_SRC) $(MISSION_STATE_HDR) mission/test_mission_goals.c
+	@mkdir -p $(BUILD)
+	$(CC) $(CFLAGS) $(MISSION_STATE_SRC) mission/test_mission_goals.c -o $@
+
+check: $(SETTINGS_BIN) $(INGREDIENT_BIN) $(MISSION_STATE_BIN) $(MISSION_GOALS_BIN)
 	./$(SETTINGS_BIN)
 	./$(INGREDIENT_BIN)
-	./$(MISSION_BIN)
+	./$(MISSION_STATE_BIN)
+	./$(MISSION_GOALS_BIN)
 
 clean:
 	rm -rf $(BUILD)
