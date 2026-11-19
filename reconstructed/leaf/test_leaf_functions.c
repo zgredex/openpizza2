@@ -2,6 +2,8 @@
 
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 static void test_clamp(void) {
     int32_t value = 120;
@@ -191,6 +193,93 @@ static void test_counters(void) {
     clear_ptr(NULL);
 }
 
+static void write_i32_at(uint8_t *base, size_t offset, int32_t value) {
+    memcpy(base + offset, &value, sizeof(value));
+}
+
+static void test_array_stride_helpers(void) {
+    uint8_t records[4 * 12 + 4] = {0};
+    array_set_field4_stride12(records, 2, 0x12345678);
+    assert(array_get_field4_stride12(records, 2) == 0x12345678);
+    assert(array_get_field4_stride12(records, 0) == 0);
+    assert(array_get_field4_stride12(records, 3) == 0);
+    assert(array_get_field4_stride12(NULL, 2) == 0);
+
+    uint8_t buffer[0xdc8 + 3 * 0x60] = {0};
+    assert(array_get_stride60(buffer, 0) == buffer + 0xdc8);
+    assert(array_get_stride60(buffer, 2) == buffer + 0xdc8 + 2 * 0x60);
+    assert(array_get_stride60(buffer, -1) == NULL);
+    assert(array_get_stride60(NULL, 0) == NULL);
+
+    uint8_t primary[3 * 0x28] = {0};
+    uint8_t secondary[3 * 0x28] = {0};
+    assert(array_get_record28(primary, secondary, 1, 2) == primary + 2 * 0x28);
+    assert(array_get_record28(primary, secondary, 0, 1) == secondary + 0x28);
+    assert(array_get_record28(primary, secondary, 1, -1) == NULL);
+}
+
+static void test_building_leafs(void) {
+    assert(building_is_special_type(4));
+    assert(building_is_special_type(5));
+    assert(building_is_special_type(0xb));
+    assert(building_is_special_type(0x21));
+    assert(building_is_special_type(0xf));
+    assert(!building_is_special_type(0));
+    assert(!building_is_special_type(6));
+
+    assert(building_map_subtype_to_state(0) == 6);
+    assert(building_map_subtype_to_state(1) == 0);
+    assert(building_map_subtype_to_state(2) == 2);
+    assert(building_map_subtype_to_state(3) == 4);
+    assert(building_map_subtype_to_state(4) == -1);
+}
+
+static void test_game_leafs(void) {
+    const void *players[6] = {NULL};
+    uint8_t player0[16] = {0};
+    uint8_t player2[16] = {0};
+    uint8_t player5[16] = {0};
+    players[0] = player0;
+    players[2] = player2;
+    players[5] = player5;
+    assert(game_get_player_count(players) == 3);
+    assert(game_get_player_count(NULL) == 0);
+
+    write_i32_at(player2, 8, 77);
+    assert(game_get_player_field8(players, 0) == 0);
+    assert(game_get_player_field8(players, 2) == 77);
+    assert(game_get_player_field8(players, 1) == -1);
+    assert(game_get_player_field8(NULL, 1) == -1);
+
+    uint8_t date[32] = {0};
+    date[6] = 3;
+    date[7] = 19;
+    write_i32_at(date, 0x0c, 0x1234);
+    assert(game_get_date_field0c(date) == 0x1234);
+    uint32_t day = 0;
+    int32_t month_times5 = 0;
+    game_get_date_fields(date, &day, &month_times5);
+    assert(day == 19);
+    assert(month_times5 == 15);
+    assert(game_get_date_field0c(NULL) == 0);
+
+    uint8_t *map = calloc(0x2e4f4 + 8, 1);
+    assert(map != NULL);
+    uint16_t tile = 0xbeef;
+    memcpy(map + 0x2e4f4 + 4, &tile, sizeof(tile));
+    assert(game_get_map_value(map, 2) == 0xbeef);
+    assert(game_get_map_value(map, 0xffffffffu) == 0xffffffffu);
+    assert(game_get_map_value(map, 0xfffffffeu) == 0xfffffffeu);
+    assert(game_get_map_value(map, 0x80000000u) == 0xffffffffu);
+    free(map);
+
+    assert(game_get_cost_for_type(30, 40, 0) == 90);
+    assert(game_get_cost_for_type(30, 40, 1) == 50);
+    assert(game_get_cost_for_type(30, 40, 2) == 500);
+    assert(game_get_cost_for_type(30, 40, 3) == 160);
+    assert(game_get_cost_for_type(30, 40, 4) == 0);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -204,6 +293,9 @@ int main(void) {
     test_sprite_variant();
     test_array_helpers();
     test_counters();
+    test_array_stride_helpers();
+    test_building_leafs();
+    test_game_leafs();
     puts("leaf function reconstruction: OK");
     return 0;
 }

@@ -80,4 +80,41 @@ size_t game_count_active_stats(const int32_t values[0x56]);
 /* Clear_Ptr (0x403190). */
 void clear_ptr(int32_t *pointer);
 
+/* Array_GetField4Stride12 / Array_SetField4Stride12 (0x4F3B10 / 0x4ED310). */
+int32_t array_get_field4_stride12(const uint8_t *base, size_t index);
+void array_set_field4_stride12(uint8_t *base, size_t index, int32_t value);
+
+/* Array_GetStride60 (0x4DA630). */
+const uint8_t *array_get_stride60(const uint8_t *base, int32_t index);
+
+/* Array_GetRecord28 (0x4F0CC0). */
+const uint8_t *array_get_record28(const uint8_t *primary,
+                                  const uint8_t *secondary,
+                                  int32_t selector, int32_t index);
+
+/* Building_IsSpecialType (0x509FC0). */
+bool building_is_special_type(int32_t type);
+
+/* Building_MapSubtypeToState (0x508FB0). */
+int32_t building_map_subtype_to_state(int32_t subtype);
+
+/* Game_GetPlayerCount (0x482720): six pointer slots at +0x200. */
+size_t game_get_player_count(const void *const players[6]);
+
+/* Game_GetPlayerField8 (0x482840): player field at +8. */
+int32_t game_get_player_field8(const void *const players[6], size_t index);
+
+/* Game_GetDateField0C (0x489B10). */
+int32_t game_get_date_field0c(const uint8_t *date);
+
+/* Game_GetDateFields (0x48B3C0). */
+void game_get_date_fields(const uint8_t *date, uint32_t *day,
+                          int32_t *month_times5);
+
+/* Game_GetMapValue (0x4EAA10). */
+uint32_t game_get_map_value(const uint8_t *map, uint32_t value);
+
+/* Game_GetCostForType (0x4D4330). */
+int32_t game_get_cost_for_type(int32_t field4, int32_t field8, int32_t type);
+
 #endif

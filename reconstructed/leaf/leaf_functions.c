@@ -1,6 +1,7 @@
 #include "leaf_functions.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 void clamp_0_100(int32_t *value) {
     if (value == NULL) {
@@ -364,5 +365,132 @@ size_t game_count_active_stats(const int32_t values[0x56]) {
 void clear_ptr(int32_t *pointer) {
     if (pointer != NULL) {
         *pointer = 0;
+    }
+}
+
+static int32_t read_i32(const uint8_t *pointer) {
+    int32_t value;
+    memcpy(&value, pointer, sizeof(value));
+    return value;
+}
+
+static void write_i32(uint8_t *pointer, int32_t value) {
+    memcpy(pointer, &value, sizeof(value));
+}
+
+int32_t array_get_field4_stride12(const uint8_t *base, size_t index) {
+    if (base == NULL) {
+        return 0;
+    }
+    return read_i32(base + 4u + index * 0xcu);
+}
+
+void array_set_field4_stride12(uint8_t *base, size_t index, int32_t value) {
+    if (base == NULL) {
+        return;
+    }
+    write_i32(base + 4u + index * 0xcu, value);
+}
+
+const uint8_t *array_get_stride60(const uint8_t *base, int32_t index) {
+    if (base == NULL || index < 0) {
+        return NULL;
+    }
+    return base + 0xdc8 + (size_t)index * 0x60u;
+}
+
+const uint8_t *array_get_record28(const uint8_t *primary,
+                                  const uint8_t *secondary,
+                                  int32_t selector, int32_t index) {
+    if (index == -1) {
+        return NULL;
+    }
+    const uint8_t *base = selector == 1 ? primary : secondary;
+    if (base == NULL) {
+        return NULL;
+    }
+    return base + (size_t)index * 0x28u;
+}
+
+bool building_is_special_type(int32_t type) {
+    return type == 4 || type == 5 || type == 0xb || type == 0x21 ||
+           type == 0xf;
+}
+
+int32_t building_map_subtype_to_state(int32_t subtype) {
+    switch (subtype) {
+    case 0:
+        return 6;
+    case 1:
+        return 0;
+    case 2:
+        return 2;
+    case 3:
+        return 4;
+    default:
+        return -1;
+    }
+}
+
+size_t game_get_player_count(const void *const players[6]) {
+    if (players == NULL) {
+        return 0;
+    }
+    size_t count = 0;
+    for (size_t index = 0; index < 6; index++) {
+        if (players[index] != NULL) {
+            count++;
+        }
+    }
+    return count;
+}
+
+int32_t game_get_player_field8(const void *const players[6], size_t index) {
+    if (players == NULL || index >= 6 || players[index] == NULL) {
+        return -1;
+    }
+    return read_i32((const uint8_t *)players[index] + 8u);
+}
+
+int32_t game_get_date_field0c(const uint8_t *date) {
+    if (date == NULL) {
+        return 0;
+    }
+    return read_i32(date + 0xcu);
+}
+
+void game_get_date_fields(const uint8_t *date, uint32_t *day,
+                          int32_t *month_times5) {
+    if (date == NULL || day == NULL || month_times5 == NULL) {
+        return;
+    }
+    *day = date[7];
+    *month_times5 = (int32_t)date[6] * 5;
+}
+
+uint32_t game_get_map_value(const uint8_t *map, uint32_t value) {
+    if (value == 0xffffffffu || value == 0xfffffffeu) {
+        return value;
+    }
+    if ((int32_t)value < 0 || map == NULL) {
+        return 0xffffffffu;
+    }
+    uint16_t result;
+    memcpy(&result, map + 0x2e4f4u + (size_t)value * 2u, sizeof(result));
+    return result;
+}
+
+int32_t game_get_cost_for_type(int32_t field4, int32_t field8, int32_t type) {
+    switch (type) {
+    case 0:
+        return (field4 * field4) / 10;
+    case 1:
+        return 0x32;
+    case 2:
+        return 500;
+    case 3:
+        return (field8 * field8) / 10;
+    default:
+        return 0;
     }
 }
