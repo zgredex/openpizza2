@@ -1230,8 +1230,8 @@ def check_reconstructed_c():
                    "composition, startscreen menu, character-select, London "
                    "briefing, free-play setup, statistics view, branch-list "
                    "window, branch-details page, branch-offer page, personnel "
-                   "overview, personnel record, iso-map/branch interior render "
-                   "and hourly branch economy included")
+                   "overview, personnel record, statistics balance, iso-map/"
+                   "branch interior render and hourly branch economy included")
         if ok else output[-1200:],
     }
 

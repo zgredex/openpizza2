@@ -52,6 +52,28 @@ bool screen_render_statistics(RenderSurface *surface, const uint8_t *tga_data,
                               const char *date, uint8_t *decode_buffer,
                               size_t decode_capacity);
 
+typedef struct StatisticsBalanceRow {
+    const char *label;
+    double amount;
+} StatisticsBalanceRow;
+
+typedef struct StatisticsBalanceData {
+    const char *branch_name;
+    const char *period;
+    const char *validity;
+    const StatisticsBalanceRow *expenses;
+    size_t expense_count;
+    const StatisticsBalanceRow *incomes;
+    size_t income_count;
+} StatisticsBalanceData;
+
+/* Composes Screen_StatisticsBalance (0x430FD0) over the shipped
+ * STATISTIKBILANZBACK.spr, with TAB09 row plates and expense/income columns. */
+bool screen_render_statistics_balance(
+    RenderSurface *surface, const RgbaSprite *background,
+    const RgbaSprite *row_plate, const uint8_t *font_data, size_t font_size,
+    const FntInfo *font, const StatisticsBalanceData *data);
+
 typedef struct PersonnelRecordData {
     const char *employee_name;
     const char *profession;

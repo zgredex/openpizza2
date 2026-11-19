@@ -550,6 +550,86 @@ static void test_personnel_record_composition(void) {
     free(rating_pixels);
 }
 
+static void test_statistics_balance_composition(void) {
+    uint8_t *background_pixels = NULL;
+    uint8_t *row_pixels = NULL;
+    RgbaSprite background;
+    RgbaSprite row_plate;
+    assert(load_spr("../extracted/sprites/statistikbilanzback.spr",
+                    &background_pixels, &background));
+    assert(load_spr("../extracted/sprites/tab09.spr", &row_pixels, &row_plate));
+
+    size_t font_size = 0;
+    uint8_t *font_data = load_file("../extracted/fonts/timesfont.fnt", &font_size);
+    assert(font_data != NULL);
+    FntInfo font;
+    assert(fnt_read_info(font_data, font_size, &font));
+
+    const StatisticsBalanceRow expenses[] = {
+        {"Stocks", 30.75},
+        {"Rent", 20.0},
+        {"Wages", 60.0},
+    };
+    const StatisticsBalanceRow incomes[] = {
+        {"Sales", 100.5},
+        {"Other", 50.25},
+    };
+    const StatisticsBalanceData data = {
+        .branch_name = "London branch",
+        .period = "Quarter 1",
+        .validity = "London",
+        .expenses = expenses,
+        .expense_count = 3,
+        .incomes = incomes,
+        .income_count = 2,
+    };
+    size_t frame_size = 800 * 600 * 4;
+    uint8_t *frame = malloc(frame_size);
+    assert(frame != NULL);
+    RenderSurface surface;
+    assert(render_surface_init(&surface, frame, frame_size, 800, 600));
+    assert(screen_render_statistics_balance(&surface, &background, &row_plate,
+                                             font_data, font_size, &font,
+                                             &data));
+    assert(memcmp(frame, background.pixels, 4) == 0);
+
+    bool opaque = false;
+    size_t opaque_index = 0;
+    for (size_t index = 0; index + 3 < (size_t)row_plate.width * row_plate.height * 4;
+         index += 4) {
+        if (row_plate.pixels[index + 3] == 255) {
+            opaque = true;
+            opaque_index = index;
+            break;
+        }
+    }
+    assert(opaque);
+    size_t row_x = (opaque_index / 4) % row_plate.width;
+    size_t row_y = (opaque_index / 4) / row_plate.width;
+    size_t row_offset = ((size_t)(279 + (int)row_y) * 800 +
+                         (612 + (int)row_x)) * 4;
+    assert(memcmp(frame + row_offset, row_plate.pixels + opaque_index, 4) == 0);
+
+    bool title_ink = false;
+    for (int y = 220; y < 245; y++) {
+        for (int x = 600; x < 760; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] < 180 && frame[offset + 1] < 120) {
+                title_ink = true;
+            }
+        }
+    }
+    assert(title_ink);
+    assert(!screen_render_statistics_balance(&surface, &background, &row_plate,
+                                              font_data, font_size, &font,
+                                              NULL));
+
+    free(font_data);
+    free(frame);
+    free(background_pixels);
+    free(row_pixels);
+}
+
 static void test_statistics_composition(void) {
     size_t tga_size = 0;
     size_t font_size = 0;
@@ -773,6 +853,7 @@ int main(void) {
     test_branch_offer_composition();
     test_personnel_overview_composition();
     test_personnel_record_composition();
+    test_statistics_balance_composition();
     test_statistics_composition();
     test_free_play_composition();
     test_briefing_composition();

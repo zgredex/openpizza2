@@ -779,6 +779,44 @@ int main(void) {
     free(pr_separator_pixels);
     free(pr_rating_pixels);
 
+    uint8_t *sb_background_pixels = NULL;
+    uint8_t *sb_row_pixels = NULL;
+    RgbaSprite sb_background;
+    RgbaSprite sb_row_plate;
+    assert(load_spr_asset("../extracted/sprites/statistikbilanzback.spr",
+                          &sb_background_pixels, &sb_background));
+    assert(load_spr_asset("../extracted/sprites/tab09.spr", &sb_row_pixels,
+                          &sb_row_plate));
+    const StatisticsBalanceRow sb_expenses[3] = {
+        {"Stocks", operations.ingredient_cost},
+        {"Rent", operations.rent},
+        {"Wages", operations.wages},
+    };
+    const StatisticsBalanceRow sb_incomes[1] = {
+        {"Sales", operations.revenue},
+    };
+    const StatisticsBalanceData sb_data = {
+        .branch_name = "London branch",
+        .period = "Quarter 1",
+        .validity = city.city_name,
+        .expenses = sb_expenses,
+        .expense_count = 3,
+        .incomes = sb_incomes,
+        .income_count = 1,
+    };
+    uint8_t *sb_frame = malloc(800 * 600 * 4);
+    assert(sb_frame != NULL);
+    RenderSurface sb_surface;
+    assert(render_surface_init(&sb_surface, sb_frame, 800 * 600 * 4, 800, 600));
+    assert(screen_render_statistics_balance(&sb_surface, &sb_background,
+                                             &sb_row_plate, font_data,
+                                             font_size, &font_info, &sb_data));
+    assert(memcmp(sb_frame, sb_background.pixels, 4) == 0);
+    free(sb_frame);
+    free(sb_background_pixels);
+    free(sb_row_pixels);
+
+
 
 
 
