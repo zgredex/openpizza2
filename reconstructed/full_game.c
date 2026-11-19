@@ -547,6 +547,12 @@ int main(void) {
     assert(rating_branch_score(10, 40) == 10);
     assert(branch_customer_group_rating(60, 70, 80, 90, true, 10) == 85);
     assert(branch_customer_group_rating(30, 30, 30, 0, false, 20) == 50);
+    assert(company_get_percent_modifier(1, 5000) == 50);
+    assert(gameplan_effect_from_bar(1, 5000, 80, 0, 0) == 60);
+    assert(gameplan_effect_from_bar(1, 5000, 80, 25, 0) == 15);
+    const int32_t plan_bars[8] = {80, 80, 80, 80, 80, 80, 80, 80};
+    assert(gameplan_average_effect(plan_bars, 1, 5000, 0, 0) == 60);
+
 
 
 

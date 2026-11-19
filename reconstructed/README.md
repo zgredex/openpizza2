@@ -52,9 +52,9 @@ Current batches:
   `extracted/pictures/pe_missionsbriefing_lon.tga` with wrapped body text.
 - `rating/` — `Branch_GetCustomerGroupRating` composition, city adjustment,
   and the baseline branch-score table rule.
-- `advertising/` — `Value_Approach`, hourly value decay and
-  `Game_GetAdjustedValue` customer-radius conversion, with the original
-  positive/negative target and clamp rules.
+- `advertising/` — `Value_Approach`, hourly value decay,
+  `Game_GetAdjustedValue` customer-radius conversion, company budget-percent
+  conversion and per-category plan effect bars.
 - `operations/` — branch period accounting (sale revenue, ingredient cost,
   payroll, rent, advertising, profit, period close) plus the hourly path:
   1/24 wage and advertising shares, 0.4%/hour negative-cash interest, opening

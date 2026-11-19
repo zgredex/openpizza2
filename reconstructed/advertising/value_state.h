@@ -18,6 +18,13 @@ void value_state_init(ValueApproachState *state, double value);
 bool value_approach(ValueApproachState *state, double step, double target);
 void value_state_decay_hour(ValueApproachState *state);
 
+int32_t company_get_percent_modifier(int32_t plan_type, int32_t budget);
+int32_t gameplan_effect_from_bar(int32_t plan_type, int32_t budget, int32_t bar,
+                                 int32_t city_field_64, int32_t city_field_4c);
+int32_t gameplan_average_effect(const int32_t bars[8], int32_t plan_type,
+                                int32_t budget, int32_t city_field_64,
+                                int32_t city_field_4c);
+
 int32_t game_adjusted_value(int32_t base_value, int32_t animated_value,
                             int32_t city_event_bonus, bool human_player,
                             uint8_t mission_field_c4, bool mission_field_1ac,

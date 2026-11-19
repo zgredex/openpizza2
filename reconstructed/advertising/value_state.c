@@ -93,3 +93,38 @@ int32_t game_adjusted_value(int32_t base_value, int32_t animated_value,
     }
     return value;
 }
+
+int32_t company_get_percent_modifier(int32_t plan_type, int32_t budget) {
+    if (plan_type == 1) {
+        return budget * 100 / 10000;
+    }
+    if (plan_type == 2) {
+        return budget * 100 / 5000;
+    }
+    return 100;
+}
+
+int32_t gameplan_effect_from_bar(int32_t plan_type, int32_t budget, int32_t bar,
+                                 int32_t city_field_64, int32_t city_field_4c) {
+    int32_t percent = company_get_percent_modifier(plan_type, budget);
+    int32_t value = percent * (bar - 40) / 100 + 40;
+    value = (100 - 3 * (city_field_64 + city_field_4c)) * value / 100;
+    if (value < 0) {
+        return 0;
+    }
+    if (value > 100) {
+        return 100;
+    }
+    return value;
+}
+
+int32_t gameplan_average_effect(const int32_t bars[8], int32_t plan_type,
+                                int32_t budget, int32_t city_field_64,
+                                int32_t city_field_4c) {
+    int32_t total = 0;
+    for (int index = 0; index < 8; index++) {
+        total += gameplan_effect_from_bar(plan_type, budget, bars[index],
+                                          city_field_64, city_field_4c);
+    }
+    return total >> 3;
+}

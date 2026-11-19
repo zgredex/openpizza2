@@ -61,10 +61,24 @@ static void test_adjusted_value(void) {
            500);
 }
 
+static void test_plan_effect(void) {
+    assert(company_get_percent_modifier(1, 5000) == 50);
+    assert(company_get_percent_modifier(2, 2500) == 50);
+    assert(company_get_percent_modifier(3, 3500) == 100);
+    assert(gameplan_effect_from_bar(1, 5000, 80, 0, 0) == 60);
+    assert(gameplan_effect_from_bar(1, 5000, 80, 25, 0) == 15);
+    assert(gameplan_effect_from_bar(1, 5000, 40, 25, 0) == 10);
+    assert(gameplan_effect_from_bar(2, 5000, 200, 0, 0) == 100);
+    assert(gameplan_effect_from_bar(1, 0, 0, 100, 0) == 0);
+    const int32_t bars[8] = {80, 80, 80, 80, 80, 80, 80, 80};
+    assert(gameplan_average_effect(bars, 1, 5000, 0, 0) == 60);
+}
+
 int main(void) {
     test_positive_approach_and_decay();
     test_negative_and_zero_targets();
     test_adjusted_value();
+    test_plan_effect();
     puts("advertising value reconstruction: OK");
     return 0;
 }

@@ -1233,9 +1233,9 @@ def check_reconstructed_c():
                    "briefing, free-play setup, statistics view, branch-list "
                    "window, branch-details page, branch-offer page, personnel "
                    "overview, personnel record, statistics balance, branch-"
-                   "balance statistics, advertising value approach, customer-"
-                   "group rating, iso-map/branch interior render and hourly "
-                   "branch economy included")
+                   "balance statistics, advertising value/plan effects, "
+                   "customer-group rating, iso-map/branch interior render and "
+                   "hourly branch economy included")
         if ok else output[-1200:],
     }
 
