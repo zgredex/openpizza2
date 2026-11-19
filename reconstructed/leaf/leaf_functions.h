@@ -475,6 +475,31 @@ int32_t map_find_name_index(const uint8_t *records, int32_t count,
 int32_t string_list_find(const uint8_t *records, int32_t count,
                          const char *key, int32_t *index);
 
+/* Remaining simple object/record/rect/sprite/surface helpers. */
+bool object_is_state10(const uint8_t *object);
+void object_set_frame5(uint8_t *object, int32_t frame);
+void object_set_index171c(uint8_t *object, int32_t value);
+void object_set_field280(uint8_t *object, int32_t value);
+void record_clear48(uint8_t *records, size_t count, int32_t index);
+void record_clear_active48(uint8_t *records, size_t count, int32_t index);
+void record_clear_flags48(uint8_t *records, size_t count, int32_t index);
+void record_set_field2d0c(uint8_t *tile_defs, size_t index, uint8_t value);
+bool record_set_slot6_98(uint8_t *records, size_t count, size_t index,
+                         size_t slot, uint32_t value, uint16_t extra);
+void set_field168(uint8_t *object, int32_t value);
+void set_field228(uint8_t *object, int32_t value);
+void set_field9b8(uint8_t *object, int32_t value);
+void rect_set1a4(uint8_t *rect, const int32_t values[4]);
+const void *sprite_get_palette(const uint8_t *sprite);
+void sprite_get_render_size(const uint8_t *sprite, uint32_t *width,
+                            uint32_t *height);
+void surface_get_cursor_rect(const uint8_t *surface, int32_t rect[4]);
+void surface_reset(uint8_t *surface);
+void surface_set_bounds(uint8_t *surface, int32_t left, int32_t top,
+                        int32_t right, int32_t bottom);
+void surface_set_pixel(uint8_t *surface, int32_t x, int32_t y,
+                       uint16_t value);
+
 /* Game_GetActiveScreenOrFallback (0x482910). */
 int32_t game_get_active_screen_or_fallback(const uint8_t *game);
 

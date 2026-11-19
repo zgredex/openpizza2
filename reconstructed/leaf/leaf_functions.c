@@ -2381,3 +2381,210 @@ int32_t string_list_find(const uint8_t *records, int32_t count,
     *index = low;
     return 0;
 }
+
+bool object_is_state10(const uint8_t *object) {
+    return object != NULL && read_i32(object + 0x108) == 10;
+}
+
+void object_set_frame5(uint8_t *object, int32_t frame) {
+    if (object != NULL) {
+        write_i32(object + 0x94, frame == -1 ? -1 : frame * 5);
+    }
+}
+
+void object_set_index171c(uint8_t *object, int32_t value) {
+    if (object != NULL) {
+        write_i32(object + 0x171c, value);
+        write_i32(object + 0x1724, 0);
+        write_i32(object + 0x1720, 0);
+    }
+}
+
+void object_set_field280(uint8_t *object, int32_t value) {
+    if (object != NULL) {
+        write_i32(object + 0x280, value);
+    }
+}
+
+void record_clear48(uint8_t *records, size_t count, int32_t index) {
+    if (records != NULL && index >= 0 && (size_t)index < count) {
+        write_i32(records + (size_t)index * 0x48u, -1);
+    }
+}
+
+void record_clear_active48(uint8_t *records, size_t count, int32_t index) {
+    if (records == NULL || index < 0 || (size_t)index >= count) {
+        return;
+    }
+    uint8_t *record = records + (size_t)index * 0x48u;
+    record[0x3c] = 0;
+    uint16_t zero = 0;
+    memcpy(record + 0x30, &zero, sizeof(zero));
+}
+
+void record_clear_flags48(uint8_t *records, size_t count, int32_t index) {
+    if (records == NULL || index < 0 || (size_t)index >= count) {
+        return;
+    }
+    uint8_t *record = records + (size_t)index * 0x48u;
+    if (read_i32(record) != -1) {
+        record[0x3e] = 0;
+        record[0x3c] = 0;
+    }
+}
+
+void record_set_field2d0c(uint8_t *tile_defs, size_t index, uint8_t value) {
+    if (tile_defs == NULL) {
+        return;
+    }
+    uintptr_t target;
+    memcpy(&target, tile_defs + index * 0x0cu + 8, sizeof(target));
+    if (target != 0) {
+        ((uint8_t *)target)[0x2d] = value;
+    }
+}
+
+bool record_set_slot6_98(uint8_t *records, size_t count, size_t index,
+                         size_t slot, uint32_t value, uint16_t extra) {
+    if (records == NULL || index >= count || slot >= 0x10) {
+        return false;
+    }
+    uint8_t *target = records + index * 0x98u + slot * 6u;
+    memcpy(target, &value, sizeof(value));
+    memcpy(target + 4, &extra, sizeof(extra));
+    return true;
+}
+
+void set_field168(uint8_t *object, int32_t value) {
+    if (object != NULL) {
+        write_i32(object + 0x168, value);
+    }
+}
+
+void set_field228(uint8_t *object, int32_t value) {
+    if (object != NULL) {
+        write_i32(object + 0x228, value);
+    }
+}
+
+void set_field9b8(uint8_t *object, int32_t value) {
+    if (object != NULL) {
+        write_i32(object + 0x9b8, value);
+    }
+}
+
+void rect_set1a4(uint8_t *rect, const int32_t values[4]) {
+    if (rect == NULL || values == NULL) {
+        return;
+    }
+    int32_t current = read_i32(rect + 0x1a4);
+    if (current == -999) {
+        write_i32(rect + 0x1a4, values[0]);
+        write_i32(rect + 0x1a8, values[1]);
+        write_i32(rect + 0x1ac, values[2]);
+        write_i32(rect + 0x1b0, values[3]);
+        return;
+    }
+    int32_t left = current < values[0] ? current : values[0];
+    write_i32(rect + 0x1a4, left);
+    int32_t right = read_i32(rect + 0x1ac);
+    if (right < values[2]) {
+        right = values[2];
+    }
+    write_i32(rect + 0x1ac, right);
+    int32_t top = read_i32(rect + 0x1a8);
+    if (values[1] < top) {
+        top = values[1];
+    }
+    write_i32(rect + 0x1a8, top);
+    int32_t bottom = read_i32(rect + 0x1b0);
+    if (bottom < values[3]) {
+        bottom = values[3];
+    }
+    write_i32(rect + 0x1b0, bottom);
+}
+
+const void *sprite_get_palette(const uint8_t *sprite) {
+    if (sprite == NULL) {
+        return NULL;
+    }
+    uintptr_t palette;
+    memcpy(&palette, sprite + 0x20, sizeof(palette));
+    return (const void *)palette;
+}
+
+void sprite_get_render_size(const uint8_t *sprite, uint32_t *width,
+                            uint32_t *height) {
+    if (sprite == NULL || width == NULL || height == NULL) {
+        return;
+    }
+    uint16_t stored_width;
+    uint16_t stored_height;
+    memcpy(&stored_width, sprite + 0x12, sizeof(stored_width));
+    memcpy(&stored_height, sprite + 0x14, sizeof(stored_height));
+    if (read_i32(sprite + 0x30) == 0 || sprite[0x37] == 0) {
+        *width = stored_width;
+        *height = stored_height;
+    } else {
+        *width = stored_height;
+        *height = stored_width;
+    }
+}
+
+void surface_get_cursor_rect(const uint8_t *surface, int32_t rect[4]) {
+    if (surface == NULL || rect == NULL) {
+        return;
+    }
+    rect[0] = read_i32(surface + 4);
+    rect[1] = read_i32(surface + 0x0c);
+    rect[2] = read_i32(surface + 8);
+    rect[3] = read_i32(surface + 0x10);
+}
+
+void surface_reset(uint8_t *surface) {
+    if (surface == NULL) {
+        return;
+    }
+    write_i32(surface + 0x0c, 0);
+    write_i32(surface + 4, 0);
+    uint16_t width;
+    uint16_t height;
+    memcpy(&width, surface + 0x1a, sizeof(width));
+    memcpy(&height, surface + 0x1c, sizeof(height));
+    write_i32(surface + 8, width);
+    write_i32(surface + 0x10, height);
+}
+
+void surface_set_bounds(uint8_t *surface, int32_t left, int32_t top,
+                        int32_t right, int32_t bottom) {
+    if (surface == NULL) {
+        return;
+    }
+    int32_t value = read_i32(surface + 100);
+    write_i32(surface + 4, value > left ? value : left);
+    value = read_i32(surface + 0x68);
+    write_i32(surface + 0x0c, value > top ? value : top);
+    value = read_i32(surface + 0x6c);
+    write_i32(surface + 8, right < value ? right : value);
+    value = read_i32(surface + 0x70);
+    write_i32(surface + 0x10, bottom < value ? bottom : value);
+}
+
+void surface_set_pixel(uint8_t *surface, int32_t x, int32_t y,
+                       uint16_t value) {
+    if (surface == NULL) {
+        return;
+    }
+    uint16_t width;
+    uint16_t height;
+    memcpy(&width, surface + 0x1a, sizeof(width));
+    memcpy(&height, surface + 0x1c, sizeof(height));
+    if (x < 0 || y < 0 || x >= width || y >= height) {
+        return;
+    }
+    int32_t stride = read_i32(surface + 0x20);
+    uintptr_t base;
+    memcpy(&base, surface + 0x28, sizeof(base));
+    uint8_t *target = (uint8_t *)base + (size_t)stride * y + (size_t)x * 3;
+    memcpy(target, &value, sizeof(value));
+}

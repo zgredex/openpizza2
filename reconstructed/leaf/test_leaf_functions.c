@@ -1394,6 +1394,132 @@ static void test_tile_product_name_helpers(void) {
     assert(string_list_find(strings, 3, "alpha", NULL) == 0);
 }
 
+static void test_remaining_setters(void) {
+    uint8_t object[0x1800] = {0};
+    write_i32_at(object, 0x108, 10);
+    assert(object_is_state10(object));
+    write_i32_at(object, 0x108, 9);
+    assert(!object_is_state10(object));
+    object_set_frame5(object, 3);
+    assert(read_i32_at(object, 0x94) == 15);
+    object_set_frame5(object, -1);
+    assert(read_i32_at(object, 0x94) == -1);
+    object_set_index171c(object, 77);
+    assert(read_i32_at(object, 0x171c) == 77);
+    assert(read_i32_at(object, 0x1720) == 0);
+    assert(read_i32_at(object, 0x1724) == 0);
+    object_set_field280(object, 88);
+    assert(read_i32_at(object, 0x280) == 88);
+
+    uint8_t records[2 * 0x48] = {0};
+    write_i32_at(records, 0, 123);
+    records[0] = 0;
+    record_clear48(records, 2, 0);
+    assert(read_i32_at(records, 0) == -1);
+    write_i32_at(records, 0x48, 10);
+    records[0x48 + 0x30] = 9;
+    records[0x48 + 0x3c] = 7;
+    record_clear_active48(records, 2, 1);
+    assert(read_i16_at(records, 0x48 + 0x30) == 0);
+    assert(records[0x48 + 0x3c] == 0);
+    records[0x48 + 0x3e] = 5;
+    record_clear_flags48(records, 2, 1);
+    assert(records[0x48 + 0x3e] == 0);
+    assert(records[0x48 + 0x3c] == 0);
+    record_clear_flags48(records, 2, 0);
+    assert(records[0 + 0x3e] == 0);
+
+    uint8_t flags[0x40] = {0};
+    uint8_t tile_defs[4 * 12] = {0};
+    uintptr_t flags_pointer = (uintptr_t)flags;
+    memcpy(tile_defs + 12 + 8, &flags_pointer, sizeof(flags_pointer));
+    record_set_field2d0c(tile_defs, 1, 0x5a);
+    assert(flags[0x2d] == 0x5a);
+
+    uint8_t slots[2 * 0x98] = {0};
+    assert(record_set_slot6_98(slots, 2, 1, 3, 0x11223344, 0x5566));
+    assert(read_i32_at(slots, 0x98 + 18) == 0x11223344);
+    assert(read_i16_at(slots, 0x98 + 18 + 4) == 0x5566);
+    assert(!record_set_slot6_98(slots, 2, 2, 3, 1, 2));
+    assert(!record_set_slot6_98(slots, 2, 0, 16, 1, 2));
+
+    set_field168(object, 11);
+    set_field228(object, 22);
+    set_field9b8(object, 33);
+    assert(read_i32_at(object, 0x168) == 11);
+    assert(read_i32_at(object, 0x228) == 22);
+    assert(read_i32_at(object, 0x9b8) == 33);
+
+    uint8_t rect[0x1c0] = {0};
+    int32_t values[4] = {10, 20, 30, 40};
+    write_i32_at(rect, 0x1a4, -999);
+    rect_set1a4(rect, values);
+    assert(read_i32_at(rect, 0x1a4) == 10);
+    assert(read_i32_at(rect, 0x1a8) == 20);
+    assert(read_i32_at(rect, 0x1ac) == 30);
+    assert(read_i32_at(rect, 0x1b0) == 40);
+    const int32_t merge[4] = {5, 25, 25, 50};
+    rect_set1a4(rect, merge);
+    assert(read_i32_at(rect, 0x1a4) == 5);
+    assert(read_i32_at(rect, 0x1a8) == 20);
+    assert(read_i32_at(rect, 0x1ac) == 30);
+    assert(read_i32_at(rect, 0x1b0) == 50);
+
+    uint8_t sprite[0x40] = {0};
+    uint8_t palette[16] = {0};
+    uintptr_t palette_pointer = (uintptr_t)palette;
+    memcpy(sprite + 0x20, &palette_pointer, sizeof(palette_pointer));
+    assert(sprite_get_palette(sprite) == palette);
+    sprite[0x12] = 10;
+    sprite[0x13] = 0;
+    sprite[0x14] = 20;
+    sprite[0x15] = 0;
+    uint32_t width = 0;
+    uint32_t height = 0;
+    sprite_get_render_size(sprite, &width, &height);
+    assert(width == 10 && height == 20);
+    write_i32_at(sprite, 0x30, 1);
+    sprite[0x37] = 1;
+    sprite_get_render_size(sprite, &width, &height);
+    assert(width == 20 && height == 10);
+
+    uint8_t surface[0x80] = {0};
+    uint8_t pixels[256] = {0};
+    uintptr_t pixel_pointer = (uintptr_t)pixels;
+    memcpy(surface + 0x28, &pixel_pointer, sizeof(pixel_pointer));
+    write_i32_at(surface, 4, 1);
+    write_i32_at(surface, 0x0c, 2);
+    write_i32_at(surface, 8, 3);
+    write_i32_at(surface, 0x10, 4);
+    int32_t surface_rect[4] = {0};
+    surface_get_cursor_rect(surface, surface_rect);
+    assert(surface_rect[0] == 1 && surface_rect[1] == 2);
+    assert(surface_rect[2] == 3 && surface_rect[3] == 4);
+    uint16_t surface_width = 16;
+    uint16_t surface_height = 8;
+    memcpy(surface + 0x1a, &surface_width, sizeof(surface_width));
+    memcpy(surface + 0x1c, &surface_height, sizeof(surface_height));
+    surface_reset(surface);
+    assert(read_i32_at(surface, 4) == 0);
+    assert(read_i32_at(surface, 0x0c) == 0);
+    assert(read_i32_at(surface, 8) == 16);
+    assert(read_i32_at(surface, 0x10) == 8);
+    write_i32_at(surface, 100, 5);
+    write_i32_at(surface, 0x68, 6);
+    write_i32_at(surface, 0x6c, 20);
+    write_i32_at(surface, 0x70, 30);
+    surface_set_bounds(surface, 2, 7, 25, 28);
+    assert(read_i32_at(surface, 4) == 5);
+    assert(read_i32_at(surface, 0x0c) == 7);
+    assert(read_i32_at(surface, 8) == 20);
+    assert(read_i32_at(surface, 0x10) == 28);
+    write_i32_at(surface, 0x20, 24);
+    surface_set_pixel(surface, 2, 1, 0x1234);
+    assert(read_i16_at(pixels, 24 + 2 * 3) == 0x1234);
+    surface_set_pixel(surface, 16, 1, 0x5678);
+    assert(read_i16_at(pixels, 24 + 16 * 3) == 0);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -1428,6 +1554,7 @@ int main(void) {
     test_map_object_helpers();
     test_scroll_market_rating_player();
     test_tile_product_name_helpers();
+    test_remaining_setters();
     puts("leaf function reconstruction: OK");
     return 0;
 }
