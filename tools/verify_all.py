@@ -1208,6 +1208,7 @@ def check_reconstructed_c():
           and "AI state reconstruction: OK" in output
           and "recipe menu reconstruction: OK" in output
           and "personnel state reconstruction: OK" in output
+          and "render state reconstruction: OK" in output
           and "save state reconstruction: OK" in output
           and "piz container reconstruction: OK" in output
           and "construction state reconstruction: OK" in output
@@ -1219,8 +1220,8 @@ def check_reconstructed_c():
         "ok": ok,
         "detail": ("module tests, unified target and pc2-reconstructed full-game "
                    "target compile with gcc -std=c11 -Werror and pass; piz "
-                   "container, options/autosave, statistics, AI, recipes and "
-                   "personnel included")
+                   "container, options/autosave, statistics, AI, recipes, "
+                   "personnel and render included")
         if ok else output[-1200:],
     }
 

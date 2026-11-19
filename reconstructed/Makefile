@@ -31,6 +31,10 @@ MENU_SRC = menu/menu_state.c menu/test_menu_state.c
 MENU_HDR = menu/menu_state.h
 MENU_BIN = $(BUILD)/test_menu_state
 
+RENDER_SRC = render/render_state.c render/test_render_state.c
+RENDER_HDR = render/render_state.h
+RENDER_BIN = $(BUILD)/test_render_state
+
 AI_SRC = ai/ai_state.c ai/test_ai_state.c
 AI_HDR = ai/ai_state.h
 AI_BIN = $(BUILD)/test_ai_state
@@ -64,7 +68,7 @@ CITY_HDR = city/city_state.h $(MISSION_STATE_HDR) branch/branch_economy.h
 CITY_BIN = $(BUILD)/test_city_state
 
 GAME_MODULES = settings/settings.c ingredient/ingredient.c menu/menu_state.c \
-               ui_screen/ui_screen.c options/options_state.c statistics/statistics_state.c ai/ai_state.c recipes/recipe_state.c personnel/personnel_state.c save/save_state.c piz/piz_container.c \
+               ui_screen/ui_screen.c options/options_state.c statistics/statistics_state.c ai/ai_state.c recipes/recipe_state.c personnel/personnel_state.c render/render_state.c save/save_state.c piz/piz_container.c \
                construction/construction_state.c mission/mission_state.c \
                mission/mission_goals.c branch/branch_economy.c city/city_state.c
 GAME_SRC = $(GAME_MODULES) test_game.c
@@ -109,6 +113,10 @@ $(MENU_BIN): $(MENU_SRC) $(MENU_HDR)
 	@mkdir -p $(BUILD)
 	$(CC) $(CFLAGS) $(MENU_SRC) -o $@
 
+$(RENDER_BIN): $(RENDER_SRC) $(RENDER_HDR)
+	@mkdir -p $(BUILD)
+	$(CC) $(CFLAGS) $(RENDER_SRC) -o $@
+
 $(AI_BIN): $(AI_SRC) $(AI_HDR)
 	@mkdir -p $(BUILD)
 	$(CC) $(CFLAGS) $(AI_SRC) -o $@
@@ -152,7 +160,7 @@ $(FULL_GAME_BIN): $(FULL_GAME_SRC) $(CITY_HDR) $(BRANCH_HDR) $(INGREDIENT_HDR) $
 full-game: $(FULL_GAME_BIN)
 	./$(FULL_GAME_BIN)
 
-check: $(SETTINGS_BIN) $(INGREDIENT_BIN) $(MISSION_STATE_BIN) $(MISSION_GOALS_BIN) $(BRANCH_BIN) $(CONSTRUCTION_BIN) $(SAVE_BIN) $(PIZ_BIN) $(AI_BIN) $(RECIPE_BIN) $(PERSONNEL_BIN) $(MENU_BIN) $(UI_BIN) $(OPTIONS_BIN) $(STATISTICS_BIN) $(CITY_BIN) $(GAME_BIN)
+check: $(SETTINGS_BIN) $(INGREDIENT_BIN) $(MISSION_STATE_BIN) $(MISSION_GOALS_BIN) $(BRANCH_BIN) $(CONSTRUCTION_BIN) $(SAVE_BIN) $(PIZ_BIN) $(AI_BIN) $(RECIPE_BIN) $(PERSONNEL_BIN) $(RENDER_BIN) $(MENU_BIN) $(UI_BIN) $(OPTIONS_BIN) $(STATISTICS_BIN) $(CITY_BIN) $(GAME_BIN)
 	./$(SETTINGS_BIN)
 	./$(INGREDIENT_BIN)
 	./$(MISSION_STATE_BIN)
@@ -164,6 +172,7 @@ check: $(SETTINGS_BIN) $(INGREDIENT_BIN) $(MISSION_STATE_BIN) $(MISSION_GOALS_BI
 	./$(AI_BIN)
 	./$(RECIPE_BIN)
 	./$(PERSONNEL_BIN)
+	./$(RENDER_BIN)
 	./$(MENU_BIN)
 	./$(UI_BIN)
 	./$(OPTIONS_BIN)

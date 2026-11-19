@@ -10,6 +10,7 @@
 #include "personnel/personnel_state.h"
 #include "recipes/recipe_state.h"
 #include "ai/ai_state.h"
+#include "render/render_state.h"
 #include "statistics/statistics_state.h"
 #include "options/options_state.h"
 #include "ui_screen/ui_screen.h"
@@ -122,6 +123,18 @@ int main(void) {
     assert(save_state_decode(&loaded, buffer, written));
     assert(memcmp(&loaded.settings, &settings, sizeof(Settings)) == 0);
     assert(mission_all_goals_complete(&loaded.mission));
+
+    uint8_t frame[4 * 4 * 4];
+    RenderSurface surface;
+    assert(render_surface_init(&surface, frame, sizeof(frame), 4, 4));
+    const uint8_t black[4] = {0, 0, 0, 255};
+    const uint8_t red[4] = {255, 0, 0, 255};
+    render_clear(&surface, black);
+    render_fill_rect(&surface, 1, 1, 2, 2, red);
+    assert(frame[(1 * 4 + 1) * 4] == 255);
+    RgbaSprite sprite = {1, 1, red};
+    assert(render_blit(&surface, &sprite, 3, 3));
+    assert(frame[(3 * 4 + 3) * 4] == 255);
 
     CustomerAIState customer_ai;
     customer_ai_init(&customer_ai);
