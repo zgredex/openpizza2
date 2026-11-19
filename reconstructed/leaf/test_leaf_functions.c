@@ -911,6 +911,105 @@ static void test_record_bounds_positions(void) {
                                      &x, &y));
 }
 
+static void write_i16_at(uint8_t *base, size_t offset, int16_t value) {
+    memcpy(base + offset, &value, sizeof(value));
+}
+
+static int16_t read_i16_at(const uint8_t *base, size_t offset) {
+    int16_t value;
+    memcpy(&value, base + offset, sizeof(value));
+    return value;
+}
+
+static void test_object_sprite_settings(void) {
+    uint8_t object[0x120] = {0};
+    write_i32_at(object, 4, 99);
+    write_i32_at(object, 8, 11);
+    write_i32_at(object, 0x0c, 22);
+    write_i32_at(object, 0x10, 33);
+    write_i32_at(object, 0x68, 44);
+    write_i32_at(object, 0x6c, 55);
+    write_i32_at(object, 0x100, 1);
+    write_i32_at(object, 0x104, 2);
+    write_i32_at(object, 0x108, 3);
+    write_i32_at(object, 0x10c, 4);
+    assert(object_get_id(object) == 99);
+    assert(object_get_id(NULL) == -1);
+    assert(object_get_field0c(object) == 22);
+    assert(object_get_field10(object) == 33);
+    object_set_field0c(object, 66);
+    object_set_field8(object, 77);
+    object_set_field_fc(object, 88);
+    assert(object_get_field0c(object) == 66);
+    assert(object_get_field10(object) == 33);
+    assert(read_i32_at(object, 8) == 77);
+    assert(read_i32_at(object, 0xfc) == 88);
+    object_set_short28(object, -1234);
+    assert(read_i16_at(object, 0x28) == -1234);
+    int32_t first = 0;
+    int32_t second = 0;
+    object_get_pair68(object, &first, &second);
+    assert(first == 44 && second == 55);
+    int32_t rect[4] = {0};
+    object_get_rect100(object, rect);
+    assert(rect[0] == 1 && rect[1] == 3 && rect[2] == 2 && rect[3] == 4);
+    object_set_flag104(object, 0x5a);
+    assert(object[0x104] == 0x5a);
+
+    uint8_t sprite[0x40] = {0};
+    sprite[4] = 0x06;
+    sprite[5] = 0x10;
+    write_i32_at(sprite, 0x1c, 0x1234);
+    write_i16_at(sprite, 6, 10);
+    write_i16_at(sprite, 8, 20);
+    write_i16_at(sprite, 10, 3);
+    write_i16_at(sprite, 12, 4);
+    assert(sprite_get_format(sprite) == 0x06);
+    assert(sprite_get_color_key(sprite) == 0x1234);
+    int32_t width = 0;
+    int32_t height = 0;
+    sprite_get_size(sprite, &width, &height);
+    assert(width == 5 && height == 20);
+    sprite_get_hotspot(sprite, &width, &height);
+    assert(width == 3 && height == 4);
+    sprite_set_hotspot(sprite, 7, 8);
+    sprite_get_hotspot(sprite, &width, &height);
+    assert(width == 7 && height == 8);
+    sprite_set_color_key(sprite, 0x5678);
+    assert(sprite_get_color_key(sprite) == 0x5678);
+    assert((sprite[4] & 2) != 0);
+    sprite[4] |= 0x10;
+    assert(sprite_get_color_key(sprite) == 0);
+    write_i32_at(sprite, 0x30, 1);
+    sprite[0x37] = 1;
+    sprite_get_size(sprite, &width, &height);
+    assert(width == 20 && height == 5);
+
+    uint8_t game[0x2e30] = {0};
+    write_i32_at(game, 0x2e1c, 0x41);
+    write_i32_at(game, 0x2e20, 8);
+    assert(game_get_speed_setting(game) == 2);
+    write_i32_at(game, 0x2e1c, 0x40);
+    assert(game_get_speed_setting(game) == 1);
+    write_i32_at(game, 0x2e1c, 0x41);
+    write_i32_at(game, 0x2e20, 7);
+    assert(game_get_speed_setting(game) == 1);
+    assert(game_get_starting_capital(0) == 1000000);
+    assert(game_get_starting_capital(9) == 22000);
+    assert(game_get_starting_capital(10) == 20000);
+    assert(game_get_starting_capital(-1) == 20000);
+
+    uint8_t date[32] = {0};
+    date[7] = 8;
+    date[8] = 3;
+    write_i16_at(date, 4, 6);
+    assert(game_get_time_segment(date) == 2);
+    uint32_t year = 0;
+    uint32_t weekday = 0;
+    game_get_year_and_weekday(date, &year, &weekday);
+    assert(year == 3 && weekday == 6);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -938,6 +1037,7 @@ int main(void) {
     test_destructors_palette_record();
     test_math_string_text();
     test_record_bounds_positions();
+    test_object_sprite_settings();
     puts("leaf function reconstruction: OK");
     return 0;
 }

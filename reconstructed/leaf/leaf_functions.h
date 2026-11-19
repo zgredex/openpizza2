@@ -363,6 +363,33 @@ bool record_get_screen_offset(const uint8_t *records, size_t count,
                               const uint16_t *heights, int32_t *x,
                               int32_t *y);
 
+/* Object accessors. */
+int32_t object_get_id(const uint8_t *object);
+int32_t object_get_field0c(const uint8_t *object);
+int32_t object_get_field10(const uint8_t *object);
+void object_set_field0c(uint8_t *object, int32_t value);
+void object_set_field8(uint8_t *object, int32_t value);
+void object_set_field_fc(uint8_t *object, int32_t value);
+void object_set_short28(uint8_t *object, int16_t value);
+void object_get_pair68(const uint8_t *object, int32_t *first, int32_t *second);
+void object_get_rect100(const uint8_t *object, int32_t rect[4]);
+void object_set_flag104(uint8_t *object, uint8_t value);
+
+/* Sprite accessors. */
+uint32_t sprite_get_color_key(const uint8_t *sprite);
+uint8_t sprite_get_format(const uint8_t *sprite);
+void sprite_get_size(const uint8_t *sprite, int32_t *width, int32_t *height);
+void sprite_get_hotspot(const uint8_t *sprite, int32_t *x, int32_t *y);
+void sprite_set_hotspot(uint8_t *sprite, int16_t x, int16_t y);
+void sprite_set_color_key(uint8_t *sprite, uint32_t color_key);
+
+/* Game setting/date accessors. */
+int32_t game_get_speed_setting(const uint8_t *game);
+uint32_t game_get_starting_capital(int32_t difficulty);
+uint32_t game_get_time_segment(const uint8_t *date);
+void game_get_year_and_weekday(const uint8_t *date, uint32_t *year,
+                               uint32_t *weekday);
+
 /* Game_GetActiveScreenOrFallback (0x482910). */
 int32_t game_get_active_screen_or_fallback(const uint8_t *game);
 

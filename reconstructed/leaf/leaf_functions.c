@@ -1490,3 +1490,167 @@ bool record_get_screen_offset(const uint8_t *records, size_t count,
     *y = (int32_t)heights[point] + (int32_t)offset_y;
     return true;
 }
+
+int32_t object_get_id(const uint8_t *object) {
+    if (object == NULL) {
+        return -1;
+    }
+    return read_i32(object + 4);
+}
+
+int32_t object_get_field0c(const uint8_t *object) {
+    return object == NULL ? 0 : read_i32(object + 0x0c);
+}
+
+int32_t object_get_field10(const uint8_t *object) {
+    return object == NULL ? 0 : read_i32(object + 0x10);
+}
+
+void object_set_field0c(uint8_t *object, int32_t value) {
+    if (object != NULL) {
+        write_i32(object + 0x0c, value);
+    }
+}
+
+void object_set_field8(uint8_t *object, int32_t value) {
+    if (object != NULL) {
+        write_i32(object + 8, value);
+    }
+}
+
+void object_set_field_fc(uint8_t *object, int32_t value) {
+    if (object != NULL) {
+        write_i32(object + 0xfc, value);
+    }
+}
+
+void object_set_short28(uint8_t *object, int16_t value) {
+    if (object != NULL) {
+        memcpy(object + 0x28, &value, sizeof(value));
+    }
+}
+
+void object_get_pair68(const uint8_t *object, int32_t *first, int32_t *second) {
+    if (object == NULL || first == NULL || second == NULL) {
+        return;
+    }
+    *first = read_i32(object + 0x68);
+    *second = read_i32(object + 0x6c);
+}
+
+void object_get_rect100(const uint8_t *object, int32_t rect[4]) {
+    if (object == NULL || rect == NULL) {
+        return;
+    }
+    rect[0] = read_i32(object + 0x100);
+    rect[1] = read_i32(object + 0x108);
+    rect[2] = read_i32(object + 0x104);
+    rect[3] = read_i32(object + 0x10c);
+}
+
+void object_set_flag104(uint8_t *object, uint8_t value) {
+    if (object != NULL) {
+        object[0x104] = value;
+    }
+}
+
+uint32_t sprite_get_color_key(const uint8_t *sprite) {
+    if (sprite == NULL) {
+        return 0;
+    }
+    if ((sprite[4] & 0x10u) == 0) {
+        return (uint32_t)read_i32(sprite + 0x1c);
+    }
+    return 0;
+}
+
+uint8_t sprite_get_format(const uint8_t *sprite) {
+    return sprite == NULL ? 0 : sprite[4];
+}
+
+void sprite_get_size(const uint8_t *sprite, int32_t *width, int32_t *height) {
+    if (sprite == NULL || width == NULL || height == NULL) {
+        return;
+    }
+    int32_t stored_width;
+    memcpy(&stored_width, sprite + 6, sizeof(int16_t));
+    if (sprite[5] > 0xe) {
+        stored_width >>= 1;
+    }
+    int32_t stored_height;
+    memcpy(&stored_height, sprite + 8, sizeof(int16_t));
+    if (read_i32(sprite + 0x30) != 0 && sprite[0x37] != 0) {
+        *width = stored_height;
+        *height = stored_width;
+    } else {
+        *width = stored_width;
+        *height = stored_height;
+    }
+}
+
+void sprite_get_hotspot(const uint8_t *sprite, int32_t *x, int32_t *y) {
+    if (sprite == NULL || x == NULL || y == NULL) {
+        return;
+    }
+    if ((sprite[4] & 4u) == 0) {
+        *x = 0;
+        *y = 0;
+        return;
+    }
+    int16_t hotspot_x;
+    int16_t hotspot_y;
+    memcpy(&hotspot_x, sprite + 10, sizeof(hotspot_x));
+    memcpy(&hotspot_y, sprite + 12, sizeof(hotspot_y));
+    *x = hotspot_x;
+    *y = hotspot_y;
+}
+
+void sprite_set_hotspot(uint8_t *sprite, int16_t x, int16_t y) {
+    if (sprite != NULL && (sprite[4] & 4u) != 0) {
+        memcpy(sprite + 10, &x, sizeof(x));
+        memcpy(sprite + 12, &y, sizeof(y));
+    }
+}
+
+void sprite_set_color_key(uint8_t *sprite, uint32_t color_key) {
+    if (sprite != NULL) {
+        write_i32(sprite + 0x1c, (int32_t)color_key);
+        sprite[4] |= 2;
+    }
+}
+
+int32_t game_get_speed_setting(const uint8_t *game) {
+    if (game == NULL) {
+        return 1;
+    }
+    if (read_i32(game + 0x2e1c) < 0x41 || read_i32(game + 0x2e20) < 8) {
+        return 1;
+    }
+    return 2;
+}
+
+uint32_t game_get_starting_capital(int32_t difficulty) {
+    static const uint32_t table[10] = {
+        1000000, 500000, 200000, 100000, 75000,
+        50000, 40000, 30000, 25000, 22000,
+    };
+    if (difficulty < 0 || difficulty > 9) {
+        return 20000;
+    }
+    return table[difficulty];
+}
+
+uint32_t game_get_time_segment(const uint8_t *date) {
+    return date == NULL ? 0 : (uint32_t)date[7] / 3u;
+}
+
+void game_get_year_and_weekday(const uint8_t *date, uint32_t *year,
+                               uint32_t *weekday) {
+    if (date == NULL || year == NULL || weekday == NULL) {
+        return;
+    }
+    *year = date[8];
+    uint16_t weekday_value;
+    memcpy(&weekday_value, date + 4, sizeof(weekday_value));
+    *weekday = weekday_value;
+}
