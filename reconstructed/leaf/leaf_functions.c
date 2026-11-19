@@ -2707,3 +2707,78 @@ int32_t stream_get_available(const uint8_t *stream) {
     uint32_t second = (uint32_t)read_i32(stream + 0x2c);
     return first < second ? (int32_t)(second - first) : 0;
 }
+
+int32_t get_field19f4(const uint8_t *object) {
+    return object == NULL ? 0 : read_i32(object + 0x19f4);
+}
+
+int32_t get_field24(const uint8_t *object) {
+    return object == NULL ? 0 : read_i32(object + 0x24);
+}
+
+int32_t get_field2c(const uint8_t *object) {
+    return object == NULL ? 0 : read_i32(object + 0x2c);
+}
+
+int32_t get_field_f0(const uint8_t *object) {
+    return object == NULL ? 0 : read_i32(object + 0xf0);
+}
+
+const uint8_t *get_subobject4(const uint8_t *object) {
+    return object == NULL ? NULL : object + 4;
+}
+
+void get_width_height(const uint8_t *object, uint32_t *width,
+                      uint32_t *height) {
+    if (object == NULL || width == NULL || height == NULL) {
+        return;
+    }
+    uint16_t stored_width;
+    uint16_t stored_height;
+    memcpy(&stored_width, object + 0x12, sizeof(stored_width));
+    memcpy(&stored_height, object + 0x14, sizeof(stored_height));
+    *width = stored_width;
+    *height = stored_height;
+}
+
+int32_t record_list_get_count(const uint8_t *list) {
+    return list == NULL ? 0 : read_i32(list + 0x68);
+}
+
+uint8_t record_get_flag3e48(const uint8_t *object) {
+    if (object == NULL) {
+        return 0;
+    }
+    uintptr_t child;
+    memcpy(&child, object + 8, sizeof(child));
+    if (child == 0) {
+        return 0;
+    }
+    uint8_t *child_object = (uint8_t *)child;
+    int32_t index = read_i32(child_object);
+    uintptr_t list;
+    memcpy(&list, child_object + 0x58, sizeof(list));
+    if (list == 0) {
+        return 0;
+    }
+    uint8_t *record_list = (uint8_t *)list;
+    int32_t count = read_i32(record_list + 0x48);
+    if (index < 0 || index >= count) {
+        return 0;
+    }
+    uintptr_t records;
+    memcpy(&records, record_list + 0x4c, sizeof(records));
+    return ((uint8_t *)records)[0x3e + (size_t)index * 0x48u];
+}
+
+bool surface_is_ready(int32_t query_result) {
+    return query_result == 0;
+}
+
+int32_t stream_get_status(int32_t flags, int32_t field10,
+                          int32_t status_result) {
+    if (flags == 0 && field10 == 0) {
+        return status_result != -1 ? 1 : -1;
+    }
+    return 0;
+}

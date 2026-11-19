@@ -512,6 +512,20 @@ void object_clear_slot_refs(uint8_t *object, uint8_t *slot);
 bool stream_buffer_reset(uint8_t *buffer);
 int32_t stream_get_available(const uint8_t *stream);
 
+/* Simple field/subobject getters and record/stream status helpers. */
+int32_t get_field19f4(const uint8_t *object);
+int32_t get_field24(const uint8_t *object);
+int32_t get_field2c(const uint8_t *object);
+int32_t get_field_f0(const uint8_t *object);
+const uint8_t *get_subobject4(const uint8_t *object);
+void get_width_height(const uint8_t *object, uint32_t *width,
+                      uint32_t *height);
+int32_t record_list_get_count(const uint8_t *list);
+uint8_t record_get_flag3e48(const uint8_t *object);
+bool surface_is_ready(int32_t query_result);
+int32_t stream_get_status(int32_t flags, int32_t field10,
+                          int32_t status_result);
+
 /* Game_GetActiveScreenOrFallback (0x482910). */
 int32_t game_get_active_screen_or_fallback(const uint8_t *game);
 

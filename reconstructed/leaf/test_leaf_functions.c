@@ -1611,6 +1611,59 @@ static void test_surface_sprite_stream(void) {
     assert(stream_get_available(stream) == 0);
 }
 
+static void test_misc_getters(void) {
+    uint8_t object[0x2000] = {0};
+    write_i32_at(object, 0x19f4, 19);
+    write_i32_at(object, 0x24, 24);
+    write_i32_at(object, 0x2c, 44);
+    write_i32_at(object, 0xf0, 240);
+    assert(get_field19f4(object) == 19);
+    assert(get_field24(object) == 24);
+    assert(get_field2c(object) == 44);
+    assert(get_field_f0(object) == 240);
+    assert(get_subobject4(object) == object + 4);
+    assert(get_subobject4(NULL) == NULL);
+
+    uint16_t width = 12;
+    uint16_t height = 34;
+    memcpy(object + 0x12, &width, sizeof(width));
+    memcpy(object + 0x14, &height, sizeof(height));
+    uint32_t out_width = 0;
+    uint32_t out_height = 0;
+    get_width_height(object, &out_width, &out_height);
+    assert(out_width == 12 && out_height == 34);
+
+    write_i32_at(object, 0x68, 9);
+    assert(record_list_get_count(object) == 9);
+    assert(record_list_get_count(NULL) == 0);
+
+    uint8_t records[2 * 0x48] = {0};
+    records[0x3e] = 7;
+    records[0x48 + 0x3e] = 8;
+    uint8_t list[0x60] = {0};
+    write_i32_at(list, 0x48, 2);
+    uintptr_t records_pointer = (uintptr_t)records;
+    memcpy(list + 0x4c, &records_pointer, sizeof(records_pointer));
+    uint8_t child[0x60] = {0};
+    write_i32_at(child, 0, 1);
+    uintptr_t list_pointer = (uintptr_t)list;
+    memcpy(child + 0x58, &list_pointer, sizeof(list_pointer));
+    uintptr_t child_pointer = (uintptr_t)child;
+    memcpy(object + 8, &child_pointer, sizeof(child_pointer));
+    assert(record_get_flag3e48(object) == 8);
+    write_i32_at(child, 0, 2);
+    assert(record_get_flag3e48(object) == 0);
+    write_i32_at(child, 0, -1);
+    assert(record_get_flag3e48(object) == 0);
+
+    assert(surface_is_ready(0));
+    assert(!surface_is_ready(1));
+    assert(stream_get_status(0, 0, 0) == 1);
+    assert(stream_get_status(0, 0, -1) == -1);
+    assert(stream_get_status(1, 0, 0) == 0);
+    assert(stream_get_status(0, 1, 0) == 0);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -1647,6 +1700,7 @@ int main(void) {
     test_tile_product_name_helpers();
     test_remaining_setters();
     test_surface_sprite_stream();
+    test_misc_getters();
     puts("leaf function reconstruction: OK");
     return 0;
 }
