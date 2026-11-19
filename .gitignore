@@ -12,3 +12,5 @@ __pycache__/
 /session-*.md
 
 /decompiled_fastfood2_named_v2/functions_readable/
+
+/reconstructed/build/
