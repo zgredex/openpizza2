@@ -216,3 +216,75 @@ int32_t gameplan_category_effect(int32_t branch_count, int32_t media_type,
     }
     return value;
 }
+
+void company_allocate_plan_budget(PlanAllocation *plans, size_t plan_count,
+                                  int32_t pool, int32_t company_branch_count) {
+    if (plans == NULL || plan_count > ADVERTISING_MAX_PLANS) {
+        return;
+    }
+    int32_t total_score = 0;
+    for (size_t index = 0; index < plan_count; index++) {
+        PlanAllocation *plan = &plans[index];
+        plan->fixed = false;
+        plan->active = false;
+        plan->score = 0;
+        plan->share = 0;
+        int32_t scale = 1;
+        if (plan->type == 1) {
+            plan->cap = 10000;
+            scale = company_branch_count;
+        } else if (plan->type == 2) {
+            plan->cap = 5000;
+        } else {
+            plan->cap = 3500;
+            plan->fixed = true;
+            plan->active = true;
+            continue;
+        }
+        if (plan->effect < 41) {
+            plan->fixed = true;
+            continue;
+        }
+        plan->score = plan->effect * scale;
+        total_score += plan->score;
+    }
+    while (pool >= 1) {
+        int32_t best_index = -1;
+        int32_t best_score = 0;
+        for (size_t index = 0; index < plan_count; index++) {
+            if (!plans[index].fixed && (best_index == -1 ||
+                                        best_score < plans[index].score)) {
+                best_index = (int32_t)index;
+                best_score = plans[index].score;
+            }
+        }
+        if (best_index < 0) {
+            return;
+        }
+        PlanAllocation *best = &plans[best_index];
+        best->fixed = true;
+        if (best->type == 1) {
+            for (size_t index = 0; index < plan_count; index++) {
+                if (!plans[index].fixed && plans[index].type == 1 &&
+                    plans[index].score <= best->score) {
+                    plans[index].fixed = true;
+                    total_score -= plans[index].score;
+                }
+            }
+        }
+        if (total_score < 1) {
+            return;
+        }
+        int32_t share = best->score * pool / total_score;
+        if (share > best->cap) {
+            share = best->cap;
+        }
+        best->share = share;
+        best->active = share > 0;
+        pool -= share;
+        total_score -= best->score;
+        if (pool < 1) {
+            return;
+        }
+    }
+}

@@ -2,6 +2,7 @@
 #define PC2_RECONSTRUCTED_VALUE_STATE_H
 
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 
 typedef struct ValueApproachState {
@@ -30,6 +31,21 @@ int32_t gameplan_category_effect(int32_t branch_count, int32_t media_type,
                                  int32_t city_field_4c, bool competitor_present,
                                  const int32_t competitor_avg[4],
                                  const int32_t own_metrics[4]);
+#define ADVERTISING_MAX_PLANS 16
+typedef struct PlanAllocation {
+    int32_t type;
+    int32_t effect;
+    int32_t branch_count;
+    bool fixed;
+    int32_t score;
+    int32_t cap;
+    int32_t share;
+    bool active;
+} PlanAllocation;
+
+void company_allocate_plan_budget(PlanAllocation *plans, size_t plan_count,
+                                  int32_t pool, int32_t company_branch_count);
+
 int32_t gameplan_average_effect(const int32_t bars[8], int32_t plan_type,
                                 int32_t budget, int32_t city_field_64,
                                 int32_t city_field_4c);

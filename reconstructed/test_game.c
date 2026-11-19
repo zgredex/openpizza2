@@ -578,6 +578,16 @@ int main(void) {
     assert(gameplan_category_effect(1, 1, 1, 0, 100, 0, 0, true,
                                     plan_competitor_avg,
                                     plan_own_metrics) == 92);
+    PlanAllocation plan_allocations[3] = {
+        {.type = 1, .effect = 60},
+        {.type = 2, .effect = 50},
+        {.type = 3, .effect = 0},
+    };
+    company_allocate_plan_budget(plan_allocations, 3, 1000, 2);
+    assert(plan_allocations[0].share == 705);
+    assert(plan_allocations[1].share == 295);
+    assert(plan_allocations[2].fixed);
+
 
 
 

@@ -54,8 +54,9 @@ Current batches:
   and the baseline branch-score table rule.
 - `advertising/` — `Value_Approach`, hourly value decay,
   `Game_GetAdjustedValue` customer-radius conversion, company budget-percent
-  conversion, per-category plan effect bars and the 12×8 media/category table
-  with competitor metric adjustments.
+  conversion, per-category plan effect bars, the 12×8 media/category table
+  with competitor metric adjustments, and the budget allocation loop that
+  scores and shares the pool across plan types.
 - `operations/` — branch period accounting (sale revenue, ingredient cost,
   payroll, rent, advertising, profit, period close) plus the hourly path:
   1/24 wage and advertising shares, 0.4%/hour negative-cash interest, opening

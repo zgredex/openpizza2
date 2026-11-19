@@ -98,12 +98,49 @@ static void test_category_effect(void) {
                                     competitor_avg, low_metrics) == 67);
 }
 
+static void test_plan_allocation(void) {
+    PlanAllocation plans[3] = {
+        {.type = 1, .effect = 60},
+        {.type = 2, .effect = 50},
+        {.type = 3, .effect = 0},
+    };
+    company_allocate_plan_budget(plans, 3, 1000, 2);
+    assert(plans[0].score == 120);
+    assert(plans[0].share == 705);
+    assert(plans[0].active);
+    assert(plans[1].share == 295);
+    assert(plans[1].active);
+    assert(plans[2].fixed);
+    assert(plans[2].active);
+
+    PlanAllocation weak[2] = {
+        {.type = 1, .effect = 40},
+        {.type = 2, .effect = 80},
+    };
+    company_allocate_plan_budget(weak, 2, 500, 1);
+    assert(weak[0].fixed);
+    assert(!weak[0].active);
+    assert(weak[1].share == 500);
+
+    PlanAllocation duplicate[3] = {
+        {.type = 1, .effect = 60},
+        {.type = 1, .effect = 40},
+        {.type = 2, .effect = 50},
+    };
+    company_allocate_plan_budget(duplicate, 3, 1000, 2);
+    assert(duplicate[0].share == 705);
+    assert(duplicate[1].fixed);
+    assert(duplicate[1].share == 0);
+    assert(duplicate[2].share == 295);
+}
+
 int main(void) {
     test_positive_approach_and_decay();
     test_negative_and_zero_targets();
     test_adjusted_value();
     test_plan_effect();
     test_category_effect();
+    test_plan_allocation();
     puts("advertising value reconstruction: OK");
     return 0;
 }
