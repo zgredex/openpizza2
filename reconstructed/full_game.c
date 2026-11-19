@@ -554,6 +554,54 @@ int main(void) {
         fclose(tga_file);
     }
     if (tga_data != NULL && font_size > 0) {
+        static const char *const fp_sprite_paths[FREE_PLAY_ASSET_COUNT] = {
+            "../extracted/sprites/pb22_00.spr",
+            "../extracted/sprites/pb24_00.spr",
+            "../extracted/sprites/pb26_00.spr",
+            "../extracted/sprites/pb27_00.spr",
+            "../extracted/sprites/pb14_00.spr",
+            "../extracted/sprites/sl02_00.spr",
+            "../extracted/sprites/fotorahmen00.spr",
+            "../extracted/sprites/fotodummy00.spr",
+            "../extracted/sprites/logofenster.spr",
+            "../extracted/sprites/playlog_2_01_00.spr",
+            "../extracted/sprites/playlog_3_02_01.spr",
+            "../extracted/sprites/playlog_3_03_01.spr",
+            "../extracted/sprites/textpb05__00.spr",
+            "../extracted/sprites/textpbtranspgelb_00.spr",
+            "../extracted/sprites/textpbtranspgruen_00.spr",
+        };
+        static const char *const fp_font_paths[FREE_PLAY_FONT_COUNT] = {
+            "../extracted/fonts/timesfont.fnt",
+            "../extracted/fonts/times14.fnt",
+            "../extracted/fonts/verdana10.fnt",
+            "../extracted/fonts/verdana7.fnt",
+            "../extracted/fonts/verdana8.fnt",
+        };
+        uint8_t *fp_sprite_pixels[FREE_PLAY_ASSET_COUNT] = {NULL};
+        RgbaSprite fp_sprites[FREE_PLAY_ASSET_COUNT];
+        for (int index = 0; index < FREE_PLAY_ASSET_COUNT; index++) {
+            assert(load_spr_asset(fp_sprite_paths[index],
+                                  &fp_sprite_pixels[index], &fp_sprites[index]));
+        }
+        uint8_t *fp_font_data[FREE_PLAY_FONT_COUNT] = {NULL};
+        size_t fp_font_sizes[FREE_PLAY_FONT_COUNT] = {0};
+        FntInfo fp_font_infos[FREE_PLAY_FONT_COUNT];
+        for (int index = 0; index < FREE_PLAY_FONT_COUNT; index++) {
+            fp_font_data[index] = load_font_asset(fp_font_paths[index],
+                                                  &fp_font_sizes[index]);
+            assert(fp_font_data[index] != NULL);
+            assert(fnt_read_info(fp_font_data[index], fp_font_sizes[index],
+                                 &fp_font_infos[index]));
+        }
+        FreePlayAssets fp_assets = {0};
+        for (int index = 0; index < FREE_PLAY_ASSET_COUNT; index++) {
+            fp_assets.sprites[index] = &fp_sprites[index];
+        }
+        for (int index = 0; index < FREE_PLAY_FONT_COUNT; index++) {
+            fp_assets.fonts[index] = (FreePlayFont){
+                fp_font_data[index], fp_font_sizes[index], &fp_font_infos[index]};
+        }
         size_t freeplay_frame_size = 800 * 600 * 4;
         uint8_t *freeplay_frame = malloc(freeplay_frame_size);
         uint8_t *freeplay_decoded = malloc(freeplay_frame_size);
@@ -567,19 +615,25 @@ int main(void) {
             .map = "Ber.iso",
             .player_name = "Ada",
             .enterprise_name = "Ada Pizza",
-            .population = 250,
-            .game_length = 11,
-            .difficulty = 9,
+            .population = 2,
+            .game_length = 1,
+            .difficulty = 3,
             .starting_capital = 22000,
             .opponents = {-1, -1, -1},
             .selected_button = 1,
         };
         assert(screen_render_free_play(
-            &freeplay_surface, tga_data, tga_size, font_data, font_size,
-            &font_info, &freeplay, freeplay_decoded, freeplay_frame_size));
+            &freeplay_surface, tga_data, tga_size, &fp_assets, &freeplay,
+            freeplay_decoded, freeplay_frame_size));
         assert(memcmp(freeplay_frame, freeplay_decoded, freeplay_frame_size) != 0);
         free(freeplay_decoded);
         free(freeplay_frame);
+        for (int index = 0; index < FREE_PLAY_FONT_COUNT; index++) {
+            free(fp_font_data[index]);
+        }
+        for (int index = 0; index < FREE_PLAY_ASSET_COUNT; index++) {
+            free(fp_sprite_pixels[index]);
+        }
         free(tga_data);
     }
 

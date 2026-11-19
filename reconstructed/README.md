@@ -49,7 +49,9 @@ Current batches:
   `extracted/pictures/pe_charakterauswahl.tga` with all 66 exact constructor
   controls, four shipped fonts and the PB22/PB24/PB26/PB27, portrait, gender,
   light and button sprites, the free-play setup page over
-  `extracted/pictures/pe_freies_spiel.tga` with the Berlin scenario fields,
+  `extracted/pictures/pe_freies_spiel.tga` with all 157 exact constructor
+  controls, five shipped fonts and the scenario sliders, player rows, buttons
+  and status sprites,
   and the exact London briefing page over
   `extracted/pictures/pe_missionsbriefing_lon.tga` with the exact Mission
   title/city/description/help controls, LOGOFENSTER, slider and Back/Start

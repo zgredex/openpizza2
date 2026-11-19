@@ -1956,27 +1956,129 @@ static void test_statistics_composition(void) {
 
 static void test_free_play_composition(void) {
     size_t tga_size = 0;
-    size_t font_size = 0;
     uint8_t *tga = load_file("../extracted/pictures/pe_freies_spiel.tga", &tga_size);
-    uint8_t *font_data = load_file("../extracted/fonts/timesfont.fnt", &font_size);
     assert(tga != NULL);
-    assert(font_data != NULL);
+    static const char *const sprite_paths[FREE_PLAY_ASSET_COUNT] = {
+        "../extracted/sprites/pb22_00.spr",
+        "../extracted/sprites/pb24_00.spr",
+        "../extracted/sprites/pb26_00.spr",
+        "../extracted/sprites/pb27_00.spr",
+        "../extracted/sprites/pb14_00.spr",
+        "../extracted/sprites/sl02_00.spr",
+        "../extracted/sprites/fotorahmen00.spr",
+        "../extracted/sprites/fotodummy00.spr",
+        "../extracted/sprites/logofenster.spr",
+        "../extracted/sprites/playlog_2_01_00.spr",
+        "../extracted/sprites/playlog_3_02_01.spr",
+        "../extracted/sprites/playlog_3_03_01.spr",
+        "../extracted/sprites/textpb05__00.spr",
+        "../extracted/sprites/textpbtranspgelb_00.spr",
+        "../extracted/sprites/textpbtranspgruen_00.spr",
+    };
+    static const char *const font_paths[FREE_PLAY_FONT_COUNT] = {
+        "../extracted/fonts/timesfont.fnt",
+        "../extracted/fonts/times14.fnt",
+        "../extracted/fonts/verdana10.fnt",
+        "../extracted/fonts/verdana7.fnt",
+        "../extracted/fonts/verdana8.fnt",
+    };
+    uint8_t *sprite_pixels[FREE_PLAY_ASSET_COUNT] = {NULL};
+    RgbaSprite sprites[FREE_PLAY_ASSET_COUNT];
+    for (int index = 0; index < FREE_PLAY_ASSET_COUNT; index++) {
+        assert(load_spr(sprite_paths[index], &sprite_pixels[index],
+                        &sprites[index]));
+    }
+    uint8_t *font_data[FREE_PLAY_FONT_COUNT] = {NULL};
+    size_t font_sizes[FREE_PLAY_FONT_COUNT] = {0};
+    FntInfo font_infos[FREE_PLAY_FONT_COUNT];
+    for (int index = 0; index < FREE_PLAY_FONT_COUNT; index++) {
+        font_data[index] = load_file(font_paths[index], &font_sizes[index]);
+        assert(font_data[index] != NULL);
+        assert(fnt_read_info(font_data[index], font_sizes[index],
+                             &font_infos[index]));
+    }
+    FreePlayAssets assets = {0};
+    for (int index = 0; index < FREE_PLAY_ASSET_COUNT; index++) {
+        assets.sprites[index] = &sprites[index];
+    }
+    for (int index = 0; index < FREE_PLAY_FONT_COUNT; index++) {
+        assets.fonts[index] = (FreePlayFont){
+            font_data[index], font_sizes[index], &font_infos[index]};
+    }
+    assert(kFreePlayControlCount == 157);
+    const FreePlayControl *control = NULL;
+    for (size_t index = 0; index < kFreePlayControlCount; index++) {
+        if (kFreePlayControls[index].id == 1056) {
+            control = &kFreePlayControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 13 && control->y == 5);
+    assert(control->font == 0 && control->align == 2 && control->width == 560);
+    assert(strcmp(control->text, "Select player character") == 0);
+    control = NULL;
+    for (size_t index = 0; index < kFreePlayControlCount; index++) {
+        if (kFreePlayControls[index].id == 1087) {
+            control = &kFreePlayControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 124 && control->y == 44);
+    assert(strcmp(control->text, "#Spielername") == 0);
+    control = NULL;
+    for (size_t index = 0; index < kFreePlayControlCount; index++) {
+        if (kFreePlayControls[index].id == 1099) {
+            control = &kFreePlayControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 366 && control->y == 47);
+    assert(strcmp(control->text, "Initial capital:") == 0);
+    control = NULL;
+    for (size_t index = 0; index < kFreePlayControlCount; index++) {
+        if (kFreePlayControls[index].id == 1031) {
+            control = &kFreePlayControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->kind == FREE_PLAY_KIND_SLIDER);
+    assert(control->x == 617 && control->y == 461);
+    assert(control->asset == FREE_PLAY_ASSET_SLIDER && control->width == 175);
+    control = NULL;
+    for (size_t index = 0; index < kFreePlayControlCount; index++) {
+        if (kFreePlayControls[index].id == 1250) {
+            control = &kFreePlayControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->kind == FREE_PLAY_KIND_BUTTON);
+    assert(control->x == 595 && control->y == 509);
+    assert(control->asset == FREE_PLAY_ASSET_BUTTON_YELLOW);
+    assert(control->width == 204);
+    assert(strcmp(control->text, "To main menu") == 0);
+    control = NULL;
+    for (size_t index = 0; index < kFreePlayControlCount; index++) {
+        if (kFreePlayControls[index].id == 1251) {
+            control = &kFreePlayControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 595 && control->y == 550);
+    assert(control->asset == FREE_PLAY_ASSET_BUTTON_GREEN);
+    assert(strcmp(control->text, "Start game") == 0);
 
-    FntInfo font;
-    assert(fnt_read_info(font_data, font_size, &font));
     FreePlayScenario scenario = {
         .city = "Berlin",
         .map = "Ber.iso",
         .player_name = "Ada",
         .enterprise_name = "Ada Pizza",
-        .population = 250,
-        .game_length = 11,
-        .difficulty = 9,
+        .population = 2,
+        .game_length = 1,
+        .difficulty = 3,
         .starting_capital = 22000,
         .opponents = {-1, -1, -1},
         .selected_button = 1,
     };
-
     size_t frame_size = 800 * 600 * 4;
     uint8_t *frame = malloc(frame_size);
     uint8_t *decoded = malloc(frame_size);
@@ -1984,12 +2086,12 @@ static void test_free_play_composition(void) {
     assert(decoded != NULL);
     RenderSurface surface;
     assert(render_surface_init(&surface, frame, frame_size, 800, 600));
-    assert(screen_render_free_play(&surface, tga, tga_size, font_data, font_size,
-                                   &font, &scenario, decoded, frame_size));
+    assert(screen_render_free_play(&surface, tga, tga_size, &assets,
+                                   &scenario, decoded, frame_size));
     assert(memcmp(frame, decoded, frame_size) != 0);
 
     bool title_ink = false;
-    for (int y = 4; y < 30; y++) {
+    for (int y = 4; y < 28; y++) {
         for (int x = 10; x < 300; x++) {
             size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
             if (frame[offset] < 180 && frame[offset + 1] < 120) {
@@ -1998,13 +2100,48 @@ static void test_free_play_composition(void) {
         }
     }
     assert(title_ink);
-    size_t start_offset = ((size_t)560 * 800 + 700) * 4;
-    assert(frame[start_offset + 1] > frame[start_offset]);
-    assert(!screen_render_free_play(&surface, tga, tga_size, font_data, font_size,
-                                    &font, NULL, decoded, frame_size));
+    bool name_ink = false;
+    for (int y = 44; y < 62; y++) {
+        for (int x = 124; x < 280; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] < 120 && frame[offset + 1] < 120) {
+                name_ink = true;
+            }
+        }
+    }
+    assert(name_ink);
+    bool start_text_ink = false;
+    for (int y = 550; y < 589; y++) {
+        for (int x = 595; x < 799; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] < 80 && frame[offset + 1] < 80 &&
+                frame[offset + 2] < 80) {
+                start_text_ink = true;
+            }
+        }
+    }
+    assert(start_text_ink);
+    bool slider_ink = false;
+    for (int y = 458; y < 472; y++) {
+        for (int x = 680; x < 730; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] != 22 || frame[offset + 1] != 26 ||
+                frame[offset + 2] != 34) {
+                slider_ink = true;
+            }
+        }
+    }
+    assert(slider_ink);
+    assert(!screen_render_free_play(&surface, tga, tga_size, NULL, &scenario,
+                                    decoded, frame_size));
 
+    for (int index = 0; index < FREE_PLAY_FONT_COUNT; index++) {
+        free(font_data[index]);
+    }
+    for (int index = 0; index < FREE_PLAY_ASSET_COUNT; index++) {
+        free(sprite_pixels[index]);
+    }
     free(tga);
-    free(font_data);
     free(decoded);
     free(frame);
 }

@@ -1230,7 +1230,7 @@ def check_reconstructed_c():
                    "container, options/autosave, statistics, AI, recipes, "
                    "personnel, render, operations, SPR/FNT assets and UI "
                    "composition, exact main menu, exact character-select, exact London "
-                   "briefing, free-play setup, statistics view, exact branch-"
+                   "briefing, exact 157-control free-play setup, statistics view, exact branch-"
                    "list window, exact options sidebar, exact options page, "
                    "exact load/save page, exact enterprise comparison, exact game sidebar, "
                    "exact branch-details page, exact branch-offer page, exact "

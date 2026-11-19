@@ -10,6 +10,7 @@
 #include "../render/render_state.h"
 #include "../statistics/statistics_state.h"
 #include "character_select_layout.h"
+#include "free_play_layout.h"
 #include "office_desk_layout.h"
 #include "statistics_balance_layout.h"
 
@@ -420,12 +421,22 @@ typedef struct FreePlayScenario {
     int selected_button; /* 0 = To main menu, 1 = Start game, -1 = none */
 } FreePlayScenario;
 
-/* Composes the free-play setup page over the shipped pe_freies_spiel.tga using
- * the control positions from FreePlaySetup_InitWindow (0x4CBCD0) and
- * Screen_FreePlaySetup (0x472DA0). */
+typedef struct FreePlayFont {
+    const uint8_t *data;
+    size_t size;
+    const FntInfo *info;
+} FreePlayFont;
+
+typedef struct FreePlayAssets {
+    const RgbaSprite *sprites[FREE_PLAY_ASSET_COUNT];
+    FreePlayFont fonts[FREE_PLAY_FONT_COUNT];
+} FreePlayAssets;
+
+/* Composes Screen_FreePlaySetup (0x472DA0) exactly: the shipped
+ * pe_freies_spiel.tga plus all 157 constructor controls at their original
+ * positions, fonts, alignments and strings. */
 bool screen_render_free_play(RenderSurface *surface, const uint8_t *tga_data,
-                             size_t tga_size, const uint8_t *font_data,
-                             size_t font_size, const FntInfo *font,
+                             size_t tga_size, const FreePlayAssets *assets,
                              const FreePlayScenario *scenario,
                              uint8_t *decode_buffer, size_t decode_capacity);
 
