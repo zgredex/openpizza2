@@ -29,6 +29,28 @@ static void test_tga_decode_bottom_origin(void) {
     assert(rgba[12] == 0 && rgba[13] == 255 && rgba[14] == 0);
 }
 
+static void test_tga_decode_rle(void) {
+    uint8_t tga[18 + 1 + 3 + 1 + 6] = {0};
+    tga[2] = 10;
+    tga[12] = 2;
+    tga[14] = 2;
+    tga[16] = 24;
+    tga[18] = 0x81; /* run of 2 */
+    tga[19] = 255; tga[20] = 0; tga[21] = 0; /* blue BGR */
+    tga[22] = 0x01; /* raw 2 */
+    tga[23] = 0; tga[24] = 0; tga[25] = 255; /* red BGR */
+    tga[26] = 0; tga[27] = 255; tga[28] = 0; /* green BGR */
+
+    uint8_t rgba[2 * 2 * 4];
+    uint32_t width = 0, height = 0;
+    assert(tga_decode_rgba(tga, sizeof(tga), rgba, sizeof(rgba), &width, &height));
+    assert(width == 2 && height == 2);
+    assert(rgba[0] == 255 && rgba[1] == 0 && rgba[2] == 0);
+    assert(rgba[4] == 0 && rgba[5] == 255 && rgba[6] == 0);
+    assert(rgba[8] == 0 && rgba[9] == 0 && rgba[10] == 255);
+    assert(rgba[12] == 0 && rgba[13] == 0 && rgba[14] == 255);
+}
+
 static void test_surface_fill_and_blit(void) {
     uint8_t frame[4 * 4 * 4];
     RenderSurface surface;
@@ -84,6 +106,7 @@ static void test_alpha_and_rejects(void) {
 
 int main(void) {
     test_tga_decode_bottom_origin();
+    test_tga_decode_rle();
     test_surface_fill_and_blit();
     test_alpha_and_rejects();
     puts("render state reconstruction: OK");

@@ -27,8 +27,9 @@ Current batches:
   0x568D88 autosave interval table (1..120).
 - `statistics/` — company overview counts/rank/share and branch-balance
   entries from `Stats_Report_FillCompanyOverview` and the statistics screens.
-- `render/` — RGBA render surface, clipped fill/blit with alpha, and an
-  uncompressed 24/32-bit/8-bit TGA decoder matching the Rust asset rules.
+- `render/` — RGBA render surface, clipped fill/blit with alpha, and TGA
+  decoding for uncompressed and RLE 24/32-bit true-colour plus 8-bit
+  grayscale images.
 - `operations/` — branch period accounting: sale revenue, ingredient cost,
   payroll, rent, advertising, profit and period close.
 - `ai/` — customer visit state machine (walk 260, production 180, service 80)

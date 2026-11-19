@@ -93,6 +93,39 @@ bool render_blit(RenderSurface *surface, const RgbaSprite *sprite, int32_t x,
     return true;
 }
 
+static bool read_tga_pixel(const uint8_t *data, size_t length, size_t *position,
+                           uint8_t image_type, size_t pixel_bytes, uint8_t rgba[4]) {
+    if (*position + pixel_bytes > length) {
+        return false;
+    }
+    const uint8_t *source = data + *position;
+    if (image_type == 3 || image_type == 11) {
+        rgba[0] = source[0];
+        rgba[1] = source[0];
+        rgba[2] = source[0];
+        rgba[3] = 255;
+    } else {
+        rgba[0] = source[2];
+        rgba[1] = source[1];
+        rgba[2] = source[0];
+        rgba[3] = pixel_bytes == 4 ? source[3] : 255;
+    }
+    *position += pixel_bytes;
+    return true;
+}
+
+static void store_tga_pixel(uint8_t *output, uint32_t width, uint32_t height,
+                            bool top_origin, size_t index, const uint8_t rgba[4]) {
+    uint32_t source_y = (uint32_t)(index / width);
+    uint32_t y = top_origin ? source_y : height - 1 - source_y;
+    uint32_t x = (uint32_t)(index % width);
+    size_t target = ((size_t)y * width + x) * 4;
+    output[target + 0] = rgba[0];
+    output[target + 1] = rgba[1];
+    output[target + 2] = rgba[2];
+    output[target + 3] = rgba[3];
+}
+
 bool tga_decode_rgba(const uint8_t *data, size_t length, uint8_t *output,
                      size_t capacity, uint32_t *width, uint32_t *height) {
     if (data == NULL || output == NULL || length < 18) {
@@ -106,40 +139,63 @@ bool tga_decode_rgba(const uint8_t *data, size_t length, uint8_t *output,
     if (image_width == 0 || image_height == 0) {
         return false;
     }
-    if (image_type != 2 && image_type != 3) {
+    bool rle = image_type == 10 || image_type == 11;
+    bool grayscale = image_type == 3 || image_type == 11;
+    bool truecolor = image_type == 2 || image_type == 10;
+    if (!grayscale && !truecolor) {
         return false;
     }
     size_t pixel_bytes = (bpp + 7) / 8;
-    if ((image_type == 2 && pixel_bytes != 3 && pixel_bytes != 4) ||
-        (image_type == 3 && pixel_bytes != 1)) {
+    if (grayscale && pixel_bytes != 1) {
         return false;
     }
-    size_t needed = (size_t)image_width * image_height * 4;
+    if (truecolor && pixel_bytes != 3 && pixel_bytes != 4) {
+        return false;
+    }
+    size_t count = (size_t)image_width * image_height;
+    size_t needed = count * 4;
     if (capacity < needed) {
         return false;
     }
     size_t offset = 18 + data[0];
-    if (offset + (size_t)image_width * image_height * pixel_bytes > length) {
+    if (offset > length) {
         return false;
     }
     bool top_origin = (descriptor & 0x20) != 0;
-    for (uint32_t source_y = 0; source_y < image_height; source_y++) {
-        uint32_t target_y = top_origin ? source_y : image_height - 1 - source_y;
-        for (uint32_t x = 0; x < image_width; x++) {
-            const uint8_t *source = data + offset;
-            size_t target = ((size_t)target_y * image_width + x) * 4;
-            if (image_type == 3) {
-                output[target + 0] = source[0];
-                output[target + 1] = source[0];
-                output[target + 2] = source[0];
-                output[target + 3] = 255;
-            } else {
-                output[target + 0] = source[2];
-                output[target + 1] = source[1];
-                output[target + 2] = source[0];
-                output[target + 3] = pixel_bytes == 4 ? source[3] : 255;
+    size_t index = 0;
+    while (index < count) {
+        if (!rle) {
+            uint8_t rgba[4];
+            if (!read_tga_pixel(data, length, &offset, image_type, pixel_bytes, rgba)) {
+                return false;
             }
-            offset += pixel_bytes;
+            store_tga_pixel(output, image_width, image_height, top_origin, index, rgba);
+            index += 1;
+            continue;
+        }
+        if (offset >= length) {
+            return false;
+        }
+        uint8_t packet = data[offset++];
+        size_t run = (size_t)(packet & 0x7f) + 1;
+        if (packet & 0x80) {
+            uint8_t rgba[4];
+            if (!read_tga_pixel(data, length, &offset, image_type, pixel_bytes, rgba)) {
+                return false;
+            }
+            for (size_t repeat = 0; repeat < run && index < count; repeat++) {
+                store_tga_pixel(output, image_width, image_height, top_origin, index, rgba);
+                index += 1;
+            }
+        } else {
+            for (size_t raw = 0; raw < run && index < count; raw++) {
+                uint8_t rgba[4];
+                if (!read_tga_pixel(data, length, &offset, image_type, pixel_bytes, rgba)) {
+                    return false;
+                }
+                store_tga_pixel(output, image_width, image_height, top_origin, index, rgba);
+                index += 1;
+            }
         }
     }
     if (width != NULL) {
