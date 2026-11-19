@@ -21,6 +21,15 @@ void value_state_decay_hour(ValueApproachState *state);
 int32_t company_get_percent_modifier(int32_t plan_type, int32_t budget);
 int32_t gameplan_effect_from_bar(int32_t plan_type, int32_t budget, int32_t bar,
                                  int32_t city_field_64, int32_t city_field_4c);
+int32_t gameplan_company_category_metric(uint32_t flag, int32_t price,
+                                         int32_t menu, int32_t building,
+                                         int32_t stats);
+int32_t gameplan_category_effect(int32_t branch_count, int32_t media_type,
+                                 uint32_t flags, int32_t category,
+                                 int32_t percent, int32_t city_field_64,
+                                 int32_t city_field_4c, bool competitor_present,
+                                 const int32_t competitor_avg[4],
+                                 const int32_t own_metrics[4]);
 int32_t gameplan_average_effect(const int32_t bars[8], int32_t plan_type,
                                 int32_t budget, int32_t city_field_64,
                                 int32_t city_field_4c);

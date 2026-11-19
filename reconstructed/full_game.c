@@ -552,6 +552,16 @@ int main(void) {
     assert(gameplan_effect_from_bar(1, 5000, 80, 25, 0) == 15);
     const int32_t plan_bars[8] = {80, 80, 80, 80, 80, 80, 80, 80};
     assert(gameplan_average_effect(plan_bars, 1, 5000, 0, 0) == 60);
+    assert(gameplan_company_category_metric(1, 11, 22, 33, 44) == 11);
+    const int32_t plan_competitor_avg[4] = {50, 50, 50, 50};
+    const int32_t plan_own_metrics[4] = {100, 100, 100, 100};
+    assert(gameplan_category_effect(1, 0, 0, 0, 100, 0, 0, false,
+                                    plan_competitor_avg,
+                                    plan_own_metrics) == 40);
+    assert(gameplan_category_effect(1, 1, 1, 0, 100, 0, 0, true,
+                                    plan_competitor_avg,
+                                    plan_own_metrics) == 92);
+
 
 
 

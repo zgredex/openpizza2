@@ -128,3 +128,91 @@ int32_t gameplan_average_effect(const int32_t bars[8], int32_t plan_type,
     }
     return total >> 3;
 }
+
+static const int8_t kPlanEffectTable[12][8] = {
+    {6, 1, -2, -4, 2, -2, -6, -2},
+    {5, 0, 3, 5, -5, -6, 6, -4},
+    {4, 2, 0, 1, -2, -5, 0, 2},
+    {-6, -2, 6, -6, 6, 2, 2, -3},
+    {2, 4, -6, -3, 5, 1, -5, 0},
+    {3, 5, -4, -2, 0, -3, -4, 5},
+    {0, -4, 5, 2, -3, 4, 4, -6},
+    {-3, -5, -5, 4, -6, 6, 5, 3},
+    {1, 3, 2, 0, 4, 0, -2, -5},
+    {-2, -3, 1, 3, 1, 3, 3, 1},
+    {-5, -6, 4, -5, 3, 5, 1, 6},
+    {-4, 6, -3, 6, -4, -4, -3, 4},
+};
+
+int32_t gameplan_company_category_metric(uint32_t flag, int32_t price,
+                                         int32_t menu, int32_t building,
+                                         int32_t stats) {
+    switch (flag) {
+    case 1:
+        return price;
+    case 2:
+        return menu;
+    case 4:
+        return building;
+    case 8:
+        return stats;
+    default:
+        return 0;
+    }
+}
+
+int32_t gameplan_category_effect(int32_t branch_count, int32_t media_type,
+                                 uint32_t flags, int32_t category,
+                                 int32_t percent, int32_t city_field_64,
+                                 int32_t city_field_4c, bool competitor_present,
+                                 const int32_t competitor_avg[4],
+                                 const int32_t own_metrics[4]) {
+    if (branch_count == 0) {
+        return 0;
+    }
+    if (category < 0) {
+        category = 0;
+    }
+    if (category > 7) {
+        category = 7;
+    }
+    int32_t base = 40;
+    if (media_type != 0) {
+        int32_t media = media_type;
+        if (media < 1) {
+            media = 1;
+        }
+        if (media > 12) {
+            media = 12;
+        }
+        base = (kPlanEffectTable[media - 1][category] + 8) * 5;
+    }
+    static const uint32_t kFlagBits[4] = {1, 2, 4, 8};
+    for (int index = 0; index < 4; index++) {
+        if ((flags & kFlagBits[index]) == 0) {
+            continue;
+        }
+        int32_t lower = 45;
+        int32_t upper = 55;
+        if (competitor_present) {
+            lower = competitor_avg[index] - 5;
+            upper = competitor_avg[index] + 5;
+        }
+        int32_t own = own_metrics[index];
+        if (own < lower) {
+            base -= (lower - own) >> 2;
+        }
+        if (upper < own) {
+            base += (own - upper) >> 1;
+        }
+    }
+    int32_t value = percent * (base - 40) / 100 + 40;
+    value = (100 - 3 * (city_field_64 + city_field_4c)) * value / 100;
+    if (value < 0) {
+        return 0;
+    }
+    if (value > 100) {
+        return 100;
+    }
+    return value;
+}

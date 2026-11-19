@@ -74,11 +74,36 @@ static void test_plan_effect(void) {
     assert(gameplan_average_effect(bars, 1, 5000, 0, 0) == 60);
 }
 
+static void test_category_effect(void) {
+    assert(gameplan_company_category_metric(1, 11, 22, 33, 44) == 11);
+    assert(gameplan_company_category_metric(2, 11, 22, 33, 44) == 22);
+    assert(gameplan_company_category_metric(4, 11, 22, 33, 44) == 33);
+    assert(gameplan_company_category_metric(8, 11, 22, 33, 44) == 44);
+    assert(gameplan_company_category_metric(16, 11, 22, 33, 44) == 0);
+
+    const int32_t competitor_avg[4] = {50, 50, 50, 50};
+    const int32_t own_metrics[4] = {100, 100, 100, 100};
+    assert(gameplan_category_effect(0, 0, 0, 0, 100, 0, 0, false,
+                                    competitor_avg, own_metrics) == 0);
+    assert(gameplan_category_effect(1, 0, 0, 0, 100, 0, 0, false,
+                                    competitor_avg, own_metrics) == 40);
+    assert(gameplan_category_effect(1, 1, 0, 0, 100, 0, 0, false,
+                                    competitor_avg, own_metrics) == 70);
+    assert(gameplan_category_effect(1, 1, 1, 0, 100, 0, 0, true,
+                                    competitor_avg, own_metrics) == 92);
+    assert(gameplan_category_effect(1, 1, 1, 0, 100, 5, 5, true,
+                                    competitor_avg, own_metrics) == 64);
+    const int32_t low_metrics[4] = {30, 30, 30, 30};
+    assert(gameplan_category_effect(1, 1, 1, 0, 100, 0, 0, true,
+                                    competitor_avg, low_metrics) == 67);
+}
+
 int main(void) {
     test_positive_approach_and_decay();
     test_negative_and_zero_targets();
     test_adjusted_value();
     test_plan_effect();
+    test_category_effect();
     puts("advertising value reconstruction: OK");
     return 0;
 }
