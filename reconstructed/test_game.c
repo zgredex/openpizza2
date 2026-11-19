@@ -1164,6 +1164,106 @@ int main(void) {
         free(sb_sprite_pixels[index]);
     }
 
+    uint8_t *od_tga_data = NULL;
+    size_t od_tga_size = 0;
+    FILE *od_tga_file = fopen("../extracted/pictures/bg002.tga", "rb");
+    if (od_tga_file != NULL) {
+        fseek(od_tga_file, 0, SEEK_END);
+        long od_length = ftell(od_tga_file);
+        fseek(od_tga_file, 0, SEEK_SET);
+        if (od_length > 0) {
+            od_tga_data = malloc((size_t)od_length);
+            if (od_tga_data != NULL) {
+                od_tga_size = fread(od_tga_data, 1, (size_t)od_length, od_tga_file);
+            }
+        }
+        fclose(od_tga_file);
+    }
+    assert(od_tga_data != NULL);
+    static const char *const od_sprite_paths[OFFICE_ASSET_COUNT] = {
+        "../extracted/sprites/mauerbogen.spr",
+        "../extracted/sprites/pb22_00.spr",
+        "../extracted/sprites/pb24_00.spr",
+        "../extracted/sprites/hpb__00.spr",
+        "../extracted/sprites/hpb__01.spr",
+        "../extracted/sprites/hpb__02.spr",
+        "../extracted/sprites/hpb__03.spr",
+        "../extracted/sprites/hpb__04.spr",
+        "../extracted/sprites/rb01_00.spr",
+        "../extracted/sprites/rb02_00.spr",
+        "../extracted/sprites/rb03_00.spr",
+        "../extracted/sprites/rb04_00.spr",
+        "../extracted/sprites/rb05_00.spr",
+        "../extracted/sprites/citybut01_00.spr",
+        "../extracted/sprites/piloesch01_00.spr",
+        "../extracted/sprites/redo01_00.spr",
+        "../extracted/sprites/undo01_00.spr",
+        "../extracted/sprites/ring.spr",
+        "../extracted/sprites/uhr.spr",
+        "../extracted/sprites/loch_00.spr",
+        "../extracted/sprites/hilfebuttonsnip_00.spr",
+        "../extracted/sprites/playlog_8_01_02.spr",
+        "../extracted/sprites/star_01.spr",
+    };
+    static const char *const od_font_paths[OFFICE_FONT_COUNT] = {
+        "../extracted/fonts/timesfont.fnt",
+        "../extracted/fonts/times14.fnt",
+        "../extracted/fonts/verdana7.fnt",
+        "../extracted/fonts/verdana8.fnt",
+        "../extracted/fonts/verdana10.fnt",
+    };
+    uint8_t *od_sprite_pixels[OFFICE_ASSET_COUNT] = {NULL};
+    RgbaSprite od_sprites[OFFICE_ASSET_COUNT];
+    for (int index = 0; index < OFFICE_ASSET_COUNT; index++) {
+        assert(load_spr_asset(od_sprite_paths[index], &od_sprite_pixels[index],
+                              &od_sprites[index]));
+    }
+    uint8_t *od_font_data[OFFICE_FONT_COUNT] = {NULL};
+    size_t od_font_sizes[OFFICE_FONT_COUNT] = {0};
+    FntInfo od_font_infos[OFFICE_FONT_COUNT];
+    for (int index = 0; index < OFFICE_FONT_COUNT; index++) {
+        od_font_data[index] = load_font_asset(od_font_paths[index],
+                                              &od_font_sizes[index]);
+        assert(od_font_data[index] != NULL);
+        assert(fnt_read_info(od_font_data[index], od_font_sizes[index],
+                             &od_font_infos[index]));
+    }
+    OfficeDeskAssets od_assets = {0};
+    for (int index = 0; index < OFFICE_ASSET_COUNT; index++) {
+        od_assets.sprites[index] = &od_sprites[index];
+    }
+    for (int index = 0; index < OFFICE_FONT_COUNT; index++) {
+        od_assets.fonts[index] = (OfficeDeskFont){
+            od_font_data[index], od_font_sizes[index], &od_font_infos[index]};
+    }
+    const OfficeDeskData od_data = {
+        .city = city.city_name,
+        .clock = "17:32",
+        .time_left_clock = "#05:36",
+        .time_left_label = "Time left",
+        .guid = "$",
+        .date = "#32.11.2003",
+    };
+    uint8_t *od_frame = malloc(800 * 600 * 4);
+    uint8_t *od_decoded = malloc(800 * 600 * 4);
+    assert(od_frame != NULL);
+    assert(od_decoded != NULL);
+    RenderSurface od_surface;
+    assert(render_surface_init(&od_surface, od_frame, 800 * 600 * 4, 800, 600));
+    assert(screen_render_office_desk(&od_surface, od_tga_data, od_tga_size,
+                                     &od_assets, &od_data, od_decoded,
+                                     800 * 600 * 4));
+    assert(memcmp(od_frame, od_decoded, 800 * 600 * 4) != 0);
+    free(od_frame);
+    free(od_decoded);
+    for (int index = 0; index < OFFICE_FONT_COUNT; index++) {
+        free(od_font_data[index]);
+    }
+    for (int index = 0; index < OFFICE_ASSET_COUNT; index++) {
+        free(od_sprite_pixels[index]);
+    }
+    free(od_tga_data);
+
     uint8_t *sbb_background_pixels = NULL;
     uint8_t *sbb_row_pixels = NULL;
     uint8_t *sbb_rating_pixels = NULL;

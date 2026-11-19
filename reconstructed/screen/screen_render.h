@@ -9,6 +9,7 @@
 #include "../menu/menu_state.h"
 #include "../render/render_state.h"
 #include "../statistics/statistics_state.h"
+#include "office_desk_layout.h"
 #include "statistics_balance_layout.h"
 
 /*
@@ -214,6 +215,37 @@ typedef struct StatisticsBalanceData {
 bool screen_render_statistics_balance(
     RenderSurface *surface, const StatisticsBalanceAssets *assets,
     const StatisticsBalanceData *data);
+
+typedef struct OfficeDeskFont {
+    const uint8_t *data;
+    size_t size;
+    const FntInfo *info;
+} OfficeDeskFont;
+
+typedef struct OfficeDeskAssets {
+    const RgbaSprite *sprites[OFFICE_ASSET_COUNT];
+    OfficeDeskFont fonts[OFFICE_FONT_COUNT];
+} OfficeDeskAssets;
+
+typedef struct OfficeDeskData {
+    const char *city;
+    const char *clock;
+    const char *time_left_clock;
+    const char *time_left_label;
+    const char *guid;
+    const char *date;
+} OfficeDeskData;
+
+/* Composes Screen_BuildOfficeDesk (0x4258C0): BG002 desk background plus all
+ * 42 constructor controls at their original positions and fonts. The six
+ * animation windows are represented by exact table entries; their ANI frames
+ * are not decoded yet and are not drawn. */
+bool screen_render_office_desk(RenderSurface *surface, const uint8_t *tga_data,
+                               size_t tga_size,
+                               const OfficeDeskAssets *assets,
+                               const OfficeDeskData *data,
+                               uint8_t *decode_buffer,
+                               size_t decode_capacity);
 
 typedef struct PersonnelRecordData {
     const char *employee_name;

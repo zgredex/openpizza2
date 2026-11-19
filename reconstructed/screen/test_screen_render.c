@@ -953,6 +953,209 @@ static void test_statistics_balance_composition(void) {
     }
 }
 
+static const OfficeDeskControl *find_office_control(int32_t id) {
+    for (size_t index = 0; index < kOfficeDeskControlCount; index++) {
+        if (kOfficeDeskControls[index].id == id) {
+            return &kOfficeDeskControls[index];
+        }
+    }
+    return NULL;
+}
+
+static void test_office_desk_composition(void) {
+    static const char *const sprite_paths[OFFICE_ASSET_COUNT] = {
+        "../extracted/sprites/mauerbogen.spr",
+        "../extracted/sprites/pb22_00.spr",
+        "../extracted/sprites/pb24_00.spr",
+        "../extracted/sprites/hpb__00.spr",
+        "../extracted/sprites/hpb__01.spr",
+        "../extracted/sprites/hpb__02.spr",
+        "../extracted/sprites/hpb__03.spr",
+        "../extracted/sprites/hpb__04.spr",
+        "../extracted/sprites/rb01_00.spr",
+        "../extracted/sprites/rb02_00.spr",
+        "../extracted/sprites/rb03_00.spr",
+        "../extracted/sprites/rb04_00.spr",
+        "../extracted/sprites/rb05_00.spr",
+        "../extracted/sprites/citybut01_00.spr",
+        "../extracted/sprites/piloesch01_00.spr",
+        "../extracted/sprites/redo01_00.spr",
+        "../extracted/sprites/undo01_00.spr",
+        "../extracted/sprites/ring.spr",
+        "../extracted/sprites/uhr.spr",
+        "../extracted/sprites/loch_00.spr",
+        "../extracted/sprites/hilfebuttonsnip_00.spr",
+        "../extracted/sprites/playlog_8_01_02.spr",
+        "../extracted/sprites/star_01.spr",
+    };
+    static const char *const font_paths[OFFICE_FONT_COUNT] = {
+        "../extracted/fonts/timesfont.fnt",
+        "../extracted/fonts/times14.fnt",
+        "../extracted/fonts/verdana7.fnt",
+        "../extracted/fonts/verdana8.fnt",
+        "../extracted/fonts/verdana10.fnt",
+    };
+    uint8_t *sprite_pixels[OFFICE_ASSET_COUNT] = {NULL};
+    RgbaSprite sprites[OFFICE_ASSET_COUNT];
+    for (int index = 0; index < OFFICE_ASSET_COUNT; index++) {
+        assert(load_spr(sprite_paths[index], &sprite_pixels[index],
+                        &sprites[index]));
+    }
+    uint8_t *font_data[OFFICE_FONT_COUNT] = {NULL};
+    size_t font_sizes[OFFICE_FONT_COUNT] = {0};
+    FntInfo font_infos[OFFICE_FONT_COUNT];
+    for (int index = 0; index < OFFICE_FONT_COUNT; index++) {
+        font_data[index] = load_file(font_paths[index], &font_sizes[index]);
+        assert(font_data[index] != NULL);
+        assert(fnt_read_info(font_data[index], font_sizes[index],
+                             &font_infos[index]));
+    }
+    OfficeDeskAssets assets = {0};
+    for (int index = 0; index < OFFICE_ASSET_COUNT; index++) {
+        assets.sprites[index] = &sprites[index];
+    }
+    for (int index = 0; index < OFFICE_FONT_COUNT; index++) {
+        assets.fonts[index] = (OfficeDeskFont){
+            font_data[index], font_sizes[index], &font_infos[index]};
+    }
+    assert(kOfficeDeskControlCount == 42);
+    const OfficeDeskControl *control = find_office_control(8012);
+    assert(control != NULL);
+    assert(control->x == 534 && control->y == -2);
+    assert(control->kind == OFFICE_KIND_SPRITE);
+    assert(control->asset == OFFICE_ASSET_MAUERBOGEN);
+    control = find_office_control(1039);
+    assert(control != NULL);
+    assert(control->x == 640 && control->y == 4);
+    assert(control->kind == OFFICE_KIND_TEXT && control->font == 0);
+    assert(control->align == 2 && control->width == 120);
+    assert(strcmp(control->text, "Paris") == 0);
+    control = find_office_control(1040);
+    assert(control != NULL);
+    assert(control->x == 10 && control->y == 568);
+    assert(control->font == 1 && control->align == 2 && control->width == 50);
+    assert(strcmp(control->text, "17:32") == 0);
+    control = find_office_control(1023);
+    assert(control != NULL);
+    assert(control->x == 600 && control->y == 178);
+    assert(control->asset == OFFICE_ASSET_HPB00);
+    control = find_office_control(1022);
+    assert(control != NULL);
+    assert(control->x == 759 && control->y == 177);
+    assert(control->asset == OFFICE_ASSET_RB05);
+    control = find_office_control(1075);
+    assert(control != NULL);
+    assert(control->x == 454 && control->y == 9);
+    assert(control->asset == OFFICE_ASSET_RING);
+    control = find_office_control(1079);
+    assert(control != NULL);
+    assert(control->x == 538 && control->y == 178);
+    assert(control->font == 2 && control->align == 0 && control->width == 52);
+    assert(strcmp(control->text, "Time left") == 0);
+    control = find_office_control(8005);
+    assert(control != NULL);
+    assert(control->x == 202 && control->y == 576);
+    assert(control->font == 4 && control->align == 2 && control->width == 0);
+    control = find_office_control(8001);
+    assert(control != NULL);
+    assert(control->x == 104 && control->y == 560);
+    assert(control->font == 3 && control->align == 2 && control->width == 91);
+    assert(strcmp(control->text, "#32.11.2003") == 0);
+    control = find_office_control(1080);
+    assert(control != NULL);
+    assert(control->x == 446 && control->y == 1);
+    assert(control->kind == OFFICE_KIND_ANIMATION);
+    assert(strcmp(control->text, "haecksler.ani") == 0);
+    control = find_office_control(1086);
+    assert(control != NULL);
+    assert(control->x == 237 && control->y == 562);
+    assert(control->kind == OFFICE_KIND_BITMAP);
+    assert(control->width == 44 && control->height == 29);
+    control = find_office_control(8007);
+    assert(control != NULL);
+    assert(control->x == 767 && control->y == 53);
+    assert(control->asset == OFFICE_ASSET_STAR);
+
+    size_t tga_size = 0;
+    uint8_t *tga = load_file("../extracted/pictures/bg002.tga", &tga_size);
+    assert(tga != NULL);
+    size_t frame_size = 800 * 600 * 4;
+    uint8_t *frame = malloc(frame_size);
+    uint8_t *decoded = malloc(frame_size);
+    assert(frame != NULL);
+    assert(decoded != NULL);
+    RenderSurface surface;
+    assert(render_surface_init(&surface, frame, frame_size, 800, 600));
+    assert(screen_render_office_desk(&surface, tga, tga_size, &assets, NULL,
+                                     decoded, frame_size));
+
+    bool mauer_ink = false;
+    for (size_t index = 0;
+         index + 3 < (size_t)sprites[OFFICE_ASSET_MAUERBOGEN].width *
+                         sprites[OFFICE_ASSET_MAUERBOGEN].height * 4;
+         index += 4) {
+        if (sprites[OFFICE_ASSET_MAUERBOGEN].pixels[index + 3] == 255) {
+            size_t px = (index / 4) % sprites[OFFICE_ASSET_MAUERBOGEN].width;
+            size_t py = (index / 4) / sprites[OFFICE_ASSET_MAUERBOGEN].width;
+            if (py < 2) {
+                continue;
+            }
+            size_t target = ((size_t)(-2 + (int)py) * 800 + 534 + px) * 4;
+            assert(memcmp(frame + target,
+                          sprites[OFFICE_ASSET_MAUERBOGEN].pixels + index,
+                          4) == 0);
+            mauer_ink = true;
+            break;
+        }
+    }
+    assert(mauer_ink);
+    bool city_ink = false;
+    for (int y = 4; y < 24; y++) {
+        for (int x = 600; x < 780; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] < 120 && frame[offset + 1] < 120) {
+                city_ink = true;
+            }
+        }
+    }
+    assert(city_ink);
+    bool date_ink = false;
+    for (int y = 560; y < 576; y++) {
+        for (int x = 104; x < 210; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] < 120 && frame[offset + 1] < 120) {
+                date_ink = true;
+            }
+        }
+    }
+    assert(date_ink);
+    size_t help_offset = ((size_t)217 * 800 + 572) * 4;
+    assert(frame[help_offset] != 22 || frame[help_offset + 1] != 26 ||
+           frame[help_offset + 2] != 34);
+    const OfficeDeskData data = {
+        .city = "Berlin",
+        .clock = "18:45",
+        .time_left_clock = "#01:20",
+        .time_left_label = "Time left",
+        .guid = "Guid",
+        .date = "#01.01.2004",
+    };
+    assert(screen_render_office_desk(&surface, tga, tga_size, &assets, &data,
+                                     decoded, frame_size));
+    assert(!screen_render_office_desk(&surface, tga, tga_size, NULL, NULL,
+                                      decoded, frame_size));
+
+    for (int index = 0; index < OFFICE_FONT_COUNT; index++) {
+        free(font_data[index]);
+    }
+    for (int index = 0; index < OFFICE_ASSET_COUNT; index++) {
+        free(sprite_pixels[index]);
+    }
+    free(tga);
+    free(decoded);
+    free(frame);
+}
+
 static void test_statistics_branch_balance_composition(void) {
     uint8_t *background_pixels = NULL;
     uint8_t *row_pixels = NULL;
@@ -1798,6 +2001,7 @@ int main(void) {
     test_personnel_overview_composition();
     test_personnel_record_composition();
     test_statistics_balance_composition();
+    test_office_desk_composition();
     test_statistics_branch_balance_composition();
     test_options_page_composition();
     test_load_save_page_composition();

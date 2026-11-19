@@ -1652,3 +1652,64 @@ bool screen_render_statistics_backdrop(
                "Total evaluation", label_color);
     return true;
 }
+
+bool screen_render_office_desk(RenderSurface *surface, const uint8_t *tga_data,
+                               size_t tga_size,
+                               const OfficeDeskAssets *assets,
+                               const OfficeDeskData *data,
+                               uint8_t *decode_buffer,
+                               size_t decode_capacity) {
+    if (surface == NULL || assets == NULL) {
+        return false;
+    }
+    if (!screen_render_background(surface, tga_data, tga_size, decode_buffer,
+                                  decode_capacity)) {
+        return false;
+    }
+    const uint8_t text_color[4] = {0, 0, 0, 255};
+    for (size_t index = 0; index < kOfficeDeskControlCount; index++) {
+        const OfficeDeskControl *control = &kOfficeDeskControls[index];
+        if (control->kind == OFFICE_KIND_TEXT) {
+            const OfficeDeskFont *font = &assets->fonts[control->font];
+            if (font->data == NULL || font->info == NULL) {
+                return false;
+            }
+            const char *text = control->text;
+            if (data != NULL) {
+                if (control->id == 1039 && data->city != NULL) {
+                    text = data->city;
+                } else if (control->id == 1040 && data->clock != NULL) {
+                    text = data->clock;
+                } else if (control->id == 1077 &&
+                           data->time_left_clock != NULL) {
+                    text = data->time_left_clock;
+                } else if (control->id == 1079 &&
+                           data->time_left_label != NULL) {
+                    text = data->time_left_label;
+                } else if (control->id == 8005 && data->guid != NULL) {
+                    text = data->guid;
+                } else if (control->id == 8001 && data->date != NULL) {
+                    text = data->date;
+                }
+            }
+            uint32_t width = ui_measure_text(font->info, text);
+            int32_t draw_x = control->x;
+            if (control->align == 1) {
+                draw_x = control->x + control->width - (int32_t)width;
+            } else if (control->align == 2) {
+                draw_x = control->x + ((int32_t)control->width - (int32_t)width) / 2;
+            }
+            if (!ui_draw_text(surface, font->data, font->size, font->info,
+                              draw_x, control->y, text, text_color)) {
+                return false;
+            }
+        } else if (control->kind == OFFICE_KIND_SPRITE) {
+            const RgbaSprite *sprite = assets->sprites[control->asset];
+            if (sprite != NULL &&
+                !render_blit(surface, sprite, control->x, control->y)) {
+                return false;
+            }
+        }
+    }
+    return true;
+}

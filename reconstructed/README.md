@@ -54,7 +54,10 @@ Current batches:
   title/city/description/help controls, LOGOFENSTER, slider and Back/Start
   Mission buttons, and the exact 162-control StatisticsBalance layout over
   STATISTIKBILANZBACK.spr with TAB09/TABPB01 rows, six shipped fonts, the
-  SL01_00 slider and the PB22/PB24/PB33/TEXTPB05 controls.
+  SL01_00 slider and the PB22/PB24/PB33/TEXTPB05 controls, and the exact
+  42-control office-desk layout over BG002.tga with its five fonts, desk
+  sprites and button/status controls (ANI animation windows are mapped but
+  their frames are not decoded yet).
 - `rating/` — `Branch_GetCustomerGroupRating` composition, city adjustment,
   `Stats_GetAverage8`/`Branch_GetMenuRating`, the baseline branch-score table
   rule and `Game_GetMarketBonusFactor`.
