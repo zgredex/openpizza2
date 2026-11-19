@@ -959,3 +959,89 @@ int32_t economy_apply_table_percent(const int32_t *table, int32_t row,
     }
     return (table[row * 9 + index] * value) / 100;
 }
+
+int32_t economy_get_modifier(int32_t type, int32_t index,
+                             const EconomyModifierState *state) {
+    if (state == NULL) {
+        return 0;
+    }
+    static const int32_t table_17[24] = {
+        0, 40, 120, 0, 20, 100, 0, 30, 200, 0, 40, 300,
+        0, 20000, 50000, 0, 0, 5, 10, 0, 5, 10, 15, 5,
+    };
+    static const int32_t table_1d[24] = {
+        100, 30, 70, 0, 20, 60, 0, 30, 90, 0, 40, 120,
+        0, 20, 100, 0, 30, 200, 0, 40, 300, 0, 20000, 50000,
+    };
+    int32_t value = 0;
+    if (type == 0x17) {
+        value = table_17[index + state->row * 3];
+        if (index == 1) {
+            for (int32_t count = state->count_168; count > 0; count--) {
+                value = (value * 15) / 10;
+            }
+            for (int32_t count = state->count_24c; count > 0; count--) {
+                value = (value * 9) / 10;
+            }
+        } else if (index == 2) {
+            for (int32_t count = state->count_164; count > 0; count--) {
+                value = (value * 15) / 10;
+            }
+            for (int32_t count = state->count_248; count > 0; count--) {
+                value = (value * 9) / 10;
+            }
+        }
+    } else if (type == 0x1d) {
+        value = table_1d[index + state->row * 3];
+        if (index == 1) {
+            for (int32_t count = state->count_a8; count > 0; count--) {
+                value = (value * 15) / 10;
+            }
+            for (int32_t count = state->count_18c; count > 0; count--) {
+                value = (value * 9) / 10;
+            }
+        }
+    }
+    return value;
+}
+
+const char *economy_get_modifier_message(int32_t row, int32_t index) {
+    if (row != 0) {
+        return NULL;
+    }
+    switch (index) {
+    case 0:
+        return "can't perform action";
+    case 1:
+        return "warning";
+    case 2:
+        return "fatal error";
+    default:
+        return NULL;
+    }
+}
+
+void game_plan_construct(GamePlanState *plan) {
+    if (plan == NULL) {
+        return;
+    }
+    memset(plan, 0, sizeof(*plan));
+    plan->fields[2] = 2;
+    plan->fields[7] = -1;
+    plan->fields[0xb] = -1;
+    plan->fields[3] = -1;
+}
+
+void leaf_construction_order_construct(ConstructionOrderState *order,
+                                  int32_t field4, int32_t field8) {
+    if (order == NULL) {
+        return;
+    }
+    memset(order, 0, sizeof(*order));
+    order->fields[1] = field4;
+    order->fields[2] = field8;
+    order->fields[3] = 100;
+    order->fields[5] = -1;
+    order->fields[6] = -1;
+    order->fields[7] = -1;
+}

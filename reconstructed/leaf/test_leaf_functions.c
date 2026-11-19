@@ -574,6 +574,49 @@ static void test_font_clock_economy(void) {
     assert(economy_apply_table_percent(NULL, 0, 0, 200) == 0);
 }
 
+static void test_economy_plan_order(void) {
+    const EconomyModifierState state = {
+        .row = 0,
+        .count_168 = 1,
+        .count_24c = 1,
+        .count_164 = 1,
+        .count_248 = 1,
+        .count_a8 = 2,
+        .count_18c = 1,
+    };
+    assert(economy_get_modifier(0x17, 1, &state) == 54);
+    assert(economy_get_modifier(0x17, 2, &state) == 162);
+    assert(economy_get_modifier(0x17, 0, &state) == 0);
+    assert(economy_get_modifier(0x1d, 1, &state) == 60);
+    assert(economy_get_modifier(0x1e, 0, &state) == 0);
+    assert(economy_get_modifier(0x99, 1, &state) == 0);
+    assert(economy_get_modifier(0x17, 1, NULL) == 0);
+    assert(strcmp(economy_get_modifier_message(0, 0),
+                  "can't perform action") == 0);
+    assert(strcmp(economy_get_modifier_message(0, 1), "warning") == 0);
+    assert(strcmp(economy_get_modifier_message(0, 2), "fatal error") == 0);
+    assert(economy_get_modifier_message(1, 0) == NULL);
+
+    GamePlanState plan;
+    memset(&plan, 0xff, sizeof(plan));
+    game_plan_construct(&plan);
+    assert(plan.fields[1] == 0 && plan.fields[2] == 2);
+    assert(plan.fields[3] == -1 && plan.fields[4] == 0);
+    assert(plan.fields[7] == -1 && plan.fields[8] == 0);
+    assert(plan.fields[9] == 0 && plan.fields[10] == 0);
+    assert(plan.fields[0xb] == -1);
+    game_plan_construct(NULL);
+
+    ConstructionOrderState order;
+    memset(&order, 0xff, sizeof(order));
+    leaf_construction_order_construct(&order, 11, 22);
+    assert(order.fields[1] == 11 && order.fields[2] == 22);
+    assert(order.fields[3] == 100 && order.fields[4] == 0);
+    assert(order.fields[5] == -1 && order.fields[6] == -1);
+    assert(order.fields[7] == -1 && order.fields[8] == 0);
+    leaf_construction_order_construct(NULL, 1, 2);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -595,6 +638,7 @@ int main(void) {
     test_leaf_queue_and_inventory();
     test_stride_entity_city();
     test_font_clock_economy();
+    test_economy_plan_order();
     puts("leaf function reconstruction: OK");
     return 0;
 }

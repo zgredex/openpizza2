@@ -250,4 +250,36 @@ void game_clock_reset(uint8_t *clock, uint16_t calendar_state);
 int32_t economy_apply_table_percent(const int32_t *table, int32_t row,
                                     int32_t index, int32_t value);
 
+typedef struct EconomyModifierState {
+    int32_t row;
+    int32_t count_168;
+    int32_t count_24c;
+    int32_t count_164;
+    int32_t count_248;
+    int32_t count_a8;
+    int32_t count_18c;
+} EconomyModifierState;
+
+/* Economy_GetModifier (0x4E25B0). */
+int32_t economy_get_modifier(int32_t type, int32_t index,
+                             const EconomyModifierState *state);
+
+/* Economy_GetModifier message branch for type 0x1E. */
+const char *economy_get_modifier_message(int32_t row, int32_t index);
+
+typedef struct GamePlanState {
+    int32_t fields[12];
+} GamePlanState;
+
+/* GamePlan_Construct (0x50F630). */
+void game_plan_construct(GamePlanState *plan);
+
+typedef struct ConstructionOrderState {
+    int32_t fields[9];
+} ConstructionOrderState;
+
+/* ConstructionOrder_Construct (0x4E5D60). */
+void leaf_construction_order_construct(ConstructionOrderState *order,
+                                  int32_t field4, int32_t field8);
+
 #endif
