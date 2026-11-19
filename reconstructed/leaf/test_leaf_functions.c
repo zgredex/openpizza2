@@ -2025,6 +2025,75 @@ static void test_hover_mission_animation(void) {
     assert(read_i32_at(frames, 0x6c) == 8);
 }
 
+static void test_window_ui_helpers(void) {
+    uint8_t window[0x10300] = {0};
+    write_i32_at(window, 4, 30);
+    write_i32_at(window, 8, 40);
+    write_i32_at(window, 0x0c, 10);
+    write_i32_at(window, 0x10, 20);
+    int32_t rect[4] = {0};
+    window_get_rect(window, rect);
+    assert(rect[0] == 10 && rect[1] == 20);
+    assert(rect[2] == 40 && rect[3] == 60);
+
+    ui_set_position(window, 5, 6);
+    assert(read_i32_at(window, 0x28c) == 5);
+    assert(read_i32_at(window, 0x290) == 6);
+    write_i32_at(window, 0x28, 100);
+    write_i32_at(window, 0x2c, 200);
+    ui_set_absolute_position(window, 7, 8);
+    assert(read_i32_at(window, 0x30) == 107);
+    assert(read_i32_at(window, 0x34) == 208);
+
+    uint8_t child[0x80] = {0};
+    uintptr_t child_pointer = (uintptr_t)child;
+    memcpy(window + 0x240, &child_pointer, sizeof(child_pointer));
+    ui_set_child_position(window, 11, 12);
+    assert(read_i32_at(child, 0x5c) == 11);
+    assert(read_i32_at(child, 0x60) == 12);
+
+    write_i32_at(window, 0x38, 3);
+    write_i32_at(window, 0x3c, 4);
+    write_i32_at(window, 0x30, 2);
+    write_i32_at(window, 0x34, 3);
+    ui_get_outer_rect(window, rect);
+    assert(rect[0] == 3 && rect[1] == 4);
+    assert(rect[2] == 100 + 2 * 2 + 3);
+    assert(rect[3] == 200 + 3 * 2 + 4);
+
+    write_i32_at(window, 0x30, 107);
+    write_i32_at(window, 0x10170, 30);
+    write_i32_at(window, 0x1016c, 9);
+    write_i32_at(window, 0x10160, 50);
+    write_i32_at(window, 0x10168, 7);
+    write_i32_at(window, 0x10164, 13);
+    write_i32_at(window, 0x10174, 5);
+    ui_get_view_rect(window, rect);
+    assert(rect[0] == 209);
+    assert(rect[1] == 102);
+    assert(rect[2] == 43);
+    assert(rect[3] == 43);
+
+    write_i32_at(window, 0x0c, 0x10);
+    ui_set_window_offsets(window);
+    assert(read_i32_at(window, 0x1016c) == 0x41);
+    assert(read_i32_at(window, 0x10168) == 0);
+    assert(read_i32_at(window, 0x10174) == -0xd2);
+    assert(read_i32_at(window, 0x10170) == 0x28);
+    write_i32_at(window, 0x0c, 0);
+    ui_set_window_offsets(window);
+    assert(read_i32_at(window, 0x10168) == 0x41);
+    assert(read_i32_at(window, 0x10174) == 0x1e);
+
+    ui_set_layout_params(window, 21, 22);
+    assert(read_i32_at(window, 0x82e4) == 21);
+    assert(read_i32_at(window, 0x82e8) == 22);
+    ui_set_event_callback(window, 23);
+    ui_set_window_proc(window, 24);
+    assert(read_i32_at(window, 0x8308) == 23);
+    assert(read_i32_at(window, 0x8304) == 24);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -2069,6 +2138,7 @@ int main(void) {
     test_lookup_initializers();
     test_reference_list_window();
     test_hover_mission_animation();
+    test_window_ui_helpers();
     puts("leaf function reconstruction: OK");
     return 0;
 }

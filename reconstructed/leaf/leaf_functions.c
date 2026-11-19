@@ -3264,3 +3264,97 @@ void animation_set_point_pairs(uint8_t *frames, size_t index,
         write_i32(record + 0x6c, pair5[1]);
     }
 }
+
+void window_get_rect(const uint8_t *window, int32_t rect[4]) {
+    if (window == NULL || rect == NULL) {
+        return;
+    }
+    rect[0] = read_i32(window + 0x0c);
+    rect[1] = read_i32(window + 0x10);
+    rect[2] = rect[0] + read_i32(window + 4);
+    rect[3] = rect[1] + read_i32(window + 8);
+}
+
+void ui_set_position(uint8_t *window, int32_t x, int32_t y) {
+    if (window != NULL) {
+        write_i32(window + 0x28c, x);
+        write_i32(window + 0x290, y);
+    }
+}
+
+void ui_set_absolute_position(uint8_t *window, int32_t x, int32_t y) {
+    if (window != NULL) {
+        write_i32(window + 0x30, read_i32(window + 0x28) + x);
+        write_i32(window + 0x34, read_i32(window + 0x2c) + y);
+    }
+}
+
+void ui_set_child_position(uint8_t *window, int32_t x, int32_t y) {
+    if (window == NULL) {
+        return;
+    }
+    uintptr_t child;
+    memcpy(&child, window + 0x240, sizeof(child));
+    if (child != 0) {
+        write_i32((uint8_t *)child + 0x5c, x);
+        write_i32((uint8_t *)child + 0x60, y);
+    }
+}
+
+void ui_get_outer_rect(const uint8_t *window, int32_t rect[4]) {
+    if (window == NULL || rect == NULL) {
+        return;
+    }
+    rect[0] = read_i32(window + 0x38);
+    rect[1] = read_i32(window + 0x3c);
+    rect[2] = read_i32(window + 0x28) + read_i32(window + 0x30) * 2 +
+              rect[0];
+    rect[3] = read_i32(window + 0x2c) + read_i32(window + 0x34) * 2 +
+              rect[1];
+}
+
+void ui_get_view_rect(const uint8_t *window, int32_t rect[4]) {
+    if (window == NULL || rect == NULL) {
+        return;
+    }
+    rect[0] = read_i32(window + 0x1016c) + read_i32(window + 0x2c);
+    rect[2] = read_i32(window + 0x10160) - read_i32(window + 0x10168);
+    rect[1] = read_i32(window + 0x30) - read_i32(window + 0x10174);
+    rect[3] = read_i32(window + 0x10170) + read_i32(window + 0x10164);
+}
+
+void ui_set_window_offsets(uint8_t *window) {
+    if (window == NULL) {
+        return;
+    }
+    if (read_i32(window + 0x0c) == 0x10) {
+        write_i32(window + 0x1016c, 0x41);
+        write_i32(window + 0x10168, 0);
+        write_i32(window + 0x10174, -0xd2);
+        write_i32(window + 0x10170, 0x28);
+    } else {
+        write_i32(window + 0x1016c, 0x41);
+        write_i32(window + 0x10168, 0x41);
+        write_i32(window + 0x10174, 0x1e);
+        write_i32(window + 0x10170, 0x1e);
+    }
+}
+
+void ui_set_layout_params(uint8_t *window, int32_t first, int32_t second) {
+    if (window != NULL) {
+        write_i32(window + 0x82e4, first);
+        write_i32(window + 0x82e8, second);
+    }
+}
+
+void ui_set_event_callback(uint8_t *window, int32_t callback) {
+    if (window != NULL) {
+        write_i32(window + 0x8308, callback);
+    }
+}
+
+void ui_set_window_proc(uint8_t *window, int32_t callback) {
+    if (window != NULL) {
+        write_i32(window + 0x8304, callback);
+    }
+}

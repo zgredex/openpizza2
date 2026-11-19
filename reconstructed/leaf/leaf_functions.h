@@ -662,6 +662,18 @@ void animation_set_point_pairs(uint8_t *frames, size_t index,
                                const int32_t pair4[2],
                                const int32_t pair5[2]);
 
+/* Window/UI geometry and setter helpers. */
+void window_get_rect(const uint8_t *window, int32_t rect[4]);
+void ui_set_position(uint8_t *window, int32_t x, int32_t y);
+void ui_set_absolute_position(uint8_t *window, int32_t x, int32_t y);
+void ui_set_child_position(uint8_t *window, int32_t x, int32_t y);
+void ui_get_outer_rect(const uint8_t *window, int32_t rect[4]);
+void ui_get_view_rect(const uint8_t *window, int32_t rect[4]);
+void ui_set_window_offsets(uint8_t *window);
+void ui_set_layout_params(uint8_t *window, int32_t first, int32_t second);
+void ui_set_event_callback(uint8_t *window, int32_t callback);
+void ui_set_window_proc(uint8_t *window, int32_t callback);
+
 /* Game_GetActiveScreenOrFallback (0x482910). */
 int32_t game_get_active_screen_or_fallback(const uint8_t *game);
 
