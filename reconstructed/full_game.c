@@ -14,6 +14,7 @@
 #include "operations/branch_operations.h"
 #include "assets/assets.h"
 #include "ui_render/ui_render.h"
+#include "screen/screen_render.h"
 #include "statistics/statistics_state.h"
 #include "settings/settings.h"
 #include "ui_screen/ui_screen.h"
@@ -21,6 +22,7 @@
 #include <assert.h>
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 static bool load_fails(Settings *settings) {
@@ -140,6 +142,40 @@ int main(void) {
             }
         }
         assert(text_ink);
+    }
+
+    size_t tga_size = 0;
+    uint8_t *tga_data = NULL;
+    FILE *tga_file = fopen("../extracted/pictures/pe_startscreen.tga", "rb");
+    if (tga_file != NULL) {
+        fseek(tga_file, 0, SEEK_END);
+        long tga_length = ftell(tga_file);
+        fseek(tga_file, 0, SEEK_SET);
+        if (tga_length > 0) {
+            tga_data = malloc((size_t)tga_length);
+            if (tga_data != NULL) {
+                tga_size = fread(tga_data, 1, (size_t)tga_length, tga_file);
+            }
+        }
+        fclose(tga_file);
+    }
+    if (tga_data != NULL && font_size > 0) {
+        size_t screen_frame_size = 800 * 600 * 4;
+        uint8_t *screen_frame = malloc(screen_frame_size);
+        uint8_t *screen_decoded = malloc(screen_frame_size);
+        assert(screen_frame != NULL);
+        assert(screen_decoded != NULL);
+        RenderSurface screen_surface;
+        assert(render_surface_init(&screen_surface, screen_frame, screen_frame_size,
+                                   800, 600));
+        menu_set_hover(&menu, 0);
+        assert(screen_render_menu(&screen_surface, tga_data, tga_size, font_data,
+                                  font_size, &font_info, &menu, screen_decoded,
+                                  screen_frame_size));
+        assert(memcmp(screen_frame, screen_decoded, screen_frame_size) != 0);
+        free(screen_decoded);
+        free(screen_frame);
+        free(tga_data);
     }
 
     BranchOperations operations;

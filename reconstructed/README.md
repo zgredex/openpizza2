@@ -36,6 +36,9 @@ Current batches:
 - `ui_render/` — composes shipped SPR sprites and FNT text onto the RGBA
   render surface, including hotspot placement, alpha blending and text
   measurement.
+- `screen/` — decodes `extracted/pictures/pe_startscreen.tga` into an 800×600
+  RGBA frame and draws the reconstructed main-menu rows and status line with
+  the shipped Times font.
 - `operations/` — branch period accounting: sale revenue, ingredient cost,
   payroll, rent, advertising, profit and period close.
 - `ai/` — customer visit state machine (walk 260, production 180, service 80)

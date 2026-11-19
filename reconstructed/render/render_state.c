@@ -93,13 +93,39 @@ bool render_blit(RenderSurface *surface, const RgbaSprite *sprite, int32_t x,
     return true;
 }
 
+typedef struct TgaPalette {
+    const uint8_t *entries;
+    uint8_t entry_bytes;
+    uint16_t length;
+} TgaPalette;
+
 static bool read_tga_pixel(const uint8_t *data, size_t length, size_t *position,
-                           uint8_t image_type, size_t pixel_bytes, uint8_t rgba[4]) {
+                           uint8_t image_type, size_t pixel_bytes,
+                           const TgaPalette *palette, uint8_t rgba[4]) {
     if (*position + pixel_bytes > length) {
         return false;
     }
     const uint8_t *source = data + *position;
-    if (image_type == 3 || image_type == 11) {
+    bool colormapped = image_type == 1 || image_type == 9;
+    if (colormapped) {
+        uint32_t index = pixel_bytes == 2 ? read_u16(source) : source[0];
+        if (palette == NULL || palette->entries == NULL || index >= palette->length) {
+            return false;
+        }
+        const uint8_t *entry = palette->entries + (size_t)index * palette->entry_bytes;
+        if (palette->entry_bytes >= 3) {
+            rgba[0] = entry[2];
+            rgba[1] = entry[1];
+            rgba[2] = entry[0];
+            rgba[3] = palette->entry_bytes == 4 ? entry[3] : 255;
+        } else {
+            uint16_t value = read_u16(entry);
+            rgba[0] = (uint8_t)(((value >> 10) & 31u) * 255u / 31u);
+            rgba[1] = (uint8_t)(((value >> 5) & 31u) * 255u / 31u);
+            rgba[2] = (uint8_t)((value & 31u) * 255u / 31u);
+            rgba[3] = 255;
+        }
+    } else if (image_type == 3 || image_type == 11) {
         rgba[0] = source[0];
         rgba[1] = source[0];
         rgba[2] = source[0];
@@ -139,10 +165,11 @@ bool tga_decode_rgba(const uint8_t *data, size_t length, uint8_t *output,
     if (image_width == 0 || image_height == 0) {
         return false;
     }
-    bool rle = image_type == 10 || image_type == 11;
+    bool rle = image_type == 9 || image_type == 10 || image_type == 11;
     bool grayscale = image_type == 3 || image_type == 11;
     bool truecolor = image_type == 2 || image_type == 10;
-    if (!grayscale && !truecolor) {
+    bool colormapped = image_type == 1 || image_type == 9;
+    if (!grayscale && !truecolor && !colormapped) {
         return false;
     }
     size_t pixel_bytes = (bpp + 7) / 8;
@@ -152,12 +179,31 @@ bool tga_decode_rgba(const uint8_t *data, size_t length, uint8_t *output,
     if (truecolor && pixel_bytes != 3 && pixel_bytes != 4) {
         return false;
     }
+    if (colormapped && pixel_bytes != 1 && pixel_bytes != 2) {
+        return false;
+    }
+    TgaPalette palette = {NULL, 0, 0};
+    size_t offset = 18 + data[0];
+    if (colormapped) {
+        uint8_t cmap_type = data[1];
+        uint16_t cmap_length = read_u16(data + 5);
+        uint8_t cmap_depth = data[7];
+        if (cmap_type != 1 || cmap_depth < 15 || cmap_depth > 32 || cmap_length == 0) {
+            return false;
+        }
+        palette.entry_bytes = (uint8_t)((cmap_depth + 7) / 8);
+        palette.length = cmap_length;
+        if (offset + (size_t)cmap_length * palette.entry_bytes > length) {
+            return false;
+        }
+        palette.entries = data + offset;
+        offset += (size_t)cmap_length * palette.entry_bytes;
+    }
     size_t count = (size_t)image_width * image_height;
     size_t needed = count * 4;
     if (capacity < needed) {
         return false;
     }
-    size_t offset = 18 + data[0];
     if (offset > length) {
         return false;
     }
@@ -166,7 +212,8 @@ bool tga_decode_rgba(const uint8_t *data, size_t length, uint8_t *output,
     while (index < count) {
         if (!rle) {
             uint8_t rgba[4];
-            if (!read_tga_pixel(data, length, &offset, image_type, pixel_bytes, rgba)) {
+            if (!read_tga_pixel(data, length, &offset, image_type, pixel_bytes,
+                                &palette, rgba)) {
                 return false;
             }
             store_tga_pixel(output, image_width, image_height, top_origin, index, rgba);
@@ -180,7 +227,8 @@ bool tga_decode_rgba(const uint8_t *data, size_t length, uint8_t *output,
         size_t run = (size_t)(packet & 0x7f) + 1;
         if (packet & 0x80) {
             uint8_t rgba[4];
-            if (!read_tga_pixel(data, length, &offset, image_type, pixel_bytes, rgba)) {
+            if (!read_tga_pixel(data, length, &offset, image_type, pixel_bytes,
+                                &palette, rgba)) {
                 return false;
             }
             for (size_t repeat = 0; repeat < run && index < count; repeat++) {
@@ -190,7 +238,8 @@ bool tga_decode_rgba(const uint8_t *data, size_t length, uint8_t *output,
         } else {
             for (size_t raw = 0; raw < run && index < count; raw++) {
                 uint8_t rgba[4];
-                if (!read_tga_pixel(data, length, &offset, image_type, pixel_bytes, rgba)) {
+                if (!read_tga_pixel(data, length, &offset, image_type, pixel_bytes,
+                                &palette, rgba)) {
                     return false;
                 }
                 store_tga_pixel(output, image_width, image_height, top_origin, index, rgba);
