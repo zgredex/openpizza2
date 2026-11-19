@@ -1,6 +1,6 @@
 {
   "schema": "pc2.evidence.dependency.v1",
-  "path": "Free-play player cash multiplier and profile array",
+  "path": "Free-play player profile records",
   "executable": {
     "path": "game/fastfood2.exe",
     "sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd"
@@ -38,7 +38,7 @@
           "sites": [
             "0x4CD4AE"
           ],
-          "value": "profile +0x00 copied back into settings[0x57B97C + 4*i]",
+          "value": "profile +0x80 copied back into settings[0x57B97C + 4*i]",
           "condition": "UI-to-settings copy loop; six iterations while eax < 0x57C15C, ecx advances by 4 and eax by 0xC0"
         }
       ],
@@ -56,110 +56,155 @@
       "save_load": "No save/load reference found; this is pre-game setup state rebuilt by the free-play setup screen."
     },
     {
-      "address": "0x57BCD8",
+      "address": "0x57BC58",
       "name": "g_FreePlayProfiles",
-      "meaning": "six player setup profiles; entry 0 is the human player, entries 1..5 are AI players",
+      "meaning": "six player setup records; record 0 is the human player, records 1..5 are AI players",
       "count": 6,
+      "entry_bytes": 192,
       "entry_stride": "0xC0",
+      "layout": [
+        {
+          "offset": "0x00",
+          "size": "0x40",
+          "name": "player_name"
+        },
+        {
+          "offset": "0x40",
+          "size": "0x40",
+          "name": "company_name"
+        },
+        {
+          "offset": "0x80",
+          "size": "0x40",
+          "name": "settings"
+        }
+      ],
       "fields": [
         {
           "offset": "0x00",
+          "width": 64,
+          "name": "player_name",
+          "evidence": "SubStartMenu 0x4C7B3B..0x4C7B4C writes the CharacterSelect player name here; FreePlaySetup_InitWindow reads it at 0x4CBD4F; Game_InitScenario line 249 copies it to Player+0x0C; Game_GenerateRandomPlayers fills AI names at 0x40523D"
+        },
+        {
+          "offset": "0x40",
+          "width": 64,
+          "name": "company_name",
+          "evidence": "SubStartMenu 0x4C7B77..0x4C7B87 writes the CharacterSelect enterprise name here; FreePlaySetup_InitWindow reads it at 0x4CBD60; Game_InitScenario line 186 formats the company name from here; Game_GenerateRandomPlayers fills AI company names at 0x405257"
+        },
+        {
+          "offset": "0x80",
           "width": 4,
           "name": "cash_multiplier",
           "evidence": "0x48203D direct read; 0x482089 indexed read with player_index*0xC0; 0x481F01 writes 100; UI range 70..990"
         },
         {
-          "offset": "0x04",
+          "offset": "0x84",
           "width": 4,
           "name": "characteristic_adjust",
-          "evidence": "free-play UI 'Characteristics:' value (0x44D/0x455 labels, 0x452/0x45A values), range -6..+6 at 0x4CC973/0x4CC9C4; Game_InitScenario 0x4821B4 loads [profile+0x38-0x34]=profile+0x04, then 0x4821D9..0x482327 applies abs(value) random +/-1 adjustments to Player +0x3C..+0x50, each clamped to -3..3; sign is negative when the field is negative; applied to AI players only"
+          "evidence": "free-play UI 'Characteristics:' value (0x44D/0x455 labels, 0x452/0x45A values), range -6..+6 at 0x4CC973/0x4CC9C4; Game_InitScenario 0x4821B4 loads [profile+0xB8-0x34]=profile+0x84, then 0x4821D9..0x482327 applies abs(value) random +/-1 adjustments to Player +0x3C..+0x50, each clamped to -3..3; sign is negative when the field is negative; AI players only"
         },
         {
-          "offset": "0x08",
+          "offset": "0x88",
           "width": 4,
           "name": "buyer",
-          "evidence": "CharacterSelect label 'Buyer' at 0x411 and value at 0x418; SubStartMenu 0x4C7B65 copies 0x57DD48.. to profile+0x08..+0x1C; Game_InitScenario 0x482144..0x482187 copies to Player +0x3C..+0x50; CompanyOverview 0x4BD750 shows 'Character values:' Base/Extra/Total at 0x2338..0x234D"
+          "evidence": "CharacterSelect label 'Buyer' at 0x411 and value at 0x418; SubStartMenu 0x4C7B65 copies 0x57DD48.. to profile+0x88..+0x9C; Game_InitScenario 0x482144..0x482187 copies to Player +0x3C..+0x50; CompanyOverview 0x4BD750 shows 'Character values:' Base/Extra/Total at 0x2338..0x234D"
         },
         {
-          "offset": "0x0C",
+          "offset": "0x8C",
           "width": 4,
           "name": "gangsters",
           "evidence": "CharacterSelect label 'Gangsters' at 0x412 and value at 0x419; same copy/display path as Buyer"
         },
         {
-          "offset": "0x10",
+          "offset": "0x90",
           "width": 4,
           "name": "specialist",
           "evidence": "CharacterSelect label 'Specialist' at 0x413 and value at 0x41A; same copy/display path as Buyer"
         },
         {
-          "offset": "0x14",
+          "offset": "0x94",
           "width": 4,
           "name": "politicians",
           "evidence": "CharacterSelect label 'Politicians' at 0x414 and value at 0x41B; same copy/display path as Buyer"
         },
         {
-          "offset": "0x18",
+          "offset": "0x98",
           "width": 4,
           "name": "seller",
           "evidence": "CharacterSelect label 'Seller' at 0x415 and value at 0x41C; same copy/display path as Buyer"
         },
         {
-          "offset": "0x1C",
+          "offset": "0x9C",
           "width": 4,
           "name": "guard",
           "evidence": "CharacterSelect label 'Guard' at 0x416 and value at 0x41D; same copy/display path as Buyer"
         },
         {
-          "offset": "0x20",
+          "offset": "0xA0",
           "width": 4,
           "name": "gender",
           "evidence": "0x4051B5 Random_RangeFast(0,1); 0x40523D IDMap_GetRandomName; 0x4822E5 writes Character +0x24; UI_DrawOverlaySprites 0x54B770 param_2==0 selects male sprite lists"
         },
         {
-          "offset": "0x24",
+          "offset": "0xA4",
           "width": 4,
           "name": "hair",
           "evidence": "0x4051CC range 0x58557C-1; 0x58557C = min(HAARE_M +0x88, HAARE_F +0xA4); 0x4822EB Character +0x28; UI param_5 selects +0x74/+0x90"
         },
         {
-          "offset": "0x28",
+          "offset": "0xA8",
           "width": 4,
           "name": "eyes",
           "evidence": "0x4051DE range 0x585580-1; 0x585580 = min(AUGEN_M +0x50, AUGEN_F +0x6C); 0x4822F4 Character +0x2C; UI param_4 selects +0x3C/+0x58"
         },
         {
-          "offset": "0x2C",
+          "offset": "0xAC",
           "width": 4,
           "name": "mouth",
           "evidence": "0x4051E9 range 0x585584-1; 0x585584 = min(MUND_M +0xC0, MUND_F +0xDC); 0x4822FD Character +0x30; UI param_6 selects +0xAC/+0xC8"
         },
         {
-          "offset": "0x30",
+          "offset": "0xB0",
           "width": 4,
           "name": "head",
           "evidence": "0x405206 range 0x585588-1; 0x585588 = min(HEAD_M +0x18, HEAD_F +0x34); 0x482306 Character +0x34; UI param_3 selects +0x04/+0x20"
         },
         {
-          "offset": "0x34",
+          "offset": "0xB4",
           "width": 4,
           "name": "logo",
           "evidence": "0x405209 reads shuffled permutation 0x57B76C; 0x482029/0x48202C writes Company +0x1E0; 0x4A28F0 formats LOGOS__%d.spr with this +1; 0x4C7B7C copies the selected logo"
         },
         {
-          "offset": "0x38",
+          "offset": "0xB8",
           "width": 4,
           "name": "color",
           "evidence": "0x40520C reads shuffled permutation 0x57C25C; 0x48200C/0x48201C indexes the 8-entry color table 0x563874 and writes Company +0x1DC; SetTextColor consumes it; 0x4C7B81 copies the selected color"
         },
         {
-          "offset": "0x3C",
+          "offset": "0xBC",
           "width": 4,
           "name": "active",
           "evidence": "0x4CBEC8 writes 0/1 from 0x57B9AC; 0x40525C writes 1; 0x481EFE writes 1; 0x481EA3/0x4CB494 compare it to 0"
         }
       ],
       "writer_rings": [
+        {
+          "routine": "unnamed character-select confirmation procedure",
+          "address": "entry absent from the retained decompile index (writes at 0x4C7B3B..0x4C7B87)",
+          "sites": [
+            "0x4C7B3B",
+            "0x4C7B4C",
+            "0x4C7B77",
+            "0x4C7B87"
+          ],
+          "writes": [
+            "record0+0x00 = CharacterSelect player name (0x57DD60)",
+            "record0+0x40 = CharacterSelect enterprise name (0x57DDBC)"
+          ],
+          "condition": "character-select confirmation"
+        },
         {
           "routine": "FreePlaySetup_InitWindow",
           "address": "0x4CBCD0",
@@ -169,28 +214,32 @@
             "0x4CBEC8"
           ],
           "writes": [
-            "profile+0x00 = settings[0x57B97C + 4*i]",
-            "profile+0x04 = settings[0x57B994 + 4*i]",
-            "profile+0x3C = settings[0x57B9AC + 4*i]"
+            "record+0x80 = settings[0x57B97C + 4*i]",
+            "record+0x84 = settings[0x57B994 + 4*i]",
+            "record+0xBC = settings[0x57B9AC + 4*i]"
           ],
-          "condition": "six iterations; first profile base 0x57BCD8, stride 0xC0"
+          "condition": "six iterations; first record base 0x57BC58, stride 0xC0"
         },
         {
           "routine": "Game_GenerateRandomPlayers",
           "address": "0x4050E0",
           "sites": [
+            "0x40523D",
+            "0x405257",
             "0x40520F",
             "0x405220",
             "0x40522A",
             "0x40525C"
           ],
           "writes": [
-            "profile+0x00 = 100",
-            "profile+0x04 = 0",
-            "profile+0x08..+0x1C = 0",
-            "profile+0x3C = 1"
+            "record+0x00 = random player name",
+            "record+0x40 = random enterprise name",
+            "record+0x80 = 100",
+            "record+0x84 = 0",
+            "record+0x88..+0x9C = 0",
+            "record+0xBC = 1"
           ],
-          "condition": "five AI profiles, first at 0x57BD98, stride 0xC0; random fields at +0x20..+0x38 are filled between the zeroing and active writes"
+          "condition": "five AI records, first at 0x57BD18, stride 0xC0; random appearance fields at +0xA0..+0xB8 are filled between the zeroing and active writes"
         },
         {
           "routine": "Game_InitScenario",
@@ -200,10 +249,10 @@
             "0x481F01"
           ],
           "writes": [
-            "profile+0x3C = 1",
-            "profile+0x00 = 100"
+            "record+0xBC = 1",
+            "record+0x80 = 100"
           ],
-          "condition": "when g_FreePlayFlag 0x57BB20 == 0, for the first iVar13 profile slots"
+          "condition": "when g_FreePlayFlag 0x57BB20 == 0, for the first iVar13 records"
         },
         {
           "routine": "unnamed free-play window procedure",
@@ -213,71 +262,80 @@
             "0x4CC92E",
             "0x4CC982",
             "0x4CC9D3",
-            "0x4CD4AE",
-            "0x4CD4B7",
-            "0x4CD4BF"
+            "0x4CD4AE"
           ],
           "writes": [
-            "profile+0x00 -= 10, clamped at 70 (0x4CC8DC/0x4CC8E3)",
-            "profile+0x00 += 10, clamped at 990 (0x4CC92E/0x4CC938)",
-            "profile+0x04 -= 1, clamped at -6 (0x4CC982/0x4CC989)",
-            "profile+0x04 += 1, clamped at 6 (0x4CC9D3/0x4CC9DA)",
-            "settings[0x57B97C + 4*i] = profile+0x00 in the reverse copy loop (0x4CD4AE)",
-            "settings[0x57B994 + 4*i] = profile+0x04 and settings[0x57B9AC + 4*i] = profile+0x3C in the reverse copy loop (0x4CD4B7/0x4CD4BF)"
+            "record+0x80 -= 10, clamped at 70 (0x4CC8DC/0x4CC8E3)",
+            "record+0x80 += 10, clamped at 990 (0x4CC92E/0x4CC938)",
+            "record+0x84 -= 1, clamped at -6 (0x4CC982/0x4CC989)",
+            "record+0x84 += 1, clamped at 6 (0x4CC9D3/0x4CC9DA)",
+            "settings[0x57B97C + 4*i] = record+0x80 in the reverse copy loop (0x4CD4AE)"
           ],
-          "condition": "free-play setup UI commands for the selected player profile"
+          "condition": "free-play setup UI commands for the selected record"
         }
       ],
       "readers": [
+        {
+          "routine": "FreePlaySetup_InitWindow",
+          "address": "0x4CBCD0",
+          "sites": [
+            "0x4CBD4F",
+            "0x4CBD60",
+            "0x4CBD81"
+          ],
+          "reads": [
+            "record0+0x00 player name at 0x4CBD4F",
+            "record0+0x40 enterprise name at 0x4CBD60",
+            "all 0xC0 bytes of record 0 copied for the preview at 0x4CBD81"
+          ],
+          "condition": "setup screen initialization"
+        },
         {
           "routine": "Game_InitScenario",
           "address": "0x481D90",
           "sites": [
             "0x48203D",
-            "0x482089"
+            "0x482089",
+            "0x4821B4",
+            "0x482144",
+            "0x482153",
+            "0x482160",
+            "0x48216D",
+            "0x48217A",
+            "0x482187"
           ],
           "reads": [
-            "0x48203D: player 0 profile+0x00, then (multiplier * capital) / 100",
-            "0x482089: profile[i].+0x00 with i in 1..5, then (multiplier * 50000) / 100"
+            "record+0x00 player name into Player+0x0C",
+            "record+0x40 enterprise name",
+            "record+0x80 cash multiplier",
+            "record+0x84 characteristic adjustment",
+            "record+0x88..+0x9C six character values into Player+0x3C..+0x50",
+            "record+0xA0..+0xB0 appearance into Character+0x24..+0x34",
+            "record+0xB4 logo and +0xB8 color into Company+0x1E0/+0x1DC",
+            "record+0xBC active"
           ],
-          "condition": "g_FreePlayFlag 0x57BB20 != 0"
+          "condition": "free-play flag 0x57BB20 != 0"
         },
         {
           "routine": "FreePlaySetup_RefreshPlayerProfiles",
           "address": "0x4CB480",
           "site": "0x4CB494",
           "reads": [
-            "profile+0x3C active flag"
+            "record+0xBC active flag"
           ],
           "condition": "profile refresh loop"
-        },
-        {
-          "routine": "unnamed free-play window procedure",
-          "address": "0x4CC7xx..0x4CD8DF",
-          "sites": [
-            "0x4CC8CB",
-            "0x4CC91D",
-            "0x4CC973",
-            "0x4CC9C4"
-          ],
-          "reads": [
-            "profile+0x00 before -10/+10 clamp adjustment",
-            "profile+0x04 before -1/+1 clamp adjustment"
-          ],
-          "condition": "free-play setup UI commands"
         },
         {
           "routine": "Building_ResetInventory",
           "address": "0x4FF9E0",
           "site": "0x4FF9FC",
           "reads": [
-            "profile[scenario_index].+0x00 multiplier"
+            "record[scenario_index].+0x80 multiplier"
           ],
           "condition": "warehouse inventory reset"
         }
       ],
-      "save_load": "No save/load reference found; profile state is built by the free-play setup screen and consumed by Game_InitScenario.",
-      "entry_bytes": 192
+      "save_load": "No save/load reference found; profile state is built by the character-select/free-play setup screens and consumed by Game_InitScenario."
     }
   ],
   "object_layout": {
@@ -286,22 +344,24 @@
     "tests": "reconstructed/freeplay/test_freeplay_profiles.c",
     "static_asserts": [
       "sizeof(FreePlayProfile) == 0xC0",
-      "offsetof(FreePlayProfile, cash_multiplier) == 0x00",
-      "offsetof(FreePlayProfile, characteristic_adjust) == 0x04",
-      "offsetof(FreePlayProfile, buyer) == 0x08",
-      "offsetof(FreePlayProfile, gangsters) == 0x0C",
-      "offsetof(FreePlayProfile, specialist) == 0x10",
-      "offsetof(FreePlayProfile, politicians) == 0x14",
-      "offsetof(FreePlayProfile, seller) == 0x18",
-      "offsetof(FreePlayProfile, guard) == 0x1C",
-      "offsetof(FreePlayProfile, gender) == 0x20",
-      "offsetof(FreePlayProfile, hair) == 0x24",
-      "offsetof(FreePlayProfile, eyes) == 0x28",
-      "offsetof(FreePlayProfile, mouth) == 0x2C",
-      "offsetof(FreePlayProfile, head) == 0x30",
-      "offsetof(FreePlayProfile, logo) == 0x34",
-      "offsetof(FreePlayProfile, color) == 0x38",
-      "offsetof(FreePlayProfile, active) == 0x3C",
+      "offsetof(FreePlayProfile, player_name) == 0x00",
+      "offsetof(FreePlayProfile, company_name) == 0x40",
+      "offsetof(FreePlayProfile, cash_multiplier) == 0x80",
+      "offsetof(FreePlayProfile, characteristic_adjust) == 0x84",
+      "offsetof(FreePlayProfile, buyer) == 0x88",
+      "offsetof(FreePlayProfile, gangsters) == 0x8C",
+      "offsetof(FreePlayProfile, specialist) == 0x90",
+      "offsetof(FreePlayProfile, politicians) == 0x94",
+      "offsetof(FreePlayProfile, seller) == 0x98",
+      "offsetof(FreePlayProfile, guard) == 0x9C",
+      "offsetof(FreePlayProfile, gender) == 0xA0",
+      "offsetof(FreePlayProfile, hair) == 0xA4",
+      "offsetof(FreePlayProfile, eyes) == 0xA8",
+      "offsetof(FreePlayProfile, mouth) == 0xAC",
+      "offsetof(FreePlayProfile, head) == 0xB0",
+      "offsetof(FreePlayProfile, logo) == 0xB4",
+      "offsetof(FreePlayProfile, color) == 0xB8",
+      "offsetof(FreePlayProfile, active) == 0xBC",
       "sizeof(FreePlayCharacterAppearance) == 0x828",
       "offsetof(FreePlayCharacterAppearance, gender) == 0x24",
       "offsetof(FreePlayCharacterAppearance, hair) == 0x28",
@@ -309,13 +369,11 @@
       "offsetof(FreePlayCharacterAppearance, mouth) == 0x30",
       "offsetof(FreePlayCharacterAppearance, head) == 0x34"
     ],
-    "unknown_fields_remain_offset_named": [
-      "unknown_40[0x80]"
-    ]
+    "remainder": "None: all 0xC0 bytes are now named. The former +0x40..+0xBF was the next record's two 64-byte names, not unnamed fields of record 0."
   },
   "lookup_tables": {
     "applicable": false,
-    "note": "The selected path uses fixed parallel settings arrays and a fixed 6-entry profile array. It has no index guard, entry-signedness choice or fallback table like Game_GetStartingCapital."
+    "note": "The selected path uses fixed parallel settings arrays and a fixed six-record profile array. It has no index guard, entry-signedness choice or fallback table like Game_GetStartingCapital."
   },
   "x87_rounding": {
     "applicable": "integer division followed by integer-to-double store",
@@ -362,17 +420,15 @@
   "raw_scan": "decompiled_fastfood2_named_v2/typed_packets/freeplay_cash_multiplier.scan.json",
   "open_questions": [
     "The UI read/write sites at 0x4CC8CB/0x4CC91D/0x4CC973/0x4CC9C4 and the reverse copy at 0x4CD4AE belong to a function whose entry is absent from the retained decompile index.",
-    "No save/load pair for 0x57BCD8 was found. Confirm by tracing the save writer set before declaring the array session-only.",
+    "No save/load pair for 0x57BC58 was found. Confirm by tracing the save writer set before declaring the array session-only.",
     "The three vtable-style calls at 0x4CD30B/0x4CD376/0x4CD38B need receiver and slot resolution before the UI path can be reconstructed."
   ],
   "field_mapping_evidence": {
-    "avatar_sprite_families": "EmployeeAvatar_Construct 0x54B460 loads HEAD_M +0x04, HEAD_F +0x20, AUGEN_M +0x3C, AUGEN_F +0x58, HAARE_M +0x74, HAARE_F +0x90, MUND_M +0xAC, MUND_F +0xC8",
-    "max_limits": "0x585588=head, 0x585580=eyes, 0x585584=mouth, 0x58557C=hair, each min(male,female) list count",
-    "gender_argument": "IDMap_GetRandomName at 0x4050E0 uses profile+0x20; UI_DrawOverlaySprites 0x54B770 selects male on param_2==0",
-    "character_copy": "Game_InitScenario 0x4822E5..0x48230C writes profile +0x20..+0x30 into Character +0x24..+0x34",
-    "ui_record_mapping": "UI_ComposeOverlayWindowFromRecord 0x54BB00 passes record +0x24 gender, +0x34 head, +0x2C eyes, +0x28 hair, +0x30 mouth",
-    "logo_and_color": "profile +0x34 and +0x38 come from shuffled 0..7 permutations 0x57B76C/0x57C25C; Game_InitScenario 0x48200C..0x48202C writes Company +0x1DC/+0x1E0; LOGOS__%d.spr and SetTextColor consume them",
-    "characteristics": "free-play UI labels 'Initial capital:' and 'Characteristics:' for each player; +0x00 is the capital percentage, +0x04 is the characteristic adjustment. Game_InitScenario 0x4821B4..0x482327 applies abs(+0x04) random +/-1 changes to the six Player character values (+0x3C..+0x50), each kept within -3..3; negative +0x04 applies -1, positive applies +1. AI players only.",
-    "character_values": "CharacterSelect labels Buyer/Gangsters/Specialist/Politicians/Seller/Guard at controls 0x411..0x416, values at 0x418..0x41D; SubStartMenu 0x4C7B65 copies 0x57DD48.. to profile +0x08..+0x1C; Game_InitScenario 0x482144..0x482187 copies to Player +0x3C..+0x50; CompanyOverview 0x4BD750 renders 'Character values:' with Base/Extra/Total columns at 0x2332..0x234D."
+    "record_base": "0x57BC58; 0x57BCD8 is record0+0x80, the settings half. Therefore old +0x40..+0xBF maps to record1+0x00..+0x7F, the next player's player/company names.",
+    "names": "unnamed character-select confirmation procedure 0x4C7B22..0x4C7B4C writes the player name to record0+0x00; 0x4C7B6D..0x4C7B87 writes the enterprise name to record0+0x40. FreePlaySetup_InitWindow reads them at 0x4CBD4F/0x4CBD60 and copies the whole 0xC0-byte record for the preview at 0x4CBD81.",
+    "characteristics": "free-play UI labels 'Initial capital:' and 'Characteristics:' for each record; record+0x80 is the capital percentage, record+0x84 is the characteristic adjustment. Game_InitScenario 0x4821B4..0x482327 applies abs(+0x84) random +/-1 changes to the six Player character values (+0x3C..+0x50), each kept within -3..3; negative +0x84 applies -1, positive applies +1. AI players only.",
+    "character_values": "CharacterSelect labels Buyer/Gangsters/Specialist/Politicians/Seller/Guard at controls 0x411..0x416, values at 0x418..0x41D; SubStartMenu 0x4C7B65 copies 0x57DD48.. to record+0x88..+0x9C; Game_InitScenario 0x482144..0x482187 copies to Player +0x3C..+0x50; CompanyOverview 0x4BD750 renders 'Character values:' with Base/Extra/Total columns at 0x2332..0x234D.",
+    "appearance": "EmployeeAvatar_Construct 0x54B460 loads HEAD_M +0x04, HEAD_F +0x20, AUGEN_M +0x3C, AUGEN_F +0x58, HAARE_M +0x74, HAARE_F +0x90, MUND_M +0xAC, MUND_F +0xC8 and sets 0x585588/0x585580/0x585584/0x58557C to the male/female minimum counts. UI_DrawOverlaySprites 0x54B770 selects male lists when param_2==0.",
+    "logo_and_color": "record+0xB4 and +0xB8 come from shuffled 0..7 permutations 0x57B76C/0x57C25C; Game_InitScenario 0x48200C..0x48202C writes Company +0x1DC/+0x1E0; LOGOS__%d.spr and SetTextColor consume them."
   }
 }

@@ -6,22 +6,24 @@
 
 static void test_layout(void) {
     assert(sizeof(FreePlayProfile) == 0xC0);
-    assert(offsetof(FreePlayProfile, cash_multiplier) == 0x00);
-    assert(offsetof(FreePlayProfile, characteristic_adjust) == 0x04);
-    assert(offsetof(FreePlayProfile, buyer) == 0x08);
-    assert(offsetof(FreePlayProfile, gangsters) == 0x0C);
-    assert(offsetof(FreePlayProfile, specialist) == 0x10);
-    assert(offsetof(FreePlayProfile, politicians) == 0x14);
-    assert(offsetof(FreePlayProfile, seller) == 0x18);
-    assert(offsetof(FreePlayProfile, guard) == 0x1C);
-    assert(offsetof(FreePlayProfile, gender) == 0x20);
-    assert(offsetof(FreePlayProfile, hair) == 0x24);
-    assert(offsetof(FreePlayProfile, eyes) == 0x28);
-    assert(offsetof(FreePlayProfile, mouth) == 0x2C);
-    assert(offsetof(FreePlayProfile, head) == 0x30);
-    assert(offsetof(FreePlayProfile, logo) == 0x34);
-    assert(offsetof(FreePlayProfile, color) == 0x38);
-    assert(offsetof(FreePlayProfile, active) == 0x3C);
+    assert(offsetof(FreePlayProfile, player_name) == 0x00);
+    assert(offsetof(FreePlayProfile, company_name) == 0x40);
+    assert(offsetof(FreePlayProfile, cash_multiplier) == 0x80);
+    assert(offsetof(FreePlayProfile, characteristic_adjust) == 0x84);
+    assert(offsetof(FreePlayProfile, buyer) == 0x88);
+    assert(offsetof(FreePlayProfile, gangsters) == 0x8C);
+    assert(offsetof(FreePlayProfile, specialist) == 0x90);
+    assert(offsetof(FreePlayProfile, politicians) == 0x94);
+    assert(offsetof(FreePlayProfile, seller) == 0x98);
+    assert(offsetof(FreePlayProfile, guard) == 0x9C);
+    assert(offsetof(FreePlayProfile, gender) == 0xA0);
+    assert(offsetof(FreePlayProfile, hair) == 0xA4);
+    assert(offsetof(FreePlayProfile, eyes) == 0xA8);
+    assert(offsetof(FreePlayProfile, mouth) == 0xAC);
+    assert(offsetof(FreePlayProfile, head) == 0xB0);
+    assert(offsetof(FreePlayProfile, logo) == 0xB4);
+    assert(offsetof(FreePlayProfile, color) == 0xB8);
+    assert(offsetof(FreePlayProfile, active) == 0xBC);
     assert(FREEPLAY_PROFILE_COUNT == 6);
     assert(sizeof(FreePlayCharacterAppearance) == 0x828);
     assert(offsetof(FreePlayCharacterAppearance, gender) == 0x24);
@@ -61,8 +63,10 @@ static void test_defaults_and_accessors(void) {
     assert(profile.head == (int32_t)0xAAAAAAAAu);
     assert(profile.logo == (int32_t)0xAAAAAAAAu);
     assert(profile.color == (int32_t)0xAAAAAAAAu);
-    assert(profile.unknown_40[0] == 0xAA);
-    assert(profile.unknown_40[0x7F] == 0xAA);
+    assert(profile.player_name[0] == (char)0xAA);
+    assert(profile.player_name[0x3F] == (char)0xAA);
+    assert(profile.company_name[0] == (char)0xAA);
+    assert(profile.company_name[0x3F] == (char)0xAA);
 
     assert(freeplay_profile_cash_multiplier(&profile) == 100);
     assert(freeplay_profile_is_active(&profile));

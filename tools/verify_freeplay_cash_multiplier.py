@@ -84,6 +84,11 @@ def main() -> int:
         0x4C7B7C: "a3 0c bd 57 00",    # logo -> profile+0x34
         0x4C7B81: "89 0d 10 bd 57 00",  # color -> profile+0x38
         0x4C7B9D: "a3 38 b9 57 00",    # gender -> settings 0x57B938
+        0x4C7B3B: "68 58 bc 57 00",    # player name destination
+        0x4C7B77: "68 98 bc 57 00",    # enterprise name destination
+        0x4CBD4F: "68 58 bc 57 00",    # player name read
+        0x4CBD60: "68 98 bc 57 00",    # enterprise name read
+        0x4CBD81: "be 58 bc 57 00",    # 0xC0-byte preview copy
         0x4821B4: "8b 41 cc",          # profile+0x04 (characteristic adjust)
         0x482144: "8b 48 d0",          # profile+0x08 -> Player+0x3C
         0x482153: "8b 48 d4",          # profile+0x0C -> Player+0x40
@@ -171,6 +176,8 @@ def main() -> int:
 
     header = open(HEADER, encoding="utf-8").read()
     for needle in ("sizeof(FreePlayProfile) == FREEPLAY_PROFILE_STRIDE",
+                   "offsetof(FreePlayProfile, player_name)",
+                   "offsetof(FreePlayProfile, company_name)",
                    "offsetof(FreePlayProfile, cash_multiplier)",
                    "offsetof(FreePlayProfile, characteristic_adjust)",
                    "offsetof(FreePlayProfile, buyer)",
@@ -201,22 +208,24 @@ def main() -> int:
             failures.append(f"header missing declaration: {needle}")
 
     expected_fields = {
-        "0x00": "cash_multiplier",
-        "0x04": "characteristic_adjust",
-        "0x08": "buyer",
-        "0x0C": "gangsters",
-        "0x10": "specialist",
-        "0x14": "politicians",
-        "0x18": "seller",
-        "0x1C": "guard",
-        "0x20": "gender",
-        "0x24": "hair",
-        "0x28": "eyes",
-        "0x2C": "mouth",
-        "0x30": "head",
-        "0x34": "logo",
-        "0x38": "color",
-        "0x3C": "active",
+        "0x00": "player_name",
+        "0x40": "company_name",
+        "0x80": "cash_multiplier",
+        "0x84": "characteristic_adjust",
+        "0x88": "buyer",
+        "0x8C": "gangsters",
+        "0x90": "specialist",
+        "0x94": "politicians",
+        "0x98": "seller",
+        "0x9C": "guard",
+        "0xA0": "gender",
+        "0xA4": "hair",
+        "0xA8": "eyes",
+        "0xAC": "mouth",
+        "0xB0": "head",
+        "0xB4": "logo",
+        "0xB8": "color",
+        "0xBC": "active",
     }
     actual_fields = {field["offset"]: field["name"]
                      for field in packet["globals"][1]["fields"]}
@@ -229,7 +238,7 @@ def main() -> int:
         return 1
     print(
         "Free-play cash multiplier evidence: 3 multiplier sites, "
-        "22 profile sites, 15 mapped profile fields, fixture 11/11")
+        "22 profile sites, complete six-record 0xC0 layout, fixture 11/11")
     return 0
 
 
