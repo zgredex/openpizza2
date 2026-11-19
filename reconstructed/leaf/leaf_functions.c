@@ -3397,3 +3397,73 @@ uint8_t ui_get_first_enabled_index(const uint8_t *font) {
     }
     return 0;
 }
+
+bool ui_is_valid_size(const UIValidSizeState *state, int32_t x, int32_t y,
+                      bool (*test)(void *context, int32_t x, int32_t y),
+                      void *context) {
+    if (state == NULL) {
+        return false;
+    }
+    if (state->flag18 != 0) {
+        return true;
+    }
+    if (state->flag20 == 0 || state->flag14 == 0 || x < state->min_x ||
+        x >= state->limit_x || y < state->min_y || y >= state->limit_y) {
+        return false;
+    }
+    if (test == NULL) {
+        return false;
+    }
+    return test(context, x - state->offset_x, y - state->offset_y);
+}
+
+void ui_clear_pending_command(UIPendingCommandState *state) {
+    if (state == NULL || state->pending == 0) {
+        return;
+    }
+    state->pending = 0;
+    if (state->notify != NULL) {
+        state->notify(state->context, 0x35, 0, 0);
+    }
+}
+
+const void *window_get_child_and_notify(
+    const uint8_t *window, void (*notify)(void *child, const void *parent)) {
+    if (window == NULL) {
+        return NULL;
+    }
+    uintptr_t child;
+    memcpy(&child, window + 8, sizeof(child));
+    if (child == 0) {
+        return NULL;
+    }
+    if (notify != NULL) {
+        notify((void *)child, window);
+    }
+    return (const void *)child;
+}
+
+const void *ui_find_window_by_id(const void *const *windows, int32_t count,
+                                 int32_t id, int32_t *index) {
+    if (windows == NULL) {
+        if (index != NULL) {
+            *index = -1;
+        }
+        return NULL;
+    }
+    for (int32_t slot = 0; slot < count; slot++) {
+        if (windows[slot] != NULL) {
+            const uint8_t *window = windows[slot];
+            if (read_i32(window + 4) == id) {
+                if (index != NULL) {
+                    *index = slot;
+                }
+                return window;
+            }
+        }
+    }
+    if (index != NULL) {
+        *index = -1;
+    }
+    return NULL;
+}

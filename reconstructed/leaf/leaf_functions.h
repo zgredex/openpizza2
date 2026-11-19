@@ -681,6 +681,41 @@ void ui_clear_field230(uint8_t *window, int32_t value);
 void ui_clear_scroll_drag(uint8_t *window);
 uint8_t ui_get_first_enabled_index(const uint8_t *font);
 
+typedef struct UIValidSizeState {
+    int32_t flag18;
+    int32_t flag20;
+    int32_t flag14;
+    int32_t min_x;
+    int32_t min_y;
+    int32_t limit_x;
+    int32_t limit_y;
+    int32_t offset_x;
+    int32_t offset_y;
+} UIValidSizeState;
+
+/* UI_IsValidSize (0x520B60). */
+bool ui_is_valid_size(const UIValidSizeState *state, int32_t x, int32_t y,
+                      bool (*test)(void *context, int32_t x, int32_t y),
+                      void *context);
+
+typedef struct UIPendingCommandState {
+    int32_t pending;
+    void (*notify)(void *context, int32_t command, int32_t arg2,
+                   int32_t arg3);
+    void *context;
+} UIPendingCommandState;
+
+/* UI_ClearPendingCommand (0x520CF0). */
+void ui_clear_pending_command(UIPendingCommandState *state);
+
+/* Window_GetChildAndNotify (0x54A5D0). */
+const void *window_get_child_and_notify(
+    const uint8_t *window, void (*notify)(void *child, const void *parent));
+
+/* UI_FindWindowByID (0x528040). */
+const void *ui_find_window_by_id(const void *const *windows, int32_t count,
+                                 int32_t id, int32_t *index);
+
 /* Game_GetActiveScreenOrFallback (0x482910). */
 int32_t game_get_active_screen_or_fallback(const uint8_t *game);
 

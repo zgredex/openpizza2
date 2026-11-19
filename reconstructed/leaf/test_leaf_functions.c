@@ -2123,6 +2123,98 @@ static void test_ui_state_helpers(void) {
     assert(ui_get_first_enabled_index(font) == 0);
 }
 
+static int leaf_ui_test_calls;
+static int32_t leaf_ui_test_x;
+static int32_t leaf_ui_test_y;
+static bool leaf_ui_test(void *context, int32_t x, int32_t y) {
+    (void)context;
+    leaf_ui_test_calls++;
+    leaf_ui_test_x = x;
+    leaf_ui_test_y = y;
+    return true;
+}
+
+static int leaf_pending_calls;
+static int32_t leaf_pending_command;
+static void leaf_pending_notify(void *context, int32_t command, int32_t arg2,
+                                int32_t arg3) {
+    (void)context;
+    (void)arg2;
+    (void)arg3;
+    leaf_pending_calls++;
+    leaf_pending_command = command;
+}
+
+static int leaf_child_calls;
+static const void *leaf_child_parent;
+static void leaf_child_notify(void *child, const void *parent) {
+    (void)child;
+    leaf_child_calls++;
+    leaf_child_parent = parent;
+}
+
+static void test_ui_validation_pending_child(void) {
+    UIValidSizeState size_state = {
+        .flag18 = 0,
+        .flag20 = 1,
+        .flag14 = 1,
+        .min_x = 10,
+        .min_y = 20,
+        .limit_x = 100,
+        .limit_y = 200,
+        .offset_x = 5,
+        .offset_y = 7,
+    };
+    leaf_ui_test_calls = 0;
+    assert(ui_is_valid_size(&size_state, 50, 60, leaf_ui_test, NULL));
+    assert(leaf_ui_test_calls == 1);
+    assert(leaf_ui_test_x == 45 && leaf_ui_test_y == 53);
+    assert(!ui_is_valid_size(&size_state, 5, 60, leaf_ui_test, NULL));
+    assert(!ui_is_valid_size(&size_state, 50, 5, leaf_ui_test, NULL));
+    assert(!ui_is_valid_size(&size_state, 100, 60, leaf_ui_test, NULL));
+    assert(!ui_is_valid_size(&size_state, 50, 200, leaf_ui_test, NULL));
+    size_state.flag18 = 1;
+    assert(ui_is_valid_size(&size_state, -1, -1, NULL, NULL));
+    size_state.flag18 = 0;
+    size_state.flag20 = 0;
+    assert(!ui_is_valid_size(&size_state, 50, 60, leaf_ui_test, NULL));
+
+    UIPendingCommandState pending = {
+        .pending = 1,
+        .notify = leaf_pending_notify,
+    };
+    leaf_pending_calls = 0;
+    ui_clear_pending_command(&pending);
+    assert(pending.pending == 0);
+    assert(leaf_pending_calls == 1);
+    assert(leaf_pending_command == 0x35);
+    ui_clear_pending_command(&pending);
+    assert(leaf_pending_calls == 1);
+
+    uint8_t window[0x10] = {0};
+    uint8_t child[0x10] = {0};
+    uintptr_t child_pointer = (uintptr_t)child;
+    memcpy(window + 8, &child_pointer, sizeof(child_pointer));
+    leaf_child_calls = 0;
+    assert(window_get_child_and_notify(window, leaf_child_notify) == child);
+    assert(leaf_child_calls == 1);
+    assert(leaf_child_parent == window);
+    memcpy(window + 8, &(uintptr_t){0}, sizeof(uintptr_t));
+    assert(window_get_child_and_notify(window, leaf_child_notify) == NULL);
+    assert(window_get_child_and_notify(NULL, leaf_child_notify) == NULL);
+
+    uint8_t win0[0x10] = {0};
+    uint8_t win1[0x10] = {0};
+    write_i32_at(win0, 4, 11);
+    write_i32_at(win1, 4, 22);
+    const void *windows[3] = {win0, NULL, win1};
+    int32_t index = -1;
+    assert(ui_find_window_by_id(windows, 3, 22, &index) == win1);
+    assert(index == 2);
+    assert(ui_find_window_by_id(windows, 3, 99, &index) == NULL);
+    assert(index == -1);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -2169,6 +2261,7 @@ int main(void) {
     test_hover_mission_animation();
     test_window_ui_helpers();
     test_ui_state_helpers();
+    test_ui_validation_pending_child();
     puts("leaf function reconstruction: OK");
     return 0;
 }
