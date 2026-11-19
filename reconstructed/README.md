@@ -8,6 +8,9 @@ Current batches:
 
 - `settings/` — settings block layout, `Settings_InitDefaults` behavior, and the
   defaults that the Unicorn probe `tools/emulate_settings_defaults.py` observes.
+- `ingredient/` — `Ingredient` prefix layout and `Game_SetBuildingDesc`, checked
+  against the Olives descriptor read back by
+  `tools/emulate_ingredient_desc.py`.
 
 Build and run:
 

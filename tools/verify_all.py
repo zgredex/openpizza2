@@ -1190,6 +1190,22 @@ def check_ingredient_desc_emulation():
                    "values stored at +0xa8..+0xc8") if ok else output[-1200:],
     }
 
+def check_reconstructed_c():
+    result = subprocess.run(
+        ["make", "-C", "reconstructed", "check"],
+        cwd=ROOT, text=True, capture_output=True, timeout=180)
+    output = (result.stdout + result.stderr).strip()
+    ok = (result.returncode == 0
+          and "settings reconstruction: OK" in output
+          and "ingredient descriptor reconstruction: OK" in output)
+    return {
+        "name": "reconstructed C build",
+        "ok": ok,
+        "detail": ("settings defaults and ingredient descriptor compile with "
+                   "gcc -std=c11 -Werror and pass their assertions")
+        if ok else output[-1200:],
+    }
+
 def check_rust_tests():
     result = subprocess.run(
         ["cargo", "test", "--quiet", "--all"],
@@ -1437,6 +1453,7 @@ def main(argv=None):
     checks.append(check_crt_helpers_emulation())
     checks.append(check_settings_defaults_emulation())
     checks.append(check_ingredient_desc_emulation())
+    checks.append(check_reconstructed_c())
     checks.append(check_rust_tests())
     checks.append(check_iso())
     checks.append(check_isodaten())
