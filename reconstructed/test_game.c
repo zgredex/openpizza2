@@ -731,6 +731,54 @@ int main(void) {
         free(po_tab_pixels[index]);
     }
 
+    uint8_t *pr_panel_pixels = NULL;
+    uint8_t *pr_plan_pixels = NULL;
+    uint8_t *pr_light_pixels = NULL;
+    uint8_t *pr_separator_pixels = NULL;
+    uint8_t *pr_rating_pixels = NULL;
+    RgbaSprite pr_panel;
+    RgbaSprite pr_plan;
+    RgbaSprite pr_light;
+    RgbaSprite pr_separator;
+    RgbaSprite pr_rating;
+    assert(load_spr_asset("../extracted/sprites/submenue.spr", &pr_panel_pixels,
+                          &pr_panel));
+    assert(load_spr_asset("../extracted/sprites/persoplan.spr", &pr_plan_pixels,
+                          &pr_plan));
+    assert(load_spr_asset("../extracted/sprites/persoplanlight.spr",
+                          &pr_light_pixels, &pr_light));
+    assert(load_spr_asset("../extracted/sprites/trennzeile.spr",
+                          &pr_separator_pixels, &pr_separator));
+    assert(load_spr_asset("../extracted/sprites/bewertung__08.spr",
+                          &pr_rating_pixels, &pr_rating));
+    PersonnelRecordData pr_data = {
+        .employee_name = "Ada",
+        .profession = "Cook",
+        .age = 30,
+        .cooking = personnel.staff[0].skill,
+        .speed = personnel.staff[0].speed,
+        .motivation = personnel.staff[0].motivation,
+        .health = personnel.staff[0].health,
+    };
+    for (int index = 0; index < 8; index++) {
+        pr_data.ratings[index] = &pr_rating;
+    }
+    uint8_t *pr_frame = malloc(800 * 600 * 4);
+    assert(pr_frame != NULL);
+    RenderSurface pr_surface;
+    assert(render_surface_init(&pr_surface, pr_frame, 800 * 600 * 4, 800, 600));
+    assert(screen_render_personnel_record(&pr_surface, &pr_panel, &pr_plan,
+                                           &pr_light, &pr_separator, font_data,
+                                           font_size, &font_info, &pr_data));
+    size_t pr_panel_offset = ((size_t)218 * 800 + 561) * 4;
+    assert(memcmp(pr_frame + pr_panel_offset, pr_panel.pixels, 4) == 0);
+    free(pr_frame);
+    free(pr_panel_pixels);
+    free(pr_plan_pixels);
+    free(pr_light_pixels);
+    free(pr_separator_pixels);
+    free(pr_rating_pixels);
+
 
 
 

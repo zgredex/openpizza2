@@ -822,3 +822,87 @@ bool screen_render_personnel_overview(
     }
     return true;
 }
+
+bool screen_render_personnel_record(
+    RenderSurface *surface, const RgbaSprite *panel,
+    const RgbaSprite *plan_sprite, const RgbaSprite *plan_light,
+    const RgbaSprite *separator, const uint8_t *font_data, size_t font_size,
+    const FntInfo *font, const PersonnelRecordData *data) {
+    if (surface == NULL || font == NULL || data == NULL) {
+        return false;
+    }
+    const uint8_t background[4] = {22, 26, 34, 255};
+    render_clear(surface, background);
+    const int32_t window_x = 561;
+    const int32_t window_y = 218;
+    if (panel != NULL && !render_blit(surface, panel, window_x, window_y)) {
+        return false;
+    }
+    const uint8_t title_color[4] = {120, 20, 20, 255};
+    const uint8_t label_color[4] = {40, 28, 20, 255};
+    const uint8_t value_color[4] = {20, 20, 90, 255};
+    char value_text[64];
+
+    draw_label(surface, font_data, font_size, font, window_x + 44, window_y + 5,
+               "Staff", title_color);
+    if (plan_sprite != NULL) {
+        render_blit(surface, plan_sprite, window_x + 48, window_y + 224);
+    }
+    if (plan_light != NULL) {
+        for (int index = 0; index < 7; index++) {
+            render_blit(surface, plan_light, window_x + 48,
+                        window_y + 234 + index * 10);
+        }
+    }
+    if (data->employee_name != NULL) {
+        draw_label(surface, font_data, font_size, font, window_x + 126,
+                   window_y + 37, data->employee_name, value_color);
+    }
+    if (data->profession != NULL) {
+        draw_label(surface, font_data, font_size, font, window_x + 126,
+                   window_y + 60, data->profession, label_color);
+    }
+    snprintf(value_text, sizeof(value_text), "Age %u", data->age);
+    draw_label(surface, font_data, font_size, font, window_x + 126,
+               window_y + 49, value_text, label_color);
+
+    draw_label(surface, font_data, font_size, font, window_x + 48,
+               window_y + 117, "Cooking", label_color);
+    draw_label(surface, font_data, font_size, font, window_x + 48,
+               window_y + 140, "Speed", label_color);
+    draw_label(surface, font_data, font_size, font, window_x + 48,
+               window_y + 163, "Motivation", label_color);
+    draw_label(surface, font_data, font_size, font, window_x + 48,
+               window_y + 186, "Health", label_color);
+    const int32_t stat_rows[4] = {117, 140, 163, 186};
+    const int32_t stat_values[4] = {data->cooking, data->speed,
+                                    data->motivation, data->health};
+    for (int index = 0; index < 4; index++) {
+        snprintf(value_text, sizeof(value_text), "%d", stat_values[index]);
+        draw_label(surface, font_data, font_size, font, window_x + 100,
+                   window_y + stat_rows[index], value_text, value_color);
+    }
+
+    if (separator != NULL) {
+        render_blit(surface, separator, window_x + 39, window_y + 297);
+    }
+    static const char *const group_names[8] = {
+        "Kids", "Teens", "Students", "Louts",
+        "Yuppies", "Big shots", "Gothics", "Tourist",
+    };
+    static const int32_t group_x[4] = {39, 88, 138, 188};
+    static const int32_t group_y[2] = {304, 340};
+    static const int32_t rating_x[4] = {49, 99, 149, 199};
+    static const int32_t rating_y[2] = {315, 350};
+    for (int group = 0; group < 8; group++) {
+        int column = group % 4;
+        int row = group / 4;
+        draw_label(surface, font_data, font_size, font, window_x + group_x[column],
+                   window_y + group_y[row], group_names[group], label_color);
+        if (data->ratings[group] != NULL) {
+            render_blit(surface, data->ratings[group],
+                        window_x + rating_x[column], window_y + rating_y[row]);
+        }
+    }
+    return true;
+}
