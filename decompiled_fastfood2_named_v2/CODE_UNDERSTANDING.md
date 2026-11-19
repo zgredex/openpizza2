@@ -36,6 +36,12 @@ string/environment helpers). They are named in `symbols.csv` and were renamed
 in REA; for example `0x555605` is `CRT_ControlFP` and decompiles to
 `CRT_ControlWordFromFPFlags` / `CRT_FPFlagsFromControlWord`.
 
+Unicorn checks for the named CRT behavior (`tools/emulate_crt_helpers.py`,
+8/8): control-word mapping round-trip, `strcspn`, `strpbrk`, `strnlen`, and
+32-bit add-with-carry. The executable is mapped at its preferred base and each
+helper is called at its original entry, so these are behavior checks on the
+shipped bytes, not reimplementations.
+
 ## Data-name confidence tiers
 
 `data_symbols.csv` has 3611 entries:

@@ -1118,6 +1118,30 @@ def check_mission_goals_emulation():
                    "goal 2 needs flag 0x16f4; rat action writes slot 1") if ok else output[-1200:],
     }
 
+def check_crt_helpers_emulation():
+    result = subprocess.run(
+        ["python3", "tools/emulate_crt_helpers.py"],
+        cwd=ROOT, text=True, capture_output=True, timeout=180)
+    output = (result.stdout + result.stderr).strip()
+    try:
+        payload = json.loads(result.stdout)
+    except json.JSONDecodeError:
+        return {
+            "name": "CRT helper emulation",
+            "ok": False,
+            "detail": output[-1200:],
+        }
+    ok = (result.returncode == 0
+          and payload.get("case_count") == 8
+          and payload.get("matches") == 8
+          and payload.get("first_mismatch") is None)
+    return {
+        "name": "CRT helper emulation",
+        "ok": ok,
+        "detail": ("8/8 cases: control word mapping, strcspn/strpbrk, "
+                   "strnlen and 32-bit carry") if ok else output[-1200:],
+    }
+
 def check_rust_tests():
     result = subprocess.run(
         ["cargo", "test", "--quiet", "--all"],
@@ -1362,6 +1386,7 @@ def main(argv=None):
     checks.append(check_starting_capital_emulation())
     checks.append(check_clock_command_emulation())
     checks.append(check_mission_goals_emulation())
+    checks.append(check_crt_helpers_emulation())
     checks.append(check_rust_tests())
     checks.append(check_iso())
     checks.append(check_isodaten())
