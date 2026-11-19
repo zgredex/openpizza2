@@ -616,6 +616,18 @@ void game_set_datetime(GameDateTimeState *state, int32_t mode,
                        int32_t hour, int32_t minute, int32_t second,
                        int32_t millisecond, int32_t timezone_offset);
 
+/* Remaining small lookup/initializer helpers. */
+int32_t personnel_get_training_level(const int32_t *table, int32_t index);
+int32_t sparse_map_lookup48(const uint8_t *object, int32_t index);
+int32_t map_find_index(const int32_t *values, int32_t count, int32_t key);
+int32_t map_lookup_linear(const int32_t *keys, const int32_t *values,
+                          int32_t count, int32_t key);
+void options_get_global_settings(const int32_t source[4],
+                                 int32_t destination[4]);
+void file_object_init_base(uint8_t *object, const void *vtable);
+int32_t map_count_buildable_neighbors(const uint8_t *base, int32_t first,
+                                      int32_t second, int32_t offset);
+
 /* Game_GetActiveScreenOrFallback (0x482910). */
 int32_t game_get_active_screen_or_fallback(const uint8_t *game);
 

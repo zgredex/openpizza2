@@ -1879,6 +1879,55 @@ static void test_building_datetime(void) {
     game_set_datetime(NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 }
 
+static void test_lookup_initializers(void) {
+    const int32_t training[4] = {9, 10, 11, 12};
+    assert(personnel_get_training_level(training, 0) == 0);
+    assert(personnel_get_training_level(training, 2) == 12);
+
+    uint8_t sparse[0x200] = {0};
+    write_i32_at(sparse, 4, 7);
+    write_i32_at(sparse, 8, 8);
+    write_i32_at(sparse, 0x58 + 2 * 0x48, 9);
+    assert(sparse_map_lookup48(sparse, -1) == 7);
+    assert(sparse_map_lookup48(sparse, -2) == 8);
+    assert(sparse_map_lookup48(sparse, 2) == 9);
+    assert(sparse_map_lookup48(sparse, 0x9c4) == 0);
+    assert(sparse_map_lookup48(NULL, 0) == 0);
+
+    const int32_t keys[3] = {5, 6, 7};
+    const int32_t values[3] = {50, 60, 70};
+    assert(map_find_index(keys, 3, 6) == 1);
+    assert(map_find_index(keys, 3, 9) == -1);
+    assert(map_lookup_linear(keys, values, 3, 7) == 70);
+    assert(map_lookup_linear(keys, values, 3, 9) == (int32_t)0xffffffff);
+    assert(map_lookup_linear(NULL, values, 3, 7) == (int32_t)0xffffffff);
+
+    const int32_t source[4] = {1, 2, 3, 4};
+    int32_t destination[4] = {0};
+    options_get_global_settings(source, destination);
+    assert(destination[0] == 1 && destination[3] == 4);
+
+    uint8_t file_object[0x60] = {0};
+    int vtable = 0;
+    file_object_init_base(file_object, &vtable);
+    uintptr_t stored;
+    memcpy(&stored, file_object + 0x50, sizeof(stored));
+    assert(stored == (uintptr_t)&vtable);
+    assert(read_i32_at(file_object, 0x14) == 1);
+
+    uint8_t *neighbors = calloc(1, 0x2000);
+    assert(neighbors != NULL);
+    size_t cell_offset = 0x800;
+    assert(map_count_buildable_neighbors(neighbors, 0, 0, (int32_t)cell_offset) == 8);
+    int16_t blocked = 1;
+    memcpy(neighbors + cell_offset + 0x14, &blocked, sizeof(blocked));
+    assert(map_count_buildable_neighbors(neighbors, 0, 0, (int32_t)cell_offset) == 7);
+    blocked = 2;
+    memcpy(neighbors + cell_offset + 0x14, &blocked, sizeof(blocked));
+    assert(map_count_buildable_neighbors(neighbors, 0, 0, (int32_t)cell_offset) == 8);
+    free(neighbors);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -1920,6 +1969,7 @@ int main(void) {
     test_game_setters();
     test_sprite_player_defaults();
     test_building_datetime();
+    test_lookup_initializers();
     puts("leaf function reconstruction: OK");
     return 0;
 }

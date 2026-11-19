@@ -1,6 +1,7 @@
 #include "leaf_functions.h"
 
 #include <stdlib.h>
+#include <stddef.h>
 #include <string.h>
 
 void clamp_0_100(int32_t *value) {
@@ -3023,4 +3024,130 @@ void game_set_datetime(GameDateTimeState *state, int32_t mode,
         state->current_day_of_year = result + 1;
     }
     state->current_year = year;
+}
+
+int32_t personnel_get_training_level(const int32_t *table, int32_t index) {
+    if (index == 0) {
+        return 0;
+    }
+    return table[index] + 1;
+}
+
+int32_t sparse_map_lookup48(const uint8_t *object, int32_t index) {
+    if (object == NULL) {
+        return 0;
+    }
+    if (index == -1) {
+        return read_i32(object + 4);
+    }
+    if (index < 0) {
+        return read_i32(object + 8);
+    }
+    if (index < 0x9c4) {
+        return read_i32(object + 0x58 + (size_t)index * 0x48u);
+    }
+    return 0;
+}
+
+int32_t map_find_index(const int32_t *values, int32_t count, int32_t key) {
+    if (values == NULL) {
+        return -1;
+    }
+    for (int32_t index = 0; index < count; index++) {
+        if (values[index] == key) {
+            return index;
+        }
+    }
+    return -1;
+}
+
+int32_t map_lookup_linear(const int32_t *keys, const int32_t *values,
+                          int32_t count, int32_t key) {
+    if (keys == NULL || values == NULL) {
+        return 0xffffffff;
+    }
+    for (int32_t index = 0; index < count; index++) {
+        if (keys[index] == key) {
+            return values[index];
+        }
+    }
+    return 0xffffffff;
+}
+
+void options_get_global_settings(const int32_t source[4],
+                                 int32_t destination[4]) {
+    if (source == NULL || destination == NULL) {
+        return;
+    }
+    memcpy(destination, source, 4 * sizeof(int32_t));
+}
+
+void file_object_init_base(uint8_t *object, const void *vtable) {
+    if (object == NULL) {
+        return;
+    }
+    uintptr_t value = (uintptr_t)vtable;
+    memcpy(object + 0x50, &value, sizeof(value));
+    write_i32(object + 0x14, 1);
+}
+
+static bool buildable_neighbor_value(const uint8_t *base, ptrdiff_t offset) {
+    int16_t value;
+    memcpy(&value, base + offset, sizeof(value));
+    return value == 0 || value == 2;
+}
+
+int32_t map_count_buildable_neighbors(const uint8_t *base, int32_t first,
+                                      int32_t second, int32_t offset) {
+    if (base == NULL) {
+        return 0;
+    }
+    const uint8_t *cell =
+        base + offset + (ptrdiff_t)(first * 0x50 + second) * 8;
+    int32_t count = 0;
+    if (buildable_neighbor_value(cell, 0x14) &&
+        buildable_neighbor_value(cell, 0x1c) &&
+        buildable_neighbor_value(cell, 0x294) &&
+        buildable_neighbor_value(cell, 0x29c)) {
+        count++;
+    }
+    if (buildable_neighbor_value(cell, -4) &&
+        buildable_neighbor_value(cell, -0xc) &&
+        buildable_neighbor_value(cell, 0x27c) &&
+        buildable_neighbor_value(cell, 0x274)) {
+        count++;
+    }
+    if (buildable_neighbor_value(cell, 0x504) &&
+        buildable_neighbor_value(cell, 0x50c) &&
+        buildable_neighbor_value(cell, 0x784) &&
+        buildable_neighbor_value(cell, 0x78c)) {
+        count++;
+    }
+    if (buildable_neighbor_value(cell, -0x27c) &&
+        buildable_neighbor_value(cell, -0x274) &&
+        buildable_neighbor_value(cell, -0x4fc) &&
+        buildable_neighbor_value(cell, -0x4f4)) {
+        count++;
+    }
+    if (buildable_neighbor_value(cell, -0x26c) &&
+        buildable_neighbor_value(cell, -0x4ec) &&
+        buildable_neighbor_value(cell, -0x264) &&
+        buildable_neighbor_value(cell, -0x4e4)) {
+        count++;
+    }
+    if (buildable_neighbor_value(cell, 0x514) &&
+        buildable_neighbor_value(cell, 0x51c) &&
+        buildable_neighbor_value(cell, 0x794) &&
+        buildable_neighbor_value(cell, 0x79c)) {
+        count++;
+    }
+    if (buildable_neighbor_value(cell, 0x4fc) &&
+        buildable_neighbor_value(cell, 0x774)) {
+        count++;
+    }
+    if (buildable_neighbor_value(cell, -0x284) &&
+        buildable_neighbor_value(cell, -0x50c)) {
+        count++;
+    }
+    return count;
 }
