@@ -280,6 +280,84 @@ static void test_game_leafs(void) {
     assert(game_get_cost_for_type(30, 40, 4) == 0);
 }
 
+static void test_more_leafs(void) {
+    uint8_t clear_buffer[0x154e + 8 * 0x34] = {0};
+    memset(clear_buffer, 0xff, sizeof(clear_buffer));
+    array_clear_stride34(clear_buffer);
+    for (size_t index = 0; index < 8; index++) {
+        size_t offset = 0x154e + index * 0x34u;
+        for (size_t byte = 0; byte < 8; byte++) {
+            assert(clear_buffer[offset + byte] == 0);
+        }
+        assert(clear_buffer[offset + 8] == 0xff);
+    }
+    array_clear_stride34(NULL);
+
+    uint8_t copy_source[0x151c + 0x68 * 4] = {0};
+    int32_t copy_destination[0x68] = {0};
+    for (size_t index = 0; index < 0x68 * 4; index++) {
+        copy_source[0x151c + index] = (uint8_t)(index + 1);
+    }
+    array_copy68(copy_source, copy_destination);
+    assert(copy_destination[0] == (int32_t)0x04030201);
+    assert(copy_destination[0x67] == (int32_t)0xA09F9E9D);
+
+    int32_t ids[3] = {5, 7, 5};
+    int32_t counts[8] = {0};
+    array_search_set(ids, counts, 5);
+    assert(counts[5] == 2);
+    array_search_set(ids, counts, 7);
+    assert(counts[7] == 1);
+    array_search_set(ids, counts, 1);
+    assert(counts[1] == 0);
+    array_set_slot(ids, counts, 5, 99);
+    assert(counts[5] == 99);
+    array_set_slot(ids, counts, 2, 4);
+    assert(counts[2] == 0);
+
+    int32_t company[0x200 / 4] = {0};
+    for (int index = 0; index < 4; index++) {
+        company[(0x120 + index * 4) / 4] = index + 1;
+        company[(0x140 + index * 4) / 4] = index + 2;
+        company[(0x160 + index * 4) / 4] = index + 3;
+        company[(0x180 + index * 4) / 4] = index + 4;
+        company[(0x150 + index * 4) / 4] = index + 5;
+        company[(0x130 + index * 4) / 4] = index + 6;
+        company[(0x170 + index * 4) / 4] = index + 7;
+        company[(0x190 + index * 4) / 4] = index + 8;
+    }
+    company_compute_totals(company);
+    assert(company[0xfc / 4] == 10);
+    assert(company[0x100 / 4] == 14);
+    assert(company[0x104 / 4] == 34);
+    assert(company[0x108 / 4] == 38);
+    assert(company[0x10c / 4] == 18);
+    assert(company[0x110 / 4] == 26);
+    assert(company[0x114 / 4] == 30);
+    assert(company[0x118 / 4] == 22);
+    assert(company[0x11c / 4] == 192);
+
+    EmployeeSkillMultipliers employee = {
+        .field4 = 2000,
+        .field8 = 3000,
+        .field_c = 1000,
+        .field_10 = 4000,
+    };
+    employee_apply_skill_multipliers(&employee, 77, 3, 2, 4, 5);
+    assert(employee.value24 == 77);
+    assert(employee.value28 == 20);
+    assert(employee.value2c == 20);
+    assert(employee.value30 == 90);
+    assert(employee.value34 == 160);
+
+    assert(strcmp(game_get_plan_name(0), "keinen Plan") == 0);
+    assert(strcmp(game_get_plan_name(3), "komplette KI") == 0);
+    assert(strcmp(game_get_plan_name(0xb), "Filialen überprüfen") == 0);
+    assert(strcmp(game_get_plan_name(0x18), "Spieler abwickeln") == 0);
+    assert(strcmp(game_get_plan_name(2), "Unknown Plan") == 0);
+    assert(strcmp(game_get_plan_name(0x19), "Unknown Plan") == 0);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -296,6 +374,7 @@ int main(void) {
     test_array_stride_helpers();
     test_building_leafs();
     test_game_leafs();
+    test_more_leafs();
     puts("leaf function reconstruction: OK");
     return 0;
 }

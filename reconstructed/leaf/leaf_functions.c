@@ -494,3 +494,137 @@ int32_t game_get_cost_for_type(int32_t field4, int32_t field8, int32_t type) {
         return 0;
     }
 }
+
+void array_clear_stride34(uint8_t *base) {
+    if (base == NULL) {
+        return;
+    }
+    for (size_t index = 0; index < 8; index++) {
+        memset(base + 0x154e + index * 0x34u, 0, 8);
+    }
+}
+
+void array_copy68(const uint8_t *base, int32_t *destination) {
+    if (base == NULL || destination == NULL) {
+        return;
+    }
+    memcpy(destination, base + 0x151c, 0x68u * sizeof(int32_t));
+}
+
+void array_search_set(const int32_t ids[3], int32_t *counts, int32_t value) {
+    if (ids == NULL || counts == NULL) {
+        return;
+    }
+    for (size_t index = 0; index < 3; index++) {
+        if (ids[index] == value) {
+            counts[value]++;
+        }
+    }
+}
+
+void array_set_slot(const int32_t ids[3], int32_t *counts, int32_t value,
+                    int32_t slot_value) {
+    if (ids == NULL || counts == NULL) {
+        return;
+    }
+    for (size_t index = 0; index < 3; index++) {
+        if (ids[index] == value) {
+            counts[value] = slot_value;
+        }
+    }
+}
+
+void company_compute_totals(int32_t *company) {
+    if (company == NULL) {
+        return;
+    }
+    company[0xfc / 4] = company[0x12c / 4] + company[0x128 / 4] +
+                        company[0x124 / 4] + company[0x120 / 4];
+    company[0x100 / 4] = company[0x14c / 4] + company[0x148 / 4] +
+                         company[0x144 / 4] + company[0x140 / 4];
+    company[0x104 / 4] = company[0x17c / 4] + company[0x178 / 4] +
+                         company[0x174 / 4] + company[0x170 / 4];
+    company[0x108 / 4] = company[0x19c / 4] + company[0x198 / 4] +
+                         company[0x194 / 4] + company[0x190 / 4];
+    company[0x10c / 4] = company[0x16c / 4] + company[0x168 / 4] +
+                         company[0x164 / 4] + company[0x160 / 4];
+    company[0x110 / 4] = company[0x15c / 4] + company[0x158 / 4] +
+                         company[0x154 / 4] + company[0x150 / 4];
+    company[0x114 / 4] = company[0x13c / 4] + company[0x138 / 4] +
+                         company[0x134 / 4] + company[0x130 / 4];
+    company[0x118 / 4] = company[0x18c / 4] + company[0x188 / 4] +
+                         company[0x184 / 4] + company[0x180 / 4];
+    company[0x11c / 4] = company[0x118 / 4] + company[0xfc / 4] +
+                         company[0x100 / 4] + company[0x104 / 4] +
+                         company[0x108 / 4] + company[0x10c / 4] +
+                         company[0x110 / 4] + company[0x114 / 4];
+}
+
+void employee_apply_skill_multipliers(EmployeeSkillMultipliers *employee,
+                                      int32_t value, int32_t random_c,
+                                      int32_t random_4, int32_t random_8,
+                                      int32_t random_10) {
+    if (employee == NULL) {
+        return;
+    }
+    employee->value24 = value;
+    employee->value28 = ((random_c - 1) * employee->field_c) / 100;
+    employee->value2c = ((random_4 - 1) * employee->field4) / 100;
+    employee->value30 = ((random_8 - 1) * employee->field8) / 100;
+    employee->value34 = ((random_10 - 1) * employee->field_10) / 100;
+}
+
+const char *game_get_plan_name(int32_t plan) {
+    switch (plan) {
+    case 0:
+        return "keinen Plan";
+    case 1:
+        return "schlafen";
+    case 3:
+        return "komplette KI";
+    case 4:
+        return "(Filiale)";
+    case 5:
+        return "neue Filiale kaufen";
+    case 6:
+        return "Filiale optimieren";
+    case 7:
+        return "Personal optimieren";
+    case 8:
+        return "Einrichtung optimieren";
+    case 9:
+        return "Manager";
+    case 10:
+        return "Rezepte verbessern";
+    case 0xb:
+        return "Filialen überprüfen";
+    case 0xc:
+        return "Lager überprüfen";
+    case 0xd:
+        return "Wachen überprüfen";
+    case 0xe:
+        return "Filiale abstoßen";
+    case 0xf:
+        return "Syndikat";
+    case 0x10:
+        return "Ärgern";
+    case 0x11:
+        return "Gangster verwalten";
+    case 0x12:
+        return "Umfeld anpassen";
+    case 0x13:
+        return "Werbung schalten";
+    case 0x14:
+        return "Sicherheit verbessern";
+    case 0x15:
+        return "Bürgermeister schmieren";
+    case 0x16:
+        return "HQ überprüfen";
+    case 0x17:
+        return "Erpressungen überprüfen";
+    case 0x18:
+        return "Spieler abwickeln";
+    default:
+        return "Unknown Plan";
+    }
+}

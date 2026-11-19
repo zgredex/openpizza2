@@ -117,4 +117,41 @@ uint32_t game_get_map_value(const uint8_t *map, uint32_t value);
 /* Game_GetCostForType (0x4D4330). */
 int32_t game_get_cost_for_type(int32_t field4, int32_t field8, int32_t type);
 
+/* Array_ClearStride34 (0x47C590): clears eight bytes at 0x154E+i*0x34. */
+void array_clear_stride34(uint8_t *base);
+
+/* Array_Copy68 (0x47C3C0): copies 0x68 dwords from +0x151C. */
+void array_copy68(const uint8_t *base, int32_t *destination);
+
+/* Array_SearchSet (0x4F5FA0). */
+void array_search_set(const int32_t ids[3], int32_t *counts, int32_t value);
+
+/* Array_SetSlot (0x4F5F70). */
+void array_set_slot(const int32_t ids[3], int32_t *counts, int32_t value,
+                    int32_t slot_value);
+
+/* Company_ComputeTotals (0x4E0010). */
+void company_compute_totals(int32_t *company);
+
+typedef struct EmployeeSkillMultipliers {
+    int32_t field4;
+    int32_t field8;
+    int32_t field_c;
+    int32_t field_10;
+    int32_t value24;
+    int32_t value28;
+    int32_t value2c;
+    int32_t value30;
+    int32_t value34;
+} EmployeeSkillMultipliers;
+
+/* Employee_ApplySkillMultipliers (0x4D3EF0). */
+void employee_apply_skill_multipliers(EmployeeSkillMultipliers *employee,
+                                      int32_t value, int32_t random_c,
+                                      int32_t random_4, int32_t random_8,
+                                      int32_t random_10);
+
+/* Game_GetPlanName (0x501580). */
+const char *game_get_plan_name(int32_t plan);
+
 #endif
