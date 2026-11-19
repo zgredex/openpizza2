@@ -329,20 +329,20 @@ class PizSave:
     def parse_companies(self, limit=None) -> dict:
         """Parse the six company slots.
 
-        The reconstructed container writes CompanyData_Save's 270-byte fixed
-        prefix followed by nine zero nested-list counts (GamePlan, recipe,
-        featured recipe, branch, StatsPeriodReport, Storage, pair and
-        0x1A0-byte lists). Original saves with populated nested lists are
-        reported as unsupported rather than misparsed.
+        Each present slot is CompanyData_Save's 270-byte fixed prefix followed
+        by the company index, GamePlan/recipe/featured counts, the nested
+        Branch_Save list (u32 id + 6412-byte fixed body + variable tail), and
+        the StatsPeriodReport, Storage, pair and 0x1A0-byte counts. Populated
+        lists other than branches are reported as unsupported rather than
+        misparsed.
         """
         start, end = self.directory[3], self.directory[5]
         owner = self._owner("CompanyData_Save")
         rec_size = owner["fixed_bytes"]
-        nested_count = 9
-        nested_size = nested_count * 4
+        branch_size = 6412
         result = {"start": f"0x{start:x}", "end": f"0x{end:x}",
                   "count": 0, "record_size": rec_size,
-                  "nested_size": nested_size,
+                  "branch_record_size": branch_size,
                   "slots": [], "errors": []}
         pos = start
         for slot in range(6):
@@ -356,21 +356,70 @@ class PizSave:
                 continue
             if limit is not None and result["count"] >= limit:
                 break
-            if pos + rec_size + nested_size > end:
+            if pos + rec_size + 16 > end:
                 result["errors"].append(f"slot {slot} company body past region")
                 break
             try:
                 fields, pos = self._decode_sequential(pos, owner)
+                company_index = self._u32(pos)
+                pos += 4
+                plans = self._u32(pos)
+                pos += 4
+                recipes = self._u32(pos)
+                pos += 4
+                featured = self._u32(pos)
+                pos += 4
+                branch_count = self._u32(pos)
+                pos += 4
+                if plans or recipes or featured:
+                    raise ValueError(
+                        f"nested plans/recipes not supported: "
+                        f"{plans},{recipes},{featured}")
+                branches = []
+                for branch_index in range(branch_count):
+                    if pos + 4 + branch_size > end:
+                        raise ValueError(f"branch {branch_index} past region")
+                    branch_id = self._u32(pos)
+                    pos += 4 + branch_size
+                    has_asset = self._u32(pos)
+                    pos += 4
+                    if has_asset:
+                        pos += 4
+                    pos += 4  # removed ID-map entry
+                    stats_reports = self._u32(pos)
+                    pos += 4 + stats_reports * 856
+                    pos += 4  # array index
+                    supplies = self._u32(pos)
+                    pos += 4 + supplies * 8
+                    constructions = self._u32(pos)
+                    pos += 4 + constructions * (4 + 32)
+                    for _ in range(3):
+                        count = self._u32(pos)
+                        pos += 4 + count * 4
+                    count = self._u32(pos)
+                    pos += 4 + count * (4 + 0x20)
+                    count = self._u32(pos)
+                    pos += 4 + count * 0x30
+                    constructions = self._u32(pos)
+                    pos += 4 + constructions * (4 + 32)
+                    if pos > end:
+                        raise ValueError(f"branch {branch_index} past region")
+                    branches.append({"id": branch_id,
+                                     "record_size": branch_size})
+                stats_reports = self._u32(pos)
+                pos += 4
+                storage = self._u32(pos)
+                pos += 4
+                pairs = self._u32(pos)
+                pos += 4
+                big_records = self._u32(pos)
+                pos += 4
+                if stats_reports or storage or pairs or big_records:
+                    raise ValueError(
+                        f"nested company lists not supported: "
+                        f"{stats_reports},{storage},{pairs},{big_records}")
             except ValueError as exc:
                 result["errors"].append(f"slot {slot}: {exc}")
-                break
-            nested = []
-            for index in range(nested_count):
-                nested.append(self._u32(pos))
-                pos += 4
-            if any(value != 0 for value in nested):
-                result["errors"].append(
-                    f"slot {slot} nested company lists not supported: {nested}")
                 break
             name = decode_text(bytes.fromhex(fields["0x8"])).rstrip("\0")
             cash_bits = fields["0x108"]
@@ -381,7 +430,12 @@ class PizSave:
                 "name": name,
                 "company_slot": fields["0x48"],
                 "cash": cash,
-                "nested_counts": nested,
+                "company_index": company_index,
+                "branch_count": branch_count,
+                "branches": branches,
+                "nested_counts": [company_index, plans, recipes, featured,
+                                  branch_count, stats_reports, storage, pairs,
+                                  big_records],
                 "fields": fields,
             })
             result["count"] += 1
@@ -855,13 +909,15 @@ def cmd_companies(args):
         print(json.dumps(data, indent=2))
         return 0
     print(f"companies: count={data['count']} record={data['record_size']} "
-          f"nested={data['nested_size']}")
+          f"branch_record={data['branch_record_size']}")
     for slot in data["slots"]:
         if not slot["present"]:
             print(f"slot {slot['slot']}: present=0")
             continue
+        branch_ids = [b["id"] for b in slot["branches"]]
         print(f"slot {slot['slot']}: present=1 name={slot['name']!r} "
-              f"cash={slot['cash']:.2f} nested={slot['nested_counts']}")
+              f"cash={slot['cash']:.2f} branches={branch_ids} "
+              f"nested={slot['nested_counts']}")
     if data["errors"]:
         print("errors: " + "; ".join(data["errors"]))
     return 0 if not data["errors"] else 2

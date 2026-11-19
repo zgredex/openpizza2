@@ -13,6 +13,8 @@ _Static_assert(offsetof(PizHeader, magic) == 0xec, "magic offset");
 #define PLAYER_BODY_SIZE 132u
 #define COMPANY_BODY_SIZE 270u
 #define COMPANY_NESTED_SIZE 36u
+#define BRANCH_BODY_SIZE 6412u
+#define BRANCH_TAIL_SIZE 48u
 #define AI_BODY_SIZE 554u
 #define MISSION_BODY_SIZE 208u
 #define CAR_SIZE 8u
@@ -75,6 +77,8 @@ static size_t company_region_size(const PizContainer *container) {
         total += 4;
         if (container->companies[slot].present) {
             total += COMPANY_BODY_SIZE + COMPANY_NESTED_SIZE;
+            total += (size_t)container->companies[slot].branch_count *
+                     (4 + BRANCH_BODY_SIZE + BRANCH_TAIL_SIZE);
         }
     }
     return total;
@@ -267,10 +271,34 @@ size_t piz_container_encode(const PizContainer *container, uint8_t *buffer,
         }
         write_company_body(buffer + offset, company);
         offset += COMPANY_BODY_SIZE;
-        for (int nested = 0; nested < 9; nested++) {
-            put_u32(buffer, offset, 0);
-            offset += 4;
+        put_u32(buffer, offset, 0); /* company list index */
+        offset += 4;
+        put_u32(buffer, offset, 0); /* GamePlan count */
+        offset += 4;
+        put_u32(buffer, offset, 0); /* recipe count */
+        offset += 4;
+        put_u32(buffer, offset, 0); /* featured recipe flag */
+        offset += 4;
+        uint32_t branch_count = company->branch_count;
+        if (branch_count > PIZ_MAX_BRANCHES_PER_COMPANY) {
+            return 0;
         }
+        put_u32(buffer, offset, branch_count);
+        offset += 4;
+        for (uint32_t branch = 0; branch < branch_count; branch++) {
+            put_u32(buffer, offset, company->branches[branch].id);
+            offset += 4;
+            memset(buffer + offset, 0, BRANCH_BODY_SIZE + BRANCH_TAIL_SIZE);
+            offset += BRANCH_BODY_SIZE + BRANCH_TAIL_SIZE;
+        }
+        put_u32(buffer, offset, 0); /* StatsPeriodReport count */
+        offset += 4;
+        put_u32(buffer, offset, 0); /* Storage count */
+        offset += 4;
+        put_u32(buffer, offset, 0); /* pair-list count */
+        offset += 4;
+        put_u32(buffer, offset, 0); /* 0x1A0-record count */
+        offset += 4;
     }
     size_t tail_start = offset;
     offset += 2160;
@@ -486,13 +514,34 @@ bool piz_container_decode(PizContainer *container, const uint8_t *buffer,
         company->slot = get_u32(buffer, offset + 64);
         memcpy(&company->cash, buffer + offset + 86, 8);
         offset += COMPANY_BODY_SIZE;
-        for (int nested = 0; nested < 9; nested++) {
+        if (get_u32(buffer, offset) != 0) { /* company list index */
+            return false;
+        }
+        offset += 4;
+        if (get_u32(buffer, offset) != 0 || get_u32(buffer, offset + 4) != 0 ||
+            get_u32(buffer, offset + 8) != 0) {
+            return false;
+        }
+        offset += 12; /* plan, recipe, featured */
+        uint32_t branch_count = get_u32(buffer, offset);
+        offset += 4;
+        if (branch_count > PIZ_MAX_BRANCHES_PER_COMPANY) {
+            return false;
+        }
+        company->branch_count = branch_count;
+        for (uint32_t branch = 0; branch < branch_count; branch++) {
+            if (offset + 4 + BRANCH_BODY_SIZE + BRANCH_TAIL_SIZE > length) {
+                return false;
+            }
+            company->branches[branch].id = get_u32(buffer, offset);
+            offset += 4 + BRANCH_BODY_SIZE + BRANCH_TAIL_SIZE;
+        }
+        for (int nested = 0; nested < 4; nested++) {
             if (get_u32(buffer, offset) != 0) {
                 return false;
             }
             offset += 4;
         }
-        company->branches = 0;
         company->share_x100 = 0;
     }
 

@@ -25,6 +25,7 @@
 #define PIZ_MAX_CARS 4
 #define PIZ_MAX_PLAYERS 6
 #define PIZ_MAX_COMPANIES 6
+#define PIZ_MAX_BRANCHES_PER_COMPANY 4
 #define PIZ_MAX_CONTAINER_SIZE 0x30000u
 
 #pragma pack(push, 1)
@@ -79,12 +80,17 @@ typedef struct PizPlayer {
     double cash;
 } PizPlayer;
 
+typedef struct PizBranchRecord {
+    uint32_t id;
+} PizBranchRecord;
+
 typedef struct PizCompany {
     uint32_t present;
     uint32_t slot;
     char name[32];
     double cash;
-    uint32_t branches;
+    uint32_t branch_count;
+    PizBranchRecord branches[PIZ_MAX_BRANCHES_PER_COMPANY];
     uint32_t share_x100;
 } PizCompany;
 

@@ -39,12 +39,16 @@ def main() -> int:
         "player_slot0_present": players["slots"][0]["present"] if players["slots"] else 0,
         "company_count": companies["count"],
         "company_record_size": companies["record_size"],
-        "company_nested_size": companies["nested_size"],
+        "company_branch_record_size": companies["branch_record_size"],
         "company_errors": companies["errors"],
         "company_slot0_name": (companies["slots"][0].get("name")
                                if companies["slots"] else None),
         "company_slot0_cash": (companies["slots"][0].get("cash")
                                if companies["slots"] else None),
+        "company_slot0_branch_count": (companies["slots"][0].get("branch_count")
+                                       if companies["slots"] else None),
+        "company_slot0_branches": (companies["slots"][0].get("branches")
+                                   if companies["slots"] else None),
     }
     ok = (not characters["errors"] and not players["errors"]
           and not companies["errors"]
@@ -52,7 +56,10 @@ def main() -> int:
           and result["player_slot0_present"] == 1
           and companies["count"] == 1 and companies["record_size"] == 270
           and result["company_slot0_name"] == "Ada Pizza"
-          and result["company_slot0_cash"] == 494270.0)
+          and result["company_slot0_cash"] == 494270.0
+          and result["company_slot0_branch_count"] == 1
+          and result["company_slot0_branches"] == [
+              {"id": 13694, "record_size": 6412}])
     result["ok"] = ok
     print(json.dumps(result, separators=(",", ":")))
     return 0 if ok else 1

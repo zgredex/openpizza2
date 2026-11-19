@@ -1256,15 +1256,18 @@ def check_piz_records():
           and not payload.get("company_errors")
           and payload.get("company_count") == 1
           and payload.get("company_record_size") == 270
-          and payload.get("company_nested_size") == 36
+          and payload.get("company_branch_record_size") == 6412
           and payload.get("company_slot0_name") == "Ada Pizza"
-          and payload.get("company_slot0_cash") == 494270.0)
+          and payload.get("company_slot0_cash") == 494270.0
+          and payload.get("company_slot0_branch_count") == 1
+          and payload.get("company_slot0_branches") == [
+              {"id": 13694, "record_size": 6412}])
     return {
         "name": "piz record parse",
         "ok": ok,
         "detail": ("piz_payload.py accepts 1 character (2086-byte record), "
-                   "6 player slots and 1 company (270-byte prefix + 36-byte "
-                   "nested counts) with no errors") if ok else output[-1200:],
+                   "6 player slots and 1 company with 1 nested branch "
+                   "(6412-byte Branch_Save body) with no errors") if ok else output[-1200:],
     }
 
 def check_rust_tests():
