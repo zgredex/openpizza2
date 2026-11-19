@@ -578,6 +578,53 @@ int main(void) {
     personnel_set_branch(&personnel, 2, 13694);
     assert(personnel_find(&personnel, 2)->branch_id == 13694);
 
+    uint8_t *bd_panel_pixels = NULL;
+    uint8_t *bd_separator_pixels = NULL;
+    uint8_t *bd_logo_pixels = NULL;
+    uint8_t *bd_rating_pixels = NULL;
+    RgbaSprite bd_panel;
+    RgbaSprite bd_separator;
+    RgbaSprite bd_logo;
+    RgbaSprite bd_rating;
+    assert(load_spr_asset("../extracted/sprites/submenue.spr", &bd_panel_pixels,
+                          &bd_panel));
+    assert(load_spr_asset("../extracted/sprites/trennzeile.spr",
+                          &bd_separator_pixels, &bd_separator));
+    assert(load_spr_asset("../extracted/sprites/logorahmen_00.spr",
+                          &bd_logo_pixels, &bd_logo));
+    assert(load_spr_asset("../extracted/sprites/bewertung__08.spr",
+                          &bd_rating_pixels, &bd_rating));
+    const BranchDetailsData bd_data = {
+        .branch_name = "London branch",
+        .employee_name = "Ada",
+        .employee_role = "Cook",
+        .owner_name = "Ada Pizza",
+        .tile_index = city.branches[0].tile_index,
+        .age = 30,
+        .cooking = personnel.staff[0].skill,
+        .speed = personnel.staff[0].speed,
+        .motivation = personnel.staff[0].motivation,
+        .health = personnel.staff[0].health,
+        .performance = personnel_average_skill(&personnel),
+        .salary = (uint32_t)personnel.staff[0].wage,
+        .selected_button = 0,
+    };
+    uint8_t *bd_frame = malloc(800 * 600 * 4);
+    assert(bd_frame != NULL);
+    RenderSurface bd_surface;
+    assert(render_surface_init(&bd_surface, bd_frame, 800 * 600 * 4, 800, 600));
+    assert(screen_render_branch_details(&bd_surface, &bd_panel, &bd_separator,
+                                        &bd_logo, &bd_rating, font_data,
+                                        font_size, &font_info, &bd_data));
+    size_t bd_panel_offset = ((size_t)218 * 800 + 561) * 4;
+    assert(memcmp(bd_frame + bd_panel_offset, bd_panel.pixels, 4) == 0);
+    free(bd_frame);
+    free(bd_panel_pixels);
+    free(bd_separator_pixels);
+    free(bd_logo_pixels);
+    free(bd_rating_pixels);
+
+
     PizContainer piz;
     piz_container_init(&piz, "My Save", "Ada Pizza", "London");
     piz.save = save;

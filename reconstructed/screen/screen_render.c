@@ -551,3 +551,110 @@ bool screen_render_branch_list(RenderSurface *surface, const RgbaSprite *panel,
                window_y + 303, "Persons in area of influence", label_color);
     return true;
 }
+
+bool screen_render_branch_details(RenderSurface *surface, const RgbaSprite *panel,
+                                  const RgbaSprite *separator,
+                                  const RgbaSprite *logo_frame,
+                                  const RgbaSprite *rating_sprite,
+                                  const uint8_t *font_data, size_t font_size,
+                                  const FntInfo *font,
+                                  const BranchDetailsData *data) {
+    if (surface == NULL || font == NULL || data == NULL) {
+        return false;
+    }
+    const uint8_t background[4] = {22, 26, 34, 255};
+    render_clear(surface, background);
+    const int32_t window_x = 561;
+    const int32_t window_y = 218;
+    if (panel != NULL && !render_blit(surface, panel, window_x, window_y)) {
+        return false;
+    }
+    const uint8_t title_color[4] = {120, 20, 20, 255};
+    const uint8_t label_color[4] = {40, 28, 20, 255};
+    const uint8_t value_color[4] = {20, 20, 90, 255};
+    char value_text[64];
+
+    draw_label(surface, font_data, font_size, font, window_x + 44, window_y + 5,
+               "Other staff", title_color);
+    if (data->branch_name != NULL) {
+        draw_label(surface, font_data, font_size, font, window_x + 44,
+                   window_y + 24, data->branch_name, value_color);
+    }
+    draw_label(surface, font_data, font_size, font, window_x + 48,
+               window_y + 117, "Cooking", label_color);
+    draw_label(surface, font_data, font_size, font, window_x + 48,
+               window_y + 140, "Speed", label_color);
+    draw_label(surface, font_data, font_size, font, window_x + 48,
+               window_y + 163, "Motivation", label_color);
+    draw_label(surface, font_data, font_size, font, window_x + 48,
+               window_y + 186, "Health", label_color);
+    const int32_t stat_rows[4] = {117, 140, 163, 186};
+    const int32_t stat_values[4] = {data->cooking, data->speed,
+                                    data->motivation, data->health};
+    for (int index = 0; index < 4; index++) {
+        snprintf(value_text, sizeof(value_text), "%d", stat_values[index]);
+        draw_label(surface, font_data, font_size, font, window_x + 100,
+                   window_y + stat_rows[index], value_text, value_color);
+    }
+
+    static const char *const button_labels[5] = {
+        "Headhunt", "Bribe", "Bribe", "Bribe", "Edit",
+    };
+    static const int32_t button_y[5] = {98, 123, 146, 169, 192};
+    const uint8_t button_idle[4] = {180, 170, 150, 220};
+    const uint8_t button_active[4] = {255, 215, 110, 235};
+    for (int index = 0; index < 5; index++) {
+        blend_rect(surface, window_x + 142, window_y + button_y[index], 84, 20,
+                   index == data->selected_button ? button_active : button_idle);
+        draw_label(surface, font_data, font_size, font, window_x + 150,
+                   window_y + button_y[index] + 2, button_labels[index],
+                   label_color);
+    }
+
+    if (data->employee_name != NULL) {
+        draw_label(surface, font_data, font_size, font, window_x + 126,
+                   window_y + 37, data->employee_name, value_color);
+    }
+    if (data->employee_role != NULL) {
+        draw_label(surface, font_data, font_size, font, window_x + 126,
+                   window_y + 60, data->employee_role, label_color);
+    }
+    snprintf(value_text, sizeof(value_text), "%u", data->age);
+    draw_label(surface, font_data, font_size, font, window_x + 183,
+               window_y + 49, value_text, value_color);
+    draw_label(surface, font_data, font_size, font, window_x + 126,
+               window_y + 49, "Age", label_color);
+    draw_label(surface, font_data, font_size, font, window_x + 126,
+               window_y + 71, "Performance", label_color);
+    snprintf(value_text, sizeof(value_text), "%d%%", data->performance);
+    draw_label(surface, font_data, font_size, font, window_x + 183,
+               window_y + 71, value_text, value_color);
+    draw_label(surface, font_data, font_size, font, window_x + 126,
+               window_y + 83, "Salary", label_color);
+    snprintf(value_text, sizeof(value_text), "%u", data->salary);
+    draw_label(surface, font_data, font_size, font, window_x + 169,
+               window_y + 83, value_text, value_color);
+
+    if (separator != NULL) {
+        render_blit(surface, separator, window_x + 39, window_y + 242);
+        render_blit(surface, separator, window_x + 39, window_y + 297);
+    }
+    draw_label(surface, font_data, font_size, font, window_x + 45,
+               window_y + 253, "Owners", label_color);
+    if (data->owner_name != NULL) {
+        draw_label(surface, font_data, font_size, font, window_x + 45,
+                   window_y + 278, data->owner_name, value_color);
+    }
+    if (logo_frame != NULL) {
+        render_blit(surface, logo_frame, window_x + 181, window_y + 260);
+    }
+    if (rating_sprite != NULL) {
+        render_blit(surface, rating_sprite, window_x + 199, window_y + 315);
+        render_blit(surface, rating_sprite, window_x + 99, window_y + 315);
+        render_blit(surface, rating_sprite, window_x + 49, window_y + 350);
+    }
+    snprintf(value_text, sizeof(value_text), "Branch %u", data->tile_index);
+    draw_label(surface, font_data, font_size, font, window_x + 45,
+               window_y + 358, value_text, label_color);
+    return true;
+}

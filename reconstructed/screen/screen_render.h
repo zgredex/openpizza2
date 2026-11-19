@@ -52,6 +52,32 @@ bool screen_render_statistics(RenderSurface *surface, const uint8_t *tga_data,
                               const char *date, uint8_t *decode_buffer,
                               size_t decode_capacity);
 
+typedef struct BranchDetailsData {
+    const char *branch_name;
+    const char *employee_name;
+    const char *employee_role;
+    const char *owner_name;
+    uint32_t tile_index;
+    uint32_t age;
+    int32_t cooking;
+    int32_t speed;
+    int32_t motivation;
+    int32_t health;
+    int32_t performance;
+    uint32_t salary;
+    int selected_button; /* 0..4 headhunt/bribe/edit, -1 none */
+} BranchDetailsData;
+
+/* Composes Screen_BranchDetails (0x451DD0): SUBMENUE window, separators,
+ * LOGORAHMEN frame, BEWERTUNG rating sprite, staff rows and action buttons. */
+bool screen_render_branch_details(RenderSurface *surface, const RgbaSprite *panel,
+                                  const RgbaSprite *separator,
+                                  const RgbaSprite *logo_frame,
+                                  const RgbaSprite *rating_sprite,
+                                  const uint8_t *font_data, size_t font_size,
+                                  const FntInfo *font,
+                                  const BranchDetailsData *data);
+
 typedef struct BranchListEntry {
     uint32_t tile_index;
     uint32_t rent;
