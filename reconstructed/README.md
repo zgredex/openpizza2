@@ -71,6 +71,9 @@ Current batches:
   percent modifiers, building level/area/sprite-variant mapping, direction
   mapping, calendar interpolation, array counters/search/pair access,
   8-byte-record binary search, game stat counters and trivial pointer clears.
+- `freeplay/` — six 0xC0-byte player setup profiles at 0x57BCD8 with static
+  asserts for the recovered offsets, the default multiplier/active writes and
+  the `(multiplier * capital) / 100` starting-cash formula.
 - `rating/` — `Branch_GetCustomerGroupRating` composition, city adjustment,
   `Stats_GetAverage8`/`Branch_GetMenuRating`, the baseline branch-score table
   rule and `Game_GetMarketBonusFactor`.

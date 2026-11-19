@@ -1133,6 +1133,21 @@ def check_london_ownership_evidence():
         "detail": output[-1200:],
     }
 
+def check_freeplay_cash_multiplier_evidence():
+    result = subprocess.run(
+        ["python3", "tools/verify_freeplay_cash_multiplier.py"],
+        cwd=ROOT, text=True, capture_output=True, timeout=180)
+    output = (result.stdout + result.stderr).strip()
+    ok = (result.returncode == 0
+          and "3 multiplier sites" in output
+          and "15 profile sites" in output
+          and "fixture 9/9" in output)
+    return {
+        "name": "free-play multiplier evidence",
+        "ok": ok,
+        "detail": output[-1200:],
+    }
+
 def check_crt_helpers_emulation():
     result = subprocess.run(
         ["python3", "tools/emulate_crt_helpers.py"],
@@ -1244,6 +1259,7 @@ def check_reconstructed_c():
                    "target compile with gcc -std=c11 -Werror and pass; piz "
                    "container, options/autosave, statistics, AI, recipes, "
                    "personnel, render, operations, leaf functions, "
+                   "free-play profiles, "
                    "SPR/FNT/ANI assets and UI "
                    "composition, exact main menu, exact character-select, exact London "
                    "briefing, exact 157-control free-play setup, statistics view, exact branch-"
@@ -1577,6 +1593,7 @@ def main(argv=None):
     checks.append(check_clock_command_emulation())
     checks.append(check_mission_goals_emulation())
     checks.append(check_london_ownership_evidence())
+    checks.append(check_freeplay_cash_multiplier_evidence())
     checks.append(check_crt_helpers_emulation())
     checks.append(check_settings_defaults_emulation())
     checks.append(check_ingredient_desc_emulation())
