@@ -1664,6 +1664,72 @@ static void test_misc_getters(void) {
     assert(stream_get_status(0, 1, 0) == 0);
 }
 
+static int32_t leaf_stream_value;
+static int32_t test_stream_read(void *context) {
+    (void)context;
+    return ++leaf_stream_value;
+}
+
+static int leaf_release_count;
+static void test_stream_release(void *context) {
+    (void)context;
+    leaf_release_count++;
+}
+
+static int leaf_init_count;
+static int32_t leaf_init_size;
+static void test_object_init(void *context, int32_t size, int32_t arg2,
+                             int32_t arg3) {
+    (void)context;
+    (void)arg2;
+    (void)arg3;
+    leaf_init_count++;
+    leaf_init_size = size;
+}
+
+static void test_stream_object_init(void) {
+    StreamCharState stream = {0};
+    uint8_t bytes[4] = {'a', 'b', 'c', 0};
+    stream.current = (uintptr_t)bytes;
+    stream.end = (uintptr_t)bytes + 2;
+    assert(stream_get_char(&stream, test_stream_read, NULL) == 'b');
+    stream.current += 1;
+    assert(stream_get_char(&stream, test_stream_read, NULL) == 2);
+
+    StreamCharState peek_stream = {0};
+    peek_stream.flags = 1;
+    peek_stream.peek = -1;
+    leaf_stream_value = 0;
+    assert(stream_get_char(&peek_stream, test_stream_read, NULL) == 2);
+    assert(peek_stream.peek == 2);
+    assert(stream_get_char(&peek_stream, test_stream_read, NULL) == 3);
+    assert(stream_get_char(NULL, test_stream_read, NULL) == -1);
+
+    uint8_t old_buffer[4] = {0};
+    uint8_t new_buffer[4] = {0};
+    StreamBufferState buffer = {0};
+    buffer.buffer = old_buffer;
+    buffer.release_enabled = 1;
+    leaf_release_count = 0;
+    stream_set_buffer(&buffer, new_buffer, test_stream_release, NULL);
+    assert(leaf_release_count == 1);
+    assert(buffer.buffer == new_buffer);
+    assert((buffer.flags & 4) == 0);
+    stream_set_buffer(&buffer, NULL, test_stream_release, NULL);
+    assert(buffer.buffer == NULL);
+    assert((buffer.flags & 4) != 0);
+
+    ObjectInitState init = {0};
+    init.initialize = test_object_init;
+    leaf_init_count = 0;
+    object_ensure_init(&init);
+    assert(init.initialized == 1);
+    assert(leaf_init_count == 1);
+    assert(leaf_init_size == 0x34);
+    object_ensure_init(&init);
+    assert(leaf_init_count == 1);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -1701,6 +1767,7 @@ int main(void) {
     test_remaining_setters();
     test_surface_sprite_stream();
     test_misc_getters();
+    test_stream_object_init();
     puts("leaf function reconstruction: OK");
     return 0;
 }

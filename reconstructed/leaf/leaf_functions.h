@@ -526,6 +526,37 @@ bool surface_is_ready(int32_t query_result);
 int32_t stream_get_status(int32_t flags, int32_t field10,
                           int32_t status_result);
 
+typedef struct StreamCharState {
+    int32_t flags;
+    int32_t peek;
+    uintptr_t current;
+    uintptr_t end;
+} StreamCharState;
+
+/* Stream_GetChar (0x54D372): callback-backed stream read. */
+int32_t stream_get_char(StreamCharState *state,
+                        int32_t (*read)(void *context), void *context);
+
+typedef struct StreamBufferState {
+    uint8_t *buffer;
+    uint32_t flags;
+    int32_t release_enabled;
+} StreamBufferState;
+
+/* Stream_SetBuffer (0x54D921). */
+void stream_set_buffer(StreamBufferState *state, uint8_t *buffer,
+                       void (*release)(void *context), void *context);
+
+typedef struct ObjectInitState {
+    int32_t initialized;
+    void (*initialize)(void *context, int32_t size, int32_t arg2,
+                       int32_t arg3);
+    void *context;
+} ObjectInitState;
+
+/* Object_EnsureInit (0x520CD0). */
+void object_ensure_init(ObjectInitState *state);
+
 /* Game_GetActiveScreenOrFallback (0x482910). */
 int32_t game_get_active_screen_or_fallback(const uint8_t *game);
 

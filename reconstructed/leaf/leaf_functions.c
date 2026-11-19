@@ -2782,3 +2782,53 @@ int32_t stream_get_status(int32_t flags, int32_t field10,
     }
     return 0;
 }
+
+int32_t stream_get_char(StreamCharState *state,
+                        int32_t (*read)(void *context), void *context) {
+    if (state == NULL || read == NULL) {
+        return -1;
+    }
+    if (state->flags != 0) {
+        if (state->peek == -1) {
+            (void)read(context);
+        }
+        int32_t value = read(context);
+        state->peek = value;
+        return value;
+    }
+    if (state->end == 0 || state->end <= state->current) {
+        (void)read(context);
+    }
+    state->current++;
+    if (state->current < state->end) {
+        return ((const uint8_t *)state->current)[0];
+    }
+    return read(context);
+}
+
+void stream_set_buffer(StreamBufferState *state, uint8_t *buffer,
+                       void (*release)(void *context), void *context) {
+    if (state == NULL) {
+        return;
+    }
+    if (state->release_enabled != 0 && state->buffer != NULL &&
+        release != NULL) {
+        release(context);
+    }
+    state->buffer = buffer;
+    if (buffer == NULL) {
+        state->flags |= 4;
+    } else {
+        state->flags &= ~4u;
+    }
+}
+
+void object_ensure_init(ObjectInitState *state) {
+    if (state == NULL || state->initialized != 0) {
+        return;
+    }
+    state->initialized = 1;
+    if (state->initialize != NULL) {
+        state->initialize(state->context, 0x34, 0, 0);
+    }
+}
