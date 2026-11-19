@@ -1371,3 +1371,51 @@ bool screen_render_options_page(RenderSurface *surface,
                label_color);
     return true;
 }
+
+bool screen_render_load_save_page(RenderSurface *surface,
+                                  const RgbaSprite *background,
+                                  const RgbaSprite *row_plate,
+                                  const RgbaSprite *scrollbar,
+                                  const uint8_t *font_data, size_t font_size,
+                                  const FntInfo *font,
+                                  const LoadSavePageData *data) {
+    if (surface == NULL || background == NULL || font == NULL || data == NULL) {
+        return false;
+    }
+    const uint8_t background_color[4] = {22, 26, 34, 255};
+    render_clear(surface, background_color);
+    if (!render_blit(surface, background, 0, 0)) {
+        return false;
+    }
+    const uint8_t title_color[4] = {120, 20, 20, 255};
+    const uint8_t label_color[4] = {40, 28, 20, 255};
+    draw_label(surface, font_data, font_size, font, 605, 224, "Load/Savegame",
+               title_color);
+    draw_label(surface, font_data, font_size, font, 612, 258, "Select Savegame",
+               label_color);
+
+    static const int32_t row_y[LOAD_SAVE_ROW_COUNT] = {
+        275, 296, 317, 338, 359, 380, 401, 422,
+        443, 464, 485, 506, 527,
+    };
+    for (int index = 0; index < LOAD_SAVE_ROW_COUNT; index++) {
+        if (row_plate != NULL) {
+            render_blit(surface, row_plate, 613, row_y[index]);
+        }
+        if (index == data->selected) {
+            blend_rect(surface, 613, row_y[index], 160, 21,
+                       (const uint8_t[4]){255, 225, 120, 150});
+        }
+        const char *name = index < (int)data->count && data->names[index] != NULL
+                               ? data->names[index]
+                               : "Blablablablabla";
+        draw_label(surface, font_data, font_size, font, 618, row_y[index] + 2,
+                   name, label_color);
+    }
+    if (scrollbar != NULL) {
+        for (int32_t tile = 0; tile < 270; tile += scrollbar->height) {
+            render_blit(surface, scrollbar, 783, 281 + tile);
+        }
+    }
+    return true;
+}

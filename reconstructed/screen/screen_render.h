@@ -69,6 +69,24 @@ bool screen_render_game_sidebar(RenderSurface *surface,
                                 const RgbaSprite *buttons,
                                 int selected);
 
+#define LOAD_SAVE_ROW_COUNT 13
+
+typedef struct LoadSavePageData {
+    const char *names[LOAD_SAVE_ROW_COUNT];
+    size_t count;
+    int selected;
+} LoadSavePageData;
+
+/* Composes Screen_SubStartMenu_A (0x4750B0): PE_SUB_STARTSCREEN background,
+ * 13 save-row plates, names and the vertical scrollbar. */
+bool screen_render_load_save_page(RenderSurface *surface,
+                                  const RgbaSprite *background,
+                                  const RgbaSprite *row_plate,
+                                  const RgbaSprite *scrollbar,
+                                  const uint8_t *font_data, size_t font_size,
+                                  const FntInfo *font,
+                                  const LoadSavePageData *data);
+
 typedef struct OptionsPageData {
     int32_t general_volume;
     int32_t music;

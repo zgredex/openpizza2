@@ -1215,6 +1215,38 @@ int main(void) {
     free(op_separator_pixels);
     free(op_marker_pixels);
 
+    uint8_t *ls_background_pixels = NULL;
+    uint8_t *ls_row_pixels = NULL;
+    uint8_t *ls_scroll_pixels = NULL;
+    RgbaSprite ls_background;
+    RgbaSprite ls_row_plate;
+    RgbaSprite ls_scrollbar;
+    assert(load_spr_asset("../extracted/sprites/pe_sub_startscreen.spr",
+                          &ls_background_pixels, &ls_background));
+    assert(load_spr_asset("../extracted/sprites/tabpb01__00.spr",
+                          &ls_row_pixels, &ls_row_plate));
+    assert(load_spr_asset("../extracted/sprites/sl01_00.spr",
+                          &ls_scroll_pixels, &ls_scrollbar));
+    LoadSavePageData ls_data = {
+        .count = 3,
+        .selected = 0,
+    };
+    ls_data.names[0] = "London 1999";
+    ls_data.names[1] = "London 2000";
+    ls_data.names[2] = "Autosave";
+    uint8_t *ls_frame = malloc(800 * 600 * 4);
+    assert(ls_frame != NULL);
+    RenderSurface ls_surface;
+    assert(render_surface_init(&ls_surface, ls_frame, 800 * 600 * 4, 800, 600));
+    assert(screen_render_load_save_page(&ls_surface, &ls_background,
+                                        &ls_row_plate, &ls_scrollbar, font_data,
+                                        font_size, &font_info, &ls_data));
+    free(ls_frame);
+    free(ls_background_pixels);
+    free(ls_row_pixels);
+    free(ls_scroll_pixels);
+
+
 
 
 

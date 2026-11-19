@@ -1117,6 +1117,84 @@ static void test_options_page_composition(void) {
     free(marker_pixels);
 }
 
+static void test_load_save_page_composition(void) {
+    uint8_t *background_pixels = NULL;
+    uint8_t *row_pixels = NULL;
+    uint8_t *scroll_pixels = NULL;
+    RgbaSprite background;
+    RgbaSprite row_plate;
+    RgbaSprite scrollbar;
+    assert(load_spr("../extracted/sprites/pe_sub_startscreen.spr",
+                    &background_pixels, &background));
+    assert(load_spr("../extracted/sprites/tabpb01__00.spr", &row_pixels,
+                    &row_plate));
+    assert(load_spr("../extracted/sprites/sl01_00.spr", &scroll_pixels,
+                    &scrollbar));
+
+    size_t font_size = 0;
+    uint8_t *font_data = load_file("../extracted/fonts/timesfont.fnt", &font_size);
+    assert(font_data != NULL);
+    FntInfo font;
+    assert(fnt_read_info(font_data, font_size, &font));
+    LoadSavePageData data = {
+        .count = 3,
+        .selected = 0,
+    };
+    data.names[0] = "London 1999";
+    data.names[1] = "London 2000";
+    data.names[2] = "Autosave";
+    size_t frame_size = 800 * 600 * 4;
+    uint8_t *frame = malloc(frame_size);
+    assert(frame != NULL);
+    RenderSurface surface;
+    assert(render_surface_init(&surface, frame, frame_size, 800, 600));
+    assert(screen_render_load_save_page(&surface, &background, &row_plate,
+                                        &scrollbar, font_data, font_size, &font,
+                                        &data));
+    bool background_ink = false;
+    for (int y = 0; y < 600; y++) {
+        for (int x = 0; x < 800; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] != 22 || frame[offset + 1] != 26 ||
+                frame[offset + 2] != 34) {
+                background_ink = true;
+            }
+        }
+    }
+    assert(background_ink);
+    bool title_ink = false;
+    for (int y = 220; y < 245; y++) {
+        for (int x = 600; x < 780; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] < 180 && frame[offset + 1] < 120) {
+                title_ink = true;
+            }
+        }
+    }
+    assert(title_ink);
+    bool row_ink = false;
+    for (size_t index = 0; index + 3 < (size_t)row_plate.width * row_plate.height * 4;
+         index += 4) {
+        if (row_plate.pixels[index + 3] == 255) {
+            size_t px = (index / 4) % row_plate.width;
+            size_t py = (index / 4) / row_plate.width;
+            size_t target = ((size_t)(296 + (int)py) * 800 + (613 + (int)px)) * 4;
+            assert(memcmp(frame + target, row_plate.pixels + index, 4) == 0);
+            row_ink = true;
+            break;
+        }
+    }
+    assert(row_ink);
+    assert(!screen_render_load_save_page(&surface, &background, &row_plate,
+                                         &scrollbar, font_data, font_size,
+                                         &font, NULL));
+    free(font_data);
+    free(frame);
+    free(background_pixels);
+    free(row_pixels);
+    free(scroll_pixels);
+}
+
 static void test_statistics_composition(void) {
     size_t tga_size = 0;
     size_t font_size = 0;
@@ -1368,6 +1446,7 @@ int main(void) {
     test_statistics_balance_composition();
     test_statistics_branch_balance_composition();
     test_options_page_composition();
+    test_load_save_page_composition();
     test_mission_goals_composition();
     test_recipe_info_panel_composition();
     test_options_sidebar_composition();
