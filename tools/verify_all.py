@@ -815,6 +815,57 @@ def check_free_play_chain():
                    "missing map rejected") if ok else output[-1800:],
     }
 
+def check_two_party_queue():
+    output_png = "/tmp/opencode/pc2-two-party.png"
+    result = subprocess.run(
+        ["cargo", "run", "--quiet", "-p", "pc2-app", "--",
+         "--map", "game/Isokarten/Iso_Filiale_einf_klein.iso",
+         "--replay", "open;step;party;step;step;step;step;step;step;step",
+         "--output", output_png],
+        cwd=ROOT, text=True, capture_output=True, timeout=300)
+    output = result.stdout + result.stderr
+    sims = []
+    queues = []
+    for line in result.stdout.splitlines():
+        if line.startswith("sim: "):
+            try:
+                sims.append(json.loads(line[5:]))
+            except json.JSONDecodeError:
+                pass
+        elif line.startswith("queue: "):
+            try:
+                queues.append(json.loads(line[6:]))
+            except json.JSONDecodeError:
+                pass
+    ok = result.returncode == 0 and len(sims) == len(queues) == 10
+    if ok:
+        first_sale = next((i for i, sim in enumerate(sims)
+                           if sim.get("sales") == 1), None)
+        second_sale = next((i for i, sim in enumerate(sims)
+                            if sim.get("sales") == 2), None)
+        ok = (first_sale is not None and second_sale is not None
+              and sims[first_sale]["clock_minutes"] == 670
+              and queues[first_sale]["queue"] == 2
+              and queues[first_sale]["visit_state"] == "departing"
+              and [c["phase"] for c in queues[first_sale]["customers"]]
+                  == ["departing", "queued"]
+              and queues[first_sale]["customers"][1]["slot"] is None
+              and sims[second_sale]["clock_minutes"] == 685
+              and sims[second_sale]["sales"] == 2
+              and abs(sims[second_sale]["cash"] - 10026.841049) < 1e-6
+              and sims[second_sale]["stock"] == 398.0
+              and queues[second_sale]["queue"] == 1
+              and queues[second_sale]["customers"][0]["id"] == 2
+              and queues[-1]["queue"] == 0
+              and queues[-1]["visit_state"] == "idle")
+    return {
+        "name": "two-party queue",
+        "ok": ok,
+        "detail": ("party 1 sold at 670 while party 2 stayed queued; "
+                   "party 2 admitted at 675 and sold at 685; queue drained at 690") if ok
+                  else output[-1800:],
+    }
+
 def check_campaign_start():
     profile = "mode=campaign;difficulty=9;player=Ada;enterprise=Ada Pizza"
     command = ["cargo", "run", "--quiet", "-p", "pc2-app", "--", "--campaign-start",
@@ -1199,6 +1250,7 @@ def main(argv=None):
     checks.append(check_free_play_scenario())
     checks.append(check_free_play_setup_screen())
     checks.append(check_free_play_chain())
+    checks.append(check_two_party_queue())
     checks.append(check_campaign_start())
     checks.append(check_typed_packet())
     checks.append(check_starting_capital_emulation())

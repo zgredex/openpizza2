@@ -611,6 +611,29 @@ pub enum VisitState {
     Departing,
 }
 
+/// Per-party state for the one-slot queue model.
+///
+/// `Object_UpdateCustomerQueue` (`0x409d80`) holds queued parties outside the
+/// active service slot, then `0x409c60`/`0x409d40` move the next queued party
+/// onto the target once `0x409bb0`/`0x409b10` can claim it again.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum CustomerPhase {
+    Queued,
+    Waiting,
+    Producing,
+    Departing,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Customer {
+    pub id: u32,
+    pub party_size: u32,
+    pub phase: CustomerPhase,
+    pub slot: Option<u32>,
+    pub arrived_minute: u32,
+    pub phase_started: u32,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub enum ClockEvent {
     Tick {
@@ -654,6 +677,7 @@ pub struct WorldSnapshot {
     pub hourly_count: u32,
     pub visit_state: VisitState,
     pub state_started: u32,
+    pub customers: Vec<Customer>,
     pub profile: Option<CharacterProfile>,
     pub scenario: Option<ScenarioSetup>,
     pub leased_property: Option<u32>,
@@ -669,6 +693,8 @@ pub struct World {
     hourly_count: u32,
     visit_state: VisitState,
     state_started: u32,
+    next_customer_id: u32,
+    customers: Vec<Customer>,
     profile: Option<CharacterProfile>,
     scenario: Option<ScenarioSetup>,
     leased_property: Option<u32>,
@@ -686,6 +712,8 @@ impl World {
             hourly_count: 0,
             visit_state: VisitState::Idle,
             state_started: start_minute,
+            next_customer_id: 1,
+            customers: Vec::new(),
             profile: None,
             scenario: None,
             leased_property: None,
@@ -785,13 +813,110 @@ impl World {
             .map(|profile| (profile.difficulty as u32 * 6, profile.difficulty as u32 * 9))
     }
 
+    /// Seed queued parties. The first party claims the single service slot and
+    /// starts in `Waiting`; the rest remain `Queued` behind it.
     pub fn with_queue(mut self, queue: u32) -> Self {
-        if queue > 0 {
-            self.queue = queue;
-            self.visit_state = VisitState::Waiting;
-            self.state_started = self.minute;
+        self.customers.clear();
+        self.next_customer_id = 1;
+        for _ in 0..queue {
+            self.push_queued_party(1);
         }
+        self.admit_next();
         self
+    }
+
+    /// Add one arriving party. This is the replay/CLI hook for the two-party
+    /// fixture; automatic hourly arrivals use the same path.
+    pub fn enqueue_party(&mut self, party_size: u32) -> u32 {
+        let id = self.push_queued_party(party_size.max(1));
+        self.admit_next();
+        id
+    }
+
+    pub fn customers(&self) -> &[Customer] {
+        &self.customers
+    }
+
+    pub fn active_customer(&self) -> Option<&Customer> {
+        self.customers
+            .iter()
+            .find(|customer| customer.slot.is_some())
+    }
+
+    fn push_queued_party(&mut self, party_size: u32) -> u32 {
+        let id = self.next_customer_id;
+        self.next_customer_id += 1;
+        self.customers.push(Customer {
+            id,
+            party_size,
+            phase: CustomerPhase::Queued,
+            slot: None,
+            arrived_minute: self.minute,
+            phase_started: self.minute,
+        });
+        self.sync_queue();
+        id
+    }
+
+    /// `0x409c60`/`0x409d40` scan the queue for the next party while the
+    /// single target slot is free; `0x409b10` is the claim that sets the
+    /// target to state `0xb` and records its id on the customer at `+0x10c`.
+    fn admit_next(&mut self) -> bool {
+        if self.active_customer_index().is_some() {
+            return false;
+        }
+        let Some(index) = self
+            .customers
+            .iter()
+            .position(|customer| customer.phase == CustomerPhase::Queued)
+        else {
+            return false;
+        };
+        let customer = &mut self.customers[index];
+        customer.phase = CustomerPhase::Waiting;
+        customer.phase_started = self.minute;
+        customer.slot = Some(0);
+        self.sync_queue();
+        true
+    }
+
+    fn active_customer_index(&self) -> Option<usize> {
+        self.customers
+            .iter()
+            .position(|customer| customer.slot.is_some())
+    }
+
+    fn queued_count(&self) -> u32 {
+        self.customers
+            .iter()
+            .filter(|customer| customer.phase == CustomerPhase::Queued)
+            .count() as u32
+    }
+
+    fn sync_queue(&mut self) {
+        self.queue = self.customers.len() as u32;
+        let active = self.active_customer_index().map(|index| {
+            let customer = &self.customers[index];
+            (customer.phase, customer.phase_started)
+        });
+        match active {
+            Some((CustomerPhase::Waiting, started)) => {
+                self.visit_state = VisitState::Waiting;
+                self.state_started = started;
+            }
+            Some((CustomerPhase::Producing, started)) => {
+                self.visit_state = VisitState::Producing;
+                self.state_started = started;
+            }
+            Some((CustomerPhase::Departing, started)) => {
+                self.visit_state = VisitState::Departing;
+                self.state_started = started;
+            }
+            _ => {
+                self.visit_state = VisitState::Idle;
+                self.state_started = self.minute;
+            }
+        }
     }
 
     pub fn set_open(&mut self, open: bool) {
@@ -808,6 +933,45 @@ impl World {
 
     pub fn snapshot_json(&self) -> String {
         self.sim.snapshot_json()
+    }
+
+    /// Queue/customer view used by the two-party replay evidence.
+    pub fn queue_snapshot_json(&self) -> String {
+        let customers = self
+            .customers
+            .iter()
+            .map(|customer| {
+                let phase = match customer.phase {
+                    CustomerPhase::Queued => "queued",
+                    CustomerPhase::Waiting => "waiting",
+                    CustomerPhase::Producing => "producing",
+                    CustomerPhase::Departing => "departing",
+                };
+                let slot = customer
+                    .slot
+                    .map_or_else(|| "null".to_string(), |slot| slot.to_string());
+                format!(
+                    "{{\"id\":{},\"party_size\":{},\"phase\":\"{}\",\"slot\":{},\"arrived_minute\":{},\"phase_started\":{}}}",
+                    customer.id,
+                    customer.party_size,
+                    phase,
+                    slot,
+                    customer.arrived_minute,
+                    customer.phase_started
+                )
+            })
+            .collect::<Vec<_>>()
+            .join(",");
+        let visit_state = match self.visit_state {
+            VisitState::Idle => "idle",
+            VisitState::Waiting => "waiting",
+            VisitState::Producing => "producing",
+            VisitState::Departing => "departing",
+        };
+        format!(
+            "{{\"queue\":{},\"visit_state\":\"{}\",\"state_started\":{},\"customers\":[{}]}}",
+            self.queue, visit_state, self.state_started, customers
+        )
     }
 
     pub fn sim(&self) -> &BranchSim {
@@ -833,6 +997,7 @@ impl World {
             hourly_count: self.hourly_count,
             visit_state: self.visit_state,
             state_started: self.state_started,
+            customers: self.customers.clone(),
             profile: self.profile.clone(),
             scenario: self.scenario.clone(),
             leased_property: self.leased_property,
@@ -847,6 +1012,14 @@ impl World {
             hourly_count: snapshot.hourly_count,
             visit_state: snapshot.visit_state,
             state_started: snapshot.state_started,
+            next_customer_id: snapshot
+                .customers
+                .iter()
+                .map(|customer| customer.id)
+                .max()
+                .unwrap_or(0)
+                + 1,
+            customers: snapshot.customers.clone(),
             profile: snapshot.profile.clone(),
             scenario: snapshot.scenario.clone(),
             leased_property: snapshot.leased_property,
@@ -894,10 +1067,9 @@ impl World {
                         hour,
                     });
                 }
-                if self.visit_state == VisitState::Idle && self.sim.snapshot().open {
-                    self.queue = 1;
-                    self.visit_state = VisitState::Waiting;
-                    self.state_started = self.minute;
+                if self.customers.is_empty() && self.sim.snapshot().open {
+                    self.push_queued_party(1);
+                    self.admit_next();
                     events.push(ClockEvent::Arrival {
                         minute: self.minute,
                         queue: self.queue,
@@ -905,36 +1077,49 @@ impl World {
                 }
             }
 
-            if self.visit_state == VisitState::Waiting && self.minute >= self.state_started + 5 {
-                self.visit_state = VisitState::Producing;
-                self.state_started = self.minute;
-                events.push(ClockEvent::ProductionStart {
-                    minute: self.minute,
-                });
-            } else if self.visit_state == VisitState::Producing
-                && self.minute >= self.state_started + 5
-            {
-                self.queue = 0;
-                self.visit_state = VisitState::Departing;
-                self.state_started = self.minute;
-                events.push(ClockEvent::QueueService {
-                    minute: self.minute,
-                    remaining_queue: self.queue,
-                });
-                if let StepOutcome::Sale(sale) = self.sim.settle_sale_at(self.minute) {
-                    events.push(ClockEvent::Sale {
+            let Some(index) = self.active_customer_index() else {
+                self.admit_next();
+                continue;
+            };
+            let phase = self.customers[index].phase;
+            let started = self.customers[index].phase_started;
+            match phase {
+                CustomerPhase::Waiting if self.minute >= started + 5 => {
+                    self.customers[index].phase = CustomerPhase::Producing;
+                    self.customers[index].phase_started = self.minute;
+                    self.sync_queue();
+                    events.push(ClockEvent::ProductionStart {
                         minute: self.minute,
-                        stock: self.sim.snapshot().stock,
-                        cash_delta: sale.cash_delta,
                     });
                 }
-            } else if self.visit_state == VisitState::Departing
-                && self.minute >= self.state_started + 5
-            {
-                self.visit_state = VisitState::Idle;
-                events.push(ClockEvent::Departure {
-                    minute: self.minute,
-                });
+                CustomerPhase::Producing if self.minute >= started + 5 => {
+                    let remaining = self.queued_count();
+                    self.customers[index].phase = CustomerPhase::Departing;
+                    self.customers[index].phase_started = self.minute;
+                    self.sync_queue();
+                    events.push(ClockEvent::QueueService {
+                        minute: self.minute,
+                        remaining_queue: remaining,
+                    });
+                    if let StepOutcome::Sale(sale) = self.sim.settle_sale_at(self.minute) {
+                        events.push(ClockEvent::Sale {
+                            minute: self.minute,
+                            stock: self.sim.snapshot().stock,
+                            cash_delta: sale.cash_delta,
+                        });
+                    }
+                }
+                CustomerPhase::Departing if self.minute >= started + 5 => {
+                    self.customers.remove(index);
+                    self.sync_queue();
+                    events.push(ClockEvent::Departure {
+                        minute: self.minute,
+                    });
+                    // The target is free after departure; 0x409d40 first tries
+                    // the queued list through 0x409c60.
+                    self.admit_next();
+                }
+                _ => {}
             }
         }
         events
@@ -1222,6 +1407,63 @@ mod tests {
         assert_eq!(world.snapshot().stock, 399.0);
         assert!((world.snapshot().cash - 10_013.420_524_712_366).abs() < 1e-9);
         assert_eq!(world.snapshot().clock_minutes, 680);
+        assert_eq!(world.visit_state(), VisitState::Idle);
+    }
+
+    #[test]
+    fn two_party_one_slot_serializes_and_resumes_from_contention() {
+        let mut world = ClockReplay::new(10 * 60 + 55);
+        world.set_open(true);
+        let _ = world.advance_to(11 * 60);
+        assert_eq!(world.customers().len(), 1);
+        assert_eq!(world.visit_state(), VisitState::Waiting);
+
+        let second_id = world.enqueue_party(1);
+        assert_eq!(second_id, 2);
+        assert_eq!(world.customers().len(), 2);
+        assert_eq!(world.customers()[1].phase, CustomerPhase::Queued);
+        assert_eq!(world.queue, 2);
+
+        let first = world.advance_to(11 * 60 + 10);
+        assert_eq!(world.snapshot().sales, 1);
+        assert_eq!(world.customers()[0].phase, CustomerPhase::Departing);
+        assert_eq!(world.customers()[1].phase, CustomerPhase::Queued);
+        assert!(first.contains(&ClockEvent::QueueService {
+            minute: 670,
+            remaining_queue: 1,
+        }));
+        assert!(first
+            .iter()
+            .any(|event| matches!(event, ClockEvent::Sale { minute: 670, .. })));
+
+        let contention = world.world_snapshot();
+        assert_eq!(contention.queue, 2);
+        assert_eq!(contention.visit_state, VisitState::Departing);
+        assert_eq!(contention.customers.len(), 2);
+        assert_eq!(contention.customers[0].slot, Some(0));
+        assert_eq!(contention.customers[1].slot, None);
+
+        let expected = world.advance_to(11 * 60 + 25);
+        assert_eq!(world.snapshot().sales, 2);
+        assert_eq!(world.snapshot().stock, 398.0);
+        assert_eq!(world.customers().len(), 1);
+        assert_eq!(world.customers()[0].id, second_id);
+        assert_eq!(world.customers()[0].phase, CustomerPhase::Departing);
+        assert!(expected.contains(&ClockEvent::Departure { minute: 675 }));
+        assert!(expected.contains(&ClockEvent::ProductionStart { minute: 680 }));
+        assert!(expected.contains(&ClockEvent::QueueService {
+            minute: 685,
+            remaining_queue: 0,
+        }));
+
+        let mut restored = ClockReplay::from_snapshot(&contention);
+        let actual = restored.advance_to(11 * 60 + 25);
+        assert_eq!(actual, expected);
+        assert_eq!(restored.world_snapshot(), world.world_snapshot());
+
+        let _ = world.advance_to(11 * 60 + 30);
+        assert_eq!(world.queue, 0);
+        assert!(world.customers().is_empty());
         assert_eq!(world.visit_state(), VisitState::Idle);
     }
 

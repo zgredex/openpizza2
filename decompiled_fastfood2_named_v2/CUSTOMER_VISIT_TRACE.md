@@ -42,6 +42,55 @@ The queue-capacity field is **not proven**. `SIMULATION.md` records
 number of entries in `+0x1744`. The Python model uses a 40-seat constant. The
 full-queue trace below therefore marks the capacity comparison **I/R**.
 
+## Rust two-party, one-slot model
+
+The current headless `World` has one service target slot. The claim/release
+path follows these retained routines:
+
+- `FUN_0047d150` (`0x47d150`) only returns branch objects in state `0xd`
+  (available), choosing the closest target in the same `+0xc4` submap.
+- `FUN_00409b10` (`0x409b10`) changes the claimed target to state `0xb`,
+  changes the customer to state `0xc`, and records the target id at
+  `customer+0x10c`.
+- `FUN_00409c60` (`0x409c60`) scans the customer's queue list and reuses a
+  target already in state `0xb` that belongs to the current branch.
+- `FUN_00409d40` (`0x409d40`) first tries `0x409c60`, then falls back to
+  `0x409bb0`; `0x409bb0` retries `0x409b10` only when the party can still be
+  admitted, otherwise it takes the fallback/walk-away path.
+- `FUN_00409d80` (`0x409d80`) case `0x10` completes service, changes the target
+  state through `0x409d40`, and is the release edge that lets the queued party
+  claim the slot.
+
+The Rust replay therefore serializes parties:
+
+```text
+11:00  party 1 arrives, claims slot 0; queue=1
+       party 2 arrives (replay injection); queue=2, phase=queued
+11:05  party 1 producing
+11:10  party 1 sells once; party 2 remains queued (remaining_queue=1)
+11:15  party 1 departs; party 2 claims slot 0 and waits
+11:20  party 2 producing
+11:25  party 2 sells once; queue drains at 11:30
+```
+
+The original timer granularity is 10 ms / 80-180 tick service and 250-270
+tick queue movement. The Rust `World` deliberately keeps the existing
+five-minute phase boundary; the queue ordering, slot claim/release, and
+snapshot state are the verified parts. Queue capacity remains unmodeled, so
+the second party takes the wait path rather than a capacity rejection.
+
+Replay:
+
+```sh
+cargo run -p pc2-app -- --map game/Isokarten/Iso_Filiale_einf_klein.iso \
+  --replay 'open;step;party;step;step;step;step;step;step;step' \
+  --output two_party.png
+```
+
+`World::queue_snapshot_json` records every party id, party size, phase, slot,
+arrival minute and phase start. `world_snapshot()` carries the same list, so a
+snapshot during contention restores both customers and the claimed slot.
+
 ## State table
 
 | # | State / transition | Address and guard | Timer | Next state | Queue | Stock / cash | Confidence |

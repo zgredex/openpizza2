@@ -20,7 +20,7 @@ For planning, assume one supported executable and an independently authored desk
 | Front end | The viewer rebuilds `Screen_MainMenu` from `Pe_Startscreen.tga` and its Start New Game destination `Screen_CharacterSelect` from `Pe_Charakterauswahl.tga`. Both screens use recovered labels, IDs, coordinates and original panel tiles; character gender, four face layers, six attribute arrows, difficulty, 8x8 logo/color portraits and name fields are interactive. Free Play now opens a rebuilt `Screen_FreePlaySetup` from `Pe_Freies_Spiel.tga` with the original Back/Start controls, commits the traced Berlin city/settings and carries them with the profile into `pc2_sim::World`; difficulty drives the verified starting capital. The windowed chain Menu -> Character -> Setup -> first sale matches the headless replay snapshot. | The six character attributes are copied and saved but still have no established branch-economy consumer. Exact font colors, menu music, the credits movie, the Mission Briefing screen, and the Continue/Options sub-start menus still need reconstruction. Original runtime comparisons remain pending. [Menu trace](decompiled_fastfood2_named_v2/MAIN_MENU_TRACE.md) · [Character trace](decompiled_fastfood2_named_v2/CHARACTER_SELECT_TRACE.md) · [Menu sample](decompiled_fastfood2_named_v2/samples/main_menu.png) |
 | Modern runtime | The viewer and `pc2-clock` submit the same `open`, `close`, `price` and `step` commands to one headless `World`. The five-minute clock dispatches the hourly update, creates one arrival, and advances that visit through waiting, production, one settlement and departure. A snapshot taken while the customer waits resumes with the same events, clock, stock and cash. | Player movement, multiple customers, queue admission and actor placement still need original evidence. The queue is a one-customer scripting rule, and actor coordinates are fixed. Runtime comparison of the original clock and saves remains pending. [World](crates/sim/src/lib.rs#L379) · [Actor composition](crates/app/src/actors.rs#L97) · [Playable sale](decompiled_fastfood2_named_v2/samples/branch_playable_sale.png) |
 
-`python3 tools/verify_all.py --no-write` passed **36/36 checks**, including the main-menu and character-select replays, quality fixtures, the hourly and midnight clock replay, snapshot resume, the Free Play setup screen and chain, the typed function packets, both Unicorn fixtures, and the Vulkan branch replay. Original-game comparisons remain pending, and Git history was unavailable in the visible workspace. [Baseline instructions](README.md#quick-start) · [Verification entry point](tools/verify_all.py)
+`python3 tools/verify_all.py --no-write` passed **37/37 checks**, including the main-menu and character-select replays, quality fixtures, the hourly and midnight clock replay, snapshot resume, the Free Play setup screen and chain, the typed function packets, both Unicorn fixtures, and the Vulkan branch replay. Original-game comparisons remain pending, and Git history was unavailable in the visible workspace. [Baseline instructions](README.md#quick-start) · [Verification entry point](tools/verify_all.py)
 
 ## Completed milestone: one clock, one customer visit
 
@@ -92,11 +92,35 @@ targets. Bounded Unicorn harnesses execute `Game_GetStartingCapital`
 [Clock trace](decompiled_fastfood2_named_v2/TYPED_CLOCK_WORKER.md) ·
 [Batch tool](tools/function_batch.py) · [Unicorn fixture](decompiled_fastfood2_named_v2/typed_packets/fixtures/game_get_starting_capital.fixture.json)
 
+## Completed milestone: two-party, one-slot queue
+
+**Done 2026-11-19.** `World` now carries separate party IDs, party sizes,
+phases and slot assignments. Claim and release follow the retained routines:
+
+- `0x47d150` selects only targets in state `0xd` (available);
+- `0x409b10` claims a target, sets it to `0xb` and records the target id at
+  `customer+0x10c`;
+- `0x409c60` reuses a `0xb` target from the queue list;
+- `0x409d40` tries the queue first, then falls back to `0x409bb0`;
+- `0x409d80` service completion is the release edge.
+
+`--replay 'open;step;party;step;step;step;step;step;step;step'` now runs two
+parties through one slot: party 1 sells at 11:10 while party 2 stays queued;
+party 1 departs at 11:15 and party 2 claims the slot, selling at 11:25. A
+contention snapshot restores both customers and the slot. The original 10 ms
+timers remain collapsed to five-minute phases, and queue capacity/rejection is
+not modeled yet. [World source](crates/sim/src/lib.rs) ·
+[Visit trace](decompiled_fastfood2_named_v2/CUSTOMER_VISIT_TRACE.md)
+
 ## Next project milestone
 
-**Recover slot admission and release.** A `pc2-clock --queue 2` probe reports one sale and resets the queue to zero. The original's `0x47d150` searches objects in the branch list and selects the closest same-submap target in state `0x0d`. Its caller `0x409b10` changes the target to `0x0b` and records its ID on the customer. Follow the writes that put targets into `0x0d`, the fallback when no target can be selected, and the releases on service completion or departure. The evidence so far supports per-target state checks. The template-wide capacity and fallback rules still need tracing. [Rust queue reset](crates/sim/src/lib.rs#L526) · [Original selection](decompiled_fastfood2_named_v2/full_game_verification/functions/0x47d150.c) · [Original state change](decompiled_fastfood2_named_v2/full_game_verification/functions/0x409b10.c)
-
-Make the replay hold separate customer IDs and target assignments. **Done when** a two-party, one-slot fixture exercises contention, the first party settles once, the other takes the documented wait or rejection path, and a snapshot taken during contention restores both customers and the slot assignment. Keep the current one-customer replay as a baseline. This can start from static evidence. A captured original visit is still needed to validate placement and timing. [Visit trace](decompiled_fastfood2_named_v2/CUSTOMER_VISIT_TRACE.md)
+**Recover queue capacity and the full-queue rejection path.** The two-party
+wait path is established, but there is still no proven admission threshold for
+a party that cannot fit. Trace the writes and reads around the queue count and
+the `0x409d80`/`0x409bb0` fallback, then add a fixture where a party is rejected
+without consuming stock or cash and the lost counter increments. Keep the
+one-slot wait replay as the baseline. [Queue state machine](decompiled_fastfood2_named_v2/full_game_verification/functions/0x409d80.c) ·
+[Fallback](decompiled_fastfood2_named_v2/full_game_verification/functions/0x409bb0.c)
 
 ## Clock investigation and replay baseline
 

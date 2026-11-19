@@ -38,8 +38,8 @@ It regenerates `decompiled_fastfood2_named_v2/samples/sim_demo_360.json`,
 `sim_sweep_90.json`, `sim_demo_map_90.json`, and refreshes
 `decompiled_fastfood2_named_v2/SIM_VERIFICATION.json` from the same run.
 
-Use `--no-write` for a read-only check. Current result: **36/36 checks**,
-**191 Python tests**, and **65 Rust tests**.
+Use `--no-write` for a read-only check. Current result: **37/37 checks**,
+**191 Python tests**, and **66 Rust tests**.
 
 ### Typed function packets
 
@@ -434,6 +434,33 @@ result: OK
 
 ![Playable branch sale](decompiled_fastfood2_named_v2/samples/branch_playable_sale.png)
 
+### Two-party, one-slot queue
+
+`World` now keeps separate parties with IDs, party size, phase and slot
+assignment. The claim/release path follows `0x47d150` (only state `0xd`
+targets), `0x409b10` (claim target and record `customer+0x10c`), `0x409c60`
+(reuse a `0xb` target), `0x409d40` (queue-first retry) and `0x409d80`
+(service-complete release).
+
+```sh
+cargo run -p pc2-app -- \
+  --map game/Isokarten/Iso_Filiale_einf_klein.iso \
+  --replay 'open;step;party;step;step;step;step;step;step;step' \
+  --output two_party.png
+```
+
+```text
+11:00 party 1 arrives; replay queues party 2
+11:10 party 1 sells once; party 2 remains queued
+11:15 party 1 leaves; party 2 claims the only slot
+11:25 party 2 sells once; queue drains
+```
+
+`queue_snapshot_json()` exposes every party and slot; a snapshot during
+contention restores both customers and the claimed slot. The original 10 ms
+timers are still collapsed to the existing five-minute phases; queue capacity
+and rejection are not modeled yet, so the second party waits.
+
 ### Camera and city-to-branch transition
 
 `--explore` caches a full 4096×2048 city composite once, then pans an 800×600
@@ -614,6 +641,10 @@ check is part of `verify_all.py`.
 - The rebuilt Free Play Setup screen uses `Pe_Freies_Spiel.tga` and original
   controls `0x4e2`/`0x4e3`. `--free-play-chain` exercises Menu -> Character ->
   Setup, loads the selected city and playable branch, and verifies the first sale.
+- `World` serializes two parties through one slot with separate IDs, phases and
+  a claimed slot. `--replay 'open;step;party;...'` sells party 1 at 11:10,
+  admits party 2 at 11:15 and sells it at 11:25; contention snapshots resume
+  with both parties and the slot intact.
 - Two typed packets cover **21 records**, **80 trace steps**, **3 dispatch
   tables** and **8 fixtures**. Every stored instruction prefix matches the
   executable at its PE address; the callbacks at `0x4cc640` and `0x4dd300`

@@ -150,7 +150,7 @@ fn usage(program: &str) {
          --animate            use decoded .ani tree-sway frames in the window\n\
          --animation-frame N  render still frame N of the animation\n\
          --playable           interactive branch: O open/close, -/+ price, Space step 5 min\n\
-         --replay SCRIPT      headless world commands, e.g. open;step;step;step\n\
+         --replay SCRIPT      headless world commands, e.g. open;step;party;step\n\
          --playable-script S  run world commands, plus lease=N and branch in Campaign Start\n\
          --explore            city camera + B branch / C city transition\n\
          --menu               rebuild the original main menu screen\n\
@@ -1337,6 +1337,13 @@ fn apply_world_command(world: &mut World, command: &str) -> Result<(), String> {
         world.set_open(false);
     } else if command.eq_ignore_ascii_case("step") {
         world.step();
+    } else if command.eq_ignore_ascii_case("party") {
+        world.enqueue_party(1);
+    } else if let Some(value) = command.strip_prefix("party=") {
+        let party_size = value
+            .parse::<u32>()
+            .map_err(|_| format!("invalid party size: {command}"))?;
+        world.enqueue_party(party_size);
     } else if let Some(value) = command.strip_prefix("price=") {
         world.set_price(
             value
@@ -1731,6 +1738,7 @@ fn main() -> ExitCode {
                 return ExitCode::FAILURE;
             }
             println!("sim: {}", sim.snapshot_json());
+            println!("queue: {}", sim.queue_snapshot_json());
             display = match actors::compose(
                 &scene.pixels,
                 scene.crop.width,
