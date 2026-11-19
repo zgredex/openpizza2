@@ -1213,6 +1213,7 @@ def check_reconstructed_c():
           and "SPR/FNT asset reconstruction: OK" in output
           and "UI render reconstruction: OK" in output
           and "screen render reconstruction: OK" in output
+          and "map render reconstruction: OK" in output
           and "save state reconstruction: OK" in output
           and "piz container reconstruction: OK" in output
           and "construction state reconstruction: OK" in output
@@ -1226,8 +1227,8 @@ def check_reconstructed_c():
                    "target compile with gcc -std=c11 -Werror and pass; piz "
                    "container, options/autosave, statistics, AI, recipes, "
                    "personnel, render, operations, SPR/FNT assets and UI "
-                   "composition, startscreen menu, character-select and London "
-                   "briefing screens included")
+                   "composition, startscreen menu, character-select, London "
+                   "briefing and iso-map/branch interior render included")
         if ok else output[-1200:],
     }
 

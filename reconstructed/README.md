@@ -36,6 +36,12 @@ Current batches:
 - `ui_render/` — composes shipped SPR sprites and FNT text onto the RGBA
   render surface, including hotspot placement, alpha blending and text
   measurement.
+- `map/` — `.iso` parser from `IsoMap_DeserializeGrid` (`0x4EB900`) and
+  city/branch composition from `IsoMap_RenderFrame` (`0x4EF9E0`): crops the
+  shipped 4096×2048 `lon.tga` city background around a tile, draws branch
+  markers, renders the branch interior from
+  `Iso_Filiale_einf_klein.iso` plus its background and 40 furniture sprites,
+  and builds the `bg003.tga`/`mask.tga` statistics map panel.
 - `screen/` — decodes `extracted/pictures/pe_startscreen.tga` into an 800×600
   RGBA frame and draws the reconstructed main-menu rows and status line with
   the shipped Times font. Also composes the character-select page over

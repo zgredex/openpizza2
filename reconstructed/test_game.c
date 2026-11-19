@@ -15,6 +15,7 @@
 #include "assets/assets.h"
 #include "ui_render/ui_render.h"
 #include "screen/screen_render.h"
+#include "map/map_render.h"
 #include "statistics/statistics_state.h"
 #include "options/options_state.h"
 #include "ui_screen/ui_screen.h"
@@ -90,6 +91,73 @@ int main(void) {
     assert(city_state_sale(&city, 600) == BRANCH_SALE);
     assert(city_state_place_rat(&city));
     assert(city_state_mission_complete(&city));
+
+    size_t iso_length = 0;
+    uint8_t *iso_data = NULL;
+    FILE *iso_file = fopen("../game/Isokarten/Lon.iso", "rb");
+    if (iso_file != NULL) {
+        fseek(iso_file, 0, SEEK_END);
+        long iso_size = ftell(iso_file);
+        fseek(iso_file, 0, SEEK_SET);
+        if (iso_size > 0) {
+            iso_data = malloc((size_t)iso_size);
+            if (iso_data != NULL) {
+                iso_length = fread(iso_data, 1, (size_t)iso_size, iso_file);
+            }
+        }
+        fclose(iso_file);
+    }
+    static IsoTile london_tiles[ISO_MAX_TILES];
+    IsoMap london_map;
+    if (iso_data != NULL &&
+        iso_map_parse(iso_data, iso_length, &london_map, london_tiles,
+                      ISO_MAX_TILES)) {
+        size_t lon_length = 0;
+        uint8_t *lon_data = NULL;
+        FILE *lon_file = fopen("../extracted/backgrounds/lon.tga", "rb");
+        if (lon_file != NULL) {
+            fseek(lon_file, 0, SEEK_END);
+            long lon_size = ftell(lon_file);
+            fseek(lon_file, 0, SEEK_SET);
+            if (lon_size > 0) {
+                lon_data = malloc((size_t)lon_size);
+                if (lon_data != NULL) {
+                    lon_length = fread(lon_data, 1, (size_t)lon_size, lon_file);
+                }
+            }
+            fclose(lon_file);
+        }
+        if (lon_data != NULL) {
+            size_t city_capacity = (size_t)4096 * 2048 * 4;
+            uint8_t *city_pixels = malloc(city_capacity);
+            uint32_t city_width = 0;
+            uint32_t city_height = 0;
+            if (city_pixels != NULL &&
+                tga_decode_rgba(lon_data, lon_length, city_pixels, city_capacity,
+                                &city_width, &city_height)) {
+                RgbaSprite city_background = {city_width, city_height, city_pixels};
+                uint8_t *city_frame = malloc(800 * 600 * 4);
+                assert(city_frame != NULL);
+                RenderSurface city_surface;
+                assert(render_surface_init(&city_surface, city_frame,
+                                           800 * 600 * 4, 800, 600));
+                const MapMarker city_marker = {82, 83, {20, 230, 90, 255}, 5};
+                assert(map_render_city_view(
+                    &city_surface, &city_background,
+                    (int32_t)london_map.header.origin_x,
+                    (int32_t)london_map.header.origin_y, &london_map, 13694,
+                    &city_marker, 1));
+                size_t city_center = ((size_t)300 * 800 + 400) * 4;
+                assert(city_frame[city_center + 1] == 230);
+                assert(city_frame[city_center + 2] == 90);
+                free(city_frame);
+            }
+            free(city_pixels);
+            free(lon_data);
+        }
+    }
+    free(iso_data);
+
     assert_close(city.economy.cash, 494283.420524712365806, 1e-9);
     assert(city.branches[0].sales == 1);
     assert_close(city.branches[0].revenue, 13.80, 1e-12);

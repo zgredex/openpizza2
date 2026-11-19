@@ -106,7 +106,7 @@ bool spr_decode(const uint8_t *data, size_t length, SpriteAsset *sprite,
                 y += 1;
             }
         }
-    } else if (bpp == 8 && data_size >= needed / 4) {
+    } else if (bpp == 8 && data_size >= (size_t)width * height) {
         uint8_t transparent = (uint8_t)(color_key & 0xff);
         for (size_t index = 0; index < (size_t)width * height; index++) {
             uint8_t value = body[index];

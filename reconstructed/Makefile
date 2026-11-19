@@ -2,6 +2,10 @@ CC ?= cc
 CFLAGS ?= -std=c11 -O2 -Wall -Wextra -Werror
 BUILD ?= build
 
+MAP_SRC = map/iso_map.c map/map_render.c map/test_map_render.c render/render_state.c assets/assets.c
+MAP_HDR = map/iso_map.h map/map_render.h render/render_state.h assets/assets.h
+MAP_BIN = $(BUILD)/test_map_render
+
 SETTINGS_SRC = settings/settings.c settings/test_settings.c
 SETTINGS_HDR = settings/settings.h
 SETTINGS_BIN = $(BUILD)/test_settings
@@ -84,7 +88,7 @@ CITY_HDR = city/city_state.h $(MISSION_STATE_HDR) branch/branch_economy.h
 CITY_BIN = $(BUILD)/test_city_state
 
 GAME_MODULES = settings/settings.c ingredient/ingredient.c menu/menu_state.c \
-               ui_screen/ui_screen.c options/options_state.c statistics/statistics_state.c ai/ai_state.c recipes/recipe_state.c personnel/personnel_state.c render/render_state.c operations/branch_operations.c assets/assets.c ui_render/ui_render.c screen/screen_render.c save/save_state.c piz/piz_container.c \
+               ui_screen/ui_screen.c options/options_state.c statistics/statistics_state.c ai/ai_state.c recipes/recipe_state.c personnel/personnel_state.c render/render_state.c operations/branch_operations.c assets/assets.c map/iso_map.c map/map_render.c ui_render/ui_render.c screen/screen_render.c save/save_state.c piz/piz_container.c \
                construction/construction_state.c mission/mission_state.c \
                mission/mission_goals.c branch/branch_economy.c city/city_state.c
 GAME_SRC = $(GAME_MODULES) test_game.c
@@ -96,6 +100,10 @@ FULL_GAME_SRC = $(GAME_MODULES) full_game.c
 .PHONY: all check full-game clean
 
 all: check full-game
+
+$(MAP_BIN): $(MAP_SRC) $(MAP_HDR)
+	@mkdir -p $(BUILD)
+	$(CC) $(CFLAGS) $(MAP_SRC) -o $@
 
 $(SETTINGS_BIN): $(SETTINGS_SRC) $(SETTINGS_HDR)
 	@mkdir -p $(BUILD)
@@ -192,7 +200,7 @@ $(FULL_GAME_BIN): $(FULL_GAME_SRC) $(CITY_HDR) $(BRANCH_HDR) $(INGREDIENT_HDR) $
 full-game: $(FULL_GAME_BIN)
 	./$(FULL_GAME_BIN)
 
-check: $(SETTINGS_BIN) $(INGREDIENT_BIN) $(MISSION_STATE_BIN) $(MISSION_GOALS_BIN) $(BRANCH_BIN) $(CONSTRUCTION_BIN) $(SAVE_BIN) $(PIZ_BIN) $(AI_BIN) $(RECIPE_BIN) $(PERSONNEL_BIN) $(RENDER_BIN) $(OPERATIONS_BIN) $(ASSETS_BIN) $(UI_RENDER_BIN) $(SCREEN_BIN) $(MENU_BIN) $(UI_BIN) $(OPTIONS_BIN) $(STATISTICS_BIN) $(CITY_BIN) $(GAME_BIN)
+check: $(SETTINGS_BIN) $(INGREDIENT_BIN) $(MISSION_STATE_BIN) $(MISSION_GOALS_BIN) $(BRANCH_BIN) $(CONSTRUCTION_BIN) $(SAVE_BIN) $(PIZ_BIN) $(AI_BIN) $(RECIPE_BIN) $(PERSONNEL_BIN) $(RENDER_BIN) $(OPERATIONS_BIN) $(ASSETS_BIN) $(MAP_BIN) $(UI_RENDER_BIN) $(SCREEN_BIN) $(MENU_BIN) $(UI_BIN) $(OPTIONS_BIN) $(STATISTICS_BIN) $(CITY_BIN) $(GAME_BIN)
 	./$(SETTINGS_BIN)
 	./$(INGREDIENT_BIN)
 	./$(MISSION_STATE_BIN)
@@ -207,6 +215,7 @@ check: $(SETTINGS_BIN) $(INGREDIENT_BIN) $(MISSION_STATE_BIN) $(MISSION_GOALS_BI
 	./$(RENDER_BIN)
 	./$(OPERATIONS_BIN)
 	./$(ASSETS_BIN)
+	./$(MAP_BIN)
 	./$(UI_RENDER_BIN)
 	./$(SCREEN_BIN)
 	./$(MENU_BIN)
