@@ -1286,3 +1286,96 @@ void building_value_destroy(void *value) {
         write_i32(value, 0);
     }
 }
+
+int64_t math_round_float(float value) {
+    if (value >= 0.0f) {
+        return (int64_t)(value + 0.5f);
+    }
+    return (int64_t)(value - 0.5f);
+}
+
+int64_t math_truncate_double(double value) {
+    return (int64_t)value;
+}
+
+int32_t math_piecewise_linear(int32_t value) {
+    if (value < 0x32) {
+        return (value * 0x12) / 0x19;
+    }
+    return ((value - 0x32) * 0x20) / 0x19 + 0x24;
+}
+
+void string_skip_delimiters(const char *buffer, size_t *index) {
+    if (buffer == NULL || index == NULL) {
+        return;
+    }
+    while (buffer[*index] == ' ' || buffer[*index] == '\t' ||
+           buffer[*index] == ',') {
+        (*index)++;
+    }
+}
+
+void text_skip_field_separators(const char *buffer, size_t *index) {
+    if (buffer == NULL || index == NULL) {
+        return;
+    }
+    for (;;) {
+        char character = buffer[*index];
+        if (character == '}' || character == '\0' ||
+            (character > ' ' && character != ',')) {
+            break;
+        }
+        (*index)++;
+    }
+}
+
+int32_t text_get_line_height(const uint8_t *text) {
+    if (text == NULL) {
+        return 0;
+    }
+    return read_i32(text + 0x9b8);
+}
+
+void text_get_position(const uint8_t *text, int32_t *x, int32_t *y) {
+    if (text == NULL || x == NULL || y == NULL) {
+        return;
+    }
+    *x = read_i32(text + 0x9a0);
+    *y = read_i32(text + 0x9a4);
+}
+
+void text_set_cursor(uint8_t *text, int32_t x, int32_t y) {
+    if (text == NULL) {
+        return;
+    }
+    write_i32(text + 0x9a0, x);
+    write_i32(text + 0x9a4, y);
+}
+
+void text_set_metrics(uint8_t *text, int32_t x, int32_t y, int32_t param3) {
+    if (text == NULL) {
+        return;
+    }
+    int32_t previous_y = read_i32(text + 0x9b4);
+    int32_t delta = y - previous_y;
+    write_i32(text + 0x9a0, x);
+    write_i32(text + 0x9bc, x);
+    write_i32(text + 0x9a8, x);
+    write_i32(text + 0x9a4, delta);
+    write_i32(text + 0x9c0, delta);
+    write_i32(text + 0x9ac, delta);
+    write_i32(text + 0x9c4, param3);
+}
+
+void text_set_metrics2(uint8_t *text, int32_t x, int32_t y, int32_t param3) {
+    if (text == NULL) {
+        return;
+    }
+    write_i32(text + 0x9a0, x);
+    write_i32(text + 0x9bc, x);
+    write_i32(text + 0x9a8, x);
+    write_i32(text + 0x9a4, y);
+    write_i32(text + 0x9c0, y);
+    write_i32(text + 0x9ac, y);
+    write_i32(text + 0x9c4, param3);
+}

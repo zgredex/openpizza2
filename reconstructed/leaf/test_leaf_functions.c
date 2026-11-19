@@ -197,6 +197,12 @@ static void write_i32_at(uint8_t *base, size_t offset, int32_t value) {
     memcpy(base + offset, &value, sizeof(value));
 }
 
+static int32_t read_i32_at(const uint8_t *base, size_t offset) {
+    int32_t value;
+    memcpy(&value, base + offset, sizeof(value));
+    return value;
+}
+
 static void test_array_stride_helpers(void) {
     uint8_t records[4 * 12 + 4] = {0};
     array_set_field4_stride12(records, 2, 0x12345678);
@@ -791,6 +797,62 @@ static void test_destructors_palette_record(void) {
     assert(record_get_type_index48(NULL, 2, 0, sources) == -1);
 }
 
+static void test_math_string_text(void) {
+    assert(math_round_float(1.4f) == 1);
+    assert(math_round_float(1.5f) == 2);
+    assert(math_round_float(-1.4f) == -1);
+    assert(math_round_float(-1.5f) == -2);
+    assert(math_truncate_double(3.9) == 3);
+    assert(math_truncate_double(-3.9) == -3);
+    assert(math_piecewise_linear(0) == 0);
+    assert(math_piecewise_linear(25) == 18);
+    assert(math_piecewise_linear(49) == 35);
+    assert(math_piecewise_linear(50) == 36);
+    assert(math_piecewise_linear(75) == 68);
+
+    const char *delimiters = " ,\tfoo";
+    size_t index = 0;
+    string_skip_delimiters(delimiters, &index);
+    assert(index == 3);
+    string_skip_delimiters(NULL, &index);
+    string_skip_delimiters(delimiters, NULL);
+
+    const char *separators = " ,}rest";
+    index = 0;
+    text_skip_field_separators(separators, &index);
+    assert(index == 2);
+    index = 0;
+    text_skip_field_separators("abc", &index);
+    assert(index == 0);
+    index = 0;
+    text_skip_field_separators("", &index);
+    assert(index == 0);
+
+    uint8_t text[0xa00] = {0};
+    write_i32_at(text, 0x9b8, 14);
+    write_i32_at(text, 0x9b4, 10);
+    assert(text_get_line_height(text) == 14);
+    assert(text_get_line_height(NULL) == 0);
+    text_set_cursor(text, 11, 22);
+    int32_t x = 0;
+    int32_t y = 0;
+    text_get_position(text, &x, &y);
+    assert(x == 11 && y == 22);
+    text_set_metrics(text, 30, 40, 50);
+    assert(read_i32_at(text, 0x9a0) == 30);
+    assert(read_i32_at(text, 0x9a4) == 30);
+    assert(read_i32_at(text, 0x9a8) == 30);
+    assert(read_i32_at(text, 0x9bc) == 30);
+    assert(read_i32_at(text, 0x9c0) == 30);
+    assert(read_i32_at(text, 0x9ac) == 30);
+    assert(read_i32_at(text, 0x9c4) == 50);
+    text_set_metrics2(text, 60, 70, 80);
+    assert(read_i32_at(text, 0x9a0) == 60);
+    assert(read_i32_at(text, 0x9a4) == 70);
+    assert(read_i32_at(text, 0x9c0) == 70);
+    assert(read_i32_at(text, 0x9c4) == 80);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -816,6 +878,7 @@ int main(void) {
     test_furniture_and_game_accessors();
     test_object_record_palette();
     test_destructors_palette_record();
+    test_math_string_text();
     puts("leaf function reconstruction: OK");
     return 0;
 }

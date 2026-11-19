@@ -354,4 +354,26 @@ void leaf_construction_order_destructor(ConstructionOrderState *order);
 void award_node_destructor(void *node);
 void building_value_destroy(void *value);
 
+/* Math_RoundFloat / Math_TruncateDouble / Math_PiecewiseLinear
+ * (0x403850 / 0x511FA0 / 0x50FBE0). */
+int64_t math_round_float(float value);
+int64_t math_truncate_double(double value);
+int32_t math_piecewise_linear(int32_t value);
+
+/* String_SkipDelimiters (0x4DB2E0). */
+void string_skip_delimiters(const char *buffer, size_t *index);
+
+/* Text_SkipFieldSeparators (0x52CB70). */
+void text_skip_field_separators(const char *buffer, size_t *index);
+
+/* Text_GetLineHeight / Text_GetPosition / Text_SetCursor
+ * (0x535510 / 0x5355B0 / 0x5355D0). */
+int32_t text_get_line_height(const uint8_t *text);
+void text_get_position(const uint8_t *text, int32_t *x, int32_t *y);
+void text_set_cursor(uint8_t *text, int32_t x, int32_t y);
+
+/* Text_SetMetrics / Text_SetMetrics2 (0x535520 / 0x535570). */
+void text_set_metrics(uint8_t *text, int32_t x, int32_t y, int32_t param3);
+void text_set_metrics2(uint8_t *text, int32_t x, int32_t y, int32_t param3);
+
 #endif
