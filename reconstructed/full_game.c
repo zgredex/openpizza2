@@ -799,6 +799,67 @@ int main(void) {
     free(sb_background_pixels);
     free(sb_row_pixels);
 
+    uint8_t *sbb_background_pixels = NULL;
+    uint8_t *sbb_row_pixels = NULL;
+    uint8_t *sbb_rating_pixels = NULL;
+    uint8_t *sbb_personal_pixels = NULL;
+    uint8_t *sbb_money_pixels = NULL;
+    uint8_t *sbb_load_pixels = NULL;
+    uint8_t *sbb_balance_pixels = NULL;
+    RgbaSprite sbb_background;
+    RgbaSprite sbb_row_plate;
+    RgbaSprite sbb_rating;
+    RgbaSprite sbb_personal;
+    RgbaSprite sbb_money;
+    RgbaSprite sbb_load;
+    RgbaSprite sbb_balance;
+    assert(load_spr_asset("../extracted/sprites/statistikfilialbilanz.spr",
+                          &sbb_background_pixels, &sbb_background));
+    assert(load_spr_asset("../extracted/sprites/tabpb01__00.spr",
+                          &sbb_row_pixels, &sbb_row_plate));
+    assert(load_spr_asset("../extracted/sprites/bewertung__08.spr",
+                          &sbb_rating_pixels, &sbb_rating));
+    assert(load_spr_asset("../extracted/sprites/skfilialpersonal_00.spr",
+                          &sbb_personal_pixels, &sbb_personal));
+    assert(load_spr_asset("../extracted/sprites/skfilialmoney_00.spr",
+                          &sbb_money_pixels, &sbb_money));
+    assert(load_spr_asset("../extracted/sprites/skfilialauslastung_00.spr",
+                          &sbb_load_pixels, &sbb_load));
+    assert(load_spr_asset("../extracted/sprites/skbilanz_00.spr",
+                          &sbb_balance_pixels, &sbb_balance));
+    const StatisticsBalanceRow sbb_rows[3] = {
+        {"Revenue", operations.revenue},
+        {"Ingredients", operations.ingredient_cost},
+        {"Wages", operations.wages},
+    };
+    const StatisticsBranchBalanceData sbb_data = {
+        .branch_name = "London branch",
+        .period = "Quarter 1",
+        .validity = city.city_name,
+        .total = operations.revenue - operations.ingredient_cost - operations.wages,
+        .rows = sbb_rows,
+        .row_count = 3,
+        .rating = &sbb_rating,
+    };
+    uint8_t *sbb_frame = malloc(800 * 600 * 4);
+    assert(sbb_frame != NULL);
+    RenderSurface sbb_surface;
+    assert(render_surface_init(&sbb_surface, sbb_frame, 800 * 600 * 4, 800, 600));
+    assert(screen_render_statistics_branch_balance(
+        &sbb_surface, &sbb_background, &sbb_row_plate, &sbb_rating,
+        &sbb_personal, &sbb_money, &sbb_load, &sbb_balance, font_data,
+        font_size, &font_info, &sbb_data));
+    assert(memcmp(sbb_frame, sbb_background.pixels, 4) == 0);
+    free(sbb_frame);
+    free(sbb_background_pixels);
+    free(sbb_row_pixels);
+    free(sbb_rating_pixels);
+    free(sbb_personal_pixels);
+    free(sbb_money_pixels);
+    free(sbb_load_pixels);
+    free(sbb_balance_pixels);
+
+
 
 
 

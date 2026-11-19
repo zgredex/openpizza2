@@ -981,3 +981,79 @@ bool screen_render_statistics_balance(
                value_color);
     return true;
 }
+
+bool screen_render_statistics_branch_balance(
+    RenderSurface *surface, const RgbaSprite *background,
+    const RgbaSprite *row_plate, const RgbaSprite *rating,
+    const RgbaSprite *icon_personal, const RgbaSprite *icon_money,
+    const RgbaSprite *icon_load, const RgbaSprite *icon_balance,
+    const uint8_t *font_data, size_t font_size, const FntInfo *font,
+    const StatisticsBranchBalanceData *data) {
+    if (surface == NULL || background == NULL || font == NULL || data == NULL) {
+        return false;
+    }
+    const uint8_t background_color[4] = {22, 26, 34, 255};
+    render_clear(surface, background_color);
+    if (!render_blit(surface, background, 0, 0)) {
+        return false;
+    }
+    const uint8_t title_color[4] = {120, 20, 20, 255};
+    const uint8_t label_color[4] = {40, 28, 20, 255};
+    const uint8_t value_color[4] = {20, 20, 90, 255};
+    char value_text[64];
+
+    draw_label(surface, font_data, font_size, font, 605, 223,
+               "Branch statistics", title_color);
+    if (data->validity != NULL) {
+        draw_label(surface, font_data, font_size, font, 609, 258, data->validity,
+                   label_color);
+    }
+    if (data->period != NULL) {
+        draw_label(surface, font_data, font_size, font, 609, 441, data->period,
+                   label_color);
+    }
+    draw_label(surface, font_data, font_size, font, 648, 463,
+               "Previous quarter", label_color);
+    if (data->branch_name != NULL) {
+        draw_label(surface, font_data, font_size, font, 614, 314,
+                   data->branch_name, value_color);
+    }
+    snprintf(value_text, sizeof(value_text), "%.2f", data->total);
+    draw_label(surface, font_data, font_size, font, 696, 282, value_text,
+               value_color);
+    draw_label(surface, font_data, font_size, font, 614, 282, "Total",
+               title_color);
+
+    if (row_plate != NULL) {
+        render_blit(surface, row_plate, 611, 279);
+    }
+    for (size_t index = 0; index < data->row_count && index < 6; index++) {
+        int32_t y = 310 + (int32_t)index * 21;
+        if (row_plate != NULL) {
+            render_blit(surface, row_plate, 611, y);
+        }
+        draw_label(surface, font_data, font_size, font, 614, y + 3,
+                   data->rows[index].label, label_color);
+        snprintf(value_text, sizeof(value_text), "%.2f",
+                 data->rows[index].amount);
+        draw_label(surface, font_data, font_size, font, 696, y + 3, value_text,
+                   value_color);
+    }
+
+    if (rating != NULL) {
+        render_blit(surface, rating, 245, 79);
+    }
+    if (icon_personal != NULL) {
+        render_blit(surface, icon_personal, 616, 481);
+    }
+    if (icon_money != NULL) {
+        render_blit(surface, icon_money, 682, 481);
+    }
+    if (icon_load != NULL) {
+        render_blit(surface, icon_load, 748, 481);
+    }
+    if (icon_balance != NULL) {
+        render_blit(surface, icon_balance, 748, 551);
+    }
+    return true;
+}

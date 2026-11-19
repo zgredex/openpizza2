@@ -630,6 +630,125 @@ static void test_statistics_balance_composition(void) {
     free(row_pixels);
 }
 
+static void test_statistics_branch_balance_composition(void) {
+    uint8_t *background_pixels = NULL;
+    uint8_t *row_pixels = NULL;
+    uint8_t *rating_pixels = NULL;
+    uint8_t *personal_pixels = NULL;
+    uint8_t *money_pixels = NULL;
+    uint8_t *load_pixels = NULL;
+    uint8_t *balance_pixels = NULL;
+    RgbaSprite background;
+    RgbaSprite row_plate;
+    RgbaSprite rating;
+    RgbaSprite personal;
+    RgbaSprite money;
+    RgbaSprite load;
+    RgbaSprite balance;
+    assert(load_spr("../extracted/sprites/statistikfilialbilanz.spr",
+                    &background_pixels, &background));
+    assert(load_spr("../extracted/sprites/tabpb01__00.spr", &row_pixels,
+                    &row_plate));
+    assert(load_spr("../extracted/sprites/bewertung__08.spr", &rating_pixels,
+                    &rating));
+    assert(load_spr("../extracted/sprites/skfilialpersonal_00.spr",
+                    &personal_pixels, &personal));
+    assert(load_spr("../extracted/sprites/skfilialmoney_00.spr", &money_pixels,
+                    &money));
+    assert(load_spr("../extracted/sprites/skfilialauslastung_00.spr",
+                    &load_pixels, &load));
+    assert(load_spr("../extracted/sprites/skbilanz_00.spr", &balance_pixels,
+                    &balance));
+
+    size_t font_size = 0;
+    uint8_t *font_data = load_file("../extracted/fonts/timesfont.fnt", &font_size);
+    assert(font_data != NULL);
+    FntInfo font;
+    assert(fnt_read_info(font_data, font_size, &font));
+
+    const StatisticsBalanceRow rows[] = {
+        {"Customers", 120.0},
+        {"Revenue", 100.5},
+        {"Costs", 30.75},
+    };
+    const StatisticsBranchBalanceData data = {
+        .branch_name = "London branch",
+        .period = "Quarter 1",
+        .validity = "London",
+        .total = 69.75,
+        .rows = rows,
+        .row_count = 3,
+        .rating = &rating,
+    };
+    size_t frame_size = 800 * 600 * 4;
+    uint8_t *frame = malloc(frame_size);
+    assert(frame != NULL);
+    RenderSurface surface;
+    assert(render_surface_init(&surface, frame, frame_size, 800, 600));
+    assert(screen_render_statistics_branch_balance(
+        &surface, &background, &row_plate, &rating, &personal, &money, &load,
+        &balance, font_data, font_size, &font, &data));
+    assert(memcmp(frame, background.pixels, 4) == 0);
+
+    bool opaque = false;
+    size_t opaque_index = 0;
+    for (size_t index = 0; index + 3 < (size_t)row_plate.width * row_plate.height * 4;
+         index += 4) {
+        if (row_plate.pixels[index + 3] == 255) {
+            opaque = true;
+            opaque_index = index;
+            break;
+        }
+    }
+    assert(opaque);
+    size_t row_x = (opaque_index / 4) % row_plate.width;
+    size_t row_y = (opaque_index / 4) / row_plate.width;
+    size_t row_offset = ((size_t)(279 + (int)row_y) * 800 +
+                         (611 + (int)row_x)) * 4;
+    assert(memcmp(frame + row_offset, row_plate.pixels + opaque_index, 4) == 0);
+
+    bool rating_opaque = false;
+    size_t rating_index = 0;
+    for (size_t index = 0; index + 3 < (size_t)rating.width * rating.height * 4;
+         index += 4) {
+        if (rating.pixels[index + 3] == 255) {
+            rating_opaque = true;
+            rating_index = index;
+            break;
+        }
+    }
+    assert(rating_opaque);
+    size_t rating_x = (rating_index / 4) % rating.width;
+    size_t rating_y = (rating_index / 4) / rating.width;
+    size_t rating_offset = ((size_t)(79 + (int)rating_y) * 800 +
+                            (245 + (int)rating_x)) * 4;
+    assert(memcmp(frame + rating_offset, rating.pixels + rating_index, 4) == 0);
+
+    bool title_ink = false;
+    for (int y = 220; y < 245; y++) {
+        for (int x = 600; x < 780; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] < 180 && frame[offset + 1] < 120) {
+                title_ink = true;
+            }
+        }
+    }
+    assert(title_ink);
+    assert(!screen_render_statistics_branch_balance(
+        &surface, &background, &row_plate, &rating, &personal, &money, &load,
+        &balance, font_data, font_size, &font, NULL));
+
+    free(font_data);
+    free(frame);
+    free(background_pixels);
+    free(row_pixels);
+    free(rating_pixels);
+    free(personal_pixels);
+    free(money_pixels);
+    free(load_pixels);
+    free(balance_pixels);
+}
+
 static void test_statistics_composition(void) {
     size_t tga_size = 0;
     size_t font_size = 0;
@@ -854,6 +973,7 @@ int main(void) {
     test_personnel_overview_composition();
     test_personnel_record_composition();
     test_statistics_balance_composition();
+    test_statistics_branch_balance_composition();
     test_statistics_composition();
     test_free_play_composition();
     test_briefing_composition();

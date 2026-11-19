@@ -57,6 +57,26 @@ typedef struct StatisticsBalanceRow {
     double amount;
 } StatisticsBalanceRow;
 
+typedef struct StatisticsBranchBalanceData {
+    const char *branch_name;
+    const char *period;
+    const char *validity;
+    double total;
+    const StatisticsBalanceRow *rows;
+    size_t row_count;
+    const RgbaSprite *rating;
+} StatisticsBranchBalanceData;
+
+/* Composes Window_BuildStatisticsBranchBalancePage (0x433790) over the
+ * shipped STATISTIKFILIALBILANZ.spr with row plates, bottom icons and rating. */
+bool screen_render_statistics_branch_balance(
+    RenderSurface *surface, const RgbaSprite *background,
+    const RgbaSprite *row_plate, const RgbaSprite *rating,
+    const RgbaSprite *icon_personal, const RgbaSprite *icon_money,
+    const RgbaSprite *icon_load, const RgbaSprite *icon_balance,
+    const uint8_t *font_data, size_t font_size, const FntInfo *font,
+    const StatisticsBranchBalanceData *data);
+
 typedef struct StatisticsBalanceData {
     const char *branch_name;
     const char *period;
