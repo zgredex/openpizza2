@@ -654,6 +654,39 @@ pub struct Customer {
     pub timer_ticks: u32,
 }
 
+/// A branch owned or rented by the current player. The first London lease
+/// creates one of these; the mission goal evaluator reads the player branch
+/// count (`Game_GetPlayerFieldC20`, `0x4e2280`) and the owned-branch flag
+/// (`Game_CountRecordsWithFlag16F4`, `0x4de710`).
+#[derive(Clone, Debug, PartialEq)]
+pub struct PlayerBranch {
+    pub tile_index: u32,
+    pub owner_slot: u8,
+    pub size: u8,
+    pub style: u8,
+    pub owned: bool,
+    pub player_controlled: bool,
+    pub rent: u32,
+    pub sales: u32,
+    pub revenue: f64,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum GoalStatus {
+    Pending,
+    Complete,
+    Failed,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct MissionGoalState {
+    pub id: u32,
+    pub status: GoalStatus,
+    pub progress: u32,
+    pub target: u32,
+    pub description: String,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub enum ClockEvent {
     Tick {
@@ -699,6 +732,11 @@ pub struct WorldSnapshot {
     pub state_started: u32,
     pub customers: Vec<Customer>,
     pub queue_capacity: u32,
+    pub player_branches: Vec<PlayerBranch>,
+    pub mission_goals: Vec<MissionGoalState>,
+    pub mission_complete: bool,
+    pub hq_level: u32,
+    pub rats_placed: u32,
     pub profile: Option<CharacterProfile>,
     pub scenario: Option<ScenarioSetup>,
     pub leased_property: Option<u32>,
@@ -717,6 +755,11 @@ pub struct World {
     next_customer_id: u32,
     customers: Vec<Customer>,
     queue_capacity: u32,
+    player_branches: Vec<PlayerBranch>,
+    mission_goals: Vec<MissionGoalState>,
+    mission_complete: bool,
+    hq_level: u32,
+    rats_placed: u32,
     profile: Option<CharacterProfile>,
     scenario: Option<ScenarioSetup>,
     leased_property: Option<u32>,
@@ -737,6 +780,11 @@ impl World {
             next_customer_id: 1,
             customers: Vec::new(),
             queue_capacity: QUEUE_CAPACITY,
+            player_branches: Vec::new(),
+            mission_goals: Vec::new(),
+            mission_complete: false,
+            hq_level: 0,
+            rats_placed: 0,
             profile: None,
             scenario: None,
             leased_property: None,
@@ -756,6 +804,7 @@ impl World {
             self.sim.set_open(false);
         }
         self.apply_starting_capital();
+        self.reset_mission_goals();
         self
     }
 
@@ -771,8 +820,177 @@ impl World {
         self.scenario.as_ref()?.campaign_mission.as_ref()
     }
 
+    pub fn player_branches(&self) -> &[PlayerBranch] {
+        &self.player_branches
+    }
+
+    pub fn player_branch_count(&self) -> u32 {
+        self.player_branches.len() as u32
+    }
+
+    pub fn mission_goals(&self) -> &[MissionGoalState] {
+        &self.mission_goals
+    }
+
+    pub fn mission_complete(&self) -> bool {
+        self.mission_complete
+    }
+
+    pub fn hq_level(&self) -> u32 {
+        self.hq_level
+    }
+
+    pub fn rats_placed(&self) -> u32 {
+        self.rats_placed
+    }
+
+    pub fn mission_summary(&self) -> Option<String> {
+        let mission = self.campaign_mission()?;
+        let completed = self
+            .mission_goals
+            .iter()
+            .filter(|goal| goal.status == GoalStatus::Complete)
+            .count();
+        let city = self
+            .scenario
+            .as_ref()
+            .map_or("MISSION", |scenario| scenario.city_name.as_str());
+        Some(format!(
+            "MISSION: {}   GOALS {}/{}   HQ {}/3   RAT {}/1   BRANCHES {}",
+            city.to_ascii_uppercase(),
+            completed,
+            mission.goal_ids.len(),
+            self.hq_level,
+            self.rats_placed,
+            self.player_branch_count()
+        ))
+    }
+
+    pub fn mission_goal_text(&self) -> Option<String> {
+        let goals = self
+            .mission_goals
+            .iter()
+            .map(|goal| {
+                let status = match goal.status {
+                    GoalStatus::Pending => " ",
+                    GoalStatus::Complete => "X",
+                    GoalStatus::Failed => "!",
+                };
+                format!(
+                    "[{}] {} ({}/{})",
+                    status, goal.description, goal.progress, goal.target
+                )
+            })
+            .collect::<Vec<_>>()
+            .join("   ");
+        (!goals.is_empty()).then_some(goals)
+    }
+
+    pub fn mission_sales(&self) -> u32 {
+        self.player_branches.iter().map(|branch| branch.sales).sum()
+    }
+
+    fn record_branch_sale(&mut self, sale: &Sale) {
+        if let Some(branch) = self.player_branches.first_mut() {
+            branch.sales += sale.servings;
+            branch.revenue += sale.revenue;
+        }
+        self.evaluate_mission_goals();
+    }
+
+    fn reset_mission_goals(&mut self) {
+        let goal_ids = self
+            .campaign_mission()
+            .map_or_else(Vec::new, |mission| mission.goal_ids.clone());
+        self.mission_goals = goal_ids
+            .into_iter()
+            .map(|id| {
+                // Mission_EvaluateGoals (0x4f5fd0) reads:
+                //   0: Game_GetPlayerFieldC20(player) > 2  (HQ level 3)
+                //   1: mission-state +0x14 > 0           (rat delivered)
+                //   2: Game_CountRecordsWithFlag16F4 != 0 (owned/leased branch)
+                // Unicorn probe: tools/emulate_mission_goals.py.
+                let (target, description) = match id {
+                    0 => (3, "Build HQ level 3".to_string()),
+                    1 => (1, "Rat a rival branch".to_string()),
+                    2 => (1, "Own a branch".to_string()),
+                    other => (1, format!("Mission goal {other}")),
+                };
+                MissionGoalState {
+                    id,
+                    status: GoalStatus::Pending,
+                    progress: 0,
+                    target,
+                    description,
+                }
+            })
+            .collect();
+        self.mission_complete = false;
+        self.evaluate_mission_goals();
+    }
+
+    fn evaluate_mission_goals(&mut self) {
+        if self.mission_goals.is_empty() {
+            self.mission_complete = false;
+            return;
+        }
+        let owned_count = self
+            .player_branches
+            .iter()
+            .filter(|branch| branch.player_controlled)
+            .count() as u32;
+        for goal in &mut self.mission_goals {
+            goal.progress = match goal.id {
+                0 => self.hq_level,
+                1 => self.rats_placed,
+                2 => owned_count,
+                _ => goal.progress,
+            };
+            goal.status = if goal.progress >= goal.target {
+                GoalStatus::Complete
+            } else {
+                GoalStatus::Pending
+            };
+        }
+        self.mission_complete = self
+            .mission_goals
+            .iter()
+            .all(|goal| goal.status == GoalStatus::Complete);
+    }
+
     pub fn campaign_property_offer(&self) -> Option<CampaignPropertyOffer> {
         self.campaign_mission()?.property_offer
+    }
+
+    /// Build or upgrade the player's headquarters.  `Game_IncrementPlayerCounterC20`
+    /// (0x4dcb30) is called from the HQ construction completion path; the London
+    /// goal 0 evaluator requires the counter to exceed 2.
+    pub fn build_hq(&mut self) -> Result<u32, &'static str> {
+        if self.campaign_mission().is_none() {
+            return Err("headquarters missions require a campaign");
+        }
+        if self.hq_level >= 3 {
+            return Err("headquarters is already level 3");
+        }
+        self.hq_level += 1;
+        self.evaluate_mission_goals();
+        Ok(self.hq_level)
+    }
+
+    /// Deliver a rat to a rival branch.  The shipped action path
+    /// (`Object_UpdateBranchOpenClose` 0x408a70, action 3) writes mission-state
+    /// slot 1 via `Array_SetSlot`, and `Mission_EvaluateGoals` reads that slot as
+    /// `+0x14`.
+    pub fn place_rat(&mut self) -> Result<u32, &'static str> {
+        let mission = self
+            .campaign_mission()
+            .ok_or("rat deliveries require a campaign")?;
+        if mission.rival_count == 0 {
+            return Err("there is no rival branch");
+        }
+        self.rats_placed += 1;
+        self.evaluate_mission_goals();
+        Ok(self.rats_placed)
     }
 
     pub fn can_enter_branch(&self) -> bool {
@@ -793,6 +1011,18 @@ impl World {
         }
         self.sim.cash -= price;
         self.leased_property = Some(tile_index);
+        self.player_branches.push(PlayerBranch {
+            tile_index,
+            owner_slot: 0,
+            size: 0,
+            style: 0,
+            owned: false,
+            player_controlled: true,
+            rent: offer.price,
+            sales: 0,
+            revenue: 0.0,
+        });
+        self.evaluate_mission_goals();
         Ok(offer.price)
     }
 
@@ -1041,6 +1271,11 @@ impl World {
             state_started: self.state_started,
             customers: self.customers.clone(),
             queue_capacity: self.queue_capacity,
+            player_branches: self.player_branches.clone(),
+            mission_goals: self.mission_goals.clone(),
+            mission_complete: self.mission_complete,
+            hq_level: self.hq_level,
+            rats_placed: self.rats_placed,
             profile: self.profile.clone(),
             scenario: self.scenario.clone(),
             leased_property: self.leased_property,
@@ -1064,6 +1299,11 @@ impl World {
                 + 1,
             customers: snapshot.customers.clone(),
             queue_capacity: snapshot.queue_capacity,
+            player_branches: snapshot.player_branches.clone(),
+            mission_goals: snapshot.mission_goals.clone(),
+            mission_complete: snapshot.mission_complete,
+            hq_level: snapshot.hq_level,
+            rats_placed: snapshot.rats_placed,
             profile: snapshot.profile.clone(),
             scenario: snapshot.scenario.clone(),
             leased_property: snapshot.leased_property,
@@ -1120,6 +1360,7 @@ impl World {
                         remaining_queue: remaining,
                     });
                     if let StepOutcome::Sale(sale) = self.sim.settle_sale_at(self.minute) {
+                        self.record_branch_sale(&sale);
                         events.push(ClockEvent::Sale {
                             minute: self.minute,
                             stock: self.sim.snapshot().stock,
@@ -1214,6 +1455,7 @@ impl World {
                         remaining_queue: remaining,
                     });
                     if let StepOutcome::Sale(sale) = self.sim.settle_sale_at(self.minute) {
+                        self.record_branch_sale(&sale);
                         events.push(ClockEvent::Sale {
                             minute: self.minute,
                             stock: self.sim.snapshot().stock,
@@ -1829,13 +2071,81 @@ mod tests {
         let leased = world.world_snapshot();
         assert_eq!(leased.leased_property, Some(13_694));
         assert_eq!(leased.sim.cash, 494_270.0);
-        let mut restored = World::from_snapshot(&leased);
+        assert_eq!(leased.player_branches.len(), 1);
+        assert_eq!(leased.player_branches[0].tile_index, 13_694);
+        assert_eq!(leased.player_branches[0].owner_slot, 0);
+        assert!(!leased.player_branches[0].owned);
+        assert_eq!(leased.player_branches[0].rent, 5_730);
+        assert_eq!(leased.mission_goals[0].status, GoalStatus::Pending);
+        assert_eq!(leased.mission_goals[1].status, GoalStatus::Pending);
+        assert_eq!(leased.mission_goals[2].status, GoalStatus::Complete);
+        assert!(!leased.mission_complete);
+        world.set_open(true);
+        world.enqueue_party(1);
+        world.advance_queue_ticks(QUEUE_WALK_TICKS + PRODUCTION_TICKS);
+        let sold = world.world_snapshot();
+        assert_eq!(sold.player_branches[0].sales, 1);
+        // The shipped goal 1 is "place a rat", not sales, so a sale must not
+        // advance it.  This is the Unicorn-confirmed +0x14 slot.
+        assert_eq!(sold.mission_goals[1].status, GoalStatus::Pending);
+        assert_eq!(sold.mission_goals[0].progress, 0);
+        assert!(world.mission_summary().unwrap().contains("GOALS 1/3"));
+        assert!(!sold.mission_complete);
+
+        assert_eq!(world.build_hq(), Ok(1));
+        assert_eq!(world.build_hq(), Ok(2));
+        assert_eq!(world.mission_goals()[0].status, GoalStatus::Pending);
+        assert_eq!(world.build_hq(), Ok(3));
+        assert_eq!(world.mission_goals()[0].status, GoalStatus::Complete);
+        assert_eq!(world.build_hq(), Err("headquarters is already level 3"));
+        assert!(!world.mission_complete());
+
+        assert_eq!(world.place_rat(), Ok(1));
+        assert_eq!(world.mission_goals()[1].status, GoalStatus::Complete);
+        assert!(world.mission_complete());
+        assert!(world.mission_summary().unwrap().contains("GOALS 3/3"));
+        assert!(world.mission_summary().unwrap().contains("HQ 3/3"));
+        assert!(world.mission_summary().unwrap().contains("RAT 1/1"));
+
+        let completed = world.world_snapshot();
+        let mut restored = World::from_snapshot(&completed);
         assert!(restored.can_enter_branch());
+        assert_eq!(restored.hq_level(), 3);
+        assert_eq!(restored.rats_placed(), 1);
         assert_eq!(
             restored.lease_campaign_property(13_694),
             Err("property is already leased")
         );
-        assert_eq!(restored.world_snapshot(), leased);
+        assert_eq!(restored.world_snapshot(), completed);
+    }
+
+    #[test]
+    fn campaign_actions_require_a_mission_and_rival() {
+        let mut world = World::new(0);
+        assert_eq!(
+            world.build_hq(),
+            Err("headquarters missions require a campaign")
+        );
+        assert_eq!(world.place_rat(), Err("rat deliveries require a campaign"));
+
+        let scenario = ScenarioSetup::from_campaign_mission(
+            "lon".into(),
+            "London".into(),
+            280,
+            2,
+            CampaignMission {
+                starting_cash: 500_000,
+                difficulty_percent: 10,
+                goal_ids: vec![0, 1, 2],
+                rival_count: 0,
+                player_start_hq: 0,
+                rival_start_hq: 1,
+                starting_branches: Vec::new(),
+                property_offer: None,
+            },
+        );
+        let mut no_rival = World::new(0).with_scenario(scenario);
+        assert_eq!(no_rival.place_rat(), Err("there is no rival branch"));
     }
 
     #[test]

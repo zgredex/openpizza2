@@ -1554,6 +1554,14 @@ enum LeasePrompt {
 fn city_controls(world: &World, branch_loaded: bool, prompt: Option<LeasePrompt>) -> &'static str {
     if prompt.is_some() {
         "ENTER LEASE   ESC CANCEL"
+    } else if !world.mission_goals().is_empty() {
+        if branch_loaded && world.can_enter_branch() {
+            "ARROWS/WASD PAN   B BRANCH   H HQ   R RAT"
+        } else if branch_loaded && world.campaign_property_offer().is_some() {
+            "ARROWS/WASD PAN   B LEASE   H HQ   R RAT"
+        } else {
+            "ARROWS/WASD PAN   H HQ   R RAT"
+        }
     } else if branch_loaded && world.can_enter_branch() {
         "ARROWS/WASD PAN   B ENTER BRANCH"
     } else if branch_loaded && world.campaign_property_offer().is_some() {
@@ -1629,6 +1637,16 @@ fn show_explore(
         city_controls(&world, branch.is_some() || args.campaign_start, None),
         campaign_city_summary(&world, None).as_deref(),
     )?;
+    if let Some(summary) = world.mission_summary() {
+        overlay::draw_mission_hud(
+            &mut city_view,
+            width,
+            height,
+            &summary,
+            world.mission_goal_text().as_deref().unwrap_or(""),
+            world.mission_complete(),
+        );
+    }
     if args.campaign_start && !args.window {
         pc2_scene::write_rgba_png(&args.output, width, height, &city_view)
             .map_err(|error| format!("png failed: {error}"))?;
@@ -2995,6 +3013,16 @@ impl WindowApp {
                 )
                 .is_ok()
                 {
+                    if let Some(summary) = sim.mission_summary() {
+                        overlay::draw_mission_hud(
+                            &mut view,
+                            self.width,
+                            self.height,
+                            &summary,
+                            sim.mission_goal_text().as_deref().unwrap_or(""),
+                            sim.mission_complete(),
+                        );
+                    }
                     viewer.update_image(&view);
                     println!(
                         "explore: city camera {},{} crop_us={}",
@@ -3030,6 +3058,16 @@ impl WindowApp {
                 )
                 .is_ok()
                 {
+                    if let Some(summary) = sim.mission_summary() {
+                        overlay::draw_mission_hud(
+                            &mut view,
+                            self.width,
+                            self.height,
+                            &summary,
+                            sim.mission_goal_text().as_deref().unwrap_or(""),
+                            sim.mission_complete(),
+                        );
+                    }
                     viewer.update_image(&view);
                     println!("explore: branch {}", sim.snapshot_json());
                 }
@@ -3080,6 +3118,34 @@ impl WindowApp {
                 Key::Character(text) if text.eq_ignore_ascii_case("d") => self.camera_x += step,
                 Key::Character(text) if text.eq_ignore_ascii_case("w") => self.camera_y -= step,
                 Key::Character(text) if text.eq_ignore_ascii_case("s") => self.camera_y += step,
+                Key::Character(text)
+                    if text.eq_ignore_ascii_case("h")
+                        && self
+                            .sim
+                            .as_ref()
+                            .is_some_and(|sim| !sim.mission_goals().is_empty()) =>
+                {
+                    if let Some(sim) = self.sim.as_mut() {
+                        match sim.build_hq() {
+                            Ok(level) => println!("mission: headquarters level {level}"),
+                            Err(error) => println!("mission: headquarters: {error}"),
+                        }
+                    }
+                }
+                Key::Character(text)
+                    if text.eq_ignore_ascii_case("r")
+                        && self
+                            .sim
+                            .as_ref()
+                            .is_some_and(|sim| !sim.mission_goals().is_empty()) =>
+                {
+                    if let Some(sim) = self.sim.as_mut() {
+                        match sim.place_rat() {
+                            Ok(count) => println!("mission: rats placed {count}"),
+                            Err(error) => println!("mission: rat: {error}"),
+                        }
+                    }
+                }
                 Key::Character(text)
                     if text.eq_ignore_ascii_case("b") && self.branch_base.is_some() =>
                 {

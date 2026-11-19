@@ -10,3 +10,5 @@ __pycache__/
 *.pyc
 .pytest_cache/
 /session-*.md
+
+/decompiled_fastfood2_named_v2/functions_readable/

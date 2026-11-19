@@ -53,6 +53,9 @@ fn glyph(ch: char) -> [u8; 7] {
         'P' => [
             0b11110, 0b10001, 0b10001, 0b11110, 0b10000, 0b10000, 0b10000,
         ],
+        'Q' => [
+            0b01110, 0b10001, 0b10001, 0b10001, 0b10101, 0b10010, 0b01101,
+        ],
         'R' => [
             0b11110, 0b10001, 0b10001, 0b11110, 0b10100, 0b10010, 0b10001,
         ],
@@ -410,6 +413,90 @@ pub fn draw_status(
         [200, 200, 210, 255],
     );
     Ok(())
+}
+
+/// Mission strip shared by the city and branch views.
+pub fn draw_mission_hud(
+    frame: &mut [u8],
+    width: u32,
+    height: u32,
+    summary: &str,
+    goals: &str,
+    complete: bool,
+) {
+    let panel_x = 12;
+    let panel_y = height.saturating_sub(92) as i32;
+    let panel_w = width.saturating_sub(24) as i32;
+    let panel_h = 80;
+    let border = if complete {
+        [110, 230, 130, 255]
+    } else {
+        [210, 170, 80, 255]
+    };
+    fill_rect(
+        frame,
+        width,
+        height,
+        panel_x,
+        panel_y,
+        panel_w,
+        panel_h,
+        [8, 10, 14, 220],
+    );
+    fill_rect(frame, width, height, panel_x, panel_y, panel_w, 2, border);
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 12,
+        panel_y + 8,
+        summary,
+        [235, 235, 235, 255],
+    );
+    let max_chars = ((panel_w - 24) / (ADVANCE * SCALE) as i32).max(20) as usize;
+    let (line_one, line_two) = if goals.chars().count() <= max_chars {
+        (goals, "")
+    } else {
+        let cut = goals
+            .char_indices()
+            .take(max_chars + 1)
+            .filter(|(_, ch)| *ch == ' ')
+            .map(|(index, _)| index)
+            .last()
+            .unwrap_or(goals.len());
+        (&goals[..cut], goals[cut..].trim_start())
+    };
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 12,
+        panel_y + 28,
+        line_one,
+        [200, 200, 210, 255],
+    );
+    if !line_two.is_empty() {
+        draw_text(
+            frame,
+            width,
+            height,
+            panel_x + 12,
+            panel_y + 44,
+            line_two,
+            [200, 200, 210, 255],
+        );
+    }
+    if complete {
+        draw_text(
+            frame,
+            width,
+            height,
+            panel_x + 12,
+            panel_y + 60,
+            "MISSION COMPLETE",
+            [120, 230, 130, 255],
+        );
+    }
 }
 
 pub fn draw_lease_marker(frame: &mut [u8], width: u32, height: u32, x: i32, y: i32) {

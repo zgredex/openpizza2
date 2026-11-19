@@ -1092,6 +1092,32 @@ def check_clock_command_emulation():
                    "(index 0x62, selector 4); 0xfffe79f7 -> 0x405ae0") if ok else output[-1200:],
     }
 
+def check_mission_goals_emulation():
+    result = subprocess.run(
+        ["python3", "tools/emulate_mission_goals.py"],
+        cwd=ROOT, text=True, capture_output=True, timeout=180)
+    output = (result.stdout + result.stderr).strip()
+    try:
+        payload = json.loads(result.stdout)
+    except json.JSONDecodeError:
+        return {
+            "name": "mission goal emulation",
+            "ok": False,
+            "detail": output[-1200:],
+        }
+    ok = (result.returncode == 0
+          and payload.get("case_count") == 9
+          and payload.get("matches") == 9
+          and payload.get("first_mismatch") is None
+          and all(case.get("actual", {}).get("evidence") == "emulated"
+                  for case in payload.get("cases", [])))
+    return {
+        "name": "mission goal emulation",
+        "ok": ok,
+        "detail": ("9/9 cases: goal 0 needs C20>2, goal 1 needs +0x14>0, "
+                   "goal 2 needs flag 0x16f4; rat action writes slot 1") if ok else output[-1200:],
+    }
+
 def check_rust_tests():
     result = subprocess.run(
         ["cargo", "test", "--quiet", "--all"],
@@ -1335,6 +1361,7 @@ def main(argv=None):
     checks.append(check_typed_packet())
     checks.append(check_starting_capital_emulation())
     checks.append(check_clock_command_emulation())
+    checks.append(check_mission_goals_emulation())
     checks.append(check_rust_tests())
     checks.append(check_iso())
     checks.append(check_isodaten())
