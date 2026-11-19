@@ -358,6 +358,50 @@ static void test_more_leafs(void) {
     assert(strcmp(game_get_plan_name(0x19), "Unknown Plan") == 0);
 }
 
+static void test_setters_and_tables(void) {
+    uint8_t object[0x300] = {0};
+    write_i32_at(object, 0x228, 1234);
+    write_i32_at(object, 0x22c, 5678);
+    clear_field228(object);
+    int32_t value = 0;
+    memcpy(&value, object + 0x228, sizeof(value));
+    assert(value == 0);
+    memcpy(&value, object + 0x22c, sizeof(value));
+    assert(value == 5678);
+    clear_field228(NULL);
+
+    entity_set_tile_id(object, 0x12345678);
+    memcpy(&value, object + 0x24, sizeof(value));
+    assert(value == 0x12345678);
+
+    uint8_t dialog[0x300] = {0};
+    dialog_set_result(dialog, 77);
+    memcpy(&value, dialog + 0x280, sizeof(value));
+    assert(value == 1);
+    memcpy(&value, dialog + 0x27c, sizeof(value));
+    assert(value == 77);
+    dialog_set_result(NULL, 1);
+
+    assert(game_get_global_table_value(0) == 0x3300ffu);
+    assert(game_get_global_table_value(4) == 0xff66ffu);
+    assert(game_get_global_table_value(8) == 0x99cc33u);
+    assert(game_get_global_table_value(20) == 0);
+    assert(game_get_global_table_value(21) == 0);
+
+    assert(game_find_city_index(200) == 0);
+    assert(game_find_city_index(16711680) == 2);
+    assert(game_find_city_index(26111) == 6);
+    assert(game_find_city_index(1234) == 7);
+
+    assert(strcmp(game_get_data_by_index(0), "Kids") == 0);
+    assert(strcmp(game_get_data_by_index(5), "Big shots") == 0);
+    assert(strcmp(game_get_data_by_index(10), "Official") == 0);
+    assert(strcmp(game_get_data_by_index(0xf), "Celebrity ") == 0);
+    assert(strcmp(game_get_data_by_index(0x21), "Celebrity ") == 0);
+    assert(strcmp(game_get_data_by_index(0x22), "Flyer Boy ") == 0);
+    assert(strcmp(game_get_data_by_index(99), "???") == 0);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -375,6 +419,7 @@ int main(void) {
     test_building_leafs();
     test_game_leafs();
     test_more_leafs();
+    test_setters_and_tables();
     puts("leaf function reconstruction: OK");
     return 0;
 }

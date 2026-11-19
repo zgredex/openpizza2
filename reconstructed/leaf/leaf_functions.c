@@ -628,3 +628,114 @@ const char *game_get_plan_name(int32_t plan) {
         return "Unknown Plan";
     }
 }
+
+void clear_field228(uint8_t *object) {
+    if (object != NULL) {
+        write_i32(object + 0x228, 0);
+    }
+}
+
+void entity_set_tile_id(uint8_t *entity, int32_t tile_id) {
+    if (entity != NULL) {
+        write_i32(entity + 0x24, tile_id);
+    }
+}
+
+void dialog_set_result(uint8_t *dialog, int32_t result) {
+    if (dialog == NULL) {
+        return;
+    }
+    write_i32(dialog + 0x280, 1);
+    write_i32(dialog + 0x27c, result);
+}
+
+uint32_t game_get_global_table_value(size_t index) {
+    static const uint32_t table[21] = {
+        0x3300ffu, 0xcc0000u, 0x00cc00u, 0x33ffffu, 0xff66ffu,
+        0xffff00u, 0x0066ffu, 0x990066u, 0x99cc33u, 0x66ff99u,
+        0xcc6666u, 0x009966u, 0x505214u, 0x5eb2ffu, 0xff9900u,
+        0x000066u, 0x660000u, 0x003300u, 0x00ccffu, 0xc1ff00u,
+        0x000000u,
+    };
+    return index < 21 ? table[index] : 0;
+}
+
+int32_t game_find_city_index(int32_t city_id) {
+    static const int32_t table[7] = {
+        200, 60927, 16711680, 42496, 13435085, 15197952, 26111,
+    };
+    for (int32_t index = 0; index < 7; index++) {
+        if (table[index] == city_id) {
+            return index;
+        }
+    }
+    return 7;
+}
+
+const char *game_get_data_by_index(int32_t index) {
+    switch (index) {
+    case 0:
+        return "Kids";
+    case 1:
+        return "Teens";
+    case 2:
+        return "Students";
+    case 3:
+        return "Louts";
+    case 4:
+        return "Yuppies";
+    case 5:
+        return "Big shots";
+    case 6:
+        return "Gothics";
+    case 7:
+        return "Tourist";
+    case 10:
+        return "Official";
+    case 0xb:
+        return "Fat man";
+    case 0xc:
+        return "Supplier ";
+    case 0xd:
+        return "Policeman ";
+    case 0xe:
+        return "Cleaning ";
+    case 0xf:
+    case 0x21:
+        return "Celebrity ";
+    case 0x10:
+        return "Job-seeker ";
+    case 0x11:
+        return "Cook ";
+    case 0x12:
+        return "Manager ";
+    case 0x13:
+        return "Service ";
+    case 0x14:
+        return "Errand Boy ";
+    case 0x16:
+        return "Punk ";
+    case 0x17:
+        return "Guard ";
+    case 0x18:
+        return "Mayor ";
+    case 0x1a:
+        return "Rat ";
+    case 0x1b:
+        return "Cockroach ";
+    case 0x1c:
+        return "Woodworm ";
+    case 0x1d:
+        return "Gangster ";
+    case 0x1e:
+        return "Thug ";
+    case 0x1f:
+        return "Courier ";
+    case 0x20:
+        return "Exterminator ";
+    case 0x22:
+        return "Flyer Boy ";
+    default:
+        return "???";
+    }
+}

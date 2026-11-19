@@ -154,4 +154,22 @@ void employee_apply_skill_multipliers(EmployeeSkillMultipliers *employee,
 /* Game_GetPlanName (0x501580). */
 const char *game_get_plan_name(int32_t plan);
 
+/* Clear_Field228 (0x526D00). */
+void clear_field228(uint8_t *object);
+
+/* Entity_SetTileId (0x4D3070). */
+void entity_set_tile_id(uint8_t *entity, int32_t tile_id);
+
+/* Dialog_SetResult (0x526850). */
+void dialog_set_result(uint8_t *dialog, int32_t result);
+
+/* Game_GetGlobalTableValue (0x482710): 21-entry colour table. */
+uint32_t game_get_global_table_value(size_t index);
+
+/* Game_FindCityIndex (0x4E2250): seven-entry city-id table. */
+int32_t game_find_city_index(int32_t city_id);
+
+/* Game_GetDataByIndex (0x48D110): customer/staff labels. */
+const char *game_get_data_by_index(int32_t index);
+
 #endif
