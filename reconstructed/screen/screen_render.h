@@ -52,6 +52,23 @@ bool screen_render_statistics(RenderSurface *surface, const uint8_t *tga_data,
                               const char *date, uint8_t *decode_buffer,
                               size_t decode_capacity);
 
+typedef struct BranchOfferData {
+    const char *branch_name;
+    uint32_t expand_days;
+    uint32_t cost;
+    uint32_t capacity;
+    uint32_t new_capacity;
+    const RgbaSprite *ratings[8];
+    int selected_button; /* 0 = Expand, -1 = none */
+} BranchOfferData;
+
+/* Composes Screen_BranchOffer (0x45C150): stock expansion offer with the
+ * eight customer-group rating strips and the Expand button. */
+bool screen_render_branch_offer(RenderSurface *surface, const RgbaSprite *panel,
+                                const RgbaSprite *separator,
+                                const uint8_t *font_data, size_t font_size,
+                                const FntInfo *font, const BranchOfferData *data);
+
 typedef struct BranchDetailsData {
     const char *branch_name;
     const char *employee_name;
