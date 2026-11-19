@@ -10,38 +10,117 @@
 #define PIZ_HEADER_SIZE 0xF0u
 #define PIZ_DIRECTORY_SIZE 0x20u
 #define PIZ_PREAMBLE_SIZE (PIZ_HEADER_SIZE + PIZ_DIRECTORY_SIZE)
+#define PIZ_FIXED_PREFIX 2011u
 #define PIZ_VERSION 0x11u
 #define PIZ_MAGIC 0x13738317u
 #define PIZ_START_MARKER 0x2Eu
 #define PIZ_END_MARKER 0x2Au
 
+#define PIZ_TILE_COUNT 2500
+#define PIZ_TILE_RECORD_SIZE 50
+#define PIZ_MAX_BRIEFINGS 4
+#define PIZ_MAX_CHARACTERS 4
+#define PIZ_MAX_MAPOBJECTS 4
+#define PIZ_MAX_PERSONS 8
+#define PIZ_MAX_CARS 4
+#define PIZ_MAX_PLAYERS 6
+#define PIZ_MAX_COMPANIES 6
+#define PIZ_MAX_CONTAINER_SIZE 0x30000u
+
 #pragma pack(push, 1)
 typedef struct PizHeader {
-    char title[0x40];            /* 0x00 */
-    char company[0x40];          /* 0x40 */
-    char city[0x40];             /* 0x80 */
-    uint8_t player_count;        /* 0xC0 */
-    uint8_t player_flags[7];     /* 0xC1 */
-    uint32_t game_calendar[4];   /* 0xC8 */
-    uint16_t system_time[8];     /* 0xD8 */
-    uint32_t version;            /* 0xE8 */
-    uint32_t magic;              /* 0xEC */
+    char title[0x40];
+    char company[0x40];
+    char city[0x40];
+    uint8_t player_count;
+    uint8_t player_flags[7];
+    uint32_t game_calendar[4];
+    uint16_t system_time[8];
+    uint32_t version;
+    uint32_t magic;
 } PizHeader;
+
+typedef struct PizBriefing {
+    uint32_t id;
+    char text[64];
+} PizBriefing;
+
+typedef struct PizCharacter {
+    uint32_t id;
+    char name[32];
+    int32_t skill;
+    int32_t motivation;
+} PizCharacter;
+
+typedef struct PizMapObject {
+    uint32_t id;
+    uint32_t type;
+    uint32_t owner_slot;
+    uint32_t tile_index;
+    uint32_t state;
+} PizMapObject;
+
+typedef struct PizPerson {
+    uint32_t id;
+    uint32_t profession;
+    uint32_t branch_id;
+    int32_t skill;
+} PizPerson;
+
+typedef struct PizCar {
+    uint32_t id;
+    uint32_t type;
+} PizCar;
+
+typedef struct PizPlayer {
+    uint32_t present;
+    uint32_t slot;
+    char name[32];
+    double cash;
+} PizPlayer;
+
+typedef struct PizCompany {
+    uint32_t present;
+    uint32_t slot;
+    char name[32];
+    double cash;
+    uint32_t branches;
+    uint32_t share_x100;
+} PizCompany;
 
 typedef struct PizContainer {
     PizHeader header;
     SaveState save;
+    uint32_t briefing_count;
+    PizBriefing briefings[PIZ_MAX_BRIEFINGS];
+    char tile_names[PIZ_TILE_COUNT][PIZ_TILE_RECORD_SIZE];
+    uint32_t character_count;
+    PizCharacter characters[PIZ_MAX_CHARACTERS];
+    uint32_t mapobject_count;
+    PizMapObject mapobjects[PIZ_MAX_MAPOBJECTS];
+    uint32_t person_count;
+    PizPerson persons[PIZ_MAX_PERSONS];
+    uint32_t car_count;
+    PizCar cars[PIZ_MAX_CARS];
+    PizPlayer players[PIZ_MAX_PLAYERS];
+    PizCompany companies[PIZ_MAX_COMPANIES];
 } PizContainer;
 #pragma pack(pop)
 
 /*
- * Minimal .piz container reconstructed from tools/piz_payload.py and
- * save_schema.json: 0xF0 header, 0x20 directory, start marker, payload and
- * end marker. The payload is the reconstructed SaveState blob.
+ * Expanded .piz save container reconstructed from save_schema.json and
+ * tools/piz_payload.py. It keeps the real 0xF0 header, 0x20 directory,
+ * fixed preamble through the 25-byte game calendar, variable briefing list,
+ * 2500 x 50-byte tile-name table, then directory-bounded character,
+ * map-object, person, car, player and company regions.
  */
 void piz_container_init(PizContainer *container, const char *title,
                         const char *company, const char *city);
-size_t piz_container_size(void);
+bool piz_container_add_briefing(PizContainer *container, uint32_t id,
+                                const char *text);
+bool piz_container_set_tile_name(PizContainer *container, uint32_t index,
+                                 const char *name);
+size_t piz_container_size(const PizContainer *container);
 size_t piz_container_encode(const PizContainer *container, uint8_t *buffer,
                             size_t capacity);
 bool piz_container_decode(PizContainer *container, const uint8_t *buffer,

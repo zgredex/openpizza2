@@ -144,14 +144,29 @@ int main(void) {
     PizContainer piz;
     piz_container_init(&piz, "My Save", "Ada Pizza", "London");
     piz.save = save;
-    uint8_t piz_buffer[PIZ_PREAMBLE_SIZE + 4 + SAVE_STATE_TOTAL_SIZE + 4];
+    piz.briefing_count = 1;
+    piz.briefings[0].id = 1;
+    strcpy(piz.briefings[0].text, "Welcome to London");
+    piz_container_set_tile_name(&piz, 0, "tile-zero");
+    piz.character_count = 1;
+    piz.characters[0].id = 99;
+    strcpy(piz.characters[0].name, "Ada");
+    piz.players[0].present = 1;
+    strcpy(piz.players[0].name, "Ada");
+    piz.players[0].cash = city.economy.cash;
+    piz.companies[0].present = 1;
+    strcpy(piz.companies[0].name, "Ada Pizza");
+    piz.companies[0].branches = 1;
+    uint8_t piz_buffer[PIZ_MAX_CONTAINER_SIZE];
     size_t piz_written = piz_container_encode(&piz, piz_buffer, sizeof(piz_buffer));
-    assert(piz_written == piz_container_size());
+    assert(piz_written == piz_container_size(&piz));
     PizContainer piz_loaded;
     assert(piz_container_decode(&piz_loaded, piz_buffer, piz_written));
     assert(strcmp(piz_loaded.header.title, "My Save") == 0);
     assert(strcmp(piz_loaded.header.city, "London") == 0);
     assert(mission_all_goals_complete(&piz_loaded.save.mission));
+    assert(piz_loaded.character_count == 1);
+    assert(strcmp(piz_loaded.tile_names[0], "tile-zero") == 0);
 
     printf("pc2 reconstructed full game: OK\n");
     printf("screen=%d goals=%u/%u hq=%u rats=%u branches=%u cash=%.6f\n",

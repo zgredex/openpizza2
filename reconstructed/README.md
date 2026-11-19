@@ -35,9 +35,11 @@ Current batches:
   wage totals, average skill, branch assignment and training level.
 - `save/` — packed save blob: "PC2S" header, the 0x164-byte settings block,
   and the 0xD0 bytes emitted by `Player_MissionState_Save`.
-- `piz/` — minimal `.piz` container: 0xF0 header, 0x20 directory, start/end
-  markers and the SaveState payload. The header is recognised by
-  `tools/piz_payload.py` (magic 0x13738317, version 0x11, payload end 0x354).
+- `piz/` — expanded `.piz` container: 0xF0 header, 0x20 directory, fixed
+  preamble through the game calendar, briefing list, 2500×50 tile-name table,
+  and directory-bounded character/map-object/person/car/player/company
+  sections. `tools/piz_payload.py info` accepts it with 2500 tile names,
+  2 briefings and all list counts.
 - `construction/` — `ConstructionOrder` 0x24 layout, enqueue cell index and
   completion ownership derived from `Branch_EnqueueConstructionOrder` and
   `Branch_CompleteConstruction`.
