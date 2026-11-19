@@ -68,8 +68,9 @@ Current batches:
   231-control personnel-record page with 39 shipped sprites.
 - `leaf/` — leaf routines from the original executable: clamping, weighted
   Manhattan distance, RGB555/RGB565 conversion, quantity pricing, company
-  percent modifiers, building level/area mapping, direction mapping and
-  small-array counters.
+  percent modifiers, building level/area/sprite-variant mapping, direction
+  mapping, calendar interpolation, array counters/search/pair access,
+  8-byte-record binary search, game stat counters and trivial pointer clears.
 - `rating/` — `Branch_GetCustomerGroupRating` composition, city adjustment,
   `Stats_GetAverage8`/`Branch_GetMenuRating`, the baseline branch-score table
   rule and `Game_GetMarketBonusFactor`.

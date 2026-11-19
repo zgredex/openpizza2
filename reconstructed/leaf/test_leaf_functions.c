@@ -100,6 +100,97 @@ static void test_arrays(void) {
     assert(array_count_non_zero20(NULL) == 0);
 }
 
+static void test_calendar(void) {
+    const int32_t values[4] = {100, 200, 300, 400};
+    const int32_t expected_month0[10] = {394, 322, 250, 178, 130,
+                                         106, 103, 100, 97, 95};
+    const int32_t days[10] = {0, 3, 6, 9, 11, 12, 15, 18, 21, 23};
+    for (int index = 0; index < 10; index++) {
+        assert(calendar_interpolate_monthly_value(days[index], 0, values) ==
+               expected_month0[index]);
+    }
+    assert(calendar_interpolate_monthly_value(0, 1, values) == 94);
+    assert(calendar_interpolate_monthly_value(6, 1, values) == 150);
+    assert(calendar_interpolate_monthly_value(12, 1, values) == 206);
+    assert(calendar_interpolate_monthly_value(18, 1, values) == 200);
+    assert(calendar_interpolate_monthly_value(6, 2, values) == 250);
+}
+
+static void test_sprite_variant(void) {
+    assert(building_get_sprite_variant(0x81c) == 0);
+    assert(building_get_sprite_variant(0x820) == 1);
+    assert(building_get_sprite_variant(0x824) == 2);
+    assert(building_get_sprite_variant(0x828) == 3);
+    assert(building_get_sprite_variant(0x833) == 3);
+    assert(building_get_sprite_variant(0x834) == 0);
+    assert(building_get_sprite_variant(0x863) == 2);
+    assert(building_get_sprite_variant(0x864) == -1);
+    assert(building_get_sprite_variant(0x800) == -1);
+}
+
+static void test_array_helpers(void) {
+    int32_t counts[256] = {0};
+    counts[3] = 1;
+    counts[7] = -1;
+    assert(array_are_both_counts_positive(counts, 3, 3));
+    assert(!array_are_both_counts_positive(counts, 3, 7));
+    assert(!array_are_both_counts_positive(counts, 1, 2));
+
+    const int32_t values[4] = {10, 20, 30, 20};
+    assert(array_index_of_int(values, 4, 30) == 2);
+    assert(array_index_of_int(values, 4, 20) == 1);
+    assert(array_index_of_int(values, 4, 99) == -1);
+    assert(array_index_of_int(NULL, 4, 30) == -1);
+
+    const int32_t records[4][2] = {{7, 10}, {8, 20}, {9, 30}, {10, 40}};
+    assert(binary_search8(records, 4, 30, false) == 2);
+    assert(binary_search8(records, 4, 10, false) == 0);
+    assert(binary_search8(records, 4, 40, false) == 3);
+    assert(binary_search8(records, 4, 25, false) == -1);
+    assert(binary_search8(records, 4, 25, true) == 2);
+    assert(binary_search8(records, 4, 5, true) == 0);
+    assert(binary_search8(records, 4, 50, true) == 4);
+    assert(binary_search8(records, 0, 5, false) == -1);
+    assert(binary_search8(records, 0, 5, true) == 0);
+
+    int32_t first = 0;
+    int32_t second = 0;
+    assert(array_get_pair8(records, 4, 2, &first, &second));
+    assert(first == 9 && second == 30);
+    assert(!array_get_pair8(records, 4, 4, &first, &second));
+
+    int32_t pairs[20][3] = {{0}};
+    pairs[4][0] = 1;
+    pairs[4][1] = 77;
+    pairs[9][0] = 2;
+    pairs[9][1] = 77;
+    assert(array_find_pair(pairs, 77) == 4);
+    assert(array_find_pair(pairs, 12) == -1);
+}
+
+static void test_counters(void) {
+    int16_t counter = 41;
+    assert(counter_increment_short(&counter) == 42);
+    assert(counter == 42);
+    assert(counter_increment_short(NULL) == 0);
+
+    const int8_t values[4] = {-5, 20, 20, -1};
+    assert(game_get_max_index4(values) == 2);
+    const int8_t first[4] = {9, 1, 2, 3};
+    assert(game_get_max_index4(first) == 0);
+
+    int32_t stats[0x56] = {0};
+    stats[0] = 1;
+    stats[0x55] = 5;
+    stats[4] = -2;
+    assert(game_count_active_stats(stats) == 2);
+
+    int32_t pointer = 99;
+    clear_ptr(&pointer);
+    assert(pointer == 0);
+    clear_ptr(NULL);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -109,6 +200,10 @@ int main(void) {
     test_building();
     test_direction();
     test_arrays();
+    test_calendar();
+    test_sprite_variant();
+    test_array_helpers();
+    test_counters();
     puts("leaf function reconstruction: OK");
     return 0;
 }

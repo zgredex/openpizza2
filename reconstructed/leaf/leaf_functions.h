@@ -43,4 +43,41 @@ size_t array_count_non_zero20(const int32_t values[20][3]);
 /* Array_CountValid8 (0x4EDBD0): eight shorts, count != -1. */
 size_t array_count_valid8(const int16_t values[8]);
 
+/* Calendar_InterpolateMonthlyValue (0x4DC6A0). */
+int32_t calendar_interpolate_monthly_value(int32_t day, unsigned month,
+                                           const int32_t values[4]);
+
+/* Building_GetSpriteVariant (0x4D2E80). */
+int32_t building_get_sprite_variant(int32_t type);
+
+/* Array_AreBothCountsPositive (0x512700). */
+bool array_are_both_counts_positive(const int32_t *counts, uint8_t first,
+                                    uint8_t second);
+
+/* Array_IndexOfInt (0x5230D0). */
+int32_t array_index_of_int(const int32_t *values, size_t count, int32_t key);
+
+/* BinarySearch8 (0x531330): records are {payload,key} pairs. */
+int32_t binary_search8(const int32_t records[][2], size_t count, int32_t key,
+                       bool insert);
+
+/* Array_FindPair (0x5140B0): 20 triples, first non-zero and second == key. */
+int32_t array_find_pair(const int32_t pairs[20][3], int32_t key);
+
+/* Array_GetPair8 (0x5312F0). */
+bool array_get_pair8(const int32_t records[][2], size_t count, size_t index,
+                     int32_t *first, int32_t *second);
+
+/* Counter_IncrementShortBA (0x4F0E20). */
+int16_t counter_increment_short(int16_t *counter);
+
+/* Game_GetMaxIndex4 (0x4E47E0). */
+uint8_t game_get_max_index4(const int8_t values[4]);
+
+/* Game_CountActiveStats (0x50FE50): 0x56 ints, count > 0. */
+size_t game_count_active_stats(const int32_t values[0x56]);
+
+/* Clear_Ptr (0x403190). */
+void clear_ptr(int32_t *pointer);
+
 #endif

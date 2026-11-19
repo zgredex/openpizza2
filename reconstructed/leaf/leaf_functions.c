@@ -175,3 +175,194 @@ size_t array_count_valid8(const int16_t values[8]) {
     }
     return count;
 }
+
+int32_t calendar_interpolate_monthly_value(int32_t day, unsigned month,
+                                           const int32_t values[4]) {
+    if (values == NULL) {
+        return 0;
+    }
+    if (day < 12) {
+        int32_t base = values[(month - 1u) & 3u] - 6;
+        int32_t step = ((values[month & 3u] - base) + 6) * day;
+        step = step / 6 + (step >> 31);
+        return ((step >> 1) - (step >> 31)) + base;
+    }
+    int32_t base = values[month & 3u];
+    int32_t peak = base + 6;
+    int32_t step = ((base - peak) + -6) * (day - 12);
+    step = step / 6 + (step >> 31);
+    return ((step >> 1) - (step >> 31)) + peak;
+}
+
+int32_t building_get_sprite_variant(int32_t type) {
+    if (type >= 0x81c && type <= 0x81f) {
+        return 0;
+    }
+    if (type >= 0x820 && type <= 0x823) {
+        return 1;
+    }
+    if (type >= 0x824 && type <= 0x827) {
+        return 2;
+    }
+    if (type >= 0x828 && type <= 0x833) {
+        return 3;
+    }
+    if (type >= 0x834 && type <= 0x837) {
+        return 0;
+    }
+    if (type >= 0x838 && type <= 0x83b) {
+        return 1;
+    }
+    if (type >= 0x83c && type <= 0x83f) {
+        return 2;
+    }
+    if (type >= 0x840 && type <= 0x843) {
+        return 0;
+    }
+    if (type >= 0x844 && type <= 0x847) {
+        return 1;
+    }
+    if (type >= 0x848 && type <= 0x84b) {
+        return 2;
+    }
+    if (type >= 0x84c && type <= 0x84f) {
+        return 0;
+    }
+    if (type >= 0x850 && type <= 0x853) {
+        return 1;
+    }
+    if (type >= 0x854 && type <= 0x857) {
+        return 2;
+    }
+    if (type >= 0x858 && type <= 0x85b) {
+        return 0;
+    }
+    if (type >= 0x85c && type <= 0x85f) {
+        return 1;
+    }
+    if (type >= 0x860 && type <= 0x863) {
+        return 2;
+    }
+    return -1;
+}
+
+bool array_are_both_counts_positive(const int32_t *counts, uint8_t first,
+                                    uint8_t second) {
+    if (counts == NULL) {
+        return false;
+    }
+    return counts[first] >= 1 && counts[second] >= 1;
+}
+
+int32_t array_index_of_int(const int32_t *values, size_t count, int32_t key) {
+    if (values == NULL) {
+        return -1;
+    }
+    for (size_t index = 0; index < count; index++) {
+        if (values[index] == key) {
+            return (int32_t)index;
+        }
+    }
+    return -1;
+}
+
+int32_t binary_search8(const int32_t records[][2], size_t count, int32_t key,
+                       bool insert) {
+    if (records == NULL || count == 0) {
+        return insert ? 0 : -1;
+    }
+    size_t low = 0;
+    size_t high = count;
+    if (count > 1) {
+        do {
+            size_t middle = (high + low) >> 1;
+            int32_t value = records[middle][1];
+            if (value == key) {
+                return (int32_t)middle;
+            }
+            if (value < key) {
+                low = middle;
+            } else {
+                high = middle;
+            }
+        } while (low < high - 1);
+    }
+    int32_t value = records[low][1];
+    if (value != key) {
+        if (high < count && records[high][1] == key) {
+            return (int32_t)high;
+        }
+        if (!insert) {
+            return -1;
+        }
+        if (value < key) {
+            return (int32_t)high;
+        }
+    }
+    return (int32_t)low;
+}
+
+int32_t array_find_pair(const int32_t pairs[20][3], int32_t key) {
+    if (pairs == NULL) {
+        return -1;
+    }
+    for (int32_t index = 0; index < 20; index++) {
+        if (pairs[index][0] != 0 && pairs[index][1] == key) {
+            return index;
+        }
+    }
+    return -1;
+}
+
+bool array_get_pair8(const int32_t records[][2], size_t count, size_t index,
+                     int32_t *first, int32_t *second) {
+    if (records == NULL || first == NULL || second == NULL || index >= count) {
+        return false;
+    }
+    *first = records[index][0];
+    *second = records[index][1];
+    return true;
+}
+
+int16_t counter_increment_short(int16_t *counter) {
+    if (counter == NULL) {
+        return 0;
+    }
+    *counter = (int16_t)(*counter + 1);
+    return *counter;
+}
+
+uint8_t game_get_max_index4(const int8_t values[4]) {
+    if (values == NULL) {
+        return 0;
+    }
+    uint8_t best_index = 0;
+    int32_t best_value = -1000;
+    for (uint8_t index = 0; index < 4; index++) {
+        int32_t value = values[index];
+        if (best_value <= value) {
+            best_index = index;
+            best_value = value;
+        }
+    }
+    return best_index;
+}
+
+size_t game_count_active_stats(const int32_t values[0x56]) {
+    size_t count = 0;
+    if (values == NULL) {
+        return 0;
+    }
+    for (size_t index = 0; index < 0x56; index++) {
+        if (values[index] > 0) {
+            count++;
+        }
+    }
+    return count;
+}
+
+void clear_ptr(int32_t *pointer) {
+    if (pointer != NULL) {
+        *pointer = 0;
+    }
+}
