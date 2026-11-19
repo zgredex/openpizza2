@@ -1747,6 +1747,26 @@ bool screen_render_office_desk(RenderSurface *surface, const uint8_t *tga_data,
                 !render_blit(surface, sprite, control->x, control->y)) {
                 return false;
             }
+        } else if (control->kind == OFFICE_KIND_ANIMATION) {
+            int animation = -1;
+            if (control->id == 1080) {
+                animation = 0;
+            } else if (control->id == 1045) {
+                animation = 1;
+            } else if (control->id == 1041) {
+                animation = 2;
+            } else if (control->id == 1042) {
+                animation = 3;
+            } else if (control->id == 1044) {
+                animation = 4;
+            } else if (control->id == 1043) {
+                animation = 5;
+            }
+            if (animation >= 0 && assets->animations[animation] != NULL &&
+                !render_blit(surface, assets->animations[animation],
+                             control->x, control->y)) {
+                return false;
+            }
         }
     }
     return true;

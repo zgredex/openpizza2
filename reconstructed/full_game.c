@@ -15,6 +15,7 @@
 #include "advertising/value_state.h"
 #include "rating/rating_state.h"
 #include "assets/assets.h"
+#include "assets/ani.h"
 #include "ui_render/ui_render.h"
 #include "screen/screen_render.h"
 #include "map/map_render.h"
@@ -1324,6 +1325,33 @@ int main(void) {
         od_assets.fonts[index] = (OfficeDeskFont){
             od_font_data[index], od_font_sizes[index], &od_font_infos[index]};
     }
+    static const struct {
+        const char *path;
+        size_t chunk;
+    } od_ani_cases[6] = {
+        {"../extracted/sprites/haecksler.ani", 1},
+        {"../extracted/sprites/spideranim.ani", 34},
+        {"../extracted/sprites/kakanim2.ani", 12},
+        {"../extracted/sprites/kakanim.ani", 3},
+        {"../extracted/sprites/kakanim1.ani", 3},
+        {"../extracted/sprites/tomatenanim.ani", 0},
+    };
+    uint8_t *od_ani_data[6] = {NULL};
+    uint8_t *od_ani_pixels[6] = {NULL};
+    RgbaSprite od_ani_sprites[6];
+    for (int index = 0; index < 6; index++) {
+        size_t od_ani_size = 0;
+        od_ani_data[index] = load_font_asset(od_ani_cases[index].path,
+                                             &od_ani_size);
+        assert(od_ani_data[index] != NULL);
+        od_ani_pixels[index] = malloc(800 * 600 * 4);
+        assert(od_ani_pixels[index] != NULL);
+        assert(ani_decode_chunk(od_ani_data[index], od_ani_size,
+                                od_ani_cases[index].chunk,
+                                od_ani_pixels[index], 800 * 600 * 4,
+                                &od_ani_sprites[index]));
+        od_assets.animations[index] = &od_ani_sprites[index];
+    }
     const OfficeDeskData od_data = {
         .city = city.city_name,
         .clock = "17:32",
@@ -1349,6 +1377,10 @@ int main(void) {
     }
     for (int index = 0; index < OFFICE_ASSET_COUNT; index++) {
         free(od_sprite_pixels[index]);
+    }
+    for (int index = 0; index < 6; index++) {
+        free(od_ani_data[index]);
+        free(od_ani_pixels[index]);
     }
     free(od_tga_data);
 

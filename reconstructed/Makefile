@@ -43,7 +43,7 @@ MENU_SRC = menu/menu_state.c menu/test_menu_state.c
 MENU_HDR = menu/menu_state.h
 MENU_BIN = $(BUILD)/test_menu_state
 
-SCREEN_SRC = screen/screen_render.c screen/statistics_balance_layout.c screen/office_desk_layout.c screen/character_select_layout.c screen/free_play_layout.c screen/test_screen_render.c ui_render/ui_render.c assets/assets.c render/render_state.c menu/menu_state.c statistics/statistics_state.c
+SCREEN_SRC = screen/screen_render.c screen/statistics_balance_layout.c screen/office_desk_layout.c screen/character_select_layout.c screen/free_play_layout.c screen/test_screen_render.c ui_render/ui_render.c assets/assets.c assets/ani.c render/render_state.c menu/menu_state.c statistics/statistics_state.c
 SCREEN_HDR = screen/screen_render.h ui_render/ui_render.h assets/assets.h render/render_state.h menu/menu_state.h statistics/statistics_state.h
 SCREEN_BIN = $(BUILD)/test_screen_render
 
@@ -51,7 +51,7 @@ UI_RENDER_SRC = ui_render/ui_render.c ui_render/test_ui_render.c assets/assets.c
 UI_RENDER_HDR = ui_render/ui_render.h assets/assets.h render/render_state.h
 UI_RENDER_BIN = $(BUILD)/test_ui_render
 
-ASSETS_SRC = assets/assets.c assets/test_assets.c
+ASSETS_SRC = assets/assets.c assets/ani.c assets/test_assets.c
 ASSETS_HDR = assets/assets.h
 ASSETS_BIN = $(BUILD)/test_assets
 
@@ -96,7 +96,7 @@ CITY_HDR = city/city_state.h $(MISSION_STATE_HDR) branch/branch_economy.h
 CITY_BIN = $(BUILD)/test_city_state
 
 GAME_MODULES = settings/settings.c ingredient/ingredient.c menu/menu_state.c \
-               ui_screen/ui_screen.c options/options_state.c statistics/statistics_state.c ai/ai_state.c recipes/recipe_state.c personnel/personnel_state.c render/render_state.c operations/branch_operations.c advertising/value_state.c rating/rating_state.c assets/assets.c map/iso_map.c map/map_render.c ui_render/ui_render.c screen/screen_render.c screen/statistics_balance_layout.c screen/office_desk_layout.c screen/character_select_layout.c screen/free_play_layout.c save/save_state.c piz/piz_container.c \
+               ui_screen/ui_screen.c options/options_state.c statistics/statistics_state.c ai/ai_state.c recipes/recipe_state.c personnel/personnel_state.c render/render_state.c operations/branch_operations.c advertising/value_state.c rating/rating_state.c assets/assets.c assets/ani.c map/iso_map.c map/map_render.c ui_render/ui_render.c screen/screen_render.c screen/statistics_balance_layout.c screen/office_desk_layout.c screen/character_select_layout.c screen/free_play_layout.c save/save_state.c piz/piz_container.c \
                construction/construction_state.c mission/mission_state.c \
                mission/mission_goals.c branch/branch_economy.c city/city_state.c
 GAME_SRC = $(GAME_MODULES) test_game.c
@@ -165,6 +165,14 @@ $(ASSETS_BIN): $(ASSETS_SRC) $(ASSETS_HDR)
 	@mkdir -p $(BUILD)
 	$(CC) $(CFLAGS) $(ASSETS_SRC) -o $@
 
+ANI_SRC = assets/ani.c assets/test_ani.c
+ANI_HDR = assets/ani.h render/render_state.h
+ANI_BIN = $(BUILD)/test_ani
+
+$(ANI_BIN): $(ANI_SRC) $(ANI_HDR)
+	@mkdir -p $(BUILD)
+	$(CC) $(CFLAGS) $(ANI_SRC) -o $@
+
 $(OPERATIONS_BIN): $(OPERATIONS_SRC) $(OPERATIONS_HDR)
 	@mkdir -p $(BUILD)
 	$(CC) $(CFLAGS) $(OPERATIONS_SRC) -lm -o $@
@@ -216,7 +224,7 @@ $(FULL_GAME_BIN): $(FULL_GAME_SRC) $(CITY_HDR) $(BRANCH_HDR) $(INGREDIENT_HDR) $
 full-game: $(FULL_GAME_BIN)
 	./$(FULL_GAME_BIN)
 
-check: $(SETTINGS_BIN) $(INGREDIENT_BIN) $(MISSION_STATE_BIN) $(MISSION_GOALS_BIN) $(BRANCH_BIN) $(CONSTRUCTION_BIN) $(SAVE_BIN) $(PIZ_BIN) $(AI_BIN) $(RECIPE_BIN) $(PERSONNEL_BIN) $(RENDER_BIN) $(OPERATIONS_BIN) $(ADVERTISING_BIN) $(RATING_BIN) $(ASSETS_BIN) $(MAP_BIN) $(UI_RENDER_BIN) $(SCREEN_BIN) $(MENU_BIN) $(UI_BIN) $(OPTIONS_BIN) $(STATISTICS_BIN) $(CITY_BIN) $(GAME_BIN)
+check: $(SETTINGS_BIN) $(INGREDIENT_BIN) $(MISSION_STATE_BIN) $(MISSION_GOALS_BIN) $(BRANCH_BIN) $(CONSTRUCTION_BIN) $(SAVE_BIN) $(PIZ_BIN) $(AI_BIN) $(RECIPE_BIN) $(PERSONNEL_BIN) $(RENDER_BIN) $(OPERATIONS_BIN) $(ADVERTISING_BIN) $(RATING_BIN) $(ASSETS_BIN) $(ANI_BIN) $(MAP_BIN) $(UI_RENDER_BIN) $(SCREEN_BIN) $(MENU_BIN) $(UI_BIN) $(OPTIONS_BIN) $(STATISTICS_BIN) $(CITY_BIN) $(GAME_BIN)
 	./$(SETTINGS_BIN)
 	./$(INGREDIENT_BIN)
 	./$(MISSION_STATE_BIN)
@@ -232,7 +240,7 @@ check: $(SETTINGS_BIN) $(INGREDIENT_BIN) $(MISSION_STATE_BIN) $(MISSION_GOALS_BI
 	./$(OPERATIONS_BIN)
 	./$(ADVERTISING_BIN)
 	./$(RATING_BIN)
-	./$(ASSETS_BIN)
+	./$(ASSETS_BIN) $(ANI_BIN)
 	./$(MAP_BIN)
 	./$(UI_RENDER_BIN)
 	./$(SCREEN_BIN)

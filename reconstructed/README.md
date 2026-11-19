@@ -31,7 +31,8 @@ Current batches:
 - `render/` — RGBA render surface, clipped fill/blit with alpha, and TGA
   decoding for uncompressed and RLE 24/32-bit true-colour plus 8-bit
   grayscale images.
-- `assets/` — SPR 8/16bpp alpha/RLE/raw decoder and FNT glyph decoder,
+- `assets/` — SPR 8/16bpp alpha/RLE/raw decoder, ANI sprite-sheet/raw/RLE
+  16bpp chunk decoder and FNT glyph decoder,
   exercised against `extracted/sprites/pb24_01.spr` and
   `extracted/fonts/timesfont.fnt`.
 - `ui_render/` — composes shipped SPR sprites and FNT text onto the RGBA
@@ -59,8 +60,8 @@ Current batches:
   STATISTIKBILANZBACK.spr with TAB09/TABPB01 rows, six shipped fonts, the
   SL01_00 slider and the PB22/PB24/PB33/TEXTPB05 controls, and the exact
   42-control office-desk layout over BG002.tga with its five fonts, desk
-  sprites and button/status controls (ANI animation windows are mapped but
-  their frames are not decoded yet).
+  sprites and button/status controls, with the six ANI animation windows
+  drawing decoded raw/RLE 16bpp frames.
 - `rating/` — `Branch_GetCustomerGroupRating` composition, city adjustment,
   `Stats_GetAverage8`/`Branch_GetMenuRating`, the baseline branch-score table
   rule and `Game_GetMarketBonusFactor`.

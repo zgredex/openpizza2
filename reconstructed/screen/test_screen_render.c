@@ -1,5 +1,7 @@
 #include "screen_render.h"
 
+#include "../assets/ani.h"
+
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -1165,6 +1167,31 @@ static void test_office_desk_composition(void) {
         assets.fonts[index] = (OfficeDeskFont){
             font_data[index], font_sizes[index], &font_infos[index]};
     }
+    static const struct {
+        const char *path;
+        size_t chunk;
+    } ani_cases[6] = {
+        {"../extracted/sprites/haecksler.ani", 1},
+        {"../extracted/sprites/spideranim.ani", 34},
+        {"../extracted/sprites/kakanim2.ani", 12},
+        {"../extracted/sprites/kakanim.ani", 3},
+        {"../extracted/sprites/kakanim1.ani", 3},
+        {"../extracted/sprites/tomatenanim.ani", 0},
+    };
+    uint8_t *ani_data[6] = {NULL};
+    uint8_t *ani_pixels[6] = {NULL};
+    RgbaSprite ani_sprites[6];
+    for (int index = 0; index < 6; index++) {
+        size_t ani_size = 0;
+        ani_data[index] = load_file(ani_cases[index].path, &ani_size);
+        assert(ani_data[index] != NULL);
+        ani_pixels[index] = malloc(800 * 600 * 4);
+        assert(ani_pixels[index] != NULL);
+        assert(ani_decode_chunk(ani_data[index], ani_size,
+                                ani_cases[index].chunk, ani_pixels[index],
+                                800 * 600 * 4, &ani_sprites[index]));
+        assets.animations[index] = &ani_sprites[index];
+    }
     assert(kOfficeDeskControlCount == 42);
     const OfficeDeskControl *control = find_office_control(8012);
     assert(control != NULL);
@@ -1235,6 +1262,16 @@ static void test_office_desk_composition(void) {
     assert(render_surface_init(&surface, frame, frame_size, 800, 600));
     assert(screen_render_office_desk(&surface, tga, tga_size, &assets, NULL,
                                      decoded, frame_size));
+    uint8_t *frame_without_animations = malloc(frame_size);
+    assert(frame_without_animations != NULL);
+    RenderSurface surface_without_animations;
+    assert(render_surface_init(&surface_without_animations,
+                               frame_without_animations, frame_size, 800, 600));
+    OfficeDeskAssets no_animations = assets;
+    memset(no_animations.animations, 0, sizeof(no_animations.animations));
+    assert(screen_render_office_desk(&surface_without_animations, tga, tga_size,
+                                     &no_animations, NULL, decoded, frame_size));
+    assert(memcmp(frame, frame_without_animations, frame_size) != 0);
 
     bool mauer_ink = false;
     for (size_t index = 0;
@@ -1248,7 +1285,7 @@ static void test_office_desk_composition(void) {
                 continue;
             }
             size_t target = ((size_t)(-2 + (int)py) * 800 + 534 + px) * 4;
-            assert(memcmp(frame + target,
+            assert(memcmp(frame_without_animations + target,
                           sprites[OFFICE_ASSET_MAUERBOGEN].pixels + index,
                           4) == 0);
             mauer_ink = true;
@@ -1298,6 +1335,11 @@ static void test_office_desk_composition(void) {
     for (int index = 0; index < OFFICE_ASSET_COUNT; index++) {
         free(sprite_pixels[index]);
     }
+    for (int index = 0; index < 6; index++) {
+        free(ani_data[index]);
+        free(ani_pixels[index]);
+    }
+    free(frame_without_animations);
     free(tga);
     free(decoded);
     free(frame);

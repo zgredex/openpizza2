@@ -237,6 +237,7 @@ typedef struct OfficeDeskFont {
 
 typedef struct OfficeDeskAssets {
     const RgbaSprite *sprites[OFFICE_ASSET_COUNT];
+    const RgbaSprite *animations[6];
     OfficeDeskFont fonts[OFFICE_FONT_COUNT];
 } OfficeDeskAssets;
 
@@ -251,8 +252,7 @@ typedef struct OfficeDeskData {
 
 /* Composes Screen_BuildOfficeDesk (0x4258C0): BG002 desk background plus all
  * 42 constructor controls at their original positions and fonts. The six
- * animation windows are represented by exact table entries; their ANI frames
- * are not decoded yet and are not drawn. */
+ * animation windows draw their decoded ANI chunk sprites when supplied. */
 bool screen_render_office_desk(RenderSurface *surface, const uint8_t *tga_data,
                                size_t tga_size,
                                const OfficeDeskAssets *assets,
