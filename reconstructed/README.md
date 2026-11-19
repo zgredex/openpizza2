@@ -66,6 +66,10 @@ Current batches:
   page with 28 sprites and its five rating rows, and the exact 208-control
   end-results points page over PE_ENDERGEBNIS_PUNKTE.TGA, and the exact
   231-control personnel-record page with 39 shipped sprites.
+- `leaf/` — leaf routines from the original executable: clamping, weighted
+  Manhattan distance, RGB555/RGB565 conversion, quantity pricing, company
+  percent modifiers, building level/area mapping, direction mapping and
+  small-array counters.
 - `rating/` — `Branch_GetCustomerGroupRating` composition, city adjustment,
   `Stats_GetAverage8`/`Branch_GetMenuRating`, the baseline branch-score table
   rule and `Game_GetMarketBonusFactor`.
