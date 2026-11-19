@@ -30,7 +30,7 @@ SYMBOLS = BASE / "symbols.csv"
 DATA_SYMBOLS = BASE / "data_symbols.csv"
 
 NAME_RE = re.compile(r"^// name: (.+)$", re.MULTILINE)
-DAT_RE = re.compile(r"\bDAT_([0-9A-Fa-f]{8})\b")
+DAT_RE = re.compile(r"\b(?:_?DAT)_([0-9A-Fa-f]{8})\b")
 UNK_RE = re.compile(r"\bUNK_([0-9A-Fa-f]{8})\b")
 FUN_RE = re.compile(r"\bFUN_([0-9A-Fa-f]{8})\b")
 
@@ -41,7 +41,7 @@ def load_function_names() -> dict[str, str]:
         return names
     with SYMBOLS.open(newline="", encoding="utf-8") as fh:
         for row in csv.DictReader(fh):
-            address = (row.get("address") or "").strip().lower()
+            address = normalize_address(row.get("address") or "")
             name = (row.get("name") or "").strip()
             if address and name:
                 names[address] = name
@@ -89,8 +89,8 @@ def main() -> int:
         match = NAME_RE.search(text)
         header_name = match.group(1).strip() if match else ""
         stem = path.stem.lower()
-        symbol_name = function_names.get(stem, "")
-        name = header_name or symbol_name
+        symbol_name = function_names.get(normalize_address(stem), "")
+        name = symbol_name or header_name
         if name and not name.startswith("FUN_"):
             named_functions += 1
         elif len(unnamed_examples) < 10:

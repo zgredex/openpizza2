@@ -25,14 +25,34 @@ evidence string for the address.
 | Metric | Value |
 |---|---:|
 | Decompiled function files | 3919 |
-| Named functions | 3857 (98.42%) |
-| Unique data addresses referenced | 2450 |
-| Named data addresses | 16 (0.65%) |
-| Data references resolved | 6331 / 15268 (41.47%) |
+| Named functions | 3919 (100.0%) |
+| Unique data addresses referenced | 3611 |
+| Named data addresses | 3611 (100.0%) |
+| Data references resolved | 16556 / 16556 (100.0%) |
 
-The 16 names cover 41.47% of all global references because the language/UI/game
-singletons dominate the call sites. The long tail is large; add names only with
-evidence.
+The 62 previously unnamed functions are the MSVC CRT block at
+`0x555605-0x557b98` (floating-point control, 64-bit helpers, locale/codepage,
+string/environment helpers). They are named in `symbols.csv` and were renamed
+in REA; for example `0x555605` is `CRT_ControlFP` and decompiles to
+`CRT_ControlWordFromFPFlags` / `CRT_FPFlagsFromControlWord`.
+
+## Data-name confidence tiers
+
+`data_symbols.csv` has 3611 entries:
+
+| Confidence | Count | Meaning |
+|---|---:|---|
+| high | 2369 | semantic name pinned by a code path or string table |
+| medium | 3 | role is clear but not exhaustively verified |
+| low | 1239 | address-stable alias, first-use evidence recorded |
+
+2367 of the high-confidence names come from `Language_MapStrings`
+(`0x5146d0`), which assigns specific `language.ldf` entries to globals; those
+are named `g_Text_<index>_<slug>`. The low-confidence aliases are deliberately
+not presented as understood semantics: they remove raw `DAT_` tokens while
+retaining the first referencing function and PE-section evidence in the CSV.
+Promoting a low-confidence alias to a semantic name requires the same
+code-path/runtime evidence used for the mission goals.
 
 ## Verified: London mission goals
 
