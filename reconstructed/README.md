@@ -46,8 +46,9 @@ Current batches:
 - `screen/` — decodes `extracted/pictures/pe_startscreen.tga` into an 800×600
   RGBA frame and draws the exact main-menu buttons at x=595 with tiled
   `TEXTPBTRANSPGELB_00.spr` backgrounds and the shipped Times font. Also composes the character-select page over
-  `extracted/pictures/pe_charakterauswahl.tga` at the documented control
-  positions, the free-play setup page over
+  `extracted/pictures/pe_charakterauswahl.tga` with all 66 exact constructor
+  controls, four shipped fonts and the PB22/PB24/PB26/PB27, portrait, gender,
+  light and button sprites, the free-play setup page over
   `extracted/pictures/pe_freies_spiel.tga` with the Berlin scenario fields,
   and the exact London briefing page over
   `extracted/pictures/pe_missionsbriefing_lon.tga` with the exact Mission

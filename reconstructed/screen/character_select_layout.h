@@ -1,0 +1,52 @@
+#ifndef PC2_RECONSTRUCTED_CHARACTER_SELECT_LAYOUT_H
+#define PC2_RECONSTRUCTED_CHARACTER_SELECT_LAYOUT_H
+
+#include <stddef.h>
+#include <stdint.h>
+
+#define CHARACTER_SELECT_ASSET_PB22 0
+#define CHARACTER_SELECT_ASSET_PB24 1
+#define CHARACTER_SELECT_ASSET_PB26 2
+#define CHARACTER_SELECT_ASSET_PB27 3
+#define CHARACTER_SELECT_ASSET_SLIDER 4
+#define CHARACTER_SELECT_ASSET_PHOTO_FRAME 5
+#define CHARACTER_SELECT_ASSET_PHOTO_DUMMY 6
+#define CHARACTER_SELECT_ASSET_BUTTON_YELLOW 7
+#define CHARACTER_SELECT_ASSET_BUTTON_GREEN 8
+#define CHARACTER_SELECT_ASSET_GENDER_M 9
+#define CHARACTER_SELECT_ASSET_GENDER_W 10
+#define CHARACTER_SELECT_ASSET_PLAYLOG 11
+#define CHARACTER_SELECT_ASSET_LOGO 12
+#define CHARACTER_SELECT_ASSET_LIGHT 13
+#define CHARACTER_SELECT_ASSET_COUNT 14
+
+#define CHARACTER_SELECT_FONT_TIMES 0
+#define CHARACTER_SELECT_FONT_VERDANA10 1
+#define CHARACTER_SELECT_FONT_VERDANA8 2
+#define CHARACTER_SELECT_FONT_TIMES14 3
+#define CHARACTER_SELECT_FONT_COUNT 4
+
+#define CHARACTER_SELECT_KIND_TEXT 0
+#define CHARACTER_SELECT_KIND_SPRITE 1
+#define CHARACTER_SELECT_KIND_SLIDER 2
+#define CHARACTER_SELECT_KIND_BITMAP 3
+#define CHARACTER_SELECT_KIND_INPUT 4
+#define CHARACTER_SELECT_KIND_BUTTON 5
+
+typedef struct CharacterSelectControl {
+    int32_t id;
+    int16_t x;
+    int16_t y;
+    uint8_t kind;
+    uint8_t asset;
+    uint8_t font;
+    uint8_t align;
+    uint16_t width;
+    uint16_t height;
+    const char *text;
+} CharacterSelectControl;
+
+extern const CharacterSelectControl kCharacterSelectControls[];
+extern const size_t kCharacterSelectControlCount;
+
+#endif

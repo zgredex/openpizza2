@@ -233,75 +233,111 @@ bool screen_render_briefing(RenderSurface *surface, const uint8_t *tga_data,
 
 bool screen_render_character_select(RenderSurface *surface,
                                     const uint8_t *tga_data, size_t tga_size,
-                                    const uint8_t *font_data, size_t font_size,
-                                    const FntInfo *font, const CharacterScreenData *data,
+                                    const CharacterSelectAssets *assets,
+                                    const CharacterScreenData *data,
                                     uint8_t *decode_buffer,
                                     size_t decode_capacity) {
-    if (data == NULL || font == NULL) {
+    if (assets == NULL || data == NULL) {
         return false;
     }
     if (!screen_render_background(surface, tga_data, tga_size, decode_buffer,
                                   decode_capacity)) {
         return false;
     }
-    const uint8_t title_color[4] = {120, 20, 20, 255};
-    const uint8_t label_color[4] = {40, 28, 20, 255};
-    const uint8_t value_color[4] = {20, 20, 90, 255};
-    draw_label(surface, font_data, font_size, font, 13, 5,
-               "Select player character", title_color);
-    draw_label(surface, font_data, font_size, font, 608, 5, "Enterprises:",
-               title_color);
-    draw_label(surface, font_data, font_size, font, 259, 77, "Characteristics:",
-               title_color);
-    draw_label(surface, font_data, font_size, font, 44, 304, "Player's name:",
-               label_color);
-    draw_label(surface, font_data, font_size, font, 609, 304, "Enterprise name:",
-               label_color);
-
-    static const char *const attribute_labels[CHARACTER_ATTRIBUTE_COUNT] = {
-        "Buyer", "Gangsters", "Specialist", "Politicians", "Seller", "Guard",
-    };
-    static const int32_t attribute_y[CHARACTER_ATTRIBUTE_COUNT] = {
-        140, 173, 207, 239, 273, 305,
-    };
-    char value_text[16];
-    for (int index = 0; index < CHARACTER_ATTRIBUTE_COUNT; index++) {
-        draw_label(surface, font_data, font_size, font, 323, attribute_y[index],
-                   attribute_labels[index], label_color);
-        snprintf(value_text, sizeof(value_text), "%d", data->attributes[index]);
-        draw_label(surface, font_data, font_size, font, 501, attribute_y[index],
-                   value_text, value_color);
+    const uint8_t text_color[4] = {0, 0, 0, 255};
+    const uint8_t highlight[4] = {255, 225, 120, 120};
+    char value_text[32];
+    for (size_t index = 0; index < kCharacterSelectControlCount; index++) {
+        const CharacterSelectControl *control = &kCharacterSelectControls[index];
+        if (control->kind == CHARACTER_SELECT_KIND_TEXT) {
+            const CharacterSelectFont *font = &assets->fonts[control->font];
+            if (font->data == NULL || font->info == NULL) {
+                return false;
+            }
+            const char *text = control->text;
+            if (control->id >= 1048 && control->id <= 1053) {
+                int32_t value = data->attributes[control->id - 1048];
+                snprintf(value_text, sizeof(value_text), "%d", value);
+                text = value_text;
+            }
+            uint32_t width = ui_measure_text(font->info, text);
+            int32_t draw_x = control->x;
+            if (control->align == 1) {
+                draw_x = control->x + control->width - (int32_t)width;
+            } else if (control->align == 2) {
+                draw_x = control->x + ((int32_t)control->width - (int32_t)width) / 2;
+            }
+            if (!ui_draw_text(surface, font->data, font->size, font->info,
+                              draw_x, control->y, text, text_color)) {
+                return false;
+            }
+        } else if (control->kind == CHARACTER_SELECT_KIND_SPRITE) {
+            const RgbaSprite *sprite = assets->sprites[control->asset];
+            if (sprite != NULL &&
+                !render_blit(surface, sprite, control->x, control->y)) {
+                return false;
+            }
+        } else if (control->kind == CHARACTER_SELECT_KIND_SLIDER) {
+            const RgbaSprite *sprite = assets->sprites[control->asset];
+            if (sprite != NULL) {
+                uint32_t level = data->difficulty > 4 ? 4 : data->difficulty;
+                int32_t offset = (int32_t)(level * control->width / 4);
+                if (offset > (int32_t)control->width - (int32_t)sprite->width) {
+                    offset = (int32_t)control->width - (int32_t)sprite->width;
+                }
+                if (!render_blit(surface, sprite, control->x + offset,
+                                 control->y)) {
+                    return false;
+                }
+            }
+        } else if (control->kind == CHARACTER_SELECT_KIND_INPUT) {
+            const CharacterSelectFont *font = &assets->fonts[control->font];
+            if (font->data == NULL || font->info == NULL) {
+                return false;
+            }
+            const char *text = control->text;
+            if (control->id == 1034 && data->enterprise_name != NULL) {
+                text = data->enterprise_name;
+            } else if (control->id == 1036 && data->player_name != NULL) {
+                text = data->player_name;
+            }
+            if (!ui_draw_text(surface, font->data, font->size, font->info,
+                              control->x, control->y, text, text_color)) {
+                return false;
+            }
+        } else if (control->kind == CHARACTER_SELECT_KIND_BUTTON) {
+            const RgbaSprite *sprite = assets->sprites[control->asset];
+            const CharacterSelectFont *font = &assets->fonts[control->font];
+            if (sprite == NULL || font->data == NULL || font->info == NULL) {
+                continue;
+            }
+            bool selected = (control->id == 1076 && data->selected_button == 0) ||
+                            (control->id == 1077 && data->selected_button == 1);
+            for (int32_t tile = 0; tile < (int32_t)control->width;
+                 tile += (int32_t)sprite->width) {
+                if (!render_blit(surface, sprite, control->x + tile,
+                                 control->y)) {
+                    return false;
+                }
+            }
+            if (selected) {
+                blend_rect(surface, control->x, control->y,
+                           (int32_t)control->width, (int32_t)sprite->height,
+                           highlight);
+            }
+            uint32_t width = ui_measure_text(font->info, control->text);
+            int32_t text_x = control->x +
+                             ((int32_t)control->width - (int32_t)width) / 2;
+            int32_t text_y = control->y +
+                             ((int32_t)sprite->height -
+                              (int32_t)font->info->line_height) /
+                                 2;
+            if (!ui_draw_text(surface, font->data, font->size, font->info,
+                              text_x, text_y, control->text, text_color)) {
+                return false;
+            }
+        }
     }
-
-    if (data->player_name != NULL) {
-        draw_label(surface, font_data, font_size, font, 44, 332, data->player_name,
-                   value_color);
-    }
-    if (data->enterprise_name != NULL) {
-        draw_label(surface, font_data, font_size, font, 609, 332,
-                   data->enterprise_name, value_color);
-    }
-
-    draw_label(surface, font_data, font_size, font, 609, 425,
-               "Level of difficulty", label_color);
-    snprintf(value_text, sizeof(value_text), "%u", data->difficulty);
-    draw_label(surface, font_data, font_size, font, 609, 478, "Very easy",
-               value_color);
-    draw_label(surface, font_data, font_size, font, 690, 478, value_text,
-               value_color);
-
-    const uint8_t back_idle[4] = {180, 170, 150, 210};
-    const uint8_t back_active[4] = {255, 215, 110, 230};
-    const uint8_t start_idle[4] = {140, 180, 140, 210};
-    const uint8_t start_active[4] = {130, 230, 130, 235};
-    blend_rect(surface, 595, 509, 204, 38,
-               data->selected_button == 0 ? back_active : back_idle);
-    blend_rect(surface, 595, 551, 204, 38,
-               data->selected_button == 1 ? start_active : start_idle);
-    draw_label(surface, font_data, font_size, font, 640, 517, "To main menu",
-               label_color);
-    draw_label(surface, font_data, font_size, font, 650, 559, "Start game",
-               label_color);
     return true;
 }
 

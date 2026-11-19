@@ -9,6 +9,7 @@
 #include "../menu/menu_state.h"
 #include "../render/render_state.h"
 #include "../statistics/statistics_state.h"
+#include "character_select_layout.h"
 #include "office_desk_layout.h"
 #include "statistics_balance_layout.h"
 
@@ -35,13 +36,24 @@ typedef struct CharacterScreenData {
     int selected_button; /* 0 = To main menu, 1 = Start game, -1 = none */
 } CharacterScreenData;
 
-/* Composes the character-selection page over the shipped
- * pe_charakterauswahl.tga using the control positions from
- * Screen_CharacterSelect (0x46DBD0). */
+typedef struct CharacterSelectFont {
+    const uint8_t *data;
+    size_t size;
+    const FntInfo *info;
+} CharacterSelectFont;
+
+typedef struct CharacterSelectAssets {
+    const RgbaSprite *sprites[CHARACTER_SELECT_ASSET_COUNT];
+    CharacterSelectFont fonts[CHARACTER_SELECT_FONT_COUNT];
+} CharacterSelectAssets;
+
+/* Composes Screen_CharacterSelect (0x46DBD0) exactly: the shipped
+ * pe_charakterauswahl.tga plus all 66 constructor controls at their original
+ * positions, fonts, alignments and strings. */
 bool screen_render_character_select(RenderSurface *surface,
                                     const uint8_t *tga_data, size_t tga_size,
-                                    const uint8_t *font_data, size_t font_size,
-                                    const FntInfo *font, const CharacterScreenData *data,
+                                    const CharacterSelectAssets *assets,
+                                    const CharacterScreenData *data,
                                     uint8_t *decode_buffer,
                                     size_t decode_capacity);
 

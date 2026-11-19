@@ -478,6 +478,52 @@ int main(void) {
         fclose(tga_file);
     }
     if (tga_data != NULL && font_size > 0) {
+        static const char *const cs_sprite_paths[CHARACTER_SELECT_ASSET_COUNT] = {
+            "../extracted/sprites/pb22_00.spr",
+            "../extracted/sprites/pb24_00.spr",
+            "../extracted/sprites/pb26_00.spr",
+            "../extracted/sprites/pb27_00.spr",
+            "../extracted/sprites/sl02_00.spr",
+            "../extracted/sprites/fotorahmen00.spr",
+            "../extracted/sprites/fotodummy00.spr",
+            "../extracted/sprites/textpbtranspgelb_00.spr",
+            "../extracted/sprites/textpbtranspgruen_00.spr",
+            "../extracted/sprites/geschlecht_m_00.spr",
+            "../extracted/sprites/geschlecht_w_00.spr",
+            "../extracted/sprites/playlog_2_01_00.spr",
+            "../extracted/sprites/logofenster.spr",
+            "../extracted/sprites/leuchtfeld_00_00.spr",
+        };
+        static const char *const cs_font_paths[CHARACTER_SELECT_FONT_COUNT] = {
+            "../extracted/fonts/timesfont.fnt",
+            "../extracted/fonts/verdana10.fnt",
+            "../extracted/fonts/verdana8.fnt",
+            "../extracted/fonts/times14.fnt",
+        };
+        uint8_t *cs_sprite_pixels[CHARACTER_SELECT_ASSET_COUNT] = {NULL};
+        RgbaSprite cs_sprites[CHARACTER_SELECT_ASSET_COUNT];
+        for (int index = 0; index < CHARACTER_SELECT_ASSET_COUNT; index++) {
+            assert(load_spr_asset(cs_sprite_paths[index],
+                                  &cs_sprite_pixels[index], &cs_sprites[index]));
+        }
+        uint8_t *cs_font_data[CHARACTER_SELECT_FONT_COUNT] = {NULL};
+        size_t cs_font_sizes[CHARACTER_SELECT_FONT_COUNT] = {0};
+        FntInfo cs_font_infos[CHARACTER_SELECT_FONT_COUNT];
+        for (int index = 0; index < CHARACTER_SELECT_FONT_COUNT; index++) {
+            cs_font_data[index] = load_font_asset(cs_font_paths[index],
+                                                  &cs_font_sizes[index]);
+            assert(cs_font_data[index] != NULL);
+            assert(fnt_read_info(cs_font_data[index], cs_font_sizes[index],
+                                 &cs_font_infos[index]));
+        }
+        CharacterSelectAssets cs_assets = {0};
+        for (int index = 0; index < CHARACTER_SELECT_ASSET_COUNT; index++) {
+            cs_assets.sprites[index] = &cs_sprites[index];
+        }
+        for (int index = 0; index < CHARACTER_SELECT_FONT_COUNT; index++) {
+            cs_assets.fonts[index] = (CharacterSelectFont){
+                cs_font_data[index], cs_font_sizes[index], &cs_font_infos[index]};
+        }
         size_t character_frame_size = 800 * 600 * 4;
         uint8_t *character_frame = malloc(character_frame_size);
         uint8_t *character_decoded = malloc(character_frame_size);
@@ -490,17 +536,22 @@ int main(void) {
             .player_name = "Ada",
             .enterprise_name = "Ada Pizza",
             .attributes = {5, 3, 4, 2, 5, 4},
-            .difficulty = 9,
+            .difficulty = 2,
             .selected_button = 1,
         };
         assert(screen_render_character_select(
-            &character_surface, tga_data, tga_size, font_data, font_size,
-            &font_info, &character_screen, character_decoded,
-            character_frame_size));
+            &character_surface, tga_data, tga_size, &cs_assets,
+            &character_screen, character_decoded, character_frame_size));
         assert(memcmp(character_frame, character_decoded,
                       character_frame_size) != 0);
         free(character_decoded);
         free(character_frame);
+        for (int index = 0; index < CHARACTER_SELECT_FONT_COUNT; index++) {
+            free(cs_font_data[index]);
+        }
+        for (int index = 0; index < CHARACTER_SELECT_ASSET_COUNT; index++) {
+            free(cs_sprite_pixels[index]);
+        }
         free(tga_data);
     }
 

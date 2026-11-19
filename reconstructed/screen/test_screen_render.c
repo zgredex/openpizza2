@@ -32,24 +32,138 @@ static uint8_t *load_file(const char *path, size_t *length) {
     return data;
 }
 
+static bool load_spr(const char *path, uint8_t **pixels, RgbaSprite *sprite);
+
 static void test_character_select_composition(void) {
     size_t tga_size = 0;
-    size_t font_size = 0;
     uint8_t *tga = load_file("../extracted/pictures/pe_charakterauswahl.tga", &tga_size);
-    uint8_t *font_data = load_file("../extracted/fonts/timesfont.fnt", &font_size);
     assert(tga != NULL);
-    assert(font_data != NULL);
+    static const char *const sprite_paths[CHARACTER_SELECT_ASSET_COUNT] = {
+        "../extracted/sprites/pb22_00.spr",
+        "../extracted/sprites/pb24_00.spr",
+        "../extracted/sprites/pb26_00.spr",
+        "../extracted/sprites/pb27_00.spr",
+        "../extracted/sprites/sl02_00.spr",
+        "../extracted/sprites/fotorahmen00.spr",
+        "../extracted/sprites/fotodummy00.spr",
+        "../extracted/sprites/textpbtranspgelb_00.spr",
+        "../extracted/sprites/textpbtranspgruen_00.spr",
+        "../extracted/sprites/geschlecht_m_00.spr",
+        "../extracted/sprites/geschlecht_w_00.spr",
+        "../extracted/sprites/playlog_2_01_00.spr",
+        "../extracted/sprites/logofenster.spr",
+        "../extracted/sprites/leuchtfeld_00_00.spr",
+    };
+    static const char *const font_paths[CHARACTER_SELECT_FONT_COUNT] = {
+        "../extracted/fonts/timesfont.fnt",
+        "../extracted/fonts/verdana10.fnt",
+        "../extracted/fonts/verdana8.fnt",
+        "../extracted/fonts/times14.fnt",
+    };
+    uint8_t *sprite_pixels[CHARACTER_SELECT_ASSET_COUNT] = {NULL};
+    RgbaSprite sprites[CHARACTER_SELECT_ASSET_COUNT];
+    for (int index = 0; index < CHARACTER_SELECT_ASSET_COUNT; index++) {
+        assert(load_spr(sprite_paths[index], &sprite_pixels[index],
+                        &sprites[index]));
+    }
+    uint8_t *font_data[CHARACTER_SELECT_FONT_COUNT] = {NULL};
+    size_t font_sizes[CHARACTER_SELECT_FONT_COUNT] = {0};
+    FntInfo font_infos[CHARACTER_SELECT_FONT_COUNT];
+    for (int index = 0; index < CHARACTER_SELECT_FONT_COUNT; index++) {
+        font_data[index] = load_file(font_paths[index], &font_sizes[index]);
+        assert(font_data[index] != NULL);
+        assert(fnt_read_info(font_data[index], font_sizes[index],
+                             &font_infos[index]));
+    }
+    CharacterSelectAssets assets = {0};
+    for (int index = 0; index < CHARACTER_SELECT_ASSET_COUNT; index++) {
+        assets.sprites[index] = &sprites[index];
+    }
+    for (int index = 0; index < CHARACTER_SELECT_FONT_COUNT; index++) {
+        assets.fonts[index] = (CharacterSelectFont){
+            font_data[index], font_sizes[index], &font_infos[index]};
+    }
+    assert(kCharacterSelectControlCount == 66);
+    const CharacterSelectControl *control = NULL;
+    for (size_t index = 0; index < kCharacterSelectControlCount; index++) {
+        if (kCharacterSelectControls[index].id == 1056) {
+            control = &kCharacterSelectControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 13 && control->y == 5);
+    assert(control->font == 0 && control->align == 2 && control->width == 560);
+    assert(strcmp(control->text, "Select player character") == 0);
+    control = NULL;
+    for (size_t index = 0; index < kCharacterSelectControlCount; index++) {
+        if (kCharacterSelectControls[index].id == 1033) {
+            control = &kCharacterSelectControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 609 && control->y == 304);
+    assert(control->align == 2 && control->width == 180);
+    assert(strcmp(control->text, "Enterprise name:") == 0);
+    control = NULL;
+    for (size_t index = 0; index < kCharacterSelectControlCount; index++) {
+        if (kCharacterSelectControls[index].id == 1031) {
+            control = &kCharacterSelectControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 617 && control->y == 461);
+    assert(control->kind == CHARACTER_SELECT_KIND_SLIDER);
+    assert(control->asset == CHARACTER_SELECT_ASSET_SLIDER);
+    assert(control->width == 175);
+    control = NULL;
+    for (size_t index = 0; index < kCharacterSelectControlCount; index++) {
+        if (kCharacterSelectControls[index].id == 1034) {
+            control = &kCharacterSelectControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->kind == CHARACTER_SELECT_KIND_INPUT);
+    assert(control->x == 616 && control->y == 347);
+    assert(control->font == 3 && control->width == 170);
+    assert(strcmp(control->text, "#Unternehmensname") == 0);
+    control = NULL;
+    for (size_t index = 0; index < kCharacterSelectControlCount; index++) {
+        if (kCharacterSelectControls[index].id == 1076) {
+            control = &kCharacterSelectControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->kind == CHARACTER_SELECT_KIND_BUTTON);
+    assert(control->x == 595 && control->y == 509);
+    assert(control->asset == CHARACTER_SELECT_ASSET_BUTTON_YELLOW);
+    assert(control->width == 204);
+    assert(strcmp(control->text, "To main menu") == 0);
+    control = NULL;
+    for (size_t index = 0; index < kCharacterSelectControlCount; index++) {
+        if (kCharacterSelectControls[index].id == 1086) {
+            control = &kCharacterSelectControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 626 && control->y == 54);
+    assert(control->asset == CHARACTER_SELECT_ASSET_LOGO);
+    control = NULL;
+    for (size_t index = 0; index < kCharacterSelectControlCount; index++) {
+        if (kCharacterSelectControls[index].id == 1087) {
+            control = &kCharacterSelectControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 42 && control->y == 343);
+    assert(control->asset == CHARACTER_SELECT_ASSET_LIGHT);
 
-    FntInfo font;
-    assert(fnt_read_info(font_data, font_size, &font));
     CharacterScreenData data = {
         .player_name = "Ada",
         .enterprise_name = "Ada Pizza",
         .attributes = {5, 3, 4, 2, 5, 4},
-        .difficulty = 9,
+        .difficulty = 2,
         .selected_button = 1,
     };
-
     size_t frame_size = 800 * 600 * 4;
     uint8_t *frame = malloc(frame_size);
     uint8_t *decoded = malloc(frame_size);
@@ -57,13 +171,12 @@ static void test_character_select_composition(void) {
     assert(decoded != NULL);
     RenderSurface surface;
     assert(render_surface_init(&surface, frame, frame_size, 800, 600));
-    assert(screen_render_character_select(&surface, tga, tga_size, font_data,
-                                          font_size, &font, &data, decoded,
-                                          frame_size));
+    assert(screen_render_character_select(&surface, tga, tga_size, &assets,
+                                          &data, decoded, frame_size));
     assert(memcmp(frame, decoded, frame_size) != 0);
 
     bool title_ink = false;
-    for (int y = 4; y < 30; y++) {
+    for (int y = 4; y < 28; y++) {
         for (int x = 10; x < 300; x++) {
             size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
             if (frame[offset] < 180 && frame[offset + 1] < 120) {
@@ -72,14 +185,48 @@ static void test_character_select_composition(void) {
         }
     }
     assert(title_ink);
-    size_t start_offset = ((size_t)560 * 800 + 700) * 4;
-    assert(frame[start_offset + 1] > frame[start_offset]);
-    assert(!screen_render_character_select(&surface, tga, tga_size, font_data,
-                                           font_size, &font, NULL, decoded,
-                                           frame_size));
+    bool name_ink = false;
+    for (int y = 347; y < 365; y++) {
+        for (int x = 51; x < 210; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] < 120 && frame[offset + 1] < 120) {
+                name_ink = true;
+            }
+        }
+    }
+    assert(name_ink);
+    bool start_text_ink = false;
+    for (int y = 551; y < 590; y++) {
+        for (int x = 595; x < 799; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] < 80 && frame[offset + 1] < 80 &&
+                frame[offset + 2] < 80) {
+                start_text_ink = true;
+            }
+        }
+    }
+    assert(start_text_ink);
+    bool slider_ink = false;
+    for (int y = 458; y < 472; y++) {
+        for (int x = 680; x < 730; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] != 22 || frame[offset + 1] != 26 ||
+                frame[offset + 2] != 34) {
+                slider_ink = true;
+            }
+        }
+    }
+    assert(slider_ink);
+    assert(!screen_render_character_select(&surface, tga, tga_size, NULL,
+                                           &data, decoded, frame_size));
 
+    for (int index = 0; index < CHARACTER_SELECT_FONT_COUNT; index++) {
+        free(font_data[index]);
+    }
+    for (int index = 0; index < CHARACTER_SELECT_ASSET_COUNT; index++) {
+        free(sprite_pixels[index]);
+    }
     free(tga);
-    free(font_data);
     free(decoded);
     free(frame);
 }
