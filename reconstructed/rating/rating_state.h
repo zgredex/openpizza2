@@ -15,6 +15,11 @@
 int32_t rating_city_adjust(int32_t rating, int32_t city_field_5c,
                            int32_t city_field_44);
 int32_t rating_branch_score(int32_t value, int32_t baseline);
+int32_t rating_branch_scores(const int32_t values[8],
+                             const int32_t baselines[8], int32_t scores[8]);
+double rating_market_bonus_factor(bool has_market, int32_t market_value,
+                                  int32_t composite);
+
 int32_t branch_customer_group_rating(int32_t stats_average8,
                                      int32_t building_rating,
                                      int32_t menu_rating, int32_t price_rating,

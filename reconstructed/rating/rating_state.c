@@ -1,5 +1,7 @@
 #include "rating_state.h"
 
+#include <stddef.h>
+
 static int32_t clamp_0_100(int32_t value) {
     if (value < 0) {
         return 0;
@@ -33,4 +35,30 @@ int32_t branch_customer_group_rating(int32_t stats_average8,
     }
     int32_t result = building_score + score / divisor;
     return clamp_0_100(result);
+}
+
+int32_t rating_branch_scores(const int32_t values[8],
+                             const int32_t baselines[8], int32_t scores[8]) {
+    if (values == NULL || baselines == NULL || scores == NULL) {
+        return 0;
+    }
+    for (int index = 0; index < 8; index++) {
+        scores[index] = rating_branch_score(values[index], baselines[index]);
+    }
+    return 8;
+}
+
+double rating_market_bonus_factor(bool has_market, int32_t market_value,
+                                  int32_t composite) {
+    if (!has_market) {
+        return 1.0;
+    }
+    int32_t value = market_value >> 1;
+    if (value < 0) {
+        int32_t adjustment = composite / 20;
+        if (adjustment < 1) {
+            value += adjustment;
+        }
+    }
+    return (double)(value + 100) * 0.01;
 }

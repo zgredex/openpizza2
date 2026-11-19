@@ -51,7 +51,7 @@ Current batches:
   and the London briefing page over
   `extracted/pictures/pe_missionsbriefing_lon.tga` with wrapped body text.
 - `rating/` — `Branch_GetCustomerGroupRating` composition, city adjustment,
-  and the baseline branch-score table rule.
+  the baseline branch-score table rule and `Game_GetMarketBonusFactor`.
 - `advertising/` — `Value_Approach`, hourly value decay,
   `Game_GetAdjustedValue` customer-radius conversion, company budget-percent
   conversion, per-category plan effect bars, the 12×8 media/category table

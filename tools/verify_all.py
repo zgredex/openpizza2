@@ -1236,8 +1236,8 @@ def check_reconstructed_c():
                    "balance, branch-balance statistics, AI plan scoring, "
                    "advertising value/plan effects, "
                    "category metrics and budget allocation, customer-group "
-                   "rating, iso-map/branch interior render and hourly branch "
-                   "economy included")
+                   "rating and market bonus, iso-map/branch interior render and "
+                   "hourly branch economy included")
         if ok else output[-1200:],
     }
 

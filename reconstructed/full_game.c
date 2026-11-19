@@ -547,6 +547,15 @@ int main(void) {
     assert(rating_branch_score(10, 40) == 10);
     assert(branch_customer_group_rating(60, 70, 80, 90, true, 10) == 85);
     assert(branch_customer_group_rating(30, 30, 30, 0, false, 20) == 50);
+    const int32_t rating_values[8] = {10, 40, 19, 41, 0, 100, 20, 30};
+    const int32_t rating_baselines[8] = {40, 40, 20, 40, 30, 50, 60, 30};
+    int32_t rating_scores[8] = {0};
+    assert(rating_branch_scores(rating_values, rating_baselines,
+                                rating_scores) == 8);
+    assert(rating_scores[0] == 10 && rating_scores[6] == 0);
+    assert(rating_market_bonus_factor(false, 0, 0) == 1.0);
+    assert(rating_market_bonus_factor(true, 20, 0) == 1.1);
+
     assert(company_get_percent_modifier(1, 5000) == 50);
     assert(gameplan_effect_from_bar(1, 5000, 80, 0, 0) == 60);
     assert(gameplan_effect_from_bar(1, 5000, 80, 25, 0) == 15);

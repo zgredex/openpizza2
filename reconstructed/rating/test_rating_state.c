@@ -27,10 +27,36 @@ static void test_group_rating(void) {
     assert(branch_customer_group_rating(30, 30, 30, 0, false, 20) == 50);
 }
 
+static void test_branch_scores(void) {
+    const int32_t values[8] = {10, 40, 19, 41, 0, 100, 20, 30};
+    const int32_t baselines[8] = {40, 40, 20, 40, 30, 50, 60, 30};
+    int32_t scores[8] = {0};
+    assert(rating_branch_scores(values, baselines, scores) == 8);
+    assert(scores[0] == 10);
+    assert(scores[1] == 100);
+    assert(scores[2] == 97);
+    assert(scores[3] == 100);
+    assert(scores[4] == 10);
+    assert(scores[5] == 100);
+    assert(scores[6] == 0);
+    assert(scores[7] == 100);
+    assert(rating_branch_scores(NULL, baselines, scores) == 0);
+}
+
+static void test_market_bonus(void) {
+    assert(rating_market_bonus_factor(false, 0, 0) == 1.0);
+    assert(rating_market_bonus_factor(true, 20, 0) == 1.1);
+    assert(rating_market_bonus_factor(true, -40, 10) == 0.8);
+    assert(rating_market_bonus_factor(true, -40, 20) == 0.8);
+    assert(rating_market_bonus_factor(true, 0, 20) == 1.0);
+}
+
 int main(void) {
     test_city_adjust();
     test_branch_score();
     test_group_rating();
+    test_branch_scores();
+    test_market_bonus();
     puts("rating state reconstruction: OK");
     return 0;
 }
