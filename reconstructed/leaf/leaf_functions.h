@@ -467,6 +467,14 @@ void player_reset_ai_state(uint8_t *player);
 void player_reset_debt_hours(uint8_t *player);
 void player_set_slot_flag18(uint8_t *player, size_t index);
 
+/* Tile/product/name lookup helpers. */
+bool tile_def_test_flag(const uint8_t *tile_defs, size_t index, uint32_t mask);
+bool product_map_category(uint8_t category, uint8_t group);
+int32_t map_find_name_index(const uint8_t *records, int32_t count,
+                            const char *name);
+int32_t string_list_find(const uint8_t *records, int32_t count,
+                         const char *key, int32_t *index);
+
 /* Game_GetActiveScreenOrFallback (0x482910). */
 int32_t game_get_active_screen_or_fallback(const uint8_t *game);
 

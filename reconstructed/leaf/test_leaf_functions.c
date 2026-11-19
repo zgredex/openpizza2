@@ -1347,6 +1347,53 @@ static void test_scroll_market_rating_player(void) {
     assert(player_state[0x10e5 + 2 * 0x18] == 1);
 }
 
+static void test_tile_product_name_helpers(void) {
+    uint8_t flags[0x20] = {0};
+    write_i32_at(flags, 0x1c, 0x5);
+    uint8_t defs[4 * 12] = {0};
+    uintptr_t flag_pointer = (uintptr_t)flags;
+    memcpy(defs + 12 + 8, &flag_pointer, sizeof(flag_pointer));
+    assert(!tile_def_test_flag(defs, 0, 1));
+    assert(tile_def_test_flag(defs, 1, 1));
+    assert(!tile_def_test_flag(defs, 1, 2));
+    assert(!tile_def_test_flag(NULL, 0, 1));
+
+    assert(!product_map_category(0x11, 0));
+    assert(product_map_category(0x12, 0));
+    assert(!product_map_category(0, 0));
+    assert(!product_map_category(8, 1));
+    assert(product_map_category(9, 1));
+    assert(product_map_category(1, 2));
+    assert(!product_map_category(4, 2));
+    assert(product_map_category(9, 3));
+    assert(product_map_category(0x11, 3));
+    assert(!product_map_category(0x12, 3));
+    assert(!product_map_category(9, 4));
+
+    uint8_t records[0x25 + 2 * 0x48] = {0};
+    strcpy((char *)records + 0x25, "Alpha");
+    strcpy((char *)records + 0x25 + 0x48, "Beta");
+    assert(map_find_name_index(records, 2, "Alpha") == 0);
+    assert(map_find_name_index(records, 2, "Beta") == 1);
+    assert(map_find_name_index(records, 2, "Gamma") == -1);
+    assert(map_find_name_index(NULL, 2, "Alpha") == -1);
+
+    uint8_t strings[3 * 0x48] = {0};
+    strcpy((char *)strings, "alpha");
+    strcpy((char *)strings + 0x48, "charlie");
+    strcpy((char *)strings + 2 * 0x48, "echo");
+    int32_t index = -1;
+    assert(string_list_find(strings, 3, "charlie", &index) == 1);
+    assert(index == 1);
+    assert(string_list_find(strings, 3, "bravo", &index) == 0);
+    assert(index == 1);
+    assert(string_list_find(strings, 3, "zulu", &index) == 0);
+    assert(index == 3);
+    assert(string_list_find(strings, 0, "alpha", &index) == 0);
+    assert(index == 0);
+    assert(string_list_find(strings, 3, "alpha", NULL) == 0);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -1380,6 +1427,7 @@ int main(void) {
     test_table_grid_searches();
     test_map_object_helpers();
     test_scroll_market_rating_player();
+    test_tile_product_name_helpers();
     puts("leaf function reconstruction: OK");
     return 0;
 }

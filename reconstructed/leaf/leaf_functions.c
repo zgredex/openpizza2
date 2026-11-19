@@ -2281,3 +2281,103 @@ void player_set_slot_flag18(uint8_t *player, size_t index) {
         player[0x10e5u + index * 0x18u] = 1;
     }
 }
+
+bool tile_def_test_flag(const uint8_t *tile_defs, size_t index, uint32_t mask) {
+    if (tile_defs == NULL) {
+        return false;
+    }
+    uintptr_t flags;
+    memcpy(&flags, tile_defs + index * 0x0c + 8, sizeof(flags));
+    if (flags == 0) {
+        return false;
+    }
+    return ((uint32_t)read_i32((const uint8_t *)flags + 0x1c) & mask) != 0;
+}
+
+bool product_map_category(uint8_t category, uint8_t group) {
+    static const uint8_t group0[] = {
+        0, 0x11, 0x1c, 0x1e, 0x24, 0x30, 0x27, 0x2a, 0x2b,
+        0x2c, 0x2d, 0x31, 0x39, 0x3a, 0x3b, 0x41, 0xff,
+    };
+    static const uint8_t group1[] = {
+        0, 8, 10, 13, 14, 15, 16, 22, 28, 36, 39, 43,
+        44, 45, 48, 51, 53, 54, 55, 59, 60, 62, 63, 0xff,
+    };
+    static const uint8_t group2[] = {
+        0, 1, 2, 3, 7, 9, 10, 13, 17, 18, 19, 20, 21, 24, 27, 32,
+        34, 35, 37, 40, 45, 48, 49, 51, 54, 55, 56, 57, 58, 60, 61,
+        65, 0xff,
+    };
+    static const uint8_t group3[] = {9, 0x11, 0x26, 0x35, 0x3b, 0x3e, 0x41, 0xff};
+    const uint8_t *table;
+    bool invert;
+    switch (group) {
+    case 0:
+        table = group0;
+        invert = false;
+        break;
+    case 1:
+        table = group1;
+        invert = false;
+        break;
+    case 2:
+        table = group2;
+        invert = true;
+        break;
+    case 3:
+        table = group3;
+        invert = true;
+        break;
+    default:
+        return false;
+    }
+    for (size_t index = 0; table[index] != 0xff; index++) {
+        if (table[index] == category) {
+            return invert;
+        }
+    }
+    return !invert;
+}
+
+int32_t map_find_name_index(const uint8_t *records, int32_t count,
+                            const char *name) {
+    if (records == NULL || name == NULL) {
+        return -1;
+    }
+    for (int32_t index = 0; index < count; index++) {
+        const char *candidate = (const char *)(records + 0x25 + (size_t)index * 0x48);
+        if (strcmp(candidate, name) == 0) {
+            return index;
+        }
+    }
+    return -1;
+}
+
+int32_t string_list_find(const uint8_t *records, int32_t count,
+                         const char *key, int32_t *index) {
+    if (index == NULL) {
+        return 0;
+    }
+    *index = 0;
+    if (records == NULL || key == NULL || count <= 0) {
+        return 0;
+    }
+    int32_t low = 0;
+    int32_t high = count - 1;
+    while (low <= high) {
+        int32_t middle = (low + high) >> 1;
+        const char *candidate = (const char *)(records + (size_t)middle * 0x48);
+        int comparison = strcmp(key, candidate);
+        if (comparison == 0) {
+            *index = middle;
+            return 1;
+        }
+        if (comparison < 0) {
+            high = middle - 1;
+        } else {
+            low = middle + 1;
+        }
+    }
+    *index = low;
+    return 0;
+}
