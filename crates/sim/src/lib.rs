@@ -14,6 +14,18 @@ pub const UNIT_COST: f64 = 4.0;
 pub const MARKET_PRICE_FACTOR: f64 = 0.094_868_821_908_548_48;
 pub const RATING: i32 = 50;
 pub const STEP_MINUTES: u32 = 15;
+/// Original game-loop timer unit: `Game_GetTimeByMode` counts down tenths of
+/// a second in 10 ms ticks (`0x50d200` stores `mode * 5` and the loop ticks
+/// at 100 Hz).
+pub const TICK_MS: u32 = 10;
+/// Queue movement mode 4 is `0x104 ± 10` ticks (2.50-2.70 s).
+pub const QUEUE_WALK_TICKS: u32 = 260;
+/// Production mode 6 is 80 ticks; the no-prepared-order cooking path is 180.
+pub const PRODUCTION_TICKS: u32 = 180;
+pub const SERVICE_TICKS: u32 = 80;
+/// Queue capacity remains a model parameter: the retained branch export does
+/// not expose a proven admission limit. 40 matches the existing Python model.
+pub const QUEUE_CAPACITY: u32 = 40;
 
 /// `Game_GetStartingCapital` (`0x48d3a0`). The difficulty index is
 /// `DAT_0057bb24`; every other value falls through to 20,000.
@@ -201,6 +213,13 @@ impl BranchSim {
 
     pub fn set_open(&mut self, open: bool) {
         self.open = open;
+    }
+
+    /// `Object_UpdateCustomerQueue` (`0x409d80`) increments branch `+0x16e0`
+    /// on the rejection path. The admission threshold itself is not exposed by
+    /// the retained export.
+    pub fn record_lost_customer(&mut self) {
+        self.customers_lost += 1;
     }
 
     /// Applies the scenario's starting capital. `Game_GetStartingCapital`
@@ -632,6 +651,7 @@ pub struct Customer {
     pub slot: Option<u32>,
     pub arrived_minute: u32,
     pub phase_started: u32,
+    pub timer_ticks: u32,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -678,6 +698,7 @@ pub struct WorldSnapshot {
     pub visit_state: VisitState,
     pub state_started: u32,
     pub customers: Vec<Customer>,
+    pub queue_capacity: u32,
     pub profile: Option<CharacterProfile>,
     pub scenario: Option<ScenarioSetup>,
     pub leased_property: Option<u32>,
@@ -695,6 +716,7 @@ pub struct World {
     state_started: u32,
     next_customer_id: u32,
     customers: Vec<Customer>,
+    queue_capacity: u32,
     profile: Option<CharacterProfile>,
     scenario: Option<ScenarioSetup>,
     leased_property: Option<u32>,
@@ -714,6 +736,7 @@ impl World {
             state_started: start_minute,
             next_customer_id: 1,
             customers: Vec::new(),
+            queue_capacity: QUEUE_CAPACITY,
             profile: None,
             scenario: None,
             leased_property: None,
@@ -818,7 +841,7 @@ impl World {
     pub fn with_queue(mut self, queue: u32) -> Self {
         self.customers.clear();
         self.next_customer_id = 1;
-        for _ in 0..queue {
+        for _ in 0..queue.min(self.queue_capacity) {
             self.push_queued_party(1);
         }
         self.admit_next();
@@ -828,9 +851,25 @@ impl World {
     /// Add one arriving party. This is the replay/CLI hook for the two-party
     /// fixture; automatic hourly arrivals use the same path.
     pub fn enqueue_party(&mut self, party_size: u32) -> u32 {
+        if self.queue >= self.queue_capacity {
+            self.sim.record_lost_customer();
+            return 0;
+        }
         let id = self.push_queued_party(party_size.max(1));
         self.admit_next();
         id
+    }
+
+    pub fn set_queue_capacity(&mut self, capacity: u32) -> Result<(), String> {
+        if capacity == 0 {
+            return Err("queue capacity must be greater than zero".into());
+        }
+        self.queue_capacity = capacity;
+        Ok(())
+    }
+
+    pub fn queue_capacity(&self) -> u32 {
+        self.queue_capacity
     }
 
     pub fn customers(&self) -> &[Customer] {
@@ -853,6 +892,7 @@ impl World {
             slot: None,
             arrived_minute: self.minute,
             phase_started: self.minute,
+            timer_ticks: 0,
         });
         self.sync_queue();
         id
@@ -876,6 +916,7 @@ impl World {
         customer.phase = CustomerPhase::Waiting;
         customer.phase_started = self.minute;
         customer.slot = Some(0);
+        customer.timer_ticks = QUEUE_WALK_TICKS;
         self.sync_queue();
         true
     }
@@ -951,13 +992,14 @@ impl World {
                     .slot
                     .map_or_else(|| "null".to_string(), |slot| slot.to_string());
                 format!(
-                    "{{\"id\":{},\"party_size\":{},\"phase\":\"{}\",\"slot\":{},\"arrived_minute\":{},\"phase_started\":{}}}",
+                    "{{\"id\":{},\"party_size\":{},\"phase\":\"{}\",\"slot\":{},\"arrived_minute\":{},\"phase_started\":{},\"timer_ticks\":{}}}",
                     customer.id,
                     customer.party_size,
                     phase,
                     slot,
                     customer.arrived_minute,
-                    customer.phase_started
+                    customer.phase_started,
+                    customer.timer_ticks
                 )
             })
             .collect::<Vec<_>>()
@@ -969,8 +1011,8 @@ impl World {
             VisitState::Departing => "departing",
         };
         format!(
-            "{{\"queue\":{},\"visit_state\":\"{}\",\"state_started\":{},\"customers\":[{}]}}",
-            self.queue, visit_state, self.state_started, customers
+            "{{\"queue\":{},\"queue_capacity\":{},\"visit_state\":\"{}\",\"state_started\":{},\"customers\":[{}]}}",
+            self.queue, self.queue_capacity, visit_state, self.state_started, customers
         )
     }
 
@@ -998,6 +1040,7 @@ impl World {
             visit_state: self.visit_state,
             state_started: self.state_started,
             customers: self.customers.clone(),
+            queue_capacity: self.queue_capacity,
             profile: self.profile.clone(),
             scenario: self.scenario.clone(),
             leased_property: self.leased_property,
@@ -1020,6 +1063,7 @@ impl World {
                 .unwrap_or(0)
                 + 1,
             customers: snapshot.customers.clone(),
+            queue_capacity: snapshot.queue_capacity,
             profile: snapshot.profile.clone(),
             scenario: snapshot.scenario.clone(),
             leased_property: snapshot.leased_property,
@@ -1029,6 +1073,72 @@ impl World {
 
     pub fn step(&mut self) -> Vec<ClockEvent> {
         self.advance_to(self.minute + 5)
+    }
+
+    /// Advance the original 10 ms queue/service timers without moving the
+    /// five-minute game clock. This is the precise timer lane used by queue
+    /// fixtures; `advance_to` keeps the existing five-minute phase cadence.
+    pub fn advance_millis(&mut self, millis: u32) -> Vec<ClockEvent> {
+        self.advance_queue_ticks(millis / TICK_MS)
+    }
+
+    pub fn advance_queue_ticks(&mut self, ticks: u32) -> Vec<ClockEvent> {
+        let mut events = Vec::new();
+        for _ in 0..ticks {
+            let Some(index) = self.active_customer_index() else {
+                self.admit_next();
+                if self.active_customer_index().is_none() {
+                    break;
+                }
+                continue;
+            };
+            let phase = self.customers[index].phase;
+            if self.customers[index].timer_ticks > 0 {
+                self.customers[index].timer_ticks -= 1;
+            }
+            if self.customers[index].timer_ticks != 0 {
+                continue;
+            }
+            match phase {
+                CustomerPhase::Waiting => {
+                    self.customers[index].phase = CustomerPhase::Producing;
+                    self.customers[index].phase_started = self.minute;
+                    self.customers[index].timer_ticks = PRODUCTION_TICKS;
+                    self.sync_queue();
+                    events.push(ClockEvent::ProductionStart {
+                        minute: self.minute,
+                    });
+                }
+                CustomerPhase::Producing => {
+                    let remaining = self.queued_count();
+                    self.customers[index].phase = CustomerPhase::Departing;
+                    self.customers[index].phase_started = self.minute;
+                    self.customers[index].timer_ticks = SERVICE_TICKS;
+                    self.sync_queue();
+                    events.push(ClockEvent::QueueService {
+                        minute: self.minute,
+                        remaining_queue: remaining,
+                    });
+                    if let StepOutcome::Sale(sale) = self.sim.settle_sale_at(self.minute) {
+                        events.push(ClockEvent::Sale {
+                            minute: self.minute,
+                            stock: self.sim.snapshot().stock,
+                            cash_delta: sale.cash_delta,
+                        });
+                    }
+                }
+                CustomerPhase::Departing => {
+                    self.customers.remove(index);
+                    self.sync_queue();
+                    events.push(ClockEvent::Departure {
+                        minute: self.minute,
+                    });
+                    self.admit_next();
+                }
+                CustomerPhase::Queued => {}
+            }
+        }
+        events
     }
 
     /// Advance in the original five-minute worker increments. The hourly
@@ -1087,6 +1197,7 @@ impl World {
                 CustomerPhase::Waiting if self.minute >= started + 5 => {
                     self.customers[index].phase = CustomerPhase::Producing;
                     self.customers[index].phase_started = self.minute;
+                    self.customers[index].timer_ticks = PRODUCTION_TICKS;
                     self.sync_queue();
                     events.push(ClockEvent::ProductionStart {
                         minute: self.minute,
@@ -1096,6 +1207,7 @@ impl World {
                     let remaining = self.queued_count();
                     self.customers[index].phase = CustomerPhase::Departing;
                     self.customers[index].phase_started = self.minute;
+                    self.customers[index].timer_ticks = SERVICE_TICKS;
                     self.sync_queue();
                     events.push(ClockEvent::QueueService {
                         minute: self.minute,
@@ -1465,6 +1577,66 @@ mod tests {
         assert_eq!(world.queue, 0);
         assert!(world.customers().is_empty());
         assert_eq!(world.visit_state(), VisitState::Idle);
+    }
+
+    #[test]
+    fn original_10ms_timers_drive_waiting_production_and_service() {
+        let mut world = ClockReplay::new(11 * 60);
+        world.enqueue_party(1);
+        assert_eq!(world.visit_state(), VisitState::Waiting);
+        assert_eq!(world.customers()[0].timer_ticks, QUEUE_WALK_TICKS);
+
+        let events = world.advance_queue_ticks(QUEUE_WALK_TICKS - 1);
+        assert!(events.is_empty());
+        assert_eq!(world.visit_state(), VisitState::Waiting);
+        assert_eq!(world.customers()[0].timer_ticks, 1);
+
+        let events = world.advance_queue_ticks(1);
+        assert_eq!(world.visit_state(), VisitState::Producing);
+        assert_eq!(world.customers()[0].timer_ticks, PRODUCTION_TICKS);
+        assert!(events.contains(&ClockEvent::ProductionStart { minute: 660 }));
+
+        let events = world.advance_queue_ticks(PRODUCTION_TICKS);
+        assert_eq!(world.snapshot().sales, 1);
+        assert_eq!(world.visit_state(), VisitState::Departing);
+        assert_eq!(world.customers()[0].timer_ticks, SERVICE_TICKS);
+        assert!(events
+            .iter()
+            .any(|event| matches!(event, ClockEvent::Sale { minute: 660, .. })));
+
+        let events = world.advance_queue_ticks(SERVICE_TICKS);
+        assert_eq!(world.visit_state(), VisitState::Idle);
+        assert!(world.customers().is_empty());
+        assert!(events.contains(&ClockEvent::Departure { minute: 660 }));
+        assert_eq!(world.queue, 0);
+    }
+
+    #[test]
+    fn advance_millis_uses_the_original_10ms_unit() {
+        let mut world = ClockReplay::new(11 * 60);
+        world.enqueue_party(1);
+        world.advance_millis(2590);
+        assert_eq!(world.customers()[0].timer_ticks, 1);
+        assert_eq!(world.visit_state(), VisitState::Waiting);
+        world.advance_millis(10);
+        assert_eq!(world.visit_state(), VisitState::Producing);
+        assert_eq!(world.customers()[0].timer_ticks, PRODUCTION_TICKS);
+    }
+
+    #[test]
+    fn full_queue_rejects_without_stock_or_cash_change() {
+        let mut world = ClockReplay::new(11 * 60);
+        world.set_queue_capacity(1).unwrap();
+        world.set_open(true);
+        assert_eq!(world.enqueue_party(1), 1);
+        assert_eq!(world.enqueue_party(1), 0);
+        assert_eq!(world.snapshot().customers_lost, 1);
+        assert_eq!(world.snapshot().sales, 0);
+        assert_eq!(world.snapshot().stock, 400.0);
+        assert_eq!(world.snapshot().cash, START_CASH);
+        assert_eq!(world.queue, 1);
+        assert_eq!(world.customers().len(), 1);
+        assert_eq!(world.queue_capacity(), 1);
     }
 
     #[test]

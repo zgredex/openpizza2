@@ -866,6 +866,84 @@ def check_two_party_queue():
                   else output[-1800:],
     }
 
+def check_full_queue_rejection():
+    output_png = "/tmp/opencode/pc2-full-queue.png"
+    result = subprocess.run(
+        ["cargo", "run", "--quiet", "-p", "pc2-app", "--",
+         "--map", "game/Isokarten/Iso_Filiale_einf_klein.iso",
+         "--replay", "capacity=1;open;party;party;step;step;step;step",
+         "--output", output_png],
+        cwd=ROOT, text=True, capture_output=True, timeout=300)
+    output = result.stdout + result.stderr
+    sims = []
+    queues = []
+    for line in result.stdout.splitlines():
+        if line.startswith("sim: "):
+            try:
+                sims.append(json.loads(line[5:]))
+            except json.JSONDecodeError:
+                pass
+        elif line.startswith("queue: "):
+            try:
+                queues.append(json.loads(line[6:]))
+            except json.JSONDecodeError:
+                pass
+    ok = (result.returncode == 0 and len(sims) == len(queues) == 8
+          and queues[3]["queue_capacity"] == 1
+          and queues[3]["queue"] == 1
+          and len(queues[3]["customers"]) == 1
+          and sims[-1]["customers_lost"] == 1
+          and sims[-1]["sales"] == 1
+          and abs(sims[-1]["cash"] - 10013.420525) < 1e-6
+          and sims[-1]["stock"] == 399.0
+          and queues[-1]["queue"] == 0)
+    return {
+        "name": "full queue rejection",
+        "ok": ok,
+        "detail": ("capacity 1 rejected the second party (lost=1); "
+                   "the admitted party still sold once with unchanged rejection cost") if ok
+                  else output[-1800:],
+    }
+
+def check_10ms_timer_lane():
+    output_png = "/tmp/opencode/pc2-10ms-timer.png"
+    result = subprocess.run(
+        ["cargo", "run", "--quiet", "-p", "pc2-app", "--",
+         "--map", "game/Isokarten/Iso_Filiale_einf_klein.iso",
+         "--replay", "open;party;ticks=259;ticks=1;ticks=180;ticks=80",
+         "--output", output_png],
+        cwd=ROOT, text=True, capture_output=True, timeout=300)
+    output = result.stdout + result.stderr
+    sims = []
+    queues = []
+    for line in result.stdout.splitlines():
+        if line.startswith("sim: "):
+            try:
+                sims.append(json.loads(line[5:]))
+            except json.JSONDecodeError:
+                pass
+        elif line.startswith("queue: "):
+            try:
+                queues.append(json.loads(line[6:]))
+            except json.JSONDecodeError:
+                pass
+    ok = (result.returncode == 0 and len(sims) == len(queues) == 6
+          and queues[2]["customers"][0]["phase"] == "waiting"
+          and queues[2]["customers"][0]["timer_ticks"] == 1
+          and queues[3]["customers"][0]["phase"] == "producing"
+          and queues[3]["customers"][0]["timer_ticks"] == 180
+          and queues[4]["customers"][0]["phase"] == "departing"
+          and queues[4]["customers"][0]["timer_ticks"] == 80
+          and sims[4]["sales"] == 1
+          and queues[5]["queue"] == 0
+          and queues[5]["visit_state"] == "idle")
+    return {
+        "name": "10 ms timer lane",
+        "ok": ok,
+        "detail": ("259+1 queue ticks -> producing; 180 production ticks -> sale; "
+                   "80 service ticks -> idle") if ok else output[-1800:],
+    }
+
 def check_campaign_start():
     profile = "mode=campaign;difficulty=9;player=Ada;enterprise=Ada Pizza"
     command = ["cargo", "run", "--quiet", "-p", "pc2-app", "--", "--campaign-start",
@@ -1251,6 +1329,8 @@ def main(argv=None):
     checks.append(check_free_play_setup_screen())
     checks.append(check_free_play_chain())
     checks.append(check_two_party_queue())
+    checks.append(check_full_queue_rejection())
+    checks.append(check_10ms_timer_lane())
     checks.append(check_campaign_start())
     checks.append(check_typed_packet())
     checks.append(check_starting_capital_emulation())

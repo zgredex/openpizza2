@@ -38,8 +38,8 @@ It regenerates `decompiled_fastfood2_named_v2/samples/sim_demo_360.json`,
 `sim_sweep_90.json`, `sim_demo_map_90.json`, and refreshes
 `decompiled_fastfood2_named_v2/SIM_VERIFICATION.json` from the same run.
 
-Use `--no-write` for a read-only check. Current result: **37/37 checks**,
-**191 Python tests**, and **66 Rust tests**.
+Use `--no-write` for a read-only check. Current result: **39/39 checks**,
+**191 Python tests**, and **69 Rust tests**.
 
 ### Typed function packets
 
@@ -456,10 +456,42 @@ cargo run -p pc2-app -- \
 11:25 party 2 sells once; queue drains
 ```
 
-`queue_snapshot_json()` exposes every party and slot; a snapshot during
-contention restores both customers and the claimed slot. The original 10 ms
-timers are still collapsed to the existing five-minute phases; queue capacity
-and rejection are not modeled yet, so the second party waits.
+`queue_snapshot_json()` exposes every party, slot, phase and 10 ms
+`timer_ticks`. The precise timer lane uses `QUEUE_WALK_TICKS` 260,
+`PRODUCTION_TICKS` 180 and `SERVICE_TICKS` 80; `advance_queue_ticks` drives
+those values without moving the five-minute game clock. A contention snapshot
+restores both customers and the claimed slot.
+
+Queue capacity defaults to the existing Python model constant 40 and is
+configurable in replay. Capacity 1 rejects the second party immediately,
+increments `customers_lost` and leaves stock/cash untouched:
+
+```sh
+cargo run -p pc2-app --   --map game/Isokarten/Iso_Filiale_einf_klein.iso   --replay 'capacity=1;open;party;party;step;step;step;step'
+```
+
+```text
+capacity 1: second party rejected, customers_lost=1
+admitted party still sells once: cash 10013.420525, stock 399
+```
+
+The capacity threshold itself is a model parameter: the retained branch
+export does not expose a proven admission limit. The lost-counter write at
+`branch+0x16e0` is static evidence.
+
+The exact timer lane is replayable without advancing the five-minute clock:
+
+```sh
+cargo run -p pc2-app -- \
+  --map game/Isokarten/Iso_Filiale_einf_klein.iso \
+  --replay 'open;party;ticks=259;ticks=1;ticks=180;ticks=80'
+```
+
+```text
+259+1 queue ticks -> producing
+180 production ticks -> sale
+80 service ticks -> idle
+```
 
 ### Camera and city-to-branch transition
 
@@ -645,6 +677,10 @@ check is part of `verify_all.py`.
   a claimed slot. `--replay 'open;step;party;...'` sells party 1 at 11:10,
   admits party 2 at 11:15 and sells it at 11:25; contention snapshots resume
   with both parties and the slot intact.
+- Queue/service phases also expose the original 10 ms unit:
+  `advance_queue_ticks` covers 260 queue, 180 production and 80 service ticks.
+  A capacity-1 replay rejects the second party and increments `customers_lost`
+  without changing stock or cash.
 - Two typed packets cover **21 records**, **80 trace steps**, **3 dispatch
   tables** and **8 fixtures**. Every stored instruction prefix matches the
   executable at its PE address; the callbacks at `0x4cc640` and `0x4dd300`

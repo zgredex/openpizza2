@@ -73,11 +73,19 @@ The Rust replay therefore serializes parties:
 11:25  party 2 sells once; queue drains at 11:30
 ```
 
-The original timer granularity is 10 ms / 80-180 tick service and 250-270
-tick queue movement. The Rust `World` deliberately keeps the existing
-five-minute phase boundary; the queue ordering, slot claim/release, and
-snapshot state are the verified parts. Queue capacity remains unmodeled, so
-the second party takes the wait path rather than a capacity rejection.
+The original timer unit is 10 ms: `GameLoop_DispatchScreens` waits 10 ms per
+loop iteration, `0x50d200` writes countdowns in 5-tick units, and
+`Object_UpdateCustomerQueue` uses 250-270 queue ticks, 180 production ticks and
+80 service ticks. `World::advance_queue_ticks` now drives that precise lane and
+`Customer.timer_ticks` is serialized in `queue_snapshot_json()`. The existing
+five-minute lane remains the game-clock event cadence; the two lanes are
+separate so a five-minute step does not pretend to be wall-clock time.
+
+Queue capacity is exposed as a configurable `World` value. The retained branch
+export does not reveal a proven original admission threshold, so the default
+`QUEUE_CAPACITY = 40` is the existing model parameter. The rejection counter
+write at `branch+0x16e0` is static evidence. A capacity-1 replay rejects the
+second party without stock/cash changes.
 
 Replay:
 
@@ -88,8 +96,21 @@ cargo run -p pc2-app -- --map game/Isokarten/Iso_Filiale_einf_klein.iso \
 ```
 
 `World::queue_snapshot_json` records every party id, party size, phase, slot,
-arrival minute and phase start. `world_snapshot()` carries the same list, so a
-snapshot during contention restores both customers and the claimed slot.
+arrival minute, phase start and remaining 10 ms ticks. `world_snapshot()`
+carries the same list and capacity, so a snapshot during contention restores
+both customers and the claimed slot.
+
+Full-queue replay:
+
+```sh
+cargo run -p pc2-app -- --map game/Isokarten/Iso_Filiale_einf_klein.iso \
+  --replay 'capacity=1;open;party;party;step;step;step;step'
+```
+
+```text
+capacity 1: second party rejected, customers_lost=1
+admitted party sells once: cash 10013.420525, stock 399
+```
 
 ## State table
 

@@ -291,7 +291,8 @@ pedestrian; the function limits the number of such buildings to 30.
 (`0x406E90`) manage the interior queue:
 
 - branch queue ID map at `+0x1744`;
-- queue/interior capacity at `+0x1758`;
+- queue entry count at `+0x1758` (read by `Branch_Save` and
+  `Object_UpdateCustomerQueue`; not an admission limit);
 - lost-customer counter at `+0x16E0`;
 - party size `(Rating_GetComposite(character) >> 4) + 1` at `customer+0x98`;
 - `Customer_ApproachBranchEntrance` and `Person_ProcessMoveEvent` move the
