@@ -62,8 +62,9 @@ Current batches:
   1/24 wage and advertising shares, 0.4%/hour negative-cash interest, opening
   hours, `Game_ComputePlayerSalary` and
   `Company_CollectUnprofitableBranches`.
-- `ai/` — customer visit state machine (walk 260, production 180, service 80)
-  and competitor AI plan snapshot.
+- `ai/` — customer visit state machine (walk 260, production 180, service 80),
+  competitor AI plan snapshot and `AI_ComputePlanScores` per-period
+  income-expense scoring.
 - `recipes/` — recipe toppings, base price, branch-menu assignment and the
   `Branch_ComputeRecipePrice` formula.
 - `personnel/` — staff roster, profession, skill/speed/motivation/health,

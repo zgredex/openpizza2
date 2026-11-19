@@ -602,6 +602,16 @@ int main(void) {
     competitor_ai_update(&rival_ai, 250000.0, 4, 12, 3250, 7);
     assert(rival_ai.branch_count == 4);
     assert(rival_ai.plan_steps == 7);
+    const int32_t plan_income[3] = {100, 80, 60};
+    const int32_t plan_expense[3] = {30, 20, 10};
+    int32_t plan_scores[3] = {0};
+    int32_t plan_total = 0;
+    assert(ai_compute_plan_scores(plan_income, plan_expense, 3, plan_scores, 3,
+                                  &plan_total) == 3);
+    assert(plan_scores[0] == 70 && plan_scores[1] == 60 &&
+           plan_scores[2] == 50);
+    assert(plan_total == 180);
+
 
     BranchMenu menu_state;
     branch_menu_init(&menu_state, 1);

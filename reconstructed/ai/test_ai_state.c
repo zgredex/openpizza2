@@ -65,6 +65,25 @@ static void test_queue_capacity(void) {
     assert(state.rejected == 1);
 }
 
+static void test_plan_scores(void) {
+    const int32_t income[3] = {100, 80, 60};
+    const int32_t expense[3] = {30, 20, 10};
+    int32_t scores[3] = {0};
+    int32_t total = 0;
+    assert(ai_compute_plan_scores(income, expense, 3, scores, 3, &total) == 3);
+    assert(scores[0] == 70);
+    assert(scores[1] == 60);
+    assert(scores[2] == 50);
+    assert(total == 180);
+
+    total = 0;
+    assert(ai_compute_plan_scores(income, expense, 3, scores, 2, &total) == 2);
+    assert(scores[0] == 70);
+    assert(scores[1] == 60);
+    assert(total == 130);
+    assert(ai_compute_plan_scores(NULL, expense, 3, scores, 3, &total) == 0);
+}
+
 static void test_competitor_state(void) {
     CompetitorAIState rival;
     competitor_ai_init(&rival, 1);
@@ -87,6 +106,7 @@ int main(void) {
     test_customer_visit();
     test_second_party_waits();
     test_queue_capacity();
+    test_plan_scores();
     test_competitor_state();
     puts("AI state reconstruction: OK");
     return 0;

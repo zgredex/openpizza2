@@ -1233,7 +1233,8 @@ def check_reconstructed_c():
                    "briefing, free-play setup, statistics view, branch-list "
                    "window, branch-details page, branch-offer page, personnel "
                    "overview, personnel record, mission goals, statistics "
-                   "balance, branch-balance statistics, advertising value/plan effects, "
+                   "balance, branch-balance statistics, AI plan scoring, "
+                   "advertising value/plan effects, "
                    "category metrics and budget allocation, customer-group "
                    "rating, iso-map/branch interior render and hourly branch "
                    "economy included")

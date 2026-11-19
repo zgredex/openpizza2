@@ -144,3 +144,25 @@ void competitor_ai_record_action(CompetitorAIState *state, CompetitorAction acti
         state->last_action = action;
     }
 }
+
+size_t ai_compute_plan_scores(const int32_t *period_income,
+                              const int32_t *period_expense,
+                              size_t period_count, int32_t *scores,
+                              size_t max_scores, int32_t *total) {
+    if (period_income == NULL || period_expense == NULL || scores == NULL) {
+        return 0;
+    }
+    if (total != NULL) {
+        *total = 0;
+    }
+    size_t produced = 0;
+    for (size_t index = 0; index < period_count && produced < max_scores;
+         index++) {
+        int32_t score = period_income[index] - period_expense[index];
+        scores[produced++] = score;
+        if (total != NULL) {
+            *total += score;
+        }
+    }
+    return produced;
+}

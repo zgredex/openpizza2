@@ -2,6 +2,7 @@
 #define PC2_RECONSTRUCTED_AI_STATE_H
 
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 
 #define CUSTOMER_QUEUE_CAPACITY 40
@@ -34,6 +35,8 @@ typedef struct CustomerAIState {
     uint32_t departures;
     uint32_t rejected;
 } CustomerAIState;
+
+#define AI_MAX_PLAN_SCORES 8
 
 typedef struct CustomerAIEvents {
     uint32_t production_starts;
@@ -71,6 +74,13 @@ void customer_ai_init(CustomerAIState *state);
 bool customer_ai_enqueue(CustomerAIState *state, uint32_t party_size);
 CustomerPhase customer_ai_visit_state(const CustomerAIState *state);
 CustomerAIEvents customer_ai_advance_ticks(CustomerAIState *state, uint32_t ticks);
+
+/* AI_ComputePlanScores (0x4F7B90): newest period first, net income-expense
+ * per period, with the running total across the returned scores. */
+size_t ai_compute_plan_scores(const int32_t *period_income,
+                              const int32_t *period_expense,
+                              size_t period_count, int32_t *scores,
+                              size_t max_scores, int32_t *total);
 
 void competitor_ai_init(CompetitorAIState *state, uint32_t company_slot);
 void competitor_ai_update(CompetitorAIState *state, double cash, uint32_t branches,
