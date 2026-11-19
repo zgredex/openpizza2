@@ -262,11 +262,21 @@ int main(void) {
     uint8_t *bl_separator_pixels = NULL;
     uint8_t *bl_branch_pixels = NULL;
     uint8_t *bl_warehouse_pixels = NULL;
+    uint8_t *bl_left_pixels = NULL;
+    uint8_t *bl_right_pixels = NULL;
+    uint8_t *bl_help_pixels = NULL;
+    uint8_t *bl_button_pixels = NULL;
+    uint8_t *bl_storage_pixels = NULL;
     RgbaSprite bl_panel;
     RgbaSprite bl_table;
     RgbaSprite bl_separator;
     RgbaSprite bl_branch_icon;
     RgbaSprite bl_warehouse_icon;
+    RgbaSprite bl_arrow_left;
+    RgbaSprite bl_arrow_right;
+    RgbaSprite bl_help_button;
+    RgbaSprite bl_button_background;
+    RgbaSprite bl_storage_icon;
     assert(load_spr_asset("../extracted/sprites/submenue.spr", &bl_panel_pixels,
                           &bl_panel));
     assert(load_spr_asset("../extracted/sprites/tab01xxx.spr", &bl_table_pixels,
@@ -277,6 +287,16 @@ int main(void) {
                           &bl_branch_pixels, &bl_branch_icon));
     assert(load_spr_asset("../extracted/sprites/sklager_00.spr",
                           &bl_warehouse_pixels, &bl_warehouse_icon));
+    assert(load_spr_asset("../extracted/sprites/pb26_00.spr", &bl_left_pixels,
+                          &bl_arrow_left));
+    assert(load_spr_asset("../extracted/sprites/pb27_00.spr", &bl_right_pixels,
+                          &bl_arrow_right));
+    assert(load_spr_asset("../extracted/sprites/hilfebuttonsnip_00.spr",
+                          &bl_help_pixels, &bl_help_button));
+    assert(load_spr_asset("../extracted/sprites/textpb01__00.spr",
+                          &bl_button_pixels, &bl_button_background));
+    assert(load_spr_asset("../extracted/sprites/mg_h_lager_c7.spr",
+                          &bl_storage_pixels, &bl_storage_icon));
     const BranchListEntry bl_entries[2] = {
         {city.branches[0].tile_index, city.branches[0].rent, false},
         {7, 0, true},
@@ -287,14 +307,24 @@ int main(void) {
         .entry_count = 2,
         .selected = 0,
     };
+    const BranchListSprites bl_sprites = {
+        .panel = &bl_panel,
+        .table = &bl_table,
+        .separator = &bl_separator,
+        .branch_icon = &bl_branch_icon,
+        .warehouse_icon = &bl_warehouse_icon,
+        .arrow_left = &bl_arrow_left,
+        .arrow_right = &bl_arrow_right,
+        .help_button = &bl_help_button,
+        .button_background = &bl_button_background,
+        .storage_icon = &bl_storage_icon,
+    };
     uint8_t *bl_frame = malloc(800 * 600 * 4);
     assert(bl_frame != NULL);
     RenderSurface bl_surface;
     assert(render_surface_init(&bl_surface, bl_frame, 800 * 600 * 4, 800, 600));
-    assert(screen_render_branch_list(&bl_surface, &bl_panel, &bl_table,
-                                     &bl_separator, &bl_branch_icon,
-                                     &bl_warehouse_icon, font_data, font_size,
-                                     &font_info, &bl_data));
+    assert(screen_render_branch_list(&bl_surface, &bl_sprites, font_data,
+                                     font_size, &font_info, &bl_data));
     size_t bl_panel_offset = ((size_t)218 * 800 + 561) * 4;
     assert(memcmp(bl_frame + bl_panel_offset, bl_panel.pixels, 4) == 0);
     free(bl_frame);
@@ -303,6 +333,11 @@ int main(void) {
     free(bl_separator_pixels);
     free(bl_branch_pixels);
     free(bl_warehouse_pixels);
+    free(bl_left_pixels);
+    free(bl_right_pixels);
+    free(bl_help_pixels);
+    free(bl_button_pixels);
+    free(bl_storage_pixels);
 
     size_t stats_tga_length = 0;
     uint8_t *stats_tga = NULL;

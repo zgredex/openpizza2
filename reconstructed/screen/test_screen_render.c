@@ -119,16 +119,34 @@ static void test_branch_list_composition(void) {
     uint8_t *separator_pixels = NULL;
     uint8_t *branch_pixels = NULL;
     uint8_t *warehouse_pixels = NULL;
+    uint8_t *left_pixels = NULL;
+    uint8_t *right_pixels = NULL;
+    uint8_t *help_pixels = NULL;
+    uint8_t *button_pixels = NULL;
+    uint8_t *storage_pixels = NULL;
     RgbaSprite panel;
     RgbaSprite table;
     RgbaSprite separator;
     RgbaSprite branch_icon;
     RgbaSprite warehouse_icon;
+    RgbaSprite arrow_left;
+    RgbaSprite arrow_right;
+    RgbaSprite help_button;
+    RgbaSprite button_background;
+    RgbaSprite storage_icon;
     assert(load_spr("../extracted/sprites/submenue.spr", &panel_pixels, &panel));
     assert(load_spr("../extracted/sprites/tab01xxx.spr", &table_pixels, &table));
     assert(load_spr("../extracted/sprites/trennzeile.spr", &separator_pixels, &separator));
     assert(load_spr("../extracted/sprites/skfiliale_00.spr", &branch_pixels, &branch_icon));
     assert(load_spr("../extracted/sprites/sklager_00.spr", &warehouse_pixels, &warehouse_icon));
+    assert(load_spr("../extracted/sprites/pb26_00.spr", &left_pixels, &arrow_left));
+    assert(load_spr("../extracted/sprites/pb27_00.spr", &right_pixels, &arrow_right));
+    assert(load_spr("../extracted/sprites/hilfebuttonsnip_00.spr", &help_pixels,
+                    &help_button));
+    assert(load_spr("../extracted/sprites/textpb01__00.spr", &button_pixels,
+                    &button_background));
+    assert(load_spr("../extracted/sprites/mg_h_lager_c7.spr", &storage_pixels,
+                    &storage_icon));
 
     size_t font_size = 0;
     uint8_t *font_data = load_file("../extracted/fonts/timesfont.fnt", &font_size);
@@ -146,17 +164,44 @@ static void test_branch_list_composition(void) {
         .entry_count = 2,
         .selected = 0,
     };
+    const BranchListSprites sprites = {
+        .panel = &panel,
+        .table = &table,
+        .separator = &separator,
+        .branch_icon = &branch_icon,
+        .warehouse_icon = &warehouse_icon,
+        .arrow_left = &arrow_left,
+        .arrow_right = &arrow_right,
+        .help_button = &help_button,
+        .button_background = &button_background,
+        .storage_icon = &storage_icon,
+    };
 
     size_t frame_size = 800 * 600 * 4;
     uint8_t *frame = malloc(frame_size);
     assert(frame != NULL);
     RenderSurface surface;
     assert(render_surface_init(&surface, frame, frame_size, 800, 600));
-    assert(screen_render_branch_list(&surface, &panel, &table, &separator,
-                                     &branch_icon, &warehouse_icon, font_data,
+    assert(screen_render_branch_list(&surface, &sprites, font_data,
                                      font_size, &font, &data));
     size_t panel_offset = ((size_t)218 * 800 + 561) * 4;
     assert(memcmp(frame + panel_offset, panel.pixels, 4) == 0);
+    size_t branch_offset = ((size_t)(218 + 126) * 800 + (561 + 99)) * 4;
+    bool branch_ink = false;
+    for (size_t index = 0; index + 3 < (size_t)branch_icon.width * branch_icon.height * 4;
+         index += 4) {
+        if (branch_icon.pixels[index + 3] == 255) {
+            size_t px = (index / 4) % branch_icon.width;
+            size_t py = (index / 4) / branch_icon.width;
+            size_t target = ((size_t)(218 + 126 + (int)py) * 800 +
+                             (561 + 99 + (int)px)) * 4;
+            assert(memcmp(frame + target, branch_icon.pixels + index, 4) == 0);
+            branch_ink = true;
+            break;
+        }
+    }
+    assert(branch_ink);
+    (void)branch_offset;
 
     bool title_ink = false;
     for (int y = 220; y < 245; y++) {
@@ -168,10 +213,10 @@ static void test_branch_list_composition(void) {
         }
     }
     assert(title_ink);
-    size_t lease_offset = ((size_t)(220 + 276) * 800 + (561 + 160)) * 4;
-    assert(frame[lease_offset + 1] > frame[lease_offset]);
-    assert(!screen_render_branch_list(&surface, &panel, &table, &separator,
-                                      &branch_icon, &warehouse_icon, font_data,
+    size_t lease_offset = ((size_t)(218 + 278) * 800 + (561 + 220)) * 4;
+    assert(frame[lease_offset] != 22 || frame[lease_offset + 1] != 26 ||
+           frame[lease_offset + 2] != 34);
+    assert(!screen_render_branch_list(&surface, &sprites, font_data,
                                       font_size, &font, NULL));
 
     free(font_data);
@@ -181,6 +226,11 @@ static void test_branch_list_composition(void) {
     free(separator_pixels);
     free(branch_pixels);
     free(warehouse_pixels);
+    free(left_pixels);
+    free(right_pixels);
+    free(help_pixels);
+    free(button_pixels);
+    free(storage_pixels);
 }
 
 static void test_branch_details_composition(void) {

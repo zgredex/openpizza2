@@ -203,6 +203,19 @@ bool screen_render_branch_details(RenderSurface *surface, const RgbaSprite *pane
                                   const FntInfo *font,
                                   const BranchDetailsData *data);
 
+typedef struct BranchListSprites {
+    const RgbaSprite *panel;
+    const RgbaSprite *table;
+    const RgbaSprite *separator;
+    const RgbaSprite *branch_icon;
+    const RgbaSprite *warehouse_icon;
+    const RgbaSprite *arrow_left;
+    const RgbaSprite *arrow_right;
+    const RgbaSprite *help_button;
+    const RgbaSprite *button_background;
+    const RgbaSprite *storage_icon;
+} BranchListSprites;
+
 typedef struct BranchListEntry {
     uint32_t tile_index;
     uint32_t rent;
@@ -218,11 +231,8 @@ typedef struct BranchListData {
 
 /* Composes Screen_BranchList (0x42D560): the 239x382 SUBMENUE window at
  * (561,218), table, separators, branch/warehouse icons and the branch rows. */
-bool screen_render_branch_list(RenderSurface *surface, const RgbaSprite *panel,
-                               const RgbaSprite *table,
-                               const RgbaSprite *separator,
-                               const RgbaSprite *branch_icon,
-                               const RgbaSprite *warehouse_icon,
+bool screen_render_branch_list(RenderSurface *surface,
+                               const BranchListSprites *sprites,
                                const uint8_t *font_data, size_t font_size,
                                const FntInfo *font,
                                const BranchListData *data);
