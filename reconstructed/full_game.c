@@ -13,6 +13,7 @@
 #include "render/render_state.h"
 #include "operations/branch_operations.h"
 #include "assets/assets.h"
+#include "ui_render/ui_render.h"
 #include "statistics/statistics_state.h"
 #include "settings/settings.h"
 #include "ui_screen/ui_screen.h"
@@ -111,14 +112,34 @@ int main(void) {
     assert(mission_all_goals_complete(&loaded.mission));
 
     FntInfo font_info;
+    uint8_t font_data[32768] = {0};
+    size_t font_size = 0;
     FILE *font_file = fopen("../extracted/fonts/timesfont.fnt", "rb");
     if (font_file != NULL) {
-        uint8_t font_data[32768];
-        size_t font_size = fread(font_data, 1, sizeof(font_data), font_file);
+        font_size = fread(font_data, 1, sizeof(font_data), font_file);
         fclose(font_file);
         assert(fnt_read_info(font_data, font_size, &font_info));
         assert(font_info.line_height == 23);
         assert(font_info.max_width == 18);
+    }
+
+    uint8_t text_frame[64 * 64 * 4];
+    RenderSurface text_surface;
+    assert(render_surface_init(&text_surface, text_frame, sizeof(text_frame), 64, 64));
+    const uint8_t white_bg[4] = {255, 255, 255, 255};
+    const uint8_t black_text[4] = {0, 0, 0, 255};
+    render_clear(&text_surface, white_bg);
+    if (font_file != NULL) {
+        assert(ui_draw_text(&text_surface, font_data, font_size, &font_info, 2, 2,
+                            "A", black_text));
+        bool text_ink = false;
+        for (size_t index = 0; index < sizeof(text_frame); index += 4) {
+            if (text_frame[index] < 255) {
+                text_ink = true;
+                break;
+            }
+        }
+        assert(text_ink);
     }
 
     BranchOperations operations;

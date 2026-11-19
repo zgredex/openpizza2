@@ -33,6 +33,9 @@ Current batches:
 - `assets/` — SPR 8/16bpp alpha/RLE/raw decoder and FNT glyph decoder,
   exercised against `extracted/sprites/pb24_01.spr` and
   `extracted/fonts/timesfont.fnt`.
+- `ui_render/` — composes shipped SPR sprites and FNT text onto the RGBA
+  render surface, including hotspot placement, alpha blending and text
+  measurement.
 - `operations/` — branch period accounting: sale revenue, ingredient cost,
   payroll, rent, advertising, profit and period close.
 - `ai/` — customer visit state machine (walk 260, production 180, service 80)
