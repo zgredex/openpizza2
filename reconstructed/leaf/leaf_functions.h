@@ -451,6 +451,22 @@ void object_clear_field54(uint8_t *object);
 void object_clear_fields_a(uint8_t *object);
 void object_clear_state(uint8_t *object);
 
+/* Map/player/market/rating helpers. */
+bool map_clamp_scroll_y(uint8_t *map, int32_t requested, int32_t scroll_mode);
+uint32_t market_get_price_delta(uint8_t class_byte, int32_t table_value);
+double rating_get_float(float rating, int32_t type, int32_t difficulty);
+int32_t game_get_player_quarter_stat(const uint8_t *object, int32_t index,
+                                     int32_t type);
+uint8_t game_get_player_staff_band(int32_t sum);
+uint8_t game_get_player_wealth_band(double value);
+uint8_t game_get_player_satisfaction_band(int32_t average);
+double game_get_player_weighted_stat(const int32_t stats[0x56],
+                                     const double weights[0x56]);
+int32_t game_get_record_child14(const uint8_t *records, int32_t index);
+void player_reset_ai_state(uint8_t *player);
+void player_reset_debt_hours(uint8_t *player);
+void player_set_slot_flag18(uint8_t *player, size_t index);
+
 /* Game_GetActiveScreenOrFallback (0x482910). */
 int32_t game_get_active_screen_or_fallback(const uint8_t *game);
 

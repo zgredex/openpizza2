@@ -860,7 +860,7 @@ static double read_double_at(const uint8_t *base, size_t offset) {
 }
 
 static void test_record_bounds_positions(void) {
-    uint8_t record[0x48] = {0};
+    uint8_t record[0x80] = {0};
     const int16_t x_points[3] = {10, -8, 30};
     const int16_t y_points[3] = {20, 40, 60};
     const uint16_t widths[3] = {100, 200, 300};
@@ -1261,6 +1261,92 @@ static void test_map_object_helpers(void) {
            state[0x2f] == 0);
 }
 
+static void test_scroll_market_rating_player(void) {
+    uint8_t *map = calloc(0x10180, 1);
+    assert(map != NULL);
+    write_i32_at(map, 0x30, 200);
+    write_i32_at(map, 0x38, 20);
+    write_i32_at(map, 0xec, 100);
+    write_i32_at(map, 0x10170, 400);
+    write_i32_at(map, 0x10174, 50);
+    assert(map_clamp_scroll_y(map, 50, 0));
+    assert(read_i32_at(map, 0xec) == 150);
+    assert(!map_clamp_scroll_y(map, 150, 0));
+    assert(map_clamp_scroll_y(map, 1000, 0));
+    assert(read_i32_at(map, 0xec) == 420);
+    assert(map_clamp_scroll_y(map, 1000, 2));
+    assert(read_i32_at(map, 0xec) == 364);
+    free(map);
+
+    assert(market_get_price_delta(0, 5) == 0);
+    assert(market_get_price_delta(7, 5) == 0);
+    assert(market_get_price_delta(2, -1) == 0xffffffd8u);
+    assert(market_get_price_delta(2, 0) == 0);
+    assert(market_get_price_delta(2, 1) == 0x28u);
+
+    assert(rating_get_float(2.0f, 0, 1) == 15.0);
+    assert(rating_get_float(2.0f, 5, 1) == 33.0);
+    assert(rating_get_float(2.0f, 8, 1) == 33.0);
+    assert(rating_get_float(2.0f, 7, 1) == 17.0);
+    assert(rating_get_float(2.0f, 9, 1) == 5.0);
+
+    uint8_t player[0x300] = {0};
+    write_i32_at(player, 0x200 + 4, 4);
+    write_i32_at(player, 0x220 + 4, 8);
+    write_i32_at(player, 0x240 + 4, 12);
+    write_i32_at(player, 0x260 + 4, 16);
+    assert(game_get_player_quarter_stat(player, 1, 0) == 4);
+    assert(game_get_player_quarter_stat(player, 1, 1) == 12);
+    assert(game_get_player_quarter_stat(player, 1, 2) == 8);
+    assert(game_get_player_quarter_stat(player, 1, 3) == 16);
+    assert(game_get_player_quarter_stat(player, 1, 4) == 10);
+
+    assert(game_get_player_staff_band(0) == 0);
+    assert(game_get_player_staff_band(2) == 1);
+    assert(game_get_player_staff_band(3) == 2);
+    assert(game_get_player_staff_band(5) == 3);
+    assert(game_get_player_wealth_band(50000.0) == 0);
+    assert(game_get_player_wealth_band(100001.0) == 1);
+    assert(game_get_player_wealth_band(500001.0) == 2);
+    assert(game_get_player_wealth_band(1000001.0) == 3);
+    assert(game_get_player_satisfaction_band(91) == 0);
+    assert(game_get_player_satisfaction_band(90) == 1);
+    assert(game_get_player_satisfaction_band(80) == 1);
+    assert(game_get_player_satisfaction_band(60) == 2);
+    assert(game_get_player_satisfaction_band(40) == 3);
+
+    int32_t stats[0x56] = {0};
+    double weights[0x56] = {0};
+    stats[0] = 1;
+    stats[1] = 2;
+    stats[2] = 0;
+    weights[0] = 1000.0;
+    weights[1] = 2000.0;
+    weights[2] = 3000.0;
+    double weighted = game_get_player_weighted_stat(stats, weights);
+    assert(weighted > 4.999999 && weighted < 5.000001);
+
+    uint8_t child[0x20] = {0};
+    write_i32_at(child, 0x14, 77);
+    uint8_t record[0x80] = {0};
+    uintptr_t child_pointer = (uintptr_t)child;
+    memcpy(record + 0x68, &child_pointer, sizeof(child_pointer));
+    assert(game_get_record_child14(record, 0) == 77);
+    assert(game_get_record_child14(record, -1) == 0);
+
+    uint8_t player_state[0x1200] = {0};
+    player_reset_ai_state(player_state);
+    assert(read_i32_at(player_state, 0x84) == 1);
+    assert(read_i32_at(player_state, 0x88) == 0);
+    double debt = 12.0;
+    memcpy(player_state + 0x108, &debt, sizeof(debt));
+    write_i32_at(player_state, 0x1e8, 99);
+    player_reset_debt_hours(player_state);
+    assert(read_i32_at(player_state, 0x1e8) == 0);
+    player_set_slot_flag18(player_state, 2);
+    assert(player_state[0x10e5 + 2 * 0x18] == 1);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -1293,6 +1379,7 @@ int main(void) {
     test_small_stats_accessors();
     test_table_grid_searches();
     test_map_object_helpers();
+    test_scroll_market_rating_player();
     puts("leaf function reconstruction: OK");
     return 0;
 }

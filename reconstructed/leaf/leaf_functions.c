@@ -2108,3 +2108,176 @@ void object_clear_state(uint8_t *object) {
     state[0x2e] = 0;
     state[0x2f] = 0;
 }
+
+bool map_clamp_scroll_y(uint8_t *map, int32_t requested, int32_t scroll_mode) {
+    if (map == NULL) {
+        return false;
+    }
+    int32_t previous = read_i32(map + 0xec);
+    int32_t minimum = read_i32(map + 0x30) - read_i32(map + 0x10174);
+    int32_t current = requested;
+    if (current < minimum) {
+        current = minimum;
+    }
+    int32_t maximum;
+    if (scroll_mode == 2) {
+        maximum = read_i32(map + 0x10170) - 0x38 + read_i32(map + 0x38);
+    } else {
+        maximum = read_i32(map + 0x38) + read_i32(map + 0x10170);
+    }
+    if (current > maximum) {
+        current = maximum;
+    }
+    write_i32(map + 0xec, current);
+    return previous != current;
+}
+
+uint32_t market_get_price_delta(uint8_t class_byte, int32_t table_value) {
+    if (class_byte == 0 || class_byte >= 7) {
+        return 0;
+    }
+    if (table_value == -1) {
+        return 0xffffffd8u;
+    }
+    return table_value != 0 ? 0x28u : 0;
+}
+
+double rating_get_float(float rating, int32_t type, int32_t difficulty) {
+    double base = (double)(0xb - difficulty) * 0.5;
+    double value = rating;
+    switch (type) {
+    case 0:
+        return value * 3.0 + base + 4.0;
+    case 1:
+        return value * 4.0 + base + 5.0;
+    case 2:
+        return value * 4.0 + base + 8.0;
+    case 3:
+        return value * 3.0 + base + 8.0;
+    case 4:
+        return value * 7.0 + base + 10.0;
+    case 5:
+    case 8:
+        return value * 10.0 + base + 8.0;
+    case 6:
+        return value * 3.0 + base + 7.0;
+    case 7:
+        return base + 12.0;
+    default:
+        return base;
+    }
+}
+
+int32_t game_get_player_quarter_stat(const uint8_t *object, int32_t index,
+                                     int32_t type) {
+    if (object == NULL) {
+        return 0;
+    }
+    size_t offset;
+    switch (type) {
+    case 0:
+        offset = 0x200;
+        break;
+    case 1:
+        offset = 0x240;
+        break;
+    case 2:
+        offset = 0x220;
+        break;
+    case 3:
+        offset = 0x260;
+        break;
+    default: {
+        int32_t a = read_i32(object + 0x260 + (size_t)index * 4);
+        int32_t b = read_i32(object + 0x240 + (size_t)index * 4);
+        int32_t c = read_i32(object + 0x220 + (size_t)index * 4);
+        int32_t d = read_i32(object + 0x200 + (size_t)index * 4);
+        return (a + b + c + d) >> 2;
+    }
+    }
+    return read_i32(object + offset + (size_t)index * 4);
+}
+
+uint8_t game_get_player_staff_band(int32_t sum) {
+    if (sum > 4) {
+        return 3;
+    }
+    if (sum < 3) {
+        return sum > 0 ? 1 : 0;
+    }
+    return 2;
+}
+
+uint8_t game_get_player_wealth_band(double value) {
+    if (value > 1000000.0) {
+        return 3;
+    }
+    if (value > 500000.0) {
+        return 2;
+    }
+    if (value > 100000.0) {
+        return 1;
+    }
+    return 0;
+}
+
+uint8_t game_get_player_satisfaction_band(int32_t average) {
+    if (average > 0x5a) {
+        return 0;
+    }
+    if (average < 0x47) {
+        return (uint8_t)((average < 0x33) + 2);
+    }
+    return 1;
+}
+
+double game_get_player_weighted_stat(const int32_t stats[0x56],
+                                     const double weights[0x56]) {
+    if (stats == NULL || weights == NULL) {
+        return 0.0;
+    }
+    double total = 0.0;
+    for (size_t index = 0; index < 0x56; index++) {
+        if (stats[index] > 0) {
+            total += weights[index] * 0.001 * (double)stats[index];
+        }
+    }
+    return total;
+}
+
+int32_t game_get_record_child14(const uint8_t *records, int32_t index) {
+    if (records == NULL || index < 0) {
+        return 0;
+    }
+    uintptr_t child;
+    memcpy(&child, records + (size_t)index * 0x48 + 0x68, sizeof(child));
+    if (child == 0) {
+        return 0;
+    }
+    return read_i32((const uint8_t *)child + 0x14);
+}
+
+void player_reset_ai_state(uint8_t *player) {
+    if (player == NULL) {
+        return;
+    }
+    write_i32(player + 0x84, 1);
+    write_i32(player + 0x88, 0);
+}
+
+void player_reset_debt_hours(uint8_t *player) {
+    if (player == NULL) {
+        return;
+    }
+    double value;
+    memcpy(&value, player + 0x108, sizeof(value));
+    if (value >= 0.0) {
+        write_i32(player + 0x1e8, 0);
+    }
+}
+
+void player_set_slot_flag18(uint8_t *player, size_t index) {
+    if (player != NULL) {
+        player[0x10e5u + index * 0x18u] = 1;
+    }
+}
