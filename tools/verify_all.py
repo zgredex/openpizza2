@@ -1199,13 +1199,14 @@ def check_reconstructed_c():
           and "settings reconstruction: OK" in output
           and "ingredient descriptor reconstruction: OK" in output
           and "mission state reconstruction: OK" in output
-          and "mission goals reconstruction: OK" in output)
+          and "mission goals reconstruction: OK" in output
+          and "branch economy reconstruction: OK" in output)
     return {
         "name": "reconstructed C build",
         "ok": ok,
-        "detail": ("settings defaults, ingredient descriptor, mission state and "
-                   "mission goals compile with gcc -std=c11 -Werror and pass "
-                   "their assertions")
+        "detail": ("settings defaults, ingredient descriptor, mission state, "
+                   "mission goals and branch economy compile with gcc -std=c11 "
+                   "-Werror and pass their assertions")
         if ok else output[-1200:],
     }
 

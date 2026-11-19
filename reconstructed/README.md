@@ -15,6 +15,9 @@ Current batches:
   `Game_InitDateState`, and the London goal ids 0/1/2 from
   `Mission_EvaluateGoals`, tested against the existing 9/9 Unicorn mission
   fixture.
+- `branch/` — one-serving branch economy, price formula and sale arithmetic
+  using the Rust-verified constants (`13.420524712365806` cash delta at price
+  `12`).
 
 Build and run:
 
