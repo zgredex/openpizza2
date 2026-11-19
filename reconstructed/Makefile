@@ -43,7 +43,7 @@ MENU_SRC = menu/menu_state.c menu/test_menu_state.c
 MENU_HDR = menu/menu_state.h
 MENU_BIN = $(BUILD)/test_menu_state
 
-SCREEN_SRC = screen/screen_render.c screen/statistics_balance_layout.c screen/office_desk_layout.c screen/character_select_layout.c screen/free_play_layout.c screen/warehouse_layout.c screen/building_project_layout.c screen/test_screen_render.c ui_render/ui_render.c assets/assets.c assets/ani.c render/render_state.c menu/menu_state.c statistics/statistics_state.c
+SCREEN_SRC = screen/screen_render.c screen/statistics_balance_layout.c screen/office_desk_layout.c screen/character_select_layout.c screen/free_play_layout.c screen/warehouse_layout.c screen/building_project_layout.c screen/end_results_layout.c screen/test_screen_render.c ui_render/ui_render.c assets/assets.c assets/ani.c render/render_state.c menu/menu_state.c statistics/statistics_state.c
 SCREEN_HDR = screen/screen_render.h ui_render/ui_render.h assets/assets.h render/render_state.h menu/menu_state.h statistics/statistics_state.h
 SCREEN_BIN = $(BUILD)/test_screen_render
 
@@ -96,7 +96,7 @@ CITY_HDR = city/city_state.h $(MISSION_STATE_HDR) branch/branch_economy.h
 CITY_BIN = $(BUILD)/test_city_state
 
 GAME_MODULES = settings/settings.c ingredient/ingredient.c menu/menu_state.c \
-               ui_screen/ui_screen.c options/options_state.c statistics/statistics_state.c ai/ai_state.c recipes/recipe_state.c personnel/personnel_state.c render/render_state.c operations/branch_operations.c advertising/value_state.c rating/rating_state.c assets/assets.c assets/ani.c map/iso_map.c map/map_render.c ui_render/ui_render.c screen/screen_render.c screen/statistics_balance_layout.c screen/office_desk_layout.c screen/character_select_layout.c screen/free_play_layout.c screen/warehouse_layout.c screen/building_project_layout.c save/save_state.c piz/piz_container.c \
+               ui_screen/ui_screen.c options/options_state.c statistics/statistics_state.c ai/ai_state.c recipes/recipe_state.c personnel/personnel_state.c render/render_state.c operations/branch_operations.c advertising/value_state.c rating/rating_state.c assets/assets.c assets/ani.c map/iso_map.c map/map_render.c ui_render/ui_render.c screen/screen_render.c screen/statistics_balance_layout.c screen/office_desk_layout.c screen/character_select_layout.c screen/free_play_layout.c screen/warehouse_layout.c screen/building_project_layout.c screen/end_results_layout.c save/save_state.c piz/piz_container.c \
                construction/construction_state.c mission/mission_state.c \
                mission/mission_goals.c branch/branch_economy.c city/city_state.c
 GAME_SRC = $(GAME_MODULES) test_game.c

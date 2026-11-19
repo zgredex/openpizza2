@@ -1971,3 +1971,102 @@ bool screen_render_building_project(RenderSurface *surface,
     }
     return true;
 }
+
+bool screen_render_end_results(RenderSurface *surface, const uint8_t *tga_data,
+                               size_t tga_size,
+                               const EndResultsAssets *assets,
+                               const EndResultsData *data,
+                               uint8_t *decode_buffer,
+                               size_t decode_capacity) {
+    if (assets == NULL) {
+        return false;
+    }
+    if (!screen_render_background(surface, tga_data, tga_size, decode_buffer,
+                                  decode_capacity)) {
+        return false;
+    }
+    const uint8_t text_color[4] = {0, 0, 0, 255};
+    const uint8_t highlight[4] = {255, 225, 120, 120};
+    char value_text[32];
+    for (size_t index = 0; index < kEndResultsControlCount; index++) {
+        const EndResultsControl *control = &kEndResultsControls[index];
+        if (control->kind == END_RESULTS_KIND_TEXT) {
+            const EndResultsFont *font = &assets->fonts[control->font];
+            if (font->data == NULL || font->info == NULL) {
+                return false;
+            }
+            const char *text = control->text;
+            if (data != NULL) {
+                if (control->id == 1214 && data->company_name != NULL) {
+                    text = data->company_name;
+                } else if (control->id == 1216) {
+                    snprintf(value_text, sizeof(value_text), "%u",
+                             data->points);
+                    text = value_text;
+                }
+            }
+            uint32_t width = ui_measure_text(font->info, text);
+            int32_t draw_x = control->x;
+            if (control->align == 1) {
+                draw_x = control->x + control->width - (int32_t)width;
+            } else if (control->align == 2) {
+                draw_x = control->x + ((int32_t)control->width - (int32_t)width) / 2;
+            }
+            if (!ui_draw_text(surface, font->data, font->size, font->info,
+                              draw_x, control->y, text, text_color)) {
+                return false;
+            }
+        } else if (control->kind == END_RESULTS_KIND_SPRITE) {
+            const RgbaSprite *sprite = assets->sprites[control->asset];
+            if (sprite != NULL &&
+                !render_blit(surface, sprite, control->x, control->y)) {
+                return false;
+            }
+        } else if (control->kind == END_RESULTS_KIND_BUTTON) {
+            const RgbaSprite *sprite = assets->sprites[control->asset];
+            const EndResultsFont *font = &assets->fonts[control->font];
+            if (sprite == NULL || font->data == NULL || font->info == NULL) {
+                continue;
+            }
+            for (int32_t tile = 0; tile < (int32_t)control->width;
+                 tile += (int32_t)sprite->width) {
+                if (!render_blit(surface, sprite, control->x + tile,
+                                 control->y)) {
+                    return false;
+                }
+            }
+            bool selected = data != NULL && data->selected_button >= 0;
+            if (selected) {
+                int button_index = -1;
+                if (control->id == 1443) {
+                    button_index = 0;
+                } else if (control->id == 1444) {
+                    button_index = 1;
+                } else if (control->id == 1445) {
+                    button_index = 2;
+                } else if (control->id == 1446) {
+                    button_index = 3;
+                } else if (control->id == 1232) {
+                    button_index = 4;
+                }
+                if (button_index == data->selected_button) {
+                    blend_rect(surface, control->x, control->y,
+                               (int32_t)control->width,
+                               (int32_t)sprite->height, highlight);
+                }
+            }
+            uint32_t width = ui_measure_text(font->info, control->text);
+            int32_t text_x = control->x +
+                             ((int32_t)control->width - (int32_t)width) / 2;
+            int32_t text_y = control->y +
+                             ((int32_t)sprite->height -
+                              (int32_t)font->info->line_height) /
+                                 2;
+            if (!ui_draw_text(surface, font->data, font->size, font->info,
+                              text_x, text_y, control->text, text_color)) {
+                return false;
+            }
+        }
+    }
+    return true;
+}

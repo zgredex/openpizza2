@@ -1345,6 +1345,142 @@ static void test_office_desk_composition(void) {
     free(frame);
 }
 
+static void test_end_results_composition(void) {
+    size_t tga_size = 0;
+    uint8_t *tga = load_file("../extracted/pictures/pe_endergebnis_punkte.tga",
+                             &tga_size);
+    assert(tga != NULL);
+    uint8_t *sprite_pixels[END_RESULTS_ASSET_COUNT] = {NULL};
+    RgbaSprite sprites[END_RESULTS_ASSET_COUNT];
+    for (int index = 0; index < END_RESULTS_ASSET_COUNT; index++) {
+        char path[128];
+        snprintf(path, sizeof(path), "../extracted/sprites/%s",
+                 kEndResultsAssetNames[index]);
+        assert(load_spr(path, &sprite_pixels[index], &sprites[index]));
+    }
+    static const char *const font_paths[END_RESULTS_FONT_COUNT] = {
+        "../extracted/fonts/timesfont.fnt",
+        "../extracted/fonts/times14.fnt",
+        "../extracted/fonts/verdana7.fnt",
+        "../extracted/fonts/verdana8.fnt",
+    };
+    uint8_t *font_data[END_RESULTS_FONT_COUNT] = {NULL};
+    size_t font_sizes[END_RESULTS_FONT_COUNT] = {0};
+    FntInfo font_infos[END_RESULTS_FONT_COUNT];
+    for (int index = 0; index < END_RESULTS_FONT_COUNT; index++) {
+        font_data[index] = load_file(font_paths[index], &font_sizes[index]);
+        assert(font_data[index] != NULL);
+        assert(fnt_read_info(font_data[index], font_sizes[index],
+                             &font_infos[index]));
+    }
+    EndResultsAssets assets = {0};
+    for (int index = 0; index < END_RESULTS_ASSET_COUNT; index++) {
+        assets.sprites[index] = &sprites[index];
+    }
+    for (int index = 0; index < END_RESULTS_FONT_COUNT; index++) {
+        assets.fonts[index] = (EndResultsFont){
+            font_data[index], font_sizes[index], &font_infos[index]};
+    }
+    assert(kEndResultsControlCount == 208);
+    const EndResultsControl *control = NULL;
+    for (size_t index = 0; index < kEndResultsControlCount; index++) {
+        if (kEndResultsControls[index].id == 1056) {
+            control = &kEndResultsControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 13 && control->y == 5);
+    assert(control->font == 0 && control->align == 2 && control->width == 560);
+    assert(strcmp(control->text, "Enterprise achievements:") == 0);
+    control = NULL;
+    for (size_t index = 0; index < kEndResultsControlCount; index++) {
+        if (kEndResultsControls[index].id == 1214) {
+            control = &kEndResultsControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 631 && control->y == 290);
+    assert(control->font == 3 && control->width == 140);
+    control = NULL;
+    for (size_t index = 0; index < kEndResultsControlCount; index++) {
+        if (kEndResultsControls[index].id == 1232) {
+            control = &kEndResultsControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->kind == END_RESULTS_KIND_BUTTON);
+    assert(control->x == 613 && control->y == 251 && control->width == 169);
+    assert(strcmp(control->text, "Total evaluation") == 0);
+    control = NULL;
+    for (size_t index = 0; index < kEndResultsControlCount; index++) {
+        if (kEndResultsControls[index].id == 1444) {
+            control = &kEndResultsControls[index];
+        }
+    }
+    assert(control != NULL);
+    assert(control->x == 595 && control->y == 551 && control->width == 204);
+    assert(control->asset == 19);
+    assert(strcmp(control->text, "Set new mission") == 0);
+
+    const EndResultsData data = {
+        .company_name = "Ada Pizza",
+        .points = 16000000,
+        .selected_button = 1,
+    };
+    size_t frame_size = 800 * 600 * 4;
+    uint8_t *frame = malloc(frame_size);
+    uint8_t *decoded = malloc(frame_size);
+    assert(frame != NULL);
+    assert(decoded != NULL);
+    RenderSurface surface;
+    assert(render_surface_init(&surface, frame, frame_size, 800, 600));
+    assert(screen_render_end_results(&surface, tga, tga_size, &assets, &data,
+                                     decoded, frame_size));
+    bool title_ink = false;
+    for (int y = 4; y < 28; y++) {
+        for (int x = 10; x < 300; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] < 180 && frame[offset + 1] < 120) {
+                title_ink = true;
+            }
+        }
+    }
+    assert(title_ink);
+    bool company_ink = false;
+    for (int y = 290; y < 306; y++) {
+        for (int x = 631; x < 780; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] < 120 && frame[offset + 1] < 120) {
+                company_ink = true;
+            }
+        }
+    }
+    assert(company_ink);
+    bool start_ink = false;
+    for (int y = 551; y < 590; y++) {
+        for (int x = 595; x < 799; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] < 80 && frame[offset + 1] < 80 &&
+                frame[offset + 2] < 80) {
+                start_ink = true;
+            }
+        }
+    }
+    assert(start_ink);
+    assert(!screen_render_end_results(&surface, tga, tga_size, NULL, &data,
+                                      decoded, frame_size));
+
+    for (int index = 0; index < END_RESULTS_FONT_COUNT; index++) {
+        free(font_data[index]);
+    }
+    for (int index = 0; index < END_RESULTS_ASSET_COUNT; index++) {
+        free(sprite_pixels[index]);
+    }
+    free(tga);
+    free(decoded);
+    free(frame);
+}
+
 static void test_building_project_composition(void) {
     uint8_t *panel_pixels = NULL;
     RgbaSprite panel;
@@ -2586,6 +2722,7 @@ int main(void) {
     test_statistics_balance_composition();
     test_warehouse_composition();
     test_building_project_composition();
+    test_end_results_composition();
     test_office_desk_composition();
     test_statistics_branch_balance_composition();
     test_options_page_composition();

@@ -1505,6 +1505,82 @@ int main(void) {
     }
     free(bp_panel_pixels);
 
+    uint8_t *er_tga_data = NULL;
+    size_t er_tga_size = 0;
+    FILE *er_tga_file = fopen("../extracted/pictures/pe_endergebnis_punkte.tga",
+                              "rb");
+    if (er_tga_file != NULL) {
+        fseek(er_tga_file, 0, SEEK_END);
+        long er_length = ftell(er_tga_file);
+        fseek(er_tga_file, 0, SEEK_SET);
+        if (er_length > 0) {
+            er_tga_data = malloc((size_t)er_length);
+            if (er_tga_data != NULL) {
+                er_tga_size = fread(er_tga_data, 1, (size_t)er_length,
+                                    er_tga_file);
+            }
+        }
+        fclose(er_tga_file);
+    }
+    assert(er_tga_data != NULL);
+    uint8_t *er_sprite_pixels[END_RESULTS_ASSET_COUNT] = {NULL};
+    RgbaSprite er_sprites[END_RESULTS_ASSET_COUNT];
+    for (int index = 0; index < END_RESULTS_ASSET_COUNT; index++) {
+        char path[128];
+        snprintf(path, sizeof(path), "../extracted/sprites/%s",
+                 kEndResultsAssetNames[index]);
+        assert(load_spr_asset(path, &er_sprite_pixels[index],
+                              &er_sprites[index]));
+    }
+    static const char *const er_font_paths[END_RESULTS_FONT_COUNT] = {
+        "../extracted/fonts/timesfont.fnt",
+        "../extracted/fonts/times14.fnt",
+        "../extracted/fonts/verdana7.fnt",
+        "../extracted/fonts/verdana8.fnt",
+    };
+    uint8_t *er_font_data[END_RESULTS_FONT_COUNT] = {NULL};
+    size_t er_font_sizes[END_RESULTS_FONT_COUNT] = {0};
+    FntInfo er_font_infos[END_RESULTS_FONT_COUNT];
+    for (int index = 0; index < END_RESULTS_FONT_COUNT; index++) {
+        er_font_data[index] = load_font_asset(er_font_paths[index],
+                                              &er_font_sizes[index]);
+        assert(er_font_data[index] != NULL);
+        assert(fnt_read_info(er_font_data[index], er_font_sizes[index],
+                             &er_font_infos[index]));
+    }
+    EndResultsAssets er_assets = {0};
+    for (int index = 0; index < END_RESULTS_ASSET_COUNT; index++) {
+        er_assets.sprites[index] = &er_sprites[index];
+    }
+    for (int index = 0; index < END_RESULTS_FONT_COUNT; index++) {
+        er_assets.fonts[index] = (EndResultsFont){
+            er_font_data[index], er_font_sizes[index], &er_font_infos[index]};
+    }
+    const EndResultsData er_data = {
+        .company_name = "Ada Pizza",
+        .points = 16000000,
+        .selected_button = 1,
+    };
+    uint8_t *er_frame = malloc(800 * 600 * 4);
+    uint8_t *er_decoded = malloc(800 * 600 * 4);
+    assert(er_frame != NULL);
+    assert(er_decoded != NULL);
+    RenderSurface er_surface;
+    assert(render_surface_init(&er_surface, er_frame, 800 * 600 * 4, 800, 600));
+    assert(screen_render_end_results(&er_surface, er_tga_data, er_tga_size,
+                                     &er_assets, &er_data, er_decoded,
+                                     800 * 600 * 4));
+    assert(memcmp(er_frame, er_decoded, 800 * 600 * 4) != 0);
+    free(er_frame);
+    free(er_decoded);
+    for (int index = 0; index < END_RESULTS_FONT_COUNT; index++) {
+        free(er_font_data[index]);
+    }
+    for (int index = 0; index < END_RESULTS_ASSET_COUNT; index++) {
+        free(er_sprite_pixels[index]);
+    }
+    free(er_tga_data);
+
     uint8_t *sbb_background_pixels = NULL;
     uint8_t *sbb_row_pixels = NULL;
     uint8_t *sbb_rating_pixels = NULL;

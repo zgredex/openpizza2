@@ -13,6 +13,7 @@
 #include "free_play_layout.h"
 #include "warehouse_layout.h"
 #include "building_project_layout.h"
+#include "end_results_layout.h"
 #include "office_desk_layout.h"
 #include "statistics_balance_layout.h"
 
@@ -491,6 +492,32 @@ typedef struct BuildingProjectData {
 bool screen_render_building_project(RenderSurface *surface,
                                     const BuildingProjectAssets *assets,
                                     const BuildingProjectData *data);
+
+typedef struct EndResultsFont {
+    const uint8_t *data;
+    size_t size;
+    const FntInfo *info;
+} EndResultsFont;
+
+typedef struct EndResultsAssets {
+    const RgbaSprite *sprites[END_RESULTS_ASSET_COUNT];
+    EndResultsFont fonts[END_RESULTS_FONT_COUNT];
+} EndResultsAssets;
+
+typedef struct EndResultsData {
+    const char *company_name;
+    uint32_t points;
+    int selected_button; /* 0..4, -1 none */
+} EndResultsData;
+
+/* Composes Screen_EndResults (0x46F9C0) over PE_ENDERGEBNIS_PUNKTE.TGA with
+ * all 208 constructor controls at their original positions. */
+bool screen_render_end_results(RenderSurface *surface, const uint8_t *tga_data,
+                               size_t tga_size,
+                               const EndResultsAssets *assets,
+                               const EndResultsData *data,
+                               uint8_t *decode_buffer,
+                               size_t decode_capacity);
 
 typedef struct MissionBriefingData {
     const char *city;

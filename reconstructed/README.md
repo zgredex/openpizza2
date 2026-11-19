@@ -62,8 +62,9 @@ Current batches:
   42-control office-desk layout over BG002.tga with its five fonts, desk
   sprites and button/status controls, with the six ANI animation windows
   drawing decoded raw/RLE 16bpp frames, the exact 185-control warehouse
-  deliveries page with 27 sprites, and the exact 172-control town-advertising
-  page with 28 sprites and its five rating rows.
+  deliveries page with 27 sprites, the exact 172-control town-advertising
+  page with 28 sprites and its five rating rows, and the exact 208-control
+  end-results points page over PE_ENDERGEBNIS_PUNKTE.TGA.
 - `rating/` — `Branch_GetCustomerGroupRating` composition, city adjustment,
   `Stats_GetAverage8`/`Branch_GetMenuRating`, the baseline branch-score table
   rule and `Game_GetMarketBonusFactor`.
