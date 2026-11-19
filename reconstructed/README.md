@@ -43,8 +43,8 @@ Current batches:
   `Iso_Filiale_einf_klein.iso` plus its background and 40 furniture sprites,
   and builds the `bg003.tga`/`mask.tga` statistics map panel.
 - `screen/` — decodes `extracted/pictures/pe_startscreen.tga` into an 800×600
-  RGBA frame and draws the reconstructed main-menu rows and status line with
-  the shipped Times font. Also composes the character-select page over
+  RGBA frame and draws the exact main-menu buttons at x=595 with tiled
+  `TEXTPBTRANSPGELB_00.spr` backgrounds and the shipped Times font. Also composes the character-select page over
   `extracted/pictures/pe_charakterauswahl.tga` at the documented control
   positions, the free-play setup page over
   `extracted/pictures/pe_freies_spiel.tga` with the Berlin scenario fields,

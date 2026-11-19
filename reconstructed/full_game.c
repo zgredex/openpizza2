@@ -390,6 +390,10 @@ int main(void) {
         }
         fclose(tga_file);
     }
+    uint8_t *menu_button_pixels = NULL;
+    RgbaSprite menu_button_sprite;
+    assert(load_spr_asset("../extracted/sprites/textpbtranspgelb_00.spr",
+                          &menu_button_pixels, &menu_button_sprite));
     if (tga_data != NULL && font_size > 0) {
         size_t screen_frame_size = 800 * 600 * 4;
         uint8_t *screen_frame = malloc(screen_frame_size);
@@ -401,13 +405,14 @@ int main(void) {
                                    800, 600));
         menu_set_hover(&menu, 0);
         assert(screen_render_menu(&screen_surface, tga_data, tga_size, font_data,
-                                  font_size, &font_info, &menu, screen_decoded,
-                                  screen_frame_size));
+                                  font_size, &font_info, &menu_button_sprite,
+                                  &menu, screen_decoded, screen_frame_size));
         assert(memcmp(screen_frame, screen_decoded, screen_frame_size) != 0);
         free(screen_decoded);
         free(screen_frame);
         free(tga_data);
     }
+    free(menu_button_pixels);
 
     tga_data = NULL;
     tga_size = 0;

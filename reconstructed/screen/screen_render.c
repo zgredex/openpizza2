@@ -123,36 +123,38 @@ static int draw_wrapped_text(RenderSurface *surface, const uint8_t *font_data,
 bool screen_render_menu(RenderSurface *surface, const uint8_t *tga_data,
                         size_t tga_size, const uint8_t *font_data,
                         size_t font_size, const FntInfo *font,
+                        const RgbaSprite *button_sprite,
                         const MenuState *menu, uint8_t *decode_buffer,
                         size_t decode_capacity) {
-    if (menu == NULL || font == NULL) {
+    if (menu == NULL || font == NULL || button_sprite == NULL) {
         return false;
     }
     if (!screen_render_background(surface, tga_data, tga_size, decode_buffer,
                                   decode_capacity)) {
         return false;
     }
-    const uint8_t active[4] = {255, 225, 120, 150};
-    const uint8_t idle[4] = {30, 30, 30, 80};
+    const uint8_t highlight[4] = {255, 225, 120, 120};
     const uint8_t text_color[4] = {0, 0, 0, 255};
     for (int index = 0; index < MENU_ITEM_COUNT; index++) {
         const MenuItem *item = &menu->items[index];
+        for (int32_t tile = 0; tile < (int32_t)item->width;
+             tile += button_sprite->width) {
+            render_blit(surface, button_sprite, item->x + tile, item->y);
+        }
         bool highlighted = menu->hover >= 0 ? index == menu->hover
                                              : (menu->interacted && index == menu->selected);
-        blend_rect(surface, item->x, item->y, (int32_t)item->width,
-                   (int32_t)item->height, highlighted ? active : idle);
+        if (highlighted) {
+            blend_rect(surface, item->x, item->y, (int32_t)item->width,
+                       (int32_t)item->height, highlight);
+        }
         uint32_t text_width = ui_measure_text(font, item->label);
         int32_t text_x = item->x + ((int32_t)item->width - (int32_t)text_width) / 2;
-        int32_t text_y = item->y + 9;
+        int32_t text_y = item->y +
+                         ((int32_t)item->height - (int32_t)font->line_height) / 2;
         if (!ui_draw_text(surface, font_data, font_size, font, text_x, text_y,
                           item->label, text_color)) {
             return false;
         }
-    }
-    if (menu->has_status) {
-        const uint8_t status_color[4] = {255, 255, 255, 255};
-        ui_draw_text(surface, font_data, font_size, font, 20,
-                     (int32_t)surface->height - 30, menu->status, status_color);
     }
     return true;
 }

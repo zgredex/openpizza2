@@ -1229,7 +1229,7 @@ def check_reconstructed_c():
                    "target compile with gcc -std=c11 -Werror and pass; piz "
                    "container, options/autosave, statistics, AI, recipes, "
                    "personnel, render, operations, SPR/FNT assets and UI "
-                   "composition, startscreen menu, character-select, London "
+                   "composition, exact main menu, character-select, London "
                    "briefing, free-play setup, statistics view, exact branch-"
                    "list window, exact options sidebar, exact game sidebar, "
                    "exact branch-details page, exact branch-offer page, personnel "

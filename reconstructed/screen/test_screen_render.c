@@ -1218,6 +1218,10 @@ int main(void) {
     uint8_t *font_data = load_file("../extracted/fonts/timesfont.fnt", &font_size);
     assert(tga != NULL);
     assert(font_data != NULL);
+    uint8_t *button_pixels = NULL;
+    RgbaSprite button_sprite;
+    assert(load_spr("../extracted/sprites/textpbtranspgelb_00.spr",
+                    &button_pixels, &button_sprite));
 
     FntInfo font;
     assert(fnt_read_info(font_data, font_size, &font));
@@ -1234,8 +1238,9 @@ int main(void) {
     MenuState menu;
     menu_state_init(&menu);
     menu_set_hover(&menu, 0);
-    assert(screen_render_menu(&surface, tga, tga_size, font_data, font_size, &font,
-                              &menu, decoded, frame_size));
+    assert(screen_render_menu(&surface, tga, tga_size, font_data, font_size,
+                              &font, &button_sprite, &menu, decoded,
+                              frame_size));
 
     bool highlight = false;
     bool text_ink = false;
@@ -1255,12 +1260,14 @@ int main(void) {
 
     menu_set_selected(&menu, 2);
     menu_activate(&menu);
-    assert(screen_render_menu(&surface, tga, tga_size, font_data, font_size, &font,
-                              &menu, decoded, frame_size));
+    assert(screen_render_menu(&surface, tga, tga_size, font_data, font_size,
+                              &font, &button_sprite, &menu, decoded,
+                              frame_size));
     assert(menu.has_status);
 
     free(tga);
     free(font_data);
+    free(button_pixels);
     free(decoded);
     free(frame);
     test_character_select_composition();

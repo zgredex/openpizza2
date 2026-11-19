@@ -20,6 +20,7 @@ bool screen_render_background(RenderSurface *surface, const uint8_t *tga_data,
 bool screen_render_menu(RenderSurface *surface, const uint8_t *tga_data,
                         size_t tga_size, const uint8_t *font_data,
                         size_t font_size, const FntInfo *font,
+                        const RgbaSprite *button_sprite,
                         const MenuState *menu, uint8_t *decode_buffer,
                         size_t decode_capacity);
 #define CHARACTER_ATTRIBUTE_COUNT 6
