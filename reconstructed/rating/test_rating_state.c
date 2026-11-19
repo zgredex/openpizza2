@@ -43,6 +43,19 @@ static void test_branch_scores(void) {
     assert(rating_branch_scores(NULL, baselines, scores) == 0);
 }
 
+static void test_price_rating(void) {
+    const int32_t ratings[8] = {10, 20, 30, 40, 50, 60, 70, 80};
+    assert(rating_group_average8(ratings, -1) == 45);
+    assert(rating_group_average8(ratings, 3) == 40);
+    assert(rating_group_average8(ratings, 0) == 10);
+    assert(rating_group_average8(NULL, -1) == 0);
+    bool has_price = false;
+    assert(branch_price_comparison_rating(80, 5, 5, false, &has_price) == 0);
+    assert(!has_price);
+    assert(branch_price_comparison_rating(80, 5, 5, true, &has_price) == 56);
+    assert(has_price);
+}
+
 static void test_market_bonus(void) {
     assert(rating_market_bonus_factor(false, 0, 0) == 1.0);
     assert(rating_market_bonus_factor(true, 20, 0) == 1.1);
@@ -57,6 +70,7 @@ int main(void) {
     test_group_rating();
     test_branch_scores();
     test_market_bonus();
+    test_price_rating();
     puts("rating state reconstruction: OK");
     return 0;
 }

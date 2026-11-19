@@ -1081,9 +1081,14 @@ bool screen_render_mission_goals(RenderSurface *surface, const RgbaSprite *panel
     draw_label(surface, font_data, font_size, font,
                window_x + 44, window_y + 5,
                data->title != NULL ? data->title : "Town aims", title_color);
+    draw_label(surface, font_data, font_size, font, window_x + 47,
+               window_y + 200, "Your tasks are therefore", label_color);
+    static const int32_t goal_y[3] = {214, 240, 267};
     for (int index = 0; index < 3; index++) {
-        int32_t y = window_y + 180 + index * 25;
-        draw_label(surface, font_data, font_size, font, window_x + 47, y,
+        int32_t y = window_y + goal_y[index];
+        draw_label(surface, font_data, font_size, font, window_x + 59, y,
+                   index == 2 ? "!" : ">", label_color);
+        draw_label(surface, font_data, font_size, font, window_x + 72, y,
                    data->goal_labels[index] != NULL ? data->goal_labels[index]
                                                     : "Goal",
                    label_color);
@@ -1093,19 +1098,19 @@ bool screen_render_mission_goals(RenderSurface *surface, const RgbaSprite *panel
         draw_label(surface, font_data, font_size, font, window_x + 210, y,
                    value_text, data->completed[index] ? title_color : value_color);
     }
+    draw_label(surface, font_data, font_size, font, window_x + 47,
+               window_y + 293, "Initial capital so far", label_color);
+    snprintf(value_text, sizeof(value_text), "%u", data->capital);
+    draw_label(surface, font_data, font_size, font, window_x + 140,
+               window_y + 293, value_text, value_color);
+    draw_label(surface, font_data, font_size, font, window_x + 47,
+               window_y + 317, "Time limit", label_color);
+    snprintf(value_text, sizeof(value_text), "%u years", data->years);
+    draw_label(surface, font_data, font_size, font, window_x + 140,
+               window_y + 317, value_text, value_color);
     if (separator != NULL) {
         render_blit(surface, separator, window_x + 39, window_y + 332);
     }
-    draw_label(surface, font_data, font_size, font, window_x + 47,
-               window_y + 280, "Initial capital so far", label_color);
-    snprintf(value_text, sizeof(value_text), "%u", data->capital);
-    draw_label(surface, font_data, font_size, font, window_x + 140,
-               window_y + 280, value_text, value_color);
-    draw_label(surface, font_data, font_size, font, window_x + 47,
-               window_y + 300, "Time limit", label_color);
-    snprintf(value_text, sizeof(value_text), "%u years", data->years);
-    draw_label(surface, font_data, font_size, font, window_x + 140,
-               window_y + 300, value_text, value_color);
 
     const uint8_t button_idle[4] = {140, 180, 140, 220};
     const uint8_t button_active[4] = {130, 230, 130, 235};

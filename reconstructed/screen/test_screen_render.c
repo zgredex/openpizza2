@@ -792,6 +792,16 @@ static void test_mission_goals_composition(void) {
         }
     }
     assert(title_ink);
+    bool goal_ink = false;
+    for (int y = 430; y < 452; y++) {
+        for (int x = 630; x < 760; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] < 180 && frame[offset + 1] < 140) {
+                goal_ink = true;
+            }
+        }
+    }
+    assert(goal_ink);
     size_t button_offset = ((size_t)(218 + 350) * 800 + (561 + 215)) * 4;
     assert(frame[button_offset + 1] > frame[button_offset]);
     assert(!screen_render_mission_goals(&surface, &panel, &separator, font_data,

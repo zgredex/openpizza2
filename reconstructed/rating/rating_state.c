@@ -62,3 +62,34 @@ double rating_market_bonus_factor(bool has_market, int32_t market_value,
     }
     return (double)(value + 100) * 0.01;
 }
+
+int32_t rating_group_average8(const int32_t ratings[8], int32_t group) {
+    if (ratings == NULL) {
+        return 0;
+    }
+    int32_t value;
+    if (group == -1) {
+        int32_t total = 0;
+        for (int index = 0; index < 8; index++) {
+            total += ratings[index];
+        }
+        value = total / 8;
+    } else if (group >= 0 && group < 8) {
+        value = ratings[group];
+    } else {
+        return 0;
+    }
+    return clamp_0_100(value);
+}
+
+int32_t branch_price_comparison_rating(int32_t effect, int32_t city_field_5c,
+                                       int32_t city_field_44, bool has_plan,
+                                       bool *has_price) {
+    if (has_price != NULL) {
+        *has_price = has_plan;
+    }
+    if (!has_plan) {
+        return 0;
+    }
+    return rating_city_adjust(effect, city_field_5c, city_field_44);
+}

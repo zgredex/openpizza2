@@ -15,6 +15,11 @@
 int32_t rating_city_adjust(int32_t rating, int32_t city_field_5c,
                            int32_t city_field_44);
 int32_t rating_branch_score(int32_t value, int32_t baseline);
+int32_t rating_group_average8(const int32_t ratings[8], int32_t group);
+int32_t branch_price_comparison_rating(int32_t effect, int32_t city_field_5c,
+                                       int32_t city_field_44, bool has_plan,
+                                       bool *has_price);
+
 int32_t rating_branch_scores(const int32_t values[8],
                              const int32_t baselines[8], int32_t scores[8]);
 double rating_market_bonus_factor(bool has_market, int32_t market_value,

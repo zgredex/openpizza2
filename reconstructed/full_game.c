@@ -555,6 +555,14 @@ int main(void) {
     assert(rating_scores[0] == 10 && rating_scores[6] == 0);
     assert(rating_market_bonus_factor(false, 0, 0) == 1.0);
     assert(rating_market_bonus_factor(true, 20, 0) == 1.1);
+    const int32_t price_ratings[8] = {10, 20, 30, 40, 50, 60, 70, 80};
+    assert(rating_group_average8(price_ratings, -1) == 45);
+    bool has_price = false;
+    assert(branch_price_comparison_rating(80, 5, 5, false, &has_price) == 0);
+    assert(!has_price);
+    assert(branch_price_comparison_rating(80, 5, 5, true, &has_price) == 56);
+    assert(has_price);
+
 
     assert(company_get_percent_modifier(1, 5000) == 50);
     assert(gameplan_effect_from_bar(1, 5000, 80, 0, 0) == 60);
