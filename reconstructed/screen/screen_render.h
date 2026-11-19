@@ -222,6 +222,21 @@ bool screen_render_personnel_record(
     const RgbaSprite *separator, const uint8_t *font_data, size_t font_size,
     const FntInfo *font, const PersonnelRecordData *data);
 
+typedef struct PersonnelOverviewSprites {
+    const RgbaSprite *panel;
+    const RgbaSprite *tabs;
+    const RgbaSprite *separator;
+    const RgbaSprite *button_background;
+    const RgbaSprite *help_button;
+    const RgbaSprite *arrow_left;
+    const RgbaSprite *arrow_right;
+    const RgbaSprite *photo_frame;
+    const RgbaSprite *photo_dummy;
+    const RgbaSprite *plan_light;
+    const RgbaSprite *slider;
+    const RgbaSprite *ratings[8];
+} PersonnelOverviewSprites;
+
 typedef struct PersonnelOverviewData {
     const char *candidate_name;
     const char *profession;
@@ -230,16 +245,16 @@ typedef struct PersonnelOverviewData {
     int32_t motivation;
     int32_t cooking;
     int32_t speed;
-    const RgbaSprite *ratings[4];
+    int32_t performance;
+    uint32_t salary;
     int selected_tab;    /* 0..3 */
-    int selected_button; /* 0 = Employ, -1 = none */
+    int selected_button; /* 0 = Employ, 1 = Back, -1 = none */
 } PersonnelOverviewData;
 
 /* Composes Screen_PersonnelOverview (0x415620): staff tabs, stat gauges,
- * candidate details, Employ button and rating strips. */
+ * candidate details, Employ/Back buttons and eight rating strips. */
 bool screen_render_personnel_overview(
-    RenderSurface *surface, const RgbaSprite *panel,
-    const RgbaSprite *tabs, const RgbaSprite *separator,
+    RenderSurface *surface, const PersonnelOverviewSprites *sprites,
     const uint8_t *font_data, size_t font_size, const FntInfo *font,
     const PersonnelOverviewData *data);
 

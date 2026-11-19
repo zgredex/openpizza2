@@ -840,18 +840,18 @@ bool screen_render_branch_offer(RenderSurface *surface,
 }
 
 bool screen_render_personnel_overview(
-    RenderSurface *surface, const RgbaSprite *panel,
-    const RgbaSprite *tabs, const RgbaSprite *separator,
+    RenderSurface *surface, const PersonnelOverviewSprites *sprites,
     const uint8_t *font_data, size_t font_size, const FntInfo *font,
     const PersonnelOverviewData *data) {
-    if (surface == NULL || font == NULL || data == NULL) {
+    if (surface == NULL || sprites == NULL || font == NULL || data == NULL) {
         return false;
     }
     const uint8_t background[4] = {22, 26, 34, 255};
     render_clear(surface, background);
     const int32_t window_x = 561;
     const int32_t window_y = 218;
-    if (panel != NULL && !render_blit(surface, panel, window_x, window_y)) {
+    if (sprites->panel != NULL &&
+        !render_blit(surface, sprites->panel, window_x, window_y)) {
         return false;
     }
     const uint8_t title_color[4] = {120, 20, 20, 255};
@@ -863,13 +863,14 @@ bool screen_render_personnel_overview(
                "Hire staff", title_color);
     static const int32_t tab_x[4] = {53, 97, 141, 185};
     for (int index = 0; index < 4; index++) {
-        if (tabs != NULL && tabs[index].pixels != NULL) {
-            render_blit(surface, &tabs[index], window_x + tab_x[index],
-                        window_y + 242);
+        if (sprites->tabs != NULL && sprites->tabs[index].pixels != NULL) {
+            render_blit(surface, &sprites->tabs[index],
+                        window_x + tab_x[index], window_y + 242);
         }
     }
-    if (separator != NULL) {
-        render_blit(surface, separator, window_x + 39, window_y + 297);
+    if (sprites->separator != NULL) {
+        render_blit(surface, sprites->separator, window_x + 39, window_y + 297);
+        render_blit(surface, sprites->separator, window_x + 39, window_y + 267);
     }
     draw_label(surface, font_data, font_size, font, window_x + 53,
                window_y + 163, "Cooking", label_color);
@@ -880,51 +881,125 @@ bool screen_render_personnel_overview(
     draw_label(surface, font_data, font_size, font, window_x + 152,
                window_y + 185, "Motivation", label_color);
 
-    const int32_t gauge_x[4] = {52, 151, 52, 151};
-    const int32_t gauge_y[4] = {180, 180, 202, 202};
-    const int32_t gauge_values[4] = {data->cooking, data->speed, data->health,
-                                     data->motivation};
-    const uint8_t gauge_color[4] = {70, 150, 70, 230};
+    const int32_t stat_values[4] = {data->cooking, data->speed, data->health,
+                                    data->motivation};
+    static const int32_t bar_x[4] = {52, 52, 151, 151};
+    static const int32_t bar_y[4] = {180, 202, 180, 202};
     for (int index = 0; index < 4; index++) {
-        int32_t value = gauge_values[index];
+        int32_t value = stat_values[index];
         if (value < 0) {
             value = 0;
         }
         if (value > 100) {
             value = 100;
         }
-        blend_rect(surface, window_x + gauge_x[index], window_y + gauge_y[index],
-                   80, 12, (const uint8_t[4]){80, 70, 60, 180});
-        blend_rect(surface, window_x + gauge_x[index], window_y + gauge_y[index],
-                   value * 80 / 100, 12, gauge_color);
+        blend_rect(surface, window_x + bar_x[index], window_y + bar_y[index],
+                   80, 8, (const uint8_t[4]){80, 70, 60, 180});
+        blend_rect(surface, window_x + bar_x[index], window_y + bar_y[index],
+                   value * 80 / 100, 8, (const uint8_t[4]){70, 150, 70, 230});
+        if (sprites->slider != NULL) {
+            render_blit(surface, sprites->slider,
+                        window_x + bar_x[index] + value * 80 / 100 -
+                            (int32_t)sprites->slider->width / 2,
+                        window_y + bar_y[index] - 4);
+        }
     }
-
-    if (data->candidate_name != NULL) {
-        draw_label(surface, font_data, font_size, font, window_x + 53,
-                   window_y + 62, data->candidate_name, value_color);
+    if (sprites->arrow_left != NULL) {
+        render_blit(surface, sprites->arrow_left, window_x + 53, window_y + 95);
     }
-    if (data->profession != NULL) {
-        draw_label(surface, font_data, font_size, font, window_x + 53,
-                   window_y + 84, data->profession, label_color);
+    if (sprites->arrow_right != NULL) {
+        render_blit(surface, sprites->arrow_right, window_x + 93, window_y + 95);
     }
-    snprintf(value_text, sizeof(value_text), "Age %u", data->age);
-    draw_label(surface, font_data, font_size, font, window_x + 160,
-               window_y + 84, value_text, value_color);
-
-    const uint8_t button_idle[4] = {140, 180, 140, 220};
-    const uint8_t button_active[4] = {130, 230, 130, 235};
-    blend_rect(surface, window_x + 143, window_y + 98, 84, 24,
-               data->selected_button == 0 ? button_active : button_idle);
+    if (sprites->button_background != NULL) {
+        for (int32_t tile = 0; tile < 84; tile += sprites->button_background->width) {
+            render_blit(surface, sprites->button_background,
+                        window_x + 143 + tile, window_y + 100);
+        }
+    }
+    if (data->selected_button == 0) {
+        blend_rect(surface, window_x + 143, window_y + 100, 84, 21,
+                   (const uint8_t[4]){255, 225, 120, 150});
+    }
     draw_label(surface, font_data, font_size, font, window_x + 155,
                window_y + 102, "Employ", label_color);
 
+    draw_label(surface, font_data, font_size, font, window_x + 127,
+               window_y + 38,
+               data->candidate_name != NULL ? data->candidate_name
+                                             : "Carlos Estarda",
+               value_color);
+    draw_label(surface, font_data, font_size, font, window_x + 127,
+               window_y + 50, "Age:", label_color);
+    snprintf(value_text, sizeof(value_text), "%u", data->age);
+    draw_label(surface, font_data, font_size, font, window_x + 190,
+               window_y + 50, value_text, value_color);
+    draw_label(surface, font_data, font_size, font, window_x + 127,
+               window_y + 61,
+               data->profession != NULL ? data->profession : "Koch",
+               label_color);
+    draw_label(surface, font_data, font_size, font, window_x + 127,
+               window_y + 72, "Performance", label_color);
+    snprintf(value_text, sizeof(value_text), "%d", data->performance);
+    draw_label(surface, font_data, font_size, font, window_x + 190,
+               window_y + 72, value_text, value_color);
+    draw_label(surface, font_data, font_size, font, window_x + 127,
+               window_y + 84, "Salary ", label_color);
+    snprintf(value_text, sizeof(value_text), "%u$", data->salary);
+    draw_label(surface, font_data, font_size, font, window_x + 171,
+               window_y + 84, value_text, value_color);
+
+    static const char *const group_names[8] = {
+        "Kids", "Teens", "Students", "Louts",
+        "Yuppies", "Big shots", "Gothics", "Tourist",
+    };
+    static const int32_t group_x[4] = {39, 88, 138, 188};
+    static const int32_t group_y[2] = {304, 340};
     static const int32_t rating_x[4] = {49, 99, 149, 199};
-    for (int index = 0; index < 4; index++) {
-        if (data->ratings[index] != NULL) {
-            render_blit(surface, data->ratings[index], window_x + rating_x[index],
-                        window_y + 315);
+    static const int32_t rating_y[2] = {315, 350};
+    for (int group = 0; group < 8; group++) {
+        int column = group % 4;
+        int row = group / 4;
+        draw_label(surface, font_data, font_size, font, window_x + group_x[column],
+                   window_y + group_y[row], group_names[group], label_color);
+        if (sprites->ratings[group] != NULL) {
+            render_blit(surface, sprites->ratings[group],
+                        window_x + rating_x[column], window_y + rating_y[row]);
         }
     }
+    if (sprites->help_button != NULL) {
+        render_blit(surface, sprites->help_button, window_x + 11, window_y - 1);
+    }
+    if (sprites->photo_frame != NULL) {
+        render_blit(surface, sprites->photo_frame, window_x + 52, window_y + 37);
+    }
+    if (sprites->photo_dummy != NULL) {
+        render_blit(surface, sprites->photo_dummy, window_x + 57, window_y + 42);
+    }
+    if (sprites->button_background != NULL) {
+        for (int32_t tile = 0; tile < 84; tile += sprites->button_background->width) {
+            render_blit(surface, sprites->button_background,
+                        window_x + 142 + tile, window_y + 274);
+        }
+    }
+    if (data->selected_button == 1) {
+        blend_rect(surface, window_x + 142, window_y + 274, 84, 21,
+                   (const uint8_t[4]){255, 225, 120, 150});
+    }
+    draw_label(surface, font_data, font_size, font, window_x + 158,
+               window_y + 276, "Back", label_color);
+    if (sprites->plan_light != NULL) {
+        render_blit(surface, sprites->plan_light, window_x + 57, window_y + 224);
+    }
+    static const char *const scale_labels[9] = {
+        "0", "3", "6", "9", "12", "15", "18", "21", "24",
+    };
+    static const int32_t scale_x[9] = {56, 75, 96, 115, 132, 152, 172, 192, 211};
+    for (int index = 0; index < 9; index++) {
+        draw_label(surface, font_data, font_size, font, window_x + scale_x[index],
+                   window_y + 213, scale_labels[index], label_color);
+    }
+    blend_rect(surface, window_x + 58, window_y + 231, 140, 6,
+               (const uint8_t[4]){80, 70, 60, 180});
     return true;
 }
 

@@ -865,10 +865,26 @@ int main(void) {
     uint8_t *po_panel_pixels = NULL;
     uint8_t *po_separator_pixels = NULL;
     uint8_t *po_rating_pixels = NULL;
+    uint8_t *po_button_pixels = NULL;
+    uint8_t *po_help_pixels = NULL;
+    uint8_t *po_frame_pixels = NULL;
+    uint8_t *po_dummy_pixels = NULL;
+    uint8_t *po_light_pixels = NULL;
+    uint8_t *po_slider_pixels = NULL;
+    uint8_t *po_left_pixels = NULL;
+    uint8_t *po_right_pixels = NULL;
     uint8_t *po_tab_pixels[4] = {NULL, NULL, NULL, NULL};
     RgbaSprite po_panel;
     RgbaSprite po_separator;
     RgbaSprite po_rating;
+    RgbaSprite po_button;
+    RgbaSprite po_help;
+    RgbaSprite po_photo_frame;
+    RgbaSprite po_photo_dummy;
+    RgbaSprite po_plan_light;
+    RgbaSprite po_slider;
+    RgbaSprite po_arrow_left;
+    RgbaSprite po_arrow_right;
     RgbaSprite po_tabs[4];
     assert(load_spr_asset("../extracted/sprites/submenue.spr", &po_panel_pixels,
                           &po_panel));
@@ -876,6 +892,22 @@ int main(void) {
                           &po_separator_pixels, &po_separator));
     assert(load_spr_asset("../extracted/sprites/bewertung__08.spr",
                           &po_rating_pixels, &po_rating));
+    assert(load_spr_asset("../extracted/sprites/textpb01__00.spr",
+                          &po_button_pixels, &po_button));
+    assert(load_spr_asset("../extracted/sprites/hilfebuttonsnip_00.spr",
+                          &po_help_pixels, &po_help));
+    assert(load_spr_asset("../extracted/sprites/fotorahmen00.spr",
+                          &po_frame_pixels, &po_photo_frame));
+    assert(load_spr_asset("../extracted/sprites/fotodummy00.spr",
+                          &po_dummy_pixels, &po_photo_dummy));
+    assert(load_spr_asset("../extracted/sprites/persoplanlight.spr",
+                          &po_light_pixels, &po_plan_light));
+    assert(load_spr_asset("../extracted/sprites/sc_00.spr", &po_slider_pixels,
+                          &po_slider));
+    assert(load_spr_asset("../extracted/sprites/pb22_00.spr", &po_left_pixels,
+                          &po_arrow_left));
+    assert(load_spr_asset("../extracted/sprites/pb24_00.spr", &po_right_pixels,
+                          &po_arrow_right));
     assert(load_spr_asset("../extracted/sprites/persoueber_00.spr",
                           &po_tab_pixels[0], &po_tabs[0]));
     assert(load_spr_asset("../extracted/sprites/persoueber_01.spr",
@@ -884,26 +916,40 @@ int main(void) {
                           &po_tab_pixels[2], &po_tabs[2]));
     assert(load_spr_asset("../extracted/sprites/persoueber_03.spr",
                           &po_tab_pixels[3], &po_tabs[3]));
-    PersonnelOverviewData po_data = {
-        .candidate_name = "Ada",
-        .profession = "Cook",
-        .age = 30,
+    PersonnelOverviewSprites po_sprites = {
+        .panel = &po_panel,
+        .tabs = po_tabs,
+        .separator = &po_separator,
+        .button_background = &po_button,
+        .help_button = &po_help,
+        .arrow_left = &po_arrow_left,
+        .arrow_right = &po_arrow_right,
+        .photo_frame = &po_photo_frame,
+        .photo_dummy = &po_photo_dummy,
+        .plan_light = &po_plan_light,
+        .slider = &po_slider,
+    };
+    for (int index = 0; index < 8; index++) {
+        po_sprites.ratings[index] = &po_rating;
+    }
+    const PersonnelOverviewData po_data = {
+        .candidate_name = "Carlos Estarda",
+        .profession = "Koch",
+        .age = 45,
         .health = personnel.staff[0].health,
         .motivation = personnel.staff[0].motivation,
         .cooking = personnel.staff[0].skill,
         .speed = personnel.staff[0].speed,
+        .performance = personnel_average_skill(&personnel),
+        .salary = (uint32_t)personnel.staff[0].wage,
         .selected_tab = 0,
         .selected_button = 0,
     };
-    for (int index = 0; index < 4; index++) {
-        po_data.ratings[index] = &po_rating;
-    }
     uint8_t *po_frame = malloc(800 * 600 * 4);
     assert(po_frame != NULL);
     RenderSurface po_surface;
     assert(render_surface_init(&po_surface, po_frame, 800 * 600 * 4, 800, 600));
-    assert(screen_render_personnel_overview(&po_surface, &po_panel, po_tabs,
-                                             &po_separator, font_data,
+    assert(screen_render_personnel_overview(&po_surface, &po_sprites, font_data,
                                              font_size, &font_info, &po_data));
     size_t po_panel_offset = ((size_t)218 * 800 + 561) * 4;
     assert(memcmp(po_frame + po_panel_offset, po_panel.pixels, 4) == 0);
@@ -911,9 +957,18 @@ int main(void) {
     free(po_panel_pixels);
     free(po_separator_pixels);
     free(po_rating_pixels);
+    free(po_button_pixels);
+    free(po_help_pixels);
+    free(po_frame_pixels);
+    free(po_dummy_pixels);
+    free(po_light_pixels);
+    free(po_slider_pixels);
+    free(po_left_pixels);
+    free(po_right_pixels);
     for (int index = 0; index < 4; index++) {
         free(po_tab_pixels[index]);
     }
+
 
     uint8_t *pr_panel_pixels = NULL;
     uint8_t *pr_plan_pixels = NULL;

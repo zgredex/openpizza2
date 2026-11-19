@@ -446,16 +446,45 @@ static void test_personnel_overview_composition(void) {
     uint8_t *panel_pixels = NULL;
     uint8_t *separator_pixels = NULL;
     uint8_t *rating_pixels = NULL;
+    uint8_t *button_pixels = NULL;
+    uint8_t *help_pixels = NULL;
+    uint8_t *frame_pixels = NULL;
+    uint8_t *dummy_pixels = NULL;
+    uint8_t *light_pixels = NULL;
+    uint8_t *slider_pixels = NULL;
+    uint8_t *left_pixels = NULL;
+    uint8_t *right_pixels = NULL;
     uint8_t *tab_pixels[4] = {NULL, NULL, NULL, NULL};
     RgbaSprite panel;
     RgbaSprite separator;
     RgbaSprite rating;
+    RgbaSprite button;
+    RgbaSprite help;
+    RgbaSprite photo_frame;
+    RgbaSprite photo_dummy;
+    RgbaSprite plan_light;
+    RgbaSprite slider;
+    RgbaSprite arrow_left;
+    RgbaSprite arrow_right;
     RgbaSprite tabs[4];
     assert(load_spr("../extracted/sprites/submenue.spr", &panel_pixels, &panel));
     assert(load_spr("../extracted/sprites/trennzeile.spr", &separator_pixels,
                     &separator));
     assert(load_spr("../extracted/sprites/bewertung__08.spr", &rating_pixels,
                     &rating));
+    assert(load_spr("../extracted/sprites/textpb01__00.spr", &button_pixels,
+                    &button));
+    assert(load_spr("../extracted/sprites/hilfebuttonsnip_00.spr",
+                    &help_pixels, &help));
+    assert(load_spr("../extracted/sprites/fotorahmen00.spr", &frame_pixels,
+                    &photo_frame));
+    assert(load_spr("../extracted/sprites/fotodummy00.spr", &dummy_pixels,
+                    &photo_dummy));
+    assert(load_spr("../extracted/sprites/persoplanlight.spr", &light_pixels,
+                    &plan_light));
+    assert(load_spr("../extracted/sprites/sc_00.spr", &slider_pixels, &slider));
+    assert(load_spr("../extracted/sprites/pb22_00.spr", &left_pixels, &arrow_left));
+    assert(load_spr("../extracted/sprites/pb24_00.spr", &right_pixels, &arrow_right));
     assert(load_spr("../extracted/sprites/persoueber_00.spr", &tab_pixels[0],
                     &tabs[0]));
     assert(load_spr("../extracted/sprites/persoueber_01.spr", &tab_pixels[1],
@@ -471,32 +500,46 @@ static void test_personnel_overview_composition(void) {
     FntInfo font;
     assert(fnt_read_info(font_data, font_size, &font));
 
-    PersonnelOverviewData data = {
+    PersonnelOverviewSprites sprites = {
+        .panel = &panel,
+        .tabs = tabs,
+        .separator = &separator,
+        .button_background = &button,
+        .help_button = &help,
+        .arrow_left = &arrow_left,
+        .arrow_right = &arrow_right,
+        .photo_frame = &photo_frame,
+        .photo_dummy = &photo_dummy,
+        .plan_light = &plan_light,
+        .slider = &slider,
+    };
+    for (int index = 0; index < 8; index++) {
+        sprites.ratings[index] = &rating;
+    }
+    const PersonnelOverviewData data = {
         .candidate_name = "Carlos Estarda",
-        .profession = "Cook",
+        .profession = "Koch",
         .age = 45,
         .health = 90,
         .motivation = 75,
         .cooking = 70,
         .speed = 60,
+        .performance = 56,
+        .salary = 5656,
         .selected_tab = 0,
         .selected_button = 0,
     };
-    for (int index = 0; index < 4; index++) {
-        data.ratings[index] = &rating;
-    }
     size_t frame_size = 800 * 600 * 4;
     uint8_t *frame = malloc(frame_size);
     assert(frame != NULL);
     RenderSurface surface;
     assert(render_surface_init(&surface, frame, frame_size, 800, 600));
-    assert(screen_render_personnel_overview(&surface, &panel, tabs, &separator,
-                                            font_data, font_size, &font, &data));
+    assert(screen_render_personnel_overview(&surface, &sprites, font_data,
+                                             font_size, &font, &data));
     size_t panel_offset = ((size_t)218 * 800 + 561) * 4;
     assert(memcmp(frame + panel_offset, panel.pixels, 4) == 0);
     size_t tab_offset = ((size_t)(218 + 242) * 800 + (561 + 53)) * 4;
     assert(memcmp(frame + tab_offset, tabs[0].pixels, 4) == 0);
-
     bool opaque = false;
     size_t opaque_index = 0;
     for (size_t index = 0; index + 3 < (size_t)rating.width * rating.height * 4;
@@ -513,7 +556,6 @@ static void test_personnel_overview_composition(void) {
     size_t rating_offset = ((size_t)(218 + 315 + (int)rating_y) * 800 +
                             (561 + 49 + (int)rating_x)) * 4;
     assert(memcmp(frame + rating_offset, rating.pixels + opaque_index, 4) == 0);
-
     bool title_ink = false;
     for (int y = 220; y < 245; y++) {
         for (int x = 600; x < 760; x++) {
@@ -524,16 +566,21 @@ static void test_personnel_overview_composition(void) {
         }
     }
     assert(title_ink);
-    size_t button_offset = ((size_t)(218 + 100) * 800 + (561 + 215)) * 4;
-    assert(frame[button_offset + 1] > frame[button_offset]);
-    assert(!screen_render_personnel_overview(&surface, &panel, tabs, &separator,
-                                             font_data, font_size, &font, NULL));
-
+    assert(!screen_render_personnel_overview(&surface, &sprites, font_data,
+                                             font_size, &font, NULL));
     free(font_data);
     free(frame);
     free(panel_pixels);
     free(separator_pixels);
     free(rating_pixels);
+    free(button_pixels);
+    free(help_pixels);
+    free(frame_pixels);
+    free(dummy_pixels);
+    free(light_pixels);
+    free(slider_pixels);
+    free(left_pixels);
+    free(right_pixels);
     for (int index = 0; index < 4; index++) {
         free(tab_pixels[index]);
     }
