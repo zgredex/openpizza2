@@ -1654,3 +1654,150 @@ void game_get_year_and_weekday(const uint8_t *date, uint32_t *year,
     memcpy(&weekday_value, date + 4, sizeof(weekday_value));
     *weekday = weekday_value;
 }
+
+bool state_is_1a_1b_1c(const uint8_t *object) {
+    if (object == NULL) {
+        return false;
+    }
+    int32_t state = read_i32(object + 0x30);
+    return state == 0x1a || state == 0x1b || state == 0x1c;
+}
+
+bool state_is_2d_or_2e(const uint8_t *object) {
+    if (object == NULL) {
+        return false;
+    }
+    int32_t state = read_i32(object + 0x38);
+    return state == 0x2d || state == 0x2e;
+}
+
+bool state_is_menu_state(const uint8_t *object) {
+    if (object == NULL) {
+        return false;
+    }
+    int32_t state = read_i32(object + 0x30);
+    return state == 0x0d || state == 0x17 || state == 0x1d || state == 0x1e;
+}
+
+bool is_special_id_range(int32_t id) {
+    return id >= 0x84c && id <= 0x857;
+}
+
+bool object_is_id_in_840_range(int32_t id) {
+    return id >= 0x840 && id <= 0x84b;
+}
+
+bool object_is_known_id(int32_t id) {
+    if (id == -1) {
+        return true;
+    }
+    if (id > 0x355 && id < 0x603) {
+        return true;
+    }
+    return id >= 0x19 && id <= 0x20;
+}
+
+bool is_menu_id_352(int32_t id) {
+    return id == 0x352;
+}
+
+bool is_menu_id_351_or_355(int32_t id) {
+    return id == 0x351 || id == 0x355;
+}
+
+bool is_menu_id_34e_or_350(int32_t id) {
+    return id == 0x34e || id == 0x350;
+}
+
+bool is_menu_id_range(int32_t id) {
+    return id == 0x34d || id == 0x34e || id == 0x34f || id == 0x352 ||
+           id == 0x353 || id == 0x354 || id == 0x350 || id == 0x355 ||
+           id == 0x351;
+}
+
+bool product_has_stock(const int32_t *counts, uint8_t index) {
+    return counts != NULL && counts[index] > 0;
+}
+
+double stats_get_amount_by_type(int32_t type) {
+    switch (type) {
+    case 0:
+        return 576.0;
+    case 1:
+        return 2322.0;
+    case 2:
+        return 1368.0;
+    case 3:
+        return 1656.0;
+    default:
+        return 0.0;
+    }
+}
+
+int32_t storage_get_capacity(int32_t value) {
+    return value * 0xf + 0x24;
+}
+
+int32_t supplier_get_value_plus_one(const int32_t *table, int32_t index) {
+    if (index == 0) {
+        return 0;
+    }
+    return table[index] + 1;
+}
+
+int32_t rating_get_inverse100(int32_t value) {
+    int32_t result = value * -3 + 100;
+    return result < 0 ? 0 : result;
+}
+
+uint8_t object_get_byte36_max7(const uint8_t *object) {
+    if (object == NULL) {
+        return 0;
+    }
+    uint8_t value = 0;
+    memcpy(&value, object + 0x36, sizeof(value));
+    return value > 7 ? 0 : value;
+}
+
+int32_t index_map8to5(const int32_t values[8], int32_t index) {
+    int32_t value = 0;
+    if (values == NULL) {
+        return 0;
+    }
+    if (index == 8) {
+        index = 5;
+    }
+    if (index == -1) {
+        int32_t sum = 0;
+        for (size_t slot = 0; slot < 8; slot++) {
+            sum += values[slot];
+        }
+        value = (sum + ((sum >> 31) & 7)) >> 3;
+    } else {
+        value = values[index];
+    }
+    if (value < 0) {
+        return 0;
+    }
+    return value > 100 ? 100 : value;
+}
+
+uint8_t stats_get_level_from_four_counters(int32_t sum) {
+    if (sum > 4) {
+        return 3;
+    }
+    if (sum < 3) {
+        return sum > 0 ? 1 : 0;
+    }
+    return 2;
+}
+
+uint8_t stats_get_level_from_ten_counters(uint32_t sum) {
+    if (sum > 5) {
+        return 3;
+    }
+    if (sum < 4) {
+        return sum > 0 ? 1 : 0;
+    }
+    return 2;
+}

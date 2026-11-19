@@ -1010,6 +1010,91 @@ static void test_object_sprite_settings(void) {
     assert(year == 3 && weekday == 6);
 }
 
+static void test_state_id_predicates(void) {
+    uint8_t object[0x48] = {0};
+    write_i32_at(object, 0x30, 0x1a);
+    assert(state_is_1a_1b_1c(object));
+    write_i32_at(object, 0x30, 0x1c);
+    assert(state_is_1a_1b_1c(object));
+    write_i32_at(object, 0x30, 0x1d);
+    assert(!state_is_1a_1b_1c(object));
+    assert(state_is_menu_state(object));
+    write_i32_at(object, 0x30, 0x17);
+    assert(state_is_menu_state(object));
+    write_i32_at(object, 0x30, 0x1f);
+    assert(!state_is_menu_state(object));
+    write_i32_at(object, 0x38, 0x2d);
+    assert(state_is_2d_or_2e(object));
+    write_i32_at(object, 0x38, 0x2f);
+    assert(!state_is_2d_or_2e(object));
+
+    assert(is_special_id_range(0x84c) && is_special_id_range(0x857));
+    assert(!is_special_id_range(0x84b) && !is_special_id_range(0x858));
+    assert(object_is_id_in_840_range(0x840) &&
+           object_is_id_in_840_range(0x84b));
+    assert(!object_is_id_in_840_range(0x83f));
+    assert(object_is_known_id(-1));
+    assert(object_is_known_id(0x356));
+    assert(object_is_known_id(0x602));
+    assert(!object_is_known_id(0x603));
+    assert(object_is_known_id(0x19) && object_is_known_id(0x20));
+    assert(!object_is_known_id(0x18) && !object_is_known_id(0x21));
+    assert(is_menu_id_352(0x352));
+    assert(is_menu_id_351_or_355(0x351) && is_menu_id_351_or_355(0x355));
+    assert(is_menu_id_34e_or_350(0x34e) && is_menu_id_34e_or_350(0x350));
+    for (int32_t id = 0x34d; id <= 0x355; id++) {
+        assert(is_menu_id_range(id));
+    }
+    assert(!is_menu_id_range(0x34c));
+    assert(!is_menu_id_range(0x356));
+}
+
+static void test_small_stats_accessors(void) {
+    const int32_t counts[8] = {0, 1, 0, 2, 0, 0, 0, 0};
+    assert(!product_has_stock(counts, 0));
+    assert(product_has_stock(counts, 1));
+    assert(!product_has_stock(NULL, 1));
+    assert(stats_get_amount_by_type(0) == 576.0);
+    assert(stats_get_amount_by_type(1) == 2322.0);
+    assert(stats_get_amount_by_type(2) == 1368.0);
+    assert(stats_get_amount_by_type(3) == 1656.0);
+    assert(stats_get_amount_by_type(4) == 0.0);
+    assert(storage_get_capacity(0) == 0x24);
+    assert(storage_get_capacity(3) == 0x51);
+    const int32_t supplier[3] = {9, 10, 11};
+    assert(supplier_get_value_plus_one(supplier, 0) == 0);
+    assert(supplier_get_value_plus_one(supplier, 1) == 11);
+    assert(supplier_get_value_plus_one(supplier, 2) == 12);
+    assert(rating_get_inverse100(0) == 100);
+    assert(rating_get_inverse100(10) == 70);
+    assert(rating_get_inverse100(40) == 0);
+    uint8_t object[0x40] = {0};
+    object[0x36] = 7;
+    assert(object_get_byte36_max7(object) == 7);
+    object[0x36] = 8;
+    assert(object_get_byte36_max7(object) == 0);
+    assert(object_get_byte36_max7(NULL) == 0);
+
+    const int32_t values[8] = {0, 1, 2, 3, 4, 5, 6, 7};
+    assert(index_map8to5(values, 3) == 3);
+    assert(index_map8to5(values, 8) == 5);
+    assert(index_map8to5(values, -1) == 3);
+    const int32_t high[8] = {200, 200, 200, 200, 200, 200, 200, 200};
+    assert(index_map8to5(high, 0) == 100);
+    assert(index_map8to5(values, 0) == 0);
+    assert(index_map8to5(NULL, 0) == 0);
+
+    assert(stats_get_level_from_four_counters(0) == 0);
+    assert(stats_get_level_from_four_counters(2) == 1);
+    assert(stats_get_level_from_four_counters(3) == 2);
+    assert(stats_get_level_from_four_counters(4) == 2);
+    assert(stats_get_level_from_four_counters(5) == 3);
+    assert(stats_get_level_from_ten_counters(0) == 0);
+    assert(stats_get_level_from_ten_counters(3) == 1);
+    assert(stats_get_level_from_ten_counters(4) == 2);
+    assert(stats_get_level_from_ten_counters(6) == 3);
+}
+
 int main(void) {
     test_clamp();
     test_manhattan3();
@@ -1038,6 +1123,8 @@ int main(void) {
     test_math_string_text();
     test_record_bounds_positions();
     test_object_sprite_settings();
+    test_state_id_predicates();
+    test_small_stats_accessors();
     puts("leaf function reconstruction: OK");
     return 0;
 }

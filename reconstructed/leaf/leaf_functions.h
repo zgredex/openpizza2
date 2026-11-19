@@ -390,6 +390,29 @@ uint32_t game_get_time_segment(const uint8_t *date);
 void game_get_year_and_weekday(const uint8_t *date, uint32_t *year,
                                uint32_t *weekday);
 
+/* State/ID predicates. */
+bool state_is_1a_1b_1c(const uint8_t *object);
+bool state_is_2d_or_2e(const uint8_t *object);
+bool state_is_menu_state(const uint8_t *object);
+bool is_special_id_range(int32_t id);
+bool object_is_id_in_840_range(int32_t id);
+bool object_is_known_id(int32_t id);
+bool is_menu_id_352(int32_t id);
+bool is_menu_id_351_or_355(int32_t id);
+bool is_menu_id_34e_or_350(int32_t id);
+bool is_menu_id_range(int32_t id);
+
+/* Small product/stat/capacity accessors. */
+bool product_has_stock(const int32_t *counts, uint8_t index);
+double stats_get_amount_by_type(int32_t type);
+int32_t storage_get_capacity(int32_t value);
+int32_t supplier_get_value_plus_one(const int32_t *table, int32_t index);
+int32_t rating_get_inverse100(int32_t value);
+uint8_t object_get_byte36_max7(const uint8_t *object);
+int32_t index_map8to5(const int32_t values[8], int32_t index);
+uint8_t stats_get_level_from_four_counters(int32_t sum);
+uint8_t stats_get_level_from_ten_counters(uint32_t sum);
+
 /* Game_GetActiveScreenOrFallback (0x482910). */
 int32_t game_get_active_screen_or_fallback(const uint8_t *game);
 
