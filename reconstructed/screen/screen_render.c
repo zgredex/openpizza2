@@ -1057,3 +1057,61 @@ bool screen_render_statistics_branch_balance(
     }
     return true;
 }
+
+bool screen_render_mission_goals(RenderSurface *surface, const RgbaSprite *panel,
+                                 const RgbaSprite *separator,
+                                 const uint8_t *font_data, size_t font_size,
+                                 const FntInfo *font,
+                                 const MissionGoalsData *data) {
+    if (surface == NULL || font == NULL || data == NULL) {
+        return false;
+    }
+    const uint8_t background[4] = {22, 26, 34, 255};
+    render_clear(surface, background);
+    const int32_t window_x = 561;
+    const int32_t window_y = 218;
+    if (panel != NULL && !render_blit(surface, panel, window_x, window_y)) {
+        return false;
+    }
+    const uint8_t title_color[4] = {120, 20, 20, 255};
+    const uint8_t label_color[4] = {40, 28, 20, 255};
+    const uint8_t value_color[4] = {20, 20, 90, 255};
+    char value_text[64];
+
+    draw_label(surface, font_data, font_size, font,
+               window_x + 44, window_y + 5,
+               data->title != NULL ? data->title : "Town aims", title_color);
+    for (int index = 0; index < 3; index++) {
+        int32_t y = window_y + 180 + index * 25;
+        draw_label(surface, font_data, font_size, font, window_x + 47, y,
+                   data->goal_labels[index] != NULL ? data->goal_labels[index]
+                                                    : "Goal",
+                   label_color);
+        snprintf(value_text, sizeof(value_text), "%s %d",
+                 data->completed[index] ? "done" : "progress",
+                 data->progress[index]);
+        draw_label(surface, font_data, font_size, font, window_x + 210, y,
+                   value_text, data->completed[index] ? title_color : value_color);
+    }
+    if (separator != NULL) {
+        render_blit(surface, separator, window_x + 39, window_y + 332);
+    }
+    draw_label(surface, font_data, font_size, font, window_x + 47,
+               window_y + 280, "Initial capital so far", label_color);
+    snprintf(value_text, sizeof(value_text), "%u", data->capital);
+    draw_label(surface, font_data, font_size, font, window_x + 140,
+               window_y + 280, value_text, value_color);
+    draw_label(surface, font_data, font_size, font, window_x + 47,
+               window_y + 300, "Time limit", label_color);
+    snprintf(value_text, sizeof(value_text), "%u years", data->years);
+    draw_label(surface, font_data, font_size, font, window_x + 140,
+               window_y + 300, value_text, value_color);
+
+    const uint8_t button_idle[4] = {140, 180, 140, 220};
+    const uint8_t button_active[4] = {130, 230, 130, 235};
+    blend_rect(surface, window_x + 48, window_y + 347, 180, 26,
+               data->selected_button == 0 ? button_active : button_idle);
+    draw_label(surface, font_data, font_size, font, window_x + 70,
+               window_y + 351, "Complete mission", label_color);
+    return true;
+}

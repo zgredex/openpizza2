@@ -57,6 +57,24 @@ typedef struct StatisticsBalanceRow {
     double amount;
 } StatisticsBalanceRow;
 
+typedef struct MissionGoalsData {
+    const char *title;
+    const char *goal_labels[3];
+    uint8_t completed[3];
+    int32_t progress[3];
+    uint32_t years;
+    uint32_t capital;
+    int selected_button; /* 0 = Complete mission */
+} MissionGoalsData;
+
+/* Composes Screen_MissionGoals (0x42D990): town aims, three goal rows,
+ * capital/years summary and the Complete mission button. */
+bool screen_render_mission_goals(RenderSurface *surface, const RgbaSprite *panel,
+                                 const RgbaSprite *separator,
+                                 const uint8_t *font_data, size_t font_size,
+                                 const FntInfo *font,
+                                 const MissionGoalsData *data);
+
 typedef struct StatisticsBranchBalanceData {
     const char *branch_name;
     const char *period;

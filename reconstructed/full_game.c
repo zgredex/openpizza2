@@ -904,6 +904,41 @@ int main(void) {
     free(sbb_load_pixels);
     free(sbb_balance_pixels);
 
+    uint8_t *mg_panel_pixels = NULL;
+    uint8_t *mg_separator_pixels = NULL;
+    RgbaSprite mg_panel;
+    RgbaSprite mg_separator;
+    assert(load_spr_asset("../extracted/sprites/submenue.spr", &mg_panel_pixels,
+                          &mg_panel));
+    assert(load_spr_asset("../extracted/sprites/trennzeile.spr",
+                          &mg_separator_pixels, &mg_separator));
+    const MissionGoalsData mg_data = {
+        .title = "Town aims",
+        .goal_labels = {"C20 > 2", "+0x14 > 0", "flag 0x16f4"},
+        .completed = {(uint8_t)city.mission.completed[0],
+                      (uint8_t)city.mission.completed[1],
+                      (uint8_t)city.mission.completed[2]},
+        .progress = {city.mission.goal_progress[0],
+                     city.mission.goal_progress[1],
+                     city.mission.goal_progress[2]},
+        .years = city.game_length,
+        .capital = (uint32_t)city.economy.cash,
+        .selected_button = 0,
+    };
+    uint8_t *mg_frame = malloc(800 * 600 * 4);
+    assert(mg_frame != NULL);
+    RenderSurface mg_surface;
+    assert(render_surface_init(&mg_surface, mg_frame, 800 * 600 * 4, 800, 600));
+    assert(screen_render_mission_goals(&mg_surface, &mg_panel, &mg_separator,
+                                       font_data, font_size, &font_info,
+                                       &mg_data));
+    size_t mg_panel_offset = ((size_t)218 * 800 + 561) * 4;
+    assert(memcmp(mg_frame + mg_panel_offset, mg_panel.pixels, 4) == 0);
+    free(mg_frame);
+    free(mg_panel_pixels);
+    free(mg_separator_pixels);
+
+
 
 
 

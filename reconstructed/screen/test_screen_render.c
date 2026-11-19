@@ -749,6 +749,60 @@ static void test_statistics_branch_balance_composition(void) {
     free(balance_pixels);
 }
 
+static void test_mission_goals_composition(void) {
+    uint8_t *panel_pixels = NULL;
+    uint8_t *separator_pixels = NULL;
+    RgbaSprite panel;
+    RgbaSprite separator;
+    assert(load_spr("../extracted/sprites/submenue.spr", &panel_pixels, &panel));
+    assert(load_spr("../extracted/sprites/trennzeile.spr", &separator_pixels,
+                    &separator));
+
+    size_t font_size = 0;
+    uint8_t *font_data = load_file("../extracted/fonts/timesfont.fnt", &font_size);
+    assert(font_data != NULL);
+    FntInfo font;
+    assert(fnt_read_info(font_data, font_size, &font));
+
+    const MissionGoalsData data = {
+        .title = "Town aims",
+        .goal_labels = {"C20 > 2", "+0x14 > 0", "flag 0x16f4"},
+        .completed = {1, 1, 1},
+        .progress = {3, 1, 1},
+        .years = 2,
+        .capital = 500000,
+        .selected_button = 0,
+    };
+    size_t frame_size = 800 * 600 * 4;
+    uint8_t *frame = malloc(frame_size);
+    assert(frame != NULL);
+    RenderSurface surface;
+    assert(render_surface_init(&surface, frame, frame_size, 800, 600));
+    assert(screen_render_mission_goals(&surface, &panel, &separator, font_data,
+                                       font_size, &font, &data));
+    size_t panel_offset = ((size_t)218 * 800 + 561) * 4;
+    assert(memcmp(frame + panel_offset, panel.pixels, 4) == 0);
+    bool title_ink = false;
+    for (int y = 220; y < 245; y++) {
+        for (int x = 600; x < 760; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] < 180 && frame[offset + 1] < 120) {
+                title_ink = true;
+            }
+        }
+    }
+    assert(title_ink);
+    size_t button_offset = ((size_t)(218 + 350) * 800 + (561 + 215)) * 4;
+    assert(frame[button_offset + 1] > frame[button_offset]);
+    assert(!screen_render_mission_goals(&surface, &panel, &separator, font_data,
+                                        font_size, &font, NULL));
+
+    free(font_data);
+    free(frame);
+    free(panel_pixels);
+    free(separator_pixels);
+}
+
 static void test_statistics_composition(void) {
     size_t tga_size = 0;
     size_t font_size = 0;
@@ -974,6 +1028,7 @@ int main(void) {
     test_personnel_record_composition();
     test_statistics_balance_composition();
     test_statistics_branch_balance_composition();
+    test_mission_goals_composition();
     test_statistics_composition();
     test_free_play_composition();
     test_briefing_composition();
