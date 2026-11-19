@@ -48,17 +48,28 @@ shipped bytes, not reimplementations.
 
 | Confidence | Count | Meaning |
 |---|---:|---|
-| high | 2369 | semantic name pinned by a code path or string table |
-| medium | 3 | role is clear but not exhaustively verified |
-| low | 1239 | address-stable alias, first-use evidence recorded |
+| high | 2508 | semantic name pinned by a code path, save schema, or string table |
+| medium | 1103 | owning function and role observed; full reader/type audit pending |
+| low | 0 | address-only alias removed |
+
+Promotion rules used in this pass:
+
+- 24 serialized globals named from `save_schema.json` writers;
+- 115 literal strings named from their pooled bytes;
+- 14 BSS objects named from `InitializeCriticalSection`, `CreateEventA`,
+  `SetRect`, `NamedLockable_Construct` or another constructor;
+- 658 BSS globals named from the first-use function and role
+  (`Flag`, `Array`, `Const`, `<call>Result`, `<call>Arg`);
+- 42 read-only entries classified as GUID, function table or string pointer;
+- 387 remaining read-only entries named from their first-use role.
 
 2367 of the high-confidence names come from `Language_MapStrings`
 (`0x5146d0`), which assigns specific `language.ldf` entries to globals; those
-are named `g_Text_<index>_<slug>`. The low-confidence aliases are deliberately
-not presented as understood semantics: they remove raw `DAT_` tokens while
-retaining the first referencing function and PE-section evidence in the CSV.
-Promoting a low-confidence alias to a semantic name requires the same
-code-path/runtime evidence used for the mission goals.
+are named `g_Text_<index>_<slug>`.
+
+The 1103 medium entries are deliberately not presented as fully understood.
+They have an observed owner and role, but their byte-level type and full reader
+set still need auditing before promotion to high confidence.
 
 ## Verified: London mission goals
 
