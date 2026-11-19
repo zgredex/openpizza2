@@ -113,7 +113,17 @@ typedef struct PizReportRecord {
 } PizReportRecord;
 
 typedef struct PizPlanRecord {
-    uint32_t fields[11];
+    uint32_t active;          /* +0x04 */
+    uint32_t type;            /* +0x08 */
+    uint32_t media_type;      /* +0x10 */
+    uint32_t flags;           /* +0x14 */
+    uint32_t ingredient_index;/* +0x18 */
+    uint32_t target_company;  /* +0x1C */
+    uint32_t budget;          /* +0x20 */
+    uint32_t target_billboard;/* +0x2C */
+    uint32_t branch_id;       /* +0x0C */
+    uint32_t unused;          /* +0x24 */
+    uint32_t effect;          /* +0x28 */
 } PizPlanRecord;
 
 typedef struct PizPairRecord {

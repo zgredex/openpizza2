@@ -47,6 +47,8 @@ def main() -> int:
                                if companies["slots"] else None),
         "company_slot0_plan_count": (companies["slots"][0].get("plan_count")
                                      if companies["slots"] else None),
+        "company_slot0_plans": (companies["slots"][0].get("plans")
+                                if companies["slots"] else None),
         "company_slot0_recipe_count": (companies["slots"][0].get("recipe_count")
                                        if companies["slots"] else None),
         "company_slot0_recipes": (companies["slots"][0].get("recipes")
@@ -74,6 +76,11 @@ def main() -> int:
           and result["company_slot0_name"] == "Ada Pizza"
           and result["company_slot0_cash"] == 494270.0
           and result["company_slot0_plan_count"] == 1
+          and result["company_slot0_plans"] == [{
+              "active": 1, "type": 2, "media_type": 1, "flags": 1,
+              "ingredient_index": 487, "target_company": 0xffffffff,
+              "budget": 5000, "target_billboard": 0xffffffff,
+              "branch_id": 13694, "unused": 0, "effect": 60}]
           and result["company_slot0_recipe_count"] == 1
           and result["company_slot0_recipes"][0]["topping_count"] == 1
           and result["company_slot0_recipes"][0]["toppings"] == [

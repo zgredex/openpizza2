@@ -944,7 +944,18 @@ int main(void) {
     strcpy(piz.companies[0].name, "Ada Pizza");
     piz.companies[0].cash = city.economy.cash;
     piz.companies[0].plan_count = 1;
-    piz.companies[0].plans[0].fields[0] = 3;
+    piz.companies[0].plans[0] = (PizPlanRecord){
+        .active = 1,
+        .type = 2,
+        .media_type = 1,
+        .flags = 1,
+        .ingredient_index = 487,
+        .target_company = 0xffffffffu,
+        .budget = 5000,
+        .target_billboard = 0xffffffffu,
+        .branch_id = 13694,
+        .effect = 60,
+    };
     piz.companies[0].recipe_count = 1;
     piz.companies[0].recipes[0].id = 42;
     strcpy(piz.companies[0].recipes[0].name, "Margherita");
@@ -991,7 +1002,12 @@ int main(void) {
     assert(strcmp(piz_loaded.companies[0].name, "Ada Pizza") == 0);
     assert(piz_loaded.companies[0].cash == city.economy.cash);
     assert(piz_loaded.companies[0].plan_count == 1);
-    assert(piz_loaded.companies[0].plans[0].fields[0] == 3);
+    assert(piz_loaded.companies[0].plans[0].active == 1);
+    assert(piz_loaded.companies[0].plans[0].type == 2);
+    assert(piz_loaded.companies[0].plans[0].media_type == 1);
+    assert(piz_loaded.companies[0].plans[0].budget == 5000);
+    assert(piz_loaded.companies[0].plans[0].branch_id == 13694);
+    assert(piz_loaded.companies[0].plans[0].effect == 60);
     assert(piz_loaded.companies[0].recipe_count == 1);
     assert(piz_loaded.companies[0].recipes[0].id == 42);
     assert(strcmp(piz_loaded.companies[0].recipes[0].name, "Margherita") == 0);

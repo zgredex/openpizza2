@@ -1266,6 +1266,11 @@ def check_piz_records():
           and payload.get("company_slot0_name") == "Ada Pizza"
           and payload.get("company_slot0_cash") == 494270.0
           and payload.get("company_slot0_plan_count") == 1
+          and payload.get("company_slot0_plans") == [{
+              "active": 1, "type": 2, "media_type": 1, "flags": 1,
+              "ingredient_index": 487, "target_company": 0xffffffff,
+              "budget": 5000, "target_billboard": 0xffffffff,
+              "branch_id": 13694, "unused": 0, "effect": 60}]
           and payload.get("company_slot0_recipe_count") == 1
           and payload.get("company_slot0_recipes")[0]["topping_count"] == 1
           and payload.get("company_slot0_recipes")[0]["toppings"] == [
@@ -1291,7 +1296,8 @@ def check_piz_records():
         "detail": ("piz_payload.py accepts 1 character (2086-byte record), "
                    "6 player slots and 1 company with plan, recipe, branch, "
                    "report, storage, pair and 0x1A0 lists with populated "
-                   "recipe/branch/report/storage fields with no errors") if ok else output[-1200:],
+                   "recipe/branch/report/storage and named GamePlan fields with "
+                   "no errors") if ok else output[-1200:],
     }
 
 def check_rust_tests():

@@ -299,10 +299,19 @@ size_t piz_container_encode(const PizContainer *container, uint8_t *buffer,
         put_u32(buffer, offset, plan_count);
         offset += 4;
         for (uint32_t plan = 0; plan < plan_count; plan++) {
-            for (int field = 0; field < 11; field++) {
-                put_u32(buffer, offset, company->plans[plan].fields[field]);
-                offset += 4;
-            }
+            const PizPlanRecord *record = &company->plans[plan];
+            put_u32(buffer, offset + 0, record->active);
+            put_u32(buffer, offset + 4, record->type);
+            put_u32(buffer, offset + 8, record->media_type);
+            put_u32(buffer, offset + 12, record->flags);
+            put_u32(buffer, offset + 16, record->ingredient_index);
+            put_u32(buffer, offset + 20, record->target_company);
+            put_u32(buffer, offset + 24, record->budget);
+            put_u32(buffer, offset + 28, record->target_billboard);
+            put_u32(buffer, offset + 32, record->branch_id);
+            put_u32(buffer, offset + 36, record->unused);
+            put_u32(buffer, offset + 40, record->effect);
+            offset += 44;
         }
         uint32_t recipe_count = company->recipe_count;
         if (recipe_count > PIZ_MAX_RECIPES_PER_COMPANY) {
@@ -634,10 +643,19 @@ bool piz_container_decode(PizContainer *container, const uint8_t *buffer,
             if (offset + PLAN_BODY_SIZE > length) {
                 return false;
             }
-            for (int field = 0; field < 11; field++) {
-                company->plans[plan].fields[field] = get_u32(buffer, offset);
-                offset += 4;
-            }
+            PizPlanRecord *record = &company->plans[plan];
+            record->active = get_u32(buffer, offset + 0);
+            record->type = get_u32(buffer, offset + 4);
+            record->media_type = get_u32(buffer, offset + 8);
+            record->flags = get_u32(buffer, offset + 12);
+            record->ingredient_index = get_u32(buffer, offset + 16);
+            record->target_company = get_u32(buffer, offset + 20);
+            record->budget = get_u32(buffer, offset + 24);
+            record->target_billboard = get_u32(buffer, offset + 28);
+            record->branch_id = get_u32(buffer, offset + 32);
+            record->unused = get_u32(buffer, offset + 36);
+            record->effect = get_u32(buffer, offset + 40);
+            offset += PLAN_BODY_SIZE;
         }
         uint32_t recipe_count = get_u32(buffer, offset);
         offset += 4;

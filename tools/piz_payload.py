@@ -369,11 +369,20 @@ class PizSave:
                 for plan_index in range(plan_count):
                     if pos + 44 > end:
                         raise ValueError(f"plan {plan_index} past region")
-                    fields_plan = []
-                    for field in range(11):
-                        fields_plan.append(self._u32(pos))
-                        pos += 4
-                    plans.append({"fields": fields_plan})
+                    plans.append({
+                        "active": self._u32(pos + 0),
+                        "type": self._u32(pos + 4),
+                        "media_type": self._u32(pos + 8),
+                        "flags": self._u32(pos + 12),
+                        "ingredient_index": self._u32(pos + 16),
+                        "target_company": self._u32(pos + 20),
+                        "budget": self._u32(pos + 24),
+                        "target_billboard": self._u32(pos + 28),
+                        "branch_id": self._u32(pos + 32),
+                        "unused": self._u32(pos + 36),
+                        "effect": self._u32(pos + 40),
+                    })
+                    pos += 44
                 recipe_count = self._u32(pos)
                 pos += 4
                 recipes = []
