@@ -21,6 +21,26 @@ bool screen_render_menu(RenderSurface *surface, const uint8_t *tga_data,
                         size_t font_size, const FntInfo *font,
                         const MenuState *menu, uint8_t *decode_buffer,
                         size_t decode_capacity);
+#define CHARACTER_ATTRIBUTE_COUNT 6
+
+typedef struct CharacterScreenData {
+    const char *player_name;
+    const char *enterprise_name;
+    int32_t attributes[CHARACTER_ATTRIBUTE_COUNT];
+    uint32_t difficulty;
+    int selected_button; /* 0 = To main menu, 1 = Start game, -1 = none */
+} CharacterScreenData;
+
+/* Composes the character-selection page over the shipped
+ * pe_charakterauswahl.tga using the control positions from
+ * Screen_CharacterSelect (0x46DBD0). */
+bool screen_render_character_select(RenderSurface *surface,
+                                    const uint8_t *tga_data, size_t tga_size,
+                                    const uint8_t *font_data, size_t font_size,
+                                    const FntInfo *font, const CharacterScreenData *data,
+                                    uint8_t *decode_buffer,
+                                    size_t decode_capacity);
+
 /* Draws the London briefing page over the shipped briefing TGA. Returns the
  * number of wrapped body lines drawn, or -1 on failure. */
 int screen_render_briefing(RenderSurface *surface, const uint8_t *tga_data,

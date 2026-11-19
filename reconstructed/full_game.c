@@ -180,6 +180,48 @@ int main(void) {
 
     tga_data = NULL;
     tga_size = 0;
+    tga_file = fopen("../extracted/pictures/pe_charakterauswahl.tga", "rb");
+    if (tga_file != NULL) {
+        fseek(tga_file, 0, SEEK_END);
+        long character_length = ftell(tga_file);
+        fseek(tga_file, 0, SEEK_SET);
+        if (character_length > 0) {
+            tga_data = malloc((size_t)character_length);
+            if (tga_data != NULL) {
+                tga_size = fread(tga_data, 1, (size_t)character_length, tga_file);
+            }
+        }
+        fclose(tga_file);
+    }
+    if (tga_data != NULL && font_size > 0) {
+        size_t character_frame_size = 800 * 600 * 4;
+        uint8_t *character_frame = malloc(character_frame_size);
+        uint8_t *character_decoded = malloc(character_frame_size);
+        assert(character_frame != NULL);
+        assert(character_decoded != NULL);
+        RenderSurface character_surface;
+        assert(render_surface_init(&character_surface, character_frame,
+                                   character_frame_size, 800, 600));
+        CharacterScreenData character_screen = {
+            .player_name = "Ada",
+            .enterprise_name = "Ada Pizza",
+            .attributes = {5, 3, 4, 2, 5, 4},
+            .difficulty = 9,
+            .selected_button = 1,
+        };
+        assert(screen_render_character_select(
+            &character_surface, tga_data, tga_size, font_data, font_size,
+            &font_info, &character_screen, character_decoded,
+            character_frame_size));
+        assert(memcmp(character_frame, character_decoded,
+                      character_frame_size) != 0);
+        free(character_decoded);
+        free(character_frame);
+        free(tga_data);
+    }
+
+    tga_data = NULL;
+    tga_size = 0;
     tga_file = fopen("../extracted/pictures/pe_missionsbriefing_lon.tga", "rb");
     if (tga_file != NULL) {
         fseek(tga_file, 0, SEEK_END);

@@ -32,6 +32,58 @@ static uint8_t *load_file(const char *path, size_t *length) {
     return data;
 }
 
+static void test_character_select_composition(void) {
+    size_t tga_size = 0;
+    size_t font_size = 0;
+    uint8_t *tga = load_file("../extracted/pictures/pe_charakterauswahl.tga", &tga_size);
+    uint8_t *font_data = load_file("../extracted/fonts/timesfont.fnt", &font_size);
+    assert(tga != NULL);
+    assert(font_data != NULL);
+
+    FntInfo font;
+    assert(fnt_read_info(font_data, font_size, &font));
+    CharacterScreenData data = {
+        .player_name = "Ada",
+        .enterprise_name = "Ada Pizza",
+        .attributes = {5, 3, 4, 2, 5, 4},
+        .difficulty = 9,
+        .selected_button = 1,
+    };
+
+    size_t frame_size = 800 * 600 * 4;
+    uint8_t *frame = malloc(frame_size);
+    uint8_t *decoded = malloc(frame_size);
+    assert(frame != NULL);
+    assert(decoded != NULL);
+    RenderSurface surface;
+    assert(render_surface_init(&surface, frame, frame_size, 800, 600));
+    assert(screen_render_character_select(&surface, tga, tga_size, font_data,
+                                          font_size, &font, &data, decoded,
+                                          frame_size));
+    assert(memcmp(frame, decoded, frame_size) != 0);
+
+    bool title_ink = false;
+    for (int y = 4; y < 30; y++) {
+        for (int x = 10; x < 300; x++) {
+            size_t offset = ((size_t)y * 800 + (size_t)x) * 4;
+            if (frame[offset] < 180 && frame[offset + 1] < 120) {
+                title_ink = true;
+            }
+        }
+    }
+    assert(title_ink);
+    size_t start_offset = ((size_t)560 * 800 + 700) * 4;
+    assert(frame[start_offset + 1] > frame[start_offset]);
+    assert(!screen_render_character_select(&surface, tga, tga_size, font_data,
+                                           font_size, &font, NULL, decoded,
+                                           frame_size));
+
+    free(tga);
+    free(font_data);
+    free(decoded);
+    free(frame);
+}
+
 static void test_briefing_composition(void) {
     size_t tga_size = 0;
     size_t font_size = 0;
@@ -139,6 +191,7 @@ int main(void) {
     free(font_data);
     free(decoded);
     free(frame);
+    test_character_select_composition();
     test_briefing_composition();
     puts("screen render reconstruction: OK");
     return 0;

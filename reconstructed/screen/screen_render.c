@@ -196,3 +196,83 @@ int screen_render_briefing(RenderSurface *surface, const uint8_t *tga_data,
     }
     return lines;
 }
+
+static void draw_label(RenderSurface *surface, const uint8_t *font_data,
+                       size_t font_size, const FntInfo *font, int32_t x, int32_t y,
+                       const char *text, const uint8_t rgba[4]) {
+    ui_draw_text(surface, font_data, font_size, font, x, y, text, rgba);
+}
+
+bool screen_render_character_select(RenderSurface *surface,
+                                    const uint8_t *tga_data, size_t tga_size,
+                                    const uint8_t *font_data, size_t font_size,
+                                    const FntInfo *font, const CharacterScreenData *data,
+                                    uint8_t *decode_buffer,
+                                    size_t decode_capacity) {
+    if (data == NULL || font == NULL) {
+        return false;
+    }
+    if (!screen_render_background(surface, tga_data, tga_size, decode_buffer,
+                                  decode_capacity)) {
+        return false;
+    }
+    const uint8_t title_color[4] = {120, 20, 20, 255};
+    const uint8_t label_color[4] = {40, 28, 20, 255};
+    const uint8_t value_color[4] = {20, 20, 90, 255};
+    draw_label(surface, font_data, font_size, font, 13, 5,
+               "Select player character", title_color);
+    draw_label(surface, font_data, font_size, font, 608, 5, "Enterprises:",
+               title_color);
+    draw_label(surface, font_data, font_size, font, 259, 77, "Characteristics:",
+               title_color);
+    draw_label(surface, font_data, font_size, font, 44, 304, "Player's name:",
+               label_color);
+    draw_label(surface, font_data, font_size, font, 609, 304, "Enterprise name:",
+               label_color);
+
+    static const char *const attribute_labels[CHARACTER_ATTRIBUTE_COUNT] = {
+        "Buyer", "Gangsters", "Specialist", "Politicians", "Seller", "Guard",
+    };
+    static const int32_t attribute_y[CHARACTER_ATTRIBUTE_COUNT] = {
+        140, 173, 207, 239, 273, 305,
+    };
+    char value_text[16];
+    for (int index = 0; index < CHARACTER_ATTRIBUTE_COUNT; index++) {
+        draw_label(surface, font_data, font_size, font, 323, attribute_y[index],
+                   attribute_labels[index], label_color);
+        snprintf(value_text, sizeof(value_text), "%d", data->attributes[index]);
+        draw_label(surface, font_data, font_size, font, 501, attribute_y[index],
+                   value_text, value_color);
+    }
+
+    if (data->player_name != NULL) {
+        draw_label(surface, font_data, font_size, font, 44, 332, data->player_name,
+                   value_color);
+    }
+    if (data->enterprise_name != NULL) {
+        draw_label(surface, font_data, font_size, font, 609, 332,
+                   data->enterprise_name, value_color);
+    }
+
+    draw_label(surface, font_data, font_size, font, 609, 425,
+               "Level of difficulty", label_color);
+    snprintf(value_text, sizeof(value_text), "%u", data->difficulty);
+    draw_label(surface, font_data, font_size, font, 609, 478, "Very easy",
+               value_color);
+    draw_label(surface, font_data, font_size, font, 690, 478, value_text,
+               value_color);
+
+    const uint8_t back_idle[4] = {180, 170, 150, 210};
+    const uint8_t back_active[4] = {255, 215, 110, 230};
+    const uint8_t start_idle[4] = {140, 180, 140, 210};
+    const uint8_t start_active[4] = {130, 230, 130, 235};
+    blend_rect(surface, 595, 509, 204, 38,
+               data->selected_button == 0 ? back_active : back_idle);
+    blend_rect(surface, 595, 551, 204, 38,
+               data->selected_button == 1 ? start_active : start_idle);
+    draw_label(surface, font_data, font_size, font, 640, 517, "To main menu",
+               label_color);
+    draw_label(surface, font_data, font_size, font, 650, 559, "Start game",
+               label_color);
+    return true;
+}

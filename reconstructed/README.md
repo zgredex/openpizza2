@@ -38,7 +38,9 @@ Current batches:
   measurement.
 - `screen/` — decodes `extracted/pictures/pe_startscreen.tga` into an 800×600
   RGBA frame and draws the reconstructed main-menu rows and status line with
-  the shipped Times font. Also composes the London briefing page over
+  the shipped Times font. Also composes the character-select page over
+  `extracted/pictures/pe_charakterauswahl.tga` at the documented control
+  positions and the London briefing page over
   `extracted/pictures/pe_missionsbriefing_lon.tga` with wrapped body text.
 - `operations/` — branch period accounting: sale revenue, ingredient cost,
   payroll, rent, advertising, profit and period close.
