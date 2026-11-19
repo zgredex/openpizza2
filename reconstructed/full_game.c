@@ -1110,6 +1110,42 @@ int main(void) {
         free(os_pixels[index]);
     }
 
+    uint8_t *gs_panel_pixels = NULL;
+    RgbaSprite gs_panel;
+    assert(load_spr_asset("../extracted/sprites/dummysprite.spr",
+                          &gs_panel_pixels, &gs_panel));
+    static const char *gs_paths[10] = {
+        "../extracted/sprites/r_info__00.spr",
+        "../extracted/sprites/r_personal__00.spr",
+        "../extracted/sprites/r_einrichtung__00.spr",
+        "../extracted/sprites/r_speisekarte__00.spr",
+        "../extracted/sprites/r_bilanz__00.spr",
+        "../extracted/sprites/r_werbung__00.spr",
+        "../extracted/sprites/r_inarchi__00.spr",
+        "../extracted/sprites/r_manager__00.spr",
+        "../extracted/sprites/r_lupe__00.spr",
+        "../extracted/sprites/r_bauen__00.spr",
+    };
+    uint8_t *gs_pixels[10] = {NULL};
+    RgbaSprite gs_buttons[10];
+    for (int index = 0; index < 10; index++) {
+        assert(load_spr_asset(gs_paths[index], &gs_pixels[index],
+                              &gs_buttons[index]));
+    }
+    uint8_t *gs_frame = malloc(800 * 600 * 4);
+    assert(gs_frame != NULL);
+    RenderSurface gs_surface;
+    assert(render_surface_init(&gs_surface, gs_frame, 800 * 600 * 4, 800, 600));
+    assert(screen_render_game_sidebar(&gs_surface, &gs_panel, gs_buttons, 0));
+    size_t gs_panel_offset = ((size_t)248 * 800 + 567) * 4;
+    assert(memcmp(gs_frame + gs_panel_offset, gs_panel.pixels, 4) == 0);
+    free(gs_frame);
+    free(gs_panel_pixels);
+    for (int index = 0; index < 10; index++) {
+        free(gs_pixels[index]);
+    }
+
+
 
 
 

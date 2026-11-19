@@ -61,6 +61,13 @@ typedef struct StatisticsBalanceRow {
  * at (567,248) with its nine 37x31 image buttons at the original y offsets. */
 /* Composes Screen_BuildOptionsSidebar (0x425E70): DUMMYSPRITE window at
  * (567,248) and the five option image buttons at exact offsets. */
+/* Composes Screen_BuildGameSidebar (0x40BB00): DUMMYSPRITE window at
+ * (567,248) and ten in-game image buttons at exact offsets. */
+bool screen_render_game_sidebar(RenderSurface *surface,
+                                const RgbaSprite *panel,
+                                const RgbaSprite *buttons,
+                                int selected);
+
 bool screen_render_options_sidebar(RenderSurface *surface,
                                    const RgbaSprite *panel,
                                    const RgbaSprite *buttons,

@@ -1250,3 +1250,30 @@ bool screen_render_options_sidebar(RenderSurface *surface,
     }
     return true;
 }
+
+bool screen_render_game_sidebar(RenderSurface *surface,
+                                const RgbaSprite *panel,
+                                const RgbaSprite *buttons,
+                                int selected) {
+    if (surface == NULL || buttons == NULL) {
+        return false;
+    }
+    const uint8_t background[4] = {22, 26, 34, 255};
+    render_clear(surface, background);
+    if (panel != NULL) {
+        render_blit(surface, panel, 567, 248);
+    }
+    static const int32_t button_y[10] = {3, 33, 63, 93, 123, 153, 183, 213,
+                                         273, 243};
+    for (int index = 0; index < 10; index++) {
+        if (buttons[index].pixels == NULL) {
+            continue;
+        }
+        if (index == selected) {
+            blend_rect(surface, 568, 251 + button_y[index], 37, 31,
+                       (const uint8_t[4]){255, 225, 120, 150});
+        }
+        render_blit(surface, &buttons[index], 568, 251 + button_y[index]);
+    }
+    return true;
+}
