@@ -176,9 +176,11 @@ BRANCH after player_slot=0 site_id=0 site=F41E8050 branch_id=100000
   returns repeatedly afterward. The Rust campaign uses the same site, branch
   ID, and total debit (`2812` quoted rent + the `1000` HUD difference recorded
   as a fee) and starts with an empty pantry. Its city Employment Office hires
-  the same lifted cook candidate `100280`, and its preparation uses `London 1`
-  storage ID `100000`, supplier `Central Market Partners`, and the verified
-  first-order inputs; see `README.md` under Campaign Start.
+  the same lifted cook candidate `100280`; its Supply Office leases `London 1`
+  storage ID `100000`, selects `Central Market Partners`, and enables the
+  Atrium route. The first 200,000-unit batch arrives at the lifted 09:00
+  dispatch, and the verified first-order inputs remain the sale check; see
+  `README.md` under Campaign Start.
 - **Exception handling:** the startup registration routine `0x00555F68` is
   now lifted and dispatchable, but `win32hle`'s
   `SetUnhandledExceptionFilter` shim returns `0` and `RaiseException` exits.

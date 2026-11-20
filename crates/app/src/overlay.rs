@@ -412,7 +412,7 @@ pub fn draw_status(
             height,
             panel_x + 14,
             y,
-            "1/2/3 HIRE   W WAREHOUSE   S SUPPLIER   V DELIVERIES   D DELIVERY   H HOURS",
+            "1/2/3 HIRE   W WAREHOUSE   S SUPPLIER   V ATRIUM ROUTE   H HOURS",
             [200, 200, 210, 255],
         );
         y += line_height;
@@ -517,6 +517,132 @@ pub fn draw_lease_marker(frame: &mut [u8], width: u32, height: u32, x: i32, y: i
     let color = [120, 210, 250, 255];
     fill_rect(frame, width, height, x - 13, y - 3, 27, 2, color);
     fill_rect(frame, width, height, x - 1, y - 7, 2, 10, color);
+}
+
+pub fn draw_supply_marker(frame: &mut [u8], width: u32, height: u32, x: i32, y: i32) {
+    let color = [245, 180, 80, 255];
+    fill_rect(frame, width, height, x - 15, y - 3, 31, 2, color);
+    fill_rect(frame, width, height, x - 3, y - 11, 7, 15, color);
+    fill_rect(frame, width, height, x - 7, y - 7, 15, 7, color);
+}
+
+pub fn draw_supply_office(
+    frame: &mut [u8],
+    width: u32,
+    height: u32,
+    storage_id: Option<u32>,
+    warehouse_name: Option<&str>,
+    supplier: Option<&str>,
+    route_enabled: bool,
+    stock: f64,
+    due_hour: Option<u8>,
+    status: Option<&str>,
+) -> Result<(), String> {
+    if frame.len() != (width * height * 4) as usize {
+        return Err("overlay frame has the wrong size".into());
+    }
+    let panel_x = 48;
+    let panel_y = 48;
+    let panel_w = 560i32;
+    let panel_h = 210i32;
+    fill_rect(
+        frame,
+        width,
+        height,
+        panel_x,
+        panel_y,
+        panel_w,
+        panel_h,
+        [8, 10, 14, 238],
+    );
+    fill_rect(
+        frame,
+        width,
+        height,
+        panel_x,
+        panel_y,
+        panel_w,
+        2,
+        [245, 180, 80, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 12,
+        "SUPPLY OFFICE",
+        [245, 180, 80, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 38,
+        &format!(
+            "STORAGE {}   {}",
+            storage_id.map_or("UNASSIGNED".to_string(), |id| id.to_string()),
+            warehouse_name.unwrap_or("NO WAREHOUSE")
+        ),
+        [235, 235, 235, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 62,
+        &format!("SUPPLIER: {}", supplier.unwrap_or("NONE")),
+        [235, 235, 235, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 86,
+        &format!(
+            "ROUTE: {}   STOCK {:.0}",
+            if route_enabled {
+                "ATRIUM ENABLED"
+            } else {
+                "DISABLED"
+            },
+            stock
+        ),
+        [235, 235, 235, 255],
+    );
+    let control = if storage_id.is_none() {
+        "ENTER LEASE LONDON 1   ESC CLOSE"
+    } else if supplier.is_none() {
+        "S SELECT CENTRAL MARKET PARTNERS   ESC CLOSE"
+    } else if !route_enabled {
+        "R ENABLE ATRIUM ROUTE   ESC CLOSE"
+    } else {
+        &format!("ROUTE ACTIVE   FIRST BATCH {:02}:00", due_hour.unwrap_or(9))
+    };
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 120,
+        control,
+        [200, 200, 210, 255],
+    );
+    if let Some(status) = status {
+        draw_text(
+            frame,
+            width,
+            height,
+            panel_x + 14,
+            panel_y + 148,
+            status,
+            [235, 210, 150, 255],
+        );
+    }
+    Ok(())
 }
 
 pub fn draw_lease_terms(

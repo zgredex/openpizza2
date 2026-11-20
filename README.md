@@ -338,27 +338,30 @@ Inside the branch, prepare the restaurant before opening:
 1/2/3  hire cook/service/errand (staff roster grows)
 W      lease London 1 (storage ID 100000)
 S      assign Central Market Partners
-V      enable deliveries
-D      receive the lifted delivery batch
+V      enable the Atrium route
 H      set opening hours 06:00-22:00
 O      open/close (requires staff, warehouse, deliveries, stock, and open hours)
 Space  advance five minutes
 C      return to the city
 ```
 
+On the city map, `L` opens the Supply Office. `ENTER` leases `London 1`
+(storage ID `100000`); `S` selects `Central Market Partners`; `R` enables
+the Atrium route. Stock stays at zero until the first 200,000-unit batch
+arrives at 09:00, then the storage capacity is 400,000.
+
 The keyboard path is mirrored by the campaign script:
 
 ```sh
 cargo run -p pc2-app -- --campaign-start --playable-script \
-  'lease=13694;hire=cook;hire=service;hire=errand;hire=errand;warehouse=100000;supplier=central-market;deliveries;delivery;hours=6-22;branch;minutes=660;open;party;ticks=260;ticks=180;ticks=80' \
+  'lease=13694;hire=cook;hire=service;hire=errand;hire=errand;warehouse=100000;supplier=central-market;route;branch;advance=535;status;advance=545;status;hours=6-22;open;party;ticks=260;ticks=180;ticks=80' \
   --output /tmp/opencode/campaign_prepare.png
 ```
 
-`warehouse=100000` is the lifted `London 1` storage record; the supplier is
-`Central Market Partners`; the first delivery fills the 400,000-unit storage.
-The first campaign order uses the verified London inputs: menu `11.85281086`,
-`161` ingredient units, `100` servings, rating `66`, tip `17`, stock
-`400000 -> 383900`, and revenue `1387.28`.
+The output shows `stock=0` at 08:55 and `stock=200000` after the 09:00
+dispatch. The first campaign order then uses the verified London inputs:
+menu `11.85281086`, `161` ingredient units, `100` servings, rating `66`,
+tip `17`, stock `200000 -> 183900`, and revenue `1387.28`.
 
 The full New Game -> city -> click/confirm path is:
 
@@ -366,19 +369,26 @@ The full New Game -> city -> click/confirm path is:
 cargo run -p pc2-app -- --new-game --output /tmp/opencode/new_game_click.png
 ```
 
-The acceptance path also returns to the city and hires the lifted cook:
+The acceptance path also returns to the city, hires the lifted cook, then
+uses the city Supply Office and advances the normal clock:
 
 ```sh
-cargo run -p pc2-app -- --new-game --campaign-hire \
-  --output /tmp/opencode/new_game_hire.png
+cargo run -p pc2-app -- --new-game --campaign-hire --campaign-supply \
+  --output /tmp/opencode/new_game_supply.png
 ```
 
-It prints the Employment Office hire record:
+It prints the Employment Office hire and supply transition:
 
 ```text
 new-game: returned-to-city
 new-game: employment-office open
 campaign: employment hired employee=100280 role=Cook branch=100000 owner=0 roster=1
+new-game: supply-office open
+campaign: supply leased warehouse=100000 name=London 1 capacity=400000
+campaign: supply supplier=Central Market Partners
+campaign: supply route=branch 100000 first_batch=200000 due=09:00 stock=0
+new-game: stock-before-first-batch=0 clock=535
+new-game: stock-after-first-batch=200000 clock=545
 ```
 
 The lower-level click test is:

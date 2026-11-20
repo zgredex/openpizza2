@@ -900,6 +900,9 @@ pub struct PlayerBranch {
     pub supplier: Option<String>,
     pub warehouse_capacity: f64,
     pub deliveries_enabled: bool,
+    pub route_branch_id: Option<u32>,
+    pub delivery_due_hour: Option<u8>,
+    pub delivery_batch: f64,
     pub opening_hours: Option<(u8, u8)>,
 }
 
@@ -1064,6 +1067,9 @@ impl World {
             supplier: None,
             warehouse_capacity: 0.0,
             deliveries_enabled: false,
+            route_branch_id: None,
+            delivery_due_hour: None,
+            delivery_batch: 200_000.0,
             opening_hours: None,
         });
         world
@@ -1323,6 +1329,9 @@ impl World {
             supplier: None,
             warehouse_capacity: 0.0,
             deliveries_enabled: false,
+            route_branch_id: None,
+            delivery_due_hour: None,
+            delivery_batch: 200_000.0,
             opening_hours: None,
         });
         self.evaluate_mission_goals();
@@ -1424,10 +1433,11 @@ impl World {
             return Err("supplier is unavailable");
         }
         branch.supplier = Some("Central Market Partners".into());
-        branch.deliveries_enabled = true;
         Ok(())
     }
 
+    /// Enable the single Atrium route. The first 200,000-unit batch is due at
+    /// the lifted 09:00 dispatch; stock remains zero until then.
     pub fn enable_campaign_deliveries(&mut self) -> Result<(), &'static str> {
         let branch = self
             .campaign_branch_mut()
@@ -1438,34 +1448,52 @@ impl World {
         if branch.supplier.is_none() {
             return Err("assign a supplier first");
         }
+        if branch.deliveries_enabled {
+            return Err("route is already enabled");
+        }
+        let branch_id = branch.branch_id;
         branch.deliveries_enabled = true;
+        branch.route_branch_id = Some(branch_id);
+        branch.delivery_due_hour = Some(9);
         Ok(())
     }
 
-    /// Receive one lifted delivery batch. The first batch fills `London 1` to
-    /// its 400,000-unit capacity; later batches are the 200,000-unit refill.
-    pub fn deliver_campaign_stock(&mut self) -> Result<f64, &'static str> {
-        let (capacity, refill) = {
-            let branch = self
-                .campaign_branch()
-                .ok_or("lease the campaign property first")?;
-            if !branch.deliveries_enabled || branch.supplier.is_none() {
-                return Err("enable deliveries first");
-            }
-            (branch.warehouse_capacity, 200_000.0)
+    fn receive_campaign_delivery(&mut self, hour: u8) -> bool {
+        let Some((batch, capacity)) = self.campaign_branch().and_then(|branch| {
+            (branch.deliveries_enabled
+                && branch.supplier.is_some()
+                && branch.delivery_due_hour == Some(hour))
+            .then_some((branch.delivery_batch.max(0.0), branch.warehouse_capacity))
+        }) else {
+            return false;
         };
         let current = self.sim.snapshot().stock;
-        let amount = if current <= 0.0 {
-            (capacity - current).max(0.0)
-        } else {
-            refill
-        };
-        let stock = current + amount;
+        let stock = current + batch;
         self.sim.set_stock(stock);
         if stock > self.sim.snapshot().stock_capacity {
             self.sim.set_stock_capacity(stock.max(capacity));
         }
-        Ok(stock)
+        if let Some(branch) = self.campaign_branch_mut() {
+            branch.delivery_due_hour = None;
+        }
+        true
+    }
+
+    /// Receive one 200,000-unit batch immediately. Used by tests; the
+    /// playable path calls this from the 09:00 hourly clock.
+    pub fn deliver_campaign_stock(&mut self) -> Result<f64, &'static str> {
+        let due = self
+            .campaign_branch()
+            .map(|branch| {
+                if !branch.deliveries_enabled || branch.supplier.is_none() {
+                    Err("enable deliveries first")
+                } else {
+                    Ok(branch.delivery_due_hour.unwrap_or(9))
+                }
+            })
+            .unwrap_or(Err("lease the campaign property first"))?;
+        self.receive_campaign_delivery(due);
+        Ok(self.sim.snapshot().stock)
     }
 
     pub fn is_campaign(&self) -> bool {
@@ -1924,6 +1952,7 @@ impl World {
             let minute_of_day = self.minute % (24 * 60);
             if minute_of_day % 60 == 0 {
                 let hour = (minute_of_day / 60) % 24;
+                self.receive_campaign_delivery(hour as u8);
                 self.hourly_count += 1;
                 events.push(ClockEvent::Hourly {
                     minute: self.minute,
@@ -2757,7 +2786,7 @@ mod tests {
         assert_eq!(world.lease_campaign_warehouse(100_000), Ok(()));
         assert_eq!(world.assign_campaign_supplier("central-market"), Ok(()));
         assert_eq!(world.enable_campaign_deliveries(), Ok(()));
-        assert_eq!(world.deliver_campaign_stock(), Ok(400_000.0));
+        assert_eq!(world.deliver_campaign_stock(), Ok(200_000.0));
         assert_eq!(world.set_campaign_opening_hours(6, 22), Ok(()));
         assert_eq!(world.campaign_branch().unwrap().staff_count, 4);
         assert_eq!(
@@ -2773,7 +2802,7 @@ mod tests {
             world.campaign_branch().unwrap().opening_hours,
             Some((6, 22))
         );
-        assert_eq!(world.snapshot().stock, 400_000.0);
+        assert_eq!(world.snapshot().stock, 200_000.0);
         assert_eq!(world.set_campaign_open(true), Err("outside opening hours"));
         world.set_minute(360);
         assert_eq!(world.set_campaign_open(true), Ok(()));
@@ -2781,7 +2810,7 @@ mod tests {
         world.advance_queue_ticks(QUEUE_WALK_TICKS + PRODUCTION_TICKS);
         let sold = world.world_snapshot();
         assert_eq!(sold.player_branches[0].sales, 100);
-        assert_eq!(sold.sim.stock, 383_900.0);
+        assert_eq!(sold.sim.stock, 183_900.0);
         assert!((sold.sim.cash - 497_575.278_930_664_1).abs() < 1e-9);
         assert!((sold.player_branches[0].revenue - 1_387.278_930_664_062_5).abs() < 1e-9);
         let last_sale = sold.sim.last_sale.as_ref().expect("last sale");
@@ -2819,6 +2848,52 @@ mod tests {
             Err("property is already leased")
         );
         assert_eq!(restored.world_snapshot(), completed);
+    }
+
+    #[test]
+    fn campaign_route_stays_empty_until_the_nine_oclock_batch() {
+        let scenario = ScenarioSetup::from_campaign_mission(
+            "lon".into(),
+            "London".into(),
+            280,
+            2,
+            CampaignMission {
+                starting_cash: 500_000,
+                difficulty_percent: 10,
+                goal_ids: vec![0, 1, 2],
+                rival_count: 1,
+                player_start_hq: 0,
+                rival_start_hq: 1,
+                starting_branches: Vec::new(),
+                property_offer: Some(CampaignPropertyOffer {
+                    tile_index: 13_694,
+                    price: 2_812,
+                    fee: 1_000,
+                }),
+            },
+        );
+        let mut world = World::new(0).with_scenario(scenario);
+        world.set_cash(500_000.0);
+        world.prepare_campaign_new_game();
+        world.lease_campaign_property(13_694).unwrap();
+        world.hire_campaign_employee(EmployeeRole::Cook).unwrap();
+        world.lease_campaign_warehouse(100_000).unwrap();
+        world.assign_campaign_supplier("central-market").unwrap();
+        world.enable_campaign_deliveries().unwrap();
+        assert_eq!(world.snapshot().stock, 0.0);
+        assert_eq!(
+            world.campaign_branch().unwrap().route_branch_id,
+            Some(100_000)
+        );
+        assert_eq!(world.campaign_branch().unwrap().delivery_due_hour, Some(9));
+
+        world.advance_to(8 * 60 + 55);
+        assert_eq!(world.snapshot().stock, 0.0);
+
+        world.advance_to(9 * 60);
+        assert_eq!(world.snapshot().stock, 200_000.0);
+        assert_eq!(world.snapshot().stock_capacity, 400_000.0);
+        assert_eq!(world.campaign_branch().unwrap().delivery_due_hour, None);
     }
 
     #[test]

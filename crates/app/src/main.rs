@@ -86,6 +86,7 @@ struct Args {
     campaign_start: bool,
     campaign_click: bool,
     campaign_hire: bool,
+    campaign_supply: bool,
     new_game: bool,
     free_play_setup: bool,
     free_play_chain: bool,
@@ -126,6 +127,7 @@ impl Default for Args {
             campaign_start: false,
             campaign_click: false,
             campaign_hire: false,
+            campaign_supply: false,
             new_game: false,
             free_play_setup: false,
             free_play_chain: false,
@@ -168,6 +170,7 @@ fn usage(program: &str) {
          --new-game           New Game menu action -> campaign city -> click/confirm lease\n\
          --campaign-click     exercise the city click/confirm lease path\n\
          --campaign-hire      open Employment Office and hire the lifted cook\n\
+         --campaign-supply    lease London 1, select supplier, enable Atrium route\n\
          --free-play-setup    original Free Play Setup screen (state 0x18)\n\
          --free-play-chain    headless menu -> character -> setup -> first-sale chain\n\
          --free-play-script S headless setup-screen commands\n\
@@ -278,6 +281,7 @@ fn parse_args() -> Result<Args, String> {
             "--campaign-start" => args.campaign_start = true,
             "--campaign-click" => args.campaign_click = true,
             "--campaign-hire" => args.campaign_hire = true,
+            "--campaign-supply" => args.campaign_supply = true,
             "--new-game" => args.new_game = true,
             "--free-play-setup" => args.free_play_setup = true,
             "--free-play-chain" => args.free_play_chain = true,
@@ -425,6 +429,7 @@ struct CityWorld {
     height: u32,
     pixels: Vec<u8>,
     lease_site: Option<(i32, i32)>,
+    supply_site: Option<(i32, i32)>,
 }
 
 fn city_crop(
@@ -1364,13 +1369,16 @@ fn apply_campaign_command(world: &mut World, command: &str) -> Result<bool, Stri
             .map_err(str::to_owned)?;
         println!("campaign: supplier=Central Market Partners");
         Ok(true)
-    } else if command == "deliveries" {
+    } else if command == "deliveries" || command == "route" {
         world.enable_campaign_deliveries().map_err(str::to_owned)?;
-        println!("campaign: deliveries enabled");
-        Ok(true)
-    } else if command == "delivery" {
-        let stock = world.deliver_campaign_stock().map_err(str::to_owned)?;
-        println!("campaign: delivery stock={stock:.0}");
+        println!(
+            "campaign: route=branch {} first_batch=200000 due=09:00 stock={:.0}",
+            world
+                .campaign_branch()
+                .and_then(|branch| branch.route_branch_id)
+                .unwrap_or(0),
+            world.snapshot().stock
+        );
         Ok(true)
     } else if let Some(hours) = command.strip_prefix("hours=") {
         let (open, close) = hours
@@ -1407,6 +1415,13 @@ fn apply_world_command(world: &mut World, command: &str) -> Result<(), String> {
             .parse::<u32>()
             .map_err(|_| format!("invalid minute: {value}"))?;
         world.set_minute(minute);
+    } else if let Some(value) = command.strip_prefix("advance=") {
+        let end = value
+            .parse::<u32>()
+            .map_err(|_| format!("invalid advance minute: {value}"))?;
+        world.advance_to(end);
+    } else if command.eq_ignore_ascii_case("status") {
+        println!("campaign: status={}", world.snapshot_json());
     } else if command.eq_ignore_ascii_case("step") {
         world.step();
     } else if let Some(value) = command.strip_prefix("capacity=") {
@@ -1685,14 +1700,14 @@ fn city_controls(world: &World, branch_loaded: bool, prompt: Option<LeasePrompt>
         "ENTER CONFIRM   ESC CANCEL"
     } else if !world.mission_goals().is_empty() {
         if branch_loaded && world.can_enter_branch() {
-            "ARROWS/WASD PAN   B BRANCH   E EMPLOYMENT   H HQ   R RAT"
+            "ARROWS/WASD PAN   B BRANCH   E EMPLOYMENT   L SUPPLY   H HQ   R RAT"
         } else if branch_loaded && world.campaign_property_offer().is_some() {
             "CLICK STOREFRONT   B VIEW   H HQ   R RAT"
         } else {
             "ARROWS/WASD PAN   H HQ   R RAT"
         }
     } else if branch_loaded && world.can_enter_branch() {
-        "ARROWS/WASD PAN   B ENTER BRANCH   E EMPLOYMENT"
+        "ARROWS/WASD PAN   B ENTER BRANCH   E EMPLOYMENT   L SUPPLY"
     } else if branch_loaded && world.campaign_property_offer().is_some() {
         "ARROWS/WASD PAN   CLICK STOREFRONT   B VIEW"
     } else {
@@ -1737,6 +1752,22 @@ fn campaign_lease_site(city: &Scene, offer: pc2_sim::CampaignPropertyOffer) -> O
         })
 }
 
+fn campaign_supply_site(city: &Scene, lease_site: Option<(i32, i32)>) -> Option<(i32, i32)> {
+    city.draws
+        .iter()
+        .find(|draw| {
+            let asset = draw.asset.to_ascii_lowercase();
+            asset.contains("lager") || asset.contains("warehouse")
+        })
+        .map(|draw| {
+            (
+                draw.world_x - city.background_origin.0,
+                draw.world_y - city.background_origin.1,
+            )
+        })
+        .or_else(|| lease_site.map(|(x, y)| (x + 160, y - 80)))
+}
+
 fn run_campaign_click(
     world: World,
     args: &Args,
@@ -1753,6 +1784,7 @@ fn run_campaign_click(
         height: city.crop.height,
         pixels: city.pixels.clone(),
         lease_site: Some(lease_site),
+        supply_site: campaign_supply_site(city, Some(lease_site)),
     };
     let mut app = WindowApp::new(
         "new-game-click".into(),
@@ -1791,6 +1823,40 @@ fn run_campaign_click(
         if !app.hire_selected_candidate() {
             return Err("Employment Office did not hire the cook".into());
         }
+    }
+    if args.campaign_supply {
+        app.mode = ViewMode::City;
+        let supply_site = app
+            .city_world
+            .as_ref()
+            .and_then(|world| world.supply_site)
+            .ok_or("supply marker is not on the city map")?;
+        if !app.handle_explore_click(supply_site.0, supply_site.1) {
+            return Err("city supply click failed".into());
+        }
+        println!("new-game: supply-office open");
+        if !app.handle_supply_key(&Key::Named(NamedKey::Enter)) {
+            return Err("supply warehouse lease failed".into());
+        }
+        if !app.handle_supply_key(&Key::Character("s".into())) {
+            return Err("supplier selection failed".into());
+        }
+        if !app.handle_supply_key(&Key::Character("r".into())) {
+            return Err("Atrium route enable failed".into());
+        }
+        let sim = app.sim.as_mut().ok_or("supply flow lost the world")?;
+        sim.advance_to(535);
+        println!(
+            "new-game: stock-before-first-batch={:.0} clock={}",
+            sim.snapshot().stock,
+            sim.snapshot().clock_minutes
+        );
+        sim.advance_to(545);
+        println!(
+            "new-game: stock-after-first-batch={:.0} clock={}",
+            sim.snapshot().stock,
+            sim.snapshot().clock_minutes
+        );
     }
     if app.mode != ViewMode::Branch && !args.campaign_hire {
         return Err("click flow did not enter the branch view".into());
@@ -1852,11 +1918,13 @@ fn show_explore(
     let lease_site = world
         .campaign_property_offer()
         .and_then(|offer| campaign_lease_site(&city, offer));
+    let supply_site = campaign_supply_site(&city, lease_site);
     let city_world = CityWorld {
         width: city.crop.width,
         height: city.crop.height,
         pixels: city.pixels,
         lease_site,
+        supply_site,
     };
     let (width, height) = (args.width, args.height);
     let max_x = city_world.width.saturating_sub(width) as i32;
@@ -1868,6 +1936,9 @@ fn show_explore(
     let mut city_view = city_crop(&city_world, width, height, camera_x, camera_y);
     if let Some((x, y)) = city_world.lease_site {
         overlay::draw_lease_marker(&mut city_view, width, height, x - camera_x, y - camera_y);
+    }
+    if let Some((x, y)) = city_world.supply_site {
+        overlay::draw_supply_marker(&mut city_view, width, height, x - camera_x, y - camera_y);
     }
     overlay::draw_city_status(
         &mut city_view,
@@ -2598,6 +2669,11 @@ struct EmploymentOffice {
     status: Option<String>,
 }
 
+#[derive(Clone, Debug)]
+struct SupplyOffice {
+    status: Option<String>,
+}
+
 struct WindowApp {
     frames: Option<Vec<Vec<u8>>>,
     title: String,
@@ -2614,6 +2690,7 @@ struct WindowApp {
     branch_base: Option<Vec<u8>>,
     lease_prompt: Option<LeasePrompt>,
     employment_office: Option<EmploymentOffice>,
+    supply_office: Option<SupplyOffice>,
     mode: ViewMode,
     camera_x: i32,
     camera_y: i32,
@@ -2647,6 +2724,7 @@ impl WindowApp {
             branch_base: None,
             lease_prompt: None,
             employment_office: None,
+            supply_office: None,
             mode: ViewMode::Branch,
             camera_x: 0,
             camera_y: 0,
@@ -2689,6 +2767,7 @@ impl WindowApp {
             branch_base: None,
             lease_prompt: None,
             employment_office: None,
+            supply_office: None,
             mode: ViewMode::Branch,
             camera_x: 0,
             camera_y: 0,
@@ -2735,6 +2814,7 @@ impl WindowApp {
             branch_base,
             lease_prompt: None,
             employment_office: None,
+            supply_office: None,
             mode: ViewMode::City,
             camera_x,
             camera_y,
@@ -2775,6 +2855,7 @@ impl WindowApp {
             branch_base: None,
             lease_prompt: None,
             employment_office: None,
+            supply_office: None,
             mode: ViewMode::Branch,
             camera_x: 0,
             camera_y: 0,
@@ -2815,6 +2896,7 @@ impl WindowApp {
             branch_base: None,
             lease_prompt: None,
             employment_office: None,
+            supply_office: None,
             mode: ViewMode::Branch,
             camera_x: 0,
             camera_y: 0,
@@ -2855,6 +2937,7 @@ impl WindowApp {
             branch_base: None,
             lease_prompt: None,
             employment_office: None,
+            supply_office: None,
             mode: ViewMode::Branch,
             camera_x: 0,
             camera_y: 0,
@@ -3265,6 +3348,15 @@ impl WindowApp {
                         y - self.camera_y,
                     );
                 }
+                if let Some((x, y)) = world.supply_site {
+                    overlay::draw_supply_marker(
+                        &mut view,
+                        self.width,
+                        self.height,
+                        x - self.camera_x,
+                        y - self.camera_y,
+                    );
+                }
                 if overlay::draw_city_status(
                     &mut view,
                     self.width,
@@ -3315,6 +3407,23 @@ impl WindowApp {
                             office.status.as_deref(),
                         )
                         .ok();
+                    }
+                    if let Some(office) = self.supply_office.as_ref() {
+                        if let Some(branch) = sim.campaign_branch() {
+                            overlay::draw_supply_office(
+                                &mut view,
+                                self.width,
+                                self.height,
+                                branch.warehouse_id,
+                                branch.warehouse_name.as_deref(),
+                                branch.supplier.as_deref(),
+                                branch.deliveries_enabled,
+                                sim.snapshot().stock,
+                                branch.delivery_due_hour,
+                                office.status.as_deref(),
+                            )
+                            .ok();
+                        }
                     }
                     viewer.update_image(&view);
                     println!(
@@ -3416,6 +3525,13 @@ impl WindowApp {
         let Some(world) = self.city_world.as_ref() else {
             return false;
         };
+        if let Some((sx, sy)) = world.supply_site {
+            let sx = sx - self.camera_x;
+            let sy = sy - self.camera_y;
+            if (x - sx).abs() <= 30 && (y - sy).abs() <= 30 {
+                return self.open_supply_office();
+            }
+        }
         let Some((sx, sy)) = world.lease_site else {
             return false;
         };
@@ -3505,6 +3621,79 @@ impl WindowApp {
         true
     }
 
+    fn open_supply_office(&mut self) -> bool {
+        if self.sim.as_ref().and_then(World::campaign_branch).is_none() {
+            return false;
+        }
+        self.supply_office = Some(SupplyOffice { status: None });
+        self.refresh_explore();
+        true
+    }
+
+    fn handle_supply_key(&mut self, key: &Key) -> bool {
+        let Some(sim) = self.sim.as_mut() else {
+            return false;
+        };
+        let mut status = None;
+        match key {
+            Key::Named(NamedKey::Enter) | Key::Named(NamedKey::Space) => {
+                if sim
+                    .campaign_branch()
+                    .is_some_and(|branch| branch.warehouse_id.is_none())
+                {
+                    match sim.lease_campaign_warehouse(100_000) {
+                        Ok(()) => {
+                            let branch = sim.campaign_branch().unwrap();
+                            println!(
+                                "campaign: supply leased warehouse={} name={} capacity={:.0}",
+                                branch.warehouse_id.unwrap_or(0),
+                                branch.warehouse_name.as_deref().unwrap_or(""),
+                                branch.warehouse_capacity
+                            );
+                            status = Some("LONDON 1 LEASED".to_string());
+                        }
+                        Err(error) => status = Some(error.to_string()),
+                    }
+                }
+            }
+            Key::Character(text) if text.eq_ignore_ascii_case("s") => {
+                match sim.assign_campaign_supplier("central-market") {
+                    Ok(()) => {
+                        println!("campaign: supply supplier=Central Market Partners");
+                        status = Some("CENTRAL MARKET PARTNERS SELECTED".to_string());
+                    }
+                    Err(error) => status = Some(error.to_string()),
+                }
+            }
+            Key::Character(text) if text.eq_ignore_ascii_case("r") => {
+                match sim.enable_campaign_deliveries() {
+                    Ok(()) => {
+                        println!(
+                            "campaign: supply route=branch {} first_batch=200000 due=09:00 stock={:.0}",
+                            sim.campaign_branch()
+                                .and_then(|branch| branch.route_branch_id)
+                                .unwrap_or(0),
+                            sim.snapshot().stock
+                        );
+                        status = Some("ATRIUM ROUTE ENABLED - FIRST BATCH 09:00".to_string());
+                    }
+                    Err(error) => status = Some(error.to_string()),
+                }
+            }
+            Key::Named(NamedKey::Escape) => {
+                self.supply_office = None;
+                self.refresh_explore();
+                return true;
+            }
+            _ => {}
+        }
+        if let Some(office) = self.supply_office.as_mut() {
+            office.status = status;
+        }
+        self.refresh_explore();
+        true
+    }
+
     fn handle_employment_key(&mut self, key: &Key) -> bool {
         let Some(office) = self.employment_office.as_ref() else {
             return false;
@@ -3557,6 +3746,9 @@ impl WindowApp {
             return false;
         }
         if self.mode == ViewMode::City {
+            if self.supply_office.is_some() {
+                return self.handle_supply_key(key);
+            }
             if self.employment_office.is_some() {
                 return self.handle_employment_key(key);
             }
@@ -3629,6 +3821,9 @@ impl WindowApp {
                 Key::Character(text) if text.eq_ignore_ascii_case("e") => {
                     self.open_employment_office();
                 }
+                Key::Character(text) if text.eq_ignore_ascii_case("l") => {
+                    self.open_supply_office();
+                }
                 Key::Character(text)
                     if text.eq_ignore_ascii_case("b") && self.branch_base.is_some() =>
                 {
@@ -3667,9 +3862,6 @@ impl WindowApp {
                 }
                 Key::Character(text) if text.eq_ignore_ascii_case("v") => {
                     self.run_campaign_command("deliveries")
-                }
-                Key::Character(text) if text.eq_ignore_ascii_case("d") => {
-                    self.run_campaign_command("delivery")
                 }
                 Key::Character(text) if text.eq_ignore_ascii_case("h") => {
                     self.run_campaign_command("hours=6-22")
@@ -4068,6 +4260,7 @@ mod tests {
             height: 3,
             pixels,
             lease_site: None,
+            supply_site: None,
         };
         let first = city_crop(&world, 2, 2, 0, 0);
         let moved = city_crop(&world, 2, 2, 2, 1);
@@ -4116,6 +4309,7 @@ mod tests {
             height: 600,
             pixels: Vec::new(),
             lease_site: Some((100, 120)),
+            supply_site: Some((200, 120)),
         });
 
         assert!(app.can_enter_branch_for_test() == false);
@@ -4141,6 +4335,50 @@ mod tests {
     }
 
     #[test]
+    fn city_supply_office_leases_london_1_and_delays_the_first_batch() {
+        let mut app = WindowApp::new("supply".into(), Vec::new(), 800, 600, 0);
+        app.explore = true;
+        app.mode = ViewMode::City;
+        app.sim = Some(campaign_world_with_offer());
+        app.city_world = Some(CityWorld {
+            width: 800,
+            height: 600,
+            pixels: Vec::new(),
+            lease_site: Some((100, 120)),
+            supply_site: Some((200, 120)),
+        });
+        app.branch_base = Some(Vec::new());
+
+        assert!(app.handle_explore_click(100, 120));
+        let (confirm, _) = lease_button_rects(800, 600);
+        assert!(app.handle_explore_click(confirm.0 + 2, confirm.1 + 2));
+        app.mode = ViewMode::City;
+
+        assert!(app.handle_explore_click(200, 120));
+        assert!(app.supply_office.is_some());
+        assert!(app.handle_explore_key(&Key::Named(NamedKey::Enter)));
+        assert!(app.handle_explore_key(&Key::Character("s".into())));
+        assert!(app.handle_explore_key(&Key::Character("r".into())));
+
+        let branch = app.sim.as_ref().unwrap().campaign_branch().unwrap();
+        assert_eq!(branch.warehouse_id, Some(100_000));
+        assert_eq!(branch.warehouse_name.as_deref(), Some("London 1"));
+        assert_eq!(branch.supplier.as_deref(), Some("Central Market Partners"));
+        assert_eq!(branch.route_branch_id, Some(100_000));
+        assert_eq!(branch.delivery_due_hour, Some(9));
+        assert_eq!(app.sim.as_ref().unwrap().snapshot().stock, 0.0);
+
+        app.sim.as_mut().unwrap().advance_to(535);
+        assert_eq!(app.sim.as_ref().unwrap().snapshot().stock, 0.0);
+        app.sim.as_mut().unwrap().advance_to(545);
+        assert_eq!(app.sim.as_ref().unwrap().snapshot().stock, 200_000.0);
+        assert_eq!(
+            app.sim.as_ref().unwrap().snapshot().stock_capacity,
+            400_000.0
+        );
+    }
+
+    #[test]
     fn employment_office_hires_lifted_cook_into_atrium_roster() {
         let mut app = WindowApp::new("employment".into(), Vec::new(), 800, 600, 0);
         app.explore = true;
@@ -4151,6 +4389,7 @@ mod tests {
             height: 600,
             pixels: Vec::new(),
             lease_site: Some((100, 120)),
+            supply_site: Some((200, 120)),
         });
         app.branch_base = Some(Vec::new());
 
