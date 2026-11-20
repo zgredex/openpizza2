@@ -336,6 +336,19 @@ tip is `max(0, (rating - tip_base) >> 1)`; the revenue is
 `(100 + tip) * 100 * menu_price * 0.01 + 0.5`, stored as a 32-bit float.
 The different recipe fingerprints each start their own sales record.
 
+The two paid orders above come from:
+
+```sh
+python3 tools/pcrecomp_pc2/capture.py run \
+  tools/pcrecomp_pc2/scenarios/london-reload-20.json \
+  --work /tmp/opencode/pcrecomp-pc2-fresh \
+  --out /tmp/pc2-london-orders --timeout 1200 --max-events 0
+```
+
+The run completes at 20:00 with branch `100000`, player slot `0`, four staff,
+and cash `494656.26`. The Rust predictor uses only the first two paid orders;
+the later simulation activity is not part of the transaction comparison.
+
 ## Rust customer-visit fixture
 
 `pc2-sim` now has a `World::london_checkpoint()` fixture carrying the saved
