@@ -167,3 +167,43 @@ Next steps if the recompilation track is continued:
 4. Measure the first missing import, DirectDraw surface operation or SEH
    dispatch and close them one at a time.
 5. Use `difftest.py` on every reconstructed routine as an independent oracle.
+
+## Native Linux bring-up
+
+The pinned recipe is in `tools/pcrecomp_pc2/`:
+
+```bash
+tools/pcrecomp_pc2/build.sh
+```
+
+It builds 32-bit SDL2/SDL2_ttf into a private sysroot, lifts the executable
+with pcrecomp commit `621860a9d22c9b25ae2be4575b956596f4ddaeeb`, links the
+generated C and dispatch table against `runtime/win32hle`, and runs headlessly
+from the PE entry `0x0054FCD4`.
+
+Verified trace:
+
+```text
+[host] fastfood2.exe booted: entry 0x0054FCD4, 0 unresolved imports
+[trace] entered WinMain at 0x00403D90
+[file] CreateFileA "...\resources\update.pak" -> ... ok
+[file] CreateFileA "...\resources\main.pak"   -> ... ok
+[file] CreateFileA "...\resources\movie.pak"  -> ... ok
+[file] CreateFileA "...\resources\iso.pak"    -> ... ok
+[file] CreateFileA "language.ldf"             -> language.ldf ok
+[file] CreateFileA "resources\sound.pak"      -> Resources/sound.pak ok
+[ddraw] SetDisplayMode(800x600x16)
+[ddraw] CreateSurface 800x600 16 bpp caps 0xA18 primary -> ...
+```
+
+The first gap was `GetCommandLineA`: the default `game.exe` command line made
+WinMain derive the base `"g"` and look for `gresources\main.pak`. The host now
+sets the real guest path. The second gap was six unshimmed imports
+(`IsIconic`, `GetSystemMenu`, `SetClassLongA`, `UnregisterClassA`,
+`GetSaveFileNameA`, `_BinkGetSummary@8`), handled by `tools/pcrecomp_pc2/pc2_shims.c`.
+
+This is now a native execution path, not just a lift result: the CRT reaches
+WinMain, the 800x600x16 primary surface is created, and the PC2 resource
+archives and language table open. The next gap is the game's own
+`ResourceManager`/`Pak_*` lookup for the `sprites\...` probes, then a visible
+SDL window for the front end.
