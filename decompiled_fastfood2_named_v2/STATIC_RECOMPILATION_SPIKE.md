@@ -246,33 +246,22 @@ After that fix, `Resource_Open 0x00402290` returns non-zero for
 `TIMESFONT.fnt` and the menu-button sprites. The loose-file `CreateFileA`
 errors are fallback probes only.
 
-The next blocker is presentation, not an import or a missing asset: the
-800x600x16 DirectDraw primary remains all-zero (`PC2_TRACE_FRAMES=1` reports
-`nonzero=0/960000`) while `Screen_MainMenu` is created and the dispatcher is
-idle with pending screen `0`. The next investigation is the UI draw path
-(`UI_UpdateScene 0x00527B10` / `UI_DrawChildAt 0x005287A0` / the primary
-surface hooks), then scripted input to start London.
-
-### Presentation state after the startup trace
+### Main menu presented
 
 `Window_RenderFrame` was returning before `UI_ProcessChildEvent` because
-`g_Window_RenderFrame_Flag_00584504` was zero. The host now arms that flag
-(and clears `g_Surface_BlitRectRetry_Flag`) after boot. The menu then reaches:
+`g_Window_RenderFrame_Flag_00584504` was zero. The host now arms that flag and
+clears `g_Surface_BlitRectRetry_Flag` after boot. The menu reaches:
 
 ```text
 UI_RenderScene -> UI_ProcessChildEvent -> UI_ProcessWindowEvent
 ```
 
-`UI_ProcessWindowEvent` has the menu sprite at `+0x94` and draws it, but
-`Window_RenderFrame` takes the `Surface_BlitRectRetry 0x00538DA0` path
-(`Window+0x1BC` is zero), not the `Gfx_BlitClipped16` path. The tracked
-DirectDraw primary stays zero. The next fix is to bind the UI window's final
-target to the presenter, or make `Window+0x1BC` point at the primary.
+`UI_ProcessWindowEvent 0x0052F2E0` has the menu sprite at `+0x94` and draws
+it. `Window_RenderFrame` still takes the `Surface_BlitRectRetry 0x00538DA0`
+path (`Window+0x1BC` is zero); the `Gfx_BlitClipped16` branch and the guest
+object layout are unchanged. The tracked DirectDraw primary remains blank.
 
-### DirectDraw menu blit evidence
-
-`PC2_TRACE_FRAMES=1` still produces `nonzero=0/960000`. The bounded
-`hle_dd_blit_hook` shows where the menu pixels are lost:
+The bounded DDraw trace proves the divergence:
 
 ```text
 DDPRIMARY self=4106965392 800x600 bpp=16 pitch=1600 sum=E50455C5
@@ -282,10 +271,50 @@ DDBLT d=4106965568 primary=0 800x600 bpp=16 pitch=1600
       keyed=0 srcsum=E50455C5 dstsum=E50455C5
 ```
 
-The source and destination sizes, pitches and formats match, and the dirty
-rectangle is valid. The divergence is surface selection: the source is the
-tracked primary and the destination is a different (`primary=0`) surface. Both
-are blank at blit time. The renderer draw buffer at `renderer+0x28` has
-nonzero data, but the `renderer+0x40` pair used by `Surface_BlitRectRetry` does
-not. This is the current root-cause candidate; the next step is a full-buffer
-inspection and a focused presenter bridge or surface-selection fix.
+The source is the tracked primary and the destination is a non-primary
+surface; both are blank. The completed image is in the renderer's draw buffer
+at `renderer+0x28`. The focused host-side presenter bridge returns that buffer
+from `hle_dd_frame_hook` after `Screen_MainMenu`; no guest surface selection
+is changed.
+
+Verified headless menu frame:
+
+```text
+800x600, 458 colors,
+sha256=1abdbb3fffaa31003b9d17fbbea7d92a0d306762095ad7fb0d45b3bcea0a6e2b
+```
+
+`tools/pcrecomp_pc2/build.sh` checks this digest when `PC2_FRAME_DUMP` is set.
+
+### Campaign start and London
+
+`PC2_CLICK_START` posts the main-menu click at `(650,18)`.
+`PC2_START_CAMPAIGN` also posts `Start game` at `(700,566)` and
+`Start Mission` at `(680,560)`. The dispatcher trace is:
+
+```text
+GameLoop pending=21 -> Screen_MainMenu
+click -> GameLoop pending=28 -> Screen_CharacterSelect
+click -> GameLoop pending=22 -> Screen_MissionBriefing
+click -> GameLoop pending=23 -> Game_RunSession
+```
+
+A late renderer dump contains the London welcome dialog and `Town aims`
+panel. The next blocker is the first clock/end-of-hour path:
+`Game_EndOfHour 0x00486590` calls the missing
+`WorldObject_Delete 0x00504980` vtable slot and aborts with:
+
+```text
+ICALL: unresolved VA 0x00504980 from 0x00486590
+```
+
+`vtable_slot_functions.json` names that slot but there is no lifted function
+at the address. The menu and campaign-start path are no longer blockers.
+
+### Cursor
+
+PC2 installs `LoadCursorA(NULL, IDC_ARROW)` as its window-class cursor; it
+does not draw a software cursor. The runtime hides the SDL cursor unless
+`hle_screen_cursor_hook` is set, so the window had no pointer. The host now
+sets the hook to `hle_cursor_shown()`, which prints
+`[screen] cursor: the system arrow`.

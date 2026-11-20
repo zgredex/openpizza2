@@ -31,6 +31,12 @@ static int pc2_blit_hook(surf_t *d, int dl, int dt, int dr, int db,
     return 0;
 }
 
+static int pc2_saw_menu;
+
+static int pc2_cursor_hook(void) {
+    return hle_cursor_shown();
+}
+
 static const uint8_t *pc2_dd_frame_hook(surf_t *primary) {
     static int n;
     if (n++ < 4) {
@@ -41,7 +47,112 @@ static const uint8_t *pc2_dd_frame_hook(surf_t *primary) {
                 primary && primary->px ? pc2_checksum(primary->px,
                     (size_t)primary->pitch * (size_t)primary->h) : 0);
     }
+    if (pc2_saw_menu) {
+        uint32_t ui = MEM32(0x0057C5E0);
+        uint32_t renderer = ui ? MEM32(ui + 0xC) : 0;
+        uint32_t buf = renderer ? MEM32(renderer + 0x28) : 0;
+        if (buf) return (const uint8_t *)(uintptr_t)ADDR(buf);
+    }
     return NULL;
+}
+
+static void pc2_dump_renderer(const char *path, int tag) {
+    uint32_t ui = MEM32(0x0057C5E0);
+    uint32_t renderer = ui ? MEM32(ui + 0xC) : 0;
+    uint32_t buf = renderer ? MEM32(renderer + 0x28) : 0;
+    if (!buf) return;
+    const uint16_t *rp = (const uint16_t *)(uintptr_t)ADDR(buf);
+    char name[1200];
+    snprintf(name, sizeof name, "%s.%d", path, tag);
+    FILE *rf = fopen(name, "wb");
+    if (!rf) return;
+    fprintf(rf, "P6\n800 600\n255\n");
+    for (int y = 0; y < 600; y++)
+        for (int x = 0; x < 800; x++) {
+            uint16_t v = rp[(size_t)y * 800 + x];
+            unsigned char rgb[3] = {
+                (unsigned char)(((v >> 11) & 0x1f) * 255 / 31),
+                (unsigned char)(((v >> 5) & 0x3f) * 255 / 63),
+                (unsigned char)((v & 0x1f) * 255 / 31)};
+            fwrite(rgb, 1, 3, rf);
+        }
+    fclose(rf);
+    fprintf(stderr, "[trace] raw renderer dump %s buf=%X\n", name, buf);
+}
+
+static int pc2_raw_done;
+static int pc2_raw_char_done;
+static int pc2_char_seen;
+static int pc2_char_clicked;
+static int pc2_mission_seen;
+static int pc2_mission_clicked;
+static int pc2_started;
+static void pc2_poll(void) {
+    uint32_t pending = MEM32(0x0056386C);
+    if (pending == 21) pc2_saw_menu = 1;
+    if (pending == 28) pc2_char_seen = 1;
+    if (pending == 22) pc2_mission_seen = 1;
+    const char *path = getenv("PC2_RAW_DUMP");
+    if (path && pc2_saw_menu && pending == 0 && !pc2_raw_done) {
+        pc2_dump_renderer(path, 100);
+        pc2_raw_done = 1;
+    }
+    if (getenv("PC2_CLICK_START") && pending == 28 && path && !pc2_raw_char_done) {
+        pc2_dump_renderer(path, 200);
+        pc2_raw_char_done = 1;
+    }
+    if (getenv("PC2_CLICK_START") && pc2_char_seen && pending == 0 && path) {
+        static int after_char;
+        if (!after_char) {
+            pc2_dump_renderer(path, 300);
+            after_char = 1;
+        }
+    }
+    if (getenv("PC2_START_CAMPAIGN") && pc2_char_seen && pending == 0 && !pc2_char_clicked) {
+        uint32_t hwnd = hle_first_hwnd();
+        if (hwnd) {
+            uint32_t lp = ((566u & 0xffffu) << 16) | (700u & 0xffffu);
+            hle_post_message(hwnd, 0x0200, 0, lp);
+            hle_post_message(hwnd, 0x0201, 1, lp);
+            hle_post_message(hwnd, 0x0202, 0, lp);
+            pc2_char_clicked = 1;
+            fprintf(stderr, "[trace] scripted click Start game at 700,566\n");
+        }
+    }
+    if (getenv("PC2_START_CAMPAIGN") && pc2_mission_seen && pending == 0 && !pc2_mission_clicked) {
+        static int mission_polls;
+        if (++mission_polls < 4) return;
+        uint32_t hwnd = hle_first_hwnd();
+        if (hwnd) {
+            uint32_t lp = ((560u & 0xffffu) << 16) | (680u & 0xffffu);
+            hle_post_message(hwnd, 0x0200, 0, lp);
+            hle_post_message(hwnd, 0x0201, 1, lp);
+            hle_post_message(hwnd, 0x0202, 0, lp);
+            pc2_mission_clicked = 1;
+            fprintf(stderr, "[trace] scripted click Start Mission at 680,560\n");
+        }
+    }
+    if (getenv("PC2_START_CAMPAIGN") && pc2_mission_clicked && path) {
+        static int game_polls;
+        static int game_dumped;
+        const char *delay = getenv("PC2_GAME_DUMP_DELAY");
+        int target = delay && *delay ? atoi(delay) : 300;
+        if (!game_dumped && ++game_polls >= target) {
+            pc2_dump_renderer(path, 400);
+            game_dumped = 1;
+        }
+    }
+    if (getenv("PC2_CLICK_START") && pc2_saw_menu && pending == 0 && !pc2_started) {
+        uint32_t hwnd = hle_first_hwnd();
+        if (hwnd) {
+            uint32_t lp = ((18u & 0xffffu) << 16) | (650u & 0xffffu);
+            hle_post_message(hwnd, 0x0200, 0, lp);
+            hle_post_message(hwnd, 0x0201, 1, lp);
+            hle_post_message(hwnd, 0x0202, 0, lp);
+            pc2_started = 1;
+            fprintf(stderr, "[trace] scripted click Start new game at 650,18\n");
+        }
+    }
 }
 
 static void pc2_frame_hook(const uint8_t *px, int w, int h, int pitch, int bpp) {
@@ -56,7 +167,7 @@ static void pc2_frame_hook(const uint8_t *px, int w, int h, int pitch, int bpp) 
     }
     shown++;
     const char *path = getenv("PC2_FRAME_DUMP");
-    if (path && !dumped && bpp == 16) {
+    if (path && pc2_saw_menu && MEM32(0x0056386C) == 0 && !dumped && bpp == 16) {
         FILE *f = fopen(path, "wb");
         if (f) {
             fprintf(f, "P6\n%d %d\n255\n", w, h);
@@ -114,12 +225,14 @@ int main(int argc, char **argv) {
 
     hle_dd_blit_hook = pc2_blit_hook;
     hle_dd_frame_hook = pc2_dd_frame_hook;
+    hle_screen_cursor_hook = pc2_cursor_hook;
 
     int headless = getenv("PC2_HEADLESS") != NULL;
     if (getenv("PC2_TRACE_FRAMES")) hle_screen_frame_hook = pc2_frame_hook;
     if (hle_screen_open("Pizza Connection 2", 0, headless) != 0) {
         return 2;
     }
+    hle_screen_poll_hook = pc2_poll;
 
     return (int)recomp_host_run();
 }

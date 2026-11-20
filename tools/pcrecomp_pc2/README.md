@@ -99,34 +99,67 @@ They live in `pc2_shims.c`; the shared runtime is unmodified.
   pending screen `0`. `Resource_Open` returns non-zero for `clipsprite.spr`,
   `rklick_00.spr`, `mission.txt` and the menu assets; the loose-file
   `CreateFileA` failures are fallback probes, not the lookup result.
-- The next blocker is presentation. `Window_RenderFrame` reaches
-  `UI_RenderScene` and `UI_ProcessChildEvent`; `UI_ProcessWindowEvent
-  0x0052F2E0` draws the menu sprite (`+0x94`). `Window+0x1BC` is zero, so
-  `Gfx_BlitClipped16` is not used; the final path is
-  `Surface_BlitRectRetry 0x00538DA0`.
-- `PC2_TRACE_FRAMES=1` frame dumps are blank: `nonzero=0/960000`.
-- The bounded DDraw hook shows the divergence:
+- **The main menu is now presented.** The host arms
+  `g_Window_RenderFrame_Flag_00584504` and clears
+  `g_Surface_BlitRectRetry_Flag` after boot, which lets
+  `UI_RenderScene`/`UI_ProcessChildEvent` draw. `Window_RenderFrame` still
+  takes `Surface_BlitRectRetry 0x00538DA0` (the `Window+0x1BC` GDI branch is
+  unchanged), and the tracked DirectDraw primary is still black.
+- The presenter bridge is host-side and does not alter the guest branch or
+  object layout: after `Screen_MainMenu`, `hle_dd_frame_hook` returns the
+  completed 800x600 16bpp buffer at `renderer+0x28`. The first eight frames
+  remain blank because the menu has not been built yet; the dump happens after
+  `Screen_MainMenu` returns and `GameLoop pending` is `0`.
+- Verified headless menu frame:
 
 ```text
-DDPRIMARY self=4106965392 800x600 bpp=16 pitch=1600 sum=E50455C5
-DDBLT d=4106965568 primary=0 800x600 bpp=16 pitch=1600
-      rect=0,0..800,600
-      s=4106965392 800x600 bpp=16 pitch=1600 rect=0,0..800,600
-      keyed=0 srcsum=E50455C5 dstsum=E50455C5
+menu frame: 800x600, 458 colors,
+sha256=1abdbb3fffaa31003b9d17fbbea7d92a0d306762095ad7fb0d45b3bcea0a6e2b
 ```
 
-  The **source is the tracked primary** and the destination is not the
-  primary (`primary=0`). Both are blank. Later frames use
-  `rect=0,100..800,500`, same check. The renderer's own buffer at
-  `renderer+0x28` has a nonzero checksum in the 16-row sample, but the DDraw
-  pair used by `Surface_BlitRectRetry` does not. The root cause is therefore
-  **surface selection**: the final blit uses the renderer's `+0x40` pair
-  (primary as source, a non-primary surface as destination) instead of the
-  renderer's draw buffer/primary target.
-- Next: capture the renderer draw buffer's full 800x600 layout (width/stride/
-  height around `renderer+0x20/+0x24/+0x28`) and make the completed UI surface
-  the blit source (or select the primary as destination) without changing the
-  guest object layout.
+  `build.sh` checks that digest whenever `PC2_FRAME_DUMP` is set.
+- **Cursor:** PC2 installs `LoadCursorA(NULL, IDC_ARROW)` as its window-class
+  cursor and does not draw a software cursor into the picture. `win32hle`
+  hides the SDL cursor unless `hle_screen_cursor_hook` is set, so the running
+  window had no pointer. The host now sets the hook to `hle_cursor_shown()`;
+  the trace prints `[screen] cursor: the system arrow`.
+- **Campaign path:** `PC2_CLICK_START=1` clicks `Start new game` at
+  `(650,18)`. With `PC2_START_CAMPAIGN=1` the host also clicks
+  `Start game` at `(700,566)` and `Start Mission` at `(680,560)`.
+
+```text
+pending=21 Screen_MainMenu
+  -> click -> pending=28 Screen_CharacterSelect
+  -> click -> pending=22 Screen_MissionBriefing
+  -> click -> pending=23 Game_RunSession
+```
+
+  A late preview dump (`PC2_GAME_DUMP_DELAY=2000`) contains the London
+  welcome dialog and the `Town aims` panel:
+
+```bash
+cd game
+LD_LIBRARY_PATH=/tmp/opencode/pcrecomp-pc2-fresh/sysroot32/lib \
+SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy PC2_HEADLESS=1 \
+PC2_TRACE_FRAMES=1 PC2_CLICK_START=1 PC2_START_CAMPAIGN=1 \
+PC2_GAME_DUMP_DELAY=2000 \
+PC2_RAW_DUMP=/tmp/opencode/pcrecomp-pc2-fresh/london \
+timeout 240s /tmp/opencode/pcrecomp-pc2-fresh/pc2-native/pc2 fastfood2.exe
+```
+- **Next blocker:** after the London session starts, the first clock/end-of-
+  hour path reaches `Game_EndOfHour 0x00486590`, which calls the missing
+  `WorldObject_Delete 0x00504980` vtable slot and aborts with
+  `ICALL: unresolved VA 0x00504980 from 0x00486590`. That slot has a name in
+  `vtable_slot_functions.json` but no lifted function. The menu and the
+  campaign start are no longer blockers.
+
+To verify the menu frame through the recipe:
+
+```bash
+PC2_WORK=/tmp/opencode/pcrecomp-pc2-fresh \
+PC2_FRAME_DUMP=/tmp/opencode/pcrecomp-pc2-fresh/menu.ppm \
+tools/pcrecomp_pc2/build.sh
+```
 
 ## Crash fixed after the intro
 

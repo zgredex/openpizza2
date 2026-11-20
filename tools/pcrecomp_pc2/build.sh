@@ -10,6 +10,7 @@ GEN="$WORK/gen"
 SYS="$WORK/sysroot32"
 HOSTDIR="$WORK/pc2-native"
 EXE="$REPO_ROOT/game/fastfood2.exe"
+FRAME_DUMP="${PC2_FRAME_DUMP:-}"
 
 EXE_SHA256=18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd
 PCRECOMP_REPO=https://github.com/sp00nznet/pcrecomp.git
@@ -122,7 +123,8 @@ make -C "$REPO_ROOT/tools/pcrecomp_pc2" \
 set +e
 (cd "$REPO_ROOT/game" && \
     LD_LIBRARY_PATH="$SYS/lib" SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy \
-    PC2_HEADLESS=1 HLE_FILETRACE=1 timeout "${PC2_TIMEOUT:-75}" \
+    PC2_HEADLESS=1 HLE_FILETRACE=1 PC2_TRACE_FRAMES=1 \
+    PC2_FRAME_DUMP="$FRAME_DUMP" timeout "${PC2_TIMEOUT:-75}" \
     "$HOSTDIR/pc2" fastfood2.exe) > "$WORK/trace.log" 2>&1
 status=$?
 set -e
@@ -152,6 +154,34 @@ for point in '[trace] Movie_Play return' '[trace] Map_LoadIsodata return' '[trac
         exit 1
     }
 done
+
+if [ -n "$FRAME_DUMP" ]; then
+    python3 - "$FRAME_DUMP" <<'PY'
+import hashlib
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+data = path.read_bytes()
+lines = data.split(b"\n", 3)
+if len(lines) != 4 or lines[0] != b"P6":
+    raise SystemExit("frame dump is not a P6 PPM")
+w, h = map(int, lines[1].split())
+pixels = lines[3]
+if (w, h) != (800, 600):
+    raise SystemExit(f"frame dump is {w}x{h}, expected 800x600")
+if len(pixels) != w * h * 3:
+    raise SystemExit("frame dump pixel count mismatch")
+colors = len({pixels[i:i + 3] for i in range(0, len(pixels), 3)})
+digest = hashlib.sha256(pixels).hexdigest()
+expected = "1abdbb3fffaa31003b9d17fbbea7d92a0d306762095ad7fb0d45b3bcea0a6e2b"
+if colors < 2:
+    raise SystemExit("frame dump is a single color")
+if digest != expected:
+    raise SystemExit(f"frame dump is not the verified main menu (sha256={digest})")
+print(f"menu frame: {w}x{h}, {colors} colors, sha256={digest}")
+PY
+fi
 
 echo "native bring-up: OK"
 grep -E "\[host\]|\[trace\] (entered|Movie_Play|Map_LoadIsodata|GameMain|GameLoop pending|Screen_MainMenu)|\[file\].*(\.ldf|\.pak)" "$WORK/trace.log" > "$WORK/trace.summary" || true

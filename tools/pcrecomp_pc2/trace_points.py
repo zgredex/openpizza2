@@ -30,6 +30,10 @@ TARGETS = [
     ("sub_00523D60", "Window_ShowWindowById", True),
     ("sub_00532890", "UI_SetWindowVisible", True),
     ("sub_00539F90", "Renderer_InitForWindow", True),
+    ("sub_00474DF0", "Screen_MissionBriefing", True),
+    ("sub_00472DA0", "Screen_FreePlaySetup", True),
+    ("sub_00404AF0", "Game_RunSession", True),
+    ("sub_0046DBD0", "Screen_CharacterSelect", True),
 ]
 
 
