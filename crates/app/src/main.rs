@@ -1737,7 +1737,7 @@ fn run_campaign_click(
     world: World,
     args: &Args,
     city: &Scene,
-    branch: Option<&Scene>,
+    branch_scene: Option<&Scene>,
 ) -> Result<World, String> {
     let offer = world
         .campaign_property_offer()
@@ -1761,7 +1761,7 @@ fn run_campaign_click(
     app.mode = ViewMode::City;
     app.sim = Some(world);
     app.city_world = Some(city_world);
-    app.branch_base = branch.map(|branch| branch.pixels.clone());
+    app.branch_base = branch_scene.map(|branch| branch.pixels.clone());
     app.camera_x = 0;
     app.camera_y = 0;
 
@@ -1776,10 +1776,17 @@ fn run_campaign_click(
     if !app.handle_explore_click(confirm.0 + 2, confirm.1 + 2) {
         return Err("lease confirm click failed".into());
     }
+    if app.mode != ViewMode::Branch {
+        return Err("click flow did not enter the branch view".into());
+    }
     let world = app.sim.ok_or("click flow lost the world")?;
     let branch = world
         .campaign_branch()
         .ok_or("click flow did not create the branch")?;
+    println!(
+        "new-game: entered branch={}",
+        branch_scene.map_or("<missing>", |scene| scene.map_path.as_str())
+    );
     println!(
         "new-game: lease-confirmed branch={} tile={} owner={} cash={:.2} stock={:.0}",
         branch.branch_id,
