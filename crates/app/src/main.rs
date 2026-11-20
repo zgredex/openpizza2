@@ -85,6 +85,7 @@ struct Args {
     character_script: Option<String>,
     campaign_start: bool,
     campaign_click: bool,
+    campaign_hire: bool,
     new_game: bool,
     free_play_setup: bool,
     free_play_chain: bool,
@@ -124,6 +125,7 @@ impl Default for Args {
             character_script: None,
             campaign_start: false,
             campaign_click: false,
+            campaign_hire: false,
             new_game: false,
             free_play_setup: false,
             free_play_chain: false,
@@ -165,6 +167,7 @@ fn usage(program: &str) {
          --campaign-start     load the first installed campaign mission\n\
          --new-game           New Game menu action -> campaign city -> click/confirm lease\n\
          --campaign-click     exercise the city click/confirm lease path\n\
+         --campaign-hire      open Employment Office and hire the lifted cook\n\
          --free-play-setup    original Free Play Setup screen (state 0x18)\n\
          --free-play-chain    headless menu -> character -> setup -> first-sale chain\n\
          --free-play-script S headless setup-screen commands\n\
@@ -274,6 +277,7 @@ fn parse_args() -> Result<Args, String> {
             "--character-select" => args.character_select = true,
             "--campaign-start" => args.campaign_start = true,
             "--campaign-click" => args.campaign_click = true,
+            "--campaign-hire" => args.campaign_hire = true,
             "--new-game" => args.new_game = true,
             "--free-play-setup" => args.free_play_setup = true,
             "--free-play-chain" => args.free_play_chain = true,
@@ -1681,14 +1685,14 @@ fn city_controls(world: &World, branch_loaded: bool, prompt: Option<LeasePrompt>
         "ENTER CONFIRM   ESC CANCEL"
     } else if !world.mission_goals().is_empty() {
         if branch_loaded && world.can_enter_branch() {
-            "ARROWS/WASD PAN   B BRANCH   H HQ   R RAT"
+            "ARROWS/WASD PAN   B BRANCH   E EMPLOYMENT   H HQ   R RAT"
         } else if branch_loaded && world.campaign_property_offer().is_some() {
             "CLICK STOREFRONT   B VIEW   H HQ   R RAT"
         } else {
             "ARROWS/WASD PAN   H HQ   R RAT"
         }
     } else if branch_loaded && world.can_enter_branch() {
-        "ARROWS/WASD PAN   B ENTER BRANCH"
+        "ARROWS/WASD PAN   B ENTER BRANCH   E EMPLOYMENT"
     } else if branch_loaded && world.campaign_property_offer().is_some() {
         "ARROWS/WASD PAN   CLICK STOREFRONT   B VIEW"
     } else {
@@ -1776,8 +1780,23 @@ fn run_campaign_click(
     if !app.handle_explore_click(confirm.0 + 2, confirm.1 + 2) {
         return Err("lease confirm click failed".into());
     }
-    if app.mode != ViewMode::Branch {
+    if args.campaign_hire {
+        app.mode = ViewMode::City;
+        println!("new-game: returned-to-city");
+        app.employment_office = Some(EmploymentOffice {
+            selected: 0,
+            status: None,
+        });
+        println!("new-game: employment-office open");
+        if !app.hire_selected_candidate() {
+            return Err("Employment Office did not hire the cook".into());
+        }
+    }
+    if app.mode != ViewMode::Branch && !args.campaign_hire {
         return Err("click flow did not enter the branch view".into());
+    }
+    if args.campaign_hire {
+        app.mode = ViewMode::Branch;
     }
     let world = app.sim.ok_or("click flow lost the world")?;
     let branch = world
@@ -2573,6 +2592,12 @@ enum ViewMode {
     Branch,
 }
 
+#[derive(Clone, Debug)]
+struct EmploymentOffice {
+    selected: usize,
+    status: Option<String>,
+}
+
 struct WindowApp {
     frames: Option<Vec<Vec<u8>>>,
     title: String,
@@ -2588,6 +2613,7 @@ struct WindowApp {
     city_world: Option<CityWorld>,
     branch_base: Option<Vec<u8>>,
     lease_prompt: Option<LeasePrompt>,
+    employment_office: Option<EmploymentOffice>,
     mode: ViewMode,
     camera_x: i32,
     camera_y: i32,
@@ -2620,6 +2646,7 @@ impl WindowApp {
             city_world: None,
             branch_base: None,
             lease_prompt: None,
+            employment_office: None,
             mode: ViewMode::Branch,
             camera_x: 0,
             camera_y: 0,
@@ -2661,6 +2688,7 @@ impl WindowApp {
             city_world: None,
             branch_base: None,
             lease_prompt: None,
+            employment_office: None,
             mode: ViewMode::Branch,
             camera_x: 0,
             camera_y: 0,
@@ -2706,6 +2734,7 @@ impl WindowApp {
             city_world: Some(city_world),
             branch_base,
             lease_prompt: None,
+            employment_office: None,
             mode: ViewMode::City,
             camera_x,
             camera_y,
@@ -2745,6 +2774,7 @@ impl WindowApp {
             city_world: None,
             branch_base: None,
             lease_prompt: None,
+            employment_office: None,
             mode: ViewMode::Branch,
             camera_x: 0,
             camera_y: 0,
@@ -2784,6 +2814,7 @@ impl WindowApp {
             city_world: None,
             branch_base: None,
             lease_prompt: None,
+            employment_office: None,
             mode: ViewMode::Branch,
             camera_x: 0,
             camera_y: 0,
@@ -2823,6 +2854,7 @@ impl WindowApp {
             city_world: None,
             branch_base: None,
             lease_prompt: None,
+            employment_office: None,
             mode: ViewMode::Branch,
             camera_x: 0,
             camera_y: 0,
@@ -3269,6 +3301,21 @@ impl WindowApp {
                             overlay::draw_lease_buttons(&mut view, self.width, self.height).ok();
                         }
                     }
+                    if let (Some(office), Some(branch)) =
+                        (self.employment_office.as_ref(), sim.campaign_branch())
+                    {
+                        overlay::draw_employment_office(
+                            &mut view,
+                            self.width,
+                            self.height,
+                            office.selected,
+                            World::campaign_employee_candidates(),
+                            &branch.employees,
+                            branch.branch_id,
+                            office.status.as_deref(),
+                        )
+                        .ok();
+                    }
                     viewer.update_image(&view);
                     println!(
                         "explore: city camera {},{} crop_us={}",
@@ -3405,11 +3452,114 @@ impl WindowApp {
         self.sim.as_ref().is_some_and(World::can_enter_branch)
     }
 
+    fn open_employment_office(&mut self) -> bool {
+        if self.sim.as_ref().and_then(World::campaign_branch).is_none() {
+            return false;
+        }
+        self.employment_office = Some(EmploymentOffice {
+            selected: 0,
+            status: None,
+        });
+        self.refresh_explore();
+        true
+    }
+
+    fn hire_selected_candidate(&mut self) -> bool {
+        let Some(office) = self.employment_office.as_ref() else {
+            return false;
+        };
+        let candidates = World::campaign_employee_candidates();
+        let Some(candidate) = candidates.get(office.selected).copied() else {
+            return false;
+        };
+        let Some(sim) = self.sim.as_mut() else {
+            return false;
+        };
+        let message = match sim.hire_campaign_candidate(candidate.id) {
+            Ok(employee) => {
+                println!(
+                    "campaign: employment hired employee={} role={:?} branch={} owner={} roster={}",
+                    employee.id,
+                    employee.role,
+                    employee.branch_id,
+                    employee.owner_slot,
+                    sim.campaign_branch().map_or(0, |branch| branch.staff_count)
+                );
+                format!(
+                    "HIRED {} {} -> BRANCH {}",
+                    employee.id,
+                    match employee.role {
+                        pc2_sim::EmployeeRole::Cook => "COOK",
+                        pc2_sim::EmployeeRole::Service => "SERVICE",
+                        pc2_sim::EmployeeRole::Errand => "ERRAND",
+                    },
+                    employee.branch_id
+                )
+            }
+            Err(error) => error.to_string(),
+        };
+        if let Some(office) = self.employment_office.as_mut() {
+            office.status = Some(message);
+        }
+        self.refresh_explore();
+        true
+    }
+
+    fn handle_employment_key(&mut self, key: &Key) -> bool {
+        let Some(office) = self.employment_office.as_ref() else {
+            return false;
+        };
+        let count = World::campaign_employee_candidates().len();
+        match key {
+            Key::Named(NamedKey::ArrowUp) => {
+                if let Some(office) = self.employment_office.as_mut() {
+                    office.selected = office.selected.saturating_sub(1);
+                }
+                self.refresh_explore();
+                true
+            }
+            Key::Character(text) if text.eq_ignore_ascii_case("w") => {
+                if let Some(office) = self.employment_office.as_mut() {
+                    office.selected = office.selected.saturating_sub(1);
+                }
+                self.refresh_explore();
+                true
+            }
+            Key::Named(NamedKey::ArrowDown) => {
+                if let Some(office) = self.employment_office.as_mut() {
+                    office.selected = (office.selected + 1).min(count.saturating_sub(1));
+                }
+                self.refresh_explore();
+                true
+            }
+            Key::Character(text) if text.eq_ignore_ascii_case("s") => {
+                if let Some(office) = self.employment_office.as_mut() {
+                    office.selected = (office.selected + 1).min(count.saturating_sub(1));
+                }
+                self.refresh_explore();
+                true
+            }
+            Key::Named(NamedKey::Enter) | Key::Named(NamedKey::Space) => {
+                let _ = office;
+                self.hire_selected_candidate()
+            }
+            Key::Named(NamedKey::Escape) => {
+                self.employment_office = None;
+                self.refresh_explore();
+                true
+            }
+            _ => true,
+        }
+    }
+
     fn handle_explore_key(&mut self, key: &Key) -> bool {
         if !self.explore {
             return false;
         }
         if self.mode == ViewMode::City {
+            if self.employment_office.is_some() {
+                return self.handle_employment_key(key);
+            }
             let step = 96;
             let Some(world) = self.city_world.as_ref() else {
                 return false;
@@ -3475,6 +3625,9 @@ impl WindowApp {
                             Err(error) => println!("mission: rat: {error}"),
                         }
                     }
+                }
+                Key::Character(text) if text.eq_ignore_ascii_case("e") => {
+                    self.open_employment_office();
                 }
                 Key::Character(text)
                     if text.eq_ignore_ascii_case("b") && self.branch_base.is_some() =>
@@ -3985,6 +4138,42 @@ mod tests {
         assert_eq!(branch.owner_slot, 0);
         assert!(branch.player_controlled);
         assert!(!branch.owned);
+    }
+
+    #[test]
+    fn employment_office_hires_lifted_cook_into_atrium_roster() {
+        let mut app = WindowApp::new("employment".into(), Vec::new(), 800, 600, 0);
+        app.explore = true;
+        app.mode = ViewMode::City;
+        app.sim = Some(campaign_world_with_offer());
+        app.city_world = Some(CityWorld {
+            width: 800,
+            height: 600,
+            pixels: Vec::new(),
+            lease_site: Some((100, 120)),
+        });
+        app.branch_base = Some(Vec::new());
+
+        assert!(app.handle_explore_click(100, 120));
+        let (confirm, _) = lease_button_rects(800, 600);
+        assert!(app.handle_explore_click(confirm.0 + 2, confirm.1 + 2));
+        assert_eq!(app.mode, ViewMode::Branch);
+
+        app.mode = ViewMode::City;
+        assert!(app.handle_explore_key(&Key::Character("e".into())));
+        let office = app.employment_office.as_ref().expect("employment office");
+        assert_eq!(office.selected, 0);
+        assert!(app.hire_selected_candidate());
+
+        let sim = app.sim.as_ref().unwrap();
+        let branch = sim.campaign_branch().expect("branch");
+        assert_eq!(branch.branch_id, 100_000);
+        assert_eq!(branch.staff_count, 1);
+        assert_eq!(branch.employees.len(), 1);
+        assert_eq!(branch.employees[0].id, 100_280);
+        assert_eq!(branch.employees[0].role, pc2_sim::EmployeeRole::Cook);
+        assert_eq!(branch.employees[0].owner_slot, 0);
+        assert_eq!(branch.employees[0].branch_id, 100_000);
     }
 
     #[test]

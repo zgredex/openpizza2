@@ -1,6 +1,8 @@
 //! Small built-in 5x7 status overlay for the playable branch view.
 
-use pc2_sim::{CharacterProfile, GameMode, ScenarioSetup, Snapshot};
+use pc2_sim::{
+    CharacterProfile, Employee, EmployeeCandidate, EmployeeRole, GameMode, ScenarioSetup, Snapshot,
+};
 
 const SCALE: u32 = 2;
 const GLYPH_WIDTH: u32 = 5;
@@ -625,6 +627,116 @@ fn draw_button(frame: &mut [u8], width: u32, height: u32, rect: (i32, i32, u32, 
         label,
         [240, 240, 240, 255],
     );
+}
+
+fn employee_role_label(role: EmployeeRole) -> &'static str {
+    match role {
+        EmployeeRole::Cook => "COOK",
+        EmployeeRole::Service => "SERVICE",
+        EmployeeRole::Errand => "ERRAND",
+    }
+}
+
+pub fn draw_employment_office(
+    frame: &mut [u8],
+    width: u32,
+    height: u32,
+    selected: usize,
+    candidates: &[EmployeeCandidate],
+    roster: &[Employee],
+    branch_id: u32,
+    status: Option<&str>,
+) -> Result<(), String> {
+    if frame.len() != (width * height * 4) as usize {
+        return Err("overlay frame has the wrong size".into());
+    }
+    let panel_x = 48;
+    let panel_y = 48;
+    let panel_w = 560i32;
+    let panel_h = 228i32;
+    fill_rect(
+        frame,
+        width,
+        height,
+        panel_x,
+        panel_y,
+        panel_w,
+        panel_h,
+        [8, 10, 14, 238],
+    );
+    fill_rect(
+        frame,
+        width,
+        height,
+        panel_x,
+        panel_y,
+        panel_w,
+        2,
+        [120, 210, 250, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 12,
+        "EMPLOYMENT OFFICE",
+        [120, 210, 250, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 34,
+        &format!("BRANCH {branch_id}   ROSTER {}", roster.len()),
+        [235, 235, 235, 255],
+    );
+    let mut y = panel_y + 60;
+    for (index, candidate) in candidates.iter().enumerate() {
+        let marker = if index == selected { ">" } else { " " };
+        let hired = roster.iter().any(|employee| employee.id == candidate.id);
+        let suffix = if hired { "  HIRED" } else { "" };
+        draw_text(
+            frame,
+            width,
+            height,
+            panel_x + 14,
+            y,
+            &format!(
+                "{marker} CANDIDATE {}   {}{suffix}",
+                candidate.id,
+                employee_role_label(candidate.role)
+            ),
+            if hired {
+                [150, 220, 150, 255]
+            } else {
+                [235, 235, 235, 255]
+            },
+        );
+        y += 22;
+    }
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 160,
+        "UP/DOWN SELECT   ENTER HIRE   ESC CLOSE",
+        [200, 200, 210, 255],
+    );
+    if let Some(status) = status {
+        draw_text(
+            frame,
+            width,
+            height,
+            panel_x + 14,
+            panel_y + 184,
+            status,
+            [235, 210, 150, 255],
+        );
+    }
+    Ok(())
 }
 
 pub fn draw_city_status(

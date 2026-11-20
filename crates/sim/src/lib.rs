@@ -843,6 +843,40 @@ impl EmployeeRole {
     }
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct EmployeeCandidate {
+    pub id: u32,
+    pub role: EmployeeRole,
+}
+
+/// Candidate IDs observed in the lifted London staffing replay.
+pub const CAMPAIGN_EMPLOYEE_CANDIDATES: [EmployeeCandidate; 4] = [
+    EmployeeCandidate {
+        id: 100_280,
+        role: EmployeeRole::Cook,
+    },
+    EmployeeCandidate {
+        id: 100_300,
+        role: EmployeeRole::Service,
+    },
+    EmployeeCandidate {
+        id: 100_310,
+        role: EmployeeRole::Errand,
+    },
+    EmployeeCandidate {
+        id: 100_312,
+        role: EmployeeRole::Errand,
+    },
+];
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Employee {
+    pub id: u32,
+    pub role: EmployeeRole,
+    pub owner_slot: u8,
+    pub branch_id: u32,
+}
+
 /// A branch owned or rented by the current player. The first London lease
 /// creates one of these; the mission goal evaluator reads the player branch
 /// count (`Game_GetPlayerFieldC20`, `0x4e2280`) and the owned-branch flag
@@ -860,7 +894,7 @@ pub struct PlayerBranch {
     pub rent: u32,
     pub sales: u32,
     pub revenue: f64,
-    pub employees: Vec<EmployeeRole>,
+    pub employees: Vec<Employee>,
     pub warehouse_id: Option<u32>,
     pub warehouse_name: Option<String>,
     pub supplier: Option<String>,
@@ -1016,12 +1050,15 @@ impl World {
             rent: 0,
             sales: 0,
             revenue: 0.0,
-            employees: vec![
-                EmployeeRole::Cook,
-                EmployeeRole::Service,
-                EmployeeRole::Errand,
-                EmployeeRole::Errand,
-            ],
+            employees: CAMPAIGN_EMPLOYEE_CANDIDATES
+                .iter()
+                .map(|candidate| Employee {
+                    id: candidate.id,
+                    role: candidate.role,
+                    owner_slot: LONDON_PLAYER_SLOT,
+                    branch_id: LONDON_BRANCH_ID,
+                })
+                .collect(),
             warehouse_id: None,
             warehouse_name: None,
             supplier: None,
@@ -1304,13 +1341,57 @@ impl World {
             .find(|branch| branch.player_controlled)
     }
 
-    pub fn hire_campaign_employee(&mut self, role: EmployeeRole) -> Result<u32, &'static str> {
+    pub fn campaign_employee_candidates() -> &'static [EmployeeCandidate] {
+        &CAMPAIGN_EMPLOYEE_CANDIDATES
+    }
+
+    pub fn hire_campaign_candidate(&mut self, candidate_id: u32) -> Result<Employee, &'static str> {
+        let candidate = CAMPAIGN_EMPLOYEE_CANDIDATES
+            .iter()
+            .find(|candidate| candidate.id == candidate_id)
+            .copied()
+            .ok_or("employee is unavailable")?;
         let branch = self
             .campaign_branch_mut()
             .ok_or("lease the campaign property first")?;
-        branch.employees.push(role);
+        if branch
+            .employees
+            .iter()
+            .any(|employee| employee.id == candidate_id)
+        {
+            return Err("employee is already assigned");
+        }
+        let employee = Employee {
+            id: candidate.id,
+            role: candidate.role,
+            owner_slot: branch.owner_slot,
+            branch_id: branch.branch_id,
+        };
+        branch.employees.push(employee.clone());
         branch.staff_count = branch.employees.len() as u32;
-        Ok(branch.staff_count)
+        Ok(employee)
+    }
+
+    pub fn hire_campaign_employee(&mut self, role: EmployeeRole) -> Result<u32, &'static str> {
+        let hired: Vec<u32> = self
+            .campaign_branch()
+            .map(|branch| {
+                branch
+                    .employees
+                    .iter()
+                    .map(|employee| employee.id)
+                    .collect()
+            })
+            .unwrap_or_default();
+        let candidate = CAMPAIGN_EMPLOYEE_CANDIDATES
+            .iter()
+            .find(|candidate| candidate.role == role && !hired.contains(&candidate.id))
+            .copied()
+            .ok_or("employee is unavailable")?;
+        self.hire_campaign_candidate(candidate.id)?;
+        Ok(self
+            .campaign_branch()
+            .map_or(0, |branch| branch.staff_count))
     }
 
     /// Lease the lifted `London 1` storage. Its save record is storage ID
@@ -2671,12 +2752,14 @@ mod tests {
         assert!(!leased.mission_complete);
         assert_eq!(world.hire_campaign_employee(EmployeeRole::Cook), Ok(1));
         assert_eq!(world.hire_campaign_employee(EmployeeRole::Service), Ok(2));
+        assert_eq!(world.hire_campaign_employee(EmployeeRole::Errand), Ok(3));
+        assert_eq!(world.hire_campaign_employee(EmployeeRole::Errand), Ok(4));
         assert_eq!(world.lease_campaign_warehouse(100_000), Ok(()));
         assert_eq!(world.assign_campaign_supplier("central-market"), Ok(()));
         assert_eq!(world.enable_campaign_deliveries(), Ok(()));
         assert_eq!(world.deliver_campaign_stock(), Ok(400_000.0));
         assert_eq!(world.set_campaign_opening_hours(6, 22), Ok(()));
-        assert_eq!(world.campaign_branch().unwrap().staff_count, 2);
+        assert_eq!(world.campaign_branch().unwrap().staff_count, 4);
         assert_eq!(
             world.campaign_branch().unwrap().warehouse_name.as_deref(),
             Some("London 1")

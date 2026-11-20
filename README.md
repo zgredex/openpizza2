@@ -327,6 +327,11 @@ owner slot `0`, marks it player-controlled and leased, and leaves stock at zero.
 match the lifted `Player_CreateBranch` checkpoint (`site_id=0`,
 `branch_id=100000`, HUD cash `500000 -> 496188`).
 
+Return to the city with `C`. Press `E` to open the Employment Office.
+`UP/DOWN` selects a candidate and `ENTER` hires them; `ESC` closes the office.
+The first cook is candidate `100280` (role `COOK`), assigned to branch
+`100000` under owner slot `0`.
+
 Inside the branch, prepare the restaurant before opening:
 
 ```text
@@ -359,6 +364,21 @@ The full New Game -> city -> click/confirm path is:
 
 ```sh
 cargo run -p pc2-app -- --new-game --output /tmp/opencode/new_game_click.png
+```
+
+The acceptance path also returns to the city and hires the lifted cook:
+
+```sh
+cargo run -p pc2-app -- --new-game --campaign-hire \
+  --output /tmp/opencode/new_game_hire.png
+```
+
+It prints the Employment Office hire record:
+
+```text
+new-game: returned-to-city
+new-game: employment-office open
+campaign: employment hired employee=100280 role=Cook branch=100000 owner=0 roster=1
 ```
 
 The lower-level click test is:
