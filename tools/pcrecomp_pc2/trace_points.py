@@ -34,6 +34,8 @@ TARGETS = [
     ("sub_00472DA0", "Screen_FreePlaySetup", True),
     ("sub_00404AF0", "Game_RunSession", True),
     ("sub_0046DBD0", "Screen_CharacterSelect", True),
+    ("sub_00486590", "Game_EndOfHour", True),
+    ("sub_004F7420", "Player_CreateBranch", True),
 ]
 
 
@@ -53,6 +55,11 @@ def add_includes(text: str) -> str:
     if "#include <stdlib.h>" not in text:
         text = text.replace("#include <stdio.h>\n",
                             "#include <stdio.h>\n#include <stdlib.h>\n", 1)
+    if "extern void pc2_trace_branch_before" not in text:
+        text = text.replace("#include <stdlib.h>\n",
+                            "#include <stdlib.h>\n"
+                            "extern void pc2_trace_branch_before(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t);\n"
+                            "extern void pc2_trace_branch_after(uint32_t);\n", 1)
     return text
 
 
@@ -65,6 +72,8 @@ def patch_function(text: str, name: str, label: str) -> tuple[str, bool]:
     body = match.group(0)
     if f"[trace] {label}" in body:
         return text, False
+    if label == "Player_CreateBranch" and "pc2_trace_branch_before" in body:
+        return text, False
 
     if label == "Resource_Open":
         entry = ('    if (getenv("PC2_TRACE_RESOURCES")) '
@@ -72,6 +81,10 @@ def patch_function(text: str, name: str, label: str) -> tuple[str, bool]:
                  '(char *)(uintptr_t)ADDR(MEM32(esp + 4)));\n')
         ret = ('if (getenv("PC2_TRACE_RESOURCES")) '
                'fprintf(stderr, "[trace] Resource_Open return eax=%08X\\n", eax); return;')
+    elif label == "Player_CreateBranch":
+        entry = ('    pc2_trace_branch_before(ecx, MEM32(esp + 4), MEM32(esp + 8), '
+                 'MEM32(esp + 12), MEM32(esp + 16), MEM32(esp + 20));\n')
+        ret = 'pc2_trace_branch_after(eax); return;'
     else:
         entry = f'    fprintf(stderr, "[trace] {label} enter\\n");\n'
         ret = f'fprintf(stderr, "[trace] {label} return\\n"); return;'

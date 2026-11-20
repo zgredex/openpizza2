@@ -87,7 +87,10 @@ They live in `pc2_shims.c`; the shared runtime is unmodified.
 
 ## Current status
 
-- Whole-image lift: 9,275 functions, 0 lift failures.
+- Whole-image lift: 9,277 functions, 0 lift failures. The repo lift driver
+  seeds `WorldObject_Delete 0x00504980`, `CRT_LocalUnwind2 0x00553C9D` and
+  the exception-filter registration routine `0x00555F68`; `build.sh` relifts
+  if any of those addresses is missing from the dispatch table.
 - Native host: links 32-bit, runs from CRT entry `0x0054FCD4` through WinMain
   `0x00403D90`, both `Movie_Play` calls, `Map_LoadIsodata 0x004EA440` and into
   `GameMain 0x004043E0`.
@@ -118,6 +121,23 @@ sha256=1abdbb3fffaa31003b9d17fbbea7d92a0d306762095ad7fb0d45b3bcea0a6e2b
 ```
 
   `build.sh` checks that digest whenever `PC2_FRAME_DUMP` is set.
+- **DirectDraw trace:** `PC2_TRACE_DDBLT=1` captures the first menu blits
+  with the dirty rectangle before and after clipping, the source/destination
+  IDs and formats, the HRESULT, and the destination checksum after the copy:
+
+```text
+DDBLT d=4106965568 primary=0 800x600 bpp=16 pitch=1600
+      rect=0,0..800,600
+      s=4106965392 800x600 bpp=16 pitch=1600 rect=0,0..800,600
+      keyed=0 srcsum=E50455C5 dstsum_before=E50455C5
+DDBLT clip before=0,0..800,600 after=0,0..800,600
+      src_after=0,0..800,600 bpp=16 keyed=0
+DDBLT post d=4106965568 primary=0 pitch=1600 bpp=16
+      hr=0x00000000 DD_OK dstsum_after=E50455C5 copy=1
+```
+
+  The post-copy destination is still blank, which is why the game's completed
+  renderer buffer is presented instead of the tracked primary.
 - **Cursor:** PC2 installs `LoadCursorA(NULL, IDC_ARROW)` as its window-class
   cursor and does not draw a software cursor into the picture. `win32hle`
   hides the SDL cursor unless `hle_screen_cursor_hook` is set, so the running
@@ -135,23 +155,48 @@ pending=21 Screen_MainMenu
 ```
 
   A late preview dump (`PC2_GAME_DUMP_DELAY=2000`) contains the London
-  welcome dialog and the `Town aims` panel:
+  welcome dialog and the `Town aims` panel.
+- **Verified lease:** the replay below opens the `Rent buildings` panel,
+  clicks the offer (`Lease` at `745,500`), confirms the `Do you want to lease
+  this building for 2812$?` dialog (`O.K.` at `740,581`), and owns the branch.
+  The bounded `Player_CreateBranch 0x004F7420` checkpoint reports:
+
+```text
+BRANCH before player=E600750 site_id=0 site=F41E8050 slot=0 type=0 flags=1
+      branch_id_before=-1
+BRANCH after player_slot=0 site_id=0 site=F41E8050 branch_id=100000
+      site+2c=100000
+```
+
+  The human player slot is `0`; the site's branch ID changes from `-1` to
+  `100000`. The HUD cash changes from `500000` to `496188` and the clock
+  advances from `00:05` to `00:10`. `Game_EndOfHour 0x00486590` enters and
+  returns repeatedly afterward.
+- **Exception handling:** the startup registration routine `0x00555F68` is
+  now lifted and dispatchable, but `win32hle`'s
+  `SetUnhandledExceptionFilter` shim returns `0` and `RaiseException` exits.
+  Filter registration runs; actual guest exception delivery is still
+  unverified.
+
+Replay command:
 
 ```bash
 cd game
 LD_LIBRARY_PATH=/tmp/opencode/pcrecomp-pc2-fresh/sysroot32/lib \
 SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy PC2_HEADLESS=1 \
 PC2_TRACE_FRAMES=1 PC2_CLICK_START=1 PC2_START_CAMPAIGN=1 \
-PC2_GAME_DUMP_DELAY=2000 \
-PC2_RAW_DUMP=/tmp/opencode/pcrecomp-pc2-fresh/london \
-timeout 240s /tmp/opencode/pcrecomp-pc2-fresh/pc2-native/pc2 fastfood2.exe
+PC2_TUTORIAL_CLICKS=2 PC2_TUTORIAL_START=1000 PC2_TUTORIAL_INTERVAL=400 \
+PC2_LEASE_CLICK=1 PC2_LEASE_DELAY=1700 PC2_LEASE_X=745 PC2_LEASE_Y=500 \
+PC2_CONFIRM_CLICK=1 PC2_CONFIRM_DELAY=400 \
+PC2_POST_LEASE_CLICKS=8 PC2_POST_LEASE_START=2300 PC2_POST_LEASE_INTERVAL=150 \
+PC2_GAME_DUMP_DELAY=3800 \
+PC2_RAW_DUMP=/tmp/opencode/pcrecomp-pc2-fresh/london-lease \
+timeout 360s /tmp/opencode/pcrecomp-pc2-fresh/pc2-native/pc2 fastfood2.exe
 ```
-- **Next blocker:** after the London session starts, the first clock/end-of-
-  hour path reaches `Game_EndOfHour 0x00486590`, which calls the missing
-  `WorldObject_Delete 0x00504980` vtable slot and aborts with
-  `ICALL: unresolved VA 0x00504980 from 0x00486590`. That slot has a name in
-  `vtable_slot_functions.json` but no lifted function. The menu and the
-  campaign start are no longer blockers.
+
+  The last verified checkpoint is a London restaurant lease owned by player
+  slot 0, with the tutorial still on the `Hire personnel` page. The menu,
+  hourly update and first business transaction are no longer blockers.
 
 To verify the menu frame through the recipe:
 

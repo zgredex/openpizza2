@@ -268,14 +268,18 @@ DDPRIMARY self=4106965392 800x600 bpp=16 pitch=1600 sum=E50455C5
 DDBLT d=4106965568 primary=0 800x600 bpp=16 pitch=1600
       rect=0,0..800,600
       s=4106965392 800x600 bpp=16 pitch=1600 rect=0,0..800,600
-      keyed=0 srcsum=E50455C5 dstsum=E50455C5
+      keyed=0 srcsum=E50455C5 dstsum_before=E50455C5
+DDBLT clip before=0,0..800,600 after=0,0..800,600
+      src_after=0,0..800,600 bpp=16 keyed=0
+DDBLT post d=4106965568 primary=0 pitch=1600 bpp=16
+      hr=0x00000000 DD_OK dstsum_after=E50455C5 copy=1
 ```
 
 The source is the tracked primary and the destination is a non-primary
-surface; both are blank. The completed image is in the renderer's draw buffer
-at `renderer+0x28`. The focused host-side presenter bridge returns that buffer
-from `hle_dd_frame_hook` after `Screen_MainMenu`; no guest surface selection
-is changed.
+surface; both are blank before and after the copy. The completed image is in
+the renderer's draw buffer at `renderer+0x28`. The focused host-side presenter
+bridge returns that buffer from `hle_dd_frame_hook` after `Screen_MainMenu`;
+no guest surface selection is changed.
 
 Verified headless menu frame:
 
@@ -300,16 +304,32 @@ click -> GameLoop pending=23 -> Game_RunSession
 ```
 
 A late renderer dump contains the London welcome dialog and `Town aims`
-panel. The next blocker is the first clock/end-of-hour path:
-`Game_EndOfHour 0x00486590` calls the missing
-`WorldObject_Delete 0x00504980` vtable slot and aborts with:
+panel. The repo lift driver seeds three confirmed targets into discovery:
+`WorldObject_Delete 0x00504980`, `CRT_LocalUnwind2 0x00553C9D`, and the
+exception-filter registration routine `0x00555F68`; a clean build asserts all
+three are in the dispatch table.
+
+`Game_EndOfHour 0x00486590` now enters and returns repeatedly. The scripted
+rent flow opens the `Rent buildings` panel, clicks `Lease` at `(745,500)`,
+and confirms at `(740,581)`. The bounded `Player_CreateBranch 0x004F7420`
+checkpoint reports:
 
 ```text
-ICALL: unresolved VA 0x00504980 from 0x00486590
+BRANCH before player=E600750 site_id=0 site=F41E8050 slot=0 type=0 flags=1
+      branch_id_before=-1
+BRANCH after player_slot=0 site_id=0 site=F41E8050 branch_id=100000
+      site+2c=100000
 ```
 
-`vtable_slot_functions.json` names that slot but there is no lifted function
-at the address. The menu and campaign-start path are no longer blockers.
+The human player slot is `0`; the site's branch ID changes from `-1` to
+`100000`. Cash changes from `500000` to `496188`, and the clock advances from
+`00:05` to `00:10`. The tutorial remains on the `Hire personnel` page, but
+the first business transaction is verified.
+
+Exception handling is still only partially proven: the registration routine
+is lifted and dispatched, but `SetUnhandledExceptionFilter` returns `0` and
+`RaiseException` exits in `win32hle`, so guest exception delivery has not been
+tested.
 
 ### Cursor
 

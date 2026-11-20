@@ -10,7 +10,9 @@ GEN="$WORK/gen"
 SYS="$WORK/sysroot32"
 HOSTDIR="$WORK/pc2-native"
 EXE="$REPO_ROOT/game/fastfood2.exe"
+LIFT_DRIVER="$REPO_ROOT/tools/pcrecomp_pc2/lift.py"
 FRAME_DUMP="${PC2_FRAME_DUMP:-}"
+DDBLT_TRACE="${PC2_TRACE_DDBLT:-}"
 
 EXE_SHA256=18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd
 PCRECOMP_REPO=https://github.com/sp00nznet/pcrecomp.git
@@ -107,10 +109,24 @@ if [ ! -f "$SYS/lib/libSDL2_ttf.so" ]; then
     cmake --install "$WORK/src/SDL2_ttf-build32" > "$WORK/ttf-install.log" 2>&1
 fi
 
-if [ ! -f "$GEN/recomp_dispatch.c" ]; then
-    (cd "$PC" && "$VENV/bin/python" -m tools "$EXE" --all --output "$GEN") > "$WORK/lift.log" 2>&1
-    tail -8 "$WORK/lift.log"
+PC2_SEEDS='0x00504980u 0x00553C9Du 0x00555F68u'
+needs_lift=0
+[ -f "$GEN/recomp_dispatch.c" ] || needs_lift=1
+for seed in $PC2_SEEDS; do
+    grep -Fq "$seed" "$GEN/recomp_dispatch.c" 2>/dev/null || needs_lift=1
+done
+if [ "$needs_lift" -ne 0 ]; then
+    (cd "$PC" && PCRECOMP_ROOT="$PC" "$VENV/bin/python" "$LIFT_DRIVER" \
+        "$EXE" --all --output "$GEN") > "$WORK/lift.log" 2>&1
+    tail -12 "$WORK/lift.log"
 fi
+for seed in $PC2_SEEDS; do
+    grep -Fq "$seed" "$GEN/recomp_dispatch.c" || {
+        echo "lift: seeded function missing from dispatch: $seed" >&2
+        tail -20 "$WORK/lift.log" >&2
+        exit 1
+    }
+done
 
 python3 "$REPO_ROOT/tools/pcrecomp_pc2/trace_points.py" "$GEN"
 
@@ -124,7 +140,8 @@ set +e
 (cd "$REPO_ROOT/game" && \
     LD_LIBRARY_PATH="$SYS/lib" SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy \
     PC2_HEADLESS=1 HLE_FILETRACE=1 PC2_TRACE_FRAMES=1 \
-    PC2_FRAME_DUMP="$FRAME_DUMP" timeout "${PC2_TIMEOUT:-75}" \
+    PC2_TRACE_DDBLT="$DDBLT_TRACE" PC2_FRAME_DUMP="$FRAME_DUMP" \
+    timeout "${PC2_TIMEOUT:-75}" \
     "$HOSTDIR/pc2" fastfood2.exe) > "$WORK/trace.log" 2>&1
 status=$?
 set -e
@@ -154,6 +171,24 @@ for point in '[trace] Movie_Play return' '[trace] Map_LoadIsodata return' '[trac
         exit 1
     }
 done
+
+if [ -n "$DDBLT_TRACE" ]; then
+    grep -Fq '[trace] DDBLT clip before=' "$WORK/trace.log" || {
+        echo "trace: DDBLT before/after clipping was not captured" >&2
+        tail -40 "$WORK/trace.log" >&2
+        exit 1
+    }
+    grep -Fq 'hr=0x00000000 DD_OK' "$WORK/trace.log" || {
+        echo "trace: DDBLT HRESULT was not captured" >&2
+        tail -40 "$WORK/trace.log" >&2
+        exit 1
+    }
+    grep -Fq 'dstsum_after=' "$WORK/trace.log" || {
+        echo "trace: DDBLT post-copy destination checksum was not captured" >&2
+        tail -40 "$WORK/trace.log" >&2
+        exit 1
+    }
+fi
 
 if [ -n "$FRAME_DUMP" ]; then
     python3 - "$FRAME_DUMP" <<'PY'
