@@ -29,6 +29,7 @@ TARGETS = [
     ("sub_0051FB00", "Screen_BeginTileWipeTransition", True),
     ("sub_00523D60", "Window_ShowWindowById", True),
     ("sub_00532890", "UI_SetWindowVisible", True),
+    ("sub_00539F90", "Renderer_InitForWindow", True),
 ]
 
 

@@ -268,3 +268,24 @@ UI_RenderScene -> UI_ProcessChildEvent -> UI_ProcessWindowEvent
 (`Window+0x1BC` is zero), not the `Gfx_BlitClipped16` path. The tracked
 DirectDraw primary stays zero. The next fix is to bind the UI window's final
 target to the presenter, or make `Window+0x1BC` point at the primary.
+
+### DirectDraw menu blit evidence
+
+`PC2_TRACE_FRAMES=1` still produces `nonzero=0/960000`. The bounded
+`hle_dd_blit_hook` shows where the menu pixels are lost:
+
+```text
+DDPRIMARY self=4106965392 800x600 bpp=16 pitch=1600 sum=E50455C5
+DDBLT d=4106965568 primary=0 800x600 bpp=16 pitch=1600
+      rect=0,0..800,600
+      s=4106965392 800x600 bpp=16 pitch=1600 rect=0,0..800,600
+      keyed=0 srcsum=E50455C5 dstsum=E50455C5
+```
+
+The source and destination sizes, pitches and formats match, and the dirty
+rectangle is valid. The divergence is surface selection: the source is the
+tracked primary and the destination is a different (`primary=0`) surface. Both
+are blank at blit time. The renderer draw buffer at `renderer+0x28` has
+nonzero data, but the `renderer+0x40` pair used by `Surface_BlitRectRetry` does
+not. This is the current root-cause candidate; the next step is a full-buffer
+inspection and a focused presenter bridge or surface-selection fix.

@@ -99,15 +99,34 @@ They live in `pc2_shims.c`; the shared runtime is unmodified.
   pending screen `0`. `Resource_Open` returns non-zero for `clipsprite.spr`,
   `rklick_00.spr`, `mission.txt` and the menu assets; the loose-file
   `CreateFileA` failures are fallback probes, not the lookup result.
-- The next blocker is presentation. `Window_RenderFrame` now reaches
-  `UI_RenderScene` and `UI_ProcessChildEvent`; the menu sprite is drawn by
-  `UI_ProcessWindowEvent 0x0052F2E0` (`f94` holds the sprite). The final blit
-  is `Surface_BlitRectRetry 0x00538DA0`; `Gfx_BlitClipped16` is not called
-  because `Window+0x1BC` is zero. The tracked 800x600x16 primary is still
-  all-zero (`PC2_TRACE_FRAMES=1` reports `nonzero=0/960000`), so the UI drawing
-  is going to the window/GDI target rather than the primary the presenter
-  reads. Next: bind that target or route the completed UI surface through the
-  presenter.
+- The next blocker is presentation. `Window_RenderFrame` reaches
+  `UI_RenderScene` and `UI_ProcessChildEvent`; `UI_ProcessWindowEvent
+  0x0052F2E0` draws the menu sprite (`+0x94`). `Window+0x1BC` is zero, so
+  `Gfx_BlitClipped16` is not used; the final path is
+  `Surface_BlitRectRetry 0x00538DA0`.
+- `PC2_TRACE_FRAMES=1` frame dumps are blank: `nonzero=0/960000`.
+- The bounded DDraw hook shows the divergence:
+
+```text
+DDPRIMARY self=4106965392 800x600 bpp=16 pitch=1600 sum=E50455C5
+DDBLT d=4106965568 primary=0 800x600 bpp=16 pitch=1600
+      rect=0,0..800,600
+      s=4106965392 800x600 bpp=16 pitch=1600 rect=0,0..800,600
+      keyed=0 srcsum=E50455C5 dstsum=E50455C5
+```
+
+  The **source is the tracked primary** and the destination is not the
+  primary (`primary=0`). Both are blank. Later frames use
+  `rect=0,100..800,500`, same check. The renderer's own buffer at
+  `renderer+0x28` has a nonzero checksum in the 16-row sample, but the DDraw
+  pair used by `Surface_BlitRectRetry` does not. The root cause is therefore
+  **surface selection**: the final blit uses the renderer's `+0x40` pair
+  (primary as source, a non-primary surface as destination) instead of the
+  renderer's draw buffer/primary target.
+- Next: capture the renderer draw buffer's full 800x600 layout (width/stride/
+  height around `renderer+0x20/+0x24/+0x28`) and make the completed UI surface
+  the blit source (or select the primary as destination) without changing the
+  guest object layout.
 
 ## Crash fixed after the intro
 
