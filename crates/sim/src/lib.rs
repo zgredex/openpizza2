@@ -178,6 +178,20 @@ impl OrderInput {
     }
 }
 
+/// First verified London customer order (100017): menu 11.85281086,
+/// 161 ingredient units, 100 servings, rating 66, tip base 32 -> tip 17,
+/// 16,100 stock units and revenue 1387.28.
+pub const CAMPAIGN_LONDON_ORDER: OrderInput = OrderInput {
+    customer_id: 100_017,
+    minute: 0,
+    menu_price: 11.852_810_86,
+    recipe_id: 0x0143_7164,
+    ingredient_units: 161,
+    servings: 100,
+    rating: 66,
+    tip_base: 32,
+};
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct Sale {
     pub clock_minutes: u32,
@@ -847,7 +861,10 @@ pub struct PlayerBranch {
     pub sales: u32,
     pub revenue: f64,
     pub employees: Vec<EmployeeRole>,
-    pub warehouse_tile: Option<u32>,
+    pub warehouse_id: Option<u32>,
+    pub warehouse_name: Option<String>,
+    pub supplier: Option<String>,
+    pub warehouse_capacity: f64,
     pub deliveries_enabled: bool,
     pub opening_hours: Option<(u8, u8)>,
 }
@@ -1005,7 +1022,10 @@ impl World {
                 EmployeeRole::Errand,
                 EmployeeRole::Errand,
             ],
-            warehouse_tile: None,
+            warehouse_id: None,
+            warehouse_name: None,
+            supplier: None,
+            warehouse_capacity: 0.0,
             deliveries_enabled: false,
             opening_hours: None,
         });
@@ -1261,7 +1281,10 @@ impl World {
             sales: 0,
             revenue: 0.0,
             employees: Vec::new(),
-            warehouse_tile: None,
+            warehouse_id: None,
+            warehouse_name: None,
+            supplier: None,
+            warehouse_capacity: 0.0,
             deliveries_enabled: false,
             opening_hours: None,
         });
@@ -1290,14 +1313,37 @@ impl World {
         Ok(branch.staff_count)
     }
 
-    pub fn lease_campaign_warehouse(&mut self, tile_index: u32) -> Result<(), &'static str> {
+    /// Lease the lifted `London 1` storage. Its save record is storage ID
+    /// `100000`; the storage fill target is 400,000 units.
+    pub fn lease_campaign_warehouse(&mut self, storage_id: u32) -> Result<(), &'static str> {
         let branch = self
             .campaign_branch_mut()
             .ok_or("lease the campaign property first")?;
-        if branch.warehouse_tile.is_some() {
+        if branch.warehouse_id.is_some() {
             return Err("warehouse is already leased");
         }
-        branch.warehouse_tile = Some(tile_index);
+        if storage_id != 100_000 {
+            return Err("warehouse is unavailable");
+        }
+        branch.warehouse_id = Some(storage_id);
+        branch.warehouse_name = Some("London 1".into());
+        branch.warehouse_capacity = 400_000.0;
+        Ok(())
+    }
+
+    /// Select the lifted supplier `Central Market Partners` for `London 1`.
+    pub fn assign_campaign_supplier(&mut self, supplier: &str) -> Result<(), &'static str> {
+        let branch = self
+            .campaign_branch_mut()
+            .ok_or("lease the campaign property first")?;
+        if branch.warehouse_id.is_none() {
+            return Err("lease a warehouse first");
+        }
+        if supplier != "central-market" && supplier != "Central Market Partners" {
+            return Err("supplier is unavailable");
+        }
+        branch.supplier = Some("Central Market Partners".into());
+        branch.deliveries_enabled = true;
         Ok(())
     }
 
@@ -1305,24 +1351,38 @@ impl World {
         let branch = self
             .campaign_branch_mut()
             .ok_or("lease the campaign property first")?;
-        if branch.warehouse_tile.is_none() {
+        if branch.warehouse_id.is_none() {
             return Err("lease a warehouse first");
+        }
+        if branch.supplier.is_none() {
+            return Err("assign a supplier first");
         }
         branch.deliveries_enabled = true;
         Ok(())
     }
 
-    pub fn deliver_campaign_stock(&mut self, units: f64) -> Result<f64, &'static str> {
-        let branch = self
-            .campaign_branch_mut()
-            .ok_or("lease the campaign property first")?;
-        if !branch.deliveries_enabled {
-            return Err("enable deliveries first");
-        }
-        let stock = self.sim.snapshot().stock + units.max(0.0);
+    /// Receive one lifted delivery batch. The first batch fills `London 1` to
+    /// its 400,000-unit capacity; later batches are the 200,000-unit refill.
+    pub fn deliver_campaign_stock(&mut self) -> Result<f64, &'static str> {
+        let (capacity, refill) = {
+            let branch = self
+                .campaign_branch()
+                .ok_or("lease the campaign property first")?;
+            if !branch.deliveries_enabled || branch.supplier.is_none() {
+                return Err("enable deliveries first");
+            }
+            (branch.warehouse_capacity, 200_000.0)
+        };
+        let current = self.sim.snapshot().stock;
+        let amount = if current <= 0.0 {
+            (capacity - current).max(0.0)
+        } else {
+            refill
+        };
+        let stock = current + amount;
         self.sim.set_stock(stock);
         if stock > self.sim.snapshot().stock_capacity {
-            self.sim.set_stock_capacity(stock);
+            self.sim.set_stock_capacity(stock.max(capacity));
         }
         Ok(stock)
     }
@@ -1351,7 +1411,7 @@ impl World {
                     .ok_or("lease the campaign property first")?;
                 (
                     branch.staff_count,
-                    branch.warehouse_tile,
+                    branch.warehouse_id,
                     branch.deliveries_enabled,
                     branch.opening_hours,
                     self.sim.snapshot().stock,
@@ -1691,6 +1751,20 @@ impl World {
     /// Advance the original 10 ms queue/service timers without moving the
     /// five-minute game clock. This is the precise timer lane used by queue
     /// fixtures; `advance_to` keeps the existing five-minute phase cadence.
+    fn settle_current_sale(&mut self) -> StepOutcome {
+        if self.is_campaign() && self.campaign_branch().is_some() {
+            let mut order = CAMPAIGN_LONDON_ORDER;
+            order.minute = self.minute;
+            let outcome = self.sim.settle_order_input(&order);
+            if let StepOutcome::Sale(sale) = &outcome {
+                self.sim.credit_payment(sale);
+            }
+            outcome
+        } else {
+            self.sim.settle_sale_at(self.minute)
+        }
+    }
+
     pub fn advance_millis(&mut self, millis: u32) -> Vec<ClockEvent> {
         self.advance_queue_ticks(millis / TICK_MS)
     }
@@ -1732,7 +1806,7 @@ impl World {
                         minute: self.minute,
                         remaining_queue: remaining,
                     });
-                    if let StepOutcome::Sale(sale) = self.sim.settle_sale_at(self.minute) {
+                    if let StepOutcome::Sale(sale) = self.settle_current_sale() {
                         self.record_branch_sale(&sale);
                         events.push(ClockEvent::Sale {
                             minute: self.minute,
@@ -1827,7 +1901,7 @@ impl World {
                         minute: self.minute,
                         remaining_queue: remaining,
                     });
-                    if let StepOutcome::Sale(sale) = self.sim.settle_sale_at(self.minute) {
+                    if let StepOutcome::Sale(sale) = self.settle_current_sale() {
                         self.record_branch_sale(&sale);
                         events.push(ClockEvent::Sale {
                             minute: self.minute,
@@ -2587,7 +2661,7 @@ mod tests {
         assert!(!leased.player_branches[0].owned);
         assert_eq!(leased.player_branches[0].rent, 2_812);
         assert!(leased.player_branches[0].employees.is_empty());
-        assert_eq!(leased.player_branches[0].warehouse_tile, None);
+        assert_eq!(leased.player_branches[0].warehouse_id, None);
         assert!(!leased.player_branches[0].deliveries_enabled);
         assert_eq!(leased.player_branches[0].opening_hours, None);
         assert_eq!(world.set_campaign_open(true), Err("hire staff first"));
@@ -2597,25 +2671,39 @@ mod tests {
         assert!(!leased.mission_complete);
         assert_eq!(world.hire_campaign_employee(EmployeeRole::Cook), Ok(1));
         assert_eq!(world.hire_campaign_employee(EmployeeRole::Service), Ok(2));
-        assert_eq!(world.lease_campaign_warehouse(1), Ok(()));
+        assert_eq!(world.lease_campaign_warehouse(100_000), Ok(()));
+        assert_eq!(world.assign_campaign_supplier("central-market"), Ok(()));
         assert_eq!(world.enable_campaign_deliveries(), Ok(()));
-        assert_eq!(world.deliver_campaign_stock(200_000.0), Ok(200_000.0));
+        assert_eq!(world.deliver_campaign_stock(), Ok(400_000.0));
         assert_eq!(world.set_campaign_opening_hours(6, 22), Ok(()));
         assert_eq!(world.campaign_branch().unwrap().staff_count, 2);
-        assert_eq!(world.campaign_branch().unwrap().warehouse_tile, Some(1));
+        assert_eq!(
+            world.campaign_branch().unwrap().warehouse_name.as_deref(),
+            Some("London 1")
+        );
+        assert_eq!(
+            world.campaign_branch().unwrap().supplier.as_deref(),
+            Some("Central Market Partners")
+        );
         assert!(world.campaign_branch().unwrap().deliveries_enabled);
         assert_eq!(
             world.campaign_branch().unwrap().opening_hours,
             Some((6, 22))
         );
-        assert_eq!(world.snapshot().stock, 200_000.0);
+        assert_eq!(world.snapshot().stock, 400_000.0);
         assert_eq!(world.set_campaign_open(true), Err("outside opening hours"));
         world.set_minute(360);
         assert_eq!(world.set_campaign_open(true), Ok(()));
         world.enqueue_party(1);
         world.advance_queue_ticks(QUEUE_WALK_TICKS + PRODUCTION_TICKS);
         let sold = world.world_snapshot();
-        assert_eq!(sold.player_branches[0].sales, 1);
+        assert_eq!(sold.player_branches[0].sales, 100);
+        assert_eq!(sold.sim.stock, 383_900.0);
+        assert!((sold.sim.cash - 497_575.278_930_664_1).abs() < 1e-9);
+        assert!((sold.player_branches[0].revenue - 1_387.278_930_664_062_5).abs() < 1e-9);
+        let last_sale = sold.sim.last_sale.as_ref().expect("last sale");
+        assert_eq!(last_sale.servings, 100);
+        assert!((last_sale.price - 11.852_810_86).abs() < 1e-9);
         // The shipped goal 1 is "place a rat", not sales, so a sale must not
         // advance it.  This is the Unicorn-confirmed +0x14 slot.
         assert_eq!(sold.mission_goals[1].status, GoalStatus::Pending);

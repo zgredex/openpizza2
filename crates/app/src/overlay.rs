@@ -410,7 +410,7 @@ pub fn draw_status(
             height,
             panel_x + 14,
             y,
-            "1/2/3 HIRE   W WAREHOUSE   V DELIVERIES   D DELIVERY   H HOURS",
+            "1/2/3 HIRE   W WAREHOUSE   S SUPPLIER   V DELIVERIES   D DELIVERY   H HOURS",
             [200, 200, 210, 255],
         );
         y += line_height;

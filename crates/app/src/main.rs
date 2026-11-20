@@ -84,6 +84,8 @@ struct Args {
     character_select: bool,
     character_script: Option<String>,
     campaign_start: bool,
+    campaign_click: bool,
+    new_game: bool,
     free_play_setup: bool,
     free_play_chain: bool,
     free_play_script: Option<String>,
@@ -121,6 +123,8 @@ impl Default for Args {
             character_select: false,
             character_script: None,
             campaign_start: false,
+            campaign_click: false,
+            new_game: false,
             free_play_setup: false,
             free_play_chain: false,
             free_play_script: None,
@@ -159,6 +163,8 @@ fn usage(program: &str) {
          --character-select   original Start New Game character screen\n\
          --character-script S headless character-screen commands\n\
          --campaign-start     load the first installed campaign mission\n\
+         --new-game           New Game menu action -> campaign city -> click/confirm lease\n\
+         --campaign-click     exercise the city click/confirm lease path\n\
          --free-play-setup    original Free Play Setup screen (state 0x18)\n\
          --free-play-chain    headless menu -> character -> setup -> first-sale chain\n\
          --free-play-script S headless setup-screen commands\n\
@@ -267,6 +273,8 @@ fn parse_args() -> Result<Args, String> {
             }
             "--character-select" => args.character_select = true,
             "--campaign-start" => args.campaign_start = true,
+            "--campaign-click" => args.campaign_click = true,
+            "--new-game" => args.new_game = true,
             "--free-play-setup" => args.free_play_setup = true,
             "--free-play-chain" => args.free_play_chain = true,
             "--free-play-script" => {
@@ -1337,24 +1345,27 @@ fn apply_campaign_command(world: &mut World, command: &str) -> Result<bool, Stri
         let staff = world.hire_campaign_employee(role).map_err(str::to_owned)?;
         println!("campaign: hired role={role:?} staff={staff}");
         Ok(true)
-    } else if let Some(tile) = command.strip_prefix("warehouse=") {
-        let tile: u32 = tile
+    } else if let Some(storage) = command.strip_prefix("warehouse=") {
+        let storage: u32 = storage
             .parse()
-            .map_err(|_| format!("invalid warehouse tile: {tile}"))?;
+            .map_err(|_| format!("invalid warehouse id: {storage}"))?;
         world
-            .lease_campaign_warehouse(tile)
+            .lease_campaign_warehouse(storage)
             .map_err(str::to_owned)?;
-        println!("campaign: warehouse tile={tile}");
+        println!("campaign: warehouse id={storage} name=London 1");
+        Ok(true)
+    } else if let Some(supplier) = command.strip_prefix("supplier=") {
+        world
+            .assign_campaign_supplier(supplier)
+            .map_err(str::to_owned)?;
+        println!("campaign: supplier=Central Market Partners");
         Ok(true)
     } else if command == "deliveries" {
         world.enable_campaign_deliveries().map_err(str::to_owned)?;
         println!("campaign: deliveries enabled");
         Ok(true)
-    } else if let Some(units) = command.strip_prefix("delivery=") {
-        let units: f64 = units
-            .parse()
-            .map_err(|_| format!("invalid delivery units: {units}"))?;
-        let stock = world.deliver_campaign_stock(units).map_err(str::to_owned)?;
+    } else if command == "delivery" {
+        let stock = world.deliver_campaign_stock().map_err(str::to_owned)?;
         println!("campaign: delivery stock={stock:.0}");
         Ok(true)
     } else if let Some(hours) = command.strip_prefix("hours=") {
@@ -1556,12 +1567,18 @@ fn run_campaign_start(args: &Args) -> Result<(), String> {
         );
     }
     let branch = if world.campaign_property_offer().is_some()
-        && (args.window || args.playable_script.is_some())
+        && (args.window || args.playable_script.is_some() || args.new_game || args.campaign_click)
     {
         Some(load_explore_branch(&session)?)
     } else {
         None
     };
+    if args.campaign_click && !args.window {
+        let branch = branch
+            .as_ref()
+            .ok_or("campaign has no available branch site")?;
+        world = run_campaign_click(world, args, &city, Some(branch))?;
+    }
     if let Some(script) = &args.playable_script {
         let branch = branch
             .as_ref()
@@ -1569,12 +1586,15 @@ fn run_campaign_start(args: &Args) -> Result<(), String> {
         run_campaign_script(&mut world, script, &branch.map_path)?;
         if let Some(branch) = world.campaign_branch() {
             println!(
-                "campaign: branch id={} tile={} staff={} warehouse={:?} deliveries={} hours={:?}",
+                "campaign: branch id={} tile={} staff={} warehouse={:?} name={:?} supplier={:?} deliveries={} capacity={:.0} hours={:?}",
                 branch.branch_id,
                 branch.tile_index,
                 branch.staff_count,
-                branch.warehouse_tile,
+                branch.warehouse_id,
+                branch.warehouse_name,
+                branch.supplier,
                 branch.deliveries_enabled,
+                branch.warehouse_capacity,
                 branch.opening_hours
             );
         }
@@ -1701,6 +1721,100 @@ fn campaign_city_summary(world: &World, prompt: Option<LeasePrompt>) -> Option<S
         })
 }
 
+fn campaign_lease_site(city: &Scene, offer: pc2_sim::CampaignPropertyOffer) -> Option<(i32, i32)> {
+    city.draws
+        .iter()
+        .find(|draw| draw.layer == 2 && draw.tile_y * city.grid_w + draw.tile_x == offer.tile_index)
+        .map(|draw| {
+            (
+                draw.world_x - city.background_origin.0,
+                draw.world_y - city.background_origin.1,
+            )
+        })
+}
+
+fn run_campaign_click(
+    world: World,
+    args: &Args,
+    city: &Scene,
+    branch: Option<&Scene>,
+) -> Result<World, String> {
+    let offer = world
+        .campaign_property_offer()
+        .ok_or("campaign has no available storefront")?;
+    let lease_site =
+        campaign_lease_site(city, offer).ok_or("lease marker is not on the city map")?;
+    let city_world = CityWorld {
+        width: city.crop.width,
+        height: city.crop.height,
+        pixels: city.pixels.clone(),
+        lease_site: Some(lease_site),
+    };
+    let mut app = WindowApp::new(
+        "new-game-click".into(),
+        Vec::new(),
+        args.width,
+        args.height,
+        0,
+    );
+    app.explore = true;
+    app.mode = ViewMode::City;
+    app.sim = Some(world);
+    app.city_world = Some(city_world);
+    app.branch_base = branch.map(|branch| branch.pixels.clone());
+    app.camera_x = 0;
+    app.camera_y = 0;
+
+    println!(
+        "new-game: city marker tile={} at {},{}",
+        offer.tile_index, lease_site.0, lease_site.1
+    );
+    if !app.handle_explore_click(lease_site.0, lease_site.1) {
+        return Err("city click did not select the storefront".into());
+    }
+    let (confirm, _) = lease_button_rects(args.width, args.height);
+    if !app.handle_explore_click(confirm.0 + 2, confirm.1 + 2) {
+        return Err("lease confirm click failed".into());
+    }
+    let world = app.sim.ok_or("click flow lost the world")?;
+    let branch = world
+        .campaign_branch()
+        .ok_or("click flow did not create the branch")?;
+    println!(
+        "new-game: lease-confirmed branch={} tile={} owner={} cash={:.2} stock={:.0}",
+        branch.branch_id,
+        branch.tile_index,
+        branch.owner_slot,
+        world.snapshot().cash,
+        world.snapshot().stock
+    );
+    if branch.branch_id != 100_000 || branch.tile_index != 13_694 || branch.owner_slot != 0 {
+        return Err("click flow created the wrong branch".into());
+    }
+    Ok(world)
+}
+
+fn run_new_game(args: &Args) -> Result<(), String> {
+    let mut install = GameInstall::open(&args.install)
+        .map_err(|error| format!("cannot open installation: {error}"))?;
+    let mut menu = menu::Menu::load(&mut install)?;
+    let action = menu.activate();
+    println!(
+        "new-game: menu action={:?} id=0x{:03x} label=\"{}\"",
+        action,
+        action.control_id(),
+        action.label()
+    );
+    if !matches!(action, menu::MenuAction::StartNewGame) {
+        return Err("New Game menu action was not selected".into());
+    }
+    let mut next = args.clone();
+    next.new_game = false;
+    next.campaign_start = true;
+    next.campaign_click = true;
+    run_campaign_start(&next)
+}
+
 fn show_explore(
     args: &Args,
     title: String,
@@ -1709,19 +1823,9 @@ fn show_explore(
     branch: Option<Scene>,
     world: World,
 ) -> Result<(), String> {
-    let lease_site = world.campaign_property_offer().and_then(|offer| {
-        city.draws
-            .iter()
-            .find(|draw| {
-                draw.layer == 2 && draw.tile_y * city.grid_w + draw.tile_x == offer.tile_index
-            })
-            .map(|draw| {
-                (
-                    draw.world_x - city.background_origin.0,
-                    draw.world_y - city.background_origin.1,
-                )
-            })
-    });
+    let lease_site = world
+        .campaign_property_offer()
+        .and_then(|offer| campaign_lease_site(&city, offer));
     let city_world = CityWorld {
         width: city.crop.width,
         height: city.crop.height,
@@ -1801,6 +1905,15 @@ fn main() -> ExitCode {
             Ok(()) => ExitCode::SUCCESS,
             Err(error) => {
                 eprintln!("character select failed: {error}");
+                ExitCode::FAILURE
+            }
+        };
+    }
+    if args.new_game {
+        return match run_new_game(&args) {
+            Ok(()) => ExitCode::SUCCESS,
+            Err(error) => {
+                eprintln!("new game failed: {error}");
                 ExitCode::FAILURE
             }
         };
@@ -3387,13 +3500,16 @@ impl WindowApp {
                     self.run_campaign_command("hire=errand")
                 }
                 Key::Character(text) if text.eq_ignore_ascii_case("w") => {
-                    self.run_campaign_command("warehouse=1")
+                    self.run_campaign_command("warehouse=100000")
+                }
+                Key::Character(text) if text.eq_ignore_ascii_case("s") => {
+                    self.run_campaign_command("supplier=central-market")
                 }
                 Key::Character(text) if text.eq_ignore_ascii_case("v") => {
                     self.run_campaign_command("deliveries")
                 }
                 Key::Character(text) if text.eq_ignore_ascii_case("d") => {
-                    self.run_campaign_command("delivery=200000")
+                    self.run_campaign_command("delivery")
                 }
                 Key::Character(text) if text.eq_ignore_ascii_case("h") => {
                     self.run_campaign_command("hours=6-22")

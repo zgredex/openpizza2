@@ -331,9 +331,10 @@ Inside the branch, prepare the restaurant before opening:
 
 ```text
 1/2/3  hire cook/service/errand (staff roster grows)
-W      lease the warehouse
+W      lease London 1 (storage ID 100000)
+S      assign Central Market Partners
 V      enable deliveries
-D      deliver 200,000 stock units
+D      receive the lifted delivery batch
 H      set opening hours 06:00-22:00
 O      open/close (requires staff, warehouse, deliveries, stock, and open hours)
 Space  advance five minutes
@@ -344,11 +345,23 @@ The keyboard path is mirrored by the campaign script:
 
 ```sh
 cargo run -p pc2-app -- --campaign-start --playable-script \
-  'lease=13694;hire=cook;hire=service;hire=errand;hire=errand;warehouse=1;deliveries;delivery=400000;hours=6-22;branch;minutes=360;open;step' \
+  'lease=13694;hire=cook;hire=service;hire=errand;hire=errand;warehouse=100000;supplier=central-market;deliveries;delivery;hours=6-22;branch;minutes=660;open;party;ticks=260;ticks=180;ticks=80' \
   --output /tmp/opencode/campaign_prepare.png
 ```
 
-The click path is covered by:
+`warehouse=100000` is the lifted `London 1` storage record; the supplier is
+`Central Market Partners`; the first delivery fills the 400,000-unit storage.
+The first campaign order uses the verified London inputs: menu `11.85281086`,
+`161` ingredient units, `100` servings, rating `66`, tip `17`, stock
+`400000 -> 383900`, and revenue `1387.28`.
+
+The full New Game -> city -> click/confirm path is:
+
+```sh
+cargo run -p pc2-app -- --new-game --output /tmp/opencode/new_game_click.png
+```
+
+The lower-level click test is:
 
 ```sh
 cargo test -p pc2-app city_click_selects_vacant_storefront_and_confirm_leases_it -- --nocapture
