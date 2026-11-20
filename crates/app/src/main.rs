@@ -4095,14 +4095,21 @@ impl WindowApp {
     }
 
     fn open_recipe_editor(&mut self) -> bool {
-        if self.sim.as_ref().and_then(World::campaign_branch).is_none() {
+        let Some(sim) = self.sim.as_ref() else {
+            return false;
+        };
+        if sim.campaign_branch().is_none() {
             return false;
         }
+        let (tomato, cheese, saved) = sim
+            .campaign_recipe()
+            .map(|recipe| (recipe.tomato, recipe.cheese, true))
+            .unwrap_or((0, 0, false));
         self.recipe_editor = Some(RecipeEditor {
-            tomato: 0,
-            cheese: 0,
-            saved: false,
-            status: None,
+            tomato,
+            cheese,
+            saved,
+            status: saved.then(|| "REOPENED SAVED RECIPE".to_string()),
         });
         self.refresh_explore();
         true
@@ -5134,6 +5141,13 @@ mod tests {
         for _ in 0..3 {
             assert!(app.handle_explore_key(&Key::Character("+".into())));
         }
+        assert!(app.handle_explore_key(&Key::Named(NamedKey::Escape)));
+        assert!(app.handle_explore_key(&Key::Character("r".into())));
+        let reopened = app.recipe_editor.as_ref().expect("reopened editor");
+        assert_eq!(reopened.tomato, 30);
+        assert_eq!(reopened.cheese, 20);
+        assert!(reopened.saved);
+        assert!(app.handle_explore_key(&Key::Named(NamedKey::Escape)));
 
         let sim = app.sim.as_mut().unwrap();
         let recipe = sim.campaign_recipe().cloned().expect("recipe");

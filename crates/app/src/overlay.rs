@@ -941,6 +941,49 @@ pub fn draw_recipe_editor(
         &saved_line,
         [235, 235, 235, 255],
     );
+    let preview_x = panel_x + 360;
+    let preview_y = panel_y + 34;
+    fill_rect(
+        frame,
+        width,
+        height,
+        preview_x,
+        preview_y,
+        120,
+        120,
+        [225, 190, 130, 255],
+    );
+    fill_rect(
+        frame,
+        width,
+        height,
+        preview_x + 10,
+        preview_y + 10,
+        100,
+        100,
+        [240, 210, 150, 255],
+    );
+    let tomato_dots = tomato.min(25) as i32;
+    for i in 0..tomato_dots {
+        let x = preview_x + 14 + (i % 5) * 20;
+        let y = preview_y + 14 + (i / 5) * 20;
+        fill_rect(frame, width, height, x, y, 12, 12, [220, 60, 55, 255]);
+    }
+    let cheese_dots = cheese.min(25) as i32;
+    for i in 0..cheese_dots {
+        let x = preview_x + 14 + (i % 5) * 20 + 6;
+        let y = preview_y + 14 + (i / 5) * 20 + 6;
+        fill_rect(frame, width, height, x, y, 8, 8, [250, 220, 80, 255]);
+    }
+    draw_text(
+        frame,
+        width,
+        height,
+        preview_x + 10,
+        preview_y + 102,
+        "PIZZA PREVIEW",
+        [110, 80, 30, 255],
+    );
     draw_text(
         frame,
         width,
