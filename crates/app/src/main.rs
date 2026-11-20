@@ -1380,6 +1380,37 @@ fn apply_campaign_command(world: &mut World, command: &str) -> Result<bool, Stri
             world.snapshot().stock
         );
         Ok(true)
+    } else if let Some(values) = command.strip_prefix("recipe=") {
+        let (tomato, cheese) = values
+            .split_once(',')
+            .ok_or_else(|| format!("invalid recipe command: {command}"))?;
+        let tomato: u32 = tomato
+            .parse()
+            .map_err(|_| format!("invalid recipe tomato: {tomato}"))?;
+        let cheese: u32 = cheese
+            .parse()
+            .map_err(|_| format!("invalid recipe cheese: {cheese}"))?;
+        let recipe = world
+            .create_campaign_recipe(tomato, cheese)
+            .map_err(str::to_owned)?;
+        println!(
+            "campaign: recipe saved id={} tomato={} cheese={} price={:.2}",
+            recipe.id, recipe.tomato, recipe.cheese, recipe.price
+        );
+        Ok(true)
+    } else if let Some(value) = command.strip_prefix("recipe-price=") {
+        let price: f64 = value
+            .parse()
+            .map_err(|_| format!("invalid recipe price: {value}"))?;
+        let price = world
+            .set_campaign_recipe_price(price)
+            .map_err(str::to_owned)?;
+        println!("campaign: recipe price={price:.2}");
+        Ok(true)
+    } else if command == "recipe-menu" {
+        let id = world.add_campaign_recipe_to_menu().map_err(str::to_owned)?;
+        println!("campaign: recipe menu id={id} branch=100000");
+        Ok(true)
     } else if let Some(hours) = command.strip_prefix("hours=") {
         let (open, close) = hours
             .split_once('-')
@@ -2674,6 +2705,14 @@ struct SupplyOffice {
     status: Option<String>,
 }
 
+#[derive(Clone, Debug)]
+struct RecipeEditor {
+    tomato: u32,
+    cheese: u32,
+    saved: bool,
+    status: Option<String>,
+}
+
 struct WindowApp {
     frames: Option<Vec<Vec<u8>>>,
     title: String,
@@ -2691,6 +2730,7 @@ struct WindowApp {
     lease_prompt: Option<LeasePrompt>,
     employment_office: Option<EmploymentOffice>,
     supply_office: Option<SupplyOffice>,
+    recipe_editor: Option<RecipeEditor>,
     mode: ViewMode,
     camera_x: i32,
     camera_y: i32,
@@ -2725,6 +2765,7 @@ impl WindowApp {
             lease_prompt: None,
             employment_office: None,
             supply_office: None,
+            recipe_editor: None,
             mode: ViewMode::Branch,
             camera_x: 0,
             camera_y: 0,
@@ -2768,6 +2809,7 @@ impl WindowApp {
             lease_prompt: None,
             employment_office: None,
             supply_office: None,
+            recipe_editor: None,
             mode: ViewMode::Branch,
             camera_x: 0,
             camera_y: 0,
@@ -2815,6 +2857,7 @@ impl WindowApp {
             lease_prompt: None,
             employment_office: None,
             supply_office: None,
+            recipe_editor: None,
             mode: ViewMode::City,
             camera_x,
             camera_y,
@@ -2856,6 +2899,7 @@ impl WindowApp {
             lease_prompt: None,
             employment_office: None,
             supply_office: None,
+            recipe_editor: None,
             mode: ViewMode::Branch,
             camera_x: 0,
             camera_y: 0,
@@ -2897,6 +2941,7 @@ impl WindowApp {
             lease_prompt: None,
             employment_office: None,
             supply_office: None,
+            recipe_editor: None,
             mode: ViewMode::Branch,
             camera_x: 0,
             camera_y: 0,
@@ -2938,6 +2983,7 @@ impl WindowApp {
             lease_prompt: None,
             employment_office: None,
             supply_office: None,
+            recipe_editor: None,
             mode: ViewMode::Branch,
             camera_x: 0,
             camera_y: 0,
@@ -3470,6 +3516,21 @@ impl WindowApp {
                             sim.mission_complete(),
                         );
                     }
+                    if let Some(editor) = self.recipe_editor.as_ref() {
+                        let recipe = sim.campaign_recipe();
+                        overlay::draw_recipe_editor(
+                            &mut view,
+                            self.width,
+                            self.height,
+                            editor.tomato,
+                            editor.cheese,
+                            editor.saved,
+                            recipe.is_some_and(|recipe| recipe.on_menu),
+                            recipe.map_or(0.0, |recipe| recipe.price),
+                            editor.status.as_deref(),
+                        )
+                        .ok();
+                    }
                     viewer.update_image(&view);
                     println!("explore: branch {}", sim.snapshot_json());
                 }
@@ -3616,6 +3677,105 @@ impl WindowApp {
         };
         if let Some(office) = self.employment_office.as_mut() {
             office.status = Some(message);
+        }
+        self.refresh_explore();
+        true
+    }
+
+    fn open_recipe_editor(&mut self) -> bool {
+        if self.sim.as_ref().and_then(World::campaign_branch).is_none() {
+            return false;
+        }
+        self.recipe_editor = Some(RecipeEditor {
+            tomato: 0,
+            cheese: 0,
+            saved: false,
+            status: None,
+        });
+        self.refresh_explore();
+        true
+    }
+
+    fn handle_recipe_key(&mut self, key: &Key) -> bool {
+        let Some(editor) = self.recipe_editor.as_ref() else {
+            return false;
+        };
+        let mut tomato = editor.tomato;
+        let mut cheese = editor.cheese;
+        let mut saved = editor.saved;
+        let mut status = editor.status.clone();
+        match key {
+            Key::Character(text) if text.eq_ignore_ascii_case("t") => {
+                tomato = tomato.saturating_add(10);
+                saved = false;
+            }
+            Key::Character(text) if text.eq_ignore_ascii_case("c") => {
+                cheese = cheese.saturating_add(10);
+                saved = false;
+            }
+            Key::Named(NamedKey::Enter) | Key::Named(NamedKey::Space) => {
+                if let Some(sim) = self.sim.as_mut() {
+                    match sim.create_campaign_recipe(tomato, cheese) {
+                        Ok(recipe) => {
+                            saved = true;
+                            println!(
+                                "campaign: recipe saved id={} tomato={} cheese={} price={:.2}",
+                                recipe.id, recipe.tomato, recipe.cheese, recipe.price
+                            );
+                            status = Some(format!("SAVED RECIPE {}", recipe.id));
+                        }
+                        Err(error) => status = Some(error.to_string()),
+                    }
+                }
+            }
+            Key::Character(text) if text.eq_ignore_ascii_case("a") => {
+                if let Some(sim) = self.sim.as_mut() {
+                    match sim.add_campaign_recipe_to_menu() {
+                        Ok(id) => {
+                            saved = true;
+                            println!("campaign: recipe menu id={id} branch=100000");
+                            status = Some("ADDED TO ATRIUM MENU".to_string());
+                        }
+                        Err(error) => status = Some(error.to_string()),
+                    }
+                }
+            }
+            Key::Character(text) if text == "+" || text == "=" => {
+                if let Some(sim) = self.sim.as_mut() {
+                    let price = sim.campaign_recipe().map_or(12.0, |recipe| recipe.price);
+                    match sim.set_campaign_recipe_price(price + 1.0) {
+                        Ok(price) => {
+                            println!("campaign: recipe price={price:.2}");
+                            status = Some(format!("PRICE {price:.2}"));
+                        }
+                        Err(error) => status = Some(error.to_string()),
+                    }
+                }
+            }
+            Key::Character(text) if text == "-" || text == "_" => {
+                if let Some(sim) = self.sim.as_mut() {
+                    let price = sim.campaign_recipe().map_or(12.0, |recipe| recipe.price);
+                    match sim.set_campaign_recipe_price(price - 1.0) {
+                        Ok(price) => {
+                            println!("campaign: recipe price={price:.2}");
+                            status = Some(format!("PRICE {price:.2}"));
+                        }
+                        Err(error) => status = Some(error.to_string()),
+                    }
+                }
+            }
+            Key::Named(NamedKey::Escape) => {
+                self.recipe_editor = None;
+                self.refresh_explore();
+                return true;
+            }
+            _ => {}
+        }
+        if let Some(editor) = self.recipe_editor.as_mut() {
+            editor.tomato = tomato;
+            editor.cheese = cheese;
+            editor.saved = saved;
+            editor.status = status;
         }
         self.refresh_explore();
         true
@@ -3844,6 +4004,12 @@ impl WindowApp {
             }
             handled
         } else {
+            if self.recipe_editor.is_some() {
+                return self.handle_recipe_key(key);
+            }
+            if matches!(key, Key::Character(text) if text.eq_ignore_ascii_case("r")) {
+                return self.open_recipe_editor();
+            }
             match key {
                 Key::Character(text) if text.eq_ignore_ascii_case("1") => {
                     self.run_campaign_command("hire=cook")
@@ -4332,6 +4498,65 @@ mod tests {
         assert_eq!(branch.owner_slot, 0);
         assert!(branch.player_controlled);
         assert!(!branch.owned);
+    }
+
+    #[test]
+    fn recipe_editor_saves_tomato_cheese_and_serves_the_menu_pizza() {
+        let mut app = WindowApp::new("recipe".into(), Vec::new(), 800, 600, 0);
+        app.explore = true;
+        app.mode = ViewMode::City;
+        app.sim = Some(campaign_world_with_offer());
+        app.city_world = Some(CityWorld {
+            width: 800,
+            height: 600,
+            pixels: Vec::new(),
+            lease_site: Some((100, 120)),
+            supply_site: Some((200, 120)),
+        });
+        app.branch_base = Some(Vec::new());
+        assert!(app.handle_explore_click(100, 120));
+        let (confirm, _) = lease_button_rects(800, 600);
+        assert!(app.handle_explore_click(confirm.0 + 2, confirm.1 + 2));
+
+        {
+            let sim = app.sim.as_mut().unwrap();
+            sim.hire_campaign_employee(pc2_sim::EmployeeRole::Cook)
+                .unwrap();
+            sim.lease_campaign_warehouse(100_000).unwrap();
+            sim.assign_campaign_supplier("central-market").unwrap();
+            sim.enable_campaign_deliveries().unwrap();
+            sim.advance_to(9 * 60);
+            sim.set_campaign_opening_hours(6, 22).unwrap();
+            sim.set_campaign_open(true).unwrap();
+        }
+        app.mode = ViewMode::Branch;
+        assert!(app.handle_explore_key(&Key::Character("r".into())));
+        for _ in 0..3 {
+            assert!(app.handle_explore_key(&Key::Character("t".into())));
+        }
+        for _ in 0..2 {
+            assert!(app.handle_explore_key(&Key::Character("c".into())));
+        }
+        assert!(app.handle_explore_key(&Key::Named(NamedKey::Enter)));
+        assert!(app.handle_explore_key(&Key::Character("a".into())));
+        for _ in 0..3 {
+            assert!(app.handle_explore_key(&Key::Character("+".into())));
+        }
+
+        let sim = app.sim.as_mut().unwrap();
+        let recipe = sim.campaign_recipe().cloned().expect("recipe");
+        assert_eq!(recipe.tomato, 30);
+        assert_eq!(recipe.cheese, 20);
+        assert!(recipe.on_menu);
+        assert!((recipe.price - 15.0).abs() < 1e-9);
+        sim.enqueue_party(1);
+        sim.advance_queue_ticks(pc2_sim::QUEUE_WALK_TICKS + pc2_sim::PRODUCTION_TICKS);
+        let snapshot = sim.world_snapshot();
+        assert_eq!(snapshot.sim.stock, 195_000.0);
+        let sale = snapshot.sim.last_sale.as_ref().expect("menu sale");
+        assert_eq!(sale.recipe_id, recipe.id);
+        assert!((sale.price - 15.0).abs() < 1e-9);
+        assert!((sale.revenue - 1_755.5).abs() < 1e-6);
     }
 
     #[test]

@@ -412,7 +412,7 @@ pub fn draw_status(
             height,
             panel_x + 14,
             y,
-            "1/2/3 HIRE   W WAREHOUSE   S SUPPLIER   V ATRIUM ROUTE   H HOURS",
+            "1/2/3 HIRE   W WAREHOUSE   S SUPPLIER   V ROUTE   R RECIPE   H HOURS",
             [200, 200, 210, 255],
         );
         y += line_height;
@@ -517,6 +517,113 @@ pub fn draw_lease_marker(frame: &mut [u8], width: u32, height: u32, x: i32, y: i
     let color = [120, 210, 250, 255];
     fill_rect(frame, width, height, x - 13, y - 3, 27, 2, color);
     fill_rect(frame, width, height, x - 1, y - 7, 2, 10, color);
+}
+
+pub fn draw_recipe_editor(
+    frame: &mut [u8],
+    width: u32,
+    height: u32,
+    tomato: u32,
+    cheese: u32,
+    saved: bool,
+    on_menu: bool,
+    price: f64,
+    status: Option<&str>,
+) -> Result<(), String> {
+    if frame.len() != (width * height * 4) as usize {
+        return Err("overlay frame has the wrong size".into());
+    }
+    let panel_x = 48;
+    let panel_y = 48;
+    let panel_w = 560i32;
+    let panel_h = 210i32;
+    fill_rect(
+        frame,
+        width,
+        height,
+        panel_x,
+        panel_y,
+        panel_w,
+        panel_h,
+        [10, 12, 16, 238],
+    );
+    fill_rect(
+        frame,
+        width,
+        height,
+        panel_x,
+        panel_y,
+        panel_w,
+        2,
+        [220, 150, 230, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 12,
+        "RECIPE EDITOR",
+        [220, 150, 230, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 38,
+        &format!("TOMATO {tomato}   CHEESE {cheese}"),
+        [235, 235, 235, 255],
+    );
+    let saved_line = if saved {
+        format!(
+            "SAVED {}   MENU {}   PRICE {:.2}",
+            tomato + cheese,
+            if on_menu { "YES" } else { "NO" },
+            price
+        )
+    } else {
+        "NOT SAVED".to_string()
+    };
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 62,
+        &saved_line,
+        [235, 235, 235, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 96,
+        "T ADD TOMATO   C ADD CHEESE   ENTER SAVE",
+        [200, 200, 210, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 120,
+        "A ADD TO MENU   +/- PRICE   ESC CLOSE",
+        [200, 200, 210, 255],
+    );
+    if let Some(status) = status {
+        draw_text(
+            frame,
+            width,
+            height,
+            panel_x + 14,
+            panel_y + 152,
+            status,
+            [235, 210, 150, 255],
+        );
+    }
+    Ok(())
 }
 
 pub fn draw_supply_marker(frame: &mut [u8], width: u32, height: u32, x: i32, y: i32) {

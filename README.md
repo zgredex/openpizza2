@@ -339,6 +339,7 @@ Inside the branch, prepare the restaurant before opening:
 W      lease London 1 (storage ID 100000)
 S      assign Central Market Partners
 V      enable the Atrium route
+R      open the recipe editor
 H      set opening hours 06:00-22:00
 O      open/close (requires staff, warehouse, deliveries, stock, and open hours)
 Space  advance five minutes
@@ -359,9 +360,36 @@ cargo run -p pc2-app -- --campaign-start --playable-script \
 ```
 
 The output shows `stock=0` at 08:55 and `stock=200000` after the 09:00
-dispatch. The first campaign order then uses the verified London inputs:
-menu `11.85281086`, `161` ingredient units, `100` servings, rating `66`,
-tip `17`, stock `200000 -> 183900`, and revenue `1387.28`.
+dispatch.
+
+### Recipe editor and branch menu
+
+The recipe editor is playable from the branch with `R`:
+
+```text
+T      add 10 tomato
+C      add 10 cheese
+ENTER  save the recipe
+A      add it to Atrium's menu
++/-    change the menu price
+ESC    close the editor
+```
+
+The same flow is available headlessly:
+
+```sh
+cargo run -p pc2-app -- --campaign-start --playable-script \
+  'lease=13694;hire=cook;hire=service;hire=errand;hire=errand;warehouse=100000;supplier=central-market;route;branch;advance=535;advance=545;recipe=30,20;recipe-price=15;recipe-menu;hours=6-22;open;party;ticks=260;ticks=180;ticks=80' \
+  --output /tmp/opencode/campaign_recipe_sale.png
+```
+
+The saved recipe is `100001` with tomato `30` and cheese `20`. At price
+`15.00`, the cook serves 100 portions: stock `200000 -> 195000` (50 units ×
+100), revenue `1755.50`, and cash `497943.50`. The sale record carries recipe
+`100001`; without a menu recipe the campaign still falls back to the captured
+London order.
+
+The branch menu shows the recipe and price in the recipe-editor panel.
 
 The full New Game -> city -> click/confirm path is:
 

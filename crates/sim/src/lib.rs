@@ -525,8 +525,9 @@ pub enum Command {
 
 fn sale_json(sale: &Sale) -> String {
     format!(
-        "{{\"clock_minutes\":{},\"price\":{:.6},\"servings\":{},\"revenue\":{:.6},\"stock_cost\":{:.6},\"market_cost\":{:.6},\"cash_delta\":{:.6}}}",
+        "{{\"clock_minutes\":{},\"recipe_id\":{},\"price\":{:.6},\"servings\":{},\"revenue\":{:.6},\"stock_cost\":{:.6},\"market_cost\":{:.6},\"cash_delta\":{:.6}}}",
         sale.clock_minutes,
+        sale.recipe_id,
         sale.price,
         sale.servings,
         sale.revenue,
@@ -877,6 +878,17 @@ pub struct Employee {
     pub branch_id: u32,
 }
 
+/// A player-created pizza. Stock use is `(tomato + cheese) * servings`.
+#[derive(Clone, Debug, PartialEq)]
+pub struct Recipe {
+    pub id: u32,
+    pub name: String,
+    pub tomato: u32,
+    pub cheese: u32,
+    pub price: f64,
+    pub on_menu: bool,
+}
+
 /// A branch owned or rented by the current player. The first London lease
 /// creates one of these; the mission goal evaluator reads the player branch
 /// count (`Game_GetPlayerFieldC20`, `0x4e2280`) and the owned-branch flag
@@ -904,6 +916,8 @@ pub struct PlayerBranch {
     pub delivery_due_hour: Option<u8>,
     pub delivery_batch: f64,
     pub opening_hours: Option<(u8, u8)>,
+    pub recipes: Vec<Recipe>,
+    pub menu_recipe: Option<u32>,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -1071,6 +1085,8 @@ impl World {
             delivery_due_hour: None,
             delivery_batch: 200_000.0,
             opening_hours: None,
+            recipes: Vec::new(),
+            menu_recipe: None,
         });
         world
     }
@@ -1333,6 +1349,8 @@ impl World {
             delivery_due_hour: None,
             delivery_batch: 200_000.0,
             opening_hours: None,
+            recipes: Vec::new(),
+            menu_recipe: None,
         });
         self.evaluate_mission_goals();
         Ok(total)
@@ -1401,6 +1419,64 @@ impl World {
         Ok(self
             .campaign_branch()
             .map_or(0, |branch| branch.staff_count))
+    }
+
+    pub fn create_campaign_recipe(
+        &mut self,
+        tomato: u32,
+        cheese: u32,
+    ) -> Result<Recipe, &'static str> {
+        if tomato == 0 || cheese == 0 {
+            return Err("place tomato and cheese first");
+        }
+        let branch = self
+            .campaign_branch_mut()
+            .ok_or("lease the campaign property first")?;
+        let id = 100_000 + branch.recipes.len() as u32 + 1;
+        let recipe = Recipe {
+            id,
+            name: "Tomato & Cheese".into(),
+            tomato,
+            cheese,
+            price: 12.0,
+            on_menu: false,
+        };
+        branch.recipes.push(recipe.clone());
+        Ok(recipe)
+    }
+
+    pub fn campaign_recipe(&self) -> Option<&Recipe> {
+        self.campaign_branch()
+            .and_then(|branch| branch.recipes.last())
+    }
+
+    pub fn campaign_menu_recipe(&self) -> Option<&Recipe> {
+        let branch = self.campaign_branch()?;
+        let id = branch.menu_recipe?;
+        branch.recipes.iter().find(|recipe| recipe.id == id)
+    }
+
+    pub fn set_campaign_recipe_price(&mut self, price: f64) -> Result<f64, &'static str> {
+        if !price.is_finite() || price <= 0.0 {
+            return Err("invalid recipe price");
+        }
+        let branch = self
+            .campaign_branch_mut()
+            .ok_or("lease the campaign property first")?;
+        let recipe = branch.recipes.last_mut().ok_or("save a recipe first")?;
+        recipe.price = price.clamp(0.01, 999.99);
+        Ok(recipe.price)
+    }
+
+    pub fn add_campaign_recipe_to_menu(&mut self) -> Result<u32, &'static str> {
+        let branch = self
+            .campaign_branch_mut()
+            .ok_or("lease the campaign property first")?;
+        let recipe = branch.recipes.last_mut().ok_or("save a recipe first")?;
+        recipe.on_menu = true;
+        let id = recipe.id;
+        branch.menu_recipe = Some(id);
+        Ok(id)
     }
 
     /// Lease the lifted `London 1` storage. Its save record is storage ID
@@ -1862,7 +1938,17 @@ impl World {
     /// fixtures; `advance_to` keeps the existing five-minute phase cadence.
     fn settle_current_sale(&mut self) -> StepOutcome {
         if self.is_campaign() && self.campaign_branch().is_some() {
-            let mut order = CAMPAIGN_LONDON_ORDER;
+            let recipe = self.campaign_menu_recipe().cloned();
+            let mut order = recipe.map_or(CAMPAIGN_LONDON_ORDER, |recipe| OrderInput {
+                customer_id: CAMPAIGN_LONDON_ORDER.customer_id,
+                minute: self.minute,
+                menu_price: recipe.price,
+                recipe_id: recipe.id,
+                ingredient_units: recipe.tomato + recipe.cheese,
+                servings: 100,
+                rating: 66,
+                tip_base: 32,
+            });
             order.minute = self.minute;
             let outcome = self.sim.settle_order_input(&order);
             if let StepOutcome::Sale(sale) = &outcome {
@@ -2894,6 +2980,58 @@ mod tests {
         assert_eq!(world.snapshot().stock, 200_000.0);
         assert_eq!(world.snapshot().stock_capacity, 400_000.0);
         assert_eq!(world.campaign_branch().unwrap().delivery_due_hour, None);
+    }
+
+    #[test]
+    fn campaign_player_recipe_drives_sale_stock_and_revenue() {
+        let scenario = ScenarioSetup::from_campaign_mission(
+            "lon".into(),
+            "London".into(),
+            280,
+            2,
+            CampaignMission {
+                starting_cash: 500_000,
+                difficulty_percent: 10,
+                goal_ids: vec![0, 1, 2],
+                rival_count: 1,
+                player_start_hq: 0,
+                rival_start_hq: 1,
+                starting_branches: Vec::new(),
+                property_offer: Some(CampaignPropertyOffer {
+                    tile_index: 13_694,
+                    price: 2_812,
+                    fee: 1_000,
+                }),
+            },
+        );
+        let mut world = World::new(0).with_scenario(scenario);
+        world.set_cash(500_000.0);
+        world.prepare_campaign_new_game();
+        world.lease_campaign_property(13_694).unwrap();
+        world.hire_campaign_employee(EmployeeRole::Cook).unwrap();
+        world.lease_campaign_warehouse(100_000).unwrap();
+        world.assign_campaign_supplier("central-market").unwrap();
+        world.enable_campaign_deliveries().unwrap();
+        world.advance_to(9 * 60);
+        let recipe = world.create_campaign_recipe(30, 20).unwrap();
+        assert_eq!(recipe.tomato, 30);
+        assert_eq!(recipe.cheese, 20);
+        world.set_campaign_recipe_price(15.0).unwrap();
+        world.add_campaign_recipe_to_menu().unwrap();
+        world.set_campaign_opening_hours(6, 22).unwrap();
+        assert_eq!(world.set_campaign_open(true), Ok(()));
+
+        world.enqueue_party(1);
+        world.advance_queue_ticks(QUEUE_WALK_TICKS + PRODUCTION_TICKS);
+        let snapshot = world.world_snapshot();
+        assert_eq!(snapshot.sim.stock, 195_000.0);
+        let sale = snapshot.sim.last_sale.as_ref().expect("recipe sale");
+        assert_eq!(sale.recipe_id, recipe.id);
+        assert_eq!(sale.servings, 100);
+        assert!((sale.price - 15.0).abs() < 1e-9);
+        assert!((sale.revenue - 1_755.5).abs() < 1e-6);
+        assert!((snapshot.sim.cash - 497_943.5).abs() < 1e-6);
+        assert_eq!(world.sim.recipe_sales(recipe.id), 1);
     }
 
     #[test]
