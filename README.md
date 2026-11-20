@@ -425,7 +425,52 @@ The lower-level click test is:
 cargo test -p pc2-app city_click_selects_vacant_storefront_and_confirm_leases_it -- --nocapture
 ```
 
-### Free Play Setup
+#### London player-facing UI
+
+A New Game campaign now opens with a mission briefing panel listing the three
+objectives and the next action. Enter/Esc dismisses it. The city map exposes
+markers and actions for the vacant storefront, Employment Office, Supply
+Office, headquarters site, and rival branch. Property panels show the
+available action and the current state.
+
+The branch UI includes:
+
+```text
+E       city Employment Office: named candidates and roster
+L       city Supply Office: London 1, Central Market Partners, Atrium route
+R       recipe editor: tomato/cheese preview, save, add to menu, price
+H       opening-hours panel: edit open/close and save
+O       open/close; closing time is enforced by the clock
+F5/F9   save/load the current campaign state
+```
+
+The HUD reports the actual recipe menu price, and a closed branch shows the
+configured hours as the reason. Mission HQ and rival markers open confirmation
+panels and use the same `World` actions as the headless replay. Completing all
+three objectives shows the London result screen. F5 writes the campaign save
+and F9 reloads it; the main-menu Continue action launches the same saved
+campaign through `--campaign-load`.
+
+The UI-control run and the equivalent headless replay are:
+
+```sh
+cargo test -p pc2-app london_ui_run_matches_the_headless_campaign_flow -- --nocapture
+
+cargo run -p pc2-app -- --campaign-start --playable-script \
+  'lease=13694;hire=cook;hire=service;hire=errand;hire=errand;warehouse=100000;supplier=central-market;route;branch;advance=545;recipe=30,20;recipe-price=15;recipe-menu;hours=6-22;open;party;ticks=260;ticks=180;ticks=80;advance=1320;hq;hq;hq;rat' \
+  --output /tmp/opencode/london_headless_complete.png
+```
+
+Both finish with cash `519009.50`, stock `135000`, price `15.00`, 13 recipe
+sales, the branch closed at 22:00, and all three goals complete:
+
+```text
+campaign: goals=[X] Build HQ level 3 (3/3)
+                  [X] Rat a rival branch (1/1)
+                  [X] Own a branch (1/1) complete=true
+```
+
+## Free Play Setup
 
 `Screen_FreePlaySetup` (`0x472da0`, state `0x18`) is rebuilt from
 `Pe_Freies_Spiel.tga`, `TIMESFONT.fnt` and the original panel tiles. It shows

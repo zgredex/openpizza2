@@ -430,6 +430,267 @@ pub fn draw_status(
 }
 
 /// Mission strip shared by the city and branch views.
+pub fn draw_briefing(
+    frame: &mut [u8],
+    width: u32,
+    height: u32,
+    city: &str,
+    goals: &str,
+    next_action: &str,
+) -> Result<(), String> {
+    let panel_x = 80;
+    let panel_y = 80;
+    let panel_w = 640i32;
+    let panel_h = 240i32;
+    fill_rect(
+        frame,
+        width,
+        height,
+        panel_x,
+        panel_y,
+        panel_w,
+        panel_h,
+        [8, 10, 14, 242],
+    );
+    fill_rect(
+        frame,
+        width,
+        height,
+        panel_x,
+        panel_y,
+        panel_w,
+        2,
+        [210, 170, 80, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 16,
+        panel_y + 14,
+        &format!("MISSION BRIEFING - {city}"),
+        [210, 170, 80, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 16,
+        panel_y + 44,
+        "OBJECTIVES",
+        [235, 235, 235, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 16,
+        panel_y + 68,
+        goals,
+        [220, 220, 220, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 16,
+        panel_y + 112,
+        "NEXT ACTION",
+        [120, 210, 250, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 16,
+        panel_y + 136,
+        next_action,
+        [235, 235, 235, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 16,
+        panel_y + 184,
+        "ENTER / ESC DISMISS",
+        [200, 200, 210, 255],
+    );
+    Ok(())
+}
+
+pub fn draw_hours_panel(
+    frame: &mut [u8],
+    width: u32,
+    height: u32,
+    open: u8,
+    close: u8,
+    edit_close: bool,
+    status: Option<&str>,
+) -> Result<(), String> {
+    let panel_x = 120;
+    let panel_y = 160;
+    let panel_w = 420i32;
+    let panel_h = 150i32;
+    fill_rect(
+        frame,
+        width,
+        height,
+        panel_x,
+        panel_y,
+        panel_w,
+        panel_h,
+        [8, 10, 14, 238],
+    );
+    fill_rect(
+        frame,
+        width,
+        height,
+        panel_x,
+        panel_y,
+        panel_w,
+        2,
+        [120, 210, 250, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 12,
+        "OPENING HOURS",
+        [120, 210, 250, 255],
+    );
+    let open_mark = if edit_close { " " } else { ">" };
+    let close_mark = if edit_close { ">" } else { " " };
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 42,
+        &format!("{open_mark} OPEN  {open:02}:00"),
+        [235, 235, 235, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 66,
+        &format!("{close_mark} CLOSE {close:02}:00"),
+        [235, 235, 235, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 98,
+        "1 OPEN  2 CLOSE  +/- HOUR  ENTER SAVE  ESC",
+        [200, 200, 210, 255],
+    );
+    if let Some(status) = status {
+        draw_text(
+            frame,
+            width,
+            height,
+            panel_x + 14,
+            panel_y + 120,
+            status,
+            [235, 210, 150, 255],
+        );
+    }
+    Ok(())
+}
+
+pub fn draw_result_screen(
+    frame: &mut [u8],
+    width: u32,
+    height: u32,
+    city: &str,
+    goals: &str,
+    cash: f64,
+    revenue: f64,
+) -> Result<(), String> {
+    let panel_x = 80;
+    let panel_y = 80;
+    let panel_w = 640i32;
+    let panel_h = 260i32;
+    fill_rect(
+        frame,
+        width,
+        height,
+        panel_x,
+        panel_y,
+        panel_w,
+        panel_h,
+        [8, 10, 14, 245],
+    );
+    fill_rect(
+        frame,
+        width,
+        height,
+        panel_x,
+        panel_y,
+        panel_w,
+        3,
+        [110, 230, 130, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 18,
+        panel_y + 16,
+        &format!("{city} COMPLETE"),
+        [110, 230, 130, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 18,
+        panel_y + 48,
+        "ALL MISSION OBJECTIVES COMPLETE",
+        [235, 235, 235, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 18,
+        panel_y + 82,
+        goals,
+        [220, 220, 220, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 18,
+        panel_y + 126,
+        &format!("CASH {cash:.2}   REVENUE {revenue:.2}"),
+        [235, 235, 235, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 18,
+        panel_y + 170,
+        "ENTER CONTINUE   S SAVE   L LOAD",
+        [200, 200, 210, 255],
+    );
+    Ok(())
+}
+
+pub fn draw_branch_reason(frame: &mut [u8], width: u32, height: u32, reason: &str) {
+    let y = height.saturating_sub(28) as i32;
+    fill_rect(frame, width, height, 12, y - 6, 360, 24, [8, 10, 14, 210]);
+    draw_text(frame, width, height, 22, y, reason, [240, 180, 120, 255]);
+}
+
 pub fn draw_mission_hud(
     frame: &mut [u8],
     width: u32,
@@ -517,6 +778,92 @@ pub fn draw_lease_marker(frame: &mut [u8], width: u32, height: u32, x: i32, y: i
     let color = [120, 210, 250, 255];
     fill_rect(frame, width, height, x - 13, y - 3, 27, 2, color);
     fill_rect(frame, width, height, x - 1, y - 7, 2, 10, color);
+}
+
+pub fn draw_hq_marker(frame: &mut [u8], width: u32, height: u32, x: i32, y: i32) {
+    let color = [120, 230, 150, 255];
+    fill_rect(frame, width, height, x - 12, y - 12, 25, 25, color);
+    fill_rect(frame, width, height, x - 4, y - 4, 9, 9, [20, 50, 30, 255]);
+}
+
+pub fn draw_rival_marker(frame: &mut [u8], width: u32, height: u32, x: i32, y: i32) {
+    let color = [245, 100, 100, 255];
+    fill_rect(frame, width, height, x - 12, y - 12, 25, 4, color);
+    fill_rect(frame, width, height, x - 12, y + 8, 25, 4, color);
+    fill_rect(frame, width, height, x - 3, y - 16, 7, 32, color);
+}
+
+pub fn draw_mission_panel(
+    frame: &mut [u8],
+    width: u32,
+    height: u32,
+    title: &str,
+    detail: &str,
+    status: Option<&str>,
+) -> Result<(), String> {
+    let panel_x = 120;
+    let panel_y = 160;
+    let panel_w = 480i32;
+    let panel_h = 160i32;
+    fill_rect(
+        frame,
+        width,
+        height,
+        panel_x,
+        panel_y,
+        panel_w,
+        panel_h,
+        [8, 10, 14, 238],
+    );
+    fill_rect(
+        frame,
+        width,
+        height,
+        panel_x,
+        panel_y,
+        panel_w,
+        2,
+        [210, 170, 80, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 12,
+        title,
+        [210, 170, 80, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 42,
+        detail,
+        [235, 235, 235, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 76,
+        "ENTER CONFIRM   ESC CLOSE",
+        [200, 200, 210, 255],
+    );
+    if let Some(status) = status {
+        draw_text(
+            frame,
+            width,
+            height,
+            panel_x + 14,
+            panel_y + 108,
+            status,
+            [235, 210, 150, 255],
+        );
+    }
+    Ok(())
 }
 
 pub fn draw_recipe_editor(

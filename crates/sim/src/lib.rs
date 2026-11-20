@@ -7,6 +7,9 @@
 //! ingredient/market cost 0.3794752876341939 and a cash delta of
 //! 13.420524712365806, with stock moving 400 -> 399.
 
+use serde::{Deserialize, Serialize};
+use std::path::Path;
+
 pub const START_CASH: f64 = 10_000.0;
 pub const START_STOCK: f64 = 400.0;
 pub const STOCK_CAPACITY: f64 = 400.0;
@@ -148,7 +151,7 @@ pub fn select_candidate_index(count: usize, roll: u32, fallback_roll: u32) -> Op
 /// order object. `recipe_id` is the host-computed fingerprint of the recipe
 /// quantities, and `rating`/`tip_base` are the values used by
 /// `Branch_ProcessCustomerOrder` to derive the tip.
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
 pub struct OrderInput {
     pub customer_id: u32,
     pub minute: u32,
@@ -192,7 +195,7 @@ pub const CAMPAIGN_LONDON_ORDER: OrderInput = OrderInput {
     tip_base: 32,
 };
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Sale {
     pub clock_minutes: u32,
     pub recipe_id: u32,
@@ -204,7 +207,7 @@ pub struct Sale {
     pub cash_delta: f64,
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Snapshot {
     pub open: bool,
     pub price: f64,
@@ -539,13 +542,13 @@ fn sale_json(sale: &Sale) -> String {
 
 /// Player/company choices carried from the character-selection screen into
 /// the running branch world.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum GameMode {
     Campaign,
     FreeGame,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct CharacterProfile {
     pub mode: GameMode,
     pub gender: u8,
@@ -598,7 +601,7 @@ impl CharacterProfile {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct CampaignBranch {
     pub owner_slot: u8,
     pub size: u8,
@@ -606,7 +609,7 @@ pub struct CampaignBranch {
     pub owned: bool,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct CampaignMission {
     pub starting_cash: u32,
     pub difficulty_percent: u32,
@@ -618,7 +621,7 @@ pub struct CampaignMission {
     pub property_offer: Option<CampaignPropertyOffer>,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct CampaignPropertyOffer {
     pub tile_index: u32,
     pub price: u32,
@@ -636,7 +639,7 @@ impl CampaignPropertyOffer {
 /// at `0x4cd33d..0x4cd4cc`. The selected city record's `+0x40` short name is
 /// copied to `DAT_0057bb44`; `DAT_0057bb28` is the population, `DAT_0057bb2c`
 /// the game length, and `DAT_0057bb48/4c/50` are the three opponent slots.
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ScenarioSetup {
     pub mode: GameMode,
     pub city_code: String,
@@ -793,7 +796,7 @@ impl ScenarioSetup {
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum VisitState {
     Idle,
     Waiting,
@@ -806,7 +809,7 @@ pub enum VisitState {
 /// `Object_UpdateCustomerQueue` (`0x409d80`) holds queued parties outside the
 /// active service slot, then `0x409c60`/`0x409d40` move the next queued party
 /// onto the target once `0x409bb0`/`0x409b10` can claim it again.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum CustomerPhase {
     Queued,
     Waiting,
@@ -814,7 +817,7 @@ pub enum CustomerPhase {
     Departing,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Customer {
     pub id: u32,
     pub party_size: u32,
@@ -826,7 +829,7 @@ pub struct Customer {
 }
 
 /// Native employee role codes used by `Company_AssignEmployee`.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum EmployeeRole {
     Cook = 0,
     Service = 2,
@@ -844,7 +847,7 @@ impl EmployeeRole {
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct EmployeeCandidate {
     pub id: u32,
     pub role: EmployeeRole,
@@ -870,7 +873,7 @@ pub const CAMPAIGN_EMPLOYEE_CANDIDATES: [EmployeeCandidate; 4] = [
     },
 ];
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Employee {
     pub id: u32,
     pub role: EmployeeRole,
@@ -879,7 +882,7 @@ pub struct Employee {
 }
 
 /// A player-created pizza. Stock use is `(tomato + cheese) * servings`.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Recipe {
     pub id: u32,
     pub name: String,
@@ -893,7 +896,7 @@ pub struct Recipe {
 /// creates one of these; the mission goal evaluator reads the player branch
 /// count (`Game_GetPlayerFieldC20`, `0x4e2280`) and the owned-branch flag
 /// (`Game_CountRecordsWithFlag16F4`, `0x4de710`).
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct PlayerBranch {
     pub branch_id: u32,
     pub tile_index: u32,
@@ -920,14 +923,14 @@ pub struct PlayerBranch {
     pub menu_recipe: Option<u32>,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum GoalStatus {
     Pending,
     Complete,
     Failed,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct MissionGoalState {
     pub id: u32,
     pub status: GoalStatus,
@@ -972,7 +975,7 @@ pub enum ClockEvent {
     },
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct WorldSnapshot {
     pub minute: u32,
     pub queue: u32,
@@ -1465,7 +1468,9 @@ impl World {
             .ok_or("lease the campaign property first")?;
         let recipe = branch.recipes.last_mut().ok_or("save a recipe first")?;
         recipe.price = price.clamp(0.01, 999.99);
-        Ok(recipe.price)
+        let price = recipe.price;
+        self.sim.set_price(price);
+        Ok(price)
     }
 
     pub fn add_campaign_recipe_to_menu(&mut self) -> Result<u32, &'static str> {
@@ -1475,7 +1480,9 @@ impl World {
         let recipe = branch.recipes.last_mut().ok_or("save a recipe first")?;
         recipe.on_menu = true;
         let id = recipe.id;
+        let price = recipe.price;
         branch.menu_recipe = Some(id);
+        self.sim.set_price(price);
         Ok(id)
     }
 
@@ -1623,6 +1630,53 @@ impl World {
         }
         self.set_open(open);
         Ok(())
+    }
+
+    pub fn next_action_text(&self) -> String {
+        let Some(branch) = self.campaign_branch() else {
+            return "CITY: click the vacant storefront 13694 and confirm the lease".into();
+        };
+        if branch.staff_count == 0 {
+            return "CITY: open Employment Office (E) and hire a cook".into();
+        }
+        if branch.warehouse_id.is_none() {
+            return "CITY: open Supply Office (L) and lease London 1".into();
+        }
+        if branch.supplier.is_none() {
+            return "SUPPLY: select Central Market Partners (S)".into();
+        }
+        if !branch.deliveries_enabled {
+            return "SUPPLY: enable the Atrium route (R)".into();
+        }
+        if self.sim.snapshot().stock <= 0.0 {
+            return "CLOCK: advance to 09:00 for the first 200,000-unit delivery".into();
+        }
+        if self.campaign_menu_recipe().is_none() {
+            return "BRANCH: recipe editor (R), place tomato/cheese, save and add to menu".into();
+        }
+        if branch.opening_hours.is_none() || !self.sim.snapshot().open {
+            return "BRANCH: set opening hours (H) and open (O)".into();
+        }
+        if !self.mission_complete() {
+            return "CITY: build HQ level 3 (H) and rat the rival branch (R)".into();
+        }
+        "MISSION COMPLETE: London is running".into()
+    }
+
+    pub fn branch_status_text(&self) -> String {
+        if self.sim.snapshot().open {
+            return "OPEN".into();
+        }
+        if let Some((start, end)) = self
+            .campaign_branch()
+            .and_then(|branch| branch.opening_hours)
+        {
+            let hour = ((self.minute / 60) % 24) as u8;
+            if hour < start || hour >= end {
+                return format!("CLOSED - HOURS {start:02}:00-{end:02}:00");
+            }
+        }
+        "CLOSED".into()
     }
 
     pub fn set_campaign_opening_hours(
@@ -1929,6 +1983,19 @@ impl World {
         }
     }
 
+    pub fn save_campaign(&self, path: &Path) -> Result<(), String> {
+        let bytes =
+            bincode::serialize(&self.world_snapshot()).map_err(|error| error.to_string())?;
+        std::fs::write(path, bytes).map_err(|error| error.to_string())
+    }
+
+    pub fn load_campaign(path: &Path) -> Result<Self, String> {
+        let bytes = std::fs::read(path).map_err(|error| error.to_string())?;
+        let snapshot: WorldSnapshot =
+            bincode::deserialize(&bytes).map_err(|error| error.to_string())?;
+        Ok(Self::from_snapshot(&snapshot))
+    }
+
     pub fn step(&mut self) -> Vec<ClockEvent> {
         self.advance_to(self.minute + 5)
     }
@@ -2039,6 +2106,16 @@ impl World {
             if minute_of_day % 60 == 0 {
                 let hour = (minute_of_day / 60) % 24;
                 self.receive_campaign_delivery(hour as u8);
+                if self.sim.snapshot().open {
+                    if let Some((_, close)) = self
+                        .campaign_branch()
+                        .and_then(|branch| branch.opening_hours)
+                    {
+                        if hour as u8 >= close {
+                            self.sim.set_open(false);
+                        }
+                    }
+                }
                 self.hourly_count += 1;
                 events.push(ClockEvent::Hourly {
                     minute: self.minute,
@@ -3032,6 +3109,64 @@ mod tests {
         assert!((sale.revenue - 1_755.5).abs() < 1e-6);
         assert!((snapshot.sim.cash - 497_943.5).abs() < 1e-6);
         assert_eq!(world.sim.recipe_sales(recipe.id), 1);
+        world.advance_to(22 * 60);
+        assert!(!world.snapshot().open);
+    }
+
+    #[test]
+    fn campaign_save_and_load_preserve_the_ui_state() {
+        let scenario = ScenarioSetup::from_campaign_mission(
+            "lon".into(),
+            "London".into(),
+            280,
+            2,
+            CampaignMission {
+                starting_cash: 500_000,
+                difficulty_percent: 10,
+                goal_ids: vec![0, 1, 2],
+                rival_count: 1,
+                player_start_hq: 0,
+                rival_start_hq: 1,
+                starting_branches: Vec::new(),
+                property_offer: Some(CampaignPropertyOffer {
+                    tile_index: 13_694,
+                    price: 2_812,
+                    fee: 1_000,
+                }),
+            },
+        );
+        let mut world = World::new(0).with_scenario(scenario);
+        world.set_cash(500_000.0);
+        world.prepare_campaign_new_game();
+        world.lease_campaign_property(13_694).unwrap();
+        world.hire_campaign_employee(EmployeeRole::Cook).unwrap();
+        world.lease_campaign_warehouse(100_000).unwrap();
+        world.assign_campaign_supplier("central-market").unwrap();
+        world.enable_campaign_deliveries().unwrap();
+        world.advance_to(540);
+        world.create_campaign_recipe(30, 20).unwrap();
+        world.set_campaign_recipe_price(15.0).unwrap();
+        world.add_campaign_recipe_to_menu().unwrap();
+        world.set_campaign_opening_hours(6, 22).unwrap();
+        world.build_hq().unwrap();
+
+        let path =
+            std::env::temp_dir().join(format!("pc2-campaign-save-{}.bin", std::process::id()));
+        world.save_campaign(&path).unwrap();
+        let loaded = World::load_campaign(&path).unwrap();
+        std::fs::remove_file(path).ok();
+        assert_eq!(loaded.world_snapshot(), world.world_snapshot());
+        assert_eq!(loaded.hq_level(), 1);
+        assert_eq!(
+            loaded
+                .campaign_recipe()
+                .map(|recipe| (recipe.tomato, recipe.cheese, recipe.price)),
+            Some((30, 20, 15.0))
+        );
+        assert_eq!(
+            loaded.campaign_branch().unwrap().warehouse_id,
+            Some(100_000)
+        );
     }
 
     #[test]
