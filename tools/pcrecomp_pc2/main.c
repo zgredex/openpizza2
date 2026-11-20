@@ -284,6 +284,28 @@ static const uint8_t *pc2_dd_frame_hook(surf_t *primary) {
     return NULL;
 }
 
+/* PC2_SAVE_ON_LOAD=1 checkpoints the loaded London state through the game's
+ * own SaveGame_Write 0x00487520, into save_games/auto_<slot>.piz. */
+static void pc2_save_loaded_checkpoint(void) {
+    static int done;
+    if (done || !getenv("PC2_SAVE_ON_LOAD")) return;
+    uint32_t game = MEM32(0x0057C670);
+    uint32_t branch = game ? MEM32(game + 0x9C) : 0;
+    uint32_t calendar = game ? MEM32(game + 0x94) : 0;
+    if (!game || !branch || !calendar) return;
+    if (MEM32(branch + 0x3C) != 100000 || MEM32(branch + 0x30) != 0 ||
+        MEM32(branch + 0x1514) != 4) return;
+    if (MEM8(calendar + 7) < 8) return;
+    const char *slot_s = getenv("PC2_SAVE_SLOT");
+    int slot = slot_s && *slot_s ? atoi(slot_s) : 1;
+    uint32_t args[2] = {0, (uint32_t)slot};
+    fprintf(stderr, "[trace] SAVE checkpoint request slot=%d\n", slot);
+    g_ecx = game;
+    uint32_t result = hle_call_guest(0x00487520, 2, args);
+    fprintf(stderr, "[trace] SAVE checkpoint result=%u slot=%d\n", result, slot);
+    done = 1;
+}
+
 static void pc2_dump_renderer(const char *path, int tag) {
     uint32_t ui = MEM32(0x0057C5E0);
     uint32_t renderer = ui ? MEM32(ui + 0xC) : 0;
@@ -322,6 +344,7 @@ static void pc2_poll(void) {
     if (pending == 21) pc2_saw_menu = 1;
     if (pending == 28) pc2_char_seen = 1;
     if (pending == 22) pc2_mission_seen = 1;
+    pc2_save_loaded_checkpoint();
 #ifdef PC2_CAPTURE
     pc2_capture_poll();
 #endif

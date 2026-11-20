@@ -47,6 +47,7 @@ TARGETS = [
     ("sub_0047C3E0", "Company_AssignEmployee", True),
     ("sub_004773A0", "Branch_ProcessHour", True),
     ("sub_0047D4A0", "Branch_ProcessCustomerOrder", True),
+    ("sub_00487520", "SaveGame_Write", True),
 ]
 
 TRACE_DECLARATIONS = {

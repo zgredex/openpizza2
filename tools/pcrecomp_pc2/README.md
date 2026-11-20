@@ -254,6 +254,54 @@ received stock by 09:00. Customer `100017` consumed `16100` stock units
 `493522.42`. A second customer payment of `1354.92` also cleared before
 the checkpoint.
 
+## Reload checkpoint and paid order
+
+The pre-order checkpoint is a real `.piz` written by the game's
+`SaveGame_Write` routine. The disposable fixture is:
+
+```text
+/tmp/opencode/pc2-save-fixture/atrium-before-first-order.piz
+```
+
+It loads at 08:05 with player slot `0`, branch `100000`, four employees,
+cash `493015.00`, and stock `200000`. The source state is the London
+operations run's 08:05 autosave. The `london-save-checkpoint` scenario
+re-emits it through the game writer and traces `SaveGame_Write`:
+
+```sh
+python3 tools/pcrecomp_pc2/capture.py run \
+  tools/pcrecomp_pc2/scenarios/london-save-checkpoint.json \
+  --work /tmp/opencode/pcrecomp-pc2-fresh \
+  --out /tmp/pc2-london-save --skip-build --timeout 60
+```
+
+The generated slot is `game/Save/Games/auto_001.piz`; the fixture copy is
+what the reload replay uses. The fresh-process reload is:
+
+```sh
+python3 tools/pcrecomp_pc2/capture.py run \
+  tools/pcrecomp_pc2/scenarios/london-reload.json \
+  --work /tmp/opencode/pcrecomp-pc2-fresh \
+  --out /tmp/pc2-london-fixture-reload --skip-build --timeout 750
+```
+
+The reload waits for the saved clock, verifies branch `100000`, player
+slot `0`, and four employees, then runs to 14:00. The verified trace is:
+
+```text
+BRANCH_HOUR slot=0 branch=100000 hour=9 scheduled=1 roster=4 stock=200000
+SALE Branch_ProcessCustomerOrder slot=0 branch=100000 servings=100
+     stock=200000->183900 records=0->1 revenue=1387.28 customer=100017
+PAYMENT slot=0 branch=100000 customer=100017 amount=1387.28
+     cash=492459.16->493846.44
+snapshot checkpoint-14 cash=493846.44 hour=14
+```
+
+The lower stock, first sales record, and matching payment prove the
+restaurant menu and stock survived the reload and the vehicle completed a
+paid order in a fresh process. The fixture is the reference state for the
+Rust customer-visit port.
+
 To verify the menu frame through the recipe:
 
 ```bash
