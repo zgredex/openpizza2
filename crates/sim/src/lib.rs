@@ -1949,77 +1949,77 @@ mod tests {
     #[test]
     fn london_two_orders_predict_from_captured_inputs() {
         // Captured from the verified London reload. The first order is
-        // customer 100004 at 11:07; the second is customer 100007 at 12:00.
+        // customer 100017 at 11:09; the second is customer 100004 at 12:01.
         // Their recipes and menu prices differ, so each appends its own sales
-        // record. The native PAYMENT events clear at 493720.61 and 494898.90.
+        // record. The native PAYMENT events clear at 493856.19 and 495184.20.
         let first = OrderInput {
-            customer_id: 100_004,
-            minute: 11 * 60 + 7,
-            menu_price: 12.093_079_57,
-            recipe_id: 0x5384_5BAF,
-            ingredient_units: 170,
+            customer_id: 100_017,
+            minute: 11 * 60 + 9,
+            menu_price: 12.426_362_04,
+            recipe_id: 0xE931_2127,
+            ingredient_units: 194,
             servings: 100,
             rating: 65,
-            tip_base: 42,
+            tip_base: 31,
         };
         let second = OrderInput {
-            customer_id: 100_007,
-            minute: 12 * 60,
+            customer_id: 100_004,
+            minute: 12 * 60 + 1,
             menu_price: 11.852_810_86,
             recipe_id: 0x0143_7164,
             ingredient_units: 161,
             servings: 100,
             rating: 66,
-            tip_base: 36,
+            tip_base: 42,
         };
         assert_ne!(first.recipe_id, second.recipe_id);
-        assert_eq!(first.tip(), 11);
-        assert_eq!(second.tip(), 15);
-        assert_eq!(first.stock_use(), 17_000.0);
+        assert_eq!(first.tip(), 17);
+        assert_eq!(second.tip(), 12);
+        assert_eq!(first.stock_use(), 19_400.0);
         assert_eq!(second.stock_use(), 16_100.0);
-        assert!((first.revenue() - 1_342.831_787_109_375).abs() < 1e-9);
-        assert!((second.revenue() - 1_363.573_242_187_5).abs() < 1e-9);
+        assert!((first.revenue() - 1_454.384_399_414_062_5).abs() < 1e-9);
+        assert!((second.revenue() - 1_328.014_770_507_812_5).abs() < 1e-9);
 
         let mut sim = BranchSim::new();
         sim.set_open(true);
         sim.set_stock(200_000.0);
         sim.set_stock_capacity(200_000.0);
-        sim.set_starting_cash(492_377.77);
+        sim.set_starting_cash(492_401.80);
 
         let StepOutcome::Sale(first_sale) = sim.settle_order_input(&first) else {
             panic!("expected the first captured order to sell");
         };
         assert_eq!(first_sale.recipe_id, first.recipe_id);
         assert_eq!(first_sale.clock_minutes, first.minute);
-        assert_eq!(sim.snapshot().stock, 183_000.0);
+        assert_eq!(sim.snapshot().stock, 180_600.0);
         assert_eq!(sim.snapshot().sales, 1);
         assert_eq!(sim.recipe_sales(first.recipe_id), 1);
         assert_eq!(sim.recipe_sales(second.recipe_id), 0);
-        assert!((sim.snapshot().cash - 492_377.77).abs() < 1e-9);
+        assert!((sim.snapshot().cash - 492_401.80).abs() < 1e-9);
 
         sim.credit_payment(&first_sale);
         // The native PAYMENT line prints the credited cash to cents.
-        assert!((sim.snapshot().cash - 493_720.61).abs() < 0.01);
-        assert!((first_sale.cash_delta - 1_342.83).abs() < 0.01);
+        assert!((sim.snapshot().cash - 493_856.19).abs() < 0.01);
+        assert!((first_sale.cash_delta - 1_454.38).abs() < 0.01);
 
-        // A delivery and operating costs occur between the two payments.
-        sim.set_stock(383_000.0);
-        sim.set_stock_capacity(383_000.0);
-        sim.set_starting_cash(493_535.33);
+        // A delivery occurs between the two sales.
+        sim.set_stock(580_600.0);
+        sim.set_stock_capacity(580_600.0);
+        sim.set_starting_cash(493_856.19);
         let StepOutcome::Sale(second_sale) = sim.settle_order_input(&second) else {
             panic!("expected the second captured order to sell");
         };
         assert_eq!(second_sale.recipe_id, second.recipe_id);
         assert_eq!(second_sale.clock_minutes, second.minute);
-        assert_eq!(sim.snapshot().stock, 366_900.0);
+        assert_eq!(sim.snapshot().stock, 564_500.0);
         assert_eq!(sim.snapshot().sales, 2);
         assert_eq!(sim.recipe_sales(first.recipe_id), 1);
         assert_eq!(sim.recipe_sales(second.recipe_id), 1);
-        assert!((sim.snapshot().cash - 493_535.33).abs() < 1e-9);
+        assert!((sim.snapshot().cash - 493_856.19).abs() < 1e-9);
 
         sim.credit_payment(&second_sale);
-        assert!((sim.snapshot().cash - 494_898.90).abs() < 0.01);
-        assert!((second_sale.cash_delta - 1_363.57).abs() < 0.01);
+        assert!((sim.snapshot().cash - 495_184.20).abs() < 0.01);
+        assert!((second_sale.cash_delta - 1_328.01).abs() < 0.01);
         assert_eq!(
             sim.snapshot().servings_sold,
             first.servings + second.servings

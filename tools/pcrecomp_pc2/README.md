@@ -314,24 +314,22 @@ customer-group rating. The verified reload run has two consecutive orders
 with different recipes and prices:
 
 ```text
-ORDER_INPUT clock=11:07 customer=100004 menu_price=12.09307957
-            recipe=F42E45B0 recipe_hash=53845BAF ingredients=170
-            tip_base=42 stock=200000
-ORDER_RATING customer=100004 rating=65 tip_base=42
-SALE        stock=200000->183000 records=0->1 revenue=1342.83
-            recipe_hash=53845BAF tip=11
-PAYMENT     customer=100004 amount=1342.83 cash=492377.77->493720.61
+ORDER_INPUT clock=11:09 customer=100017 menu_price=12.42636204
+            recipe=E9312127 ingredients=194 tip_base=31 stock=200000
+ORDER_RATING customer=100017 rating=65 tip_base=31
+SALE        stock=200000->180600 records=0->1 revenue=1454.38
+            recipe_hash=E9312127 tip=17
+PAYMENT     customer=100017 amount=1454.38 cash=492401.80->493856.19
 
-ORDER_INPUT clock=12:00 customer=100007 menu_price=11.85281086
-            recipe=F42E3660 recipe_hash=01437164 ingredients=161
-            tip_base=36 stock=383000
-ORDER_RATING customer=100007 rating=66 tip_base=36
-SALE        stock=383000->366900 records=0->1 revenue=1363.57
-            recipe_hash=01437164 tip=15
-PAYMENT     customer=100007 amount=1363.57 cash=493535.33->494898.90
+ORDER_INPUT clock=12:01 customer=100004 menu_price=11.85281086
+            recipe=01437164 ingredients=161 tip_base=42 stock=580600
+ORDER_RATING customer=100004 rating=66 tip_base=42
+SALE        stock=580600->564500 records=0->1 revenue=1328.01
+            recipe_hash=01437164 tip=12
+PAYMENT     customer=100004 amount=1328.01 cash=493856.19->495184.20
 ```
 
-The stock drop is `ingredients * 100`: `17,000` and `16,100`. The native
+The stock drop is `ingredients * 100`: `19,400` and `16,100`. The native
 tip is `max(0, (rating - tip_base) >> 1)`; the revenue is
 `(100 + tip) * 100 * menu_price * 0.01 + 0.5`, stored as a 32-bit float.
 The different recipe fingerprints each start their own sales record.
@@ -346,7 +344,7 @@ python3 tools/pcrecomp_pc2/capture.py run \
 ```
 
 The run completes at 20:00 with branch `100000`, player slot `0`, four staff,
-and cash `494656.26`. The Rust predictor uses only the first two paid orders;
+and cash `496362.49`. The Rust predictor uses only the first two paid orders;
 the later simulation activity is not part of the transaction comparison.
 
 ## Rust customer-visit fixture
@@ -374,10 +372,10 @@ cargo test -p pc2-sim london_two_orders_predict_from_captured_inputs
 ```
 
 It asserts the two different recipe fingerprints, the captured ratings and
-tip bases (tips `11` and `15`), the exact stock drops (`17,000` and
+tip bases (tips `17` and `12`), the exact stock drops (`19,400` and
 `16,100`), one sales record per recipe, the computed revenues
-(`1342.831787109375` and `1363.5732421875`), and the separate payment
-credits (`492377.77 -> 493720.61` and `493535.33 -> 494898.90`). The
+(`1454.3843994140625` and `1328.0147705078125`), and the separate payment
+credits (`492401.80 -> 493856.19` and `493856.19 -> 495184.20`). The
 `pc2-sim` suite has 31 passing tests.
 
 To verify the menu frame through the recipe:
