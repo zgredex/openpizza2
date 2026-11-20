@@ -303,6 +303,27 @@ restaurant menu and stock survived the reload and the vehicle completed a
 paid order in a fresh process. The fixture is the reference state for the
 Rust customer-visit port.
 
+## Captured order inputs
+
+`PC2_TRACE_SALES=1` now logs the inputs before `Branch_ProcessCustomerOrder`
+and keeps the stock-consuming `SALE` and cash-crediting `PAYMENT` as
+separate events. The two calibrated orders use different recipes and prices:
+
+```text
+ORDER_INPUT clock=12:07 customer=100017 menu_price=11.85281086
+            ingredients=161 stock=400000
+SALE        stock=400000->383900 records=0->1 revenue=1387.28 tip=17
+PAYMENT     customer=100017 amount=1387.28 cash=492344.45->493731.73
+
+ORDER_INPUT clock=13:05 customer=100004 menu_price=12.42636204
+            ingredients=194 stock=583900
+SALE        stock=583900->564500 records=0->1 revenue=1392.25 tip=12
+PAYMENT     customer=100004 amount=1392.25 cash=493489.09->494881.34
+```
+
+The stock drop is `ingredients * 100`: `16,100` and `19,400`. The revenue
+is `(100 + tip) * 100 * menu_price * 0.01 + 0.5`, stored as a 32-bit float.
+
 ## Rust customer-visit fixture
 
 `pc2-sim` now has a `World::london_checkpoint()` fixture carrying the saved
@@ -320,6 +341,17 @@ production at 11:05, sale at 11:10, and departure at 11:15. It asserts the
 branch ID and staff count, one sales record for customer `100017`, the exact
 native stock drop `400000 -> 383900`, revenue `1387.28`, and cash
 `492344.45 -> 493731.73` (the native `SALE`/`PAYMENT` delta).
+
+The two-order predictor uses the captured inputs directly:
+
+```sh
+cargo test -p pc2-sim london_two_orders_predict_from_captured_inputs
+```
+
+It asserts the exact stock drops (`16,100` and `19,400`), both sales
+records, the computed revenues (`1387.2789306640625` and
+`1392.2525634765625`), and the separate payment credits. The `pc2-sim` suite
+has 31 passing tests.
 
 To verify the menu frame through the recipe:
 

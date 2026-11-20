@@ -210,11 +210,29 @@ void pc2_trace_order_before(uint32_t branch, uint32_t order) {
     uint32_t recipe = MEM32(order);
     if (!recipe) return;
     uint32_t records = MEM32(recipe + 0x304);
+    uint32_t game = MEM32(0x0057C670);
+    uint32_t calendar = game ? MEM32(game + 0x94) : 0;
+    uint32_t batches = MEM32(branch + 0x19ac);
+    uint32_t entries = MEM32(branch + 0x199c);
+    int ingredient_sum = 0;
+    for (int i = 0; i < 0x56; i++) ingredient_sum += (int)MEM32(recipe + 100 + 4 * i);
     order_trace.branch = branch;
     order_trace.order = order;
     order_trace.recipe = recipe;
     order_trace.sales_count = records ? MEM32(records + 0x14) : 0;
     order_trace.stock = pc2_branch_stock(branch);
+    fprintf(stderr,
+            "[trace] ORDER_INPUT slot=0 branch=%u clock=%02u:%02u customer=%u "
+            "menu_price=%.8f menu_bits=%08X recipe=%X ingredients=%d stock=%lld batches=%u",
+            MEM32(branch + 0x3c), calendar ? MEM8(calendar + 7) : 0,
+            calendar ? MEM8(calendar + 6) : 0, MEM32(order + 0x10),
+            (double)pc2_sale_amount(MEM32(order + 4)), MEM32(order + 4), recipe,
+            ingredient_sum, (long long)order_trace.stock, batches);
+    for (uint32_t i = 0; entries && i < batches && i < 4; i++) {
+        uint32_t batch = MEM32(entries + 4 * i);
+        fprintf(stderr, " batch%u=%d", i, batch ? (int)MEM32(batch) : 0);
+    }
+    fputc('\n', stderr);
 }
 
 void pc2_trace_order_after(uint32_t result) {
@@ -222,11 +240,19 @@ void pc2_trace_order_after(uint32_t result) {
     if (!branch) return;
     uint32_t records = MEM32(order_trace.recipe + 0x304);
     float revenue = result ? pc2_sale_amount(MEM32(order_trace.order + 0x1c)) : 0;
+    float price = pc2_sale_amount(MEM32(order_trace.order + 4));
+    int tip = 0;
+    if (result && price > 0.0f) {
+        float factor = (float)result * price * 0.01f;
+        if (factor > 0.0f) tip = (int)(revenue / factor - 100.0f);
+    }
     fprintf(stderr, "[trace] SALE Branch_ProcessCustomerOrder slot=0 branch=%u servings=%u "
-                    "stock=%lld->%lld records=%u->%u revenue=%.2f customer=%u\n",
+                    "stock=%lld->%lld records=%u->%u revenue=%.2f customer=%u "
+                    "menu_price=%.8f menu_bits=%08X revenue_bits=%08X tip=%d\n",
             MEM32(branch + 0x3c), result, order_trace.stock, pc2_branch_stock(branch),
             order_trace.sales_count, records ? MEM32(records + 0x14) : 0, (double)revenue,
-            MEM32(order_trace.order + 0x10));
+            MEM32(order_trace.order + 0x10), (double)price,
+            MEM32(order_trace.order + 4), MEM32(order_trace.order + 0x1c), tip);
     order_trace.branch = 0;
 }
 
