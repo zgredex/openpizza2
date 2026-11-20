@@ -252,3 +252,19 @@ The next blocker is presentation, not an import or a missing asset: the
 idle with pending screen `0`. The next investigation is the UI draw path
 (`UI_UpdateScene 0x00527B10` / `UI_DrawChildAt 0x005287A0` / the primary
 surface hooks), then scripted input to start London.
+
+### Presentation state after the startup trace
+
+`Window_RenderFrame` was returning before `UI_ProcessChildEvent` because
+`g_Window_RenderFrame_Flag_00584504` was zero. The host now arms that flag
+(and clears `g_Surface_BlitRectRetry_Flag`) after boot. The menu then reaches:
+
+```text
+UI_RenderScene -> UI_ProcessChildEvent -> UI_ProcessWindowEvent
+```
+
+`UI_ProcessWindowEvent` has the menu sprite at `+0x94` and draws it, but
+`Window_RenderFrame` takes the `Surface_BlitRectRetry 0x00538DA0` path
+(`Window+0x1BC` is zero), not the `Gfx_BlitClipped16` path. The tracked
+DirectDraw primary stays zero. The next fix is to bind the UI window's final
+target to the presenter, or make `Window+0x1BC` point at the primary.

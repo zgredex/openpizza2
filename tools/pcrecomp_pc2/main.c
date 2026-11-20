@@ -47,6 +47,11 @@ int main(int argc, char **argv) {
         return 1;
     }
 
+    /* PC2's window proc enables rendering on its first window message. The
+     * headless host does not generate that message, so arm the flag once. */
+    MEM32(0x00584504) = 1;
+    MEM32(0x005844FC) = 0;
+
     int headless = getenv("PC2_HEADLESS") != NULL;
     if (getenv("PC2_TRACE_FRAMES")) hle_screen_frame_hook = pc2_frame_hook;
     if (hle_screen_open("Pizza Connection 2", 0, headless) != 0) {

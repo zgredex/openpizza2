@@ -18,7 +18,27 @@ TARGETS = [
     ("sub_004043E0", "GameMain", True),
     ("sub_00476920", "Screen_MainMenu", True),
     ("sub_00402290", "Resource_Open", True),
+    ("sub_00523FE0", "UI_ProcessChildEvent", True),
+    ("sub_005287A0", "UI_DrawChildAt", True),
+    ("sub_0051EB50", "Renderer_DrawPendingSprite", True),
+    ("sub_005243C0", "Window_RenderFrame", True),
+    ("sub_00523E20", "UI_RenderScene", True),
+    ("sub_00539980", "Gfx_BlitClipped16", True),
+    ("sub_00526100", "Window_UpdateTooltip", True),
+    ("sub_0051FDA0", "Screen_AnimateTileWipe", True),
+    ("sub_0051FB00", "Screen_BeginTileWipeTransition", True),
+    ("sub_00523D60", "Window_ShowWindowById", True),
+    ("sub_00532890", "UI_SetWindowVisible", True),
 ]
+
+
+def repair_broken_entries(text: str) -> str:
+    """Repair trace strings written by an older non-idempotent patcher."""
+    text = re.sub(r'(\[trace\] [A-Za-z0-9_]+ enter)\n"\);',
+                  lambda m: m.group(1) + '\\n");', text)
+    text = re.sub(r'(\[trace\] Resource_Open enter path=%s)\n",',
+                  lambda m: m.group(1) + '\\n",', text)
+    return text
 
 
 def add_includes(text: str) -> str:
@@ -51,8 +71,8 @@ def patch_function(text: str, name: str, label: str) -> tuple[str, bool]:
         entry = f'    fprintf(stderr, "[trace] {label} enter\\n");\n'
         ret = f'fprintf(stderr, "[trace] {label} return\\n"); return;'
 
-    body = re.sub(r"(    RECOMP_ENTER\(0x[0-9A-Fa-f]+u\);\n)", r"\1" + entry,
-                  body, count=1)
+    body = re.sub(r"(    RECOMP_ENTER\(0x[0-9A-Fa-f]+u\);\n)",
+                  lambda m: m.group(1) + entry, body, count=1)
     body = body.replace("return;", ret)
     return text[:match.start()] + body + text[match.end():], True
 
@@ -81,7 +101,9 @@ def main() -> int:
     changed_files = 0
     for path in sorted(gen.glob("recomp_*.c")):
         text = path.read_text()
-        changed = False
+        repaired = repair_broken_entries(text)
+        changed = repaired != text
+        text = repaired
         for name, label, _ in TARGETS:
             text, did = patch_function(text, name, label)
             changed |= did

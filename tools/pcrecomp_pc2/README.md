@@ -99,10 +99,15 @@ They live in `pc2_shims.c`; the shared runtime is unmodified.
   pending screen `0`. `Resource_Open` returns non-zero for `clipsprite.spr`,
   `rklick_00.spr`, `mission.txt` and the menu assets; the loose-file
   `CreateFileA` failures are fallback probes, not the lookup result.
-- The next blocker is presentation: the 800x600x16 primary surface remains
-  all-zero. `PC2_TRACE_FRAMES=1` prints `nonzero=0/960000` for the eight frames
-  captured, so the front end is running without a draw reaching the primary.
-  This is the exact next issue to investigate; no API currently fails.
+- The next blocker is presentation. `Window_RenderFrame` now reaches
+  `UI_RenderScene` and `UI_ProcessChildEvent`; the menu sprite is drawn by
+  `UI_ProcessWindowEvent 0x0052F2E0` (`f94` holds the sprite). The final blit
+  is `Surface_BlitRectRetry 0x00538DA0`; `Gfx_BlitClipped16` is not called
+  because `Window+0x1BC` is zero. The tracked 800x600x16 primary is still
+  all-zero (`PC2_TRACE_FRAMES=1` reports `nonzero=0/960000`), so the UI drawing
+  is going to the window/GDI target rather than the primary the presenter
+  reads. Next: bind that target or route the completed UI surface through the
+  presenter.
 
 ## Crash fixed after the intro
 
