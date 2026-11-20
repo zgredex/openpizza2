@@ -197,6 +197,13 @@ static _Thread_local struct {
     long long stock;
 } order_trace;
 
+static float pc2_sale_amount(uint32_t bits) {
+    // The original writes the order's revenue with an x87 single-precision store.
+    float amount;
+    memcpy(&amount, &bits, sizeof amount);
+    return amount;
+}
+
 void pc2_trace_order_before(uint32_t branch, uint32_t order) {
     order_trace.branch = 0;
     if (!getenv("PC2_TRACE_SALES") || !branch || !order || MEM32(branch + 0x30) != 0) return;
@@ -214,12 +221,48 @@ void pc2_trace_order_after(uint32_t result) {
     uint32_t branch = order_trace.branch;
     if (!branch) return;
     uint32_t records = MEM32(order_trace.recipe + 0x304);
+    float revenue = result ? pc2_sale_amount(MEM32(order_trace.order + 0x1c)) : 0;
     fprintf(stderr, "[trace] SALE Branch_ProcessCustomerOrder slot=0 branch=%u servings=%u "
-                    "stock=%lld->%lld records=%u->%u revenue=%d\n",
+                    "stock=%lld->%lld records=%u->%u revenue=%.2f customer=%u\n",
             MEM32(branch + 0x3c), result, order_trace.stock, pc2_branch_stock(branch),
-            order_trace.sales_count, records ? MEM32(records + 0x14) : 0,
-            result ? (int32_t)MEM32(order_trace.order + 0x1c) : 0);
+            order_trace.sales_count, records ? MEM32(records + 0x14) : 0, (double)revenue,
+            MEM32(order_trace.order + 0x10));
     order_trace.branch = 0;
+}
+
+static double pc2_player_cash(uint32_t player) {
+    double cash;
+    memcpy(&cash, (const void *)(uintptr_t)ADDR(player + 0x108), sizeof cash);
+    return cash;
+}
+
+static _Thread_local struct {
+    uint32_t player, branch_id, customer;
+    float amount;
+    double cash;
+} payment_trace;
+
+void pc2_trace_payment_before(uint32_t branch, uint32_t order) {
+    payment_trace.player = 0;
+    if (!getenv("PC2_TRACE_SALES") || !branch || !order || MEM32(branch + 0x30) != 0) return;
+    uint32_t game = MEM32(0x0057C670);
+    uint32_t player = game ? MEM32(game + 0x200) : 0;
+    if (!player) return;
+    payment_trace.player = player;
+    payment_trace.branch_id = MEM32(branch + 0x3c);
+    payment_trace.customer = MEM32(order + 0x10);
+    payment_trace.amount = pc2_sale_amount(MEM32(order + 0x1c));
+    payment_trace.cash = pc2_player_cash(player);
+}
+
+void pc2_trace_payment_after(void) {
+    uint32_t player = payment_trace.player;
+    if (!player) return;
+    fprintf(stderr, "[trace] PAYMENT slot=0 branch=%u customer=%u "
+                    "amount=%.2f cash=%.2f->%.2f\n",
+            payment_trace.branch_id, payment_trace.customer, (double)payment_trace.amount,
+            payment_trace.cash, pc2_player_cash(player));
+    payment_trace.player = 0;
 }
 
 static const uint8_t *pc2_dd_frame_hook(surf_t *primary) {

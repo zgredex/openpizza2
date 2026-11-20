@@ -218,10 +218,41 @@ python3 tools/pcrecomp_pc2/capture.py run \
 ```
 
 The replay stops when branch `100000` has four employees. Read the `STAFF`
-lines in `host.log` and the final watches in `report.json`. Set
-`PC2_TRACE_SALES=1` in a subsequent replay to log slot `0`'s scheduled opening
-hours and to check stock consumption and the recipe's sales-record count on
-return from `Branch_ProcessCustomerOrder`.
+lines in `host.log` and the final watches in `report.json`.
+
+## London opening and first sale
+
+The operations replay starts with the same lease and hires. It creates a
+tomato-and-cheese recipe, adds it to Atrium's menu, leases the `London 1`
+warehouse, chooses Central Market Partners, and enables deliveries to
+Atrium. The simulation runs through its normal opening schedule and stops
+at the 14:00 checkpoint.
+
+```sh
+python3 tools/pcrecomp_pc2/capture.py run \
+  tools/pcrecomp_pc2/scenarios/london-operations.json \
+  --work /tmp/opencode/pcrecomp-pc2-fresh \
+  --out /tmp/pc2-london-opening-day --timeout 750 --max-events 0
+
+rg 'BRANCH_HOUR|SALE Branch_ProcessCustomerOrder|PAYMENT slot=0' \
+  /tmp/pc2-london-opening-day/host.log
+```
+
+Use the lines for slot `0` and branch `100000`. An open hour shows
+`scheduled=1` and `roster=4`. A successful `SALE` has positive servings,
+lower stock, an additional recipe sales record, and positive revenue.
+Match its customer ID to a `PAYMENT` line and check that the player's
+cash increased by the payment amount. Both traces are enabled by
+`PC2_TRACE_SALES=1`. The replay waits for the clock, so check the
+transaction in `host.log` as well as the final state in `report.json`.
+
+The verified run reached 14:00 with all 96 replay steps complete and zero
+unresolved edges in the recorded phases. Atrium opened at 06:00 and
+received stock by 09:00. Customer `100017` consumed `16100` stock units
+(`400000` to `383900`), created the recipe's first sales record, and paid
+`1387.28`. The human player's cash increased from `492135.14` to
+`493522.42`. A second customer payment of `1354.92` also cleared before
+the checkpoint.
 
 To verify the menu frame through the recipe:
 

@@ -59,6 +59,8 @@ TRACE_DECLARATIONS = {
     "pc2_trace_branch_hour": "uint32_t, uint32_t",
     "pc2_trace_order_before": "uint32_t, uint32_t",
     "pc2_trace_order_after": "uint32_t",
+    "pc2_trace_payment_before": "uint32_t, uint32_t",
+    "pc2_trace_payment_after": "void",
 }
 
 
@@ -162,6 +164,18 @@ def patch_pending(text: str) -> tuple[str, bool]:
     return text.replace(needle, insert, 1), True
 
 
+def patch_payment(text: str) -> tuple[str, bool]:
+    # The customer queue and waiter each have a call that credits order revenue.
+    original = text
+    for address, branch, order in (("0040A1FC", "edi", "eax"), ("0050A1FE", "ebp", "ebx")):
+        call = f"    RECOMP_CALL(sub_00477C80); /* 0x{address}: call 0x477c80 */\n"
+        traced = (f"    pc2_trace_payment_before({branch}, {order});\n" + call +
+                  "    pc2_trace_payment_after();\n")
+        # The lift may emit the same call site in more than one function body.
+        text = text.replace(traced, call).replace(call, traced)
+    return text, text != original
+
+
 def main() -> int:
     gen = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else "gen")
     if not gen.is_dir():
@@ -178,6 +192,8 @@ def main() -> int:
             text, did = patch_function(text, name, label)
             changed |= did
         text, did = patch_pending(text)
+        changed |= did
+        text, did = patch_payment(text)
         changed |= did
         if changed or any(f"{name}(" in text for name in TRACE_DECLARATIONS):
             text = add_includes(text)
