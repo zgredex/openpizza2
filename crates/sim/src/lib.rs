@@ -27,6 +27,19 @@ pub const SERVICE_TICKS: u32 = 80;
 /// not expose a proven admission limit. 40 matches the existing Python model.
 pub const QUEUE_CAPACITY: u32 = 40;
 
+/// Derived from the native London save fixture. The save itself is at 08:05;
+/// this focused visit checkpoint is 10:55, the last five-minute boundary before
+/// the first observed customer. The native trace records customer 100017,
+/// branch 100000, player slot 0, four employees, cash 493015.00 and stock
+/// 200000 at load.
+pub const LONDON_CHECKPOINT_CASH: f64 = 493_015.0;
+pub const LONDON_CHECKPOINT_STOCK: f64 = 200_000.0;
+pub const LONDON_CHECKPOINT_MINUTE: u32 = 10 * 60 + 55;
+pub const LONDON_BRANCH_ID: u32 = 100_000;
+pub const LONDON_PLAYER_SLOT: u8 = 0;
+pub const LONDON_STAFF_COUNT: u32 = 4;
+pub const LONDON_FIRST_CUSTOMER_ID: u32 = 100_017;
+
 /// `Game_GetStartingCapital` (`0x48d3a0`). The difficulty index is
 /// `DAT_0057bb24`; every other value falls through to 20,000.
 pub fn starting_capital(difficulty: u8) -> u32 {
@@ -161,6 +174,7 @@ pub struct BranchSim {
     cash: f64,
     starting_cash: f64,
     stock: f64,
+    stock_capacity: f64,
     clock_minutes: u32,
     servings_sold: u32,
     customers_served: u32,
@@ -178,6 +192,7 @@ impl Default for BranchSim {
             cash: START_CASH,
             starting_cash: START_CASH,
             stock: START_STOCK,
+            stock_capacity: STOCK_CAPACITY,
             clock_minutes: 10 * 60,
             servings_sold: 0,
             customers_served: 0,
@@ -200,7 +215,7 @@ impl BranchSim {
             price: self.price,
             cash: self.cash,
             stock: self.stock,
-            stock_capacity: STOCK_CAPACITY,
+            stock_capacity: self.stock_capacity,
             clock_minutes: self.clock_minutes,
             servings_sold: self.servings_sold,
             customers_served: self.customers_served,
@@ -232,6 +247,14 @@ impl BranchSim {
 
     pub fn set_price(&mut self, price: f64) {
         self.price = price.clamp(0.01, 999.99);
+    }
+
+    pub fn set_stock(&mut self, stock: f64) {
+        self.stock = stock.max(0.0);
+    }
+
+    pub fn set_stock_capacity(&mut self, capacity: f64) {
+        self.stock_capacity = capacity.max(0.0);
     }
 
     pub fn set_price_from_recipe(
@@ -301,6 +324,7 @@ impl BranchSim {
             cash: snapshot.cash,
             starting_cash: snapshot.cash,
             stock: snapshot.stock,
+            stock_capacity: snapshot.stock_capacity,
             clock_minutes: snapshot.clock_minutes,
             servings_sold: snapshot.servings_sold,
             customers_served: snapshot.customers_served,
@@ -790,6 +814,28 @@ impl World {
             leased_property: None,
             sim,
         }
+    }
+
+    /// Focused customer-visit fixture derived from the native London save.
+    pub fn london_checkpoint() -> Self {
+        let mut world = Self::new(LONDON_CHECKPOINT_MINUTE);
+        world.sim.set_starting_cash(LONDON_CHECKPOINT_CASH);
+        world.sim.set_stock(LONDON_CHECKPOINT_STOCK);
+        world.sim.set_stock_capacity(LONDON_CHECKPOINT_STOCK);
+        world.sim.set_open(true);
+        world.next_customer_id = LONDON_FIRST_CUSTOMER_ID;
+        world.player_branches.push(PlayerBranch {
+            tile_index: 0,
+            owner_slot: LONDON_PLAYER_SLOT,
+            size: 0,
+            style: 0,
+            owned: true,
+            player_controlled: true,
+            rent: 0,
+            sales: 0,
+            revenue: 0.0,
+        });
+        world
     }
 
     pub fn with_profile(mut self, profile: CharacterProfile) -> Self {
@@ -1762,6 +1808,46 @@ mod tests {
         assert!((world.snapshot().cash - 10_013.420_524_712_366).abs() < 1e-9);
         assert_eq!(world.snapshot().clock_minutes, 680);
         assert_eq!(world.visit_state(), VisitState::Idle);
+    }
+
+    #[test]
+    fn london_checkpoint_completes_one_customer_visit() {
+        let mut world = World::london_checkpoint();
+        let before = world.snapshot();
+        assert_eq!(before.cash, LONDON_CHECKPOINT_CASH);
+        assert_eq!(before.stock, LONDON_CHECKPOINT_STOCK);
+        assert_eq!(before.stock_capacity, LONDON_CHECKPOINT_STOCK);
+        assert_eq!(world.player_branch_count(), 1);
+        assert_eq!(world.player_branches()[0].owner_slot, LONDON_PLAYER_SLOT);
+        assert_eq!(world.player_branches()[0].sales, 0);
+
+        let arrival = world.advance_to(11 * 60);
+        assert!(arrival.contains(&ClockEvent::Arrival {
+            minute: 660,
+            queue: 1
+        }));
+        assert_eq!(world.customers().len(), 1);
+        assert_eq!(world.customers()[0].id, LONDON_FIRST_CUSTOMER_ID);
+
+        let visit = world.advance_to(11 * 60 + 20);
+        let sales: Vec<_> = visit
+            .iter()
+            .filter(|event| matches!(event, ClockEvent::Sale { .. }))
+            .collect();
+        assert_eq!(sales.len(), 1);
+        assert!(visit.contains(&ClockEvent::ProductionStart { minute: 665 }));
+        assert!(visit.contains(&ClockEvent::QueueService {
+            minute: 670,
+            remaining_queue: 0
+        }));
+        assert!(visit.contains(&ClockEvent::Departure { minute: 675 }));
+
+        let after = world.snapshot();
+        assert_eq!(after.stock, LONDON_CHECKPOINT_STOCK - 1.0);
+        assert!(after.cash > before.cash);
+        assert_eq!(after.sales, 1);
+        assert_eq!(world.player_branches()[0].sales, 1);
+        assert!(after.last_sale.is_some());
     }
 
     #[test]

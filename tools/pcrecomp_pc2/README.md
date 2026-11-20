@@ -303,6 +303,23 @@ restaurant menu and stock survived the reload and the vehicle completed a
 paid order in a fresh process. The fixture is the reference state for the
 Rust customer-visit port.
 
+## Rust customer-visit fixture
+
+`pc2-sim` now has a `World::london_checkpoint()` fixture carrying the saved
+state: branch `100000`, player slot `0`, four employees, cash `493015.00`,
+stock `200000`, and the next customer ID `100017`. The focused checkpoint is
+10:55, the last clock boundary before the observed first visit.
+
+```sh
+cargo test -p pc2-sim london_checkpoint_completes_one_customer_visit
+```
+
+The test advances through the native visit cadence: arrival at 11:00,
+production at 11:05, sale at 11:10, and departure at 11:15. It asserts one
+sale, stock `200000 -> 199999`, a positive cash delta, the branch sales
+counter incrementing, and the customer ID `100017`. The native reload trace
+is the reference for the full stock quantity and revenue calibration.
+
 To verify the menu frame through the recipe:
 
 ```bash
