@@ -111,6 +111,8 @@ if [ ! -f "$GEN/recomp_dispatch.c" ]; then
     tail -8 "$WORK/lift.log"
 fi
 
+python3 "$REPO_ROOT/tools/pcrecomp_pc2/trace_points.py" "$GEN"
+
 mkdir -p "$HOSTDIR"
 make -C "$REPO_ROOT/tools/pcrecomp_pc2" \
     PC="$PC" GEN="$GEN" SYS="$SYS" \
@@ -120,7 +122,7 @@ make -C "$REPO_ROOT/tools/pcrecomp_pc2" \
 set +e
 (cd "$REPO_ROOT/game" && \
     LD_LIBRARY_PATH="$SYS/lib" SDL_VIDEODRIVER=dummy SDL_AUDIODRIVER=dummy \
-    PC2_HEADLESS=1 HLE_FILETRACE=1 timeout "${PC2_TIMEOUT:-15}" \
+    PC2_HEADLESS=1 HLE_FILETRACE=1 timeout "${PC2_TIMEOUT:-75}" \
     "$HOSTDIR/pc2" fastfood2.exe) > "$WORK/trace.log" 2>&1
 status=$?
 set -e
@@ -130,6 +132,7 @@ if [ "$status" -ne 0 ] && [ "$status" -ne 124 ]; then
     tail -40 "$WORK/trace.log" >&2
     exit 1
 fi
+echo "run status=$status (124 = still running at the timeout)"
 
 grep -Fq "[trace] entered WinMain at 0x00403D90" "$WORK/trace.log" || {
     echo "trace: WinMain was not reached" >&2
@@ -142,6 +145,14 @@ for asset in language.ldf 'resources\main.pak' 'resources\iso.pak' 'resources\up
         exit 1
     }
 done
+for point in '[trace] Movie_Play return' '[trace] Map_LoadIsodata return' '[trace] GameMain enter' '[trace] Screen_MainMenu enter' '[trace] GameLoop pending=21'; do
+    grep -Fq "$point" "$WORK/trace.log" || {
+        echo "trace: startup point not reached: $point" >&2
+        tail -40 "$WORK/trace.log" >&2
+        exit 1
+    }
+done
 
 echo "native bring-up: OK"
-grep -E "\[host\]|\[trace\]|\[file\].*(\.ldf|\.pak)" "$WORK/trace.log" | head -20
+grep -E "\[host\]|\[trace\] (entered|Movie_Play|Map_LoadIsodata|GameMain|GameLoop pending|Screen_MainMenu)|\[file\].*(\.ldf|\.pak)" "$WORK/trace.log" > "$WORK/trace.summary" || true
+sed -n '1,30p' "$WORK/trace.summary"

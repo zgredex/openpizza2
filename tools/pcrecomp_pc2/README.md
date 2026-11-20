@@ -52,6 +52,18 @@ The script:
 [file] CreateFileA "resources\sound.pak"      -> Resources/sound.pak ok
 [ddraw] SetDisplayMode(800x600x16)
 [ddraw] CreateSurface 800x600 16 bpp caps 0xA18 primary -> ...
+[trace] Movie_Play enter
+[trace] Movie_Play return
+[trace] Movie_Play enter
+[trace] Movie_Play return
+[file] CreateFileA "C:\test.spr" -> /tmp/opencode/pc2-cdrive/test.spr ok
+[trace] Map_LoadIsodata enter
+[trace] Map_LoadIsodata return
+[trace] GameMain enter
+[trace] GameLoop pending=21
+[trace] Screen_MainMenu enter
+[trace] Screen_MainMenu return
+[trace] GameLoop pending=0
 ```
 
 `0x0054FCD4` is the MSVC CRT entry; it calls `WinMain` at `0x00403D90`.
@@ -76,16 +88,43 @@ They live in `pc2_shims.c`; the shared runtime is unmodified.
 ## Current status
 
 - Whole-image lift: 9,275 functions, 0 lift failures.
-- Native host: links 32-bit, runs to WinMain and opens the four PC2 `.pak`
-  archives plus `language.ldf` and `sound.pak`.
-- DirectDraw: sets 800x600x16 and creates the primary surface.
-- A visible SDL window is created (`Pizza Connection 2`, 1280x960 scaled from
-  the 800x600 primary). Without ffmpeg the Bink intro is skipped; the current
-  visible run then exits before the front end, so Bink playback or the next
-  resource lookup is the next gap.
-- Direct `CreateFileA("sprites\...")` probes still miss because the assets are
-  served by the game's own `ResourceManager`/`Pak_*` layer; the PAK archives
-  are open, so the next step is to verify resource lookups from those archives
-  and keep the visible run alive past the intro.
+- Native host: links 32-bit, runs from CRT entry `0x0054FCD4` through WinMain
+  `0x00403D90`, both `Movie_Play` calls, `Map_LoadIsodata 0x004EA440` and into
+  `GameMain 0x004043E0`.
+- The four PC2 `.pak` archives, `language.ldf`, `sound.pak`, the loading image
+  and the main-menu assets (`PE_STARTSCREEN.TGA`, `TIMESFONT.fnt`,
+  `TEXTPBTRANSPGELB_*.spr`) open successfully through `Resource_Open`.
+- The front-end dispatcher reaches `GameLoop_DispatchScreens 0x004052C0`,
+  pending screen `0x15`, calls `Screen_MainMenu 0x00476920`, and returns to
+  pending screen `0`. `Resource_Open` returns non-zero for `clipsprite.spr`,
+  `rklick_00.spr`, `mission.txt` and the menu assets; the loose-file
+  `CreateFileA` failures are fallback probes, not the lookup result.
+- The next blocker is presentation: the 800x600x16 primary surface remains
+  all-zero. `PC2_TRACE_FRAMES=1` prints `nonzero=0/960000` for the eight frames
+  captured, so the front end is running without a draw reaching the primary.
+  This is the exact next issue to investigate; no API currently fails.
+
+## Crash fixed after the intro
+
+Before the C: mapping, the run reached the loading-screen path and crashed:
+
+```text
+CreateFileA "C:\test.spr" -> No such file or directory
+SIGSEGV in hle_enter_cs (ecx=0)
+  k_EnterCriticalSection <- shim_entry
+  sub_00550877 (CRT_LockFile)
+  sub_0054FB27 (CRT_FwriteLocked)
+  sub_0053D160 (Sprite_Serialize)
+  sub_0052A440 (UI_Bar_BuildGradientFill)
+  sub_00528930 (UI_Bar_Construct)
+  sub_0052FC00 (UI_CreateSlider)
+  sub_00406910 (UI_ShowLoadingOverlay)
+  sub_00474B90 (LoadingWindow_Create)
+  sub_00403D90 (WinMain)
+```
+
+`C:` is now mapped to a writable host directory (`PC2_CDRIVE`, default
+`/tmp/opencode/pc2-cdrive`), so `C:\test.spr` succeeds and the run continues
+through `Map_LoadIsodata` into `GameMain`.
 
 Generated C and the pcrecomp clone stay in `PC2_WORK` and are not committed.

@@ -207,3 +207,48 @@ WinMain, the 800x600x16 primary surface is created, and the PC2 resource
 archives and language table open. The next gap is the game's own
 `ResourceManager`/`Pak_*` lookup for the `sprites\...` probes, then a visible
 SDL window for the front end.
+
+## Startup through the front end
+
+The native run now reaches the front-end dispatcher and main menu:
+
+```text
+[...]
+[trace] Movie_Play enter
+[trace] Movie_Play return
+[trace] Movie_Play enter
+[trace] Movie_Play return
+[file] CreateFileA "C:\test.spr" -> /tmp/opencode/pc2-cdrive/test.spr ok
+[trace] Map_LoadIsodata enter
+[trace] Map_LoadIsodata return
+[trace] GameMain enter
+[trace] GameLoop pending=21
+[trace] Screen_MainMenu enter
+[trace] Screen_MainMenu return
+[trace] GameLoop pending=0
+```
+
+`GameLoop_DispatchScreens` is `0x004052C0`, `Screen_MainMenu` is
+`0x00476920`, `Map_LoadIsodata` is `0x004EA440`, and `GameMain` is
+`0x004043E0`.
+
+The first failure after the intro was a null critical section:
+`CreateFileA("C:\test.spr")` failed, and the loading-screen path called
+`CRT_LockFile 0x00550877` -> `CRT_FwriteLocked 0x0054FB27` with a null file
+lock. Mapping `C:` to a writable host directory (`PC2_CDRIVE`) fixed the
+crash. The guest path was `LoadingWindow_Create 0x00474B90` ->
+`UI_ShowLoadingOverlay 0x00406910` -> `UI_CreateSlider 0x0052FC00` ->
+`UI_Bar_Construct 0x00528930` -> `UI_Bar_BuildGradientFill 0x0052A440` ->
+`Sprite_Serialize 0x0053D160`.
+
+After that fix, `Resource_Open 0x00402290` returns non-zero for
+`clipsprite.spr`, `rklick_00.spr`, `mission.txt`, `PE_STARTSCREEN.TGA`,
+`TIMESFONT.fnt` and the menu-button sprites. The loose-file `CreateFileA`
+errors are fallback probes only.
+
+The next blocker is presentation, not an import or a missing asset: the
+800x600x16 DirectDraw primary remains all-zero (`PC2_TRACE_FRAMES=1` reports
+`nonzero=0/960000`) while `Screen_MainMenu` is created and the dispatcher is
+idle with pending screen `0`. The next investigation is the UI draw path
+(`UI_UpdateScene 0x00527B10` / `UI_DrawChildAt 0x005287A0` / the primary
+surface hooks), then scripted input to start London.
