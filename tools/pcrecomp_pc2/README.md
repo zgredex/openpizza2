@@ -282,7 +282,8 @@ what the reload replay uses. The fresh-process reload is:
 python3 tools/pcrecomp_pc2/capture.py run \
   tools/pcrecomp_pc2/scenarios/london-reload.json \
   --work /tmp/opencode/pcrecomp-pc2-fresh \
-  --out /tmp/pc2-london-fixture-reload --skip-build --timeout 750
+  --out /tmp/pc2-london-fixture-reload --skip-build --timeout 750 \
+  --max-events 0
 ```
 
 The reload waits for the saved clock, verifies branch `100000`, player
@@ -291,10 +292,10 @@ slot `0`, and four employees, then runs to 14:00. The verified trace is:
 ```text
 BRANCH_HOUR slot=0 branch=100000 hour=9 scheduled=1 roster=4 stock=200000
 SALE Branch_ProcessCustomerOrder slot=0 branch=100000 servings=100
-     stock=200000->183900 records=0->1 revenue=1387.28 customer=100017
+     stock=400000->383900 records=0->1 revenue=1387.28 customer=100017
 PAYMENT slot=0 branch=100000 customer=100017 amount=1387.28
-     cash=492459.16->493846.44
-snapshot checkpoint-14 cash=493846.44 hour=14
+     cash=492344.45->493731.73
+snapshot checkpoint-14 cash=494638.71 hour=14
 ```
 
 The lower stock, first sales record, and matching payment prove the
