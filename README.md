@@ -319,7 +319,8 @@ and no player branch. Goal and branch records are retained as mission metadata.
 A New Game campaign starts with cash `500,000`, no player branch, no staff,
 and an empty pantry. The city map shows the vacant London storefront at tile
 `13694` (`(82,83)` in `Lon.iso`). Click its marker to open the lease terms:
-property `13694`, rent `2,812`, one-time fee `1,000`, total cash debit
+property `13694`, rent `2,812`, one-time fee `1,000` (the difference
+between the quoted rent and the `3,812` HUD debit), total cash debit
 `3,812`, and current cash. **Enter** or the CONFIRM button leases it; **Esc**
 or CANCEL closes the terms. The lease creates branch `100000` under
 owner slot `0`, marks it player-controlled and leased, and leaves stock at zero. These values

@@ -174,8 +174,9 @@ BRANCH after player_slot=0 site_id=0 site=F41E8050 branch_id=100000
   `100000`. The HUD cash changes from `500000` to `496188` and the clock
   advances from `00:05` to `00:10`. `Game_EndOfHour 0x00486590` enters and
   returns repeatedly afterward. The Rust campaign uses the same site, branch
-  ID, and total debit (`2812` rent + `1000` fee) and starts with an empty
-  pantry; see `README.md` under Campaign Start.
+  ID, and total debit (`2812` quoted rent + the `1000` HUD difference recorded
+  as a fee) and starts with an empty pantry; see `README.md` under Campaign
+  Start.
 - **Exception handling:** the startup registration routine `0x00555F68` is
   now lifted and dispatchable, but `win32hle`'s
   `SetUnhandledExceptionFilter` shim returns `0` and `RaiseException` exits.
