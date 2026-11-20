@@ -47,6 +47,7 @@ TARGETS = [
     ("sub_0047C3E0", "Company_AssignEmployee", True),
     ("sub_004773A0", "Branch_ProcessHour", True),
     ("sub_0047D4A0", "Branch_ProcessCustomerOrder", True),
+    ("sub_0047A3B0", "Branch_GetCustomerGroupRating", True),
     ("sub_00487520", "SaveGame_Write", True),
 ]
 
@@ -59,6 +60,7 @@ TRACE_DECLARATIONS = {
     "pc2_trace_staff_after": "void",
     "pc2_trace_branch_hour": "uint32_t, uint32_t",
     "pc2_trace_order_before": "uint32_t, uint32_t",
+    "pc2_trace_order_rating_result": "uint32_t",
     "pc2_trace_order_after": "uint32_t",
     "pc2_trace_payment_before": "uint32_t, uint32_t",
     "pc2_trace_payment_after": "void",
@@ -121,6 +123,9 @@ def patch_function(text: str, name: str, label: str) -> tuple[str, bool]:
                  '(char *)(uintptr_t)ADDR(MEM32(esp + 4)));\n')
         ret = ('if (getenv("PC2_TRACE_RESOURCES")) '
                'fprintf(stderr, "[trace] Resource_Open return eax=%08X\\n", eax); return;')
+    elif label == "Branch_GetCustomerGroupRating":
+        entry = ''
+        ret = 'pc2_trace_order_rating_result(eax); return;'
     elif label == "Player_CreateBranch":
         entry = ('    pc2_trace_branch_before(ecx, MEM32(esp + 4), MEM32(esp + 8), '
                  'MEM32(esp + 12), MEM32(esp + 16), MEM32(esp + 20));\n')

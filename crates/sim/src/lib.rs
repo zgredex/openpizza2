@@ -145,15 +145,19 @@ pub fn select_candidate_index(count: usize, roll: u32, fallback_roll: u32) -> Op
 
 /// Inputs observed immediately before a native `Branch_ProcessCustomerOrder`
 /// call. The order's price and recipe quantities are read from the lifted
-/// order object; `tip` is the rating-derived tip logged with the SALE event.
+/// order object. `recipe_id` is the host-computed fingerprint of the recipe
+/// quantities, and `rating`/`tip_base` are the values used by
+/// `Branch_ProcessCustomerOrder` to derive the tip.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct OrderInput {
     pub customer_id: u32,
     pub minute: u32,
     pub menu_price: f64,
+    pub recipe_id: u32,
     pub ingredient_units: u32,
     pub servings: u32,
-    pub tip: i32,
+    pub rating: u32,
+    pub tip_base: i32,
 }
 
 impl OrderInput {
@@ -161,10 +165,15 @@ impl OrderInput {
         self.ingredient_units as f64 * self.servings as f64
     }
 
+    /// `local_17c = (rating - customer_base) >> 1`, clamped at zero.
+    pub fn tip(&self) -> i32 {
+        ((self.rating as i32 - self.tip_base) >> 1).max(0)
+    }
+
     /// Native order revenue: `((tip + 100) * servings * price * 0.01) + 0.5`,
     /// stored as a single-precision float by `Branch_ProcessCustomerOrder`.
     pub fn revenue(&self) -> f64 {
-        let raw = (self.tip as f64 + 100.0) * self.servings as f64 * self.menu_price * 0.01;
+        let raw = (self.tip() as f64 + 100.0) * self.servings as f64 * self.menu_price * 0.01;
         f64::from((raw + 0.5) as f32)
     }
 }
@@ -172,6 +181,7 @@ impl OrderInput {
 #[derive(Clone, Debug, PartialEq)]
 pub struct Sale {
     pub clock_minutes: u32,
+    pub recipe_id: u32,
     pub price: f64,
     pub servings: u32,
     pub revenue: f64,
@@ -219,6 +229,7 @@ pub struct BranchSim {
     customers_served: u32,
     customers_lost: u32,
     sales: u32,
+    recipe_sales: Vec<(u32, u32)>,
     steps: u32,
     last_sale: Option<Sale>,
 }
@@ -240,6 +251,7 @@ impl Default for BranchSim {
             customers_served: 0,
             customers_lost: 0,
             sales: 0,
+            recipe_sales: Vec::new(),
             steps: 0,
             last_sale: None,
         }
@@ -357,6 +369,7 @@ impl BranchSim {
         self.cash += cash_delta;
         let sale = Sale {
             clock_minutes,
+            recipe_id: 0,
             price: self.price,
             servings,
             revenue,
@@ -384,8 +397,17 @@ impl BranchSim {
         self.servings_sold += order.servings;
         self.customers_served += 1;
         self.sales += 1;
+        match self
+            .recipe_sales
+            .iter_mut()
+            .find(|(recipe_id, _)| *recipe_id == order.recipe_id)
+        {
+            Some((_, records)) => *records += 1,
+            None => self.recipe_sales.push((order.recipe_id, 1)),
+        }
         let sale = Sale {
             clock_minutes: order.minute,
+            recipe_id: order.recipe_id,
             price: order.menu_price,
             servings: order.servings,
             revenue,
@@ -395,6 +417,15 @@ impl BranchSim {
         };
         self.last_sale = Some(sale.clone());
         StepOutcome::Sale(sale)
+    }
+
+    /// Number of native-style sales records appended to one recipe.
+    pub fn recipe_sales(&self, recipe_id: u32) -> u32 {
+        self.recipe_sales
+            .iter()
+            .find(|(id, _)| *id == recipe_id)
+            .map(|(_, records)| *records)
+            .unwrap_or(0)
     }
 
     /// Native payment event: credit the order revenue after the cashier path.
@@ -422,6 +453,7 @@ impl BranchSim {
             customers_served: snapshot.customers_served,
             customers_lost: snapshot.customers_lost,
             sales: snapshot.sales,
+            recipe_sales: Vec::new(),
             steps: snapshot.steps,
             last_sale: snapshot.last_sale.clone(),
         }
@@ -1916,55 +1948,82 @@ mod tests {
 
     #[test]
     fn london_two_orders_predict_from_captured_inputs() {
-        // First: native ORDER_INPUT clock=12:07 customer=100017,
-        // menu_price=11.85281086, ingredients=161, tip=17, stock 400000.
-        // Second: different recipe/price, clock=13:05 customer=100004,
-        // menu_price=12.42636204, ingredients=194, tip=12, stock 583900.
+        // Captured from the verified London reload. The first order is
+        // customer 100004 at 11:07; the second is customer 100007 at 12:00.
+        // Their recipes and menu prices differ, so each appends its own sales
+        // record. The native PAYMENT events clear at 493720.61 and 494898.90.
         let first = OrderInput {
-            customer_id: 100_017,
-            minute: 12 * 60 + 7,
-            menu_price: 11.852_810_86,
-            ingredient_units: 161,
+            customer_id: 100_004,
+            minute: 11 * 60 + 7,
+            menu_price: 12.093_079_57,
+            recipe_id: 0x5384_5BAF,
+            ingredient_units: 170,
             servings: 100,
-            tip: 17,
+            rating: 65,
+            tip_base: 42,
         };
         let second = OrderInput {
-            customer_id: 100_004,
-            minute: 13 * 60 + 5,
-            menu_price: 12.426_362_04,
-            ingredient_units: 194,
+            customer_id: 100_007,
+            minute: 12 * 60,
+            menu_price: 11.852_810_86,
+            recipe_id: 0x0143_7164,
+            ingredient_units: 161,
             servings: 100,
-            tip: 12,
+            rating: 66,
+            tip_base: 36,
         };
-        assert_eq!(first.stock_use(), 16_100.0);
-        assert_eq!(second.stock_use(), 19_400.0);
-        assert!((first.revenue() - 1387.278_930_664_062_5).abs() < 1e-9);
-        assert!((second.revenue() - 1392.252_563_476_562_5).abs() < 1e-9);
+        assert_ne!(first.recipe_id, second.recipe_id);
+        assert_eq!(first.tip(), 11);
+        assert_eq!(second.tip(), 15);
+        assert_eq!(first.stock_use(), 17_000.0);
+        assert_eq!(second.stock_use(), 16_100.0);
+        assert!((first.revenue() - 1_342.831_787_109_375).abs() < 1e-9);
+        assert!((second.revenue() - 1_363.573_242_187_5).abs() < 1e-9);
 
-        let cases = [
-            (first, 400_000.0, 383_900.0, 492_344.45, 493_731.73),
-            (second, 583_900.0, 564_500.0, 493_489.09, 494_881.34),
-        ];
-        for (order, stock_before, stock_after, cash_before, cash_after) in cases {
-            let mut sim = BranchSim::new();
-            sim.set_open(true);
-            sim.set_stock(stock_before);
-            sim.set_stock_capacity(stock_before);
-            sim.set_starting_cash(cash_before);
-            let StepOutcome::Sale(sale) = sim.settle_order_input(&order) else {
-                panic!("expected order sale");
-            };
-            assert_eq!(sale.clock_minutes, order.minute);
-            assert_eq!(sale.servings, order.servings);
-            assert_eq!(sim.snapshot().stock, stock_after);
-            assert!((sim.snapshot().cash - cash_before).abs() < 1e-9);
-            assert_eq!(sim.snapshot().sales, 1);
+        let mut sim = BranchSim::new();
+        sim.set_open(true);
+        sim.set_stock(200_000.0);
+        sim.set_stock_capacity(200_000.0);
+        sim.set_starting_cash(492_377.77);
 
-            sim.credit_payment(&sale);
-            // The native PAYMENT line prints the credited cash to cents.
-            assert!((sim.snapshot().cash - cash_after).abs() < 0.01);
-            assert!((sale.cash_delta - (cash_after - cash_before)).abs() < 0.01);
-        }
+        let StepOutcome::Sale(first_sale) = sim.settle_order_input(&first) else {
+            panic!("expected the first captured order to sell");
+        };
+        assert_eq!(first_sale.recipe_id, first.recipe_id);
+        assert_eq!(first_sale.clock_minutes, first.minute);
+        assert_eq!(sim.snapshot().stock, 183_000.0);
+        assert_eq!(sim.snapshot().sales, 1);
+        assert_eq!(sim.recipe_sales(first.recipe_id), 1);
+        assert_eq!(sim.recipe_sales(second.recipe_id), 0);
+        assert!((sim.snapshot().cash - 492_377.77).abs() < 1e-9);
+
+        sim.credit_payment(&first_sale);
+        // The native PAYMENT line prints the credited cash to cents.
+        assert!((sim.snapshot().cash - 493_720.61).abs() < 0.01);
+        assert!((first_sale.cash_delta - 1_342.83).abs() < 0.01);
+
+        // A delivery and operating costs occur between the two payments.
+        sim.set_stock(383_000.0);
+        sim.set_stock_capacity(383_000.0);
+        sim.set_starting_cash(493_535.33);
+        let StepOutcome::Sale(second_sale) = sim.settle_order_input(&second) else {
+            panic!("expected the second captured order to sell");
+        };
+        assert_eq!(second_sale.recipe_id, second.recipe_id);
+        assert_eq!(second_sale.clock_minutes, second.minute);
+        assert_eq!(sim.snapshot().stock, 366_900.0);
+        assert_eq!(sim.snapshot().sales, 2);
+        assert_eq!(sim.recipe_sales(first.recipe_id), 1);
+        assert_eq!(sim.recipe_sales(second.recipe_id), 1);
+        assert!((sim.snapshot().cash - 493_535.33).abs() < 1e-9);
+
+        sim.credit_payment(&second_sale);
+        assert!((sim.snapshot().cash - 494_898.90).abs() < 0.01);
+        assert!((second_sale.cash_delta - 1_363.57).abs() < 0.01);
+        assert_eq!(
+            sim.snapshot().servings_sold,
+            first.servings + second.servings
+        );
     }
 
     #[test]

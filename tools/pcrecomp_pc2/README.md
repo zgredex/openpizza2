@@ -305,24 +305,36 @@ Rust customer-visit port.
 
 ## Captured order inputs
 
-`PC2_TRACE_SALES=1` now logs the inputs before `Branch_ProcessCustomerOrder`
+`PC2_TRACE_SALES=1` logs the inputs before `Branch_ProcessCustomerOrder`
 and keeps the stock-consuming `SALE` and cash-crediting `PAYMENT` as
-separate events. The two calibrated orders use different recipes and prices:
+separate events. `ORDER_INPUT` carries the menu price and bits, the recipe
+pointer and stable quantity fingerprint, the ingredient sum, the active
+stock batches, the tip base, and the clock. `ORDER_RATING` carries the
+customer-group rating. The verified reload run has two consecutive orders
+with different recipes and prices:
 
 ```text
-ORDER_INPUT clock=12:07 customer=100017 menu_price=11.85281086
-            ingredients=161 stock=400000
-SALE        stock=400000->383900 records=0->1 revenue=1387.28 tip=17
-PAYMENT     customer=100017 amount=1387.28 cash=492344.45->493731.73
+ORDER_INPUT clock=11:07 customer=100004 menu_price=12.09307957
+            recipe=F42E45B0 recipe_hash=53845BAF ingredients=170
+            tip_base=42 stock=200000
+ORDER_RATING customer=100004 rating=65 tip_base=42
+SALE        stock=200000->183000 records=0->1 revenue=1342.83
+            recipe_hash=53845BAF tip=11
+PAYMENT     customer=100004 amount=1342.83 cash=492377.77->493720.61
 
-ORDER_INPUT clock=13:05 customer=100004 menu_price=12.42636204
-            ingredients=194 stock=583900
-SALE        stock=583900->564500 records=0->1 revenue=1392.25 tip=12
-PAYMENT     customer=100004 amount=1392.25 cash=493489.09->494881.34
+ORDER_INPUT clock=12:00 customer=100007 menu_price=11.85281086
+            recipe=F42E3660 recipe_hash=01437164 ingredients=161
+            tip_base=36 stock=383000
+ORDER_RATING customer=100007 rating=66 tip_base=36
+SALE        stock=383000->366900 records=0->1 revenue=1363.57
+            recipe_hash=01437164 tip=15
+PAYMENT     customer=100007 amount=1363.57 cash=493535.33->494898.90
 ```
 
-The stock drop is `ingredients * 100`: `16,100` and `19,400`. The revenue
-is `(100 + tip) * 100 * menu_price * 0.01 + 0.5`, stored as a 32-bit float.
+The stock drop is `ingredients * 100`: `17,000` and `16,100`. The native
+tip is `max(0, (rating - tip_base) >> 1)`; the revenue is
+`(100 + tip) * 100 * menu_price * 0.01 + 0.5`, stored as a 32-bit float.
+The different recipe fingerprints each start their own sales record.
 
 ## Rust customer-visit fixture
 
@@ -348,10 +360,12 @@ The two-order predictor uses the captured inputs directly:
 cargo test -p pc2-sim london_two_orders_predict_from_captured_inputs
 ```
 
-It asserts the exact stock drops (`16,100` and `19,400`), both sales
-records, the computed revenues (`1387.2789306640625` and
-`1392.2525634765625`), and the separate payment credits. The `pc2-sim` suite
-has 31 passing tests.
+It asserts the two different recipe fingerprints, the captured ratings and
+tip bases (tips `11` and `15`), the exact stock drops (`17,000` and
+`16,100`), one sales record per recipe, the computed revenues
+(`1342.831787109375` and `1363.5732421875`), and the separate payment
+credits (`492377.77 -> 493720.61` and `493535.33 -> 494898.90`). The
+`pc2-sim` suite has 31 passing tests.
 
 To verify the menu frame through the recipe:
 

@@ -193,8 +193,10 @@ void pc2_trace_branch_hour(uint32_t branch, uint32_t hour) {
 }
 
 static _Thread_local struct {
-    uint32_t branch, order, recipe, sales_count;
+    uint32_t branch, order, recipe, recipe_hash, sales_count, rating;
     long long stock;
+    int tip_base;
+    int rating_wait;
 } order_trace;
 
 static float pc2_sale_amount(uint32_t bits) {
@@ -202,6 +204,45 @@ static float pc2_sale_amount(uint32_t bits) {
     float amount;
     memcpy(&amount, &bits, sizeof amount);
     return amount;
+}
+
+// Host-side copy of IDMap_Lookup (0x4017F0): keys below 100000 index the
+// table directly, larger IDs use the sorted key array.
+static uint32_t pc2_idmap_lookup(uint32_t map, uint32_t key) {
+    if (!map) return 0;
+    uint32_t count = MEM32(map + 0x0c);
+    uint32_t values = MEM32(map + 4);
+    uint32_t keys = MEM32(map + 8);
+    if (key < 100000) {
+        return key < count ? MEM32(values + 4 * key) : 0;
+    }
+    if (!count || !values || !keys) return 0;
+    int32_t high = (int32_t)count - 1;
+    int32_t low = 0;
+    while (high - low > 1) {
+        int32_t middle = (high + low) >> 1;
+        uint32_t found = MEM32(keys + 4 * middle);
+        if (found == key) return MEM32(values + 4 * middle);
+        if (key < found) {
+            high = middle;
+        } else {
+            low = middle;
+        }
+    }
+    if (MEM32(keys + 4 * low) == key) return MEM32(values + 4 * low);
+    if (MEM32(keys + 4 * high) == key) return MEM32(values + 4 * high);
+    return 0;
+}
+
+// Stable recipe identity across runs; the recipe heap address is not stable.
+static uint32_t pc2_recipe_hash(uint32_t recipe) {
+    uint32_t hash = 2166136261u;
+    if (!recipe) return 0;
+    for (int i = 0; i < 0x56; i++) {
+        hash ^= MEM32(recipe + 100 + 4 * i);
+        hash *= 16777619u;
+    }
+    return hash;
 }
 
 void pc2_trace_order_before(uint32_t branch, uint32_t order) {
@@ -212,6 +253,9 @@ void pc2_trace_order_before(uint32_t branch, uint32_t order) {
     uint32_t records = MEM32(recipe + 0x304);
     uint32_t game = MEM32(0x0057C670);
     uint32_t calendar = game ? MEM32(game + 0x94) : 0;
+    uint32_t customer = MEM32(order + 0x10);
+    uint32_t group = game ? pc2_idmap_lookup(game + 0x3c, customer) : 0;
+    int tip_base = group ? (int)MEM32(group + 0x2c) : 0;
     uint32_t batches = MEM32(branch + 0x19ac);
     uint32_t entries = MEM32(branch + 0x199c);
     int ingredient_sum = 0;
@@ -219,40 +263,70 @@ void pc2_trace_order_before(uint32_t branch, uint32_t order) {
     order_trace.branch = branch;
     order_trace.order = order;
     order_trace.recipe = recipe;
+    order_trace.recipe_hash = pc2_recipe_hash(recipe);
     order_trace.sales_count = records ? MEM32(records + 0x14) : 0;
     order_trace.stock = pc2_branch_stock(branch);
+    order_trace.tip_base = tip_base;
+    order_trace.rating = 0;
+    order_trace.rating_wait = 1;
     fprintf(stderr,
             "[trace] ORDER_INPUT slot=0 branch=%u clock=%02u:%02u customer=%u "
-            "menu_price=%.8f menu_bits=%08X recipe=%X ingredients=%d stock=%lld batches=%u",
+            "menu_price=%.8f menu_bits=%08X recipe=%X recipe_hash=%08X "
+            "ingredients=%d tip_base=%d stock=%lld batches=%u",
             MEM32(branch + 0x3c), calendar ? MEM8(calendar + 7) : 0,
-            calendar ? MEM8(calendar + 6) : 0, MEM32(order + 0x10),
+            calendar ? MEM8(calendar + 6) : 0, customer,
             (double)pc2_sale_amount(MEM32(order + 4)), MEM32(order + 4), recipe,
-            ingredient_sum, (long long)order_trace.stock, batches);
-    for (uint32_t i = 0; entries && i < batches && i < 4; i++) {
+            order_trace.recipe_hash, ingredient_sum, tip_base,
+            (long long)order_trace.stock, batches);
+    for (uint32_t i = 0; entries && i < batches; i++) {
         uint32_t batch = MEM32(entries + 4 * i);
-        fprintf(stderr, " batch%u=%d", i, batch ? (int)MEM32(batch) : 0);
+        if (batch && MEM32(batch + 0x1c)) {
+            fprintf(stderr, " batch%u=%d", i, (int)MEM32(batch));
+        }
+    }
+    for (int i = 0; i < 0x56; i++) {
+        uint32_t quantity = MEM32(recipe + 100 + 4 * i);
+        if (quantity) fprintf(stderr, " qty%d=%u", i, quantity);
     }
     fputc('\n', stderr);
 }
 
+void pc2_trace_order_rating_result(uint32_t rating) {
+    if (!order_trace.rating_wait || !order_trace.branch) return;
+    order_trace.rating = rating;
+    fprintf(stderr, "[trace] ORDER_RATING slot=0 branch=%u customer=%u rating=%u tip_base=%d\n",
+            MEM32(order_trace.branch + 0x3c), MEM32(order_trace.order + 0x10), rating,
+            order_trace.tip_base);
+    order_trace.rating_wait = 0;
+}
+
 void pc2_trace_order_after(uint32_t result) {
+    order_trace.rating_wait = 0;
     uint32_t branch = order_trace.branch;
     if (!branch) return;
     uint32_t records = MEM32(order_trace.recipe + 0x304);
     float revenue = result ? pc2_sale_amount(MEM32(order_trace.order + 0x1c)) : 0;
     float price = pc2_sale_amount(MEM32(order_trace.order + 4));
-    int tip = 0;
+    int observed_tip = 0;
     if (result && price > 0.0f) {
         float factor = (float)result * price * 0.01f;
-        if (factor > 0.0f) tip = (int)(revenue / factor - 100.0f);
+        if (factor > 0.0f) observed_tip = (int)(revenue / factor - 100.0f);
+    }
+    int predicted_tip = 0;
+    if (order_trace.rating) {
+        predicted_tip = ((int)order_trace.rating - order_trace.tip_base) >> 1;
+        if (predicted_tip < 0) predicted_tip = 0;
     }
     fprintf(stderr, "[trace] SALE Branch_ProcessCustomerOrder slot=0 branch=%u servings=%u "
                     "stock=%lld->%lld records=%u->%u revenue=%.2f customer=%u "
-                    "menu_price=%.8f menu_bits=%08X revenue_bits=%08X tip=%d\n",
+                    "menu_price=%.8f menu_bits=%08X revenue_bits=%08X recipe=%X "
+                    "recipe_hash=%08X rating=%u tip_base=%d tip=%d\n",
             MEM32(branch + 0x3c), result, order_trace.stock, pc2_branch_stock(branch),
             order_trace.sales_count, records ? MEM32(records + 0x14) : 0, (double)revenue,
             MEM32(order_trace.order + 0x10), (double)price,
-            MEM32(order_trace.order + 4), MEM32(order_trace.order + 0x1c), tip);
+            MEM32(order_trace.order + 4), MEM32(order_trace.order + 0x1c),
+            order_trace.recipe, order_trace.recipe_hash, order_trace.rating,
+            order_trace.tip_base, predicted_tip ? predicted_tip : observed_tip);
     order_trace.branch = 0;
 }
 
@@ -263,7 +337,7 @@ static double pc2_player_cash(uint32_t player) {
 }
 
 static _Thread_local struct {
-    uint32_t player, branch_id, customer;
+    uint32_t player, branch_id, customer, recipe, recipe_hash;
     float amount;
     double cash;
 } payment_trace;
@@ -277,6 +351,8 @@ void pc2_trace_payment_before(uint32_t branch, uint32_t order) {
     payment_trace.player = player;
     payment_trace.branch_id = MEM32(branch + 0x3c);
     payment_trace.customer = MEM32(order + 0x10);
+    payment_trace.recipe = MEM32(order);
+    payment_trace.recipe_hash = pc2_recipe_hash(payment_trace.recipe);
     payment_trace.amount = pc2_sale_amount(MEM32(order + 0x1c));
     payment_trace.cash = pc2_player_cash(player);
 }
@@ -285,9 +361,10 @@ void pc2_trace_payment_after(void) {
     uint32_t player = payment_trace.player;
     if (!player) return;
     fprintf(stderr, "[trace] PAYMENT slot=0 branch=%u customer=%u "
-                    "amount=%.2f cash=%.2f->%.2f\n",
+                    "amount=%.2f cash=%.2f->%.2f recipe=%X recipe_hash=%08X\n",
             payment_trace.branch_id, payment_trace.customer, (double)payment_trace.amount,
-            payment_trace.cash, pc2_player_cash(player));
+            payment_trace.cash, pc2_player_cash(player), payment_trace.recipe,
+            payment_trace.recipe_hash);
     payment_trace.player = 0;
 }
 
