@@ -45,6 +45,8 @@ def repair_broken_entries(text: str) -> str:
                   lambda m: m.group(1) + '\\n");', text)
     text = re.sub(r'(\[trace\] Resource_Open enter path=%s)\n",',
                   lambda m: m.group(1) + '\\n",', text)
+    text = re.sub(r'(    pc2_trace_branch_before\([^\n]*\);\n)\1+',
+                  r'\1', text)
     return text
 
 
