@@ -1,0 +1,22 @@
+{
+  "name": "main menu press and drag-outside cancellation",
+  "watches": {
+    "pending_screen": {"address": "0x0056386C", "type": "u32"},
+    "screen": {"address": "0x0057C5B8", "type": "u32"}
+  },
+  "steps": [
+    {"wait_function": "Screen_MainMenu"},
+    {"wait_value": {"watch": "pending_screen", "equals": 0}},
+    {"assert_value": {"watch": "screen", "equals": 21}},
+    {"begin": "drag-outside"},
+    {"mouse": {"action": "move", "x": 650, "y": 18}},
+    {"mouse": {"action": "down", "x": 650, "y": 18}},
+    {"delay_ms": 120},
+    {"snapshot": "after-press"},
+    {"mouse": {"action": "move", "x": 400, "y": 300}},
+    {"mouse": {"action": "up", "x": 400, "y": 300}},
+    {"delay_ms": 180},
+    {"assert_value": {"watch": "screen", "equals": 21}},
+    {"end": "drag-outside"}
+  ]
+}

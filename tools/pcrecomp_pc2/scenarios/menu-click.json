@@ -1,0 +1,21 @@
+{
+  "name": "start a new game from the main menu",
+  "watches": {
+    "pending_screen": {"address": "0x0056386C", "type": "u32"},
+    "screen": {"address": "0x0057C5B8", "type": "u32"},
+    "free_play_flag": {"address": "0x0057BB20", "type": "u8"}
+  },
+  "steps": [
+    {"wait_function": "0x00476920"},
+    {"wait_value": {"watch": "pending_screen", "equals": 0}},
+    {"assert_value": {"watch": "screen", "equals": 21}},
+    {"begin": "posted-click-inside"},
+    {"post": {"message": "0x0200", "lparam": "0x0012028A"}},
+    {"post": {"message": "0x0201", "wparam": 1, "lparam": "0x0012028A"}},
+    {"post": {"message": "0x0202", "lparam": "0x0012028A"}},
+    {"wait_function": "0x0046DBD0"},
+    {"wait_value": {"watch": "pending_screen", "equals": 0}},
+    {"assert_value": {"watch": "screen", "equals": 28}},
+    {"end": "posted-click-inside"}
+  ]
+}

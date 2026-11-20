@@ -24,6 +24,8 @@ Linux. It builds 32-bit SDL2/SDL2_ttf into a private sysroot; no root or
 tools/pcrecomp_pc2/build.sh
 ```
 
+For headless input replays, guest function traces, and state capture, see [Lifted PC2 trace capture](TRACE_CAPTURE.md).
+
 The default work directory is `/tmp/opencode/pcrecomp-pc2`; override it with
 `PC2_WORK=/path`. Existing SDL builds, the lift and host objects are reused.
 
@@ -194,9 +196,32 @@ PC2_RAW_DUMP=/tmp/opencode/pcrecomp-pc2-fresh/london-lease \
 timeout 360s /tmp/opencode/pcrecomp-pc2-fresh/pc2-native/pc2 fastfood2.exe
 ```
 
-  The last verified checkpoint is a London restaurant lease owned by player
-  slot 0, with the tutorial still on the `Hire personnel` page. The menu,
-  hourly update and first business transaction are no longer blockers.
+## London staffing checkpoint
+
+The staffing replay follows the in-game tutorial to City Administration and
+the Employment Office. The `Go to` action centers a city building of type
+`25`. Clicking the building at `(299,412)` reaches `UI_CreateInfoPanelPolice`.
+The Employment Office tab at `(581,506)` opens `Screen_PersonnelOverview`.
+
+The replay hires a cook (role `0`), a service employee (role `2`), and two
+errand workers (role `3`). The `Company_AssignEmployee` trace checks each
+person's recorded player slot and branch ID as well as their presence in the
+branch roster. In the verified run, human slot `0` owns branch `100000`, and
+its roster grows from zero to four. Employee IDs in that run were `100280`,
+`100300`, `100310`, and `100312`. Candidate IDs may vary with simulation timing.
+
+```sh
+python3 tools/pcrecomp_pc2/capture.py run \
+  tools/pcrecomp_pc2/scenarios/london-staff.json \
+  --work /tmp/opencode/pcrecomp-pc2-fresh \
+  --out /tmp/pc2-london-staff --timeout 150 --max-events 0
+```
+
+The replay stops when branch `100000` has four employees. Read the `STAFF`
+lines in `host.log` and the final watches in `report.json`. Set
+`PC2_TRACE_SALES=1` in a subsequent replay to log slot `0`'s scheduled opening
+hours and to check stock consumption and the recipe's sales-record count on
+return from `Branch_ProcessCustomerOrder`.
 
 To verify the menu frame through the recipe:
 

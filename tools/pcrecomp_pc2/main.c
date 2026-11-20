@@ -6,6 +6,9 @@
 #include "host.h"
 #include "win32hle.h"
 #include "ddraw_int.h"
+#ifdef PC2_CAPTURE
+#include "capture.h"
+#endif
 
 int pc2_register_shims(void);
 
@@ -105,6 +108,120 @@ void pc2_trace_branch_after(uint32_t branch_id) {
             pc2_branch_site ? (int)MEM32(pc2_branch_site + 0x2c) : -1);
 }
 
+void pc2_trace_random_building(uint32_t obj) {
+    static int n;
+    if (!getenv("PC2_TRACE_RANDOM") || n++ >= 12) return;
+    if (!obj) {
+        fprintf(stderr, "[trace] RANDOM building null\n");
+        return;
+    }
+    fprintf(stderr,
+            "[trace] RANDOM building obj=%X type=%d rect=%d,%d..%d,%d "
+            "index=%d cell=%d,%d\n",
+            obj, (int)MEM32(obj + 4),
+            (int)MEM32(obj + 0x10), (int)MEM32(obj + 0x14),
+            (int)MEM32(obj + 0x18), (int)MEM32(obj + 0x1c),
+            (int)MEM32(obj + 0x24), (int)MEM32(obj + 0x2c),
+            (int)MEM32(obj + 0x30));
+}
+
+void pc2_trace_center_object(uint32_t obj) {
+    static int n;
+    if (!getenv("PC2_TRACE_RANDOM") || n++ >= 12) return;
+    if (!obj) {
+        fprintf(stderr, "[trace] CENTER object null\n");
+        return;
+    }
+    fprintf(stderr,
+            "[trace] CENTER object obj=%X type=%d rect=%d,%d..%d,%d "
+            "index=%d cell=%d,%d\n",
+            obj, (int)MEM32(obj + 4),
+            (int)MEM32(obj + 0x10), (int)MEM32(obj + 0x14),
+            (int)MEM32(obj + 0x18), (int)MEM32(obj + 0x1c),
+            (int)MEM32(obj + 0x24), (int)MEM32(obj + 0x2c),
+            (int)MEM32(obj + 0x30));
+}
+
+static _Thread_local struct {
+    uint32_t branch, entry, person, role, roster_index, roster_count;
+} staff_trace;
+
+void pc2_trace_staff_before(uint32_t branch, uint32_t entry, uint32_t role) {
+    staff_trace.branch = 0;
+    if (!getenv("PC2_TRACE_STAFF") || !branch || !entry || MEM32(branch + 0x30) != 0) return;
+    uint32_t person = MEM32(entry);
+    if (!person) return;
+    staff_trace.branch = branch;
+    staff_trace.entry = entry;
+    staff_trace.person = person;
+    staff_trace.role = role;
+    staff_trace.roster_index = MEM32(branch + 0x150c);
+    staff_trace.roster_count = MEM32(branch + 0x1514);
+}
+
+void pc2_trace_staff_after(void) {
+    uint32_t branch = staff_trace.branch;
+    if (!branch) return;
+    uint32_t person = staff_trace.person;
+    uint32_t roster = MEM32(branch + 0x1504);
+    uint32_t count = MEM32(branch + 0x1514);
+    int on_roster = roster && staff_trace.roster_index < MEM32(branch + 0x150c) &&
+                    MEM32(roster + 4 * staff_trace.roster_index) == staff_trace.entry;
+    fprintf(stderr, "[trace] STAFF Company_AssignEmployee employee=%u role=%u slot=%u branch=%u "
+                    "employee_slot=%u employee_branch=%u roster=%u->%u on_roster=%d\n",
+            MEM32(person + 0x814), staff_trace.role, MEM32(branch + 0x30), MEM32(branch + 0x3c),
+            MEM32(person + 0x81c), MEM32(person + 0x820), staff_trace.roster_count, count, on_roster);
+    staff_trace.branch = 0;
+}
+
+static long long pc2_branch_stock(uint32_t branch) {
+    uint32_t count = MEM32(branch + 0x19ac);
+    uint32_t entries = MEM32(branch + 0x199c);
+    long long stock = 0;
+    for (uint32_t i = 0; entries && i < count; i++) {
+        uint32_t batch = MEM32(entries + 4 * i);
+        if (batch && MEM32(batch + 0x1c)) stock += (int32_t)MEM32(batch);
+    }
+    return stock;
+}
+
+void pc2_trace_branch_hour(uint32_t branch, uint32_t hour) {
+    if (!getenv("PC2_TRACE_SALES") || !branch || MEM32(branch + 0x30) != 0 || hour >= 24) return;
+    fprintf(stderr, "[trace] BRANCH_HOUR slot=0 branch=%u hour=%u scheduled=%u roster=%u stock=%lld\n",
+            MEM32(branch + 0x3c), hour, MEM8(branch + 0x1a08 + hour),
+            MEM32(branch + 0x1514), pc2_branch_stock(branch));
+}
+
+static _Thread_local struct {
+    uint32_t branch, order, recipe, sales_count;
+    long long stock;
+} order_trace;
+
+void pc2_trace_order_before(uint32_t branch, uint32_t order) {
+    order_trace.branch = 0;
+    if (!getenv("PC2_TRACE_SALES") || !branch || !order || MEM32(branch + 0x30) != 0) return;
+    uint32_t recipe = MEM32(order);
+    if (!recipe) return;
+    uint32_t records = MEM32(recipe + 0x304);
+    order_trace.branch = branch;
+    order_trace.order = order;
+    order_trace.recipe = recipe;
+    order_trace.sales_count = records ? MEM32(records + 0x14) : 0;
+    order_trace.stock = pc2_branch_stock(branch);
+}
+
+void pc2_trace_order_after(uint32_t result) {
+    uint32_t branch = order_trace.branch;
+    if (!branch) return;
+    uint32_t records = MEM32(order_trace.recipe + 0x304);
+    fprintf(stderr, "[trace] SALE Branch_ProcessCustomerOrder slot=0 branch=%u servings=%u "
+                    "stock=%lld->%lld records=%u->%u revenue=%d\n",
+            MEM32(branch + 0x3c), result, order_trace.stock, pc2_branch_stock(branch),
+            order_trace.sales_count, records ? MEM32(records + 0x14) : 0,
+            result ? (int32_t)MEM32(order_trace.order + 0x1c) : 0);
+    order_trace.branch = 0;
+}
+
 static const uint8_t *pc2_dd_frame_hook(surf_t *primary) {
     static int n;
     if (n++ < 4) {
@@ -162,6 +279,9 @@ static void pc2_poll(void) {
     if (pending == 21) pc2_saw_menu = 1;
     if (pending == 28) pc2_char_seen = 1;
     if (pending == 22) pc2_mission_seen = 1;
+#ifdef PC2_CAPTURE
+    pc2_capture_poll();
+#endif
     const char *path = getenv("PC2_RAW_DUMP");
     if (path && pc2_saw_menu && pending == 0 && !pc2_raw_done) {
         pc2_dump_renderer(path, 100);
@@ -359,6 +479,9 @@ int main(int argc, char **argv) {
         return 64;
     }
 
+#ifdef PC2_CAPTURE
+    pc2_capture_init();
+#endif
     recomp_host_init();
     pc2_register_shims();
 
@@ -398,5 +521,12 @@ int main(int argc, char **argv) {
     }
     hle_screen_poll_hook = pc2_poll;
 
-    return (int)recomp_host_run();
+#ifdef PC2_CAPTURE
+    pc2_capture_boot_ready();
+#endif
+    int status = (int)recomp_host_run();
+#ifdef PC2_CAPTURE
+    pc2_capture_guest_exit(status);
+#endif
+    return status;
 }

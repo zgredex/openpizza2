@@ -130,11 +130,28 @@ done
 
 python3 "$REPO_ROOT/tools/pcrecomp_pc2/trace_points.py" "$GEN"
 
+CAPTURE=${PC2_CAPTURE_BUILD:-0}
+BUILD_LOG="$WORK/host-build.log"
+if [ "$CAPTURE" = 1 ]; then
+    HOSTDIR="$WORK/pc2-capture"
+    python3 "$REPO_ROOT/tools/pcrecomp_pc2/instrument_capture.py" \
+        "$GEN" "$PC/runtime/win32hle/host_lite.c" "$HOSTDIR/gen"
+    GEN="$HOSTDIR/gen"
+    BUILD_LOG="$HOSTDIR/build.log"
+fi
+
 mkdir -p "$HOSTDIR"
-make -C "$REPO_ROOT/tools/pcrecomp_pc2" \
-    PC="$PC" GEN="$GEN" SYS="$SYS" \
+if ! make -C "$REPO_ROOT/tools/pcrecomp_pc2" \
+    PC="$PC" GEN="$GEN" SYS="$SYS" CAPTURE="$CAPTURE" \
     OUT="$HOSTDIR/pc2" OBJ_DIR="$HOSTDIR/obj" \
-    -j "${JOBS:-4}" > "$WORK/host-build.log" 2>&1
+    -j "${JOBS:-4}" > "$BUILD_LOG" 2>&1; then
+    tail -40 "$BUILD_LOG" >&2
+    exit 1
+fi
+if [ "${PC2_BUILD_ONLY:-0}" = 1 ]; then
+    echo "built $HOSTDIR/pc2"
+    exit 0
+fi
 
 set +e
 (cd "$REPO_ROOT/game" && \

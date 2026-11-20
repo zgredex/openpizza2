@@ -36,12 +36,35 @@ TARGETS = [
     ("sub_0046DBD0", "Screen_CharacterSelect", True),
     ("sub_00486590", "Game_EndOfHour", True),
     ("sub_004F7420", "Player_CreateBranch", True),
+    ("sub_004C6AB0", "MissionHintButton", True),
+    ("sub_004D23B0", "Game_CenterViewOnObject", True),
+    ("sub_004D74C0", "Map_GetRandomBuildingOfType", True),
+    ("sub_00484A90", "SubMenu_BuildPolicePanelPage", True),
+    ("sub_00430950", "UI_CreateInfoPanelPolice", True),
+    ("sub_004CF380", "CityAdminPanel_UpdateTabButtons", True),
+    ("sub_0042F340", "SubMenu_BuildTownAdministration", True),
+    ("sub_00415620", "Screen_PersonnelOverview", True),
+    ("sub_0047C3E0", "Company_AssignEmployee", True),
+    ("sub_004773A0", "Branch_ProcessHour", True),
+    ("sub_0047D4A0", "Branch_ProcessCustomerOrder", True),
 ]
+
+TRACE_DECLARATIONS = {
+    "pc2_trace_branch_before": "uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t",
+    "pc2_trace_branch_after": "uint32_t",
+    "pc2_trace_random_building": "uint32_t",
+    "pc2_trace_center_object": "uint32_t",
+    "pc2_trace_staff_before": "uint32_t, uint32_t, uint32_t",
+    "pc2_trace_staff_after": "void",
+    "pc2_trace_branch_hour": "uint32_t, uint32_t",
+    "pc2_trace_order_before": "uint32_t, uint32_t",
+    "pc2_trace_order_after": "uint32_t",
+}
 
 
 def repair_broken_entries(text: str) -> str:
     """Repair trace strings written by an older non-idempotent patcher."""
-    text = re.sub(r'(\[trace\] [A-Za-z0-9_]+ enter)\n"\);',
+    text = re.sub(r'(\[trace\] [A-Za-z0-9_]+ (?:enter|return))\n"\);',
                   lambda m: m.group(1) + '\\n");', text)
     text = re.sub(r'(\[trace\] Resource_Open enter path=%s)\n",',
                   lambda m: m.group(1) + '\\n",', text)
@@ -57,11 +80,12 @@ def add_includes(text: str) -> str:
     if "#include <stdlib.h>" not in text:
         text = text.replace("#include <stdio.h>\n",
                             "#include <stdio.h>\n#include <stdlib.h>\n", 1)
-    if "extern void pc2_trace_branch_before" not in text:
-        text = text.replace("#include <stdlib.h>\n",
-                            "#include <stdlib.h>\n"
-                            "extern void pc2_trace_branch_before(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t);\n"
-                            "extern void pc2_trace_branch_after(uint32_t);\n", 1)
+    declarations = "".join(
+        f"extern void {name}({args});\n"
+        for name, args in TRACE_DECLARATIONS.items()
+        if f"{name}(" in text and f"extern void {name}(" not in text
+    )
+    text = text.replace("#include <stdlib.h>\n", "#include <stdlib.h>\n" + declarations, 1)
     return text
 
 
@@ -72,9 +96,20 @@ def patch_function(text: str, name: str, label: str) -> tuple[str, bool]:
     if not match:
         return text, False
     body = match.group(0)
-    if f"[trace] {label}" in body:
+    custom = label in ("Map_GetRandomBuildingOfType", "Game_CenterViewOnObject")
+    if custom:
+        if "pc2_trace_random_building" in body or "pc2_trace_center_object" in body:
+            return text, False
+        body = re.sub(
+            r'[ \t]*fprintf\(stderr, "\[trace\] ' + re.escape(label) + r' (enter|return)\\n"\);\n',
+            '', body)
+    elif f"[trace] {label}" in body:
         return text, False
     if label == "Player_CreateBranch" and "pc2_trace_branch_before" in body:
+        return text, False
+    if label in ("Company_AssignEmployee", "Branch_ProcessHour", "Branch_ProcessCustomerOrder") and f"[trace] {label}" not in body and any(
+        hook in body for hook in ("pc2_trace_staff_before", "pc2_trace_branch_hour", "pc2_trace_order_before")
+    ):
         return text, False
 
     if label == "Resource_Open":
@@ -87,6 +122,21 @@ def patch_function(text: str, name: str, label: str) -> tuple[str, bool]:
         entry = ('    pc2_trace_branch_before(ecx, MEM32(esp + 4), MEM32(esp + 8), '
                  'MEM32(esp + 12), MEM32(esp + 16), MEM32(esp + 20));\n')
         ret = 'pc2_trace_branch_after(eax); return;'
+    elif label == "Map_GetRandomBuildingOfType":
+        entry = ''
+        ret = 'pc2_trace_random_building(eax); return;'
+    elif label == "Game_CenterViewOnObject":
+        entry = '    pc2_trace_center_object(ecx);\n'
+        ret = f'fprintf(stderr, "[trace] {label} return\\n"); return;'
+    elif label == "Company_AssignEmployee":
+        entry = '    pc2_trace_staff_before(ecx, MEM32(esp + 4), MEM32(esp + 8));\n'
+        ret = '{ pc2_trace_staff_after(); return; }'
+    elif label == "Branch_ProcessHour":
+        entry = '    pc2_trace_branch_hour(ecx, MEM32(esp + 4));\n'
+        ret = 'return;'
+    elif label == "Branch_ProcessCustomerOrder":
+        entry = '    pc2_trace_order_before(ecx, MEM32(esp + 4));\n'
+        ret = '{ pc2_trace_order_after(eax); return; }'
     else:
         entry = f'    fprintf(stderr, "[trace] {label} enter\\n");\n'
         ret = f'fprintf(stderr, "[trace] {label} return\\n"); return;'
@@ -129,8 +179,10 @@ def main() -> int:
             changed |= did
         text, did = patch_pending(text)
         changed |= did
-        if changed:
-            path.write_text(add_includes(text))
+        if changed or any(f"{name}(" in text for name in TRACE_DECLARATIONS):
+            text = add_includes(text)
+        if changed or text != repaired:
+            path.write_text(text)
             changed_files += 1
 
     print(f"trace points: {changed_files} generated file(s) updated")
