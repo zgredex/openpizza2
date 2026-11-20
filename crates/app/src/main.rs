@@ -1329,12 +1329,69 @@ fn spawn_free_play_session(
     Ok(child.id())
 }
 
+fn apply_campaign_command(world: &mut World, command: &str) -> Result<bool, String> {
+    let command = command.trim();
+    if let Some(role) = command.strip_prefix("hire=") {
+        let role = pc2_sim::EmployeeRole::parse(role)
+            .map_err(|error| format!("invalid hire command {command}: {error}"))?;
+        let staff = world.hire_campaign_employee(role).map_err(str::to_owned)?;
+        println!("campaign: hired role={role:?} staff={staff}");
+        Ok(true)
+    } else if let Some(tile) = command.strip_prefix("warehouse=") {
+        let tile: u32 = tile
+            .parse()
+            .map_err(|_| format!("invalid warehouse tile: {tile}"))?;
+        world
+            .lease_campaign_warehouse(tile)
+            .map_err(str::to_owned)?;
+        println!("campaign: warehouse tile={tile}");
+        Ok(true)
+    } else if command == "deliveries" {
+        world.enable_campaign_deliveries().map_err(str::to_owned)?;
+        println!("campaign: deliveries enabled");
+        Ok(true)
+    } else if let Some(units) = command.strip_prefix("delivery=") {
+        let units: f64 = units
+            .parse()
+            .map_err(|_| format!("invalid delivery units: {units}"))?;
+        let stock = world.deliver_campaign_stock(units).map_err(str::to_owned)?;
+        println!("campaign: delivery stock={stock:.0}");
+        Ok(true)
+    } else if let Some(hours) = command.strip_prefix("hours=") {
+        let (open, close) = hours
+            .split_once('-')
+            .ok_or_else(|| format!("invalid hours command: {hours}"))?;
+        let open: u8 = open
+            .parse()
+            .map_err(|_| format!("invalid opening hour: {open}"))?;
+        let close: u8 = close
+            .parse()
+            .map_err(|_| format!("invalid closing hour: {close}"))?;
+        world
+            .set_campaign_opening_hours(open, close)
+            .map_err(str::to_owned)?;
+        println!("campaign: hours={open}-{close}");
+        Ok(true)
+    } else {
+        Ok(false)
+    }
+}
+
 fn apply_world_command(world: &mut World, command: &str) -> Result<(), String> {
     let command = command.trim();
     if command.eq_ignore_ascii_case("open") {
-        world.set_open(true);
+        if world.is_campaign() {
+            world.set_campaign_open(true).map_err(str::to_owned)?;
+        } else {
+            world.set_open(true);
+        }
     } else if command.eq_ignore_ascii_case("close") {
         world.set_open(false);
+    } else if let Some(value) = command.strip_prefix("minutes=") {
+        let minute = value
+            .parse::<u32>()
+            .map_err(|_| format!("invalid minute: {value}"))?;
+        world.set_minute(minute);
     } else if command.eq_ignore_ascii_case("step") {
         world.step();
     } else if let Some(value) = command.strip_prefix("capacity=") {
@@ -1462,6 +1519,7 @@ fn run_campaign_start(args: &Args) -> Result<(), String> {
     let title = scenario.city_name.clone();
     // GameClock_Reset zeros the clock counters for a newly constructed game.
     let mut world = initialize_session(0, Some(profile), Some(scenario));
+    world.prepare_campaign_new_game();
     let mission = world
         .scenario()
         .and_then(|scenario| scenario.campaign_mission.as_ref())
@@ -1490,8 +1548,11 @@ fn run_campaign_start(args: &Args) -> Result<(), String> {
     println!("campaign: world={}", world.snapshot_json());
     if let Some(offer) = world.campaign_property_offer() {
         println!(
-            "campaign: offer tile={} lease_charge={} source=static_initial_state",
-            offer.tile_index, offer.price
+            "campaign: offer tile={} lease_charge={} fee={} total={} source=lifted_initial_state",
+            offer.tile_index,
+            offer.price,
+            offer.fee,
+            offer.total_cost()
         );
     }
     let branch = if world.campaign_property_offer().is_some()
@@ -1506,6 +1567,17 @@ fn run_campaign_start(args: &Args) -> Result<(), String> {
             .as_ref()
             .ok_or("campaign has no available branch site")?;
         run_campaign_script(&mut world, script, &branch.map_path)?;
+        if let Some(branch) = world.campaign_branch() {
+            println!(
+                "campaign: branch id={} tile={} staff={} warehouse={:?} deliveries={} hours={:?}",
+                branch.branch_id,
+                branch.tile_index,
+                branch.staff_count,
+                branch.warehouse_tile,
+                branch.deliveries_enabled,
+                branch.opening_hours
+            );
+        }
         println!("campaign: result={}", world.snapshot_json());
     }
     if args.window || args.output_explicit {
@@ -1527,9 +1599,12 @@ fn run_campaign_script(world: &mut World, script: &str, branch_map: &str) -> Res
                 .map_err(|_| format!("invalid lease tile: {tile}"))?;
             let price = world.lease_campaign_property(tile)?;
             println!(
-                "campaign: leased tile={tile} charge={price} cash={:.6} owned=false",
-                world.snapshot().cash
+                "campaign: leased tile={tile} charge={price} cash={:.6} branch={} owned=false",
+                world.snapshot().cash,
+                world.campaign_branch().map_or(0, |branch| branch.branch_id)
             );
+        } else if apply_campaign_command(world, command)? {
+            // Campaign preparation command handled.
         } else if command == "branch" {
             if !world.can_enter_branch() {
                 return Err("lease the campaign property before entering the branch".into());
@@ -1551,21 +1626,51 @@ enum LeasePrompt {
     Failed(&'static str),
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum LeaseChoice {
+    Confirm,
+    Cancel,
+}
+
+pub(crate) fn lease_button_rects(
+    width: u32,
+    height: u32,
+) -> ((i32, i32, u32, u32), (i32, i32, u32, u32)) {
+    let y = height.saturating_sub(52) as i32;
+    let confirm_x = width.saturating_sub(340) as i32 / 2;
+    let cancel_x = width.saturating_sub(340) as i32 / 2 + 190;
+    ((confirm_x, y, 150, 28), (cancel_x, y, 150, 28))
+}
+
+fn lease_button_choice(x: i32, y: i32, width: u32, height: u32) -> Option<LeaseChoice> {
+    let (confirm, cancel) = lease_button_rects(width, height);
+    let inside = |(rx, ry, rw, rh): (i32, i32, u32, u32)| {
+        x >= rx && y >= ry && x < rx + rw as i32 && y < ry + rh as i32
+    };
+    if inside(confirm) {
+        Some(LeaseChoice::Confirm)
+    } else if inside(cancel) {
+        Some(LeaseChoice::Cancel)
+    } else {
+        None
+    }
+}
+
 fn city_controls(world: &World, branch_loaded: bool, prompt: Option<LeasePrompt>) -> &'static str {
     if prompt.is_some() {
-        "ENTER LEASE   ESC CANCEL"
+        "ENTER CONFIRM   ESC CANCEL"
     } else if !world.mission_goals().is_empty() {
         if branch_loaded && world.can_enter_branch() {
             "ARROWS/WASD PAN   B BRANCH   H HQ   R RAT"
         } else if branch_loaded && world.campaign_property_offer().is_some() {
-            "ARROWS/WASD PAN   B LEASE   H HQ   R RAT"
+            "CLICK STOREFRONT   B VIEW   H HQ   R RAT"
         } else {
             "ARROWS/WASD PAN   H HQ   R RAT"
         }
     } else if branch_loaded && world.can_enter_branch() {
         "ARROWS/WASD PAN   B ENTER BRANCH"
     } else if branch_loaded && world.campaign_property_offer().is_some() {
-        "ARROWS/WASD PAN   B VIEW STOREFRONT"
+        "ARROWS/WASD PAN   CLICK STOREFRONT   B VIEW"
     } else {
         "ARROWS/WASD PAN"
     }
@@ -1577,8 +1682,11 @@ fn campaign_city_summary(world: &World, prompt: Option<LeasePrompt>) -> Option<S
     }
     if let (Some(offer), Some(_)) = (world.campaign_property_offer(), prompt) {
         return Some(format!(
-            "STOREFRONT {}   LEASE {}",
-            offer.tile_index, offer.price
+            "STOREFRONT {}   LEASE {}   FEE {}   TOTAL {}",
+            offer.tile_index,
+            offer.price,
+            offer.fee,
+            offer.total_cost()
         ));
     }
     world
@@ -1628,6 +1736,9 @@ fn show_explore(
     let camera_y =
         (preview.crop.center_y - preview.background_origin.1 - height as i32 / 2).clamp(0, max_y);
     let mut city_view = city_crop(&city_world, width, height, camera_x, camera_y);
+    if let Some((x, y)) = city_world.lease_site {
+        overlay::draw_lease_marker(&mut city_view, width, height, x - camera_x, y - camera_y);
+    }
     overlay::draw_city_status(
         &mut city_view,
         width,
@@ -2993,7 +3104,7 @@ impl WindowApp {
                 let started = Instant::now();
                 let mut view =
                     city_crop(world, self.width, self.height, self.camera_x, self.camera_y);
-                if let (Some(_), Some((x, y))) = (self.lease_prompt, world.lease_site) {
+                if let Some((x, y)) = world.lease_site {
                     overlay::draw_lease_marker(
                         &mut view,
                         self.width,
@@ -3022,6 +3133,21 @@ impl WindowApp {
                             sim.mission_goal_text().as_deref().unwrap_or(""),
                             sim.mission_complete(),
                         );
+                    }
+                    if let Some(offer) = sim.campaign_property_offer() {
+                        if self.lease_prompt.is_some() {
+                            overlay::draw_lease_terms(
+                                &mut view,
+                                self.width,
+                                self.height,
+                                offer.tile_index,
+                                offer.price,
+                                offer.fee,
+                                sim.snapshot().cash,
+                            )
+                            .ok();
+                            overlay::draw_lease_buttons(&mut view, self.width, self.height).ok();
+                        }
                     }
                     viewer.update_image(&view);
                     println!(
@@ -3073,6 +3199,90 @@ impl WindowApp {
                 }
             }
         }
+    }
+
+    fn confirm_campaign_lease(&mut self) -> bool {
+        let Some(sim) = self.sim.as_mut() else {
+            return false;
+        };
+        let Some(offer) = sim.campaign_property_offer() else {
+            return false;
+        };
+        match sim.lease_campaign_property(offer.tile_index) {
+            Ok(charge) => {
+                self.lease_prompt = None;
+                self.mode = ViewMode::Branch;
+                println!(
+                    "campaign: click-lease tile={} charge={charge} cash={:.6} branch={} owned=false",
+                    offer.tile_index,
+                    sim.snapshot().cash,
+                    sim.campaign_branch().map_or(0, |branch| branch.branch_id)
+                );
+                self.refresh_explore();
+                true
+            }
+            Err(error) => {
+                self.lease_prompt = Some(LeasePrompt::Failed(error));
+                self.refresh_explore();
+                false
+            }
+        }
+    }
+
+    fn handle_explore_click(&mut self, x: i32, y: i32) -> bool {
+        if !self.explore || self.mode != ViewMode::City {
+            return false;
+        }
+        if self.lease_prompt.is_some() {
+            match lease_button_choice(x, y, self.width, self.height) {
+                Some(LeaseChoice::Confirm) => {
+                    self.confirm_campaign_lease();
+                }
+                Some(LeaseChoice::Cancel) => {
+                    self.lease_prompt = None;
+                    self.refresh_explore();
+                }
+                None => {}
+            }
+            return true;
+        }
+        let Some(world) = self.city_world.as_ref() else {
+            return false;
+        };
+        let Some((sx, sy)) = world.lease_site else {
+            return false;
+        };
+        let sx = sx - self.camera_x;
+        let sy = sy - self.camera_y;
+        if (x - sx).abs() <= 28 && (y - sy).abs() <= 28 {
+            self.lease_prompt = Some(LeasePrompt::Confirm);
+            self.refresh_explore();
+            true
+        } else {
+            false
+        }
+    }
+
+    fn run_campaign_command(&mut self, command: &str) -> bool {
+        let Some(sim) = self.sim.as_mut() else {
+            return false;
+        };
+        match apply_campaign_command(sim, command) {
+            Ok(true) => {
+                self.refresh_explore();
+                true
+            }
+            Ok(false) => false,
+            Err(error) => {
+                println!("campaign: {error}");
+                true
+            }
+        }
+    }
+
+    #[cfg(test)]
+    fn can_enter_branch_for_test(&self) -> bool {
+        self.sim.as_ref().is_some_and(World::can_enter_branch)
     }
 
     fn handle_explore_key(&mut self, key: &Key) -> bool {
@@ -3167,6 +3377,27 @@ impl WindowApp {
             handled
         } else {
             match key {
+                Key::Character(text) if text.eq_ignore_ascii_case("1") => {
+                    self.run_campaign_command("hire=cook")
+                }
+                Key::Character(text) if text.eq_ignore_ascii_case("2") => {
+                    self.run_campaign_command("hire=service")
+                }
+                Key::Character(text) if text.eq_ignore_ascii_case("3") => {
+                    self.run_campaign_command("hire=errand")
+                }
+                Key::Character(text) if text.eq_ignore_ascii_case("w") => {
+                    self.run_campaign_command("warehouse=1")
+                }
+                Key::Character(text) if text.eq_ignore_ascii_case("v") => {
+                    self.run_campaign_command("deliveries")
+                }
+                Key::Character(text) if text.eq_ignore_ascii_case("d") => {
+                    self.run_campaign_command("delivery=200000")
+                }
+                Key::Character(text) if text.eq_ignore_ascii_case("h") => {
+                    self.run_campaign_command("hours=6-22")
+                }
                 Key::Character(text) if text.eq_ignore_ascii_case("c") => {
                     self.mode = ViewMode::City;
                     self.refresh_explore();
@@ -3300,6 +3531,18 @@ impl ApplicationHandler for WindowApp {
                         setup.set_hover(Some((x, y)));
                         self.refresh_free_play_setup();
                     }
+                } else if self.explore {
+                    let (window_width, window_height) = self
+                        .viewer
+                        .as_ref()
+                        .map(|viewer| {
+                            let size = viewer.window.inner_size();
+                            (size.width.max(1), size.height.max(1))
+                        })
+                        .unwrap_or((self.width, self.height));
+                    let x = (position.x * self.width as f64 / window_width as f64) as i32;
+                    let y = (position.y * self.height as f64 / window_height as f64) as i32;
+                    self.cursor_position = Some((x, y));
                 }
             }
             WindowEvent::CursorLeft { .. } => {
@@ -3330,6 +3573,10 @@ impl ApplicationHandler for WindowApp {
                     }
                 } else if self.activate_menu_at_cursor() && self.menu_pending.is_some() {
                     event_loop.exit();
+                } else if self.explore {
+                    if let Some((x, y)) = self.cursor_position {
+                        self.handle_explore_click(x, y);
+                    }
                 }
             }
             WindowEvent::KeyboardInput {
@@ -3400,7 +3647,14 @@ impl ApplicationHandler for WindowApp {
                         if value.eq_ignore_ascii_case("o") {
                             if let Some(sim) = &mut self.sim {
                                 let open = sim.snapshot().open;
-                                sim.set_open(!open);
+                                if sim.is_campaign() {
+                                    match sim.set_campaign_open(!open) {
+                                        Ok(()) => {}
+                                        Err(error) => println!("campaign: {error}"),
+                                    }
+                                } else {
+                                    sim.set_open(!open);
+                                }
                             }
                             true
                         } else if value == "+" || value == "=" {
@@ -3546,6 +3800,68 @@ mod tests {
         assert_eq!(&moved[0..4], &[20, 10, 0, 255]);
         assert_eq!(&moved[4..8], &[30, 10, 0, 255]);
         assert_ne!(first, moved);
+    }
+
+    fn campaign_world_with_offer() -> World {
+        let scenario = pc2_sim::ScenarioSetup::from_campaign_mission(
+            "lon".into(),
+            "London".into(),
+            280,
+            2,
+            pc2_sim::CampaignMission {
+                starting_cash: 500_000,
+                difficulty_percent: 10,
+                goal_ids: vec![0, 1, 2],
+                rival_count: 1,
+                player_start_hq: 0,
+                rival_start_hq: 1,
+                starting_branches: Vec::new(),
+                property_offer: Some(pc2_sim::CampaignPropertyOffer {
+                    tile_index: 13_694,
+                    price: 2_812,
+                    fee: 1_000,
+                }),
+            },
+        );
+        let mut world = World::new(0).with_scenario(scenario);
+        world.set_cash(500_000.0);
+        world.prepare_campaign_new_game();
+        world
+    }
+
+    #[test]
+    fn city_click_selects_vacant_storefront_and_confirm_leases_it() {
+        let mut app = WindowApp::new("campaign-click".into(), Vec::new(), 800, 600, 0);
+        app.explore = true;
+        app.mode = ViewMode::City;
+        app.sim = Some(campaign_world_with_offer());
+        app.city_world = Some(CityWorld {
+            width: 800,
+            height: 600,
+            pixels: Vec::new(),
+            lease_site: Some((100, 120)),
+        });
+
+        assert!(app.can_enter_branch_for_test() == false);
+        assert!(app.handle_explore_click(100, 120));
+        assert!(matches!(app.lease_prompt, Some(LeasePrompt::Confirm)));
+        let (confirm, cancel) = lease_button_rects(800, 600);
+        assert!(app.handle_explore_click(cancel.0 + 2, cancel.1 + 2));
+        assert!(app.lease_prompt.is_none());
+        assert_eq!(app.mode, ViewMode::City);
+
+        assert!(app.handle_explore_click(100, 120));
+        assert!(app.handle_explore_click(confirm.0 + 2, confirm.1 + 2));
+        assert_eq!(app.mode, ViewMode::Branch);
+        let sim = app.sim.as_ref().unwrap();
+        assert_eq!(sim.snapshot().cash, 496_188.0);
+        assert_eq!(sim.snapshot().stock, 0.0);
+        let branch = sim.campaign_branch().expect("leased branch");
+        assert_eq!(branch.branch_id, 100_000);
+        assert_eq!(branch.tile_index, 13_694);
+        assert_eq!(branch.owner_slot, 0);
+        assert!(branch.player_controlled);
+        assert!(!branch.owned);
     }
 
     #[test]

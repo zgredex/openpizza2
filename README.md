@@ -316,22 +316,42 @@ Campaign Start reads `update\mission.txt`, with `daten\mission.txt` as a
 fallback, and loads the first city's INI and map from the installation. London
 starts at the clock reset with 500,000 cash, two years, goals 0/1/2, one rival,
 and no player branch. Goal and branch records are retained as mission metadata.
-The viewer opens the city and **B** selects the London storefront. Press
-**Enter** to confirm the 5,730 lease charge and enter the playable branch, or
-**Esc** to cancel. The lease grants player control while the property remains
-rented. Press **O** to open and **Space** to step the simulation.
+A New Game campaign starts with cash `500,000`, no player branch, no staff,
+and an empty pantry. The city map shows the vacant London storefront at tile
+`13694` (`(82,83)` in `Lon.iso`). Click its marker to open the lease terms:
+property `13694`, rent `2,812`, one-time fee `1,000`, total cash debit
+`3,812`, and current cash. **Enter** or the CONFIRM button leases it; **Esc**
+or CANCEL closes the terms. The lease creates branch `100000` under
+owner slot `0`, marks it player-controlled and leased, and leaves stock at zero. These values
+match the lifted `Player_CreateBranch` checkpoint (`site_id=0`,
+`branch_id=100000`, HUD cash `500000 -> 496188`).
 
-```sh
-cargo run -p pc2-app -- --campaign-start --output campaign_london.png
-script='lease=13694;branch;open'
-for i in $(seq 14); do script="$script;step"; done
-cargo run -p pc2-app -- --campaign-start --playable-script "$script"
+Inside the branch, prepare the restaurant before opening:
+
+```text
+1/2/3  hire cook/service/errand (staff roster grows)
+W      lease the warehouse
+V      enable deliveries
+D      deliver 200,000 stock units
+H      set opening hours 06:00-22:00
+O      open/close (requires staff, warehouse, deliveries, stock, and open hours)
+Space  advance five minutes
+C      return to the city
 ```
 
-The storefront is tile 13694 at `(82,83)` in `Lon.iso`. Its 5,730 charge is a
-static reconstruction of the initial rental offer using the shipped map,
-`MIETEN 70`, and a neutral mission rent modifier. It assumes the storefront
-is still available. The original runtime quote and recurring rent remain open.
+The keyboard path is mirrored by the campaign script:
+
+```sh
+cargo run -p pc2-app -- --campaign-start --playable-script \
+  'lease=13694;hire=cook;hire=service;hire=errand;hire=errand;warehouse=1;deliveries;delivery=400000;hours=6-22;branch;minutes=360;open;step' \
+  --output /tmp/opencode/campaign_prepare.png
+```
+
+The click path is covered by:
+
+```sh
+cargo test -p pc2-app city_click_selects_vacant_storefront_and_confirm_leases_it -- --nocapture
+```
 
 ### Free Play Setup
 

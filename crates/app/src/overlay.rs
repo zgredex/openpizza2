@@ -403,6 +403,18 @@ pub fn draw_status(
         [235, 235, 235, 255],
     );
     y += line_height;
+    if scenario.is_some() {
+        draw_text(
+            frame,
+            width,
+            height,
+            panel_x + 14,
+            y,
+            "1/2/3 HIRE   W WAREHOUSE   V DELIVERIES   D DELIVERY   H HOURS",
+            [200, 200, 210, 255],
+        );
+        y += line_height;
+    }
     draw_text(
         frame,
         width,
@@ -503,6 +515,116 @@ pub fn draw_lease_marker(frame: &mut [u8], width: u32, height: u32, x: i32, y: i
     let color = [120, 210, 250, 255];
     fill_rect(frame, width, height, x - 13, y - 3, 27, 2, color);
     fill_rect(frame, width, height, x - 1, y - 7, 2, 10, color);
+}
+
+pub fn draw_lease_terms(
+    frame: &mut [u8],
+    width: u32,
+    height: u32,
+    tile: u32,
+    price: u32,
+    fee: u32,
+    cash: f64,
+) -> Result<(), String> {
+    if frame.len() != (width * height * 4) as usize {
+        return Err("overlay frame has the wrong size".into());
+    }
+    let panel_w = 420i32;
+    let panel_h = 180i32;
+    let panel_x = (width as i32 - panel_w) / 2;
+    let panel_y = height as i32 - panel_h - 24;
+    fill_rect(
+        frame,
+        width,
+        height,
+        panel_x,
+        panel_y,
+        panel_w,
+        panel_h,
+        [8, 10, 14, 235],
+    );
+    fill_rect(
+        frame,
+        width,
+        height,
+        panel_x,
+        panel_y,
+        panel_w,
+        2,
+        [120, 210, 250, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 12,
+        "VACANT STOREFRONT",
+        [120, 210, 250, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 36,
+        &format!("PROPERTY {tile}   LEASE {price}   FEE {fee}"),
+        [235, 235, 235, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 60,
+        &format!("TOTAL {}   CASH {:.2}", price.saturating_add(fee), cash),
+        [235, 235, 235, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 88,
+        "ENTER CONFIRM   ESC CANCEL",
+        [200, 200, 210, 255],
+    );
+    draw_text(
+        frame,
+        width,
+        height,
+        panel_x + 14,
+        panel_y + 108,
+        "CLICK CONFIRM / CANCEL",
+        [160, 190, 200, 255],
+    );
+    Ok(())
+}
+
+pub fn draw_lease_buttons(frame: &mut [u8], width: u32, height: u32) -> Result<(), String> {
+    if frame.len() != (width * height * 4) as usize {
+        return Err("overlay frame has the wrong size".into());
+    }
+    let (confirm, cancel) = crate::lease_button_rects(width, height);
+    draw_button(frame, width, height, confirm, "CONFIRM");
+    draw_button(frame, width, height, cancel, "CANCEL");
+    Ok(())
+}
+
+fn draw_button(frame: &mut [u8], width: u32, height: u32, rect: (i32, i32, u32, u32), label: &str) {
+    let (x, y, w, h) = rect;
+    let (w, h) = (w as i32, h as i32);
+    fill_rect(frame, width, height, x, y, w, h, [30, 62, 88, 255]);
+    fill_rect(frame, width, height, x, y, w, 1, [140, 220, 250, 255]);
+    draw_text(
+        frame,
+        width,
+        height,
+        x + 12,
+        y + 8,
+        label,
+        [240, 240, 240, 255],
+    );
 }
 
 pub fn draw_city_status(

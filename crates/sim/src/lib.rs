@@ -607,6 +607,14 @@ pub struct CampaignMission {
 pub struct CampaignPropertyOffer {
     pub tile_index: u32,
     pub price: u32,
+    /// One-time notary/lease fee charged with the first month's rent.
+    pub fee: u32,
+}
+
+impl CampaignPropertyOffer {
+    pub fn total_cost(self) -> u32 {
+        self.price.saturating_add(self.fee)
+    }
 }
 
 /// The launch values committed by `Screen_FreePlaySetup` / the Start handler
@@ -802,6 +810,25 @@ pub struct Customer {
     pub timer_ticks: u32,
 }
 
+/// Native employee role codes used by `Company_AssignEmployee`.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum EmployeeRole {
+    Cook = 0,
+    Service = 2,
+    Errand = 3,
+}
+
+impl EmployeeRole {
+    pub fn parse(value: &str) -> Result<Self, &'static str> {
+        match value {
+            "0" | "cook" => Ok(Self::Cook),
+            "2" | "service" => Ok(Self::Service),
+            "3" | "errand" => Ok(Self::Errand),
+            _ => Err("unknown employee role"),
+        }
+    }
+}
+
 /// A branch owned or rented by the current player. The first London lease
 /// creates one of these; the mission goal evaluator reads the player branch
 /// count (`Game_GetPlayerFieldC20`, `0x4e2280`) and the owned-branch flag
@@ -819,6 +846,10 @@ pub struct PlayerBranch {
     pub rent: u32,
     pub sales: u32,
     pub revenue: f64,
+    pub employees: Vec<EmployeeRole>,
+    pub warehouse_tile: Option<u32>,
+    pub deliveries_enabled: bool,
+    pub opening_hours: Option<(u8, u8)>,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -968,8 +999,31 @@ impl World {
             rent: 0,
             sales: 0,
             revenue: 0.0,
+            employees: vec![
+                EmployeeRole::Cook,
+                EmployeeRole::Service,
+                EmployeeRole::Errand,
+                EmployeeRole::Errand,
+            ],
+            warehouse_tile: None,
+            deliveries_enabled: false,
+            opening_hours: None,
         });
         world
+    }
+
+    /// A New Game campaign starts with no player branch, no employees, and an
+    /// empty pantry. The lease and later preparation steps supply them.
+    pub fn prepare_campaign_new_game(&mut self) {
+        if self.campaign_mission().is_none() {
+            return;
+        }
+        self.sim.set_stock(0.0);
+        self.sim.set_stock_capacity(0.0);
+        self.sim.set_open(false);
+        self.leased_property = None;
+        self.player_branches
+            .retain(|branch| !branch.player_controlled);
     }
 
     pub fn with_profile(mut self, profile: CharacterProfile) -> Self {
@@ -1185,16 +1239,19 @@ impl World {
         if self.leased_property.is_some() {
             return Err("property is already leased");
         }
-        let price = f64::from(offer.price);
-        if self.sim.cash < price {
+        let total = offer.total_cost();
+        let cost = f64::from(total);
+        if self.sim.cash < cost {
             return Err("insufficient funds");
         }
-        self.sim.cash -= price;
+        self.sim.cash -= cost;
+        self.sim.set_stock(0.0);
+        self.sim.set_stock_capacity(0.0);
         self.leased_property = Some(tile_index);
         self.player_branches.push(PlayerBranch {
-            branch_id: 0,
+            branch_id: LONDON_BRANCH_ID,
             tile_index,
-            owner_slot: 0,
+            owner_slot: LONDON_PLAYER_SLOT,
             staff_count: 0,
             size: 0,
             style: 0,
@@ -1203,9 +1260,139 @@ impl World {
             rent: offer.price,
             sales: 0,
             revenue: 0.0,
+            employees: Vec::new(),
+            warehouse_tile: None,
+            deliveries_enabled: false,
+            opening_hours: None,
         });
         self.evaluate_mission_goals();
-        Ok(offer.price)
+        Ok(total)
+    }
+
+    fn campaign_branch_mut(&mut self) -> Option<&mut PlayerBranch> {
+        self.player_branches
+            .iter_mut()
+            .find(|branch| branch.player_controlled)
+    }
+
+    pub fn campaign_branch(&self) -> Option<&PlayerBranch> {
+        self.player_branches
+            .iter()
+            .find(|branch| branch.player_controlled)
+    }
+
+    pub fn hire_campaign_employee(&mut self, role: EmployeeRole) -> Result<u32, &'static str> {
+        let branch = self
+            .campaign_branch_mut()
+            .ok_or("lease the campaign property first")?;
+        branch.employees.push(role);
+        branch.staff_count = branch.employees.len() as u32;
+        Ok(branch.staff_count)
+    }
+
+    pub fn lease_campaign_warehouse(&mut self, tile_index: u32) -> Result<(), &'static str> {
+        let branch = self
+            .campaign_branch_mut()
+            .ok_or("lease the campaign property first")?;
+        if branch.warehouse_tile.is_some() {
+            return Err("warehouse is already leased");
+        }
+        branch.warehouse_tile = Some(tile_index);
+        Ok(())
+    }
+
+    pub fn enable_campaign_deliveries(&mut self) -> Result<(), &'static str> {
+        let branch = self
+            .campaign_branch_mut()
+            .ok_or("lease the campaign property first")?;
+        if branch.warehouse_tile.is_none() {
+            return Err("lease a warehouse first");
+        }
+        branch.deliveries_enabled = true;
+        Ok(())
+    }
+
+    pub fn deliver_campaign_stock(&mut self, units: f64) -> Result<f64, &'static str> {
+        let branch = self
+            .campaign_branch_mut()
+            .ok_or("lease the campaign property first")?;
+        if !branch.deliveries_enabled {
+            return Err("enable deliveries first");
+        }
+        let stock = self.sim.snapshot().stock + units.max(0.0);
+        self.sim.set_stock(stock);
+        if stock > self.sim.snapshot().stock_capacity {
+            self.sim.set_stock_capacity(stock);
+        }
+        Ok(stock)
+    }
+
+    pub fn is_campaign(&self) -> bool {
+        self.campaign_mission().is_some()
+    }
+
+    /// Move the campaign clock without advancing customer timers.
+    pub fn set_minute(&mut self, minute: u32) {
+        self.minute = minute;
+        self.sim.set_clock_minutes(minute);
+    }
+
+    /// Campaign opening gate: staff, warehouse, deliveries, stock, and the
+    /// configured opening window must all be present.
+    pub fn set_campaign_open(&mut self, open: bool) -> Result<(), &'static str> {
+        if !self.is_campaign() {
+            self.set_open(open);
+            return Ok(());
+        }
+        if open {
+            let (staff, warehouse, deliveries, hours, stock) = {
+                let branch = self
+                    .campaign_branch()
+                    .ok_or("lease the campaign property first")?;
+                (
+                    branch.staff_count,
+                    branch.warehouse_tile,
+                    branch.deliveries_enabled,
+                    branch.opening_hours,
+                    self.sim.snapshot().stock,
+                )
+            };
+            if staff == 0 {
+                return Err("hire staff first");
+            }
+            if warehouse.is_none() {
+                return Err("lease a warehouse first");
+            }
+            if !deliveries {
+                return Err("enable deliveries first");
+            }
+            if stock <= 0.0 {
+                return Err("deliver stock first");
+            }
+            if let Some((start, end)) = hours {
+                let hour = ((self.minute / 60) % 24) as u8;
+                if hour < start || hour >= end {
+                    return Err("outside opening hours");
+                }
+            }
+        }
+        self.set_open(open);
+        Ok(())
+    }
+
+    pub fn set_campaign_opening_hours(
+        &mut self,
+        open_hour: u8,
+        close_hour: u8,
+    ) -> Result<(), &'static str> {
+        if open_hour >= 24 || close_hour > 24 || open_hour >= close_hour {
+            return Err("invalid opening hours");
+        }
+        let branch = self
+            .campaign_branch_mut()
+            .ok_or("lease the campaign property first")?;
+        branch.opening_hours = Some((open_hour, close_hour));
+        Ok(())
     }
 
     fn apply_starting_capital(&mut self) {
@@ -1378,6 +1565,10 @@ impl World {
 
     pub fn set_price(&mut self, price: f64) {
         self.sim.set_price(price);
+    }
+
+    pub fn set_cash(&mut self, cash: f64) {
+        self.sim.set_starting_cash(cash);
     }
 
     pub fn snapshot(&self) -> Snapshot {
@@ -2355,12 +2546,16 @@ mod tests {
                 starting_branches: Vec::new(),
                 property_offer: Some(CampaignPropertyOffer {
                     tile_index: 13_694,
-                    price: 5_730,
+                    price: 2_812,
+                    fee: 1_000,
                 }),
             },
         );
         let mut world = World::new(0).with_scenario(scenario);
         world.sim.set_starting_cash(500_000.0);
+        world.prepare_campaign_new_game();
+        assert_eq!(world.snapshot().stock, 0.0);
+        assert_eq!(world.player_branch_count(), 0);
         world.set_open(true);
         let before = world.world_snapshot();
         assert!(!world.can_enter_branch());
@@ -2372,7 +2567,7 @@ mod tests {
         assert_eq!(world.world_snapshot(), before);
 
         let mut low_cash = before;
-        low_cash.sim.cash = 5_729.0;
+        low_cash.sim.cash = 3_811.0;
         let mut poor = World::from_snapshot(&low_cash);
         assert_eq!(
             poor.lease_campaign_property(13_694),
@@ -2380,21 +2575,43 @@ mod tests {
         );
         assert_eq!(poor.world_snapshot(), low_cash);
 
-        assert_eq!(world.lease_campaign_property(13_694), Ok(5_730));
+        assert_eq!(world.lease_campaign_property(13_694), Ok(3_812));
         assert!(world.can_enter_branch());
         let leased = world.world_snapshot();
         assert_eq!(leased.leased_property, Some(13_694));
-        assert_eq!(leased.sim.cash, 494_270.0);
+        assert_eq!(leased.sim.cash, 496_188.0);
         assert_eq!(leased.player_branches.len(), 1);
         assert_eq!(leased.player_branches[0].tile_index, 13_694);
+        assert_eq!(leased.player_branches[0].branch_id, LONDON_BRANCH_ID);
         assert_eq!(leased.player_branches[0].owner_slot, 0);
         assert!(!leased.player_branches[0].owned);
-        assert_eq!(leased.player_branches[0].rent, 5_730);
+        assert_eq!(leased.player_branches[0].rent, 2_812);
+        assert!(leased.player_branches[0].employees.is_empty());
+        assert_eq!(leased.player_branches[0].warehouse_tile, None);
+        assert!(!leased.player_branches[0].deliveries_enabled);
+        assert_eq!(leased.player_branches[0].opening_hours, None);
+        assert_eq!(world.set_campaign_open(true), Err("hire staff first"));
         assert_eq!(leased.mission_goals[0].status, GoalStatus::Pending);
         assert_eq!(leased.mission_goals[1].status, GoalStatus::Pending);
         assert_eq!(leased.mission_goals[2].status, GoalStatus::Complete);
         assert!(!leased.mission_complete);
-        world.set_open(true);
+        assert_eq!(world.hire_campaign_employee(EmployeeRole::Cook), Ok(1));
+        assert_eq!(world.hire_campaign_employee(EmployeeRole::Service), Ok(2));
+        assert_eq!(world.lease_campaign_warehouse(1), Ok(()));
+        assert_eq!(world.enable_campaign_deliveries(), Ok(()));
+        assert_eq!(world.deliver_campaign_stock(200_000.0), Ok(200_000.0));
+        assert_eq!(world.set_campaign_opening_hours(6, 22), Ok(()));
+        assert_eq!(world.campaign_branch().unwrap().staff_count, 2);
+        assert_eq!(world.campaign_branch().unwrap().warehouse_tile, Some(1));
+        assert!(world.campaign_branch().unwrap().deliveries_enabled);
+        assert_eq!(
+            world.campaign_branch().unwrap().opening_hours,
+            Some((6, 22))
+        );
+        assert_eq!(world.snapshot().stock, 200_000.0);
+        assert_eq!(world.set_campaign_open(true), Err("outside opening hours"));
+        world.set_minute(360);
+        assert_eq!(world.set_campaign_open(true), Ok(()));
         world.enqueue_party(1);
         world.advance_queue_ticks(QUEUE_WALK_TICKS + PRODUCTION_TICKS);
         let sold = world.world_snapshot();

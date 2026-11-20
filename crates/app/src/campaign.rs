@@ -6,9 +6,11 @@ use pc2_sim::{CampaignBranch, CampaignMission, CampaignPropertyOffer, ScenarioSe
 
 use crate::menu::decode_cp1252;
 
+// Lifted lease dialog: 2812 rent plus a 1000 fee; HUD 500000 -> 496188.
 const LONDON_LEASE: CampaignPropertyOffer = CampaignPropertyOffer {
     tile_index: 13_694,
-    price: 5_730,
+    price: 2_812,
+    fee: 1_000,
 };
 
 pub fn load_first_mission(install: &mut GameInstall) -> Result<ScenarioSetup, String> {
