@@ -22,3 +22,24 @@ Batch 1 is 100 functions from `decompiled_fastfood2_named_v2/final655_batches.js
 and writes candidates only under `batch01/partN/`. Keep worklogs in
 `batch01/partN/worklog.md`; commit only matched C and tests. Never commit the
 VC6 tree or the game image.
+
+## Batch runner
+
+`tools/match_batch.py` runs a part manifest and writes a JSON report:
+
+```sh
+python3 tools/match_batch.py reconstructed/match/batch01/part1.json \
+  reconstructed/match/batch01/part1 --symbols reconstructed/match/batch01/part1/symbols.json \
+  --json-out /tmp/pc2-part1.json
+```
+
+## Golden smoke test
+
+`reconstructed/match/golden/0x48d3a0.c` reproduces `Game_GetStartingCapital`
+byte-for-byte with the SP3 compiler:
+
+```sh
+python3 tools/match_decomp.py 0x48d3a0 reconstructed/match/golden/0x48d3a0.c \
+  --length 0x80 --entry _pc2_get_starting_capital \
+  --symbol _game_difficulty=0x57bb24
+```

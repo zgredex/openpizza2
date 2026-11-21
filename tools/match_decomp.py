@@ -156,6 +156,11 @@ def match(address: int, source: Path, obj: Path, vc6: Path, flags: list[str],
                              (target - (address + va + 4)) & 0xFFFFFFFF)
         else:
             raise ValueError(f"unsupported COFF relocation type {typ:#x}")
+    if entry is None:
+        functions = [item for item in coff_symbols
+                     if item["section"] > 0 and item["type"] == 0x20]
+        if len(functions) == 1:
+            entry = functions[0]["name"]
     if entry:
         symbol = next((item for item in coff_symbols if item["name"] == entry), None)
         if symbol is None or symbol["section"] <= 0:
