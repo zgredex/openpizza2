@@ -37,6 +37,24 @@ candidates and stock CRT archive identifications are outside this count.
 The strict matches cover **26.03%** of exported bodies (1,020 of 3,919) and
 approximately **4.44%** of estimated inventory code bytes (54,878 of 1,236,452).
 
+### Re-audit of paused parts
+
+The independent gate accepted 18 of 38 candidates in the previously paused
+directories. The per-part verifiers include only these 18 recipes.
+
+| Part | Strict | Body only | Code differences |
+|---|---:|---:|---:|
+| batch11/part4 | 12 | 5 | 2 |
+| batch12/part4 | 4 | 5 | 3 |
+| batch15/part2 | 2 | 0 | 5 |
+
+```sh
+python3 tools/audit_matches.py --out /tmp/pc2-paused-parts-audit \
+  reconstructed/match/batch11/part4/verify_strict.sh \
+  reconstructed/match/batch12/part4/verify_strict.sh \
+  reconstructed/match/batch15/part2/verify_strict.sh
+```
+
 ## Historical strict counts
 
 This table predates the independent relocation gate. Use
@@ -105,11 +123,9 @@ batch15 part4   4 / 25 C matches
 total        1160 / 1174 C matches
 ```
 
-Batches 11-15 were paused mid-run. The totals above include only committed
-part directories. The following verified work is still uncommitted in the
-worktree: batch11 part4 (17 strict), batch12 part4 (10 strict), and batch15
-part2 (2 strict). If those are committed later the totals become
-1203 C matches, of which 1189 are strict.
+Batches 11–15 were paused mid-run. The totals above include only parts committed
+at the time. The older gate recorded 17 strict matches in batch11/part4, 10 in
+batch12/part4, and 2 in batch15/part2 while those parts were still in the worktree.
 
 This is an increase from 875 strict matches after the checker learned to
 resolve IAT imports, decorated/data symbols, EH funclets, and anchored data
