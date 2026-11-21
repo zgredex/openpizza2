@@ -165,24 +165,34 @@ def match(address: int, source: Path, obj: Path, vc6: Path, flags: list[str],
     original = read_va(image, address, length)
     compile_candidate(source, vc6, obj, flags)
     _, sections, coff_symbols = parse_coff(obj)
-    text = next((section for section in sections if section["name"] == ".text"), None)
+    if entry is None:
+        functions = [item for item in coff_symbols
+                     if item["section"] > 0 and item["type"] == 0x20]
+        if len(functions) == 1:
+            entry = functions[0]["name"]
+    entry_symbol = None
+    if entry:
+        entry_symbol = next((item for item in coff_symbols if item["name"] == entry), None)
+        if entry_symbol is None or entry_symbol["section"] <= 0:
+            raise ValueError(f"candidate entry symbol {entry} not found")
+        text = next((section for section in sections
+                     if section["index"] == entry_symbol["section"]), None)
+    else:
+        text = next((section for section in sections if section["name"] == ".text"), None)
     if text is None:
-        raise ValueError("candidate has no .text section")
+        raise ValueError("candidate has no code section")
     candidate = bytearray(text["raw"])
     strict_issues = []
     relocation_issues = []
-    # Relocations live in the object file at text["relptr"]; read them from the
-    # original object bytes.
     object_bytes = obj.read_bytes()
     for offset in range(text["nrel"]):
         va, symbol_index, typ = struct.unpack_from(
             "<IIH", object_bytes, text["relptr"] + offset * 10)
         symbol = coff_symbols[symbol_index]
-        # Linker-resolved fields are not codegen evidence.  The original PE
-        # already contains the linked value at this offset; use it directly.
-        # This also handles COMDAT .text$x EH thunks whose final address is
-        # chosen by the original linker.  With --strict-symbols, additionally
-        # check that a supplied symbol map agrees with that value.
+        if va + 4 > len(candidate) or va + 4 > len(original):
+            issue = f"relocation at {va:#x} is outside the candidate/original extent"
+            strict_issues.append(issue)
+            continue
         original_field = original[va:va + 4]
         if symbol["section"] > 0:
             target = address + symbol["value"]
@@ -215,18 +225,8 @@ def match(address: int, source: Path, obj: Path, vc6: Path, flags: list[str],
         if typ not in (0x06, 0x14):
             raise ValueError(f"unsupported COFF relocation type {typ:#x}")
         candidate[va:va + 4] = original_field
-    if entry is None:
-        functions = [item for item in coff_symbols
-                     if item["section"] > 0 and item["type"] == 0x20]
-        if len(functions) == 1:
-            entry = functions[0]["name"]
-        elif strict:
-            strict_issues.append(f"candidate defines {len(functions)} function symbols")
-    if entry:
-        symbol = next((item for item in coff_symbols if item["name"] == entry), None)
-        if symbol is None or symbol["section"] <= 0:
-            raise ValueError(f"candidate entry symbol {entry} not found")
-        start = symbol["value"]
+    if entry_symbol is not None:
+        start = entry_symbol["value"]
         candidate = candidate[start:start + length]
     else:
         start = 0

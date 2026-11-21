@@ -12,6 +12,7 @@
       "match": false,
       "strict_match": false,
       "strict_issues": [],
+      "relocation_issues": [],
       "first_difference": {
         "offset": 6,
         "original": 139,
@@ -39,6 +40,7 @@
       "match": false,
       "strict_match": false,
       "strict_issues": [],
+      "relocation_issues": [],
       "first_difference": {
         "offset": 6,
         "original": 139,
@@ -66,6 +68,7 @@
       "match": false,
       "strict_match": false,
       "strict_issues": [],
+      "relocation_issues": [],
       "first_difference": {
         "offset": 0,
         "original": 131,
@@ -92,7 +95,11 @@
       "candidate_length": 662,
       "match": false,
       "strict_match": false,
-      "strict_issues": [],
+      "strict_issues": [
+        "relocation at 0x29e is outside the candidate/original extent",
+        "relocation at 0x2b5 is outside the candidate/original extent"
+      ],
+      "relocation_issues": [],
       "first_difference": {
         "offset": 3,
         "original": 83,
@@ -119,13 +126,17 @@
       "candidate_length": 662,
       "match": false,
       "strict_match": false,
-      "strict_issues": [],
+      "strict_issues": [
+        "relocation at 0x293 is outside the candidate/original extent",
+        "relocation at 0x2aa is outside the candidate/original extent"
+      ],
+      "relocation_issues": [],
       "first_difference": {
         "offset": 2,
         "original": 24,
         "candidate": 20
       },
-      "difference_count": 484,
+      "difference_count": 486,
       "source": "reconstructed/match/investigations/0x4ecd70/v2.c",
       "variant": "v2",
       "flags": "/O2 /TP",
@@ -147,6 +158,7 @@
       "match": false,
       "strict_match": false,
       "strict_issues": [],
+      "relocation_issues": [],
       "first_difference": {
         "offset": 6,
         "original": 139,
@@ -173,7 +185,16 @@
       "candidate_length": 438,
       "match": false,
       "strict_match": false,
-      "strict_issues": [],
+      "strict_issues": [
+        "relocation at 0x1c0 is outside the candidate/original extent",
+        "relocation at 0x1cc is outside the candidate/original extent",
+        "relocation at 0x1d0 is outside the candidate/original extent",
+        "relocation at 0x1d4 is outside the candidate/original extent",
+        "relocation at 0x1d8 is outside the candidate/original extent"
+      ],
+      "relocation_issues": [
+        "relocation at 0x29 resolves to 0x509bec, original has 0x509bd8"
+      ],
       "first_difference": {
         "offset": 21,
         "original": 54,
@@ -201,6 +222,7 @@
       "match": false,
       "strict_match": false,
       "strict_issues": [],
+      "relocation_issues": [],
       "first_difference": {
         "offset": 1,
         "original": 86,
@@ -227,7 +249,15 @@
       "candidate_length": 438,
       "match": false,
       "strict_match": false,
-      "strict_issues": [],
+      "strict_issues": [
+        "relocation at 0x200 is outside the candidate/original extent",
+        "relocation at 0x205 is outside the candidate/original extent",
+        "relocation at 0x219 is outside the candidate/original extent",
+        "relocation at 0x22a is outside the candidate/original extent",
+        "relocation at 0x235 is outside the candidate/original extent",
+        "relocation at 0x246 is outside the candidate/original extent"
+      ],
+      "relocation_issues": [],
       "first_difference": {
         "offset": 0,
         "original": 83,
@@ -254,7 +284,21 @@
       "candidate_length": 438,
       "match": false,
       "strict_match": false,
-      "strict_issues": [],
+      "strict_issues": [
+        "relocation at 0x1fb is outside the candidate/original extent",
+        "relocation at 0x200 is outside the candidate/original extent",
+        "relocation at 0x215 is outside the candidate/original extent",
+        "relocation at 0x226 is outside the candidate/original extent",
+        "relocation at 0x231 is outside the candidate/original extent",
+        "relocation at 0x242 is outside the candidate/original extent",
+        "relocation at 0x262 is outside the candidate/original extent",
+        "relocation at 0x266 is outside the candidate/original extent",
+        "relocation at 0x26a is outside the candidate/original extent",
+        "relocation at 0x26e is outside the candidate/original extent"
+      ],
+      "relocation_issues": [
+        "relocation at 0x49 resolves to 0x509c82, original has 0x56000cc2"
+      ],
       "first_difference": {
         "offset": 0,
         "original": 83,
@@ -281,7 +325,16 @@
       "candidate_length": 438,
       "match": false,
       "strict_match": false,
-      "strict_issues": [],
+      "strict_issues": [
+        "relocation at 0x1c0 is outside the candidate/original extent",
+        "relocation at 0x1cc is outside the candidate/original extent",
+        "relocation at 0x1d0 is outside the candidate/original extent",
+        "relocation at 0x1d4 is outside the candidate/original extent",
+        "relocation at 0x1d8 is outside the candidate/original extent"
+      ],
+      "relocation_issues": [
+        "relocation at 0x29 resolves to 0x509bec, original has 0x509bd8"
+      ],
       "first_difference": {
         "offset": 21,
         "original": 54,
@@ -309,6 +362,7 @@
       "match": false,
       "strict_match": false,
       "strict_issues": [],
+      "relocation_issues": [],
       "first_difference": {
         "offset": 1,
         "original": 86,
@@ -335,7 +389,16 @@
       "candidate_length": 438,
       "match": false,
       "strict_match": false,
-      "strict_issues": [],
+      "strict_issues": [
+        "relocation at 0x1c0 is outside the candidate/original extent",
+        "relocation at 0x1cc is outside the candidate/original extent",
+        "relocation at 0x1d0 is outside the candidate/original extent",
+        "relocation at 0x1d4 is outside the candidate/original extent",
+        "relocation at 0x1d8 is outside the candidate/original extent"
+      ],
+      "relocation_issues": [
+        "relocation at 0x29 resolves to 0x509bec, original has 0x509bd8"
+      ],
       "first_difference": {
         "offset": 21,
         "original": 54,
@@ -362,7 +425,16 @@
       "candidate_length": 438,
       "match": false,
       "strict_match": false,
-      "strict_issues": [],
+      "strict_issues": [
+        "relocation at 0x1c0 is outside the candidate/original extent",
+        "relocation at 0x1cc is outside the candidate/original extent",
+        "relocation at 0x1d0 is outside the candidate/original extent",
+        "relocation at 0x1d4 is outside the candidate/original extent",
+        "relocation at 0x1d8 is outside the candidate/original extent"
+      ],
+      "relocation_issues": [
+        "relocation at 0x29 resolves to 0x509bec, original has 0x509bd8"
+      ],
       "first_difference": {
         "offset": 15,
         "original": 139,
@@ -389,7 +461,10 @@
       "candidate_length": 438,
       "match": false,
       "strict_match": false,
-      "strict_issues": [],
+      "strict_issues": [
+        "relocation at 0x1c7 is outside the candidate/original extent"
+      ],
+      "relocation_issues": [],
       "first_difference": {
         "offset": 21,
         "original": 54,
@@ -417,6 +492,7 @@
       "match": false,
       "strict_match": false,
       "strict_issues": [],
+      "relocation_issues": [],
       "first_difference": {
         "offset": 1,
         "original": 86,
@@ -443,13 +519,21 @@
       "candidate_length": 438,
       "match": false,
       "strict_match": false,
-      "strict_issues": [],
+      "strict_issues": [
+        "relocation at 0x1b4 is outside the candidate/original extent",
+        "relocation at 0x1b8 is outside the candidate/original extent"
+      ],
+      "relocation_issues": [
+        "relocation at 0x29 resolves to 0x509bcc, original has 0x509bd8",
+        "relocation at 0x1ac resolves to 0x509a4d, original has 0xffff9340",
+        "relocation at 0x1b0 resolves to 0x509a52, original has 0xc25b5e5f"
+      ],
       "first_difference": {
         "offset": 21,
         "original": 54,
         "candidate": 28
       },
-      "difference_count": 177,
+      "difference_count": 178,
       "source": "reconstructed/match/investigations/0x509a20/v2.c",
       "variant": "v2",
       "flags": "/O2 /TP",
@@ -471,6 +555,7 @@
       "match": false,
       "strict_match": false,
       "strict_issues": [],
+      "relocation_issues": [],
       "first_difference": {
         "offset": 1,
         "original": 86,
@@ -498,6 +583,7 @@
       "match": false,
       "strict_match": false,
       "strict_issues": [],
+      "relocation_issues": [],
       "first_difference": {
         "offset": 0,
         "original": 106,
@@ -524,7 +610,13 @@
       "candidate_length": 178,
       "match": false,
       "strict_match": false,
-      "strict_issues": [],
+      "strict_issues": [
+        "relocation at 0xb3 is outside the candidate/original extent",
+        "relocation at 0xc4 is outside the candidate/original extent"
+      ],
+      "relocation_issues": [
+        "relocation at 0x3 resolves to 0x53240b, original has 0x55ac4b"
+      ],
       "first_difference": {
         "offset": 29,
         "original": 217,
@@ -551,7 +643,12 @@
       "candidate_length": 178,
       "match": false,
       "strict_match": false,
-      "strict_issues": [],
+      "strict_issues": [
+        "relocation at 0xbd is outside the candidate/original extent"
+      ],
+      "relocation_issues": [
+        "relocation at 0x3 resolves to 0x53240b, original has 0x55ac4b"
+      ],
       "first_difference": {
         "offset": 21,
         "original": 131,
@@ -579,6 +676,9 @@
       "match": false,
       "strict_match": false,
       "strict_issues": [],
+      "relocation_issues": [
+        "relocation at 0x1 resolves to 0x53240a, original has 0xac4b68ff"
+      ],
       "first_difference": {
         "offset": 0,
         "original": 106,
@@ -605,7 +705,13 @@
       "candidate_length": 178,
       "match": false,
       "strict_match": false,
-      "strict_issues": [],
+      "strict_issues": [
+        "relocation at 0xb3 is outside the candidate/original extent",
+        "relocation at 0xc4 is outside the candidate/original extent"
+      ],
+      "relocation_issues": [
+        "relocation at 0x3 resolves to 0x53240b, original has 0x55ac4b"
+      ],
       "first_difference": {
         "offset": 29,
         "original": 217,
@@ -629,16 +735,22 @@
     {
       "address": "0x532400",
       "length": 178,
-      "candidate_length": 32,
+      "candidate_length": 178,
       "match": false,
       "strict_match": false,
-      "strict_issues": [],
+      "strict_issues": [
+        "relocation at 0xbe is outside the candidate/original extent"
+      ],
+      "relocation_issues": [
+        "relocation at 0x3 resolves to 0x53240b, original has 0x55ac4b",
+        "relocation at 0x3c resolves to 0xffffffc0, original has 0x44f8d56"
+      ],
       "first_difference": {
-        "offset": 0,
-        "original": 106,
-        "candidate": 86
+        "offset": 27,
+        "original": 87,
+        "candidate": 139
       },
-      "difference_count": 28,
+      "difference_count": 128,
       "source": "reconstructed/match/investigations/0x532400/v3.c",
       "variant": "v3",
       "flags": "/O2 /GX /TP",
@@ -648,9 +760,9 @@
         "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
       },
       "first_instruction": [
-        0,
-        "6a ff",
-        "push   0xffffffff"
+        27,
+        "57",
+        "push   edi"
       ]
     }
   ]

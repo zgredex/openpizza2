@@ -1,0 +1,347 @@
+{
+  "compiler": {
+    "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+    "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+    "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+  },
+  "results": [
+    {
+      "address": "0x509a20",
+      "length": 438,
+      "candidate_length": 438,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [
+        "relocation at 0x1b4 is outside the candidate/original extent",
+        "relocation at 0x1b8 is outside the candidate/original extent"
+      ],
+      "relocation_issues": [
+        "relocation at 0x29 resolves to 0x509bcc, original has 0x509bd8",
+        "relocation at 0x1ac resolves to 0x509a4d, original has 0xffff9340",
+        "relocation at 0x1b0 resolves to 0x509a52, original has 0xc25b5e5f"
+      ],
+      "first_difference": {
+        "offset": 21,
+        "original": 54,
+        "candidate": 28
+      },
+      "difference_count": 178,
+      "source": "reconstructed/match/investigations/0x509a20/v2.c",
+      "variant": "inverted_Ob1",
+      "flags": "/O2 /Ob1 /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        20,
+        "74 36",
+        "je     0x509a6c"
+      ]
+    },
+    {
+      "address": "0x509a20",
+      "length": 438,
+      "candidate_length": 438,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [
+        "relocation at 0x1b4 is outside the candidate/original extent",
+        "relocation at 0x1b8 is outside the candidate/original extent"
+      ],
+      "relocation_issues": [
+        "relocation at 0x29 resolves to 0x509bcc, original has 0x509bd8",
+        "relocation at 0x1ac resolves to 0x509a4d, original has 0xffff9340",
+        "relocation at 0x1b0 resolves to 0x509a52, original has 0xc25b5e5f"
+      ],
+      "first_difference": {
+        "offset": 21,
+        "original": 54,
+        "candidate": 28
+      },
+      "difference_count": 178,
+      "source": "reconstructed/match/investigations/0x509a20/v2.c",
+      "variant": "inverted_Ob2",
+      "flags": "/O2 /Ob2 /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        20,
+        "74 36",
+        "je     0x509a6c"
+      ]
+    },
+    {
+      "address": "0x509a20",
+      "length": 438,
+      "candidate_length": 438,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [
+        "relocation at 0x1b4 is outside the candidate/original extent",
+        "relocation at 0x1b8 is outside the candidate/original extent"
+      ],
+      "relocation_issues": [
+        "relocation at 0x29 resolves to 0x509bcc, original has 0x509bd8",
+        "relocation at 0x1ac resolves to 0x509a4d, original has 0xffff9340",
+        "relocation at 0x1b0 resolves to 0x509a52, original has 0xc25b5e5f"
+      ],
+      "first_difference": {
+        "offset": 21,
+        "original": 54,
+        "candidate": 28
+      },
+      "difference_count": 178,
+      "source": "reconstructed/match/investigations/0x509a20/v2.c",
+      "variant": "inverted_Oy",
+      "flags": "/O2 /Oy /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        20,
+        "74 36",
+        "je     0x509a6c"
+      ]
+    },
+    {
+      "address": "0x509a20",
+      "length": 438,
+      "candidate_length": 438,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [
+        "relocation at 0x1b4 is outside the candidate/original extent",
+        "relocation at 0x1b8 is outside the candidate/original extent"
+      ],
+      "relocation_issues": [
+        "relocation at 0x29 resolves to 0x509bcc, original has 0x509bd8",
+        "relocation at 0x1ac resolves to 0x509a4d, original has 0xffff9340",
+        "relocation at 0x1b0 resolves to 0x509a52, original has 0xc25b5e5f"
+      ],
+      "first_difference": {
+        "offset": 15,
+        "original": 139,
+        "candidate": 133
+      },
+      "difference_count": 218,
+      "source": "reconstructed/match/investigations/0x509a20/v2.c",
+      "variant": "inverted_G6",
+      "flags": "/O2 /G6 /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        15,
+        "8b 73 34",
+        "mov    esi,DWORD PTR [ebx+0x34]"
+      ]
+    },
+    {
+      "address": "0x532400",
+      "length": 178,
+      "candidate_length": 178,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [
+        "relocation at 0xbe is outside the candidate/original extent"
+      ],
+      "relocation_issues": [
+        "relocation at 0x3 resolves to 0x53240b, original has 0x55ac4b",
+        "relocation at 0x3c resolves to 0xffffffc0, original has 0x44f8d56"
+      ],
+      "first_difference": {
+        "offset": 27,
+        "original": 87,
+        "candidate": 139
+      },
+      "difference_count": 128,
+      "source": "reconstructed/match/investigations/0x532400/v3.c",
+      "variant": "ctor_Ob1",
+      "flags": "/O2 /GX /Ob1 /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        27,
+        "57",
+        "push   edi"
+      ]
+    },
+    {
+      "address": "0x532400",
+      "length": 178,
+      "candidate_length": 178,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [
+        "relocation at 0xb3 is outside the candidate/original extent",
+        "relocation at 0xc4 is outside the candidate/original extent"
+      ],
+      "relocation_issues": [
+        "relocation at 0x3 resolves to 0x53240b, original has 0x55ac4b"
+      ],
+      "first_difference": {
+        "offset": 29,
+        "original": 217,
+        "candidate": 233
+      },
+      "difference_count": 110,
+      "source": "reconstructed/match/investigations/0x532400/v3.c",
+      "variant": "ctor_Ob2",
+      "flags": "/O2 /GX /Ob2 /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        28,
+        "8b d9",
+        "mov    ebx,ecx"
+      ]
+    },
+    {
+      "address": "0x532400",
+      "length": 178,
+      "candidate_length": 178,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [
+        "relocation at 0xbe is outside the candidate/original extent"
+      ],
+      "relocation_issues": [
+        "relocation at 0x3 resolves to 0x53240b, original has 0x55ac4b",
+        "relocation at 0x3c resolves to 0xffffffc0, original has 0x44f8d56"
+      ],
+      "first_difference": {
+        "offset": 27,
+        "original": 87,
+        "candidate": 139
+      },
+      "difference_count": 128,
+      "source": "reconstructed/match/investigations/0x532400/v3.c",
+      "variant": "ctor_Oy",
+      "flags": "/O2 /GX /Oy /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        27,
+        "57",
+        "push   edi"
+      ]
+    },
+    {
+      "address": "0x532400",
+      "length": 178,
+      "candidate_length": 178,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [
+        "relocation at 0xbe is outside the candidate/original extent"
+      ],
+      "relocation_issues": [
+        "relocation at 0x3 resolves to 0x53240b, original has 0x55ac4b",
+        "relocation at 0x3c resolves to 0xffffffc0, original has 0x44f8d56"
+      ],
+      "first_difference": {
+        "offset": 27,
+        "original": 87,
+        "candidate": 139
+      },
+      "difference_count": 128,
+      "source": "reconstructed/match/investigations/0x532400/v3.c",
+      "variant": "ctor_G6",
+      "flags": "/O2 /GX /G6 /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        27,
+        "57",
+        "push   edi"
+      ]
+    },
+    {
+      "address": "0x532400",
+      "length": 178,
+      "candidate_length": 178,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [
+        "relocation at 0xbe is outside the candidate/original extent"
+      ],
+      "relocation_issues": [
+        "relocation at 0x3 resolves to 0x53240b, original has 0x55ac4b",
+        "relocation at 0x3c resolves to 0xffffffc0, original has 0x44f8d56"
+      ],
+      "first_difference": {
+        "offset": 27,
+        "original": 87,
+        "candidate": 139
+      },
+      "difference_count": 128,
+      "source": "reconstructed/match/investigations/0x532400/v4.c",
+      "variant": "ctor_paren",
+      "flags": "/O2 /GX /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        27,
+        "57",
+        "push   edi"
+      ]
+    },
+    {
+      "address": "0x532400",
+      "length": 178,
+      "candidate_length": 178,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [
+        "relocation at 0xbe is outside the candidate/original extent"
+      ],
+      "relocation_issues": [
+        "relocation at 0x3 resolves to 0x53240b, original has 0x55ac4b",
+        "relocation at 0x3c resolves to 0xffffffc0, original has 0x44f8d56"
+      ],
+      "first_difference": {
+        "offset": 27,
+        "original": 87,
+        "candidate": 139
+      },
+      "difference_count": 128,
+      "source": "reconstructed/match/investigations/0x532400/v5.c",
+      "variant": "ctor_initializer",
+      "flags": "/O2 /GX /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        27,
+        "57",
+        "push   edi"
+      ]
+    }
+  ]
+}

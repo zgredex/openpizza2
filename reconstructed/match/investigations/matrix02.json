@@ -1,0 +1,28 @@
+{
+  "targets": [
+    {
+      "address": "0x509a20",
+      "length": 438,
+      "entry": "?ComputeAdvisorTipId@Advisor@@QAEXPAX0H@Z",
+      "variants": [
+        {"name": "inverted_Ob1", "source": "reconstructed/match/investigations/0x509a20/v2.c", "flags": "/O2 /Ob1 /TP"},
+        {"name": "inverted_Ob2", "source": "reconstructed/match/investigations/0x509a20/v2.c", "flags": "/O2 /Ob2 /TP"},
+        {"name": "inverted_Oy", "source": "reconstructed/match/investigations/0x509a20/v2.c", "flags": "/O2 /Oy /TP"},
+        {"name": "inverted_G6", "source": "reconstructed/match/investigations/0x509a20/v2.c", "flags": "/O2 /G6 /TP"}
+      ]
+    },
+    {
+      "address": "0x532400",
+      "length": 178,
+      "entry": "?AddSelectionGroup@UI@@QAEHHHPAH@Z",
+      "variants": [
+        {"name": "ctor_Ob1", "source": "reconstructed/match/investigations/0x532400/v3.c", "flags": "/O2 /GX /Ob1 /TP"},
+        {"name": "ctor_Ob2", "source": "reconstructed/match/investigations/0x532400/v3.c", "flags": "/O2 /GX /Ob2 /TP"},
+        {"name": "ctor_Oy", "source": "reconstructed/match/investigations/0x532400/v3.c", "flags": "/O2 /GX /Oy /TP"},
+        {"name": "ctor_G6", "source": "reconstructed/match/investigations/0x532400/v3.c", "flags": "/O2 /GX /G6 /TP"},
+        {"name": "ctor_paren", "source": "reconstructed/match/investigations/0x532400/v4.c", "flags": "/O2 /GX /TP"},
+        {"name": "ctor_initializer", "source": "reconstructed/match/investigations/0x532400/v5.c", "flags": "/O2 /GX /TP"}
+      ]
+    }
+  ]
+}
