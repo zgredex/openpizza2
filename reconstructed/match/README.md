@@ -246,6 +246,35 @@ recipes, and `--cache-only` requires every selected object to be retained.
 The `IStream::Read` fact selected four callers and rechecked all four from
 cache. An incorrect explicit target failed verification and published no PE.
 
+### Assess blocked objects
+
+Rank unresolved names by how many distinct functions list them as the sole
+strict blocker. When audit sets are merged, receipts made under the current
+registry supersede older receipts for the same compilation recipe. Older
+evidence is used for recipes that have no current receipt.
+
+```sh
+python3 tools/audit_symbol_targets.py /tmp/pc2-tracked-audit --rank-blockers
+python3 tools/verify_linked_image.py --audit /tmp/pc2-tracked-audit --assess \
+  --only-address 0x4810e0 --only-address 0x4e2ca0 --cache /tmp/pc2-coff-cache \
+  --manifest /tmp/pc2-before-assessment.json
+```
+
+An assessment records a verdict for each selected recipe and publishes JSON
+only. A cacheable compiler object is retained before symbol resolution, so
+a body-only candidate can be rechecked later. After changing the registry,
+use `--registry-before` to find affected VAs and repeat the assessment with
+`--cache-only` and a fresh report path. Missing objects or tool errors leave
+diagnostics in the report and return nonzero. To publish an image, omit
+`--assess`, supply `--out`, and select only recipes that now pass the strict
+gate. Use `--include-blocked` if publishing from the older audit records.
+
+The cold run retained all 12 blocked objects. Independently corroborated
+`IDMapHelper::Lookup`, `CRT_IStream::Read`, and `CRT_OStream::Write` aliases
+made nine strict on the warm recheck, with all 12 objects reused and three
+functions still blocked. The nine strict functions published 472 code bytes
+in a byte-identical scratch PE.
+
 ## Stock CRT archive identification
 
 ```sh

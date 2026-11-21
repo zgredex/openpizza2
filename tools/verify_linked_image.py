@@ -18,7 +18,7 @@ import tempfile
 from coff_cache import (CACHE_FLAGS, cache_environment, cache_identity, cache_path,
                         hash_bytes as digest, store_object)
 from match_decomp import (DEFAULT_VC6, GAME, ROOT, compile_candidate, compiler_provenance,
-                          function_lengths, match_object, match_provenance, parse_symbols,
+                          function_lengths, match_object, match_provenance, parse_coff, parse_symbols,
                           pe_file_span, pe_image, resolve_auto_symbol, write_function_audit)
 
 PINNED_SHA256 = "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd"
@@ -26,6 +26,10 @@ PINNED_SHA256 = "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922f
 
 class UnsupportedLink(ValueError):
     """A strict candidate requires a shape outside the scratch linker's scope."""
+
+
+class CacheMissing(ValueError):
+    """The exact retained compiler object is unavailable."""
 
 
 @dataclass(frozen=True)
@@ -173,7 +177,8 @@ def batch_plan(audit, image, executable_sha256, compiler, priorities, limit, onl
     return selected, excluded, len(records), outside_scope + len(addresses) - len(selected)
 
 
-def verify_recipe(recipe, vc6, scratch, original, cache_dir, cache_key, build_environment=None, cache_only=False):
+def verify_recipe(recipe, vc6, scratch, original, cache_dir, cache_key, build_environment=None,
+                  cache_only=False, assess=False):
     source_bytes = recipe.source.read_bytes()
     if digest(source_bytes) != recipe.source_sha256:
         raise ValueError("source changed after planning")
@@ -186,24 +191,47 @@ def verify_recipe(recipe, vc6, scratch, original, cache_dir, cache_key, build_en
     if hit:
         obj.write_bytes(cached.read_bytes())
     elif cache_only:
-        raise ValueError("no retained COFF object for the exact cache recipe")
+        raise CacheMissing("no retained COFF object for the exact cache recipe")
     else:
         compile_candidate(recipe.source, vc6, obj, flags,
                           environment=build_environment if cached is not None else None)
     if recipe.source.read_bytes() != source_bytes:
         raise ValueError("source changed during compilation")
+    if cached is not None and not hit:
+        # Retain valid compiler output independently of symbol or link verdicts.
+        object_bytes, _, _ = parse_coff(obj)
+        store_object(cached, object_bytes)
     provenance = match_provenance(recipe.source, vc6, flags, recipe.symbols, True, True)
     audit = match_object(recipe.address, obj, recipe.symbols, recipe.length, recipe.entry,
                          strict=True, auto_symbols=True)
     audit.update(provenance)
     write_function_audit(audit)
+    evidence = {
+        "audit_record": recipe.audit_record, "address": hex(recipe.address),
+        "source": {"path": str(recipe.source), "sha256": recipe.source_sha256},
+        "object": {"name": obj.name, "sha256": audit["object_sha256"]},
+        "cache": "hit" if hit else "miss" if cached is not None else "bypass",
+        "cache_key": cached.stem if cached is not None else None,
+        "compiler": audit["compiler"], "flags": flags,
+        "symbol_registry_sha256": audit["symbol_registry_sha256"],
+        "symbol_overrides": audit["symbol_overrides"], "relocations": audit["relocations"],
+    }
+    if assess:
+        evidence.update(match=audit["match"], strict_match=audit["strict_match"],
+                        strict_issues=audit["strict_issues"], relocation_issues=audit["relocation_issues"],
+                        link_plan_issues=audit["link_plan_issues"], first_difference=audit["first_difference"],
+                        difference_count=audit["difference_count"], blocked_sections=audit["blocked_sections"])
     if not audit["strict_match"]:
+        if assess:
+            return None, {**evidence, "status": "blocked" if audit["match"] else "mismatch"}
         issues = audit["relocation_issues"] + audit["strict_issues"]
         reason = (issues[0] if issues else audit["first_difference"])
         reason = reason or f"candidate extent {audit['candidate_length']} of {recipe.length} bytes"
         raise ValueError(f"strict match failed: {reason}")
     spans = audit["linked_spans"]
     if not spans:
+        if assess:
+            return None, {**evidence, "status": "unsupported"}
         raise UnsupportedLink("; ".join(audit["link_plan_issues"]) or "no independent link plan")
     primary = spans[0]
     if primary["kind"] != "primary" or int(primary["file_offset"], 16) != recipe.file_offset:
@@ -214,34 +242,29 @@ def verify_recipe(recipe, vc6, scratch, original, cache_dir, cache_key, build_en
         if bytes.fromhex(span["hex_bytes"]) != original[start:stop]:
             raise ValueError("independently linked replacement differs from the original PE")
     end = recipe.file_offset + recipe.length
-    object_bytes = obj.read_bytes()
-    if cached is not None and not hit:
-        store_object(cached, object_bytes)
     return spans, {
-        "audit_record": recipe.audit_record,
-        "source": {"path": str(recipe.source), "sha256": recipe.source_sha256},
-        "object": {"name": obj.name, "sha256": digest(object_bytes)},
-        "cache": "hit" if hit else "miss" if cached is not None else "bypass",
-        "cache_key": cached.stem if cached is not None else None,
-        "compiler": audit["compiler"], "flags": flags,
-        "symbol_registry_sha256": audit["symbol_registry_sha256"],
-        "symbol_overrides": audit["symbol_overrides"],
+        **evidence, "status": "strict",
         "function": {"entry": recipe.entry, "start": hex(recipe.address),
                      "end_exclusive": hex(recipe.address + recipe.length), "length": recipe.length,
                      "file_offset": hex(recipe.file_offset), "file_end_exclusive": hex(end), "sha256": primary["sha256"]},
-        "relocations": audit["relocations"], "call_targets": direct_calls(audit),
+        "call_targets": direct_calls(audit),
         "linked_spans": spans,
     }
 
 
-def verify_batch(recipes, jobs, vc6, scratch, original, cache_dir, cache_key, build_environment, cache_only=False):
+def verify_batch(recipes, jobs, vc6, scratch, original, cache_dir, cache_key, build_environment,
+                 cache_only=False, assess=False):
     def verify(recipe):
         try:
-            return verify_recipe(recipe, vc6, scratch, original, cache_dir, cache_key, build_environment, cache_only)
+            return verify_recipe(recipe, vc6, scratch, original, cache_dir, cache_key, build_environment, cache_only, assess)
         except UnsupportedLink as error:
             return None, {"record": recipe.audit_record, "address": hex(recipe.address),
                           "reason": str(error), "phase": "link"}
         except (OSError, ValueError, struct.error, subprocess.TimeoutExpired) as error:
+            if assess:
+                status = "cache_missing" if isinstance(error, CacheMissing) else "error"
+                return None, {"audit_record": recipe.audit_record, "address": hex(recipe.address),
+                              "status": status, "error": str(error)}
             raise ValueError(f"{recipe.address:#x}: {error}") from error
 
     # Fill the process-wide automatic symbol index before starting workers.
@@ -260,6 +283,19 @@ def bounded_count(value):
     return count
 
 
+def write_assessment(path, results, audit, executable_sha256, cache_only):
+    candidates = [evidence for _, evidence in results]
+    statuses = dict(Counter(row["status"] for row in candidates))
+    cached = dict(Counter(row["cache"] for row in candidates if "cache" in row))
+    report = {"schema": "pc2.coff_assessment.v1", "audit": str(audit.resolve()),
+              "executable_sha256": executable_sha256, "cache_only": cache_only,
+              "summary": {"candidates": len(candidates), "statuses": statuses, "cache": cached},
+              "candidates": candidates}
+    write_outputs([(path, (json.dumps(report, indent=2) + "\n").encode())])
+    print(f"assessed {len(candidates)} candidates, statuses={statuses}, cache={cached}")
+    return int(any(status in statuses for status in ("cache_missing", "error")))
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("function_address", nargs="?", type=lambda val: int(val, 0), metavar="VA")
@@ -275,6 +311,8 @@ def main():
                         help="limit the build to exactly these audit VAs (repeatable)")
     parser.add_argument("--include-blocked", action="store_true",
                         help="also recheck body-only audit recipes for explicitly selected VAs")
+    parser.add_argument("--assess", action="store_true",
+                        help="report exact selected audit verdicts without building a PE")
     parser.add_argument("--limit", type=bounded_count, help="maximum audit recipes to compile or reuse")
     parser.add_argument("--jobs", type=int, choices=range(1, 17), default=1, metavar="N",
                         help="maximum concurrent workers, 1–16 (default: 1)")
@@ -282,7 +320,7 @@ def main():
     parser.add_argument("--cache-only", action="store_true", help="require retained objects and never compile")
     parser.add_argument("--vc6", type=Path, default=DEFAULT_VC6)
     parser.add_argument("--image", type=Path, help="input PE copy identical to game/fastfood2.exe")
-    parser.add_argument("--out", required=True, type=Path, help="new scratch executable")
+    parser.add_argument("--out", type=Path, help="new scratch executable (image builds only)")
     parser.add_argument("--manifest", type=Path, help="new JSON path (default: OUT.manifest.json)")
     args = parser.parse_args()
     if args.audit is None:
@@ -299,12 +337,17 @@ def main():
         parser.error("--cache-only requires --cache")
     if args.only_address and args.limit:
         parser.error("--only-address selects an exact scope and cannot be combined with --limit")
+    if args.assess:
+        if not (args.audit and args.only_address and args.manifest) or args.out:
+            parser.error("--assess requires --audit, --only-address, and --manifest, without --out")
+    elif not args.out:
+        parser.error("image builds require --out")
     try:
-        out = args.out.absolute()
+        out = args.out.absolute() if args.out else None
         manifest_path = (args.manifest or out.with_name(out.name + ".manifest.json")).absolute()
-        if out.resolve() == manifest_path.resolve():
+        if out is not None and out.resolve() == manifest_path.resolve():
             raise ValueError("scratch executable and manifest require distinct output paths")
-        for path in (out, manifest_path):
+        for path in (manifest_path,) if out is None else (out, manifest_path):
             if path.exists() or path.is_symlink():
                 raise ValueError(f"output already exists: {path}")
             if not path.parent.is_dir():
@@ -322,7 +365,7 @@ def main():
         if args.audit:
             plans, exclusions, record_count, deferred = batch_plan(
                 args.audit, image, output_digest, compiler_provenance(vc6)["sha256"], args.address, args.limit,
-                args.only_address, args.include_blocked)
+                args.only_address, args.include_blocked or args.assess)
             if not plans:
                 raise ValueError(f"no supported strict audit recipes: {dict(Counter(row['reason'] for row in exclusions))}")
             print(f"audit records={record_count} planned={len(plans)} preflight_exclusions={len(exclusions)} "
@@ -347,7 +390,11 @@ def main():
         with tempfile.TemporaryDirectory(prefix="pc2-verified-image-") as scratch:
             if args.audit:
                 results = verify_batch(plans, args.jobs, vc6, Path(scratch), image[0], cache_dir, cache_key,
-                                       build_environment, args.cache_only)
+                                       build_environment, args.cache_only, args.assess)
+                if args.assess:
+                    if digest(GAME.read_bytes()) != output_digest:
+                        raise ValueError("canonical executable changed during verification")
+                    return write_assessment(manifest_path, results, args.audit, output_digest, args.cache_only)
                 verified, link_plans = [], []
                 for recipe, (spans, evidence) in zip(plans, results):
                     if spans is None:

@@ -4,11 +4,12 @@
 from __future__ import annotations
 
 import argparse
+from collections import Counter, defaultdict
 import json
 from pathlib import Path
 
 from match_decomp import GAME, ROOT, file_sha256
-from symbol_registry import load_registry
+from symbol_registry import REGISTRY, load_registry
 
 
 def select_records(directory, symbols, unverified_only, executable_sha256):
@@ -120,11 +121,61 @@ def reverse_dependencies(directory, symbols, sections, sources, changed_symbols,
             "records": records}
 
 
+def ranking_recipe(row):
+    return (int(row["address"], 16), row.get("source_sha256") or row.get("source"), row.get("entry"),
+            row.get("length"), tuple(row.get("flags", [])), json.dumps(row.get("compiler"), sort_keys=True),
+            tuple(sorted(row.get("symbol_overrides", {}).items())))
+
+
+def rank_blockers(directory, executable_sha256, only_symbols=()):
+    rows = []
+    for path in sorted(directory.glob("*.json")):
+        row = json.loads(path.read_text())
+        if row["executable_sha256"] != executable_sha256:
+            raise ValueError(f"{path.name}: audit target differs from game/fastfood2.exe")
+        rows.append(row)
+    registry_sha256 = file_sha256(REGISTRY)
+    fresh = {ranking_recipe(row) for row in rows if row.get("symbol_registry_sha256") == registry_sha256}
+    rows = [row for row in rows if row.get("symbol_registry_sha256") == registry_sha256
+            or ranking_recipe(row) not in fresh]
+    verified = {int(row["address"], 16) for row in rows if row.get("strict_match") is True}
+    affected, sole = defaultdict(set), defaultdict(set)
+    body_only = set()
+    for row in rows:
+        address = int(row["address"], 16)
+        if address in verified or row.get("match") is not True or row.get("relocation_issues"):
+            continue
+        body_only.add(address)
+        missing = [fixup for fixup in row.get("relocations", [])
+                   if fixup["verified"] is False and fixup.get("target") is None
+                   and fixup["symbol"] not in row.get("symbol_overrides", {})]
+        names = {fixup["symbol"] for fixup in missing}
+        expected_issues = Counter(f"{fixup['section']} relocation at {int(fixup['offset'], 16):#x}: "
+                                  f"unresolved symbol {fixup['symbol']}" for fixup in missing)
+        sole_blocker = (len(names) == 1 and expected_issues == Counter(row.get("strict_issues", []))
+                        and not row.get("blocked_sections") and not row.get("link_plan_issues"))
+        for name in names:
+            if not only_symbols or name in only_symbols:
+                affected[name].add(address)
+                if sole_blocker:
+                    sole[name].add(address)
+    ordered = sorted(affected, key=lambda name: (-len(sole[name]), -len(affected[name]), name))
+    return {"schema": "pc2.audit_symbol_blockers.v1", "executable_sha256": executable_sha256,
+            "symbol_registry_sha256": registry_sha256,
+            "body_only_addresses": len(body_only), "symbols": [
+                {"symbol": name, "sole_blockers": len(sole[name]), "affected": len(affected[name]),
+                 "sole_blocker_addresses": [hex(va) for va in sorted(sole[name])],
+                 "affected_addresses": [hex(va) for va in sorted(affected[name])]}
+                for name in ordered]}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("audit", type=Path, help="output directory from tools/audit_matches.py")
     parser.add_argument("--symbol", action="append", help="exact COFF spelling (default: all registry entries)")
     parser.add_argument("--reverse", action="store_true", help="emit consumed and blocked dependency records")
+    parser.add_argument("--rank-blockers", action="store_true",
+                        help="rank unresolved names by functions for which they are the only recorded blocker")
     parser.add_argument("--section-address", action="append", type=lambda value: int(value, 0),
                         help="select recorded section placements at this VA (repeatable)")
     parser.add_argument("--source", action="append", type=Path,
@@ -140,7 +191,13 @@ def main():
         directory = args.audit / "functions"
         if not directory.is_dir():
             raise ValueError(f"audit records directory is missing: {directory}")
-        if args.reverse or args.section_address or args.source or args.registry_before:
+        reverse = args.reverse or args.section_address or args.source or args.registry_before
+        if args.rank_blockers:
+            if reverse:
+                raise ValueError("--rank-blockers cannot be combined with reverse dependency queries")
+            payload = rank_blockers(directory, executable_sha256, set(args.symbol or ()))
+            summary = f"ranked {len(payload['symbols'])} unresolved names across {payload['body_only_addresses']} body-only VAs"
+        elif reverse:
             changed_symbols = registry_changes(args.registry_before, executable_sha256) if args.registry_before else set()
             reverse_symbols = symbols if args.reverse and not (args.registry_before or args.source or args.section_address) else set(args.symbol or ())
             payload = reverse_dependencies(directory, reverse_symbols, set(args.section_address or ()),

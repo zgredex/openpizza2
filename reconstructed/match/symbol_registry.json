@@ -3,6 +3,45 @@
   "executable_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd",
   "entries": [
     {
+      "symbol": "?Lookup@IDMapHelper@@QAEPAXHPAH@Z",
+      "address": "0x4017f0",
+      "name": "IDMap_Lookup",
+      "kind": "function",
+      "candidate_declaration": "void * __thiscall IDMapHelper::Lookup(int, int *)",
+      "abi_observation": "The PE reads the map through ECX, receives the key and optional index pointer on the stack, returns the map entry in EAX and pops eight bytes.",
+      "evidence": [
+        {"path": "decompiled_fastfood2_named_v2/full_game_symbols.json", "locator": "0x4017f0"},
+        {"path": "reconstructed/match/batch10/part1/verify_strict.sh", "locator": "0x40bab0 calls IDMap::Lookup"},
+        {"path": "game/fastfood2.exe", "locator": "0x4017f0–0x4018ba"}
+      ]
+    },
+    {
+      "symbol": "?Read@CRT_IStream@@QAEXPAXH@Z",
+      "address": "0x54cbc1",
+      "name": "CRT_Istream_Read",
+      "kind": "function",
+      "candidate_declaration": "void __thiscall CRT_IStream::Read(void *, int)",
+      "abi_observation": "The PE reads ECX and two stack arguments, returns with ret 8 and puts the original ECX in EAX. The caller declaration ignores that return value.",
+      "evidence": [
+        {"path": "decompiled_fastfood2_named_v2/full_game_symbols.json", "locator": "0x54cbc1"},
+        {"path": "reconstructed/match/batch09/part1/verify_strict.sh", "locator": "0x4aa6c0 calls CRT_Istream::Read"},
+        {"path": "game/fastfood2.exe", "locator": "0x54cbc1–0x54cc08"}
+      ]
+    },
+    {
+      "symbol": "?Write@CRT_OStream@@QAEXPAXH@Z",
+      "address": "0x54cc2b",
+      "name": "CRT_Ostream_Write",
+      "kind": "function",
+      "candidate_declaration": "void __thiscall CRT_OStream::Write(void *, int)",
+      "abi_observation": "The PE reads ECX and two stack arguments, returns with ret 8 and puts the original ECX in EAX. The caller declaration ignores that return value.",
+      "evidence": [
+        {"path": "decompiled_fastfood2_named_v2/full_game_symbols.json", "locator": "0x54cc2b"},
+        {"path": "reconstructed/match/batch09/part1/verify_strict.sh", "locator": "0x4aa700 calls CRT_Ostream::Write"},
+        {"path": "game/fastfood2.exe", "locator": "0x54cc2b–0x54cc6d"}
+      ]
+    },
+    {
       "symbol": "?Read@IStream@@QAEXPAXH@Z",
       "address": "0x54cbc1",
       "name": "CRT_Istream_Read",

@@ -12,7 +12,8 @@ from test_independent_relocations import coff_object
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "tools"))
 from pcrecomp_pc2 import capture
-from audit_symbol_targets import reverse_dependencies
+import audit_symbol_targets
+from audit_symbol_targets import rank_blockers, reverse_dependencies
 import match_decomp
 import verify_linked_image as linker
 from verify_linked_image import digest, write_outputs
@@ -146,6 +147,57 @@ class LinkedImageTests(unittest.TestCase):
             self.assertIsNone(linker.cache_path(cache, "identity", source, b'#include "other.h"', ("/O2",)))
             self.assertIsNone(linker.cache_path(cache, "identity", source, source.read_bytes(), ("/FIforced.h",)))
 
+    def test_assessment_retains_blocked_object_and_rechecks_it_without_compiling(self):
+        base, target = 0x401000, 0x402000
+        original = b"\xe8" + struct.pack("<i", target - base - 5) + b"\xc3"
+        image = (original, base, [(".text", 0, len(original), 0, len(original))])
+        obj_data = coff_object([(b".text", b"\xe8\0\0\0\0\xc3", [(1, 1, 0x14)])],
+                               [(b"_f", 0, 1, 0x20, 2, 0), (b"_missing", 0, 0, 0x20, 2, 0)])
+
+        def compile_fixture(source, vc6, output, flags, *, environment):
+            output.write_bytes(obj_data)
+
+        with tempfile.TemporaryDirectory() as scratch:
+            root = Path(scratch)
+            source = root / "candidate.c"
+            source.write_text("void f(void) {}\n")
+            cache = root / "cache"
+            cache.mkdir()
+            recipe = linker.Recipe(base, len(original), 0, source, digest(source.read_bytes()), "_f", ("/O2",), {})
+            args = (recipe, root, root, original, cache, "identity")
+            with (patch.object(linker, "compile_candidate", side_effect=compile_fixture) as compile_call,
+                  patch.object(match_decomp, "pe_image", return_value=image)):
+                with patch.object(match_decomp, "resolve_auto_symbol", return_value=(None, None)):
+                    spans, before = linker.verify_recipe(*args, assess=True)
+                    self.assertIsNone(spans)
+                    self.assertEqual((before["status"], before["cache"]), ("blocked", "miss"))
+                    self.assertEqual(next(cache.glob("*.obj")).read_bytes(), obj_data)
+                    with self.assertRaisesRegex(ValueError, "strict match failed"):
+                        linker.verify_recipe(*args, cache_only=True)
+                with patch.object(match_decomp, "resolve_auto_symbol", return_value=(target, "exact_symbol")):
+                    spans, after = linker.verify_recipe(*args, cache_only=True, assess=True)
+                    self.assertEqual(spans[0]["hex_bytes"], original.hex())
+                    self.assertEqual((after["status"], after["cache"]), ("strict", "hit"))
+                    self.assertEqual(before["object"]["sha256"], after["object"]["sha256"])
+                compile_call.assert_called_once()
+
+    def test_cache_only_batch_assessment_reports_each_missing_object(self):
+        with tempfile.TemporaryDirectory() as scratch:
+            root = Path(scratch)
+            source = root / "source.c"
+            source.write_text("void f(void) {}\n")
+            recipes = [linker.Recipe(0x401000 + i, 1, i, source, digest(source.read_bytes()), "_f", ("/O2",), {})
+                       for i in range(2)]
+            with patch.object(linker, "compile_candidate") as compile_call:
+                results = linker.verify_batch(recipes, 2, root, root, bytes(2), root, "identity", {},
+                                              cache_only=True, assess=True)
+                compile_call.assert_not_called()
+            path = root / "report.json"
+            self.assertEqual(linker.write_assessment(path, results, root, "image", True), 1)
+            report = json.loads(path.read_text())
+            self.assertEqual(report["summary"]["statuses"], {"cache_missing": 2})
+            self.assertEqual([row["address"] for row in report["candidates"]], ["0x401000", "0x401001"])
+
     def test_image_assembly_rejects_overlap_even_when_bytes_match(self):
         self.assertEqual(linker.assemble_image(b"xyz", [(2, b"z"), (0, b"x")]), b"xyz")
         with self.assertRaisesRegex(ValueError, "write ranges overlap"):
@@ -183,6 +235,36 @@ class LinkedImageTests(unittest.TestCase):
             self.assertEqual(reverse["addresses"], ["0x401000", "0x402000", "0x403000"])
             self.assertEqual({d["kind"] for d in reverse["records"][0]["references"]},
                              {"symbol", "source", "section_address"})
+
+    def test_blocker_ranking_counts_only_distinct_still_blocked_bodies(self):
+        with tempfile.TemporaryDirectory() as scratch:
+            root = Path(scratch)
+
+            def make_row(filename, address, names, extra_issue=None, strict=False, registry=None):
+                fixups = [{"symbol": name, "target": None, "verified": False, "section": ".text", "offset": hex(i)}
+                          for i, name in enumerate(names)]
+                issues = [f".text relocation at {fixup['offset']}: unresolved symbol {fixup['symbol']}" for fixup in fixups]
+                if extra_issue:
+                    issues.append(extra_issue)
+                (root / filename).write_text(json.dumps({"address": address, "executable_sha256": "image",
+                                                         "match": True, "strict_match": strict,
+                                                         "relocations": fixups, "strict_issues": issues,
+                                                         "symbol_registry_sha256": registry}))
+
+            make_row("a.json", "0x401000", ["?A", "?A"])
+            make_row("b.json", "0x402000", ["?A", "?B"])
+            make_row("c.json", "0x403000", ["?B"], "unverified .rdata section")
+            make_row("d.json", "0x404000", ["?B"])
+            make_row("e.json", "0x404000", [], strict=True)
+            result = rank_blockers(root, "image")
+            self.assertEqual(result["body_only_addresses"], 3)
+            self.assertEqual([(row["symbol"], row["sole_blockers"], row["affected"]) for row in result["symbols"]],
+                             [("?A", 1, 2), ("?B", 0, 2)])
+            make_row("f.json", "0x402000", ["?B"], registry="current")
+            with patch.object(audit_symbol_targets, "file_sha256", return_value="current"):
+                updated = rank_blockers(root, "image")
+            self.assertEqual([(row["symbol"], row["sole_blockers"], row["affected"]) for row in updated["symbols"]],
+                             [("?B", 1, 2), ("?A", 1, 1)])
 
     def test_capture_reports_only_linked_entries_in_captured_phases(self):
         report = {"run": {"guest_sha256": "guest"}, "complete": False,
