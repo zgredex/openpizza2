@@ -5,15 +5,16 @@ The shipped `game/fastfood2.exe` is MSVC 6.0 SP3: `C2.DLL` 12.00.8447 and
 under `/tmp/opencode/vc6-sp3-toolchain/VC98`; set `PC2_VC6` to another tree if
 needed.
 
-A candidate is done only when `tools/match_decomp.py` reports `"match": true`.
-It compiles with `/O2`, resolves COFF `DIR32`/`REL32` relocations to the original
-image addresses, and compares the function bytes with the PE.
+A candidate is verified when `tools/match_decomp.py --strict` reports
+`"strict_match": true`. It compiles with `/O2` by default, compares the
+function bytes with the PE, and checks every COFF `DIR32`/`REL32` relocation
+against an independently resolved address.
 
 Example:
 
 ```sh
 python3 tools/match_decomp.py 0x48d3a0 /tmp/candidate.c \
-  --length 0x80 --entry _pc2_get_capital \
+  --length 0x80 --entry _pc2_get_capital --strict --auto-symbols \
   --symbol _game_difficulty=0x57bb24
 ```
 
@@ -23,7 +24,10 @@ and writes candidates only under `batch01/partN/`. Keep worklogs in
 `batch01/partN/worklog.md`; commit only matched C and tests. Never commit the
 VC6 tree or the game image.
 
-## Progress
+## Historical progress
+
+These counts predate the independent relocation gate. Use the audit below
+to measure strict matches under the current gate.
 
 ```text
 batch 1    53 / 100 C-only   (strict 51)
@@ -48,13 +52,15 @@ Batches 5-9 are the next 500 smallest remaining functions and use the strict
 extent/relocation gate. Nonmatching genuine C/C++ attempts are kept under each
 part's `nonmatching/` directory with first-diff evidence.
 
-The strict gate resolves PE import IAT slots, decorated C++ and data symbols
-from the shipped symbol maps, and locates/validates `.text$x`, `.xdata$x`, and
-anchored vtable COMDATs by masked byte search. Regressions:
+The strict gate resolves unique PE import IAT slots, exact or decorated aliases
+from the shipped symbol maps, address labels, and explicit `--symbol` entries.
+It verifies secondary sections using independent anchors or unique byte
+signatures. Run the relocation regressions with:
 
 ```sh
 python3 reconstructed/match/tests/test_relocation_guard.py
 python3 reconstructed/match/tests/test_auto_symbols.py
+python3 reconstructed/match/tests/test_independent_relocations.py
 ```
 
 ## Batch runner
@@ -80,16 +86,36 @@ python3 tools/match_decomp.py 0x48d3a0 reconstructed/match/golden/0x48d3a0.c \
 
 ## Strict audit
 
-Explicit `--symbol` maps are checked by default. `--strict` also checks the
-full function extent, all relocation targets/addends, and rejects unverified
-unwind sections; `--auto-symbols` resolves undefined symbols from
-`full_game_symbols.json`. The wrong-target regression is:
+The [current verification](STRICT_AUDIT.md#current-verification) summarizes
+the full tracked audit under the independent relocation gate.
+
+The audit runner reuses the tracked verification scripts and their source,
+entry, extent, compiler flags, and symbol choices. It sets `PC2_STRICT=1` and
+`PC2_AUTO_SYMBOLS=1`. The output directory must be new. Use `--jobs` to run
+independent verifiers concurrently. The batch01/part1 and batch02/part1 wrappers
+share a serial lane.
 
 ```sh
-python3 reconstructed/match/tests/test_relocation_guard.py
+python3 tools/audit_matches.py --out /tmp/pc2-part3-audit \
+  reconstructed/match/batch03/part3/verify_strict.sh
+python3 tools/audit_matches.py --jobs 8 --out /tmp/pc2-tracked-audit
 ```
 
-See `STRICT_AUDIT.md` for the separate strict count.
+`functions/` keeps one JSON record per distinct attempted recipe, including
+failures. Each record has source/compiler/executable hashes, flags, fixup
+evidence, and the strict verdict. Numbered logs retain each script's output.
+`report.json` counts distinct observed addresses, lists those without a strict
+pass, and records each script's status. Counts cover the observed attempts,
+so inspect the script log if a failure stopped a verifier early. The audit
+exits nonzero if a script fails, the run produces no records, or any observed
+address lacks a strict pass. Two legacy wrappers share `/tmp/part1-match.json`,
+so keep batch01/part1 and batch02/part1 in the same audit or run them sequentially.
+
+Set `PC2_MATCH_AUDIT_DIR` for the same records from a direct matcher or batch
+invocation. If the instruction bytes match and a relocation is unresolved,
+use the recorded symbol and fixup site to seek independent evidence. Supply
+only an independently established address with `--symbol NAME=0xADDRESS`.
+For code generation differences, run the [bounded retry matrix](investigations/README.md).
 
 ## Stock CRT archive identification
 

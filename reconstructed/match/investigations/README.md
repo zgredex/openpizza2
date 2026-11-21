@@ -1,16 +1,29 @@
 # Miss investigation matrix
 
-`tools/compiler_matrix.py` compiles each variant with the pinned VC6 SP3
-compiler and records the compiler hashes, flags, entry, first differing
-instruction and total differing bytes.
+`tools/compiler_matrix.py` checks variants with VC6 SP3 and the same strict
+relocation gate as the audit. The small example retries four flag/source
+recipes for two checked-in array and list utility near-misses.
 
 ```sh
 python3 tools/compiler_matrix.py \
-  reconstructed/match/investigations/matrix01.json \
-  --json-out reconstructed/match/investigations/matrix01.json.out
+  reconstructed/match/investigations/utility-near-misses.json \
+  --max-attempts 4 --top 4 --json-out /tmp/pc2-utility-near-misses.json
 ```
 
-Compiler hashes for this matrix:
+Use `--target 0xADDRESS` to focus on one function. The default limit is eight
+attempts in config order. The summary ranks strict passes first, followed by
+near-misses with fewer relocation/extent issues and smaller byte differences.
+JSON adds the compiler hashes, flags, entry, first differing instruction, and
+fixup evidence for each attempt. An experiment can finish with only near-misses.
+Use `--require-match` when the exit code must require a strict pass.
+
+Use `--symbol NAME=0xADDRESS` for independently established addresses. A JSON
+`symbols` object can supply defaults per config, target, or variant. Narrower
+scopes override broader ones, and command-line mappings take precedence.
+
+## Historical matrices
+
+Compiler hashes recorded for `matrix01.json`:
 
 ```text
 CL.EXE    d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import os
 import re
@@ -17,6 +18,7 @@ import struct
 import subprocess
 import sys
 import tempfile
+from functools import lru_cache
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -26,21 +28,7 @@ DEFAULT_VC6 = Path(os.environ.get("PC2_VC6", "/tmp/opencode/vc6-sp3-toolchain/VC
 SYMBOL_INDEX = ROOT / "decompiled_fastfood2_named_v2/full_game_symbols.json"
 DATA_SYMBOLS = ROOT / "decompiled_fastfood2_named_v2/data_symbols.csv"
 _SYMBOLS = None
-_ADDRESS_NAMES = None
 _IMPORTS = None
-_FUZZY = None
-
-
-def _normalize_symbol(text: str) -> str:
-    return re.sub(r"[^a-z0-9]+", "_", text.lower()).strip("_")
-
-
-def _symbol_words(text: str):
-    words = set()
-    for part in re.split(r"[^A-Za-z0-9]+", text):
-        words.update(word.lower() for word in re.findall(
-            r"[A-Z]+(?=[A-Z][a-z]|$)|[A-Z]?[a-z]+|[0-9]+", part))
-    return words
 
 
 def pe_imports():
@@ -50,7 +38,6 @@ def pe_imports():
         return _IMPORTS
     data, base, sections = pe_image(GAME)
     pe = struct.unpack_from("<I", data, 0x3C)[0]
-    optsize = struct.unpack_from("<H", data, pe + 20)[0]
     opt = pe + 24
     import_rva, _ = struct.unpack_from("<II", data, opt + 96 + 8)
     result = {}
@@ -76,115 +63,67 @@ def pe_imports():
                     break
                 if not entry & 0x80000000:
                     name = read_rva(entry + 2, 256).split(b"\0")[0].decode("latin1")
-                    result[name] = base + first + index * 4
+                    result.setdefault(name, set()).add(base + first + index * 4)
                 index += 1
             cursor += 20
-    _IMPORTS = result
-    return result
+    _IMPORTS = {name: next(iter(addresses)) for name, addresses in result.items()
+                if len(addresses) == 1}
+    return _IMPORTS
 
 
-def _decorated_parts(name: str):
-    """Return (class, method) from a decorated or flat symbol name."""
-    if name.startswith("?"):
-        try:
-            out = subprocess.run(["llvm-undname", name], text=True,
-                                 capture_output=True, timeout=10).stdout.strip()
-        except (OSError, subprocess.TimeoutExpired):
-            out = ""
-        if out and out != name:
-            signature = out.split("(", 1)[0]
-            qualified = signature.split()[-1]
-            if "::" in qualified:
-                cls, method = qualified.rsplit("::", 1)
-                return cls.split("::")[-1], method
-            return None, qualified
-    stripped = name.lstrip("_@").split("@", 1)[0]
-    return None, stripped
-
-
-def resolve_auto_symbol(name: str, expected: int | None = None,
-                        fuzzy: bool = False):
-    global _SYMBOLS, _ADDRESS_NAMES, _FUZZY
+@lru_cache(maxsize=None)
+def resolve_auto_symbol(name: str):
+    """Resolve only independently named targets, with their evidence source."""
+    global _SYMBOLS
     if _SYMBOLS is None:
         raw = json.loads(SYMBOL_INDEX.read_text()) if SYMBOL_INDEX.is_file() else {}
-        _SYMBOLS = {name: int(address, 16) for address, name in raw.items()}
-        _ADDRESS_NAMES = {address: name for name, address in _SYMBOLS.items()}
+        _SYMBOLS = {}
+        for address, symbol in raw.items():
+            _SYMBOLS.setdefault(symbol, set()).add(int(address, 16))
         if DATA_SYMBOLS.is_file():
-            for row in csv.DictReader(DATA_SYMBOLS.open()):
-                try:
-                    address = int(row["address"], 16)
-                except (KeyError, TypeError, ValueError):
-                    continue
-                symbol = row.get("name")
-                if not symbol:
-                    continue
-                _SYMBOLS.setdefault(symbol, address)
-                _ADDRESS_NAMES.setdefault(address, symbol)
-    candidates = [name]
+            with DATA_SYMBOLS.open() as table:
+                for row in csv.DictReader(table):
+                    try:
+                        address = int(row["address"], 16)
+                    except (KeyError, TypeError, ValueError):
+                        continue
+                    if row.get("name"):
+                        _SYMBOLS.setdefault(row["name"], set()).add(address)
+    if name in _SYMBOLS:
+        addresses = _SYMBOLS[name]
+        return (next(iter(addresses)), "exact_symbol") if len(addresses) == 1 else (None, None)
+
+    aliases = []
     if name.startswith("?"):
         try:
-            out = subprocess.run(["llvm-undname", name], text=True,
-                                 capture_output=True, timeout=10).stdout.strip()
-        except (OSError, subprocess.TimeoutExpired):
+            demangled = subprocess.run(["llvm-undname", name], text=True,
+                                       capture_output=True, timeout=10, check=True)
+            _, _, out = demangled.stdout.strip().partition("\n")
+        except (OSError, subprocess.SubprocessError):
             out = ""
-        if out and out != name:
-            signature = out.split("(", 1)[0]
-            qualified = signature.split()[-1]
-            candidates.append(qualified.replace("::", "_"))
-    if name.startswith("_"):
-        candidates.append(name[1:])
-    if name.startswith("@"):
-        candidates.append(name.lstrip("@").split("@", 1)[0])
-    for candidate in candidates:
-        if candidate in _SYMBOLS:
-            return _SYMBOLS[candidate]
-    match = re.search(r"(?:DAT|STR)_([0-9a-fA-F]{8})", name)
+        data = re.fullmatch(r"\?((?:DAT|STR)_([0-9a-fA-F]{8}))@@3.+", name)
+        if data and re.search(rf"\b{data[1]}$", out):
+            return int(data[2], 16), "address_label"
+        function = re.search(r"\b([A-Za-z_~]\w*(?:::[A-Za-z_~]\w*)*)\(", out)
+        if function and ("::" in function[1] or name.startswith(f"?{function[1]}@@Y")):
+            aliases.append(function[1].replace("::", "_"))
+    elif name.startswith(("_", "@")):
+        aliases.append(re.sub(r"@\d+$", "", name[1:]))
+    addresses = {address for alias in aliases for address in _SYMBOLS.get(alias, ())}
+    if addresses:
+        return (next(iter(addresses)), "decorated_alias") if len(addresses) == 1 else (None, None)
+    match = re.fullmatch(r"_?(?:DAT|STR)_([0-9a-fA-F]{8})", name)
     if match:
-        return int(match.group(1), 16)
+        return int(match.group(1), 16), "address_label"
     for prefix in ("__imp__", "_imp__"):
         if name.startswith(prefix):
             imported = name[len(prefix):].lstrip("_").split("@", 1)[0]
             if imported in pe_imports():
-                return pe_imports()[imported]
+                return pe_imports()[imported], "pe_iat"
     if name == "__except_list":
         # The VC6 EH model encodes the FS:[0] chain head as absolute zero.
-        return 0
-    if fuzzy and expected is not None and expected in _ADDRESS_NAMES:
-        return expected
-    if fuzzy:
-        cls, method = _decorated_parts(name)
-        tokens = {_normalize_symbol(method)}
-        if method.startswith("~"):
-            tokens.add(_normalize_symbol(method[1:]))
-        variants = set()
-        for token in tokens:
-            if not token:
-                continue
-            variants.update((token, f"_{token}"))
-        if cls:
-            base = _normalize_symbol(cls)
-            for token in tokens:
-                variants.update((f"{base}_{token}", f"_{base}_{token}"))
-            if method.startswith("~"):
-                for suffix in ("destruct", "destroy", "delete",
-                               "scalar_deleting_destructor"):
-                    variants.update((f"{base}_{suffix}", f"_{base}_{suffix}"))
-        method_words = _symbol_words(method)
-        if _FUZZY is None:
-            _FUZZY = [(_normalize_symbol(symbol), _symbol_words(symbol), address)
-                      for symbol, address in _SYMBOLS.items()]
-        addresses = set()
-        for symbol_name, symbol_words, address in _FUZZY:
-            if any(symbol_name == variant or symbol_name.endswith(variant)
-                   for variant in variants):
-                addresses.add(address)
-            elif method_words and method_words <= symbol_words:
-                addresses.add(address)
-        if expected is not None and expected in addresses:
-            return expected
-        if len(addresses) == 1:
-            return addresses.pop()
-    return None
+        return 0, "vc6_eh_intrinsic"
+    return None, None
 
 
 def pe_image(path: Path):
@@ -231,10 +170,14 @@ def function_length(address: int):
             if item_address != address:
                 continue
             ranges = item.get("body", {}).get("ranges", [])
-            if ranges:
+            if len(ranges) == 1 and not item["body"].get("non_contiguous"):
+                bounds = ranges[0]
+                if isinstance(bounds, dict):
+                    bounds = (bounds["start"], bounds["end"])
                 start, end = (int(value, 16) if isinstance(value, str) else int(value)
-                              for value in ranges[0])
-                return end - start + 1
+                              for value in bounds)
+                if start == address and end >= start:
+                    return end - start + 1
     raise ValueError("no function length; pass --length")
 
 
@@ -256,8 +199,11 @@ def parse_coff(path: Path):
         })
         cursor += 40
     strtab = symptr + nsyms * 18
-    symbols = []
-    for index in range(nsyms):
+    if symptr + nsyms * 18 > len(data):
+        raise ValueError("truncated COFF symbol table")
+    symbols = [None] * nsyms
+    index = 0
+    while index < nsyms:
         entry = data[symptr + index * 18:symptr + (index + 1) * 18]
         raw_name = entry[:8]
         if raw_name[:4] == b"\0\0\0\0":
@@ -267,8 +213,11 @@ def parse_coff(path: Path):
         else:
             name = raw_name.split(b"\0")[0].decode("latin1")
         value, section, typ, storage, naux = struct.unpack_from("<IhHBB", entry, 8)
-        symbols.append({"name": name, "value": value, "section": section,
-                        "type": typ, "storage": storage, "naux": naux})
+        if index + naux >= nsyms:
+            raise ValueError("truncated COFF auxiliary symbol")
+        symbols[index] = {"name": name, "value": value, "section": section,
+                          "type": typ, "storage": storage, "naux": naux}
+        index += 1 + naux
     return data, sections, symbols
 
 
@@ -281,80 +230,105 @@ def section_relocations(object_bytes: bytes, section):
     return result
 
 
-def locate_linked_section(image, section, relocations, coff_symbols,
-                          known_bases, anchors=()):
-    """Find a COMDAT section's linked VA by its fixed bytes.
+def relocation_value(target, addend, site, kind):
+    if kind == 0x14:
+        target -= site + 4
+    elif kind != 0x06:
+        raise ValueError(f"unsupported COFF relocation type {kind:#x}")
+    return (target + addend) & 0xFFFFFFFF
 
-    Relocated fields are wildcards.  When the section is not unique by bytes,
-    relocations into already-located sections and caller-supplied anchors
-    disambiguate it.
-    """
+
+def relocation_target(symbol, bases, symbols, auto_symbols):
+    section = symbol["section"]
+    if section > 0:
+        if section in bases:
+            base, origin = bases[section]
+            return base + symbol["value"], origin
+        return None, None
+    if symbol["name"] in symbols:
+        return symbols[symbol["name"]], "explicit_symbol"
+    if auto_symbols:
+        return resolve_auto_symbol(symbol["name"])
+    return None, None
+
+
+def locate_linked_section(image, section, relocations, coff_symbols, known_bases,
+                          symbols, auto_symbols, anchors=()):
+    """Locate a section uniquely using independent bytes and resolved targets."""
     raw = bytes(section["raw"])
-    if len(raw) < 8 and not anchors:
-        return None
-    mask = bytearray(len(raw))
-    for va, _, _ in relocations:
-        for offset in range(4):
-            if va + offset < len(raw):
-                mask[va + offset] = 1
-    fixed = sum(1 for value in mask if not value)
-    if fixed < 8 and not anchors:
-        return None
+    pattern = bytearray(raw)
+    masked = set()
+    for offset, index, kind in relocations:
+        if offset + 4 > len(raw) or kind not in (0x06, 0x14):
+            return None
+        symbol = coff_symbols[index]
+        addend = struct.unpack_from("<i", raw, offset)[0]
+        target, _ = relocation_target(symbol, known_bases, symbols, auto_symbols)
+        if kind == 0x06 and target is not None:
+            struct.pack_into("<I", pattern, offset, relocation_value(target, addend, 0, kind))
+        elif kind == 0x14 and symbol["section"] == section["index"]:
+            value = relocation_value(symbol["value"], addend, offset, kind)
+            struct.pack_into("<I", pattern, offset, value)
+        else:
+            masked.update(range(offset, offset + 4))
+    fixed = [index for index in range(len(raw)) if index not in masked]
 
-    def masked_match(candidate):
-        try:
-            linked = read_va(image, candidate, len(raw))
-        except ValueError:
+    def consistent(address, linked):
+        if any(linked[index] != pattern[index] for index in fixed):
             return False
-        return all(mask[index] or linked[index] == raw[index]
-                   for index in range(len(raw)))
-
-    data, base, sections = image
-    matches = []
-    if fixed >= 8:
-        for _, section_va, _, rawptr, rawsize in sections:
-            haystack = data[rawptr:rawptr + rawsize]
-            first = (-(base + section_va)) % 4
-            for offset in range(first, len(haystack) - len(raw) + 1, 4):
-                if all(mask[index] or haystack[offset + index] == raw[index]
-                       for index in range(len(raw))):
-                    matches.append(base + section_va + offset)
-                    if len(matches) > 256:
-                        break
-            if len(matches) > 256:
-                break
-
-    def consistent(candidate):
-        for value, expected in anchors:
-            if candidate + value != expected:
-                return False
-        for va, symbol_index, typ in relocations:
-            symbol = coff_symbols[symbol_index]
-            if symbol["section"] not in known_bases:
+        bases = {**known_bases, section["index"]: (address, "section_candidate")}
+        for offset, index, kind in relocations:
+            symbol = coff_symbols[index]
+            target, _ = relocation_target(symbol, bases, symbols, auto_symbols)
+            if target is None:
+                # Final verification requires this target to resolve independently.
                 continue
-            try:
-                field = read_va(image, candidate + va, 4)
-            except ValueError:
-                return False
-            actual = struct.unpack("<I", field)[0]
-            addend = struct.unpack_from("<i", raw, va)[0]
-            target = known_bases[symbol["section"]] + symbol["value"]
-            if typ == 0x06:
-                expected = (target + addend) & 0xFFFFFFFF
-            else:
-                expected = (target + addend - (candidate + va + 4)) & 0xFFFFFFFF
-            if actual != expected:
+            addend = struct.unpack_from("<i", raw, offset)[0]
+            actual = struct.unpack_from("<I", linked, offset)[0]
+            if actual != relocation_value(target, addend, address + offset, kind):
                 return False
         return True
 
-    matches = [candidate for candidate in matches if consistent(candidate)]
-    if len(matches) != 1 and anchors:
-        candidates = {expected - value for value, expected in anchors}
-        matches = [candidate for candidate in candidates
-                   if all(candidate + value == expected
-                          for value, expected in anchors)
-                   and masked_match(candidate) and consistent(candidate)]
-    return matches[0] if len(matches) == 1 else None
+    if anchors:
+        options = {target - value for value, target in anchors}
+        if len(options) != 1:
+            return None
+        address = options.pop()
+        try:
+            linked = read_va(image, address, len(raw))
+        except ValueError:
+            return None
+        return (address, "explicit_section_anchor") if consistent(address, linked) else None
+
+    if len(fixed) < 8:
+        return None
+    # Choose the longest contiguous fixed run, then enumerate every occurrence.
+    runs = []
+    start = previous = fixed[0]
+    for index in fixed[1:]:
+        if index != previous + 1:
+            runs.append((start, previous + 1))
+            start = index
+        previous = index
+    runs.append((start, previous + 1))
+    start, end = max(runs, key=lambda run: run[1] - run[0])
+    needle = bytes(pattern[start:end])
+    found = None
+    data, image_base, sections = image
+    for _, va, virtual_size, raw_ptr, raw_size in sections:
+        size = min(virtual_size or raw_size, raw_size)
+        body = data[raw_ptr:raw_ptr + size]
+        offset = body.find(needle, start)
+        while offset != -1:
+            candidate = offset - start
+            if candidate + len(raw) <= len(body):
+                address = image_base + va + candidate
+                if consistent(address, body[candidate:candidate + len(raw)]):
+                    if found is not None:
+                        return None
+                    found = address
+            offset = body.find(needle, offset + 1)
+    return (found, "unique_section_signature") if found is not None else None
 
 
 def compile_candidate(source: Path, vc6: Path, obj: Path, flags: list[str]):
@@ -372,233 +346,245 @@ def compile_candidate(source: Path, vc6: Path, obj: Path, flags: list[str]):
         raise ValueError(f"compile failed:\n{result.stdout}\n{result.stderr}")
 
 
-def match(address: int, source: Path, obj: Path, vc6: Path, flags: list[str],
-          symbols: dict[str, int], length: int | None, entry: str | None,
-          strict_symbols: bool = False, strict: bool = False,
-          auto_symbols: bool = False):
+def match_object(address: int, obj: Path, symbols: dict[str, int],
+                 length: int | None = None, entry: str | None = None,
+                 strict_symbols: bool = False, strict: bool = False,
+                 auto_symbols: bool = False):
+    """Compare an already compiled COFF object with the shipped code."""
     image = pe_image(GAME)
     if length is None:
         length = function_length(address)
+    if length <= 0:
+        raise ValueError("function extent must be positive")
     original = read_va(image, address, length)
-    compile_candidate(source, vc6, obj, flags)
-    _, sections, coff_symbols = parse_coff(obj)
+    object_bytes, sections, coff_symbols = parse_coff(obj)
     if entry is None:
         functions = [item for item in coff_symbols
-                     if item["section"] > 0 and item["type"] == 0x20]
+                     if item is not None and item["section"] > 0 and item["type"] == 0x20]
         if len(functions) == 1:
             entry = functions[0]["name"]
     entry_symbol = None
     if entry:
-        entry_symbol = next((item for item in coff_symbols if item["name"] == entry), None)
+        entry_symbol = next((item for item in coff_symbols
+                             if item is not None and item["name"] == entry), None)
         if entry_symbol is None or entry_symbol["section"] <= 0:
             raise ValueError(f"candidate entry symbol {entry} not found")
-        text = next((section for section in sections
-                     if section["index"] == entry_symbol["section"]), None)
+        primary = next((section for section in sections
+                        if section["index"] == entry_symbol["section"]), None)
     else:
-        text = next((section for section in sections if section["name"] == ".text"), None)
-    if text is None:
+        primary = next((section for section in sections if section["name"] == ".text"), None)
+    if primary is None:
         raise ValueError("candidate has no code section")
-    candidate = bytearray(text["raw"])
+
+    raw = bytearray(primary["raw"])
     start = entry_symbol["value"] if entry_symbol is not None else 0
-    extra_len = max(0, len(candidate) - (start + length))
+    if not 0 <= start < len(raw):
+        raise ValueError("candidate entry starts outside its section")
+    extra_len = max(0, len(raw) - (start + length))
+    strict_issues = []
+    relocation_issues = []
+    fixups = []
     if extra_len:
         try:
             original = read_va(image, address, length + extra_len)
         except ValueError:
+            strict_issues.append("candidate extent extends past the original PE section")
             extra_len = 0
-    strict_issues = []
-    relocation_issues = []
-    object_bytes = obj.read_bytes()
-    section_bases = {}
-    anchors_by_section = {}
+
+    section_bases = {primary["index"]: (address - start, "candidate_entry")}
+    relocations = {section["index"]: section_relocations(object_bytes, section)
+                   for section in sections if section["raw"]}
+    if any(index >= len(coff_symbols) or coff_symbols[index] is None
+           for records in relocations.values() for _, index, _ in records):
+        raise ValueError("COFF relocation targets an invalid symbol index")
+    pending = {}
     if strict:
-        if entry_symbol is not None:
-            section_bases[text["index"]] = address
-        for va, symbol_index, typ in section_relocations(object_bytes, text):
+        # Follow candidate section references. A relocation's original value
+        # never participates in deciding where its target section is linked.
+        pending = {section["index"]: section for section in sections
+                   if section["index"] != primary["index"] and section["raw"]
+                   and section["name"].startswith((".text$", ".xdata$"))}
+        visited = {primary["index"], *pending}
+        frontier = list(visited)
+        while frontier:
+            index = frontier.pop()
+            for offset, symbol_index, _ in relocations[index]:
+                if index == primary["index"] and offset < start:
+                    continue
+                target = coff_symbols[symbol_index]["section"]
+                if target <= 0 or target in visited:
+                    continue
+                visited.add(target)
+                if target > len(sections) or not sections[target - 1]["raw"]:
+                    continue
+                pending[target] = sections[target - 1]
+                frontier.append(target)
+        anchors = {}
+        for symbol in coff_symbols:
+            if symbol is not None and symbol["section"] in pending and symbol["name"] in symbols:
+                anchors.setdefault(symbol["section"], []).append(
+                    (symbol["value"], symbols[symbol["name"]]))
+        remaining = dict(pending)
+        while remaining:
+            located = []
+            for index, section in remaining.items():
+                found = locate_linked_section(
+                    image, section, relocations[index], coff_symbols, section_bases,
+                    symbols, auto_symbols, anchors.get(index, ()))
+                if found is not None:
+                    section_bases[index] = found
+                    located.append(index)
+            if not located:
+                break
+            for index in located:
+                del remaining[index]
+        for section in remaining.values():
+            strict_issues.append(
+                f"unverified {section['name']} section ({len(section['raw'])} bytes)")
+
+    def check_relocations(section, candidate, linked, base, skip_prefix=0):
+        name = section["name"]
+        previous_end = skip_prefix
+        for offset, symbol_index, kind in sorted(relocations[section["index"]]):
+            if offset + 4 <= skip_prefix:
+                continue
+            if offset < previous_end or offset + 4 > len(candidate) or offset - skip_prefix + 4 > len(linked):
+                strict_issues.append(f"{name} relocation at {offset:#x} crosses the extent or overlaps")
+                continue
+            previous_end = offset + 4
+            if kind not in (0x06, 0x14):
+                raise ValueError(f"unsupported COFF relocation type {kind:#x}")
             symbol = coff_symbols[symbol_index]
-            if symbol["section"] <= 0 or va + 4 > len(original):
-                continue
-            addend = struct.unpack_from("<i", text["raw"], va)[0]
-            actual = struct.unpack_from("<I", original, va)[0]
-            if typ == 0x06:
-                expected_target = (actual - addend) & 0xFFFFFFFF
-            else:
-                expected_target = (actual + (address + va + 4) - addend) & 0xFFFFFFFF
-            anchors_by_section.setdefault(symbol["section"], []).append(
-                (symbol["value"], expected_target))
-        pending = [section for section in sections
-                   if section["name"] == ".text$x" and section["raw"]]
-        for section in pending:
-            relocations = section_relocations(object_bytes, section)
-            linked = locate_linked_section(
-                image, section, relocations, coff_symbols, section_bases,
-                anchors_by_section.get(section["index"], ()))
-            if linked is not None:
-                section_bases[section["index"]] = linked
-        for section in sections:
-            if section["name"] != ".xdata$x" or not section["raw"]:
-                continue
-            relocations = section_relocations(object_bytes, section)
-            linked = locate_linked_section(
-                image, section, relocations, coff_symbols, section_bases,
-                anchors_by_section.get(section["index"], ()))
-            if linked is not None:
-                section_bases[section["index"]] = linked
-        for section_index in anchors_by_section:
-            if section_index == text["index"]:
-                continue
-            section = sections[section_index - 1]
-            if not section["raw"] or section["index"] in section_bases:
-                continue
-            if not (section["name"].startswith(".rdata")
-                    or section["name"].startswith(".data")):
-                continue
-            relocations = section_relocations(object_bytes, section)
-            linked = locate_linked_section(
-                image, section, relocations, coff_symbols, section_bases,
-                anchors_by_section.get(section["index"], ()))
-            if linked is not None:
-                section_bases[section["index"]] = linked
-    for offset in range(text["nrel"]):
-        va, symbol_index, typ = struct.unpack_from(
-            "<IIH", object_bytes, text["relptr"] + offset * 10)
-        symbol = coff_symbols[symbol_index]
-        if va + 4 > len(candidate) or va + 4 > len(original):
-            issue = f"relocation at {va:#x} is outside the candidate/original extent"
-            strict_issues.append(issue)
-            continue
-        original_field = original[va:va + 4]
-        addend = struct.unpack_from("<i", candidate, va)[0]
-        actual = struct.unpack("<I", original_field)[0]
-        if typ == 0x06:
-            expected_target = (actual - addend) & 0xFFFFFFFF
-        else:
-            expected_target = (actual + (address + va + 4) - addend) & 0xFFFFFFFF
-        if symbol["section"] > 0:
-            base = section_bases.get(symbol["section"])
-            target = None if base is None else base + symbol["value"]
-        else:
-            name = symbol["name"]
-            target = symbols.get(name)
-            if target is None and auto_symbols:
-                target = resolve_auto_symbol(name, expected=expected_target,
-                                             fuzzy=strict)
-        if strict_symbols or strict:
-            if target is None:
-                if symbol["section"] > 0:
-                    issue = (f"unlocated section symbol {symbol['name']} "
-                             f"in section {symbol['section']}")
-                else:
-                    issue = f"undefined symbol {name}; pass --symbol {name}=0xADDR"
-                if strict:
-                    strict_issues.append(issue)
-                else:
-                    raise ValueError(issue)
-        if target is not None:
-            if typ == 0x06:
-                expected = (target + addend) & 0xFFFFFFFF
-            else:
-                expected = (target + addend - (address + va + 4)) & 0xFFFFFFFF
-            if actual != expected:
-                issue = (f"relocation at {va:#x} resolves to {expected:#x}, "
-                         f"original has {actual:#x}")
-                if strict:
-                    strict_issues.append(issue)
-                else:
-                    relocation_issues.append(issue)
-        if typ not in (0x06, 0x14):
-            raise ValueError(f"unsupported COFF relocation type {typ:#x}")
-        candidate[va:va + 4] = original_field
+            field_start = offset - skip_prefix
+            actual, = struct.unpack_from("<I", linked, field_start)
+            addend, = struct.unpack_from("<i", candidate, offset)
+            site = base + offset
+            target, origin = relocation_target(symbol, section_bases, symbols, auto_symbols)
+            expected = None if target is None else relocation_value(target, addend, site, kind)
+            fixups.append({"section": name, "section_index": section["index"], "site": hex(site),
+                           "offset": hex(offset), "symbol": symbol["name"],
+                           "kind": "DIR32" if kind == 0x06 else "REL32", "addend": addend,
+                           "original": hex(actual), "expected": None if expected is None else hex(expected),
+                           "target": None if target is None else hex(target), "origin": origin,
+                           "verified": expected is not None and actual == expected})
+            if expected is None:
+                if strict or strict_symbols:
+                    strict_issues.append(
+                        f"{name} relocation at {offset:#x}: unresolved symbol {symbol['name']}")
+            elif expected != actual:
+                relocation_issues.append(
+                    f"{name} relocation at {offset:#x} resolves to {expected:#x}, original has {actual:#x}")
+            # Compare instruction bodies separately from the relocation checks.
+            candidate[offset:offset + 4] = linked[field_start:field_start + 4]
+
+    check_relocations(primary, raw, original, address - start, start)
     if extra_len:
-        actual_extra = bytes(candidate[start + length:start + length + extra_len])
+        actual_extra = raw[start + length:start + length + extra_len]
         expected_extra = original[length:length + extra_len]
         padding = all(byte in (0x00, 0x90, 0xCC) for byte in actual_extra)
         if actual_extra != expected_extra and not padding:
             strict_issues.append(
-                f"candidate extent {len(text['raw'])} bytes, expected {start + length}"
+                f"candidate extent {len(raw)} bytes, expected {start + length}"
                 f" (extra={extra_len} bytes does not match the original table/padding)")
-    candidate = candidate[start:start + length]
-    if strict:
-        for section in sections:
-            if section["index"] == text["index"] or not section["raw"]:
-                continue
-            is_unwind = (section["name"].startswith(".text$")
-                         or section["name"] == ".xdata$x")
-            if not is_unwind and section["index"] not in section_bases:
-                continue
-            base = section_bases.get(section["index"])
-            if base is None:
-                strict_issues.append(
-                    f"unverified {section['name']} section "
-                    f"({len(section['raw'])} bytes)")
-                continue
-            raw = bytearray(section["raw"])
-            try:
-                original_section = read_va(image, base, len(raw))
-            except ValueError:
-                strict_issues.append(
-                    f"{section['name']} at {base:#x} is outside the PE image")
-                continue
-            for va, symbol_index, typ in section_relocations(object_bytes, section):
-                symbol = coff_symbols[symbol_index]
-                if va + 4 > len(raw) or va + 4 > len(original_section):
-                    strict_issues.append(
-                        f"{section['name']} relocation at {va:#x} is outside the extent")
-                    continue
-                field = original_section[va:va + 4]
-                addend = struct.unpack_from("<i", raw, va)[0]
-                actual = struct.unpack("<I", field)[0]
-                if typ == 0x06:
-                    expected_target = (actual - addend) & 0xFFFFFFFF
-                else:
-                    expected_target = (actual + (base + va + 4) - addend) & 0xFFFFFFFF
-                if symbol["section"] > 0:
-                    target_base = section_bases.get(symbol["section"])
-                    target = (None if target_base is None
-                              else target_base + symbol["value"])
-                else:
-                    name = symbol["name"]
-                    target = symbols.get(name)
-                    if target is None and auto_symbols:
-                        target = resolve_auto_symbol(name, expected=expected_target,
-                                                     fuzzy=True)
-                if target is None:
-                    strict_issues.append(
-                        f"{section['name']}: unresolved symbol {symbol['name']}")
-                else:
-                    if typ == 0x06:
-                        expected = (target + addend) & 0xFFFFFFFF
-                    else:
-                        expected = (target + addend - (base + va + 4)) & 0xFFFFFFFF
-                    if actual != expected:
-                        strict_issues.append(
-                            f"{section['name']} relocation at {va:#x} resolves to "
-                            f"{expected:#x}, original has {actual:#x}")
-                raw[va:va + 4] = field
-            if bytes(raw) != original_section:
-                difference = next(index for index in range(len(raw))
-                                  if raw[index] != original_section[index])
-                strict_issues.append(
-                    f"{section['name']} bytes differ at offset {difference:#x}")
+    candidate = raw[start:start + length]
+
+    for index, section in pending.items():
+        if index not in section_bases:
+            continue
+        base, _ = section_bases[index]
+        section_raw = bytearray(section["raw"])
+        linked = read_va(image, base, len(section_raw))
+        check_relocations(section, section_raw, linked, base)
+        if bytes(section_raw) != linked:
+            difference = next(offset for offset, (compiled, original_byte) in
+                              enumerate(zip(section_raw, linked)) if compiled != original_byte)
+            strict_issues.append(f"{section['name']} bytes differ at offset {difference:#x}")
+
     differences = [
         {"offset": index, "original": original[index], "candidate": candidate[index]}
-        for index in range(min(len(original), len(candidate)))
+        for index in range(len(candidate))
         if original[index] != candidate[index]
     ]
+    matched = not differences and len(candidate) == length and not relocation_issues
     return {
         "address": f"{address:#08x}",
+        "entry": entry,
         "length": length,
         "candidate_length": len(candidate),
-        "match": not differences and len(candidate) == length
-                 and not relocation_issues,
-        "strict_match": not differences and len(candidate) == length
-                        and not strict_issues and not relocation_issues,
+        "match": matched and (not strict_symbols or not strict_issues),
+        "strict_match": bool(strict and matched and not strict_issues),
         "strict_issues": strict_issues,
         "relocation_issues": relocation_issues,
+        "relocations": fixups,
+        "linked_sections": [
+            {"section": sections[index - 1]["name"], "index": index,
+             "address": hex(base), "origin": origin}
+            for index, (base, origin) in sorted(section_bases.items())
+        ],
         "first_difference": differences[0] if differences else None,
         "difference_count": len(differences),
-        "source": str(source),
     }
+
+
+@lru_cache(maxsize=None)
+def file_sha256(path: Path):
+    return hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
+
+
+def match_provenance(source, vc6, flags, symbols, strict, auto_symbols, strict_symbols=False):
+    return {
+        "source": str(source),
+        "source_sha256": file_sha256(source.resolve()),
+        "executable_sha256": file_sha256(GAME),
+        "compiler": {
+            "path": str(vc6.resolve()),
+            "sha256": {name: file_sha256(vc6.resolve() / "BIN" / name)
+                       for name in ("CL.EXE", "C1.DLL", "C1XX.DLL", "C2.DLL")},
+        },
+        "flags": flags,
+        "strict_requested": strict,
+        "strict_symbols": strict_symbols,
+        "auto_symbols": auto_symbols,
+        "symbol_overrides": {name: hex(target) for name, target in sorted(symbols.items())},
+    }
+
+
+def write_function_audit(result):
+    destination = os.environ.get("PC2_MATCH_AUDIT_DIR")
+    if not destination:
+        return
+    directory = Path(destination)
+    directory.mkdir(parents=True, exist_ok=True)
+    recipe = {key: result.get(key) for key in
+              ("address", "source", "source_sha256", "executable_sha256", "entry", "length",
+               "compiler", "flags", "strict_requested", "strict_symbols", "auto_symbols", "symbol_overrides")}
+    key = hashlib.sha256(json.dumps(recipe, sort_keys=True).encode()).hexdigest()[:16]
+    temp = None
+    try:
+        with tempfile.NamedTemporaryFile(mode="w", dir=directory, prefix=".audit-", delete=False) as file:
+            temp = Path(file.name)
+            json.dump(result, file, indent=2)
+            file.write("\n")
+        temp.replace(directory / f"{result['address']}-{key}.json")
+    finally:
+        if temp is not None:
+            temp.unlink(missing_ok=True)
+
+
+def match(address: int, source: Path, obj: Path, vc6: Path, flags: list[str],
+          symbols: dict[str, int], length: int | None, entry: str | None,
+          strict_symbols: bool = False, strict: bool = False,
+          auto_symbols: bool = False):
+    provenance = match_provenance(source, vc6, flags, symbols, strict, auto_symbols, strict_symbols)
+    try:
+        compile_candidate(source, vc6, obj, flags)
+        result = match_object(address, obj, symbols, length, entry, strict_symbols, strict, auto_symbols)
+    except (ValueError, OSError, struct.error, subprocess.TimeoutExpired) as error:
+        result = {"address": f"{address:#08x}", "length": length, "entry": entry,
+                  "match": False, "strict_match": False, "error": str(error)}
+    result.update(provenance)
+    write_function_audit(result)
+    return result
 
 
 def parse_symbols(values):

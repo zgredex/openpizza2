@@ -1,0 +1,38 @@
+{
+  "targets": [
+    {
+      "address": "0x4e4180",
+      "length": 21,
+      "entry": "?FindEmptySlot8@Array8@@QAEXXZ",
+      "variants": [
+        {
+          "name": "pointer-loop-O2",
+          "source": "reconstructed/match/batch03/part2/nonmatching/0x4e4180.c",
+          "flags": "/O2 /TP"
+        },
+        {
+          "name": "pointer-loop-O1",
+          "source": "reconstructed/match/batch03/part2/nonmatching/0x4e4180.c",
+          "flags": "/O1 /TP"
+        }
+      ]
+    },
+    {
+      "address": "0x546f00",
+      "length": 131,
+      "entry": "?Insert@List@@QAEXPAUListNode@@D@Z",
+      "variants": [
+        {
+          "name": "list-insert-O2",
+          "source": "reconstructed/match/batch15/part1/nonmatching/0x546f00.c",
+          "flags": "/O2 /TP"
+        },
+        {
+          "name": "list-insert-O1",
+          "source": "reconstructed/match/batch15/part1/nonmatching/0x546f00.c",
+          "flags": "/O1 /TP"
+        }
+      ]
+    }
+  ]
+}

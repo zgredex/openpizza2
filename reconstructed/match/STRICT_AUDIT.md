@@ -1,7 +1,7 @@
 # Strict byte-match audit
 
 A normal `"match": true` compares instruction bytes with linker-resolved fields
-normalized from the original PE. That is necessary for EH thunks and calls.
+masked for code generation comparison.
 Explicit `--symbol` maps are now checked even without `--strict`, so a supplied
 wrong target cannot pass. `--strict` additionally adds:
 
@@ -26,7 +26,23 @@ It compiles `0x532510` and supplies the wrong `Array::Destroy` address. The
 default matcher rejects the wrong target because the explicit symbol map is
 checked; strict mode rejects it as well. The correct target passes both.
 
-## Current strict counts
+## Current verification
+
+The full audit ran all 58 tracked verifiers and confirmed **1,020 of 1,180**
+distinct committed C/C++ candidates under the independent relocation gate.
+The other 160 matched the normalized function bodies and lacked complete
+strict evidence. The audit recorded zero tool errors and zero body mismatches.
+The verified set includes all six `runtime01` candidates. Pending worktree
+candidates and stock CRT archive identifications are outside this count.
+The strict matches cover **26.03%** of exported bodies (1,020 of 3,919) and
+approximately **4.44%** of estimated inventory code bytes (54,878 of 1,236,452).
+
+## Historical strict counts
+
+This table predates the independent relocation gate. Use
+`python3 tools/audit_matches.py --out /tmp/pc2-tracked-audit` to measure the
+observed strict results under the current gate, or pass tracked verifier paths
+to measure a subset.
 
 ```text
 batch01 part1   9 / 9  C matches

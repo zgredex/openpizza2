@@ -5,11 +5,11 @@ from __future__ import annotations
 
 import argparse
 import json
-import sys
+import os
+import tempfile
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from match_decomp import DEFAULT_VC6, GAME, match  # noqa: E402
+from match_decomp import DEFAULT_VC6, match, match_provenance, write_function_audit
 
 
 def main() -> int:
@@ -28,34 +28,38 @@ def main() -> int:
     parser.add_argument("--auto-symbols", action="store_true",
                         help="resolve external symbols from the shipped symbol map")
     args = parser.parse_args()
-    strict = args.strict or __import__("os").environ.get("PC2_STRICT") == "1"
+    strict = args.strict or os.environ.get("PC2_STRICT") == "1"
+    auto_symbols = args.auto_symbols or os.environ.get("PC2_AUTO_SYMBOLS") == "1"
     records = json.loads(args.manifest.read_text())
-    symbols = json.loads(args.symbols.read_text()) if args.symbols else {}
+    symbols = ({name: int(value, 0) if isinstance(value, str) else value
+                for name, value in json.loads(args.symbols.read_text()).items()}
+               if args.symbols else {})
+    flags = args.flags.split()
     results = []
-    for record in records:
-        address = int(record["address"], 0)
-        source = args.directory / f"{record['address']}.c"
-        if not source.is_file():
-            results.append({"address": record["address"], "match": False,
-                            "error": f"missing {source}"})
-            continue
-        text = source.read_text(errors="replace")
-        if not args.allow_asm and ("__asm" in text or "asm {" in text):
-            results.append({"address": record["address"], "match": False,
-                            "error": "inline assembly is not decompiled C",
-                            "source": str(source)})
-            continue
-        try:
-            result = match(address, source, args.directory / f"{record['address']}.obj",
-                           args.vc6, args.flags.split(), symbols,
-                           record.get("length"), None, False, strict,
-                           args.auto_symbols)
-        except Exception as error:  # keep the batch report
-            result = {"address": record["address"], "match": False,
-                      "error": str(error)}
-        results.append(result)
-        print(f"{record['address']} {record['name']}: "
-              f"{'MATCH' if result.get('match') else 'unmatched'}")
+    required = "strict_match" if strict else "match"
+    with tempfile.TemporaryDirectory(prefix="pc2-match-batch-") as directory:
+        for index, record in enumerate(records):
+            address = int(record["address"], 0)
+            source = args.directory / f"{record['address']}.c"
+            error = None
+            if not source.is_file():
+                error = f"missing {source}"
+            elif not args.allow_asm:
+                text = source.read_text(errors="replace")
+                if "__asm" in text or "asm {" in text:
+                    error = "inline assembly is not decompiled C"
+            if error:
+                result = {"address": f"{address:#08x}", "match": False, "strict_match": False,
+                          "error": error, "entry": record.get("entry"), "length": record.get("length")}
+                result.update(match_provenance(source, args.vc6, flags, symbols, strict, auto_symbols))
+                write_function_audit(result)
+            else:
+                result = match(address, source, Path(directory) / f"{index}.obj",
+                               args.vc6, flags, symbols, record.get("length"), record.get("entry"),
+                               strict=strict, auto_symbols=auto_symbols)
+            results.append(result)
+            print(f"{record['address']} {record['name']}: "
+                  f"{'MATCH' if result.get(required) else 'unmatched'}")
     matched = sum(1 for result in results if result.get("match"))
     strict_matched = sum(1 for result in results if result.get("strict_match"))
     report = {"matched": matched, "strict_matched": strict_matched,
@@ -64,7 +68,7 @@ def main() -> int:
     if args.json_out:
         args.json_out.write_text(text + "\n")
     print(f"matched {matched}/{len(results)}; strict {strict_matched}/{len(results)}")
-    return 0 if matched == len(results) else 1
+    return 0 if all(result.get(required) for result in results) else 1
 
 
 if __name__ == "__main__":
