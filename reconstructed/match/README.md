@@ -23,6 +23,25 @@ and writes candidates only under `batch01/partN/`. Keep worklogs in
 `batch01/partN/worklog.md`; commit only matched C and tests. Never commit the
 VC6 tree or the game image.
 
+## Progress
+
+```text
+batch 1    53 / 100 C-only   (strict 37)
+batch 2   100 / 100 C-only   (strict 71)
+batch 3   100 / 100 strict
+batch 4   100 / 100 strict
+batch 5   100 / 100 strict
+batch 6    98 / 100 strict
+batch 7    98 / 100 strict
+batch 8    92 / 100 strict
+batch 9    88 / 100 strict
+total     829 C-only / 784 strict of 853
+```
+
+Batches 5-9 are the next 500 smallest remaining functions and use the strict
+extent/relocation gate. Nonmatching genuine C/C++ attempts are kept under each
+part's `nonmatching/` directory with first-diff evidence.
+
 ## Batch runner
 
 `tools/match_batch.py` runs a part manifest and writes a JSON report:
