@@ -485,6 +485,14 @@ the construction object's `+0x38` countdown to `4`. Four native
 player's HQ counter from `0` to `1`, so the Rust timer is `240` minutes
 (four city ticks), not four days.
 
+```text
+[hq] expansion result=0 cash_after=492764.00 c20=0
+[hq] tick=1 object38=3 c20=0
+[hq] tick=2 object38=2 c20=0
+[hq] tick=3 object38=1 c20=0
+[hq] tick=4 object38=0 c20=1
+```
+
 Clicking the HQ marker quotes the next stage and debits the cost when the
 order starts. A progress bar stays on the map until construction finishes.
 The rival marker dispatches a courier to the selected restaurant; the marker
