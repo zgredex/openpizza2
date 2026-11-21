@@ -1,6 +1,7 @@
 CC ?= cc
 CFLAGS ?= -std=c11 -O2 -Wall -Wextra -Werror
 BUILD ?= build
+DECOMP_PYTHON ?= python3
 
 LEAF_SRC = leaf/leaf_functions.c leaf/test_leaf_functions.c
 LEAF_HDR = leaf/leaf_functions.h
@@ -121,9 +122,13 @@ GAME_BIN = $(BUILD)/test_game
 FULL_GAME_BIN = $(BUILD)/pc2-reconstructed
 FULL_GAME_SRC = $(GAME_MODULES) full_game.c
 
-.PHONY: all check full-game clean
+.PHONY: all check check-decomp full-game clean
 
 all: check full-game
+
+check-decomp:
+	$(DECOMP_PYTHON) ../tools/check_decomp.py check
+	$(DECOMP_PYTHON) ../tools/check_decomp.py self-test
 
 $(LEAF_BIN): $(LEAF_SRC) $(LEAF_HDR)
 	@mkdir -p $(BUILD)

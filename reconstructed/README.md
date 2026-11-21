@@ -4,6 +4,66 @@ This tree turns evidence-backed decompiled functions into normal C that a host
 compiler can build. It is deliberately **not** byte-exact yet: the goal is a
 readable, testable reconstruction with explicit layouts.
 
+## Compare a reconstruction with the shipped executable
+
+`check_decomp.py` compiles the candidate as freestanding i386 C and runs it
+and the pinned GOG `fastfood2.exe` from the same state in Unicorn. It checks
+stack cleanup, callee-saved registers, the declared return value and memory
+effects. The recipe-price fixtures also compare the x87 return as 80 bits and
+verify the order and arguments of the observed helper calls. Candidate code
+can execute original code only within the helper ranges listed for that
+routine.
+
+Use Python 3.10+ with `unicorn==2.1.4` and `pefile==2024.8.26`, plus GCC
+with i386 headers and GNU binutils. The environment from the
+[lifted build](../tools/pcrecomp_pc2/README.md)
+already provides both Python packages. Run the pilot suite and the two
+negative controls with one command from the repository root.
+
+```sh
+make -C reconstructed check-decomp DECOMP_PYTHON=/tmp/opencode/pcrecomp-pc2-fresh/venv/bin/python
+```
+
+With the same Python on your path, inspect the queue, check a single
+routine, and report the result:
+
+```sh
+python3 tools/check_decomp.py queue
+python3 tools/check_decomp.py check 0x477100 --json-out /tmp/pc2-decomp.json
+python3 tools/check_decomp.py queue --report /tmp/pc2-decomp.json
+python3 tools/check_decomp.py toolchain
+```
+
+Check the whole queue by omitting the address. Use `--source /path/to/candidate.c`
+to verify an alternate candidate for one address. Exit code 0 means all
+selected checks passed. Exit code 1 means a candidate failed to compile or
+disagreed with a fixture. Exit code 2 indicates a usage or environment error.
+
+For a new batch, give each worker a routine address, the candidate source
+file, and the check command. Keep the fixtures in
+`tools/decomp_fixtures.py` under separate review. Reuse the retained
+pseudocode and existing captures when preparing an evidence packet.
+
+```sh
+python3 tools/function_batch.py 0x401320 \
+  --capture-report /path/to/capture/report.json \
+  --json-out /tmp/pc2-function-packet.json --out /tmp/pc2-function-packet.md
+```
+
+`--capture-report` is optional and repeatable. It records observed indirect,
+tail, and return-jump dispatch with scenario, phase, count, and resolution.
+Coverage follows the supplied runs. Reports must match the shipped executable
+hash. Packets generated without capture reports keep the existing format.
+
+The pilot covers the clamp (32 cases), weighted distance (30), starting
+capital (12), and recipe pricing (7). Recipe pricing exercises the original
+active-stock-batch path with seeded branch and recipe records. The fallback
+building-value path and the broader customer-order pipeline still need their
+own fixtures. The JSON distinguishes compiled and behavior-verified results
+and leaves byte matching unset. `toolchain` reports the PE linker version,
+Rich-header product/build IDs, and installed tools to start compiler
+identification. The original compiler and flags still need verification.
+
 Current batches:
 
 - `settings/` — settings block layout, `Settings_InitDefaults` behavior, and the

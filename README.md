@@ -41,6 +41,9 @@ It regenerates `decompiled_fastfood2_named_v2/samples/sim_demo_360.json`,
 Use `--no-write` for a read-only check. Current result: **39/39 checks**,
 **191 Python tests**, and **69 Rust tests**.
 
+For per-function C verification against the shipped executable, see the
+[decompilation workflow](reconstructed/README.md#compare-a-reconstruction-with-the-shipped-executable).
+
 ### Typed function packets
 
 `tools/function_batch.py` now emits JSON records keyed by executable SHA-256

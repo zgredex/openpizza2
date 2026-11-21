@@ -11,6 +11,8 @@ machine consumption.
 from __future__ import annotations
 
 import argparse
+from collections import defaultdict
+from functools import cache
 import hashlib
 import json
 import os
@@ -45,6 +47,7 @@ def function_path(address):
     return os.path.join(FUNCTIONS, f"0x{address[2:].lower()}.c")
 
 
+@cache
 def body(path):
     with open(path) as fh:
         return fh.read()
@@ -62,11 +65,11 @@ def callers(name, address, paths, index):
     return sorted(hits)
 
 
-def callees(text, index, own_address):
+def callees(text, addresses_by_name, own_address):
     names = {}
-    for name in CALL_RE.findall(text):
-        for address, item in index.items():
-            if item.get("name") == name and address != own_address:
+    for name in set(CALL_RE.findall(text)):
+        for address in addresses_by_name.get(name, ()):
+            if address != own_address:
                 names[name] = address
                 break
     return sorted(names.items())
@@ -94,7 +97,7 @@ def normalize(address):
     return address
 
 
-def base_record(address, index, paths):
+def base_record(address, index, paths, addresses_by_name, include_disassembly):
     item = index.get(address)
     if item is None:
         return None
@@ -121,12 +124,12 @@ def base_record(address, index, paths):
         ],
         "callees": [
             {"address": callee_address, "name": callee_name}
-            for callee_name, callee_address in callees(text, index, address)
+            for callee_name, callee_address in callees(text, addresses_by_name, address)
         ],
         "unresolved_placeholders": sorted(set(UNRESOLVED_RE.findall(text))),
         "disassembly": {
             "range": ranges,
-            "text": disassembly(ranges[0], ranges[1]) if ranges else None,
+            "text": disassembly(ranges[0], ranges[1]) if ranges and include_disassembly else None,
         },
         "signature": None,
         "dispatch": [],
@@ -154,20 +157,51 @@ def merge_record(record, annotation):
     return record
 
 
+def observed_dispatch(paths, target_sha256):
+    by_address = defaultdict(list)
+    for path in paths:
+        with open(path, encoding="utf-8") as stream:
+            report = json.load(stream)
+        if report.get("format") != "pc2.capture.v1" or report.get("run", {}).get("guest_sha256") != target_sha256:
+            raise ValueError(f"{path}: capture report does not match the target executable")
+        for phase in report["phases"]:
+            for edge in phase["edges"]:
+                if edge["kind"] not in ("indirect", "tail", "return_jump") or not edge["caller"]:
+                    continue
+                address = hex(int(edge["caller"], 16))
+                by_address[address].append({
+                    "scenario": report["scenario"], "phase": phase["name"],
+                    "report_complete": report["complete"], "kind": edge["kind"],
+                    "site": edge["site"], "target": edge["target"],
+                    "target_symbol": edge["target_symbol"], "resolution": edge["resolution"],
+                    "count": edge["count"],
+                })
+    return by_address
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("addresses", nargs="+")
     parser.add_argument("--no-disassembly", action="store_true")
     parser.add_argument("--annotations")
+    parser.add_argument("--capture-report", action="append", default=[],
+                        help="include observed indirect dispatch from a capture.py report.json (repeatable)")
     parser.add_argument("--json-out")
     parser.add_argument("--out")
     args = parser.parse_args()
     index = load_index()
     paths = {}
-    for address in index:
+    addresses_by_name = defaultdict(list)
+    for address, item in index.items():
+        addresses_by_name[item.get("name")].append(address)
         path = function_path(address)
         if os.path.isfile(path):
             paths[address] = path
+    target_sha256 = sha256_file(EXE) if args.json_out or args.capture_report else None
+    try:
+        observed = observed_dispatch(args.capture_report, target_sha256)
+    except (OSError, ValueError, KeyError) as error:
+        parser.error(str(error))
     annotations = {"records": {}, "trace": [], "known_gaps": []}
     if args.annotations:
         with open(args.annotations) as fh:
@@ -178,7 +212,7 @@ def main() -> int:
         address = normalize(raw)
         if address in records:
             continue
-        record = base_record(address, index, paths)
+        record = base_record(address, index, paths, addresses_by_name, not args.no_disassembly)
         if record is None:
             if address not in annotations.get("records", {}):
                 ordered.append((address, None))
@@ -204,6 +238,8 @@ def main() -> int:
                 "annotations": [],
             }
         merge_record(record, annotations.get("records", {}).get(address, {}))
+        if args.capture_report:
+            record["observed_dispatch"] = observed.get(hex(int(address, 16)), [])
         if args.no_disassembly:
             record["disassembly"] = {"range": None, "text": None}
         records[address] = record
@@ -230,6 +266,10 @@ def main() -> int:
                 "- Dispatch: " + ", ".join(
                     f"`{item.get('kind')}` {item.get('from')} -> {item.get('targets')}"
                     for item in record["dispatch"]))
+        if record.get("observed_dispatch"):
+            lines.append("- Observed dispatch: " + ", ".join(
+                f"`{edge['site']}` → `{edge['target']}` ({edge['phase']}, {edge['resolution']})"
+                for edge in record["observed_dispatch"]))
         unresolved = record.get("unresolved_questions") or []
         lines.append(
             "- Unresolved questions: " +
@@ -246,7 +286,6 @@ def main() -> int:
         sys.stdout.write(output)
 
     if args.json_out:
-        target_sha256 = sha256_file(EXE)
         for address, record in records.items():
             record["packet_key"] = f"{target_sha256}:{address}"
         packet = {
