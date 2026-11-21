@@ -67,6 +67,12 @@ fn print_events(events: &[ClockEvent]) {
                 )
             }
             ClockEvent::Departure { minute } => println!("{} departure", label(*minute)),
+            ClockEvent::HeadquartersComplete { minute, level } => {
+                println!("{} headquarters_complete level={level}", label(*minute))
+            }
+            ClockEvent::RatDelivered { minute, count } => {
+                println!("{} rat_delivered count={count}", label(*minute))
+            }
             ClockEvent::QuarterBoundary { minute, hour } => {
                 println!("{} quarter_boundary hour={hour}", label(*minute))
             }

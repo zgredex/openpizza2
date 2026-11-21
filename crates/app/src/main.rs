@@ -1465,12 +1465,29 @@ fn apply_campaign_command(world: &mut World, command: &str) -> Result<bool, Stri
         println!("campaign: recipe menu id={id} branch=100000");
         Ok(true)
     } else if command == "hq" {
-        let level = world.build_hq().map_err(str::to_owned)?;
-        println!("campaign: headquarters level={level}");
+        let site = world.hq_site_tile().unwrap_or(pc2_sim::LONDON_HQ_TILE);
+        let project = world.start_hq_construction(site).map_err(str::to_owned)?;
+        println!(
+            "campaign: headquarters construction started tile={} target_level={} cost={} complete_minute={} cash={:.2}",
+            project.site_tile,
+            project.target_level,
+            project.cost,
+            project.complete_minute,
+            world.snapshot().cash
+        );
         Ok(true)
     } else if command == "rat" {
-        let count = world.place_rat().map_err(str::to_owned)?;
-        println!("campaign: rival rat delivered={count}");
+        let target = world
+            .rival_branch_id()
+            .unwrap_or(pc2_sim::LONDON_RIVAL_BRANCH_ID);
+        let delivery = world.dispatch_rats(target).map_err(str::to_owned)?;
+        println!(
+            "campaign: rat courier dispatched target_branch={} cost={} complete_minute={} cash={:.2}",
+            delivery.target_branch,
+            delivery.cost,
+            delivery.complete_minute,
+            world.snapshot().cash
+        );
         Ok(true)
     } else if let Some(hours) = command.strip_prefix("hours=") {
         let (open, close) = hours
@@ -1511,7 +1528,17 @@ fn apply_world_command(world: &mut World, command: &str) -> Result<(), String> {
         let end = value
             .parse::<u32>()
             .map_err(|_| format!("invalid advance minute: {value}"))?;
-        world.advance_to(end);
+        for event in world.advance_to(end) {
+            match event {
+                pc2_sim::ClockEvent::HeadquartersComplete { minute, level } => {
+                    println!("campaign: headquarters completed level={level} minute={minute}")
+                }
+                pc2_sim::ClockEvent::RatDelivered { minute, count } => {
+                    println!("campaign: rival rat delivered count={count} minute={minute}")
+                }
+                _ => {}
+            }
+        }
     } else if command.eq_ignore_ascii_case("status") {
         println!("campaign: status={}", world.snapshot_json());
     } else if command.eq_ignore_ascii_case("save") {
@@ -1832,6 +1859,64 @@ fn city_controls(world: &World, branch_loaded: bool, prompt: Option<LeasePrompt>
     }
 }
 
+fn mission_panel_detail(sim: &World, kind: MissionPanelKind) -> (&'static str, String) {
+    match kind {
+        MissionPanelKind::Headquarters => {
+            let site = sim.hq_site_tile().unwrap_or(pc2_sim::LONDON_HQ_TILE);
+            if let Some(project) = sim.hq_project() {
+                let remaining = project.complete_minute.saturating_sub(sim.minute());
+                (
+                    "HEADQUARTERS CONSTRUCTION",
+                    format!(
+                        "PLOT {site}  LEVEL {}/3  COST {}  {}m LEFT",
+                        project.target_level, project.cost, remaining
+                    ),
+                )
+            } else if sim.hq_level() >= 3 {
+                ("HEADQUARTERS", format!("PLOT {site}  LEVEL 3/3  COMPLETE"))
+            } else {
+                let cost = sim.hq_expansion_cost().unwrap_or(0);
+                (
+                    "HEADQUARTERS PLOT",
+                    format!(
+                        "PLOT {site}  LEVEL {}/3  NEXT COST {}  4 DAYS",
+                        sim.hq_level(),
+                        cost
+                    ),
+                )
+            }
+        }
+        MissionPanelKind::Rival => {
+            let target = sim
+                .rival_branch_id()
+                .unwrap_or(pc2_sim::LONDON_RIVAL_BRANCH_ID);
+            if let Some(delivery) = sim.rat_delivery() {
+                (
+                    "RIVAL RESTAURANT",
+                    format!(
+                        "BRANCH {target}  RATS {}/1  COURIER {}m LEFT",
+                        sim.rats_placed(),
+                        delivery.complete_minute.saturating_sub(sim.minute())
+                    ),
+                )
+            } else if sim.rats_placed() > 0 {
+                (
+                    "RIVAL RESTAURANT",
+                    format!("BRANCH {target}  RATS 1/1  COMPLETE"),
+                )
+            } else {
+                (
+                    "RIVAL RESTAURANT",
+                    format!(
+                        "BRANCH {target}  RATS 0/1  COURIER COST {}  HQ 3",
+                        pc2_sim::RAT_DELIVERY_COST
+                    ),
+                )
+            }
+        }
+    }
+}
+
 fn campaign_city_summary(world: &World, prompt: Option<LeasePrompt>) -> Option<String> {
     if let Some(LeasePrompt::Failed(error)) = prompt {
         return Some(error.to_string());
@@ -1896,6 +1981,26 @@ fn campaign_supply_site(city: &Scene, lease_site: Option<(i32, i32)>) -> Option<
         .or_else(|| lease_site.map(|(x, y)| (x + 160, y - 80)))
 }
 
+/// Resolve a campaign tile index to its background-relative world position.
+fn campaign_tile_site(city: &Scene, tile: u32) -> Option<(i32, i32)> {
+    city.draws
+        .iter()
+        .find(|draw| draw.layer == 2 && draw.tile_y * city.grid_w + draw.tile_x == tile)
+        .map(|draw| {
+            (
+                draw.world_x - city.background_origin.0,
+                draw.world_y - city.background_origin.1,
+            )
+        })
+}
+
+fn campaign_site(city: &Scene, tile: u32, world: (i32, i32)) -> (i32, i32) {
+    campaign_tile_site(city, tile).unwrap_or((
+        world.0 - city.background_origin.0,
+        world.1 - city.background_origin.1,
+    ))
+}
+
 fn run_campaign_click(
     world: World,
     args: &Args,
@@ -1913,8 +2018,16 @@ fn run_campaign_click(
         pixels: city.pixels.clone(),
         lease_site: Some(lease_site),
         supply_site: campaign_supply_site(city, Some(lease_site)),
-        hq_site: Some((lease_site.0 + 240, lease_site.1 + 80)),
-        rival_site: Some((lease_site.0 - 240, lease_site.1 + 80)),
+        hq_site: Some(campaign_site(
+            city,
+            pc2_sim::LONDON_HQ_TILE,
+            pc2_sim::LONDON_HQ_WORLD,
+        )),
+        rival_site: Some(campaign_site(
+            city,
+            pc2_sim::LONDON_RIVAL_TILE,
+            pc2_sim::LONDON_RIVAL_WORLD,
+        )),
     };
     let mut app = WindowApp::new(
         "new-game-click".into(),
@@ -2049,14 +2162,24 @@ fn show_explore(
         .campaign_property_offer()
         .and_then(|offer| campaign_lease_site(&city, offer));
     let supply_site = campaign_supply_site(&city, lease_site);
+    let hq_site = world
+        .hq_site_tile()
+        .map(|tile| campaign_site(&city, tile, pc2_sim::LONDON_HQ_WORLD));
+    let rival_site = world.rival_branch_id().map(|_| {
+        campaign_site(
+            &city,
+            pc2_sim::LONDON_RIVAL_TILE,
+            pc2_sim::LONDON_RIVAL_WORLD,
+        )
+    });
     let city_world = CityWorld {
         width: city.crop.width,
         height: city.crop.height,
         pixels: city.pixels,
         lease_site,
         supply_site,
-        hq_site: lease_site.map(|(x, y)| (x + 240, y + 80)),
-        rival_site: lease_site.map(|(x, y)| (x - 240, y + 80)),
+        hq_site,
+        rival_site,
     };
     let (width, height) = (args.width, args.height);
     let max_x = city_world.width.saturating_sub(width) as i32;
@@ -2072,11 +2195,30 @@ fn show_explore(
     if let Some((x, y)) = city_world.supply_site {
         overlay::draw_supply_marker(&mut city_view, width, height, x - camera_x, y - camera_y);
     }
+    let hq_progress = world.hq_project().map(|project| {
+        let remaining = project.complete_minute.saturating_sub(world.minute());
+        1.0 - remaining as f32 / pc2_sim::HQ_CONSTRUCTION_MINUTES as f32
+    });
+    let rat_pending = world.rat_delivery().is_some();
     if let Some((x, y)) = city_world.hq_site {
-        overlay::draw_hq_marker(&mut city_view, width, height, x - camera_x, y - camera_y);
+        overlay::draw_hq_marker(
+            &mut city_view,
+            width,
+            height,
+            x - camera_x,
+            y - camera_y,
+            hq_progress,
+        );
     }
     if let Some((x, y)) = city_world.rival_site {
-        overlay::draw_rival_marker(&mut city_view, width, height, x - camera_x, y - camera_y);
+        overlay::draw_rival_marker(
+            &mut city_view,
+            width,
+            height,
+            x - camera_x,
+            y - camera_y,
+            rat_pending,
+        );
     }
     overlay::draw_city_status(
         &mut city_view,
@@ -3617,6 +3759,11 @@ impl WindowApp {
                         y - self.camera_y,
                     );
                 }
+                let hq_progress = sim.hq_project().map(|project| {
+                    let remaining = project.complete_minute.saturating_sub(sim.minute());
+                    1.0 - remaining as f32 / pc2_sim::HQ_CONSTRUCTION_MINUTES as f32
+                });
+                let rat_pending = sim.rat_delivery().is_some();
                 if let Some((x, y)) = world.hq_site {
                     overlay::draw_hq_marker(
                         &mut view,
@@ -3624,6 +3771,7 @@ impl WindowApp {
                         self.height,
                         x - self.camera_x,
                         y - self.camera_y,
+                        hq_progress,
                     );
                 }
                 if let Some((x, y)) = world.rival_site {
@@ -3633,6 +3781,7 @@ impl WindowApp {
                         self.height,
                         x - self.camera_x,
                         y - self.camera_y,
+                        rat_pending,
                     );
                 }
                 if overlay::draw_city_status(
@@ -3704,20 +3853,7 @@ impl WindowApp {
                         }
                     }
                     if let Some(panel) = self.mission_panel.as_ref() {
-                        let (title, detail) = match panel.kind {
-                            MissionPanelKind::Headquarters => (
-                                "HEADQUARTERS SITE",
-                                format!(
-                                    "LEVEL {}/3   CASH {:.2}",
-                                    sim.hq_level(),
-                                    sim.snapshot().cash
-                                ),
-                            ),
-                            MissionPanelKind::Rival => (
-                                "RIVAL BRANCH",
-                                format!("RATS DELIVERED {}", sim.rats_placed()),
-                            ),
-                        };
+                        let (title, detail) = mission_panel_detail(sim, panel.kind);
                         overlay::draw_mission_panel(
                             &mut view,
                             self.width,
@@ -3911,6 +4047,11 @@ impl WindowApp {
                         y - self.camera_y,
                     );
                 }
+                let hq_progress = sim.hq_project().map(|project| {
+                    let remaining = project.complete_minute.saturating_sub(sim.minute());
+                    1.0 - remaining as f32 / pc2_sim::HQ_CONSTRUCTION_MINUTES as f32
+                });
+                let rat_pending = sim.rat_delivery().is_some();
                 if let Some((x, y)) = world.hq_site {
                     overlay::draw_hq_marker(
                         &mut view,
@@ -3918,6 +4059,7 @@ impl WindowApp {
                         self.height,
                         x - self.camera_x,
                         y - self.camera_y,
+                        hq_progress,
                     );
                 }
                 if let Some((x, y)) = world.rival_site {
@@ -3927,6 +4069,7 @@ impl WindowApp {
                         self.height,
                         x - self.camera_x,
                         y - self.camera_y,
+                        rat_pending,
                     );
                 }
                 overlay::draw_city_status(
@@ -3997,20 +4140,7 @@ impl WindowApp {
                     }
                 }
                 if let Some(panel) = self.mission_panel.as_ref() {
-                    let (title, detail) = match panel.kind {
-                        MissionPanelKind::Headquarters => (
-                            "HEADQUARTERS SITE",
-                            format!(
-                                "LEVEL {}/3   CASH {:.2}",
-                                sim.hq_level(),
-                                sim.snapshot().cash
-                            ),
-                        ),
-                        MissionPanelKind::Rival => (
-                            "RIVAL BRANCH",
-                            format!("RATS DELIVERED {}", sim.rats_placed()),
-                        ),
-                    };
+                    let (title, detail) = mission_panel_detail(sim, panel.kind);
                     overlay::draw_mission_panel(
                         &mut view,
                         self.width,
@@ -4311,6 +4441,18 @@ impl WindowApp {
         if self.sim.as_ref().and_then(World::campaign_branch).is_none() {
             return false;
         }
+        if let Some(world) = self.city_world.as_ref() {
+            let site = match kind {
+                MissionPanelKind::Headquarters => world.hq_site,
+                MissionPanelKind::Rival => world.rival_site,
+            };
+            if let Some((x, y)) = site {
+                let max_x = world.width.saturating_sub(self.width) as i32;
+                let max_y = world.height.saturating_sub(self.height) as i32;
+                self.camera_x = (x - self.width as i32 / 2).clamp(0, max_x);
+                self.camera_y = (y - self.height as i32 / 2).clamp(0, max_y);
+            }
+        }
         self.mission_panel = Some(MissionPanel { kind, status: None });
         self.refresh_explore();
         true
@@ -4326,20 +4468,48 @@ impl WindowApp {
             Key::Named(NamedKey::Enter) | Key::Named(NamedKey::Space) => {
                 if let Some(sim) = self.sim.as_mut() {
                     match kind {
-                        MissionPanelKind::Headquarters => match sim.build_hq() {
-                            Ok(level) => {
-                                println!("campaign: headquarters level={level}");
-                                status = Some(format!("HQ LEVEL {level}/3"));
+                        MissionPanelKind::Headquarters => {
+                            let site = sim.hq_site_tile().unwrap_or(pc2_sim::LONDON_HQ_TILE);
+                            match sim.start_hq_construction(site) {
+                                Ok(project) => {
+                                    println!(
+                                        "campaign: headquarters construction started tile={} target_level={} cost={} complete_minute={} cash={:.2}",
+                                        project.site_tile,
+                                        project.target_level,
+                                        project.cost,
+                                        project.complete_minute,
+                                        sim.snapshot().cash
+                                    );
+                                    status = Some(format!(
+                                        "LEVEL {} UNDER CONSTRUCTION {}m",
+                                        project.target_level,
+                                        project.complete_minute.saturating_sub(sim.minute())
+                                    ));
+                                }
+                                Err(error) => status = Some(error.to_string()),
                             }
-                            Err(error) => status = Some(error.to_string()),
-                        },
-                        MissionPanelKind::Rival => match sim.place_rat() {
-                            Ok(count) => {
-                                println!("campaign: rival rat delivered={count}");
-                                status = Some(format!("RATS DELIVERED {count}"));
+                        }
+                        MissionPanelKind::Rival => {
+                            let target = sim
+                                .rival_branch_id()
+                                .unwrap_or(pc2_sim::LONDON_RIVAL_BRANCH_ID);
+                            match sim.dispatch_rats(target) {
+                                Ok(delivery) => {
+                                    println!(
+                                        "campaign: rat courier dispatched target_branch={} cost={} complete_minute={} cash={:.2}",
+                                        delivery.target_branch,
+                                        delivery.cost,
+                                        delivery.complete_minute,
+                                        sim.snapshot().cash
+                                    );
+                                    status = Some(format!(
+                                        "COURIER ON THE WAY {}m",
+                                        delivery.complete_minute.saturating_sub(sim.minute())
+                                    ));
+                                }
+                                Err(error) => status = Some(error.to_string()),
                             }
-                            Err(error) => status = Some(error.to_string()),
-                        },
+                        }
                     }
                 }
             }
@@ -4818,7 +4988,10 @@ impl WindowApp {
         if *logical_key == Key::Named(NamedKey::Escape) {
             return false;
         }
-        if self.explore && self.mode == ViewMode::City {
+        if self.explore
+            && self.mode == ViewMode::City
+            && *logical_key != Key::Named(NamedKey::Space)
+        {
             return true;
         }
         let handled = match logical_key {
@@ -5260,6 +5433,23 @@ mod tests {
         Some((city, branch, actors, screen))
     }
 
+    fn advance_app_minutes(app: &mut WindowApp, minutes: u32) {
+        for _ in 0..minutes / 5 {
+            assert!(app.handle_key(&Key::Named(NamedKey::Space)));
+        }
+    }
+
+    fn capture_app_frame(app: &WindowApp, path: &str) {
+        if let Some(frame) = app.render_explore_frame() {
+            pc2_scene::write_rgba_png(std::path::Path::new(path), 800, 600, &frame).unwrap();
+        }
+    }
+
+    fn click_site(app: &mut WindowApp, site: Option<(i32, i32)>) {
+        let (x, y) = site.expect("site");
+        assert!(app.handle_explore_click(x - app.camera_x, y - app.camera_y));
+    }
+
     fn campaign_world_with_offer() -> World {
         let scenario = pc2_sim::ScenarioSetup::from_campaign_mission(
             "lon".into(),
@@ -5331,25 +5521,42 @@ mod tests {
         app.explore = true;
         app.mode = ViewMode::City;
         app.sim = Some(campaign_world_with_offer());
+        let mut lease_site = (100, 120);
+        let mut supply_site = (200, 120);
+        let mut hq_site = (300, 120);
+        let mut rival_site = (400, 120);
         app.city_world = Some(CityWorld {
             width: 800,
             height: 600,
             pixels: Vec::new(),
-            lease_site: Some((100, 120)),
-            supply_site: Some((200, 120)),
-            hq_site: Some((300, 120)),
-            rival_site: Some((400, 120)),
+            lease_site: Some(lease_site),
+            supply_site: Some(supply_site),
+            hq_site: Some(hq_site),
+            rival_site: Some(rival_site),
         });
         app.branch_base = Some(Vec::new());
         if let Some((city, branch, actors, screen)) = real_ui_scenes() {
+            let offer = app
+                .sim
+                .as_ref()
+                .and_then(World::campaign_property_offer)
+                .expect("campaign offer");
+            lease_site = campaign_lease_site(&city, offer).expect("lease marker");
+            supply_site = campaign_supply_site(&city, Some(lease_site)).expect("supply marker");
+            hq_site = campaign_site(&city, pc2_sim::LONDON_HQ_TILE, pc2_sim::LONDON_HQ_WORLD);
+            rival_site = campaign_site(
+                &city,
+                pc2_sim::LONDON_RIVAL_TILE,
+                pc2_sim::LONDON_RIVAL_WORLD,
+            );
             app.city_world = Some(CityWorld {
                 width: city.crop.width,
                 height: city.crop.height,
                 pixels: city.pixels,
-                lease_site: Some((100, 120)),
-                supply_site: Some((200, 120)),
-                hq_site: Some((300, 120)),
-                rival_site: Some((400, 120)),
+                lease_site: Some(lease_site),
+                supply_site: Some(supply_site),
+                hq_site: Some(hq_site),
+                rival_site: Some(rival_site),
             });
             app.branch_base = Some(branch.pixels);
             app.actors = Some(actors);
@@ -5358,7 +5565,7 @@ mod tests {
         app.briefing_open = true;
         assert!(app.handle_explore_key(&Key::Named(NamedKey::Enter)));
 
-        assert!(app.handle_explore_click(100, 120));
+        assert!(app.handle_explore_click(lease_site.0 - app.camera_x, lease_site.1 - app.camera_y));
         let (confirm, _) = lease_button_rects(800, 600);
         assert!(app.handle_explore_click(confirm.0 + 2, confirm.1 + 2));
         app.mode = ViewMode::City;
@@ -5371,7 +5578,9 @@ mod tests {
         }
         assert!(app.handle_explore_key(&Key::Named(NamedKey::Escape)));
 
-        assert!(app.handle_explore_click(200, 120));
+        assert!(
+            app.handle_explore_click(supply_site.0 - app.camera_x, supply_site.1 - app.camera_y)
+        );
         assert!(app.handle_explore_key(&Key::Named(NamedKey::Enter)));
         assert!(app.handle_explore_key(&Key::Character("s".into())));
         assert!(app.handle_explore_key(&Key::Character("r".into())));
@@ -5430,13 +5639,45 @@ mod tests {
         }
 
         assert!(app.handle_key(&Key::Character("c".into())));
-        assert!(app.handle_explore_click(300, 120));
-        for _ in 0..3 {
+        for expected in 1..=3 {
+            click_site(&mut app, Some(hq_site));
             assert!(app.handle_explore_key(&Key::Named(NamedKey::Enter)));
+            let project = app.sim.as_ref().unwrap().hq_project().expect("project");
+            assert_eq!(project.target_level, expected);
+            assert_eq!(app.sim.as_ref().unwrap().hq_level(), expected - 1);
+            assert!(app.handle_explore_key(&Key::Named(NamedKey::Escape)));
+            if expected == 1 {
+                assert!(app.handle_key(&Key::Named(NamedKey::F5)));
+                assert!(app.handle_key(&Key::Named(NamedKey::F9)));
+                let loaded = app.sim.as_ref().unwrap();
+                assert_eq!(loaded.hq_level(), 0);
+                assert_eq!(loaded.hq_project(), Some(project));
+            }
+            if expected == 1 {
+                advance_app_minutes(&mut app, 24 * 60);
+                assert_eq!(app.sim.as_ref().unwrap().hq_level(), 0);
+                capture_app_frame(&app, "/tmp/opencode/london_hq_progress.png");
+                advance_app_minutes(&mut app, pc2_sim::HQ_CONSTRUCTION_MINUTES - 24 * 60);
+            } else {
+                advance_app_minutes(&mut app, pc2_sim::HQ_CONSTRUCTION_MINUTES);
+            }
+            assert_eq!(app.sim.as_ref().unwrap().hq_level(), expected);
+            assert_eq!(app.sim.as_ref().unwrap().hq_project(), None);
         }
-        assert!(app.handle_explore_key(&Key::Named(NamedKey::Escape)));
-        assert!(app.handle_explore_click(400, 120));
+        assert!(!app.sim.as_ref().unwrap().mission_complete());
+        click_site(&mut app, Some(rival_site));
         assert!(app.handle_explore_key(&Key::Named(NamedKey::Enter)));
+        let delivery = app.sim.as_ref().unwrap().rat_delivery().expect("delivery");
+        assert_eq!(app.sim.as_ref().unwrap().rats_placed(), 0);
+        assert!(app.handle_explore_key(&Key::Named(NamedKey::Escape)));
+        assert!(app.handle_key(&Key::Named(NamedKey::F5)));
+        assert!(app.handle_key(&Key::Named(NamedKey::F9)));
+        assert_eq!(app.sim.as_ref().unwrap().rat_delivery(), Some(delivery));
+        assert_eq!(app.sim.as_ref().unwrap().rats_placed(), 0);
+        assert!(!app.sim.as_ref().unwrap().mission_complete());
+        capture_app_frame(&app, "/tmp/opencode/london_rat_pending.png");
+        advance_app_minutes(&mut app, pc2_sim::RAT_DELIVERY_MINUTES);
+        assert_eq!(app.sim.as_ref().unwrap().rats_placed(), 1);
         assert!(app.sim.as_ref().unwrap().mission_complete());
         if let Some(frame) = app.render_explore_frame() {
             pc2_scene::write_rgba_png(
@@ -5472,10 +5713,17 @@ mod tests {
         headless.enqueue_party(1);
         headless.advance_queue_ticks(pc2_sim::QUEUE_WALK_TICKS + pc2_sim::PRODUCTION_TICKS);
         headless.advance_to(22 * 60);
-        headless.build_hq().unwrap();
-        headless.build_hq().unwrap();
-        headless.build_hq().unwrap();
-        headless.place_rat().unwrap();
+        headless.set_open(false);
+        for _ in 0..3 {
+            let project = headless
+                .start_hq_construction(pc2_sim::LONDON_HQ_TILE)
+                .unwrap();
+            headless.advance_to(project.complete_minute);
+        }
+        let delivery = headless
+            .dispatch_rats(pc2_sim::LONDON_RIVAL_BRANCH_ID)
+            .unwrap();
+        headless.advance_to(delivery.complete_minute);
 
         let ui = app.sim.as_ref().unwrap();
         assert!(ui.mission_complete());
@@ -5512,21 +5760,33 @@ mod tests {
         assert!(app.handle_explore_click(confirm.0 + 2, confirm.1 + 2));
         app.mode = ViewMode::City;
 
-        assert!(app.handle_explore_click(300, 120));
-        for _ in 0..3 {
+        for expected in 1..=3 {
+            assert!(app.handle_explore_click(300, 120));
             assert!(app.handle_explore_key(&Key::Named(NamedKey::Enter)));
+            assert_eq!(app.sim.as_ref().unwrap().hq_level(), expected - 1);
+            assert!(app.handle_explore_key(&Key::Named(NamedKey::Escape)));
+            advance_app_minutes(&mut app, pc2_sim::HQ_CONSTRUCTION_MINUTES);
+            assert_eq!(app.sim.as_ref().unwrap().hq_level(), expected);
         }
-        assert_eq!(app.sim.as_ref().unwrap().hq_level(), 3);
-        assert!(app.handle_explore_key(&Key::Named(NamedKey::Escape)));
         assert!(app.handle_explore_click(400, 120));
         assert!(app.handle_explore_key(&Key::Named(NamedKey::Enter)));
+        let delivery = app.sim.as_ref().unwrap().rat_delivery().expect("delivery");
+        assert_eq!(app.sim.as_ref().unwrap().rats_placed(), 0);
+        assert!(!app.sim.as_ref().unwrap().mission_complete());
+        assert!(app.save_world());
+        assert_eq!(
+            app.saved_world.as_ref().unwrap().rat_delivery(),
+            Some(delivery)
+        );
+        assert_eq!(app.saved_world.as_ref().unwrap().rats_placed(), 0);
+        assert!(app.handle_explore_key(&Key::Named(NamedKey::Escape)));
+        advance_app_minutes(&mut app, pc2_sim::RAT_DELIVERY_MINUTES);
         assert_eq!(app.sim.as_ref().unwrap().rats_placed(), 1);
         assert!(app.sim.as_ref().unwrap().mission_complete());
-        assert!(app.save_world());
-        app.sim.as_mut().unwrap().place_rat().unwrap();
-        let saved = app.saved_world.as_ref().unwrap().rats_placed();
-        assert_eq!(saved, 1);
         assert!(app.load_world());
+        assert_eq!(app.sim.as_ref().unwrap().rat_delivery(), Some(delivery));
+        assert_eq!(app.sim.as_ref().unwrap().rats_placed(), 0);
+        advance_app_minutes(&mut app, pc2_sim::RAT_DELIVERY_MINUTES);
         assert_eq!(app.sim.as_ref().unwrap().rats_placed(), 1);
     }
 

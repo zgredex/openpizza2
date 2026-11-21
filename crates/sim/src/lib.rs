@@ -53,6 +53,24 @@ pub const LONDON_ORDER_CASH_BEFORE: f64 = 492_344.45;
 pub const LONDON_ORDER_CASH_AFTER: f64 = 493_731.73;
 pub const LONDON_ORDER_PRICE: f64 = LONDON_ORDER_REVENUE / (LONDON_ORDER_SERVINGS as f64 * 1.15);
 
+/// London city sites.  The plot and rival marker use the city's tile/object
+/// coordinates; they are not offsets from Atrium.
+pub const LONDON_HQ_TILE: u32 = 13_691;
+pub const LONDON_HQ_WORLD: (i32, i32) = (5_120, 2_592);
+pub const LONDON_RIVAL_TILE: u32 = 11_508;
+pub const LONDON_RIVAL_WORLD: (i32, i32) = (3_904, 1_568);
+pub const LONDON_RIVAL_BRANCH_ID: u32 = 100_001;
+/// `CompanyInfo_FillActions` (`0x4a2a10`) quotes HQ expansion from
+/// `Stats_GetCombinedValue(4, level)`.  The level-one quote is the shipped
+/// 3424 value; the higher tiers scale with the same dynamic multiplier.
+pub const HQ_EXPANSION_COSTS: [u32; 3] = [3_424, 4_565, 5_706];
+/// `CompanyInfo_FillActions` (`0x4a2a10`) sets the next-stage length to four
+/// days; the level is awarded by `City_TickSimulation` (`0x4d8d50`, case 0x1c).
+pub const HQ_CONSTRUCTION_MINUTES: u32 = 4 * 24 * 60;
+/// `SubMenu_BuildAnnoyances` rat order: 5000 cost, courier travel time.
+pub const RAT_DELIVERY_COST: u32 = 5_000;
+pub const RAT_DELIVERY_MINUTES: u32 = 60;
+
 /// `Game_GetStartingCapital` (`0x48d3a0`). The difficulty index is
 /// `DAT_0057bb24`; every other value falls through to 20,000.
 pub fn starting_capital(difficulty: u8) -> u32 {
@@ -629,6 +647,25 @@ pub struct CampaignPropertyOffer {
     pub fee: u32,
 }
 
+/// A headquarters expansion started from the city expansion page.  The level
+/// is awarded when `complete_minute` is reached, not when the order is placed.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct HeadquartersProject {
+    pub target_level: u32,
+    pub site_tile: u32,
+    pub cost: u32,
+    pub complete_minute: u32,
+}
+
+/// A courier order carrying rats to the rival restaurant.  Mission state slot
+/// 1 is written when the courier reaches the branch, not when it is dispatched.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct RatDelivery {
+    pub target_branch: u32,
+    pub cost: u32,
+    pub complete_minute: u32,
+}
+
 impl CampaignPropertyOffer {
     pub fn total_cost(self) -> u32 {
         self.price.saturating_add(self.fee)
@@ -969,6 +1006,14 @@ pub enum ClockEvent {
     Departure {
         minute: u32,
     },
+    HeadquartersComplete {
+        minute: u32,
+        level: u32,
+    },
+    RatDelivered {
+        minute: u32,
+        count: u32,
+    },
     QuarterBoundary {
         minute: u32,
         hour: u32,
@@ -989,6 +1034,8 @@ pub struct WorldSnapshot {
     pub mission_complete: bool,
     pub hq_level: u32,
     pub rats_placed: u32,
+    pub hq_project: Option<HeadquartersProject>,
+    pub rat_delivery: Option<RatDelivery>,
     pub profile: Option<CharacterProfile>,
     pub scenario: Option<ScenarioSetup>,
     pub leased_property: Option<u32>,
@@ -1012,6 +1059,8 @@ pub struct World {
     mission_complete: bool,
     hq_level: u32,
     rats_placed: u32,
+    hq_project: Option<HeadquartersProject>,
+    rat_delivery: Option<RatDelivery>,
     profile: Option<CharacterProfile>,
     scenario: Option<ScenarioSetup>,
     leased_property: Option<u32>,
@@ -1037,6 +1086,8 @@ impl World {
             mission_complete: false,
             hq_level: 0,
             rats_placed: 0,
+            hq_project: None,
+            rat_delivery: None,
             profile: None,
             scenario: None,
             leased_property: None,
@@ -1171,13 +1222,29 @@ impl World {
             .scenario
             .as_ref()
             .map_or("MISSION", |scenario| scenario.city_name.as_str());
+        let hq = match self.hq_project {
+            Some(project) => format!(
+                "HQ {}/3 (+{}m)",
+                self.hq_level,
+                project.complete_minute.saturating_sub(self.minute) / 60
+            ),
+            None => format!("HQ {}/3", self.hq_level),
+        };
+        let rat = match self.rat_delivery {
+            Some(delivery) => format!(
+                "RAT {}/1 (+{}m)",
+                self.rats_placed,
+                delivery.complete_minute.saturating_sub(self.minute)
+            ),
+            None => format!("RAT {}/1", self.rats_placed),
+        };
         Some(format!(
-            "MISSION: {}   GOALS {}/{}   HQ {}/3   RAT {}/1   BRANCHES {}",
+            "MISSION: {}   GOALS {}/{}   {}   {}   BRANCHES {}",
             city.to_ascii_uppercase(),
             completed,
             mission.goal_ids.len(),
-            self.hq_level,
-            self.rats_placed,
+            hq,
+            rat,
             self.player_branch_count()
         ))
     }
@@ -1278,35 +1345,134 @@ impl World {
         self.campaign_mission()?.property_offer
     }
 
-    /// Build or upgrade the player's headquarters.  `Game_IncrementPlayerCounterC20`
-    /// (0x4dcb30) is called from the HQ construction completion path; the London
-    /// goal 0 evaluator requires the counter to exceed 2.
-    pub fn build_hq(&mut self) -> Result<u32, &'static str> {
+    /// The real London headquarters plot.  The city view uses the same tile
+    /// constant when it draws the marker, so the panel cannot drift to an
+    /// offset from Atrium.
+    pub fn hq_site_tile(&self) -> Option<u32> {
+        self.campaign_mission().map(|_| LONDON_HQ_TILE)
+    }
+
+    /// The rival restaurant selected by the rat order.
+    pub fn rival_branch_id(&self) -> Option<u32> {
+        (self.campaign_mission()?.rival_count > 0).then_some(LONDON_RIVAL_BRANCH_ID)
+    }
+
+    pub fn hq_project(&self) -> Option<HeadquartersProject> {
+        self.hq_project
+    }
+
+    pub fn rat_delivery(&self) -> Option<RatDelivery> {
+        self.rat_delivery
+    }
+
+    /// Quote the next headquarters stage from `CompanyInfo_FillActions`
+    /// (`0x4a2a10`).  The expansion page shows this value before the player
+    /// confirms.
+    pub fn hq_expansion_cost(&self) -> Option<u32> {
+        if self.campaign_mission().is_none() || self.hq_level >= 3 {
+            return None;
+        }
+        HQ_EXPANSION_COSTS.get(self.hq_level as usize).copied()
+    }
+
+    /// Start the shipped headquarters expansion action.  The level is awarded
+    /// by `City_TickSimulation` (`0x4d8d50`, case `0x1c`) when construction
+    /// completes; placing the order only debits the quote and records the
+    /// completion minute.
+    pub fn start_hq_construction(
+        &mut self,
+        site_tile: u32,
+    ) -> Result<HeadquartersProject, &'static str> {
         if self.campaign_mission().is_none() {
             return Err("headquarters missions require a campaign");
+        }
+        if self.hq_project.is_some() {
+            return Err("headquarters construction is already in progress");
         }
         if self.hq_level >= 3 {
             return Err("headquarters is already level 3");
         }
-        self.hq_level += 1;
-        self.evaluate_mission_goals();
-        Ok(self.hq_level)
+        if site_tile != LONDON_HQ_TILE {
+            return Err("headquarters must be built on the designated plot");
+        }
+        let cost = self
+            .hq_expansion_cost()
+            .ok_or("headquarters is already level 3")?;
+        let charge = f64::from(cost);
+        if self.sim.cash < charge {
+            return Err("insufficient funds");
+        }
+        self.sim.cash -= charge;
+        let project = HeadquartersProject {
+            target_level: self.hq_level + 1,
+            site_tile,
+            cost,
+            complete_minute: self.minute + HQ_CONSTRUCTION_MINUTES,
+        };
+        self.hq_project = Some(project);
+        Ok(project)
     }
 
-    /// Deliver a rat to a rival branch.  The shipped action path
-    /// (`Object_UpdateBranchOpenClose` 0x408a70, action 3) writes mission-state
-    /// slot 1 via `Array_SetSlot`, and `Mission_EvaluateGoals` reads that slot as
-    /// `+0x14`.
-    pub fn place_rat(&mut self) -> Result<u32, &'static str> {
+    /// Dispatch a courier with rats to the actual rival restaurant.  The
+    /// mission slot is written on arrival by `Object_UpdateBranchOpenClose`
+    /// (`0x408a70`, case 3), matching the shipped annoyances page.
+    pub fn dispatch_rats(&mut self, target_branch: u32) -> Result<RatDelivery, &'static str> {
         let mission = self
             .campaign_mission()
             .ok_or("rat deliveries require a campaign")?;
         if mission.rival_count == 0 {
             return Err("there is no rival branch");
         }
-        self.rats_placed += 1;
-        self.evaluate_mission_goals();
-        Ok(self.rats_placed)
+        if self.hq_level < 3 {
+            return Err("headquarters level 3 is required for couriers");
+        }
+        if self.rat_delivery.is_some() {
+            return Err("a rat delivery is already on the way");
+        }
+        if target_branch != LONDON_RIVAL_BRANCH_ID {
+            return Err("rats must be sent to the rival branch");
+        }
+        let charge = f64::from(RAT_DELIVERY_COST);
+        if self.sim.cash < charge {
+            return Err("insufficient funds");
+        }
+        self.sim.cash -= charge;
+        let delivery = RatDelivery {
+            target_branch,
+            cost: RAT_DELIVERY_COST,
+            complete_minute: self.minute + RAT_DELIVERY_MINUTES,
+        };
+        self.rat_delivery = Some(delivery);
+        Ok(delivery)
+    }
+
+    /// Apply any construction/delivery whose completion minute has passed.
+    /// This is the single clock path used by the headless replay and the UI.
+    fn complete_campaign_projects(&mut self) -> Vec<ClockEvent> {
+        let mut events = Vec::new();
+        if let Some(project) = self.hq_project {
+            if self.minute >= project.complete_minute {
+                self.hq_project = None;
+                self.hq_level = project.target_level;
+                self.evaluate_mission_goals();
+                events.push(ClockEvent::HeadquartersComplete {
+                    minute: self.minute,
+                    level: self.hq_level,
+                });
+            }
+        }
+        if let Some(delivery) = self.rat_delivery {
+            if self.minute >= delivery.complete_minute {
+                self.rat_delivery = None;
+                self.rats_placed += 1;
+                self.evaluate_mission_goals();
+                events.push(ClockEvent::RatDelivered {
+                    minute: self.minute,
+                    count: self.rats_placed,
+                });
+            }
+        }
+        events
     }
 
     pub fn can_enter_branch(&self) -> bool {
@@ -1657,8 +1823,31 @@ impl World {
         if branch.opening_hours.is_none() || !self.sim.snapshot().open {
             return "BRANCH: set opening hours (H) and open (O)".into();
         }
+        if let Some(project) = self.hq_project {
+            let remaining = project.complete_minute.saturating_sub(self.minute);
+            return format!(
+                "CITY: headquarters level {} under construction at tile {} ({}m left)",
+                project.target_level, project.site_tile, remaining
+            );
+        }
+        if self.hq_level < 3 {
+            let cost = self.hq_expansion_cost().unwrap_or(0);
+            return format!(
+                "CITY: select the HQ plot {LONDON_HQ_TILE} and expand (cost {cost}, {} days)",
+                HQ_CONSTRUCTION_MINUTES / (24 * 60)
+            );
+        }
+        if let Some(delivery) = self.rat_delivery {
+            let remaining = delivery.complete_minute.saturating_sub(self.minute);
+            return format!(
+                "CITY: rats are on the way to branch {} ({}m left)",
+                delivery.target_branch, remaining
+            );
+        }
         if !self.mission_complete() {
-            return "CITY: build HQ level 3 (H) and rat the rival branch (R)".into();
+            return format!(
+                "CITY: select rival branch {LONDON_RIVAL_BRANCH_ID} and send the rat courier (cost {RAT_DELIVERY_COST})"
+            );
         }
         "MISSION COMPLETE: London is running".into()
     }
@@ -1948,6 +2137,8 @@ impl World {
             mission_complete: self.mission_complete,
             hq_level: self.hq_level,
             rats_placed: self.rats_placed,
+            hq_project: self.hq_project,
+            rat_delivery: self.rat_delivery,
             profile: self.profile.clone(),
             scenario: self.scenario.clone(),
             leased_property: self.leased_property,
@@ -1976,6 +2167,8 @@ impl World {
             mission_complete: snapshot.mission_complete,
             hq_level: snapshot.hq_level,
             rats_placed: snapshot.rats_placed,
+            hq_project: snapshot.hq_project,
+            rat_delivery: snapshot.rat_delivery,
             profile: snapshot.profile.clone(),
             scenario: snapshot.scenario.clone(),
             leased_property: snapshot.leased_property,
@@ -2102,6 +2295,7 @@ impl World {
             events.push(ClockEvent::Tick {
                 minute: self.minute,
             });
+            events.extend(self.complete_campaign_projects());
             let minute_of_day = self.minute % (24 * 60);
             if minute_of_day % 60 == 0 {
                 let hour = (minute_of_day / 60) % 24;
@@ -2986,15 +3180,42 @@ mod tests {
         assert!(world.mission_summary().unwrap().contains("GOALS 1/3"));
         assert!(!sold.mission_complete);
 
-        assert_eq!(world.build_hq(), Ok(1));
-        assert_eq!(world.build_hq(), Ok(2));
-        assert_eq!(world.mission_goals()[0].status, GoalStatus::Pending);
-        assert_eq!(world.build_hq(), Ok(3));
+        world.set_open(false);
+        let mut hq_cost = 0;
+        for expected in 1..=3 {
+            let cash_before = world.snapshot().cash;
+            let project = world.start_hq_construction(LONDON_HQ_TILE).unwrap();
+            assert_eq!(cash_before - world.snapshot().cash, project.cost as f64);
+            hq_cost += project.cost;
+            assert_eq!(project.target_level, expected);
+            assert_eq!(world.hq_level(), expected - 1);
+            assert_eq!(world.hq_project(), Some(project));
+            world.advance_to(project.complete_minute);
+            assert_eq!(world.hq_level(), expected);
+            assert_eq!(world.hq_project(), None);
+        }
+        assert_eq!(
+            world.start_hq_construction(LONDON_HQ_TILE),
+            Err("headquarters is already level 3")
+        );
+        assert_eq!(hq_cost, 13_695);
         assert_eq!(world.mission_goals()[0].status, GoalStatus::Complete);
-        assert_eq!(world.build_hq(), Err("headquarters is already level 3"));
         assert!(!world.mission_complete());
 
-        assert_eq!(world.place_rat(), Ok(1));
+        assert_eq!(
+            world.dispatch_rats(123),
+            Err("rats must be sent to the rival branch")
+        );
+        let cash_before = world.snapshot().cash;
+        let delivery = world.dispatch_rats(LONDON_RIVAL_BRANCH_ID).unwrap();
+        assert_eq!(
+            cash_before - world.snapshot().cash,
+            RAT_DELIVERY_COST as f64
+        );
+        assert_eq!(world.rats_placed(), 0);
+        assert_eq!(world.rat_delivery(), Some(delivery));
+        world.advance_to(delivery.complete_minute);
+        assert_eq!(world.rats_placed(), 1);
         assert_eq!(world.mission_goals()[1].status, GoalStatus::Complete);
         assert!(world.mission_complete());
         assert!(world.mission_summary().unwrap().contains("GOALS 3/3"));
@@ -3148,14 +3369,17 @@ mod tests {
         world.set_campaign_recipe_price(15.0).unwrap();
         world.add_campaign_recipe_to_menu().unwrap();
         world.set_campaign_opening_hours(6, 22).unwrap();
-        world.build_hq().unwrap();
+        let project = world.start_hq_construction(LONDON_HQ_TILE).unwrap();
+        assert_eq!(world.hq_level(), 0);
 
         let path =
             std::env::temp_dir().join(format!("pc2-campaign-save-{}.bin", std::process::id()));
         world.save_campaign(&path).unwrap();
-        let loaded = World::load_campaign(&path).unwrap();
-        std::fs::remove_file(path).ok();
+        let mut loaded = World::load_campaign(&path).unwrap();
         assert_eq!(loaded.world_snapshot(), world.world_snapshot());
+        assert_eq!(loaded.hq_project(), Some(project));
+        assert_eq!(loaded.hq_level(), 0);
+        loaded.advance_to(project.complete_minute);
         assert_eq!(loaded.hq_level(), 1);
         assert_eq!(
             loaded
@@ -3167,16 +3391,20 @@ mod tests {
             loaded.campaign_branch().unwrap().warehouse_id,
             Some(100_000)
         );
+        std::fs::remove_file(path).ok();
     }
 
     #[test]
     fn campaign_actions_require_a_mission_and_rival() {
         let mut world = World::new(0);
         assert_eq!(
-            world.build_hq(),
+            world.start_hq_construction(LONDON_HQ_TILE),
             Err("headquarters missions require a campaign")
         );
-        assert_eq!(world.place_rat(), Err("rat deliveries require a campaign"));
+        assert_eq!(
+            world.dispatch_rats(LONDON_RIVAL_BRANCH_ID),
+            Err("rat deliveries require a campaign")
+        );
 
         let scenario = ScenarioSetup::from_campaign_mission(
             "lon".into(),
@@ -3195,7 +3423,16 @@ mod tests {
             },
         );
         let mut no_rival = World::new(0).with_scenario(scenario);
-        assert_eq!(no_rival.place_rat(), Err("there is no rival branch"));
+        no_rival.set_cash(500_000.0);
+        no_rival.set_open(false);
+        for _ in 0..3 {
+            let project = no_rival.start_hq_construction(LONDON_HQ_TILE).unwrap();
+            no_rival.advance_to(project.complete_minute);
+        }
+        assert_eq!(
+            no_rival.dispatch_rats(LONDON_RIVAL_BRANCH_ID),
+            Err("there is no rival branch")
+        );
     }
 
     #[test]

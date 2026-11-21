@@ -780,14 +780,49 @@ pub fn draw_lease_marker(frame: &mut [u8], width: u32, height: u32, x: i32, y: i
     fill_rect(frame, width, height, x - 1, y - 7, 2, 10, color);
 }
 
-pub fn draw_hq_marker(frame: &mut [u8], width: u32, height: u32, x: i32, y: i32) {
+pub fn draw_hq_marker(
+    frame: &mut [u8],
+    width: u32,
+    height: u32,
+    x: i32,
+    y: i32,
+    progress: Option<f32>,
+) {
     let color = [120, 230, 150, 255];
     fill_rect(frame, width, height, x - 12, y - 12, 25, 25, color);
     fill_rect(frame, width, height, x - 4, y - 4, 9, 9, [20, 50, 30, 255]);
+    if let Some(progress) = progress {
+        let clamped = progress.clamp(0.0, 1.0);
+        fill_rect(
+            frame,
+            width,
+            height,
+            x - 16,
+            y + 17,
+            33,
+            5,
+            [20, 40, 26, 255],
+        );
+        let filled = (31.0 * clamped) as i32;
+        fill_rect(
+            frame,
+            width,
+            height,
+            x - 15,
+            y + 18,
+            filled.max(0),
+            3,
+            [250, 210, 90, 255],
+        );
+    }
 }
 
-pub fn draw_rival_marker(frame: &mut [u8], width: u32, height: u32, x: i32, y: i32) {
-    let color = [245, 100, 100, 255];
+pub fn draw_rival_marker(frame: &mut [u8], width: u32, height: u32, x: i32, y: i32, pending: bool) {
+    let color = if pending {
+        [250, 210, 90, 255]
+    } else {
+        [245, 100, 100, 255]
+    };
     fill_rect(frame, width, height, x - 12, y - 12, 25, 4, color);
     fill_rect(frame, width, height, x - 12, y + 8, 25, 4, color);
     fill_rect(frame, width, height, x - 3, y - 16, 7, 32, color);

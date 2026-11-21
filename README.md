@@ -462,11 +462,25 @@ It writes `/tmp/opencode/original_recipe_screen.png`; the handler session also
 captures the in-branch screen at `/tmp/opencode/original_recipe_frame.png`.
 
 The HUD reports the actual recipe menu price, and a closed branch shows the
-configured hours as the reason. Mission HQ and rival markers open confirmation
-panels and use the same `World` actions as the headless replay. Completing all
-three objectives shows the London result screen. F5 writes the campaign save
-and F9 reloads it; the main-menu Continue action launches the same saved
-campaign through `--campaign-load`.
+configured hours as the reason. The city actions are now stateful instead of
+instant shortcuts:
+
+```text
+HQ plot       tile 13691 (79,83), world 5120,2592
+HQ quote      3424 / 4565 / 5706 for levels 1-3
+HQ work       4 days; the level is awarded when the clock reaches completion
+Rival target  rival restaurant cell 11508 (28,70), world 3904,1568
+Rat courier   5000, 60 minutes to the target; objective awarded on arrival
+```
+
+Clicking the HQ marker quotes the next stage and debits the cost when the
+order starts. A progress bar stays on the map until construction finishes.
+The rival marker dispatches a courier to the selected restaurant; the marker
+turns yellow while the delivery is pending. F5/F9 preserve both pending
+records. The handler test saves at minute `1320` with HQ level 1 pending and
+at minute `18600` with the rat courier pending, reloads each state, and only
+then advances the clock. The result screen only appears after the last HQ
+level and the rat delivery have completed.
 
 The UI-control run and the equivalent headless replay are:
 
@@ -474,22 +488,26 @@ The UI-control run and the equivalent headless replay are:
 cargo test -p pc2-app london_ui_run_matches_the_headless_campaign_flow -- --nocapture
 
 cargo run -p pc2-app -- --campaign-start --playable-script \
-  'lease=13694;hire=cook;hire=service;hire=errand;hire=errand;warehouse=100000;supplier=central-market;route;branch;advance=545;recipe=30,20;recipe-price=15;recipe-menu;hours=6-22;open;party;ticks=260;ticks=180;ticks=80;advance=1320;hq;hq;hq;rat;save' \
+  'lease=13694;hire=cook;hire=service;hire=errand;hire=errand;warehouse=100000;supplier=central-market;route;branch;advance=545;recipe=30,20;recipe-price=15;recipe-menu;hours=6-22;open;party;ticks=260;ticks=180;ticks=80;advance=1320;hq;advance=7080;hq;advance=12840;hq;advance=18600;rat;advance=18660;save' \
   --output /tmp/opencode/london_headless_complete.png
 
 cargo run -p pc2-app -- --menu-continue \
   --output /tmp/opencode/london_menu_continue.png
 ```
 
-The UI test also captures the rendered branch and result frames:
+The UI test captures the branch, pending HQ, pending courier, and result
+frames:
 
 ```text
 /tmp/opencode/london_branch_frame.png
+/tmp/opencode/london_hq_progress.png
+/tmp/opencode/london_rat_pending.png
 /tmp/opencode/london_result_frame.png
 ```
 
-Both paths finish with cash `519009.50`, stock `135000`, price `15.00`, 13
-recipe sales, the branch closed at 22:00, and all three goals complete:
+Both paths finish with cash `500314.50`, stock `135000`, price `15.00`, 13
+recipe sales, the branch closed at 22:00, HQ level 3, the rat delivered, and
+all three goals complete:
 
 ```text
 campaign: goals=[X] Build HQ level 3 (3/3)
