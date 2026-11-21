@@ -21,6 +21,8 @@ def main() -> int:
     parser.add_argument("--flags", default="/O2")
     parser.add_argument("--json-out", type=Path)
     parser.add_argument("--vc6", type=Path, default=DEFAULT_VC6)
+    parser.add_argument("--allow-asm", action="store_true",
+                        help="count naked inline-assembly transcriptions as matches")
     args = parser.parse_args()
     records = json.loads(args.manifest.read_text())
     symbols = json.loads(args.symbols.read_text()) if args.symbols else {}
@@ -31,6 +33,12 @@ def main() -> int:
         if not source.is_file():
             results.append({"address": record["address"], "match": False,
                             "error": f"missing {source}"})
+            continue
+        text = source.read_text(errors="replace")
+        if not args.allow_asm and ("__asm" in text or "asm {" in text):
+            results.append({"address": record["address"], "match": False,
+                            "error": "inline assembly is not decompiled C",
+                            "source": str(source)})
             continue
         try:
             result = match(address, source, args.directory / f"{record['address']}.obj",
