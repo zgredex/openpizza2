@@ -65,9 +65,10 @@ pub const LONDON_RIVAL_BRANCH_ID: u32 = 100_001;
 /// `Stats_GetCombinedValue(4, level)`.  The level-one quote is the shipped
 /// 3424 value; the higher tiers scale with the same dynamic multiplier.
 pub const HQ_EXPANSION_COSTS: [u32; 3] = [3_424, 4_565, 5_706];
-/// `CompanyInfo_FillActions` (`0x4a2a10`) sets the next-stage length to four
-/// days; the level is awarded by `City_TickSimulation` (`0x4d8d50`, case 0x1c).
-pub const HQ_CONSTRUCTION_MINUTES: u32 = 4 * 24 * 60;
+/// The native expansion sets `MapObject+0x38 = 4`; `City_TickSimulation`
+/// (`0x4d8d50`, case 0x1c) decrements it once per city hour and increments C20
+/// when it reaches zero.  Four ticks therefore equal four in-game hours.
+pub const HQ_CONSTRUCTION_MINUTES: u32 = 4 * 60;
 /// `SubMenu_BuildAnnoyances` rat order: 5000 cost, courier travel time.
 pub const RAT_DELIVERY_COST: u32 = 5_000;
 pub const RAT_DELIVERY_MINUTES: u32 = 60;
@@ -1225,7 +1226,7 @@ impl World {
             .map_or("MISSION", |scenario| scenario.city_name.as_str());
         let hq = match self.hq_project {
             Some(project) => format!(
-                "HQ {}/3 (+{}m)",
+                "HQ {}/3 (+{}h)",
                 self.hq_level,
                 project.complete_minute.saturating_sub(self.minute) / 60
             ),
@@ -1827,15 +1828,15 @@ impl World {
         if let Some(project) = self.hq_project {
             let remaining = project.complete_minute.saturating_sub(self.minute);
             return format!(
-                "CITY: headquarters level {} under construction at tile {} ({}m left)",
+                "CITY: headquarters level {} under construction at tile {} ({}h left)",
                 project.target_level, project.site_tile, remaining
             );
         }
         if self.hq_level < 3 {
             let cost = self.hq_expansion_cost().unwrap_or(0);
             return format!(
-                "CITY: select the HQ plot {LONDON_HQ_TILE} and expand (cost {cost}, {} days)",
-                HQ_CONSTRUCTION_MINUTES / (24 * 60)
+                "CITY: select the HQ plot {LONDON_HQ_TILE} and expand (cost {cost}, {} hours)",
+                HQ_CONSTRUCTION_MINUTES / 60
             );
         }
         if let Some(delivery) = self.rat_delivery {

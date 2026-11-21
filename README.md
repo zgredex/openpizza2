@@ -471,7 +471,7 @@ instant shortcuts:
 ```text
 HQ plot       vacant plot cell 13885 (87,84), world 6048,3088
 HQ quote      3424 / 4565 / 5706 for levels 1-3
-HQ work       4 days; the level is awarded when the clock reaches completion
+HQ work       4 city ticks (4 in-game hours); the level is awarded when the clock reaches completion
 Rival target  stationary rival branch cell 14628 (32,89), world 3424,1936
 Rat courier   5000, 60 minutes to the target; objective awarded on arrival
 ```
@@ -479,8 +479,11 @@ Rat courier   5000, 60 minutes to the target; objective awarded on arrival
 The cells come from a native London city-object scan after staffing: the
 player branch was at cell `12592`, the rival branch at `14628` (identical in
 two scans 800 polls apart), and `13885` is an unowned type-20 plot. A native
-probe located plot `13885` and `Game_CanAffordWithCurrency` accepted its
-`3424` debit. They replace the old fixed offsets from Atrium.
+kind-4 expansion on `13885` debited `3424` (`496188.00 -> 492764.00`) and set
+the construction object's `+0x38` countdown to `4`. Four native
+`City_TickSimulation` calls decremented it `3, 2, 1, 0` and raised the
+player's HQ counter from `0` to `1`, so the Rust timer is `240` minutes
+(four city ticks), not four days.
 
 Clicking the HQ marker quotes the next stage and debits the cost when the
 order starts. A progress bar stays on the map until construction finishes.
@@ -497,7 +500,7 @@ The UI-control run and the equivalent headless replay are:
 cargo test -p pc2-app london_ui_run_matches_the_headless_campaign_flow -- --nocapture
 
 cargo run -p pc2-app -- --campaign-start --playable-script \
-  'lease=13694;hire=cook;hire=service;hire=errand;hire=errand;warehouse=100000;supplier=central-market;route;branch;advance=545;recipe=30,20;recipe-price=15;recipe-menu;hours=6-22;open;party;ticks=260;ticks=180;ticks=80;advance=1320;hq;advance=7080;hq;advance=12840;hq;advance=18600;rat;advance=18660;save' \
+  'lease=13694;hire=cook;hire=service;hire=errand;hire=errand;warehouse=100000;supplier=central-market;route;branch;advance=545;recipe=30,20;recipe-price=15;recipe-menu;hours=6-22;open;party;ticks=260;ticks=180;ticks=80;advance=1320;hq;advance=1560;hq;advance=1800;hq;advance=2040;rat;advance=2100;save' \
   --output /tmp/opencode/london_headless_complete.png
 
 cargo run -p pc2-app -- --menu-continue \

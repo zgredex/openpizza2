@@ -1868,7 +1868,7 @@ fn mission_panel_detail(sim: &World, kind: MissionPanelKind) -> (&'static str, S
                 (
                     "HEADQUARTERS CONSTRUCTION",
                     format!(
-                        "PLOT {site}  LEVEL {}/3  COST {}  {}m LEFT",
+                        "PLOT {site}  LEVEL {}/3  COST {}  {}h LEFT",
                         project.target_level, project.cost, remaining
                     ),
                 )
@@ -1879,7 +1879,7 @@ fn mission_panel_detail(sim: &World, kind: MissionPanelKind) -> (&'static str, S
                 (
                     "HEADQUARTERS PLOT",
                     format!(
-                        "PLOT {site}  LEVEL {}/3  NEXT COST {}  4 DAYS",
+                        "PLOT {site}  LEVEL {}/3  NEXT COST {}  4 HOURS",
                         sim.hq_level(),
                         cost
                     ),
@@ -5654,10 +5654,10 @@ mod tests {
                 assert_eq!(loaded.hq_project(), Some(project));
             }
             if expected == 1 {
-                advance_app_minutes(&mut app, 24 * 60);
+                advance_app_minutes(&mut app, 2 * 60);
                 assert_eq!(app.sim.as_ref().unwrap().hq_level(), 0);
                 capture_app_frame(&app, "/tmp/opencode/london_hq_progress.png");
-                advance_app_minutes(&mut app, pc2_sim::HQ_CONSTRUCTION_MINUTES - 24 * 60);
+                advance_app_minutes(&mut app, pc2_sim::HQ_CONSTRUCTION_MINUTES - 2 * 60);
             } else {
                 advance_app_minutes(&mut app, pc2_sim::HQ_CONSTRUCTION_MINUTES);
             }
