@@ -23,7 +23,12 @@ def main() -> int:
     parser.add_argument("--vc6", type=Path, default=DEFAULT_VC6)
     parser.add_argument("--allow-asm", action="store_true",
                         help="count naked inline-assembly transcriptions as matches")
+    parser.add_argument("--strict", action="store_true",
+                        help="require exact extent and relocation checks")
+    parser.add_argument("--auto-symbols", action="store_true",
+                        help="resolve external symbols from the shipped symbol map")
     args = parser.parse_args()
+    strict = args.strict or __import__("os").environ.get("PC2_STRICT") == "1"
     records = json.loads(args.manifest.read_text())
     symbols = json.loads(args.symbols.read_text()) if args.symbols else {}
     results = []
@@ -43,7 +48,8 @@ def main() -> int:
         try:
             result = match(address, source, args.directory / f"{record['address']}.obj",
                            args.vc6, args.flags.split(), symbols,
-                           record.get("length"), None, False)
+                           record.get("length"), None, False, strict,
+                           args.auto_symbols)
         except Exception as error:  # keep the batch report
             result = {"address": record["address"], "match": False,
                       "error": str(error)}
@@ -51,11 +57,13 @@ def main() -> int:
         print(f"{record['address']} {record['name']}: "
               f"{'MATCH' if result.get('match') else 'unmatched'}")
     matched = sum(1 for result in results if result.get("match"))
-    report = {"matched": matched, "total": len(results), "results": results}
+    strict_matched = sum(1 for result in results if result.get("strict_match"))
+    report = {"matched": matched, "strict_matched": strict_matched,
+              "total": len(results), "results": results}
     text = json.dumps(report, indent=2)
     if args.json_out:
         args.json_out.write_text(text + "\n")
-    print(f"matched {matched}/{len(results)}")
+    print(f"matched {matched}/{len(results)}; strict {strict_matched}/{len(results)}")
     return 0 if matched == len(results) else 1
 
 

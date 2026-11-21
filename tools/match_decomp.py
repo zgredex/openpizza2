@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import struct
 import subprocess
 import sys
@@ -21,6 +22,37 @@ ROOT = Path(__file__).resolve().parents[1]
 GAME = ROOT / "game/fastfood2.exe"
 INDEX = ROOT / "decompiled_fastfood2_named_v2/full_game_verification/decompile-index.json"
 DEFAULT_VC6 = Path(os.environ.get("PC2_VC6", "/tmp/opencode/vc6-sp3-toolchain/VC98"))
+SYMBOL_INDEX = ROOT / "decompiled_fastfood2_named_v2/full_game_symbols.json"
+_SYMBOLS = None
+
+
+def resolve_auto_symbol(name: str):
+    global _SYMBOLS
+    if _SYMBOLS is None:
+        raw = json.loads(SYMBOL_INDEX.read_text()) if SYMBOL_INDEX.is_file() else {}
+        _SYMBOLS = {name: int(address, 16) for address, name in raw.items()}
+    candidates = [name]
+    if name.startswith("?"):
+        try:
+            out = subprocess.run(["llvm-undname", name], text=True,
+                                 capture_output=True, timeout=10).stdout.strip()
+        except (OSError, subprocess.TimeoutExpired):
+            out = ""
+        if out and out != name:
+            signature = out.split("(", 1)[0]
+            qualified = signature.split()[-1]
+            candidates.append(qualified.replace("::", "_"))
+    if name.startswith("_"):
+        candidates.append(name[1:])
+    if name.startswith("@"):
+        candidates.append(name.lstrip("@").split("@", 1)[0])
+    for candidate in candidates:
+        if candidate in _SYMBOLS:
+            return _SYMBOLS[candidate]
+    match = re.search(r"(?:DAT|STR)_([0-9a-fA-F]{8})", name)
+    if match:
+        return int(match.group(1), 16)
+    return None
 
 
 def pe_image(path: Path):
@@ -125,7 +157,8 @@ def compile_candidate(source: Path, vc6: Path, obj: Path, flags: list[str]):
 
 def match(address: int, source: Path, obj: Path, vc6: Path, flags: list[str],
           symbols: dict[str, int], length: int | None, entry: str | None,
-          strict_symbols: bool = False):
+          strict_symbols: bool = False, strict: bool = False,
+          auto_symbols: bool = False):
     image = pe_image(GAME)
     if length is None:
         length = function_length(address)
@@ -136,6 +169,7 @@ def match(address: int, source: Path, obj: Path, vc6: Path, flags: list[str],
     if text is None:
         raise ValueError("candidate has no .text section")
     candidate = bytearray(text["raw"])
+    strict_issues = []
     # Relocations live in the object file at text["relptr"]; read them from the
     # original object bytes.
     object_bytes = obj.read_bytes()
@@ -154,16 +188,29 @@ def match(address: int, source: Path, obj: Path, vc6: Path, flags: list[str],
         else:
             name = symbol["name"]
             target = symbols.get(name)
-        if strict_symbols:
+            if target is None and auto_symbols:
+                target = resolve_auto_symbol(name)
+        if strict_symbols or strict:
             if target is None:
-                raise ValueError(
-                    f"undefined symbol {name}; pass --symbol {name}=0xADDR")
-            expected = (target if typ == 0x06 else
-                        target - (address + va + 4)) & 0xFFFFFFFF
-            if struct.unpack("<I", original_field)[0] != expected:
-                raise ValueError(
-                    f"relocation at {va:#x} resolves to {expected:#x}, "
-                    f"original has {struct.unpack('<I', original_field)[0]:#x}")
+                issue = f"undefined symbol {name}; pass --symbol {name}=0xADDR"
+                if strict:
+                    strict_issues.append(issue)
+                else:
+                    raise ValueError(issue)
+            else:
+                addend = struct.unpack_from("<i", candidate, va)[0]
+                if typ == 0x06:
+                    expected = (target + addend) & 0xFFFFFFFF
+                else:
+                    expected = (target + addend - (address + va + 4)) & 0xFFFFFFFF
+                actual = struct.unpack("<I", original_field)[0]
+                if actual != expected:
+                    issue = (f"relocation at {va:#x} resolves to {expected:#x}, "
+                             f"original has {actual:#x}")
+                    if strict:
+                        strict_issues.append(issue)
+                    else:
+                        raise ValueError(issue)
         if typ not in (0x06, 0x14):
             raise ValueError(f"unsupported COFF relocation type {typ:#x}")
         candidate[va:va + 4] = original_field
@@ -172,13 +219,28 @@ def match(address: int, source: Path, obj: Path, vc6: Path, flags: list[str],
                      if item["section"] > 0 and item["type"] == 0x20]
         if len(functions) == 1:
             entry = functions[0]["name"]
+        elif strict:
+            strict_issues.append(f"candidate defines {len(functions)} function symbols")
     if entry:
         symbol = next((item for item in coff_symbols if item["name"] == entry), None)
         if symbol is None or symbol["section"] <= 0:
             raise ValueError(f"candidate entry symbol {entry} not found")
-        candidate = candidate[symbol["value"]:symbol["value"] + length]
+        start = symbol["value"]
+        candidate = candidate[start:start + length]
     else:
+        start = 0
         candidate = candidate[:length]
+    if strict and len(text["raw"]) != start + length:
+        extra = text["raw"][start + length:]
+        padding = all(byte in (0x00, 0x90, 0xCC) for byte in extra)
+        if not padding or len(extra) > 15:
+            strict_issues.append(
+                f"candidate extent {len(text['raw'])} bytes, expected {start + length}"
+                f" (extra={len(extra)} bytes, padding={padding})")
+    for section in sections:
+        if strict and section["name"].startswith(".text$") and len(section["raw"]):
+            strict_issues.append(
+                f"unverified unwind section {section['name']} ({len(section['raw'])} bytes)")
     differences = [
         {"offset": index, "original": original[index], "candidate": candidate[index]}
         for index in range(min(len(original), len(candidate)))
@@ -189,6 +251,9 @@ def match(address: int, source: Path, obj: Path, vc6: Path, flags: list[str],
         "length": length,
         "candidate_length": len(candidate),
         "match": not differences and len(candidate) == len(original),
+        "strict_match": not differences and len(candidate) == len(original)
+                        and not strict_issues,
+        "strict_issues": strict_issues,
         "first_difference": differences[0] if differences else None,
         "difference_count": len(differences),
         "source": str(source),
@@ -213,24 +278,32 @@ def main() -> int:
                         help="external symbol NAME=0xADDR (strict check)")
     parser.add_argument("--strict-symbols", action="store_true",
                         help="require supplied symbols to match original relocations")
+    parser.add_argument("--strict", action="store_true",
+                        help="also require exact function extent and no unverified unwind data")
+    parser.add_argument("--auto-symbols", action="store_true",
+                        help="resolve undefined symbols from the shipped symbol map")
     parser.add_argument("--vc6", type=Path, default=DEFAULT_VC6)
     parser.add_argument("--flags", default="/O2")
     parser.add_argument("--json-out", type=Path)
     args = parser.parse_args()
+    strict = args.strict or os.environ.get("PC2_STRICT") == "1"
+    auto_symbols = args.auto_symbols or os.environ.get("PC2_AUTO_SYMBOLS") == "1"
     address = int(args.address, 0)
     with tempfile.TemporaryDirectory(prefix="pc2-match-") as directory:
         obj = Path(directory) / "candidate.obj"
         try:
             result = match(address, args.source, obj, args.vc6,
                            args.flags.split(), parse_symbols(args.symbol),
-                           args.length, args.entry, args.strict_symbols)
+                           args.length, args.entry, args.strict_symbols, strict,
+                           auto_symbols)
         except (ValueError, OSError, subprocess.TimeoutExpired) as error:
             result = {"address": f"{address:#08x}", "match": False, "error": str(error)}
     text = json.dumps(result, indent=2)
     if args.json_out:
         args.json_out.write_text(text + "\n")
     print(text)
-    return 0 if result.get("match") else 1
+    required = "strict_match" if strict else "match"
+    return 0 if result.get(required) else 1
 
 
 if __name__ == "__main__":

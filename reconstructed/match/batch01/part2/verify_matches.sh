@@ -2,7 +2,7 @@
 # Re-run the byte match for every function matched in batch01/part2.
 set -u
 cd "$(dirname "$0")/../../../.."
-run() { python3 tools/match_decomp.py "$@" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d['address'], d['match'], d.get('first_difference'), d.get('difference_count'))"; }
+run() { python3 tools/match_decomp.py "$@" | python3 -c "import json,os,sys; d=json.load(sys.stdin); print(d['address'], d.get('strict_match') if os.environ.get('PC2_STRICT') else d['match'], d.get('first_difference'), d.get('difference_count'))"; }
 run 0x4012e0 reconstructed/match/batch01/part2/0x4012e0.c --length 30 --entry '@NamedLockable_Delete@12' --symbol '@NamedLockable_Destroy@4'=0x401300 --symbol _Mem_Free=0x54dd78
 run 0x4e47c0 reconstructed/match/batch01/part2/0x4e47c0.c --length 30 --entry '@Ingredient_Delete@12' --symbol '@Ingredient_Destroy@4'=0x4e4920 --symbol _Mem_Free=0x54dd78
 run 0x4f5e20 reconstructed/match/batch01/part2/0x4f5e20.c --length 30 --entry '@Player_MissionState_Delete@12' --symbol '@Player_MissionState_Destructor@4'=0x4f5e40 --symbol _Mem_Free=0x54dd78

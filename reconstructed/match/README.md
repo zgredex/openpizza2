@@ -43,3 +43,15 @@ python3 tools/match_decomp.py 0x48d3a0 reconstructed/match/golden/0x48d3a0.c \
   --length 0x80 --entry _pc2_get_starting_capital \
   --symbol _game_difficulty=0x57bb24
 ```
+
+## Strict audit
+
+`--strict` checks the full function extent, relocation targets/addends and
+rejects unverified unwind sections; `--auto-symbols` resolves undefined
+symbols from `full_game_symbols.json`. The wrong-target regression is:
+
+```sh
+python3 reconstructed/match/tests/test_relocation_guard.py
+```
+
+See `STRICT_AUDIT.md` for the separate strict count.

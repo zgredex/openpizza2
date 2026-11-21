@@ -87,8 +87,9 @@ def main():
             cmd += ["--symbol", item]
         result = subprocess.run(cmd, capture_output=True, text=True)
         data = json.loads(result.stdout)
-        status = "MATCH" if data.get("match") else "FAIL"
-        if data.get("match"):
+        ok = data.get("strict_match") if __import__("os").environ.get("PC2_STRICT") else data.get("match")
+        status = "MATCH" if ok else "FAIL"
+        if ok:
             matched += 1
         else:
             failures.append(address)

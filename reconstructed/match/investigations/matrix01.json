@@ -1,0 +1,145 @@
+{
+  "targets": [
+    {
+      "address": "0x4ecd70",
+      "length": 662,
+      "entry": "?ReadFromStream@Actor@@QAEXPAUStream@@PAH@Z",
+      "variants": [
+        {
+          "name": "base",
+          "source": "reconstructed/match/investigations/0x4ecd70/v0.c",
+          "flags": "/O2 /TP"
+        },
+        {
+          "name": "base_Oy",
+          "source": "reconstructed/match/investigations/0x4ecd70/v0.c",
+          "flags": "/O2 /Oy /TP"
+        },
+        {
+          "name": "base_O1",
+          "source": "reconstructed/match/investigations/0x4ecd70/v0.c",
+          "flags": "/O1 /TP"
+        },
+        {
+          "name": "volatile_stream",
+          "source": "reconstructed/match/investigations/0x4ecd70/v1.c",
+          "flags": "/O2 /TP"
+        },
+        {
+          "name": "v2",
+          "source": "reconstructed/match/investigations/0x4ecd70/v2.c",
+          "flags": "/O2 /TP"
+        },
+        {
+          "name": "v3",
+          "source": "reconstructed/match/investigations/0x4ecd70/v3.c",
+          "flags": "/O2 /TP"
+        }
+      ]
+    },
+    {
+      "address": "0x509a20",
+      "length": 438,
+      "entry": "?ComputeAdvisorTipId@Advisor@@QAEXPAX0H@Z",
+      "variants": [
+        {
+          "name": "O2",
+          "source": "reconstructed/match/investigations/0x509a20/v0.c",
+          "flags": "/O2 /TP"
+        },
+        {
+          "name": "O1",
+          "source": "reconstructed/match/investigations/0x509a20/v0.c",
+          "flags": "/O1 /TP"
+        },
+        {
+          "name": "Os",
+          "source": "reconstructed/match/investigations/0x509a20/v0.c",
+          "flags": "/Os /TP"
+        },
+        {
+          "name": "Ot",
+          "source": "reconstructed/match/investigations/0x509a20/v0.c",
+          "flags": "/Ot /TP"
+        },
+        {
+          "name": "O2_Oy",
+          "source": "reconstructed/match/investigations/0x509a20/v0.c",
+          "flags": "/O2 /Oy /TP"
+        },
+        {
+          "name": "O1_Oy",
+          "source": "reconstructed/match/investigations/0x509a20/v0.c",
+          "flags": "/O1 /Oy /TP"
+        },
+        {
+          "name": "O2_G5",
+          "source": "reconstructed/match/investigations/0x509a20/v0.c",
+          "flags": "/O2 /G5 /TP"
+        },
+        {
+          "name": "O2_G6",
+          "source": "reconstructed/match/investigations/0x509a20/v0.c",
+          "flags": "/O2 /G6 /TP"
+        },
+        {
+          "name": "v1",
+          "source": "reconstructed/match/investigations/0x509a20/v1.c",
+          "flags": "/O2 /TP"
+        },
+        {
+          "name": "v1_O1",
+          "source": "reconstructed/match/investigations/0x509a20/v1.c",
+          "flags": "/O1 /TP"
+        },
+        {
+          "name": "v2",
+          "source": "reconstructed/match/investigations/0x509a20/v2.c",
+          "flags": "/O2 /TP"
+        },
+        {
+          "name": "v2_O1",
+          "source": "reconstructed/match/investigations/0x509a20/v2.c",
+          "flags": "/O1 /TP"
+        }
+      ]
+    },
+    {
+      "address": "0x532400",
+      "length": 178,
+      "entry": "?AddSelectionGroup@UI@@QAEHHHPAH@Z",
+      "variants": [
+        {
+          "name": "base",
+          "source": "reconstructed/match/investigations/0x532400/v0.c",
+          "flags": "/O2 /TP"
+        },
+        {
+          "name": "base_GX",
+          "source": "reconstructed/match/investigations/0x532400/v0.c",
+          "flags": "/O2 /GX /TP"
+        },
+        {
+          "name": "volatile_new",
+          "source": "reconstructed/match/investigations/0x532400/v1.c",
+          "flags": "/O2 /GX /TP"
+        },
+        {
+          "name": "O1_GX",
+          "source": "reconstructed/match/investigations/0x532400/v0.c",
+          "flags": "/O1 /GX /TP"
+        },
+        {
+          "name": "v2",
+          "source": "reconstructed/match/investigations/0x532400/v2.c",
+          "flags": "/O2 /GX /TP"
+        },
+        {
+          "name": "v3",
+          "source": "reconstructed/match/investigations/0x532400/v3.c",
+          "flags": "/O2 /GX /TP"
+        }
+      ]
+    }
+  ]
+}

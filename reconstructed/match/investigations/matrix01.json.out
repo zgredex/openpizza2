@@ -1,0 +1,657 @@
+{
+  "compiler": {
+    "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+    "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+    "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+  },
+  "results": [
+    {
+      "address": "0x4ecd70",
+      "length": 662,
+      "candidate_length": 662,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [],
+      "first_difference": {
+        "offset": 6,
+        "original": 139,
+        "candidate": 137
+      },
+      "difference_count": 9,
+      "source": "reconstructed/match/investigations/0x4ecd70/v0.c",
+      "variant": "base",
+      "flags": "/O2 /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        6,
+        "8b 74 24 28",
+        "mov    esi,DWORD PTR [esp+0x28]"
+      ]
+    },
+    {
+      "address": "0x4ecd70",
+      "length": 662,
+      "candidate_length": 662,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [],
+      "first_difference": {
+        "offset": 6,
+        "original": 139,
+        "candidate": 137
+      },
+      "difference_count": 9,
+      "source": "reconstructed/match/investigations/0x4ecd70/v0.c",
+      "variant": "base_Oy",
+      "flags": "/O2 /Oy /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        6,
+        "8b 74 24 28",
+        "mov    esi,DWORD PTR [esp+0x28]"
+      ]
+    },
+    {
+      "address": "0x4ecd70",
+      "length": 662,
+      "candidate_length": 589,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [],
+      "first_difference": {
+        "offset": 0,
+        "original": 131,
+        "candidate": 85
+      },
+      "difference_count": 431,
+      "source": "reconstructed/match/investigations/0x4ecd70/v0.c",
+      "variant": "base_O1",
+      "flags": "/O1 /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        0,
+        "83 ec 18",
+        "sub    esp,0x18"
+      ]
+    },
+    {
+      "address": "0x4ecd70",
+      "length": 662,
+      "candidate_length": 662,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [],
+      "first_difference": {
+        "offset": 3,
+        "original": 83,
+        "candidate": 139
+      },
+      "difference_count": 505,
+      "source": "reconstructed/match/investigations/0x4ecd70/v1.c",
+      "variant": "volatile_stream",
+      "flags": "/O2 /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        3,
+        "53",
+        "push   ebx"
+      ]
+    },
+    {
+      "address": "0x4ecd70",
+      "length": 662,
+      "candidate_length": 662,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [],
+      "first_difference": {
+        "offset": 2,
+        "original": 24,
+        "candidate": 20
+      },
+      "difference_count": 484,
+      "source": "reconstructed/match/investigations/0x4ecd70/v2.c",
+      "variant": "v2",
+      "flags": "/O2 /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        0,
+        "83 ec 18",
+        "sub    esp,0x18"
+      ]
+    },
+    {
+      "address": "0x4ecd70",
+      "length": 662,
+      "candidate_length": 662,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [],
+      "first_difference": {
+        "offset": 6,
+        "original": 139,
+        "candidate": 137
+      },
+      "difference_count": 9,
+      "source": "reconstructed/match/investigations/0x4ecd70/v3.c",
+      "variant": "v3",
+      "flags": "/O2 /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        6,
+        "8b 74 24 28",
+        "mov    esi,DWORD PTR [esp+0x28]"
+      ]
+    },
+    {
+      "address": "0x509a20",
+      "length": 438,
+      "candidate_length": 438,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [],
+      "first_difference": {
+        "offset": 21,
+        "original": 54,
+        "candidate": 86
+      },
+      "difference_count": 320,
+      "source": "reconstructed/match/investigations/0x509a20/v0.c",
+      "variant": "O2",
+      "flags": "/O2 /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        20,
+        "74 36",
+        "je     0x509a6c"
+      ]
+    },
+    {
+      "address": "0x509a20",
+      "length": 438,
+      "candidate_length": 420,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [],
+      "first_difference": {
+        "offset": 1,
+        "original": 86,
+        "candidate": 139
+      },
+      "difference_count": 293,
+      "source": "reconstructed/match/investigations/0x509a20/v0.c",
+      "variant": "O1",
+      "flags": "/O1 /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        1,
+        "56",
+        "push   esi"
+      ]
+    },
+    {
+      "address": "0x509a20",
+      "length": 438,
+      "candidate_length": 438,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [],
+      "first_difference": {
+        "offset": 0,
+        "original": 83,
+        "candidate": 85
+      },
+      "difference_count": 388,
+      "source": "reconstructed/match/investigations/0x509a20/v0.c",
+      "variant": "Os",
+      "flags": "/Os /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        0,
+        "53",
+        "push   ebx"
+      ]
+    },
+    {
+      "address": "0x509a20",
+      "length": 438,
+      "candidate_length": 438,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [],
+      "first_difference": {
+        "offset": 0,
+        "original": 83,
+        "candidate": 85
+      },
+      "difference_count": 384,
+      "source": "reconstructed/match/investigations/0x509a20/v0.c",
+      "variant": "Ot",
+      "flags": "/Ot /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        0,
+        "53",
+        "push   ebx"
+      ]
+    },
+    {
+      "address": "0x509a20",
+      "length": 438,
+      "candidate_length": 438,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [],
+      "first_difference": {
+        "offset": 21,
+        "original": 54,
+        "candidate": 86
+      },
+      "difference_count": 320,
+      "source": "reconstructed/match/investigations/0x509a20/v0.c",
+      "variant": "O2_Oy",
+      "flags": "/O2 /Oy /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        20,
+        "74 36",
+        "je     0x509a6c"
+      ]
+    },
+    {
+      "address": "0x509a20",
+      "length": 438,
+      "candidate_length": 420,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [],
+      "first_difference": {
+        "offset": 1,
+        "original": 86,
+        "candidate": 139
+      },
+      "difference_count": 293,
+      "source": "reconstructed/match/investigations/0x509a20/v0.c",
+      "variant": "O1_Oy",
+      "flags": "/O1 /Oy /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        1,
+        "56",
+        "push   esi"
+      ]
+    },
+    {
+      "address": "0x509a20",
+      "length": 438,
+      "candidate_length": 438,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [],
+      "first_difference": {
+        "offset": 21,
+        "original": 54,
+        "candidate": 86
+      },
+      "difference_count": 320,
+      "source": "reconstructed/match/investigations/0x509a20/v0.c",
+      "variant": "O2_G5",
+      "flags": "/O2 /G5 /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        20,
+        "74 36",
+        "je     0x509a6c"
+      ]
+    },
+    {
+      "address": "0x509a20",
+      "length": 438,
+      "candidate_length": 438,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [],
+      "first_difference": {
+        "offset": 15,
+        "original": 139,
+        "candidate": 133
+      },
+      "difference_count": 326,
+      "source": "reconstructed/match/investigations/0x509a20/v0.c",
+      "variant": "O2_G6",
+      "flags": "/O2 /G6 /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        15,
+        "8b 73 34",
+        "mov    esi,DWORD PTR [ebx+0x34]"
+      ]
+    },
+    {
+      "address": "0x509a20",
+      "length": 438,
+      "candidate_length": 438,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [],
+      "first_difference": {
+        "offset": 21,
+        "original": 54,
+        "candidate": 93
+      },
+      "difference_count": 339,
+      "source": "reconstructed/match/investigations/0x509a20/v1.c",
+      "variant": "v1",
+      "flags": "/O2 /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        20,
+        "74 36",
+        "je     0x509a6c"
+      ]
+    },
+    {
+      "address": "0x509a20",
+      "length": 438,
+      "candidate_length": 423,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [],
+      "first_difference": {
+        "offset": 1,
+        "original": 86,
+        "candidate": 139
+      },
+      "difference_count": 316,
+      "source": "reconstructed/match/investigations/0x509a20/v1.c",
+      "variant": "v1_O1",
+      "flags": "/O1 /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        1,
+        "56",
+        "push   esi"
+      ]
+    },
+    {
+      "address": "0x509a20",
+      "length": 438,
+      "candidate_length": 438,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [],
+      "first_difference": {
+        "offset": 21,
+        "original": 54,
+        "candidate": 28
+      },
+      "difference_count": 177,
+      "source": "reconstructed/match/investigations/0x509a20/v2.c",
+      "variant": "v2",
+      "flags": "/O2 /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        20,
+        "74 36",
+        "je     0x509a6c"
+      ]
+    },
+    {
+      "address": "0x509a20",
+      "length": 438,
+      "candidate_length": 420,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [],
+      "first_difference": {
+        "offset": 1,
+        "original": 86,
+        "candidate": 139
+      },
+      "difference_count": 294,
+      "source": "reconstructed/match/investigations/0x509a20/v2.c",
+      "variant": "v2_O1",
+      "flags": "/O1 /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        1,
+        "56",
+        "push   esi"
+      ]
+    },
+    {
+      "address": "0x532400",
+      "length": 178,
+      "candidate_length": 176,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [],
+      "first_difference": {
+        "offset": 0,
+        "original": 106,
+        "candidate": 131
+      },
+      "difference_count": 152,
+      "source": "reconstructed/match/investigations/0x532400/v0.c",
+      "variant": "base",
+      "flags": "/O2 /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        0,
+        "6a ff",
+        "push   0xffffffff"
+      ]
+    },
+    {
+      "address": "0x532400",
+      "length": 178,
+      "candidate_length": 178,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [],
+      "first_difference": {
+        "offset": 29,
+        "original": 217,
+        "candidate": 233
+      },
+      "difference_count": 110,
+      "source": "reconstructed/match/investigations/0x532400/v0.c",
+      "variant": "base_GX",
+      "flags": "/O2 /GX /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        28,
+        "8b d9",
+        "mov    ebx,ecx"
+      ]
+    },
+    {
+      "address": "0x532400",
+      "length": 178,
+      "candidate_length": 178,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [],
+      "first_difference": {
+        "offset": 21,
+        "original": 131,
+        "candidate": 81
+      },
+      "difference_count": 134,
+      "source": "reconstructed/match/investigations/0x532400/v1.c",
+      "variant": "volatile_new",
+      "flags": "/O2 /GX /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        21,
+        "83 ec 08",
+        "sub    esp,0x8"
+      ]
+    },
+    {
+      "address": "0x532400",
+      "length": 178,
+      "candidate_length": 154,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [],
+      "first_difference": {
+        "offset": 0,
+        "original": 106,
+        "candidate": 184
+      },
+      "difference_count": 119,
+      "source": "reconstructed/match/investigations/0x532400/v0.c",
+      "variant": "O1_GX",
+      "flags": "/O1 /GX /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        0,
+        "6a ff",
+        "push   0xffffffff"
+      ]
+    },
+    {
+      "address": "0x532400",
+      "length": 178,
+      "candidate_length": 178,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [],
+      "first_difference": {
+        "offset": 29,
+        "original": 217,
+        "candidate": 233
+      },
+      "difference_count": 110,
+      "source": "reconstructed/match/investigations/0x532400/v2.c",
+      "variant": "v2",
+      "flags": "/O2 /GX /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        28,
+        "8b d9",
+        "mov    ebx,ecx"
+      ]
+    },
+    {
+      "address": "0x532400",
+      "length": 178,
+      "candidate_length": 32,
+      "match": false,
+      "strict_match": false,
+      "strict_issues": [],
+      "first_difference": {
+        "offset": 0,
+        "original": 106,
+        "candidate": 86
+      },
+      "difference_count": 28,
+      "source": "reconstructed/match/investigations/0x532400/v3.c",
+      "variant": "v3",
+      "flags": "/O2 /GX /TP",
+      "compiler": {
+        "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+        "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153",
+        "LINK.EXE": "9672e578fdfaa43bdb8e9c16071682988665cb90bba2904bf02f6a5576d8ffbc"
+      },
+      "first_instruction": [
+        0,
+        "6a ff",
+        "push   0xffffffff"
+      ]
+    }
+  ]
+}
