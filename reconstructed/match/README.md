@@ -75,3 +75,30 @@ python3 reconstructed/match/tests/test_relocation_guard.py
 ```
 
 See `STRICT_AUDIT.md` for the separate strict count.
+
+## Stock CRT archive identification
+
+```sh
+python3 tools/match_crt_archive.py --json-out /tmp/pc2-crt-archive-report.json
+python3 reconstructed/match/tests/test_crt_archive.py
+```
+
+The scanner defaults to `LIBC.LIB` and `LIBCMT.LIB` under `PC2_VC6` (or the SP3
+tree above). To use other copies, pass the archive paths as positional
+arguments. Wine and the compiler are unnecessary for this scan.
+
+The report groups archive variants by PE address. Exact comparisons use
+complete, contiguous game function bodies and COFF code sections with one
+entry, or a function-definition auxiliary size. Relocated comparisons require
+every i386 `DIR32` and `REL32` field to resolve with its addend. The scanner
+uses same-section placement, unique exact anchors, or explicit external
+addresses provided as `--symbol NAME=0xADDRESS`. An unresolved symbol remains
+a candidate. Distinct archive identities with the same bytes are marked
+ambiguous. These results measure equivalence to stock objects independently
+of the C reconstruction counts and do not identify original compiler flags.
+
+With the pinned SP3 archives and shipped executable, 43 PE locations have
+verified bytes, including 33 with a single identity. `intrncvt.obj` contributes
+three raw matches at `0x555896` (`__CopyMan`), `0x5558b1` (`__FillZeroMan`), and
+`0x5558bd` (`__IsZeroMan`). The JSON records input hashes and relocation
+evidence. Generate the report locally with the command above.
