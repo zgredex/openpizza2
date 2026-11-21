@@ -28,16 +28,15 @@ checked; strict mode rejects it as well. The correct target passes both.
 
 ## Current verification
 
-The full audit ran all 58 tracked verifiers and confirmed **1,020 of 1,180**
-distinct committed C/C++ candidates under the independent relocation gate.
-The other 160 matched the normalized function bodies and lacked complete
+The final full audit ran all 58 tracked verifiers and confirmed **1,055 of
+1,180** distinct committed C/C++ candidates under the independent relocation
+gate. The other 125 matched the normalized function bodies and lacked complete
 strict evidence. The audit recorded zero tool errors and zero body mismatches.
-The verified set includes all six `runtime01` candidates. The reusable-fact
-pilot below adds seventeen more strict functions, for **1,037 of 1,180**.
-Pending worktree candidates and stock CRT archive identifications are outside
-this count. The strict matches cover **26.46%** of exported bodies (1,037 of
-3,919) and approximately **4.50%** of estimated inventory code bytes
-(55,654 of 1,236,452).
+The verified set includes all six `runtime01` candidates. Including the 18
+paused worktree candidates, the audit observed **1,073 of 1,198** strict
+addresses. The tracked strict matches cover **26.92%** of exported bodies
+(1,055 of 3,919) and approximately **4.56%** of estimated inventory code bytes
+(56,383 of 1,236,452); the paused set adds 1,712 bytes.
 
 ### Reusable-fact pilot
 
@@ -48,7 +47,9 @@ inventories. Five independently evidenced CRT/C++/vtable facts were accepted,
 seventeen affected objects were rechecked from the COFF cache, and three vtable
 globals from `vtables_full.csv` finished three functions. Extending address-label
 resolution to decorated `?DAT_...@@3...`/`@@Y...` names finished fourteen more.
-The seventeen new strict functions total 776 code bytes.
+The seventeen direct wins total 776 code bytes. The full tracked audit gained
+35 strict functions over the previous 1,020 count because the same joins also
+resolved additional verifier candidates beyond the pilot addresses.
 
 ```sh
 python3 tools/propose_symbol_mappings.py /tmp/pc2-tracked-audit \
