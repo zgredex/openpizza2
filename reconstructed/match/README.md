@@ -275,6 +275,57 @@ made nine strict on the warm recheck, with all 12 objects reused and three
 functions still blocked. The nine strict functions published 472 code bytes
 in a byte-identical scratch PE.
 
+### Propose reusable symbol facts
+
+`tools/propose_symbol_mappings.py` joins every unresolved COFF name in the
+body-only audit set against independent evidence: strict audit recipes, the
+shared symbol registry, the shipped function/data maps, the PE import table,
+the stock CRT report, and the recovered vtable inventories. It keeps observed
+relocation targets only as investigation leads; they never become accepted
+facts by themselves.
+
+```sh
+python3 tools/propose_symbol_mappings.py /tmp/pc2-tracked-audit \
+  --crt-report /tmp/pc2-crt-archive-report.json \
+  --json-out /tmp/pc2-proposals.json \
+  --report-out /tmp/pc2-proposals.md \
+  --registry-fragment-out /tmp/pc2-registry-fragment.json \
+  --pilot-fragment-out /tmp/pc2-pilot-registry.json
+```
+
+The report ranks groups of facts by the number of body-only functions they
+would finish. `ready` facts have an independent source; `candidate` facts are
+a unique name match corroborated by the observed target and still need an
+independent check; `ambiguous`, `needs_evidence`, and `missing` lists are the
+Luna review queue. `section_facts` isolates per-function `.text$x`/`.xdata$x`
+and local-label placement issues from reusable symbol facts.
+
+Only `ready` facts are written to a registry fragment. `--pilot` limits the
+fragment to CRT, vtable, and C++ runtime helpers (`operator new/delete`,
+constructors, destructors). Add those entries to
+`reconstructed/match/symbol_registry.json` only with their evidence. Then use
+the existing dependency index to recheck just the consumers:
+
+```sh
+cp reconstructed/match/symbol_registry.json /tmp/pc2-registry-before.json
+# merge the reviewed fragment
+python3 tools/audit_symbol_targets.py /tmp/pc2-tracked-audit \
+  --registry-before /tmp/pc2-registry-before.json --json-out /tmp/pc2-affected.json
+python3 tools/verify_linked_image.py --audit /tmp/pc2-tracked-audit --assess \
+  --only-address 0x... --cache /tmp/pc2-coff-cache \
+  --manifest /tmp/pc2-after.json
+```
+
+Feed the assessment JSON back with the original audit. Assessment receipts
+supersede older recipes for the same address/source/flags, so resolved names
+leave the queue and remaining blockers re-rank automatically. Cache hits
+re-run the strict matcher and independent relocation checks; they do not
+recompile. The regression test is:
+
+```sh
+python3 reconstructed/match/tests/test_symbol_proposals.py
+```
+
 ## Stock CRT archive identification
 
 ```sh
