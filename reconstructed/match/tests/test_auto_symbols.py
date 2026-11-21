@@ -18,10 +18,10 @@ CASES = [
     # Typed DAT_ address label and the independent IDMap_Lookup symbol.
     ("0x4d3910", "reconstructed/match/batch03/part1/0x4d3910.c",
      23, "?Game_GetRecordByField814@@YIXPAD@Z", "/O2 /TP", "address_label", None),
-    # Unique EH signatures are verified, but the vtable has no independent anchor.
+    # The constructor anchors the vtable, while this EH body still has unknown targets.
     ("0x401a20", "reconstructed/match/batch01/part1/0x401a20.c",
-     204, "??1ResourceManager@@UAE@XZ", "/O2 /GX /TP", "unique_section_signature",
-     "??_7ResourceManager@@6B@"),
+     204, "??1ResourceManager@@UAE@XZ", "/O2 /GX /TP", "registry_section_anchor",
+     "_fclose"),
     # Explicit global addresses would be needed for these source-specific names.
     ("0x477190", "reconstructed/match/batch01/part4/0x477190.c",
      456, "?SpawnWalkInCustomer@Branch@@QAEXXZ", "/O2 /GX /TP", "decorated_alias",

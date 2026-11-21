@@ -20,6 +20,8 @@ import re
 import subprocess
 import sys
 
+from symbol_registry import CLASSES, load_registry, registry_classes
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE = os.path.join(ROOT, "decompiled_fastfood2_named_v2")
 INDEX = os.path.join(BASE, "full_game_verification", "decompile-index.json")
@@ -179,6 +181,21 @@ def observed_dispatch(paths, target_sha256):
     return by_address
 
 
+def abi_context(record, registry, classes):
+    procedures = [record, *record["callees"]]
+    addresses = {item["address"] for item in procedures}
+    names = {item["name"] for item in procedures}
+    layouts = []
+    for row in classes:
+        related = {row["destructor"], *row["constructors"], *row["related_functions"], *row["references"]}
+        if names & related:
+            addresses.add(row["vtable"])
+            layouts.append({"class": row["class"], "vtable": row["vtable"], "slots": row["slots"],
+                            "observed_fields": row["fields"], "source": os.path.relpath(CLASSES, ROOT)})
+    return {"symbols": [entry for entry in registry.values() if entry["address"] in addresses],
+            "layouts": layouts}
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("addresses", nargs="+")
@@ -186,6 +203,8 @@ def main() -> int:
     parser.add_argument("--annotations")
     parser.add_argument("--capture-report", action="append", default=[],
                         help="include observed indirect dispatch from a capture.py report.json (repeatable)")
+    parser.add_argument("--abi-context", action="store_true",
+                        help="include registered exact symbols and existing class-layout observations")
     parser.add_argument("--json-out")
     parser.add_argument("--out")
     args = parser.parse_args()
@@ -197,9 +216,12 @@ def main() -> int:
         path = function_path(address)
         if os.path.isfile(path):
             paths[address] = path
-    target_sha256 = sha256_file(EXE) if args.json_out or args.capture_report else None
+    target_sha256 = sha256_file(EXE) if args.json_out or args.capture_report or args.abi_context else None
     try:
         observed = observed_dispatch(args.capture_report, target_sha256)
+        if args.abi_context:
+            registry = load_registry(target_sha256)
+            classes = registry_classes(target_sha256)
     except (OSError, ValueError, KeyError) as error:
         parser.error(str(error))
     annotations = {"records": {}, "trace": [], "known_gaps": []}
@@ -240,6 +262,8 @@ def main() -> int:
         merge_record(record, annotations.get("records", {}).get(address, {}))
         if args.capture_report:
             record["observed_dispatch"] = observed.get(hex(int(address, 16)), [])
+        if args.abi_context:
+            record["abi_context"] = abi_context(record, registry, classes)
         if args.no_disassembly:
             record["disassembly"] = {"range": None, "text": None}
         records[address] = record
@@ -261,6 +285,13 @@ def main() -> int:
         ])
         if record.get("signature"):
             lines.append(f"- Signature: `{record['signature']}`")
+        for entry in record.get("abi_context", {}).get("symbols", []):
+            declaration = entry.get("candidate_declaration")
+            lines.append(f"- Registered symbol `{entry['symbol']}` at `{entry['address']}`")
+            if declaration:
+                lines.append(f"  - Candidate declaration `{declaration}`. {entry['abi_observation']}")
+        for layout in record.get("abi_context", {}).get("layouts", []):
+            lines.append(f"- `{layout['class']}` layout observations in `{layout['source']}`")
         if record.get("dispatch"):
             lines.append(
                 "- Dispatch: " + ", ".join(

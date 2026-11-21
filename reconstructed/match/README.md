@@ -117,6 +117,37 @@ use the recorded symbol and fixup site to seek independent evidence. Supply
 only an independently established address with `--symbol NAME=0xADDRESS`.
 For code generation differences, run the [bounded retry matrix](investigations/README.md).
 
+## Symbol and ABI registry
+
+[`symbol_registry.json`](symbol_registry.json) records exact COFF names for the
+pinned executable, with separately checked addresses and evidence references.
+`--auto-symbols` uses these entries for fixups and independently anchored
+sections. Explicit mappings still take precedence. The matcher records the
+registry hash and relevant evidence, and checks the linked bytes and fixups.
+Add an entry only when its address follows from evidence independent of the
+fixup being checked. Candidate declarations describe the COFF spelling.
+Observed ABI facts are recorded separately from those declarations.
+
+Select callers by exact symbol from a previous audit and replay just the
+selected source, flags, and relocation maps. The pilot covers eight stream
+callers and one array search caller.
+
+```sh
+python3 tools/audit_symbol_targets.py /tmp/pc2-tracked-audit --unverified-only \
+  --symbol '?Read@IStream@@QAEXPAXH@Z' --symbol '?Write@OStream@@QAEXPAXH@Z' \
+  --symbol '?BinarySearch8@Array@@QAEHHH@Z' --json-out /tmp/pc2-symbol-pilot.json
+python3 tools/compiler_matrix.py /tmp/pc2-symbol-pilot.json --max-attempts 9 \
+  --require-match --json-out /tmp/pc2-symbol-pilot-results.json
+python3 tools/function_batch.py 4900a0 5314f0 401a20 --no-disassembly --abi-context \
+  --json-out /tmp/pc2-symbol-context.json
+```
+
+All nine pilot callers passed strict VC6 verification. The independent
+ResourceManager constructor write also verified the destructor's vtable
+fixup to `0x55c2f0`. The destructor is still blocked on other relocations,
+including `_fclose`. `--abi-context` adds relevant aliases and existing class
+layout observations to function packets on request.
+
 ## Stock CRT archive identification
 
 ```sh

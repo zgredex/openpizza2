@@ -25,8 +25,15 @@ def coff_object(sections, symbols):
             payload += struct.pack("<IIH", *record)
     symbol_ptr = 20 + len(headers) + len(payload)
     header = struct.pack("<HHIIIHH", 0x14C, len(sections), 0, symbol_ptr, len(symbols), 0, 0)
-    table = b"".join(struct.pack("<8sIhHBB", *symbol) for symbol in symbols)
-    return header + headers + payload + table + struct.pack("<I", 4)
+    table = bytearray()
+    strings = bytearray()
+    for name, *values in symbols:
+        if len(name) > 8:
+            offset = 4 + len(strings)
+            strings += name + b"\0"
+            name = struct.pack("<II", 0, offset)
+        table += struct.pack("<8sIhHBB", name, *values)
+    return header + headers + payload + table + struct.pack("<I", 4 + len(strings)) + strings
 
 
 class IndependentRelocationTests(unittest.TestCase):
@@ -89,6 +96,43 @@ class IndependentRelocationTests(unittest.TestCase):
         self.assertEqual(resolve("?DAT_0057c670@@3junk"), (None, None))
         self.assertEqual(resolve("?DAT_0057c670@Foo@@3HA"), (None, None))
         self.assertEqual(resolve("?Bogus@@YAXPAX@Z"), (None, None))
+
+    def test_exact_registered_symbol_supplies_relocation_evidence(self):
+        base, target = 0x401000, 0x531330
+        raw = b"\xe8" + struct.pack("<i", target - base - 5) + b"\xc3"
+        image = (raw, base, [(".text", 0, len(raw), 0, len(raw))])
+        candidate = b"\xe8\0\0\0\0\xc3"
+        symbol = b"?BinarySearch8@Array@@QAEHHH@Z"
+        body = coff_object([(b".text", candidate, [(1, 1, 0x14)])],
+                           [(b"_entry", 0, 1, 0x20, 2, 0), (symbol, 0, 0, 0x20, 2, 0)])
+        with patch.object(matcher, "pe_image", return_value=image):
+            match = self.compare(base, body, {}, length=len(raw), entry="_entry")
+            self.assertTrue(match["strict_match"], match)
+            self.assertEqual(match["relocations"][0]["origin"], "symbol_registry")
+            self.assertTrue(match["relocations"][0]["evidence"])
+            wrong = self.compare(base, body, {symbol.decode(): target + 1}, length=len(raw), entry="_entry")
+            self.assertFalse(wrong["strict_match"])
+            self.assertEqual(wrong["relocations"][0]["origin"], "explicit_symbol")
+        self.assertEqual(matcher.load_registry("0" * 64), {})
+
+    def test_defined_vtable_uses_registry_anchor_and_checks_slot_fixup(self):
+        base, vtable, destructor = 0x401000, 0x55c2f0, 0x401a00
+        raw = b"\xa1" + struct.pack("<I", vtable) + b"\xc3"
+        image = (raw + struct.pack("<I", destructor), base,
+                 [(".text", 0, len(raw), 0, len(raw)), (".rdata", vtable - base, 4, len(raw), 4)])
+        body = coff_object([(b".text", b"\xa1\0\0\0\0\xc3", [(1, 1, 0x06)]),
+                            (b".rdata", bytes(4), [(0, 2, 0x06)])],
+                           [(b"_entry", 0, 1, 0x20, 2, 0), (b"??_7ResourceManager@@6B@", 0, 2, 0, 2, 0),
+                            (b"_dtor", 0, 0, 0x20, 2, 0)])
+        with patch.object(matcher, "pe_image", return_value=image):
+            match = self.compare(base, body, {"_dtor": destructor}, length=len(raw), entry="_entry")
+            self.assertTrue(match["strict_match"], match)
+            anchor = match["linked_sections"][1]
+            self.assertEqual(anchor["origin"], "registry_section_anchor")
+            self.assertEqual(anchor["anchors"][0]["symbol"], "??_7ResourceManager@@6B@")
+            wrong = self.compare(base, body, {"_dtor": destructor + 1}, length=len(raw), entry="_entry")
+            self.assertFalse(wrong["strict_match"])
+            self.assertIn("unverified .rdata", wrong["strict_issues"][0])
 
 
 if __name__ == "__main__":

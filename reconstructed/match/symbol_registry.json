@@ -1,0 +1,57 @@
+{
+  "schema": "pc2.symbol_registry.v1",
+  "executable_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd",
+  "entries": [
+    {
+      "symbol": "?Read@IStream@@QAEXPAXH@Z",
+      "address": "0x54cbc1",
+      "name": "CRT_Istream_Read",
+      "kind": "function",
+      "candidate_declaration": "void __thiscall IStream::Read(void *, int)",
+      "abi_observation": "The PE reads ECX and two stack arguments, returns with ret 8 and puts the original ECX in EAX. The caller declaration ignores that return value.",
+      "evidence": [
+        {"path": "decompiled_fastfood2_named_v2/full_game_symbols.json", "locator": "0x54cbc1"},
+        {"path": "reconstructed/match/batch09/part3/verify_strict.sh", "locator": "0x4d34e0"},
+        {"path": "game/fastfood2.exe", "locator": "0x54cbc1–0x54cc08"}
+      ]
+    },
+    {
+      "symbol": "?Write@OStream@@QAEXPAXH@Z",
+      "address": "0x54cc2b",
+      "name": "CRT_Ostream_Write",
+      "kind": "function",
+      "candidate_declaration": "void __thiscall OStream::Write(void *, int)",
+      "abi_observation": "The PE reads ECX and two stack arguments, returns with ret 8 and puts the original ECX in EAX. The caller declaration ignores that return value.",
+      "evidence": [
+        {"path": "decompiled_fastfood2_named_v2/full_game_symbols.json", "locator": "0x54cc2b"},
+        {"path": "reconstructed/match/batch10/part3/verify_strict.sh", "locator": "0x4f6e20"},
+        {"path": "game/fastfood2.exe", "locator": "0x54cc2b–0x54cc6d"}
+      ]
+    },
+    {
+      "symbol": "?BinarySearch8@Array@@QAEHHH@Z",
+      "address": "0x531330",
+      "name": "BinarySearch8",
+      "kind": "function",
+      "candidate_declaration": "int __thiscall Array::BinarySearch8(int, int)",
+      "abi_observation": "The PE reads ECX and two stack slots, tests only the low byte of the second slot, and returns with ret 8.",
+      "evidence": [
+        {"path": "decompiled_fastfood2_named_v2/full_game_symbols.json", "locator": "0x531330"},
+        {"path": "reconstructed/match/batch10/part4/verify_strict.sh", "locator": "0x5314a0"},
+        {"path": "game/fastfood2.exe", "locator": "0x531330"}
+      ]
+    },
+    {
+      "symbol": "??_7ResourceManager@@6B@",
+      "address": "0x55c2f0",
+      "name": "vtable_ResourceManager",
+      "kind": "vtable",
+      "class": "ResourceManager",
+      "evidence": [
+        {"path": "decompiled_fastfood2_named_v2/vtables.csv", "locator": "0x55c2f0"},
+        {"path": "decompiled_fastfood2_named_v2/vtable_slot_targets.csv", "locator": "0x55c2f0 slot 0"},
+        {"path": "game/fastfood2.exe", "locator": "constructor vptr write at 0x40198e"}
+      ]
+    }
+  ]
+}

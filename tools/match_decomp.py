@@ -21,6 +21,8 @@ import tempfile
 from functools import lru_cache
 from pathlib import Path
 
+from symbol_registry import REGISTRY, load_registry
+
 ROOT = Path(__file__).resolve().parents[1]
 GAME = ROOT / "game/fastfood2.exe"
 INDEX = ROOT / "decompiled_fastfood2_named_v2/full_game_verification/decompile-index.json"
@@ -29,6 +31,10 @@ SYMBOL_INDEX = ROOT / "decompiled_fastfood2_named_v2/full_game_symbols.json"
 DATA_SYMBOLS = ROOT / "decompiled_fastfood2_named_v2/data_symbols.csv"
 _SYMBOLS = None
 _IMPORTS = None
+
+
+def current_registry():
+    return load_registry(file_sha256(GAME))
 
 
 def pe_imports():
@@ -75,6 +81,9 @@ def pe_imports():
 def resolve_auto_symbol(name: str):
     """Resolve only independently named targets, with their evidence source."""
     global _SYMBOLS
+    registered = current_registry().get(name)
+    if registered:
+        return int(registered["address"], 16), "symbol_registry"
     if _SYMBOLS is None:
         raw = json.loads(SYMBOL_INDEX.read_text()) if SYMBOL_INDEX.is_file() else {}
         _SYMBOLS = {}
@@ -253,7 +262,7 @@ def relocation_target(symbol, bases, symbols, auto_symbols):
 
 
 def locate_linked_section(image, section, relocations, coff_symbols, known_bases,
-                          symbols, auto_symbols, anchors=()):
+                          symbols, auto_symbols, anchors=(), anchor_origin="explicit_section_anchor"):
     """Locate a section uniquely using independent bytes and resolved targets."""
     raw = bytes(section["raw"])
     pattern = bytearray(raw)
@@ -298,7 +307,7 @@ def locate_linked_section(image, section, relocations, coff_symbols, known_bases
             linked = read_va(image, address, len(raw))
         except ValueError:
             return None
-        return (address, "explicit_section_anchor") if consistent(address, linked) else None
+        return (address, anchor_origin) if consistent(address, linked) else None
 
     if len(fixed) < 8:
         return None
@@ -398,6 +407,8 @@ def match_object(address: int, obj: Path, symbols: dict[str, int],
            for records in relocations.values() for _, index, _ in records):
         raise ValueError("COFF relocation targets an invalid symbol index")
     pending = {}
+    registered = current_registry() if auto_symbols else {}
+    registry_anchors = {}
     if strict:
         # Follow candidate section references. A relocation's original value
         # never participates in deciding where its target section is linked.
@@ -421,16 +432,22 @@ def match_object(address: int, obj: Path, symbols: dict[str, int],
                 frontier.append(target)
         anchors = {}
         for symbol in coff_symbols:
-            if symbol is not None and symbol["section"] in pending and symbol["name"] in symbols:
-                anchors.setdefault(symbol["section"], []).append(
-                    (symbol["value"], symbols[symbol["name"]]))
+            if symbol is None or symbol["section"] not in pending:
+                continue
+            index, name = symbol["section"], symbol["name"]
+            if name in symbols:
+                anchors.setdefault(index, []).append((symbol["value"], symbols[name]))
+            elif name in registered:
+                anchors.setdefault(index, []).append((symbol["value"], int(registered[name]["address"], 16)))
+                registry_anchors.setdefault(index, []).append(name)
         remaining = dict(pending)
         while remaining:
             located = []
             for index, section in remaining.items():
                 found = locate_linked_section(
                     image, section, relocations[index], coff_symbols, section_bases,
-                    symbols, auto_symbols, anchors.get(index, ()))
+                    symbols, auto_symbols, anchors.get(index, ()),
+                    "registry_section_anchor" if index in registry_anchors else "explicit_section_anchor")
                 if found is not None:
                     section_bases[index] = found
                     located.append(index)
@@ -467,6 +484,8 @@ def match_object(address: int, obj: Path, symbols: dict[str, int],
                            "original": hex(actual), "expected": None if expected is None else hex(expected),
                            "target": None if target is None else hex(target), "origin": origin,
                            "verified": expected is not None and actual == expected})
+            if origin == "symbol_registry":
+                fixups[-1]["evidence"] = registered[symbol["name"]]["evidence"]
             if expected is None:
                 if strict or strict_symbols:
                     strict_issues.append(
@@ -517,8 +536,10 @@ def match_object(address: int, obj: Path, symbols: dict[str, int],
         "relocation_issues": relocation_issues,
         "relocations": fixups,
         "linked_sections": [
-            {"section": sections[index - 1]["name"], "index": index,
-             "address": hex(base), "origin": origin}
+            {"section": sections[index - 1]["name"], "index": index, "address": hex(base),
+             "origin": origin, **({"anchors": [
+                 {"symbol": name, "evidence": registered[name]["evidence"]}
+                 for name in registry_anchors[index]]} if index in registry_anchors else {})}
             for index, (base, origin) in sorted(section_bases.items())
         ],
         "first_difference": differences[0] if differences else None,
@@ -545,6 +566,7 @@ def match_provenance(source, vc6, flags, symbols, strict, auto_symbols, strict_s
         "strict_requested": strict,
         "strict_symbols": strict_symbols,
         "auto_symbols": auto_symbols,
+        "symbol_registry_sha256": file_sha256(REGISTRY) if auto_symbols else None,
         "symbol_overrides": {name: hex(target) for name, target in sorted(symbols.items())},
     }
 
@@ -557,7 +579,8 @@ def write_function_audit(result):
     directory.mkdir(parents=True, exist_ok=True)
     recipe = {key: result.get(key) for key in
               ("address", "source", "source_sha256", "executable_sha256", "entry", "length",
-               "compiler", "flags", "strict_requested", "strict_symbols", "auto_symbols", "symbol_overrides")}
+               "compiler", "flags", "strict_requested", "strict_symbols", "auto_symbols",
+               "symbol_registry_sha256", "symbol_overrides")}
     key = hashlib.sha256(json.dumps(recipe, sort_keys=True).encode()).hexdigest()[:16]
     temp = None
     try:
