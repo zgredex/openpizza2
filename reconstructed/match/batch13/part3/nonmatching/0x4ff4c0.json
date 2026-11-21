@@ -1,0 +1,16 @@
+{
+  "address": "0x4ff4c0",
+  "length": 107,
+  "candidate_length": 107,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [],
+  "relocation_issues": [],
+  "first_difference": {
+    "offset": 84,
+    "original": 68,
+    "candidate": 84
+  },
+  "difference_count": 2,
+  "source": "reconstructed/match/batch13/part3/nonmatching/0x4ff4c0.c"
+}

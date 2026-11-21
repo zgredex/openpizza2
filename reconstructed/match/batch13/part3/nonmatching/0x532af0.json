@@ -1,0 +1,19 @@
+{
+  "address": "0x532af0",
+  "length": 109,
+  "candidate_length": 109,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [
+    "relocation at 0x2f resolves to 0xffff058d, original has 0x8b1f7504",
+    "relocation at 0x42 resolves to 0xffffe89a, original has 0x6a57006a"
+  ],
+  "relocation_issues": [],
+  "first_difference": {
+    "offset": 1,
+    "original": 83,
+    "candidate": 85
+  },
+  "difference_count": 91,
+  "source": "reconstructed/match/batch13/part3/nonmatching/0x532af0.c"
+}

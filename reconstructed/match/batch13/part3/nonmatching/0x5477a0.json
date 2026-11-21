@@ -1,0 +1,25 @@
+{
+  "address": "0x5477a0",
+  "length": 108,
+  "candidate_length": 108,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [
+    "relocation at 0xb resolves to 0x575090, original has 0x900d8908",
+    "relocation at 0x14 resolves to 0x575094, original has 0x94158904",
+    "relocation at 0x1d resolves to 0x575098, original has 0x980d8908",
+    "relocation at 0x25 resolves to 0x57509c, original has 0xc508bce",
+    "relocation at 0x2e resolves to 0x575091, original has 0x1478a00",
+    "relocation at 0x35 resolves to 0xe7, original has 0xe4e80057",
+    "relocation at 0x49 resolves to 0x213, original has 0x10e8ce8b",
+    "relocation at 0x5a resolves to 0x202, original has 0xffe8ce8b"
+  ],
+  "relocation_issues": [],
+  "first_difference": {
+    "offset": 1,
+    "original": 87,
+    "candidate": 139
+  },
+  "difference_count": 71,
+  "source": "reconstructed/match/batch13/part3/nonmatching/0x5477a0.c"
+}

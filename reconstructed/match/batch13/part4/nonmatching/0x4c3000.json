@@ -1,0 +1,20 @@
+{
+  "address": "0x4c3000",
+  "length": 112,
+  "candidate_length": 112,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [
+    "relocation at 0x46 resolves to 0x57c670, original has 0x530057c6",
+    "relocation at 0x5f resolves to 0xfffbdfed, original has 0xc7fffbdf",
+    "candidate extent 128 bytes, expected 112 (extra=16 bytes does not match the original table/padding)"
+  ],
+  "relocation_issues": [],
+  "first_difference": {
+    "offset": 67,
+    "original": 40,
+    "candidate": 41
+  },
+  "difference_count": 26,
+  "source": "reconstructed/match/batch13/part4/nonmatching/0x4c3000.c"
+}

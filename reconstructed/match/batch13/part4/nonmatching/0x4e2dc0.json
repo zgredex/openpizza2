@@ -1,0 +1,21 @@
+{
+  "address": "0x4e2dc0",
+  "length": 113,
+  "candidate_length": 112,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [
+    "relocation at 0x20 resolves to 0xfff1ea0c, original has 0xcb8b5700",
+    "relocation at 0x26 resolves to 0x57c670, original has 0x8bfff1ea",
+    "relocation at 0x35 resolves to 0xfff1e9f7, original has 0x50068b3c",
+    "relocation at 0x58 resolves to 0xfffff2f4, original has 0x74000001"
+  ],
+  "relocation_issues": [],
+  "first_difference": {
+    "offset": 0,
+    "original": 81,
+    "candidate": 83
+  },
+  "difference_count": 95,
+  "source": "reconstructed/match/batch13/part4/nonmatching/0x4e2dc0.c"
+}

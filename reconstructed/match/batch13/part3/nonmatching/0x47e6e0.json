@@ -1,0 +1,18 @@
+{
+  "address": "0x47e6e0",
+  "length": 110,
+  "candidate_length": 110,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [
+    "relocation at 0x16 resolves to 0x76ee6, original has 0x8500076e"
+  ],
+  "relocation_issues": [],
+  "first_difference": {
+    "offset": 10,
+    "original": 86,
+    "candidate": 83
+  },
+  "difference_count": 31,
+  "source": "reconstructed/match/batch13/part3/nonmatching/0x47e6e0.c"
+}

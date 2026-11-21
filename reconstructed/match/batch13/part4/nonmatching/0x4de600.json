@@ -1,0 +1,21 @@
+{
+  "address": "0x4de600",
+  "length": 110,
+  "candidate_length": 110,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [
+    "relocation at 0x1d resolves to 0xfff9c22f, original has 0x5ffff9c2",
+    "relocation at 0x4a resolves to 0xfff231a2, original has 0x51016a14",
+    "relocation at 0x5d resolves to 0xfff9c1ef, original has 0xc38b5f5d",
+    "candidate extent 128 bytes, expected 110 (extra=18 bytes does not match the original table/padding)"
+  ],
+  "relocation_issues": [],
+  "first_difference": {
+    "offset": 5,
+    "original": 51,
+    "candidate": 85
+  },
+  "difference_count": 87,
+  "source": "reconstructed/match/batch13/part4/nonmatching/0x4de600.c"
+}

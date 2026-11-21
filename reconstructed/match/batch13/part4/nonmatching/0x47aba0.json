@@ -1,0 +1,19 @@
+{
+  "address": "0x47aba0",
+  "length": 111,
+  "candidate_length": 111,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [
+    "relocation at 0x27 resolves to 0x59435, original has 0x6667b8c8",
+    "relocation at 0x49 resolves to 0x59413, original has 0xe8000014"
+  ],
+  "relocation_issues": [],
+  "first_difference": {
+    "offset": 1,
+    "original": 139,
+    "candidate": 87
+  },
+  "difference_count": 99,
+  "source": "reconstructed/match/batch13/part4/nonmatching/0x47aba0.c"
+}

@@ -1,0 +1,18 @@
+{
+  "address": "0x514510",
+  "length": 111,
+  "candidate_length": 111,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [
+    "relocation at 0x38 resolves to 0x57c670, original has 0x700d8b28"
+  ],
+  "relocation_issues": [],
+  "first_difference": {
+    "offset": 39,
+    "original": 70,
+    "candidate": 78
+  },
+  "difference_count": 18,
+  "source": "reconstructed/match/batch13/part4/nonmatching/0x514510.c"
+}
