@@ -1,10 +1,9 @@
 # Strict byte-match audit
 
 A normal `"match": true` compares instruction bytes with linker-resolved fields
-normalized from the original PE. That is necessary for EH thunks and calls, but
-it can hide a wrong symbol name.
-
-`tools/match_decomp.py --strict` adds:
+normalized from the original PE. That is necessary for EH thunks and calls.
+Explicit `--symbol` maps are now checked even without `--strict`, so a supplied
+wrong target cannot pass. `--strict` additionally adds:
 
 - exact candidate function extent (up to 15 bytes of `0x00`/`0x90`/`0xCC`
   alignment padding);
@@ -21,8 +20,8 @@ python3 reconstructed/match/tests/test_relocation_guard.py
 ```
 
 It compiles `0x532510` and supplies the wrong `Array::Destroy` address. The
-normalized byte match still succeeds; strict mode rejects it. The correct
-target is accepted.
+default matcher rejects the wrong target because the explicit symbol map is
+checked; strict mode rejects it as well. The correct target passes both.
 
 ## Current strict counts
 

@@ -170,6 +170,7 @@ def match(address: int, source: Path, obj: Path, vc6: Path, flags: list[str],
         raise ValueError("candidate has no .text section")
     candidate = bytearray(text["raw"])
     strict_issues = []
+    relocation_issues = []
     # Relocations live in the object file at text["relptr"]; read them from the
     # original object bytes.
     object_bytes = obj.read_bytes()
@@ -197,20 +198,20 @@ def match(address: int, source: Path, obj: Path, vc6: Path, flags: list[str],
                     strict_issues.append(issue)
                 else:
                     raise ValueError(issue)
+        if target is not None:
+            addend = struct.unpack_from("<i", candidate, va)[0]
+            if typ == 0x06:
+                expected = (target + addend) & 0xFFFFFFFF
             else:
-                addend = struct.unpack_from("<i", candidate, va)[0]
-                if typ == 0x06:
-                    expected = (target + addend) & 0xFFFFFFFF
+                expected = (target + addend - (address + va + 4)) & 0xFFFFFFFF
+            actual = struct.unpack("<I", original_field)[0]
+            if actual != expected:
+                issue = (f"relocation at {va:#x} resolves to {expected:#x}, "
+                         f"original has {actual:#x}")
+                if strict:
+                    strict_issues.append(issue)
                 else:
-                    expected = (target + addend - (address + va + 4)) & 0xFFFFFFFF
-                actual = struct.unpack("<I", original_field)[0]
-                if actual != expected:
-                    issue = (f"relocation at {va:#x} resolves to {expected:#x}, "
-                             f"original has {actual:#x}")
-                    if strict:
-                        strict_issues.append(issue)
-                    else:
-                        raise ValueError(issue)
+                    relocation_issues.append(issue)
         if typ not in (0x06, 0x14):
             raise ValueError(f"unsupported COFF relocation type {typ:#x}")
         candidate[va:va + 4] = original_field
@@ -250,10 +251,12 @@ def match(address: int, source: Path, obj: Path, vc6: Path, flags: list[str],
         "address": f"{address:#08x}",
         "length": length,
         "candidate_length": len(candidate),
-        "match": not differences and len(candidate) == len(original),
+        "match": not differences and len(candidate) == len(original)
+                 and not relocation_issues,
         "strict_match": not differences and len(candidate) == len(original)
-                        and not strict_issues,
+                        and not strict_issues and not relocation_issues,
         "strict_issues": strict_issues,
+        "relocation_issues": relocation_issues,
         "first_difference": differences[0] if differences else None,
         "difference_count": len(differences),
         "source": str(source),
