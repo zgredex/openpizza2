@@ -1,0 +1,202 @@
+[
+  {
+    "address": "0x4f9c10",
+    "name": "City_FindMatchingCity",
+    "start": "0x4f9c10",
+    "end": "0x4f9c8f",
+    "length": 128,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4f9c10.c"
+  },
+  {
+    "address": "0x4fcc30",
+    "name": "Object_AdjustShortPercent",
+    "start": "0x4fcc30",
+    "end": "0x4fccaf",
+    "length": 128,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4fcc30.c"
+  },
+  {
+    "address": "0x523d60",
+    "name": "Window_ShowWindowById",
+    "start": "0x523d60",
+    "end": "0x523ddf",
+    "length": 128,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x523d60.c"
+  },
+  {
+    "address": "0x525af0",
+    "name": "UI_ProcessCommandQueue",
+    "start": "0x525af0",
+    "end": "0x525b6f",
+    "length": 128,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x525af0.c"
+  },
+  {
+    "address": "0x5271d0",
+    "name": "UI_ReleaseRefCount",
+    "start": "0x5271d0",
+    "end": "0x52724f",
+    "length": 128,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x5271d0.c"
+  },
+  {
+    "address": "0x54b1b0",
+    "name": "UI_BriefingList_Save",
+    "start": "0x54b1b0",
+    "end": "0x54b22f",
+    "length": 128,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x54b1b0.c"
+  },
+  {
+    "address": "0x54e170",
+    "name": "_strstr",
+    "start": "0x54e170",
+    "end": "0x54e1ef",
+    "length": 128,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x54e170.c"
+  },
+  {
+    "address": "0x505340",
+    "name": "MapObject_ReadRenderRecord",
+    "start": "0x505340",
+    "end": "0x5053c0",
+    "length": 129,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x505340.c"
+  },
+  {
+    "address": "0x4d2d80",
+    "name": "Map_ClearObjectFlags",
+    "start": "0x4d2d80",
+    "end": "0x4d2e01",
+    "length": 130,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4d2d80.c"
+  },
+  {
+    "address": "0x4e5eb0",
+    "name": "ConstructionOrder_Load",
+    "start": "0x4e5eb0",
+    "end": "0x4e5f31",
+    "length": 130,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4e5eb0.c"
+  },
+  {
+    "address": "0x4ed780",
+    "name": "UI_AlignSpriteToRect",
+    "start": "0x4ed780",
+    "end": "0x4ed801",
+    "length": 130,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4ed780.c"
+  },
+  {
+    "address": "0x4f9d50",
+    "name": "Building_GetLevelFromType",
+    "start": "0x4f9d50",
+    "end": "0x4f9dd1",
+    "length": 130,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4f9d50.c"
+  },
+  {
+    "address": "0x501f00",
+    "name": "Stats_GetCityShareRank",
+    "start": "0x501f00",
+    "end": "0x501f81",
+    "length": 130,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x501f00.c"
+  },
+  {
+    "address": "0x507d90",
+    "name": "Person_AdvanceRoute",
+    "start": "0x507d90",
+    "end": "0x507e11",
+    "length": 130,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x507d90.c"
+  },
+  {
+    "address": "0x5272f0",
+    "name": "UI_ShowTooltip",
+    "start": "0x5272f0",
+    "end": "0x527371",
+    "length": 130,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x5272f0.c"
+  },
+  {
+    "address": "0x528820",
+    "name": "UI_UpdateHoveredRow",
+    "start": "0x528820",
+    "end": "0x5288a1",
+    "length": 130,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x528820.c"
+  },
+  {
+    "address": "0x540f60",
+    "name": "List_DestroyObjects",
+    "start": "0x540f60",
+    "end": "0x540fe1",
+    "length": 130,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x540f60.c"
+  },
+  {
+    "address": "0x480ab0",
+    "name": "MapObject_RemoveAndRefund",
+    "start": "0x480ab0",
+    "end": "0x480b32",
+    "length": 131,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x480ab0.c"
+  },
+  {
+    "address": "0x4f0bd0",
+    "name": "Object_FindRecordAtOffset",
+    "start": "0x4f0bd0",
+    "end": "0x4f0c52",
+    "length": 131,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4f0bd0.c"
+  },
+  {
+    "address": "0x546f00",
+    "name": "List_Insert",
+    "start": "0x546f00",
+    "end": "0x546f82",
+    "length": 131,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x546f00.c"
+  },
+  {
+    "address": "0x488b30",
+    "name": "Ingredient_CollectByCategory",
+    "start": "0x488b30",
+    "end": "0x488bb3",
+    "length": 132,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x488b30.c"
+  },
+  {
+    "address": "0x4e2080",
+    "name": "Company_AddStaffMember",
+    "start": "0x4e2080",
+    "end": "0x4e2103",
+    "length": 132,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4e2080.c"
+  },
+  {
+    "address": "0x521a50",
+    "name": "UI_DrawRectOutline",
+    "start": "0x521a50",
+    "end": "0x521ad3",
+    "length": 132,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x521a50.c"
+  },
+  {
+    "address": "0x526d30",
+    "name": "Rect_Union",
+    "start": "0x526d30",
+    "end": "0x526db3",
+    "length": 132,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x526d30.c"
+  },
+  {
+    "address": "0x4b43f0",
+    "name": "CompanyOverview_SortCompanyIndices",
+    "start": "0x4b43f0",
+    "end": "0x4b4474",
+    "length": 133,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4b43f0.c"
+  }
+]

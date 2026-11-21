@@ -1,0 +1,202 @@
+[
+  {
+    "address": "0x50b930",
+    "name": "Object_IsCompanySiteChanged",
+    "start": "0x50b930",
+    "end": "0x50b9b4",
+    "length": 133,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x50b930.c"
+  },
+  {
+    "address": "0x50d440",
+    "name": "Object_PlayStateSound",
+    "start": "0x50d440",
+    "end": "0x50d4c4",
+    "length": 133,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x50d440.c"
+  },
+  {
+    "address": "0x513ff0",
+    "name": "Storage_SettlePendingOrders",
+    "start": "0x513ff0",
+    "end": "0x514074",
+    "length": 133,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x513ff0.c"
+  },
+  {
+    "address": "0x526dc0",
+    "name": "Rect_Set1A4",
+    "start": "0x526dc0",
+    "end": "0x526e44",
+    "length": 133,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x526dc0.c"
+  },
+  {
+    "address": "0x534250",
+    "name": "RecordList_TickFrameAtTimeAndGetPoints",
+    "start": "0x534250",
+    "end": "0x5342d4",
+    "length": 133,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x534250.c"
+  },
+  {
+    "address": "0x534b30",
+    "name": "Animation_SetPointPairs",
+    "start": "0x534b30",
+    "end": "0x534bb4",
+    "length": 133,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x534b30.c"
+  },
+  {
+    "address": "0x54c9f0",
+    "name": "Sound_ShutdownThread",
+    "start": "0x54c9f0",
+    "end": "0x54ca74",
+    "length": 133,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x54c9f0.c"
+  },
+  {
+    "address": "0x47ac10",
+    "name": "Game_GetRatingMultiplier",
+    "start": "0x47ac10",
+    "end": "0x47ac95",
+    "length": 134,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x47ac10.c"
+  },
+  {
+    "address": "0x48cd40",
+    "name": "Game_IsBuildingAssignedToOtherCompany",
+    "start": "0x48cd40",
+    "end": "0x48cdc5",
+    "length": 134,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x48cd40.c"
+  },
+  {
+    "address": "0x4d3ef0",
+    "name": "Employee_ApplySkillMultipliers",
+    "start": "0x4d3ef0",
+    "end": "0x4d3f75",
+    "length": 134,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4d3ef0.c"
+  },
+  {
+    "address": "0x4de570",
+    "name": "Game_GetObjectValue",
+    "start": "0x4de570",
+    "end": "0x4de5f5",
+    "length": 134,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4de570.c"
+  },
+  {
+    "address": "0x54a980",
+    "name": "UI_Briefing_AddMessage",
+    "start": "0x54a980",
+    "end": "0x54aa05",
+    "length": 134,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x54a980.c"
+  },
+  {
+    "address": "0x54aa10",
+    "name": "UI_Briefing_AddPinnedMessage",
+    "start": "0x54aa10",
+    "end": "0x54aa95",
+    "length": 134,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x54aa10.c"
+  },
+  {
+    "address": "0x500f40",
+    "name": "Company_PushRecentEntry",
+    "start": "0x500f40",
+    "end": "0x500fc6",
+    "length": 135,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x500f40.c"
+  },
+  {
+    "address": "0x5022d0",
+    "name": "Game_GetMarketRank",
+    "start": "0x5022d0",
+    "end": "0x502356",
+    "length": 135,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x5022d0.c"
+  },
+  {
+    "address": "0x528230",
+    "name": "Screen_TransitionEffectTick",
+    "start": "0x528230",
+    "end": "0x5282b6",
+    "length": 135,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x528230.c"
+  },
+  {
+    "address": "0x542720",
+    "name": "SoundVoiceThread_Construct",
+    "start": "0x542720",
+    "end": "0x5427a6",
+    "length": 135,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x542720.c"
+  },
+  {
+    "address": "0x4ce320",
+    "name": "UI_ShowConfirmDialog",
+    "start": "0x4ce320",
+    "end": "0x4ce3a7",
+    "length": 136,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4ce320.c"
+  },
+  {
+    "address": "0x54d736",
+    "name": "Stream_AdvanceIterator",
+    "start": "0x54d736",
+    "end": "0x54d7bd",
+    "length": 136,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x54d736.c"
+  },
+  {
+    "address": "0x4d8220",
+    "name": "Game_FindBestQualityBuilding",
+    "start": "0x4d8220",
+    "end": "0x4d82a8",
+    "length": 137,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4d8220.c"
+  },
+  {
+    "address": "0x5319c0",
+    "name": "MovieWindow_CreateForScreen",
+    "start": "0x5319c0",
+    "end": "0x531a48",
+    "length": 137,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x5319c0.c"
+  },
+  {
+    "address": "0x531bb0",
+    "name": "Movie_CreatePlayer",
+    "start": "0x531bb0",
+    "end": "0x531c38",
+    "length": 137,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x531bb0.c"
+  },
+  {
+    "address": "0x4e0170",
+    "name": "Stats_AppendPeriodReport",
+    "start": "0x4e0170",
+    "end": "0x4e01f9",
+    "length": 138,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4e0170.c"
+  },
+  {
+    "address": "0x4f0850",
+    "name": "Object_GetBufferPair",
+    "start": "0x4f0850",
+    "end": "0x4f08d9",
+    "length": 138,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4f0850.c"
+  },
+  {
+    "address": "0x4f12e0",
+    "name": "Grid_CollectNearbyIds",
+    "start": "0x4f12e0",
+    "end": "0x4f1369",
+    "length": 138,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4f12e0.c"
+  }
+]
