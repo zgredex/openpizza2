@@ -1,0 +1,5 @@
+{
+  "__imp__RegCloseKey@4": 5619728,
+  "__imp__RegOpenKeyExA@20": 5619720,
+  "__imp__RegCreateKeyA@12": 5619716
+}
