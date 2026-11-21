@@ -158,14 +158,20 @@ def pe_image(path: Path):
     return data, image_base, sections
 
 
-def read_va(image, address: int, size: int):
+def pe_file_span(image, address: int, size: int):
     data, base, sections = image
     for name, va, vsize, rawptr, rawsize in sections:
         start = base + va
-        if start <= address and address + size <= start + min(vsize or rawsize, rawsize):
+        if size >= 0 and start <= address and address + size <= start + min(vsize or rawsize, rawsize):
             offset = rawptr + (address - start)
-            return data[offset:offset + size]
+            if offset + size <= len(data):
+                return offset, name
     raise ValueError(f"address {address:#x} is outside the PE file sections")
+
+
+def read_va(image, address: int, size: int):
+    offset, _ = pe_file_span(image, address, size)
+    return image[0][offset:offset + size]
 
 
 @lru_cache(maxsize=1)
@@ -400,6 +406,9 @@ def match_object(address: int, obj: Path, symbols: dict[str, int],
     strict_issues = []
     relocation_issues = []
     fixups = []
+    linked_spans = []
+    plan_issues = []
+    blocked_sections = []
     if extra_len:
         try:
             original = read_va(image, address, length + extra_len)
@@ -465,8 +474,14 @@ def match_object(address: int, obj: Path, symbols: dict[str, int],
         for section in remaining.values():
             strict_issues.append(
                 f"unverified {section['name']} section ({len(section['raw'])} bytes)")
+            index = section["index"]
+            blocked_sections.append({"section": section["name"], "index": index,
+                                     "symbols": sorted(symbol["name"] for symbol in coff_symbols
+                                                       if symbol and symbol["section"] == index),
+                                     "expected_addresses": sorted(hex(target - value)
+                                                                  for value, target in anchors.get(index, ()))})
 
-    def check_relocations(section, candidate, linked, base, skip_prefix=0):
+    def check_relocations(section, candidate, independently_linked, linked, base, skip_prefix=0):
         name = section["name"]
         previous_end = skip_prefix
         for offset, symbol_index, kind in sorted(relocations[section["index"]]):
@@ -487,6 +502,7 @@ def match_object(address: int, obj: Path, symbols: dict[str, int],
             expected = None if target is None else relocation_value(target, addend, site, kind)
             fixups.append({"section": name, "section_index": section["index"], "site": hex(site),
                            "offset": hex(offset), "symbol": symbol["name"],
+                           "target_section_index": symbol["section"] if symbol["section"] > 0 else None,
                            "kind": "DIR32" if kind == 0x06 else "REL32", "addend": addend,
                            "original": hex(actual), "expected": None if expected is None else hex(expected),
                            "target": None if target is None else hex(target), "origin": origin,
@@ -500,31 +516,69 @@ def match_object(address: int, obj: Path, symbols: dict[str, int],
             elif expected != actual:
                 relocation_issues.append(
                     f"{name} relocation at {offset:#x} resolves to {expected:#x}, original has {actual:#x}")
-            # Compare instruction bodies separately from the relocation checks.
+            if expected is not None:
+                struct.pack_into("<I", independently_linked, offset, expected)
+            # Only the diagnostic comparison masks linker fields with original bytes.
             candidate[offset:offset + 4] = linked[field_start:field_start + 4]
 
-    check_relocations(primary, raw, original, address - start, start)
-    if extra_len:
-        actual_extra = raw[start + length:start + length + extra_len]
-        expected_extra = original[length:length + extra_len]
-        padding = all(byte in (0x00, 0x90, 0xCC) for byte in actual_extra)
-        if actual_extra != expected_extra and not padding:
-            strict_issues.append(
-                f"candidate extent {len(raw)} bytes, expected {start + length}"
-                f" (extra={extra_len} bytes does not match the original table/padding)")
+    def add_span(kind, section, address, section_offset, code, origin):
+        offset, pe_section = pe_file_span(image, address, len(code))
+        if code != image[0][offset:offset + len(code)]:
+            plan_issues.append(f"{kind} span at {address:#x} differs independently from the PE")
+            return
+        sites = []
+        for fixup in fixups:
+            if fixup["section_index"] != section["index"]:
+                continue
+            site = int(fixup["site"], 16)
+            if site < address + len(code) and site + 4 > address:
+                if not address <= site or site + 4 > address + len(code):
+                    plan_issues.append(f"fixup at {site:#x} straddles a linked span boundary")
+                sites.append(fixup["site"])
+        linked_spans.append({"kind": kind, "section": section["name"], "section_index": section["index"],
+                             "placement": origin, "pe_section": pe_section, "start": hex(address),
+                             "end_exclusive": hex(address + len(code)), "length": len(code),
+                             "source_section_offset": hex(section_offset), "file_offset": hex(offset),
+                             "file_end_exclusive": hex(offset + len(code)),
+                             "hex_bytes": code.hex(), "sha256": hashlib.sha256(code).hexdigest(),
+                             "fixup_sites": sites})
+
+    independently_linked = bytearray(raw)
+    check_relocations(primary, raw, independently_linked, original, address - start, start)
     candidate = raw[start:start + length]
 
+    secondary = []
     for index, section in pending.items():
         if index not in section_bases:
             continue
         base, _ = section_bases[index]
         section_raw = bytearray(section["raw"])
+        section_code = bytearray(section_raw)
         linked = read_va(image, base, len(section_raw))
-        check_relocations(section, section_raw, linked, base)
+        check_relocations(section, section_raw, section_code, linked, base)
+        secondary.append((section, base, section_code, section_bases[index][1]))
         if bytes(section_raw) != linked:
             difference = next(offset for offset, (compiled, original_byte) in
                               enumerate(zip(section_raw, linked)) if compiled != original_byte)
             strict_issues.append(f"{section['name']} bytes differ at offset {difference:#x}")
+
+    include_tail = False
+    if extra_len:
+        actual_extra = raw[start + length:start + length + extra_len]
+        expected_extra = original[length:length + extra_len]
+        padding = all(byte in (0x00, 0x90, 0xCC) for byte in actual_extra)
+        tail_start = address + length
+        tail_end = tail_start + extra_len
+        targeted = any(
+            (r["section_index"] == primary["index"] and tail_start <= int(r["site"], 16) < tail_end)
+            or (r["target_section_index"] == primary["index"] and r["target"] is not None
+                and tail_start <= int(r["target"], 16) + r["addend"] < tail_end)
+            for r in fixups)
+        include_tail = not padding or targeted
+        if actual_extra != expected_extra and include_tail:
+            strict_issues.append(
+                f"candidate extent {len(raw)} bytes, expected {start + length}"
+                f" (extra={extra_len} bytes does not match the original table/padding)")
 
     differences = [
         {"offset": index, "original": original[index], "candidate": candidate[index]}
@@ -532,16 +586,42 @@ def match_object(address: int, obj: Path, symbols: dict[str, int],
         if original[index] != candidate[index]
     ]
     matched = not differences and len(candidate) == length and not relocation_issues
+    is_strict = bool(strict and matched and not strict_issues)
+    if is_strict:
+        link_end = start + length + (extra_len if include_tail else 0)
+        if any(symbol and symbol is not entry_symbol and symbol["section"] == primary["index"]
+               and symbol["type"] == 0x20 and start <= symbol["value"] < link_end
+               for symbol in coff_symbols):
+            plan_issues.append("primary span includes a second function symbol")
+        add_span("primary", primary, address, start, independently_linked[start:start + length],
+                 "candidate_entry")
+        if include_tail:
+            add_span("inline_tail", primary, address + length, start + length,
+                     independently_linked[start + length:link_end], "contiguous_inline_tail")
+        for section, base, code, origin in secondary:
+            add_span("secondary", section, base, 0, code, origin)
+        occupied = [(span["section_index"], int(span["start"], 16), int(span["end_exclusive"], 16))
+                    for span in linked_spans]
+        for fixup in fixups:
+            index = fixup["target_section_index"]
+            if index is not None:
+                target = (int(fixup["target"], 16) + fixup["addend"]) & 0xFFFFFFFF
+                if not any(index == other and first <= target < end for other, first, end in occupied):
+                    plan_issues.append(f"local target {fixup['symbol']} at {target:#x} falls outside verified spans")
     return {
         "address": f"{address:#08x}",
         "entry": entry,
         "length": length,
         "candidate_length": len(candidate),
         "match": matched and (not strict_symbols or not strict_issues),
-        "strict_match": bool(strict and matched and not strict_issues),
+        "strict_match": is_strict,
         "strict_issues": strict_issues,
         "relocation_issues": relocation_issues,
         "relocations": fixups,
+        "object_sha256": hashlib.sha256(object_bytes).hexdigest(),
+        "linked_spans": linked_spans if not plan_issues else [],
+        "link_plan_issues": plan_issues,
+        "blocked_sections": blocked_sections,
         "linked_sections": [
             {"section": sections[index - 1]["name"], "index": index, "address": hex(base),
              "origin": origin, **({"anchors": [

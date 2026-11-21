@@ -12,9 +12,10 @@ from test_independent_relocations import coff_object
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "tools"))
 from pcrecomp_pc2 import capture
+from audit_symbol_targets import reverse_dependencies
 import match_decomp
 import verify_linked_image as linker
-from verify_linked_image import digest, link_body, verified_image, write_outputs
+from verify_linked_image import digest, write_outputs
 
 
 class LinkedImageTests(unittest.TestCase):
@@ -31,15 +32,38 @@ class LinkedImageTests(unittest.TestCase):
             obj = Path(scratch) / "test.obj"
             obj.write_bytes(body)
             symbols = {"_global": global_va, "_callee": callee_va}
-            code, calls = link_body(obj, base, len(raw), "_entry", symbols)
-            self.assertEqual(code, linked)
-            self.assertEqual(verified_image(image, base, code), (original, 6))
-            self.assertEqual(calls, [{"instruction": "0x401005", "target": "0x4020ed", "symbol": "_callee"}])
-            wrong, _ = link_body(obj, base, len(raw), "_entry", {**symbols, "_callee": callee_va + 1})
-            with self.assertRaisesRegex(ValueError, "differs from the original PE"):
-                verified_image(image, base, wrong)
-            with self.assertRaisesRegex(ValueError, "unresolved COFF target _callee"):
-                link_body(obj, base, len(raw), "_entry", {"_global": global_va})
+            with patch.object(match_decomp, "pe_image", return_value=image):
+                good = match_decomp.match_object(base, obj, symbols, len(raw), "_entry", strict=True)
+                self.assertEqual(good["linked_spans"][0]["hex_bytes"], linked.hex())
+                self.assertEqual(good["linked_spans"][0]["file_offset"], "0x6")
+                self.assertEqual(linker.direct_calls(good),
+                                 [{"instruction": "0x401005", "target": "0x4020ed", "symbol": "_callee"}])
+                for broken in ({**symbols, "_callee": callee_va + 1}, {"_global": global_va}):
+                    failure = match_decomp.match_object(base, obj, broken, len(raw), "_entry", strict=True)
+                    self.assertFalse(failure["strict_match"])
+                    self.assertEqual(failure["linked_spans"], [])
+
+    def test_inline_table_uses_coff_fixups_and_plain_padding_is_omitted(self):
+        base = 0x401000
+        raw = b"\xa1\0\0\0\0\xc3" + bytes(4)
+        linked = b"\xa1" + struct.pack("<I", base + 6) + b"\xc3" + struct.pack("<I", base)
+        image = (linked, base, [(".text", 0, len(linked), 0, len(linked))])
+        body = coff_object([(b".text", raw, [(1, 1, 0x06), (6, 0, 0x06)])],
+                           [(b"_entry", 0, 1, 0x20, 2, 0), (b"_table", 6, 1, 0, 3, 0)])
+        with tempfile.TemporaryDirectory() as scratch, patch.object(match_decomp, "pe_image", return_value=image):
+            obj = Path(scratch) / "test.obj"
+            obj.write_bytes(body)
+            result = match_decomp.match_object(base, obj, {}, 6, "_entry", strict=True)
+            self.assertTrue(result["strict_match"])
+            self.assertEqual([s["kind"] for s in result["linked_spans"]], ["primary", "inline_tail"])
+            self.assertEqual(result["linked_spans"][1]["hex_bytes"], linked[6:].hex())
+            self.assertEqual(result["linked_spans"][1]["fixup_sites"], [hex(base + 6)])
+            padding = coff_object([(b".text", linked[:6] + b"\x90" * 4, [])],
+                                  [(b"_entry", 0, 1, 0x20, 2, 0)])
+            obj.write_bytes(padding)
+            stripped = match_decomp.match_object(base, obj, {}, 6, "_entry", strict=True)
+            self.assertTrue(stripped["strict_match"])
+            self.assertEqual([s["kind"] for s in stripped["linked_spans"]], ["primary"])
 
     def test_outputs_keep_existing_files_and_roll_back_partial_pair(self):
         with tempfile.TemporaryDirectory() as scratch:
@@ -126,6 +150,39 @@ class LinkedImageTests(unittest.TestCase):
         self.assertEqual(linker.assemble_image(b"xyz", [(2, b"z"), (0, b"x")]), b"xyz")
         with self.assertRaisesRegex(ValueError, "write ranges overlap"):
             linker.assemble_image(b"xyz", [(0, b"xy"), (1, b"yz")])
+
+    def test_shared_span_is_written_once_and_conflicts_are_rejected(self):
+        shared = {"start": "0x405000", "file_offset": "0x10", "length": 2,
+                  "kind": "secondary", "hex_bytes": "1234"}
+        self.assertEqual(linker.merged_spans([("a", [shared]), ("b", [shared])]),
+                         [{**shared, "owners": ["a", "b"]}])
+        for conflict in ({**shared, "hex_bytes": "1235"}, {**shared, "kind": "primary"}):
+            with self.assertRaisesRegex(ValueError, "conflicting linked spans"):
+                linker.merged_spans([("a", [shared]), ("b", [conflict])])
+        for overlap in ({**shared, "start": "0x405001", "file_offset": "0x20"},
+                        {**shared, "start": "0x406000", "file_offset": "0x11"}):
+            with self.assertRaisesRegex(ValueError, "partially overlapping linked spans"):
+                linker.merged_spans([("a", [shared]), ("b", [overlap])])
+
+    def test_reverse_dependencies_distinguish_explicit_and_blocked_facts(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = Path(tmp)
+            source = directory / "a.c"
+            for address, origin in [(0x401000, "symbol_registry"), (0x402000, "explicit_symbol"), (0x403000, None)]:
+                row = {"address": hex(address), "source": str(source), "strict_match": bool(origin),
+                       "executable_sha256": "image", "relocations": [
+                           {"symbol": "?A", "verified": bool(origin), "origin": origin}],
+                       "linked_sections": [{"address": "0x405000"}] if origin else [],
+                       "blocked_sections": [{"symbols": ["?A"], "expected_addresses": ["0x405000"]}] if not origin else []}
+                (directory / f"{address:x}.json").write_text(json.dumps(row))
+            impact = reverse_dependencies(directory, set(), set(), set(), {"?A"}, False, "image")
+            self.assertEqual(impact["addresses"], ["0x401000", "0x403000"])
+            self.assertEqual(impact["strict_addresses"], ["0x401000"])
+            self.assertEqual(impact["blocked_addresses"], ["0x403000"])
+            reverse = reverse_dependencies(directory, {"?A"}, {0x405000}, {source}, set(), False, "image")
+            self.assertEqual(reverse["addresses"], ["0x401000", "0x402000", "0x403000"])
+            self.assertEqual({d["kind"] for d in reverse["records"][0]["references"]},
+                             {"symbol", "source", "section_address"})
 
     def test_capture_reports_only_linked_entries_in_captured_phases(self):
         report = {"run": {"guest_sha256": "guest"}, "complete": False,

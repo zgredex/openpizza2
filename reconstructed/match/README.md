@@ -156,7 +156,11 @@ scratch PE after evaluating its `DIR32` and `REL32` addends with independently
 resolved targets. The complete image must equal the original byte for byte.
 The manifest records both images, source and COFF hashes, the function range,
 relocation evidence, and direct call fixups. Both output paths must be new.
-The current linker accepts one function section with optional trailing padding.
+The strict matcher emits the same link plan consumed by the image builder.
+It gives the VA, file range, bytes, and fixup sites for the primary function,
+matching inline tables or tails, and independently placed secondary sections.
+The builder writes identical shared spans once and rejects partial overlaps
+or conflicting spans.
 
 Run the pilot from the repository root with `scratch` pointing to an existing
 scratch installation directory. The executable can then be replayed beside
@@ -200,9 +204,9 @@ cmp game/fastfood2.exe "$scratch/fastfood2.exe"
 ```
 
 The manifest records unique function and code-byte counts, each linked range,
-and exclusions discovered before or after compilation. Multi-section recipes
-and code that references an adjacent table are outside the current linker
-scope. An actual strict or byte mismatch aborts publication of the image.
+and exclusions discovered before or after compilation. It counts primary code
+bytes separately from the union of all written spans. A strict match or byte
+comparison failure aborts publication of the image.
 
 The optional cache uses the source path and hash, flags, compiler and Wine
 binary hashes, and the same controlled environment used on cacheable builds.
@@ -210,13 +214,37 @@ The cache is for self-contained sources. Preprocessor directives, time macros,
 and compiler or loader environment overrides bypass it. Every cache hit runs
 the strict matcher and independent relocation checks again.
 
-The pilot linked 25 of 25 functions (1,477 code bytes), and the menu replay
-reached all 25. The full run linked 1,026 of 1,043 planned functions (54,101
-code bytes) into a byte-identical PE and reused 24 pilot objects across
-unrelated environment changes. Preflight excluded four multi-section recipes,
-and the linker excluded 17 more for unsupported layouts. The full menu replay
-advanced from screen 21 to 28 on the pinned lift, reached 111 linked functions,
-and reported zero unresolved edges.
+The shared plan recovered all 21 former layout exclusions, with 17 inline
+tails and eight secondary spans. The full run linked all 1,047 planned
+functions into a byte-identical PE with 56,847 code bytes and 57,539 total
+linked bytes across 1,072 writes. It reused 1,039 cached objects. The pinned
+lift replay advanced from screen 21 to 28, reached 111 linked functions, and
+reported zero unresolved edges.
+
+### Targeted dependency rechecks
+
+Query previous audit records for exact symbols, section placement VAs, or
+recorded source and evidence paths with `audit_symbol_targets.py --reverse`.
+It reports consumed and blocked references. To isolate the impact of registry
+changes, pass a saved `--registry-before` snapshot. This mode excludes callers
+with explicit symbol mappings for a changed fact.
+
+```sh
+python3 tools/audit_symbol_targets.py /tmp/pc2-tracked-audit \
+  --registry-before /tmp/pc2-registry-before.json --json-out /tmp/pc2-affected.json
+python3 tools/verify_linked_image.py --audit /tmp/pc2-tracked-audit \
+  --only-address 0x4900a0 --only-address 0x4919b0 \
+  --only-address 0x492230 --only-address 0x499570 \
+  --cache /tmp/pc2-coff-cache --cache-only --image "$scratch/fastfood2.exe" \
+  --out "$scratch/rechecked.exe" --manifest "$scratch/rechecked.json"
+```
+
+`--only-address` gives the new manifest exactly the selected scope, even when
+it uses a prior byte-identical image. Keep the prior manifest for its wider
+coverage. `--include-blocked` allows an explicit recheck of previous body-only
+recipes, and `--cache-only` requires every selected object to be retained.
+The `IStream::Read` fact selected four callers and rechecked all four from
+cache. An incorrect explicit target failed verification and published no PE.
 
 ## Stock CRT archive identification
 

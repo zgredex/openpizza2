@@ -17,10 +17,9 @@ import tempfile
 
 from coff_cache import (CACHE_FLAGS, cache_environment, cache_identity, cache_path,
                         hash_bytes as digest, store_object)
-from match_decomp import (DEFAULT_VC6, GAME, ROOT, compile_candidate, compiler_provenance, function_lengths,
-                          match_object, match_provenance, parse_coff, parse_symbols, pe_image,
-                          relocation_target, relocation_value, resolve_auto_symbol,
-                          section_relocations, write_function_audit)
+from match_decomp import (DEFAULT_VC6, GAME, ROOT, compile_candidate, compiler_provenance,
+                          function_lengths, match_object, match_provenance, parse_symbols,
+                          pe_file_span, pe_image, resolve_auto_symbol, write_function_audit)
 
 PINNED_SHA256 = "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd"
 
@@ -42,61 +41,51 @@ class Recipe:
     audit_record: str | None = None
 
 
-def link_body(obj, address, length, entry, symbols):
-    object_bytes, sections, coff_symbols = parse_coff(obj)
-    entries = [symbol for symbol in coff_symbols if symbol and symbol["name"] == entry]
-    if len(entries) != 1 or not 0 < entries[0]["section"] <= len(sections):
-        raise ValueError(f"expected one defined COFF entry for {entry}")
-    entry_symbol = entries[0]
-    index = entry_symbol["section"]
-    section = sections[index - 1]
-    raw = section["raw"]
-    code_section = section["name"] == ".text" or section["name"].startswith(".text$")
-    if (entry_symbol["value"] != 0 or not code_section
-            or len(raw) < length or any(byte not in (0, 0x90, 0xCC) for byte in raw[length:])):
-        raise UnsupportedLink("candidate has a prefix, non-padding extra bytes, or a non-code entry section")
-    if any(symbol and symbol is not entry_symbol and symbol["section"] == index
-           and symbol["type"] == 0x20 for symbol in coff_symbols):
-        raise UnsupportedLink("candidate section contains another function")
-
-    code = bytearray(raw[:length])
-    bases = {index: (address, "candidate_entry")}
-    calls = []
-    previous_end = 0
-    for offset, symbol_index, kind in sorted(section_relocations(object_bytes, section)):
-        if offset < previous_end or offset + 4 > length:
-            raise ValueError("COFF fixup crosses or overlaps the selected function extent")
-        previous_end = offset + 4
-        symbol = coff_symbols[symbol_index] if symbol_index < len(coff_symbols) else None
-        if symbol is None:
-            raise ValueError("COFF fixup has an invalid symbol index")
-        if symbol["section"] > 0 and (symbol["section"] != index or symbol["value"] >= length):
-            raise UnsupportedLink(f"COFF target {symbol['name']} is outside the single function extent")
-        target, _ = relocation_target(symbol, bases, symbols, auto_symbols=True)
-        if target is None:
-            raise ValueError(f"unresolved COFF target {symbol['name']}")
-        addend, = struct.unpack_from("<i", raw, offset)
-        value = relocation_value(target, addend, address + offset, kind)
-        struct.pack_into("<I", code, offset, value)
-        if kind == 0x14 and offset > 0 and raw[offset - 1] == 0xE8:
-            calls.append({"instruction": hex(address + offset - 1),
-                          "target": hex((target + addend) & 0xffffffff), "symbol": symbol["name"]})
-    return bytes(code), calls
-
-
 def file_offset(image, address, length):
-    _, base, sections = image
-    for name, rva, virtual_size, raw_ptr, raw_size in sections:
-        relative = address - base - rva
-        size = min(virtual_size or raw_size, raw_size)
-        if name == ".text" and 0 < length and 0 <= relative and relative + length <= size:
-            return raw_ptr + relative
-    raise ValueError("the whole function extent must be file-backed in PE .text")
+    offset, section = pe_file_span(image, address, length)
+    if section != ".text" or length <= 0:
+        raise ValueError("the whole function extent must be file-backed in PE .text")
+    return offset
 
 
-def verified_image(image, address, code):
-    offset = file_offset(image, address, len(code))
-    return assemble_image(image[0], [(offset, code)]), offset
+def merged_spans(plans):
+    positioned = {}
+    for owner, spans in plans:
+        for span in spans:
+            bounds = (int(span["start"], 16), int(span["file_offset"], 16), span["length"])
+            previous = positioned.get(bounds)
+            if previous is None:
+                positioned[bounds] = {**span, "owners": [owner]}
+            elif (previous["kind"] == "primary" or span["kind"] == "primary"
+                  or previous["hex_bytes"] != span["hex_bytes"]):
+                raise ValueError(f"conflicting linked spans at {bounds[0]:#x}")
+            else:
+                previous["owners"].append(owner)
+    for position in (0, 1):
+        end = 0
+        for start, offset, length in sorted(positioned, key=lambda key: key[position]):
+            value = (start, offset)[position]
+            if value < end:
+                raise ValueError(f"partially overlapping linked spans at VA {start:#x}")
+            end = value + length
+    return [positioned[key] for key in sorted(positioned, key=lambda key: key[1])]
+
+
+def direct_calls(audit):
+    span_by_site = {}
+    for span in audit["linked_spans"]:
+        linked = int(span["start"], 16), bytes.fromhex(span["hex_bytes"])
+        span_by_site.update(dict.fromkeys(span["fixup_sites"], linked))
+    calls = []
+    for fixup in audit["relocations"]:
+        if fixup["kind"] != "REL32" or fixup["site"] not in span_by_site:
+            continue
+        address = int(fixup["site"], 16)
+        start, code = span_by_site[fixup["site"]]
+        if address > start and code[address - start - 1] == 0xE8:
+            target = (int(fixup["target"], 16) + fixup["addend"]) & 0xffffffff
+            calls.append({"instruction": hex(address - 1), "target": hex(target), "symbol": fixup["symbol"]})
+    return calls
 
 
 def assemble_image(original, replacements):
@@ -131,23 +120,25 @@ def write_outputs(outputs):
         raise
 
 
-def batch_plan(audit, image, executable_sha256, compiler, priorities, limit):
+def batch_plan(audit, image, executable_sha256, compiler, priorities, limit, only=(), include_blocked=False):
     records = sorted((audit / "functions").glob("*.json"))
     if not records:
         raise ValueError(f"no audit records in {audit / 'functions'}")
     planned = {}
     excluded = []
+    outside_scope = 0
     lengths = function_lengths()
     for path in records:
         row = json.loads(path.read_text())
         if row["executable_sha256"] != executable_sha256:
             raise ValueError(f"{path.name}: audit executable SHA-256 differs from the pinned image")
         address = int(row["address"], 0)
+        if only and address not in only:
+            outside_scope += 1
+            continue
         reason = None
-        if row.get("strict_match") is not True:
+        if row.get("strict_match") is not True and not (include_blocked and row.get("match") is True):
             reason = "audit was not strict"
-        elif len(row["linked_sections"]) != 1:
-            reason = "audit links multiple sections"
         elif lengths.get(address) != row["length"] or row["length"] is None:
             reason = "audit extent differs from contiguous inventory"
         elif not row["entry"] or not set(row["flags"]) <= CACHE_FLAGS:
@@ -167,7 +158,7 @@ def batch_plan(audit, image, executable_sha256, compiler, priorities, limit):
         planned[address] = Recipe(address, length, file_offset(image, address, length), source,
                                   row["source_sha256"], row["entry"], tuple(row["flags"]),
                                   {k: int(v, 0) for k, v in row["symbol_overrides"].items()}, path.name)
-    unavailable = [hex(address) for address in priorities if address not in planned]
+    unavailable = [hex(address) for address in dict.fromkeys([*priorities, *only]) if address not in planned]
     if unavailable:
         raise ValueError(f"priority addresses have no eligible audit recipe: {', '.join(unavailable)}")
     addresses = list(dict.fromkeys([*priorities, *sorted(planned)]))
@@ -179,10 +170,10 @@ def batch_plan(audit, image, executable_sha256, compiler, priorities, limit):
             if start < end:
                 raise ValueError(f"overlapping planned {key} range at VA {recipe.address:#x}")
             end = start + recipe.length
-    return selected, excluded, len(records), len(addresses) - len(selected)
+    return selected, excluded, len(records), outside_scope + len(addresses) - len(selected)
 
 
-def verify_recipe(recipe, vc6, scratch, original, cache_dir, cache_key, build_environment=None):
+def verify_recipe(recipe, vc6, scratch, original, cache_dir, cache_key, build_environment=None, cache_only=False):
     source_bytes = recipe.source.read_bytes()
     if digest(source_bytes) != recipe.source_sha256:
         raise ValueError("source changed after planning")
@@ -194,6 +185,8 @@ def verify_recipe(recipe, vc6, scratch, original, cache_dir, cache_key, build_en
     hit = cached is not None and cached.exists()
     if hit:
         obj.write_bytes(cached.read_bytes())
+    elif cache_only:
+        raise ValueError("no retained COFF object for the exact cache recipe")
     else:
         compile_candidate(recipe.source, vc6, obj, flags,
                           environment=build_environment if cached is not None else None)
@@ -209,17 +202,22 @@ def verify_recipe(recipe, vc6, scratch, original, cache_dir, cache_key, build_en
         reason = (issues[0] if issues else audit["first_difference"])
         reason = reason or f"candidate extent {audit['candidate_length']} of {recipe.length} bytes"
         raise ValueError(f"strict match failed: {reason}")
-    if len(audit["linked_sections"]) != 1:
-        raise UnsupportedLink("object links multiple sections")
-    code, calls = link_body(obj, recipe.address, recipe.length, recipe.entry, recipe.symbols)
+    spans = audit["linked_spans"]
+    if not spans:
+        raise UnsupportedLink("; ".join(audit["link_plan_issues"]) or "no independent link plan")
+    primary = spans[0]
+    if primary["kind"] != "primary" or int(primary["file_offset"], 16) != recipe.file_offset:
+        raise ValueError("primary link plan differs from the planned function placement")
+    for span in spans:
+        start = int(span["file_offset"], 16)
+        stop = int(span["file_end_exclusive"], 16)
+        if bytes.fromhex(span["hex_bytes"]) != original[start:stop]:
+            raise ValueError("independently linked replacement differs from the original PE")
     end = recipe.file_offset + recipe.length
-    if code != original[recipe.file_offset:end]:
-        raise ValueError("independently linked replacement differs from the original PE")
-
     object_bytes = obj.read_bytes()
     if cached is not None and not hit:
         store_object(cached, object_bytes)
-    return code, {
+    return spans, {
         "audit_record": recipe.audit_record,
         "source": {"path": str(recipe.source), "sha256": recipe.source_sha256},
         "object": {"name": obj.name, "sha256": digest(object_bytes)},
@@ -230,15 +228,16 @@ def verify_recipe(recipe, vc6, scratch, original, cache_dir, cache_key, build_en
         "symbol_overrides": audit["symbol_overrides"],
         "function": {"entry": recipe.entry, "start": hex(recipe.address),
                      "end_exclusive": hex(recipe.address + recipe.length), "length": recipe.length,
-                     "file_offset": hex(recipe.file_offset), "file_end_exclusive": hex(end), "sha256": digest(code)},
-        "relocations": audit["relocations"], "call_targets": calls,
+                     "file_offset": hex(recipe.file_offset), "file_end_exclusive": hex(end), "sha256": primary["sha256"]},
+        "relocations": audit["relocations"], "call_targets": direct_calls(audit),
+        "linked_spans": spans,
     }
 
 
-def verify_batch(recipes, jobs, vc6, scratch, original, cache_dir, cache_key, build_environment):
+def verify_batch(recipes, jobs, vc6, scratch, original, cache_dir, cache_key, build_environment, cache_only=False):
     def verify(recipe):
         try:
-            return verify_recipe(recipe, vc6, scratch, original, cache_dir, cache_key, build_environment)
+            return verify_recipe(recipe, vc6, scratch, original, cache_dir, cache_key, build_environment, cache_only)
         except UnsupportedLink as error:
             return None, {"record": recipe.audit_record, "address": hex(recipe.address),
                           "reason": str(error), "phase": "link"}
@@ -272,10 +271,15 @@ def main():
     parser.add_argument("--audit", type=Path, help="strict audit directory containing functions/*.json")
     parser.add_argument("--address", action="append", type=lambda val: int(val, 0), default=[],
                         help="prioritize an eligible audit VA (repeatable)")
+    parser.add_argument("--only-address", action="append", type=lambda val: int(val, 0), default=[],
+                        help="limit the build to exactly these audit VAs (repeatable)")
+    parser.add_argument("--include-blocked", action="store_true",
+                        help="also recheck body-only audit recipes for explicitly selected VAs")
     parser.add_argument("--limit", type=bounded_count, help="maximum audit recipes to compile or reuse")
     parser.add_argument("--jobs", type=int, choices=range(1, 17), default=1, metavar="N",
                         help="maximum concurrent workers, 1–16 (default: 1)")
     parser.add_argument("--cache", type=Path, help="optional local cache for self-contained COFF objects")
+    parser.add_argument("--cache-only", action="store_true", help="require retained objects and never compile")
     parser.add_argument("--vc6", type=Path, default=DEFAULT_VC6)
     parser.add_argument("--image", type=Path, help="input PE copy identical to game/fastfood2.exe")
     parser.add_argument("--out", required=True, type=Path, help="new scratch executable")
@@ -284,11 +288,17 @@ def main():
     if args.audit is None:
         if args.function_address is None or args.source is None or not args.entry:
             parser.error("provide VA SOURCE --entry SYMBOL or --audit DIR")
-        if args.address or args.limit:
-            parser.error("--address and --limit require --audit")
+        if args.address or args.only_address or args.limit:
+            parser.error("--address, --only-address and --limit require --audit")
     elif any((args.function_address is not None, args.source, args.entry, args.length is not None,
               args.flags, args.symbol)):
         parser.error("--audit uses saved entries, lengths, compiler flags, and symbol overrides")
+    if args.include_blocked and not args.only_address:
+        parser.error("--include-blocked requires --only-address")
+    if args.cache_only and not args.cache:
+        parser.error("--cache-only requires --cache")
+    if args.only_address and args.limit:
+        parser.error("--only-address selects an exact scope and cannot be combined with --limit")
     try:
         out = args.out.absolute()
         manifest_path = (args.manifest or out.with_name(out.name + ".manifest.json")).absolute()
@@ -311,7 +321,8 @@ def main():
         vc6 = args.vc6.resolve()
         if args.audit:
             plans, exclusions, record_count, deferred = batch_plan(
-                args.audit, image, output_digest, compiler_provenance(vc6)["sha256"], args.address, args.limit)
+                args.audit, image, output_digest, compiler_provenance(vc6)["sha256"], args.address, args.limit,
+                args.only_address, args.include_blocked)
             if not plans:
                 raise ValueError(f"no supported strict audit recipes: {dict(Counter(row['reason'] for row in exclusions))}")
             print(f"audit records={record_count} planned={len(plans)} preflight_exclusions={len(exclusions)} "
@@ -336,27 +347,36 @@ def main():
         with tempfile.TemporaryDirectory(prefix="pc2-verified-image-") as scratch:
             if args.audit:
                 results = verify_batch(plans, args.jobs, vc6, Path(scratch), image[0], cache_dir, cache_key,
-                                       build_environment)
-                verified, replacements = [], []
-                for recipe, (code, evidence) in zip(plans, results):
-                    if code is None:
+                                       build_environment, args.cache_only)
+                verified, link_plans = [], []
+                for recipe, (spans, evidence) in zip(plans, results):
+                    if spans is None:
                         exclusions.append(evidence)
                     else:
                         verified.append(evidence)
-                        replacements.append((recipe.file_offset, code))
+                        link_plans.append((hex(recipe.address), spans))
                 if not verified:
                     raise ValueError(f"none of the planned recipes could be linked: {dict(Counter(row['reason'] for row in exclusions))}")
+                if args.only_address and len(verified) != len(plans):
+                    raise ValueError("one or more explicitly selected addresses could not be linked")
+                writes = merged_spans(link_plans)
+                code_bytes = sum(item["function"]["length"] for item in verified)
                 summary = {"audit_records": record_count, "planned": len(plans), "deferred": deferred,
-                           "functions": len(verified), "union_code_bytes": sum(len(code) for _, code in replacements),
+                           "functions": len(verified), "union_code_bytes": code_bytes,
+                           "union_linked_bytes": sum(span["length"] for span in writes), "write_spans": len(writes),
                            "excluded": dict(Counter(f"{row['phase']}: {row['reason']}" for row in exclusions)),
                            "cache": dict(Counter(row["cache"] for row in verified))}
                 manifest = {"schema": "pc2.verified_linked_image_batch.v1", "audit": str(args.audit.resolve()),
+                            "scope": "selected_addresses" if args.only_address else "limited" if args.limit else "audit",
                             "summary": summary, "functions": verified, "exclusions": exclusions}
             else:
-                code, evidence = verify_recipe(plan, vc6, Path(scratch), image[0], cache_dir, cache_key,
-                                               build_environment)
-                replacements = [(plan.file_offset, code)]
+                spans, evidence = verify_recipe(plan, vc6, Path(scratch), image[0], cache_dir, cache_key,
+                                                build_environment, args.cache_only)
+                writes = merged_spans([(hex(plan.address), spans)])
                 manifest = {"schema": "pc2.verified_linked_image.v1", **evidence}
+            manifest["writes"] = [{key: value for key, value in span.items() if key != "hex_bytes"}
+                                  for span in writes]
+            replacements = [(int(span["file_offset"], 16), bytes.fromhex(span["hex_bytes"])) for span in writes]
             patched = assemble_image(image[0], replacements)
 
         if digest(GAME.read_bytes()) != output_digest:

@@ -130,8 +130,11 @@ class IndependentRelocationTests(unittest.TestCase):
             anchor = match["linked_sections"][1]
             self.assertEqual(anchor["origin"], "registry_section_anchor")
             self.assertEqual(anchor["anchors"][0]["symbol"], "??_7ResourceManager@@6B@")
+            self.assertEqual(match["linked_spans"][1]["hex_bytes"], struct.pack("<I", destructor).hex())
+            self.assertEqual(match["linked_spans"][1]["placement"], "registry_section_anchor")
             wrong = self.compare(base, body, {"_dtor": destructor + 1}, length=len(raw), entry="_entry")
             self.assertFalse(wrong["strict_match"])
+            self.assertEqual(wrong["linked_spans"], [])
             self.assertIn("unverified .rdata", wrong["strict_issues"][0])
 
 
