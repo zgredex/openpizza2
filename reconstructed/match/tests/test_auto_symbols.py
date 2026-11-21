@@ -18,10 +18,11 @@ CASES = [
     # Typed DAT_ address label and the independent IDMap_Lookup symbol.
     ("0x4d3910", "reconstructed/match/batch03/part1/0x4d3910.c",
      23, "?Game_GetRecordByField814@@YIXPAD@Z", "/O2 /TP", "address_label", None),
-    # The constructor anchors the vtable, while this EH body still has unknown targets.
+    # The constructor anchors the vtable, while this EH body still has an
+    # unknown local C++ destructor and must fail closed.
     ("0x401a20", "reconstructed/match/batch01/part1/0x401a20.c",
      204, "??1ResourceManager@@UAE@XZ", "/O2 /GX /TP", "registry_section_anchor",
-     "_fclose"),
+     "??1Lock@@QAE@XZ"),
     # Explicit global addresses would be needed for these source-specific names.
     ("0x477190", "reconstructed/match/batch01/part4/0x477190.c",
      456, "?SpawnWalkInCustomer@Branch@@QAEXXZ", "/O2 /GX /TP", "decorated_alias",

@@ -32,10 +32,30 @@ The full audit ran all 58 tracked verifiers and confirmed **1,020 of 1,180**
 distinct committed C/C++ candidates under the independent relocation gate.
 The other 160 matched the normalized function bodies and lacked complete
 strict evidence. The audit recorded zero tool errors and zero body mismatches.
-The verified set includes all six `runtime01` candidates. Pending worktree
-candidates and stock CRT archive identifications are outside this count.
-The strict matches cover **26.03%** of exported bodies (1,020 of 3,919) and
-approximately **4.44%** of estimated inventory code bytes (54,878 of 1,236,452).
+The verified set includes all six `runtime01` candidates. The reusable-fact
+pilot below adds sixteen more strict functions, for **1,036 of 1,180**.
+Pending worktree candidates and stock CRT archive identifications are outside
+this count. The strict matches cover **26.44%** of exported bodies (1,036 of
+3,919) and approximately **4.50%** of estimated inventory code bytes
+(55,637 of 1,236,452).
+
+### Reusable-fact pilot
+
+`tools/propose_symbol_mappings.py` joined the 142 body-only candidates and
+248 unresolved names against strict recipes, the symbol registry, the shipped
+function/data maps, the PE import table, the stock CRT report, and the vtable
+inventories. Five independently evidenced CRT/C++/vtable facts were accepted,
+seventeen affected objects were rechecked from the COFF cache, and two vtable
+globals from `vtables_full.csv` finished two functions. Extending address-label
+resolution to decorated `?DAT_...@@3...`/`@@Y...` names finished fourteen more.
+The sixteen new strict functions total 759 code bytes.
+
+```sh
+python3 tools/propose_symbol_mappings.py /tmp/pc2-tracked-audit \
+  --crt-report /tmp/pc2-crt-archive-report.json \
+  --json-out /tmp/pc2-proposals.json --report-out /tmp/pc2-proposals.md
+python3 reconstructed/match/tests/test_symbol_proposals.py
+```
 
 ### Re-audit of paused parts
 

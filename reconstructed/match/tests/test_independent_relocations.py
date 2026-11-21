@@ -92,6 +92,7 @@ class IndependentRelocationTests(unittest.TestCase):
         resolve = matcher.resolve_auto_symbol
         self.assertEqual(resolve("?DAT_0057c670@@3HA"), (0x57C670, "address_label"))
         self.assertEqual(resolve("?STR_00583ABC@@3PADA"), (0x583ABC, "address_label"))
+        self.assertEqual(resolve("?DAT_00498370@@YAHPBX0@Z"), (0x498370, "address_label"))
         self.assertEqual(resolve("?Mem_Free@@YAXPAX@Z"), (0x54DD78, "decorated_alias"))
         self.assertEqual(resolve("?DAT_0057c670@@3junk"), (None, None))
         self.assertEqual(resolve("?DAT_0057c670@Foo@@3HA"), (None, None))

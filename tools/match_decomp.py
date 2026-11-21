@@ -121,7 +121,9 @@ def resolve_auto_symbol(name: str):
     addresses = {address for alias in aliases for address in _SYMBOLS.get(alias, ())}
     if addresses:
         return (next(iter(addresses)), "decorated_alias") if len(addresses) == 1 else (None, None)
-    match = re.fullmatch(r"_?(?:DAT|STR)_([0-9a-fA-F]{8})", name)
+    match = re.fullmatch(
+        r"(?:_|\?)?(?:DAT|STR)_([0-9a-fA-F]{8})"
+        r"(?:@@3[A-Z][\w@$?]*|@@Y[A-Z][\w@$?]*)?", name)
     if match:
         return int(match.group(1), 16), "address_label"
     for prefix in ("__imp__", "_imp__"):

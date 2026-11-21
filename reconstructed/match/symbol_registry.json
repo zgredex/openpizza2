@@ -91,6 +91,151 @@
         {"path": "decompiled_fastfood2_named_v2/vtable_slot_targets.csv", "locator": "0x55c2f0 slot 0"},
         {"path": "game/fastfood2.exe", "locator": "constructor vptr write at 0x40198e"}
       ]
+    },
+    {
+      "symbol": "??2@YAPAXI@Z",
+      "address": "0x54e221",
+      "name": "operator_new",
+      "kind": "function",
+      "candidate_declaration": "void * __cdecl operator new(unsigned int)",
+      "abi_observation": "VC6 operator new. The exact address is used by a strict recipe at 0x539e00 and matches the stock LIBC/LIBCMT new.obj scan at 0x54e221.",
+      "evidence": [
+        {
+          "path": "reconstructed/match/batch05/part3/0x539e00.c",
+          "locator": "0x539e00 calls operator new"
+        },
+        {
+          "path": "reconstructed/match/batch05/part3/verify_strict.sh",
+          "locator": "0x539e00 explicit operator new mapping"
+        },
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x54e221"
+        },
+        {
+          "path": "reconstructed/match/README.md",
+          "locator": "stock CRT archive identification"
+        }
+      ]
+    },
+    {
+      "symbol": "_atexit",
+      "address": "0x54dea3",
+      "name": "CRT_Atexit",
+      "kind": "function",
+      "candidate_declaration": "int __cdecl _atexit(void (__cdecl *)(void))",
+      "abi_observation": "VC6 CRT atexit registration routine. Exact symbol appears in the stock LIBC/LIBCMT onexit.obj scan at 0x54dea3.",
+      "evidence": [
+        {
+          "path": "reconstructed/match/batch02/part3/0x522e60.c",
+          "locator": "0x522e60 calls _atexit"
+        },
+        {
+          "path": "reconstructed/match/batch02/part3/verify_c.sh",
+          "locator": "0x522e60 explicit _atexit mapping"
+        },
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x54dea3"
+        },
+        {
+          "path": "reconstructed/match/README.md",
+          "locator": "stock CRT archive identification"
+        }
+      ]
+    },
+    {
+      "symbol": "_fclose",
+      "address": "0x54dee4",
+      "name": "CRT_Fclose",
+      "kind": "function",
+      "candidate_declaration": "int __cdecl fclose(void *)",
+      "abi_observation": "VC6 CRT fclose. Exact symbol appears in the stock LIBC/LIBCMT scan at 0x54dee4.",
+      "evidence": [
+        {
+          "path": "reconstructed/match/batch01/part1/0x401a20.c",
+          "locator": "0x401a20 calls fclose"
+        },
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x54dee4"
+        },
+        {
+          "path": "reconstructed/match/README.md",
+          "locator": "stock CRT archive identification"
+        }
+      ]
+    },
+    {
+      "symbol": "___CxxFrameHandler",
+      "address": "0x54e5f6",
+      "name": "CRT_CxxFrameHandler",
+      "kind": "function",
+      "candidate_declaration": "int __cdecl __CxxFrameHandler(void)",
+      "abi_observation": "VC6 C++ frame handler. Exact symbol appears in the stock LIBC/LIBCMT scan at 0x54e5f6.",
+      "evidence": [
+        {
+          "path": "reconstructed/match/batch01/part1/0x401a20.c",
+          "locator": "0x401a20 EH handler"
+        },
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x54e5f6"
+        },
+        {
+          "path": "reconstructed/match/README.md",
+          "locator": "stock CRT archive identification"
+        }
+      ]
+    },
+    {
+      "symbol": "??_7SpriteFile@@6B@",
+      "address": "0x55c80c",
+      "name": "vtable_SpriteFile",
+      "kind": "vtable",
+      "class": "SpriteFile",
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/vtables_full.csv",
+          "locator": "0x55c80c SpriteFile"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x55c80c"
+        }
+      ]
+    },
+    {
+      "symbol": "?g_GfxRectListVtable@@3PAXA",
+      "address": "0x55c810",
+      "name": "g_GfxRectListVtable",
+      "kind": "global",
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/vtables_full.csv",
+          "locator": "0x55c810 Gfx_RectList"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x55c810"
+        }
+      ]
+    },
+    {
+      "symbol": "?g_SpriteBaseVtable@@3PAXA",
+      "address": "0x55c828",
+      "name": "g_SpriteBaseVtable",
+      "kind": "global",
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/vtables_full.csv",
+          "locator": "0x55c828 SpriteBase"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x55c828"
+        }
+      ]
     }
   ]
 }
