@@ -40,3 +40,20 @@ total         108 / 153 C matches
 The remaining strict failures are mostly missing independent symbol maps for
 calls/globals and unverified `.text$x` unwind data, not byte differences. The
 C-only codegen count remains 53/100 for batch 1 and 100/100 for batch 2.
+
+## Reproduce
+
+```sh
+# Batch 1: per-part scripts already carry the entry/flags/symbol maps.
+PC2_STRICT=1 PC2_AUTO_SYMBOLS=1 sh reconstructed/match/batch01/part1/verify.sh
+PC2_STRICT=1 PC2_AUTO_SYMBOLS=1 bash reconstructed/match/batch01/part2/verify_matches.sh
+PC2_STRICT=1 PC2_AUTO_SYMBOLS=1 bash reconstructed/match/batch01/part3/verify_c.sh
+PC2_STRICT=1 PC2_AUTO_SYMBOLS=1 python3 reconstructed/match/batch01/part4/verify.py
+
+# Batch 2: manifests plus auto symbol resolution.
+for p in 1 2 3 4; do
+  python3 tools/match_batch.py reconstructed/match/batch02/part$p.json \
+    reconstructed/match/batch02/part$p --flags "/O2 /TP" \
+    --strict --auto-symbols
+done
+```
