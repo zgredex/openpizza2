@@ -79,3 +79,15 @@ manifest length.
   makes the mangled name `Sprite::AddSprite`; the symbol is mapped explicitly.
 - `__fltused` is an unresolved marker in `Branch_ClearInteriorObjects`; it is
   not referenced from `.text`, so the matcher can map it to 0.
+
+## C-only correction (integration)
+
+The five EH instruction-level bodies were moved to `nonmatching/asm/` and are
+excluded from the decompiled-C count:
+
+```text
+0x49b4e0 0x4d9780 0x4dce70 0x531a50 0x5471d0
+```
+
+Use `verify_c.sh` for the C/C++ set. It verifies **12/25** candidates as
+`"match": true`; the other 13 are nonmatching C or assembly.
