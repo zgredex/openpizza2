@@ -63,8 +63,8 @@ remaining candidates are under `part2/nonmatching/`.
 |---|---|---|
 | 0x4d2320 | Game_GetObjectCenterY | 61 of 64 bytes match; the shipped cell-table base lands in `edx` and the scaled index in `ecx`, VC6 picks the other way round here: `mov eax,[ecx+edx*4]` vs `mov eax,[edx+ecx*4]` |
 | 0x4d8610 | AI_AddKnownRecord | 56 of 64 bytes match; the shipped null arm is `xor eax,eax; push eax`, ours is `push 0`, shifting the tail by one byte |
-| 0x4e3d30 | Advertising_StartCampaignAgainstPlayer | shipped code loads the campaign argument into `edx` before the player pointer, ours always evaluates the store address first |
-| 0x534a30 | Record_SetSlot6_98 | 59 of 65 bytes match; the shipped slot pointer ends in `edx` and the source pointer in `eax`, ours swaps them |
+| 0x4e3d30 | Advertising_StartCampaignAgainstPlayer | shipped code loads the campaign argument into `edx` before the player pointer (`mov edx,[esp+8]` first), ours evaluates the store address first: first diff offset 1, 45 bytes differ |
+| 0x534a30 | Record_SetSlot6_98 | 59 of 65 bytes match; the shipped slot pointer ends in `edx` (`lea edx,[eax+ecx*2]`) and the source pointer in `eax`, ours swaps them: first diff offset 44 |
 
 No inline assembly was used; all four failures are register-allocation or
 scheduling differences, not unresolved symbols.

@@ -60,9 +60,9 @@ remaining candidates are under `part1/nonmatching/`.
 
 | address | name | remaining difference |
 |---|---|---|
-| 0x535cb0 | Palette_FindIndex | `repz cmpsd` compare is right, but the hoisted `*value` load lands in `esi` instead of the shipped `edx` and the spill slot is reloaded differently: first diff offset 0, 62 bytes wrong |
-| 0x551981 | Stub_ReturnZero | x87 FDIV probe; shipped code is `/Od`-style (three `double` locals spilled with `fld`/`fstp`, `sahf` branch), while every `/O1`/`/O2`/`/Od` spelling tested folds the locals into the FP stack or copies them with `mov` pairs: first diff offset 0, 48-byte candidate |
-| 0x50d8f0 | Object_SyncScreenY | 62 of 63 bytes match; the shipped second hazard test (`test eax,eax; je`) is removed by VC6's jump threading, so the join `jmp` is 3 bytes longer: first diff offset 20 (0x02 vs 0x05) |
+| 0x535cb0 | Palette_FindIndex | `repz cmpsd` compare is right, but the hoisted `*value` load lands in `esi` instead of the shipped `edx`, pushing `push esi` one slot earlier: first diff offset 9 (`8b` vs `56`), 42 bytes differ and the extent is 96 bytes |
+| 0x551981 | Stub_ReturnZero | x87 FDIV probe; shipped code spills all three `double` locals with `fld`/`fstp` and branches with `sahf`, while every `/O1`/`/O2`/`/Od` spelling tested folds the locals into the FP stack or copies them with `mov` pairs: first diff offset 0, 48-byte candidate vs 62 |
+| 0x50d8f0 | Object_SyncScreenY | same length (63 bytes) but the shipped second hazard test (`test eax,eax; je` at 0x50d907) is removed by VC6's jump threading, so the first `jmp` grows from 2 to 5 bytes: first diff offset 20 (`eb 02` vs `eb 05`) and 37 bytes shift after it |
 
 No inline assembly was used; all three failures are compiler-scheduling or
 optimizer differences, not unresolved symbols.
