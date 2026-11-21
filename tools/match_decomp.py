@@ -168,15 +168,15 @@ def read_va(image, address: int, size: int):
     raise ValueError(f"address {address:#x} is outside the PE file sections")
 
 
-def function_length(address: int):
+@lru_cache(maxsize=1)
+def function_lengths():
+    lengths = {}
     if INDEX.is_file():
         index = json.loads(INDEX.read_text())
         for item in index.get("functions", []):
             try:
-                item_address = int(item.get("address", "0x0"), 16)
+                address = int(item.get("address", "0x0"), 16)
             except (TypeError, ValueError):
-                continue
-            if item_address != address:
                 continue
             ranges = item.get("body", {}).get("ranges", [])
             if len(ranges) == 1 and not item["body"].get("non_contiguous"):
@@ -186,8 +186,15 @@ def function_length(address: int):
                 start, end = (int(value, 16) if isinstance(value, str) else int(value)
                               for value in bounds)
                 if start == address and end >= start:
-                    return end - start + 1
-    raise ValueError("no function length; pass --length")
+                    lengths[address] = end - start + 1
+    return lengths
+
+
+def function_length(address: int):
+    length = function_lengths().get(address)
+    if length is None:
+        raise ValueError("no function length; pass --length")
+    return length
 
 
 def parse_coff(path: Path):
@@ -340,7 +347,7 @@ def locate_linked_section(image, section, relocations, coff_symbols, known_bases
     return (found, "unique_section_signature") if found is not None else None
 
 
-def compile_candidate(source: Path, vc6: Path, obj: Path, flags: list[str]):
+def compile_candidate(source: Path, vc6: Path, obj: Path, flags: list[str], *, environment=None):
     cl = vc6 / "BIN" / "CL.EXE"
     if not cl.is_file():
         raise ValueError(f"VC6 CL.EXE not found at {cl}")
@@ -348,7 +355,7 @@ def compile_candidate(source: Path, vc6: Path, obj: Path, flags: list[str]):
         return "Z:" + str(path).replace("/", "\\")
     command = ["wine", str(cl), "/nologo", "/c", *flags,
                f"/Fo{wine_path(obj)}", wine_path(source)]
-    env = dict(os.environ, WINEDEBUG="-all")
+    env = dict(os.environ if environment is None else environment, WINEDEBUG="-all")
     result = subprocess.run(command, cwd=ROOT, env=env, text=True,
                             capture_output=True, timeout=120)
     if result.returncode:
@@ -552,16 +559,18 @@ def file_sha256(path: Path):
     return hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
 
 
+def compiler_provenance(vc6):
+    vc6 = vc6.resolve()
+    return {"path": str(vc6), "sha256": {name: file_sha256(vc6 / "BIN" / name)
+                                        for name in ("CL.EXE", "C1.DLL", "C1XX.DLL", "C2.DLL")}}
+
+
 def match_provenance(source, vc6, flags, symbols, strict, auto_symbols, strict_symbols=False):
     return {
         "source": str(source),
         "source_sha256": file_sha256(source.resolve()),
         "executable_sha256": file_sha256(GAME),
-        "compiler": {
-            "path": str(vc6.resolve()),
-            "sha256": {name: file_sha256(vc6.resolve() / "BIN" / name)
-                       for name in ("CL.EXE", "C1.DLL", "C1XX.DLL", "C2.DLL")},
-        },
+        "compiler": compiler_provenance(vc6),
         "flags": flags,
         "strict_requested": strict,
         "strict_symbols": strict_symbols,

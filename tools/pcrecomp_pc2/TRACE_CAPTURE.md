@@ -38,6 +38,16 @@ python3 tools/pcrecomp_pc2/capture.py run tools/pcrecomp_pc2/scenarios/menu-clic
   --image "$scratch/fastfood2.exe" --out /tmp/pc2-scratch-menu-click
 ```
 
+Add `--linked-manifest "$scratch/batch-manifest.json"` to `run`, or apply it
+afterward with `capture.py report`. The report counts entries at manifest VAs
+within captured phases and lists linked addresses that were not seen. This
+measures the scenario on the pinned lift.
+
+```sh
+python3 tools/pcrecomp_pc2/capture.py report /tmp/pc2-scratch-menu-click \
+  --linked-manifest "$scratch/batch-manifest.json"
+```
+
 ## Read the evidence
 
 | File | Contents |

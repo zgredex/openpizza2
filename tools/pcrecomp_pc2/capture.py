@@ -352,8 +352,41 @@ def make_report(directory):
             "event_limit_reached": limit_hit, "phases": phases, "steps": list(steps.values())}
 
 
-def save_report(directory):
+def linked_addresses(manifest, guest_hash):
+    if manifest["output"]["sha256"] != guest_hash:
+        raise ValueError("linked manifest image SHA-256 differs from the captured image")
+    if manifest["schema"] == "pc2.verified_linked_image_batch.v1":
+        functions = manifest["functions"]
+    elif manifest["schema"] == "pc2.verified_linked_image.v1":
+        functions = [manifest]
+    else:
+        raise ValueError("unsupported linked image manifest schema")
+    linked = {int(item["function"]["start"], 0) for item in functions}
+    if len(linked) != len(functions):
+        raise ValueError("linked image manifest contains duplicate addresses")
+    return linked
+
+
+def linked_reachability(report, manifest):
+    linked = linked_addresses(manifest, report["run"]["guest_sha256"])
+    reached = defaultdict(Counter)
+    for phase in report["phases"]:
+        for item in phase["functions"]:
+            va = int(item["address"], 0)
+            if va in linked:
+                reached[va][phase["name"]] += item["count"]
+    return {"scenario_complete": report["complete"], "linked": len(linked),
+            "reached": [{"address": address(va), "entries": sum(counts.values()), "phases": dict(counts)}
+                        for va, counts in sorted(reached.items())],
+            "not_seen": [address(va) for va in sorted(linked - reached.keys())]}
+
+
+def save_report(directory, linked_manifest=None):
     report = make_report(directory)
+    if linked_manifest is not None:
+        reachability = linked_reachability(report, read_json(linked_manifest))
+        report["linked_reachability"] = {"manifest": str(linked_manifest.resolve()), **reachability}
+        print(f"linked reachability: {len(reachability['reached'])}/{reachability['linked']}")
     write_json(directory / "report.json", report)
     for phase in report["phases"]:
         print(f"{phase['name']}: {len(phase['functions'])} lifted entries, "
@@ -394,6 +427,8 @@ def run_capture(args):
     if not math.isfinite(args.timeout) or args.timeout <= 0:
         raise ValueError("timeout must be positive and finite")
     image, guest_hash = capture_image(args.image)
+    if args.linked_manifest is not None:
+        linked_addresses(read_json(args.linked_manifest), guest_hash)
     directory.mkdir(parents=True)
     write_json(directory / "scenario.json", scenario)
     (directory / "plan.bin").write_bytes(plan)
@@ -430,7 +465,7 @@ def run_capture(args):
                                         "guest_image": str(image), "guest_sha256": guest_hash,
                                         "exit_status": status, "timed_out": timed_out,
                                         "timeout_seconds": args.timeout, "max_runtime_events": args.max_events})
-    return save_report(directory)
+    return save_report(directory, args.linked_manifest)
 
 
 def show_events(args):
@@ -526,12 +561,14 @@ def main():
     run.add_argument("--out", type=Path, required=True, help="new directory for capture files")
     run.add_argument("--work", type=Path, default=DEFAULT_WORK, help="cached pcrecomp build directory")
     run.add_argument("--image", type=Path, help="byte-identical copy of the pinned PE beside its assets")
+    run.add_argument("--linked-manifest", type=Path, help="report captured entries for linked functions")
     run.add_argument("--timeout", type=float, default=120)
     run.add_argument("--max-events", type=lambda x: integer(x, "event limit", high=MASK - 1), default=2_000_000,
                      help="limit for runtime records; 0 is unlimited (default: 2,000,000)")
     run.add_argument("--skip-build", action="store_true")
     report = commands.add_parser("report", help="rebuild the summary from existing capture files")
     report.add_argument("directory", type=Path)
+    report.add_argument("--linked-manifest", type=Path, help="report captured entries for linked functions")
     events = commands.add_parser("events", help="inspect ordered raw events as JSON lines")
     events.add_argument("directory", type=Path)
     events.add_argument("--phase")
@@ -551,7 +588,7 @@ def main():
         if args.command == "run":
             return run_capture(args)
         if args.command == "report":
-            return save_report(args.directory)
+            return save_report(args.directory, args.linked_manifest)
         if args.command == "events":
             return show_events(args)
         if args.command == "sources":
@@ -562,7 +599,7 @@ def main():
         return 0
     except BrokenPipeError:
         return 0
-    except (OSError, ValueError, struct.error, subprocess.CalledProcessError) as error:
+    except (OSError, ValueError, KeyError, struct.error, subprocess.CalledProcessError) as error:
         print(f"capture: {error}", file=sys.stderr)
         return 2
 

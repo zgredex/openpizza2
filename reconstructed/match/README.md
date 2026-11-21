@@ -183,6 +183,41 @@ The final scratch PE was byte-identical to the original. The headless replay
 used the existing pinned lift and moved from screen 21 to 28, tracing 2 and
 34 entries at the two addresses respectively, with zero unresolved edges.
 
+### Batch verification from an audit
+
+Pass an audit directory to relink its eligible recipes into one scratch PE.
+The verifier checks the pinned executable, saved source and compiler hashes,
+and non-overlapping VA and file ranges before starting VC6. Priority addresses
+come first in command-line order, followed by ascending VA. Omit `--limit` to
+run the full plan. The limit counts attempted recipes.
+
+```sh
+python3 tools/verify_linked_image.py --audit /tmp/pc2-tracked-audit \
+  --jobs 8 --limit 25 --address 0x52f750 --address 0x52f910 \
+  --cache /tmp/pc2-coff-cache --out "$scratch/fastfood2.exe" \
+  --manifest "$scratch/batch-manifest.json"
+cmp game/fastfood2.exe "$scratch/fastfood2.exe"
+```
+
+The manifest records unique function and code-byte counts, each linked range,
+and exclusions discovered before or after compilation. Multi-section recipes
+and code that references an adjacent table are outside the current linker
+scope. An actual strict or byte mismatch aborts publication of the image.
+
+The optional cache uses the source path and hash, flags, compiler and Wine
+binary hashes, and the same controlled environment used on cacheable builds.
+The cache is for self-contained sources. Preprocessor directives, time macros,
+and compiler or loader environment overrides bypass it. Every cache hit runs
+the strict matcher and independent relocation checks again.
+
+The pilot linked 25 of 25 functions (1,477 code bytes), and the menu replay
+reached all 25. The full run linked 1,026 of 1,043 planned functions (54,101
+code bytes) into a byte-identical PE and reused 24 pilot objects across
+unrelated environment changes. Preflight excluded four multi-section recipes,
+and the linker excluded 17 more for unsupported layouts. The full menu replay
+advanced from screen 21 to 28 on the pinned lift, reached 111 linked functions,
+and reported zero unresolved edges.
+
 ## Stock CRT archive identification
 
 ```sh
