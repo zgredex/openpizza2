@@ -466,12 +466,17 @@ configured hours as the reason. The city actions are now stateful instead of
 instant shortcuts:
 
 ```text
-HQ plot       tile 13691 (79,83), world 5120,2592
+HQ plot       vacant plot cell 13885 (87,84), world 6048,3088
 HQ quote      3424 / 4565 / 5706 for levels 1-3
 HQ work       4 days; the level is awarded when the clock reaches completion
-Rival target  rival restaurant cell 11508 (28,70), world 3904,1568
+Rival target  stationary rival branch cell 14628 (32,89), world 3424,1936
 Rat courier   5000, 60 minutes to the target; objective awarded on arrival
 ```
+
+The cells come from a native London city-object scan after staffing: the
+player branch was at cell `12592`, the rival branch at `14628` (identical in
+two scans 800 polls apart), and `13885` is an unowned type-20 plot. They
+replace the old fixed offsets from Atrium.
 
 Clicking the HQ marker quotes the next stage and debits the cost when the
 order starts. A progress bar stays on the map until construction finishes.

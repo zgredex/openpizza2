@@ -53,12 +53,13 @@ pub const LONDON_ORDER_CASH_BEFORE: f64 = 492_344.45;
 pub const LONDON_ORDER_CASH_AFTER: f64 = 493_731.73;
 pub const LONDON_ORDER_PRICE: f64 = LONDON_ORDER_REVENUE / (LONDON_ORDER_SERVINGS as f64 * 1.15);
 
-/// London city sites.  The plot and rival marker use the city's tile/object
-/// coordinates; they are not offsets from Atrium.
-pub const LONDON_HQ_TILE: u32 = 13_691;
-pub const LONDON_HQ_WORLD: (i32, i32) = (5_120, 2_592);
-pub const LONDON_RIVAL_TILE: u32 = 11_508;
-pub const LONDON_RIVAL_WORLD: (i32, i32) = (3_904, 1_568);
+/// London city sites.  A native city-object scan after staffing reported the
+/// stationary player branch at cell 12592 and the rival branch at cell 14628
+/// across two snapshots; 13885 is an unowned type-20 plot for the headquarters.
+pub const LONDON_HQ_TILE: u32 = 13_885;
+pub const LONDON_HQ_WORLD: (i32, i32) = (6_048, 3_088);
+pub const LONDON_RIVAL_TILE: u32 = 14_628;
+pub const LONDON_RIVAL_WORLD: (i32, i32) = (3_424, 1_936);
 pub const LONDON_RIVAL_BRANCH_ID: u32 = 100_001;
 /// `CompanyInfo_FillActions` (`0x4a2a10`) quotes HQ expansion from
 /// `Stats_GetCombinedValue(4, level)`.  The level-one quote is the shipped
