@@ -475,8 +475,9 @@ Rat courier   5000, 60 minutes to the target; objective awarded on arrival
 
 The cells come from a native London city-object scan after staffing: the
 player branch was at cell `12592`, the rival branch at `14628` (identical in
-two scans 800 polls apart), and `13885` is an unowned type-20 plot. They
-replace the old fixed offsets from Atrium.
+two scans 800 polls apart), and `13885` is an unowned type-20 plot. A native
+probe located plot `13885` and `Game_CanAffordWithCurrency` accepted its
+`3424` debit. They replace the old fixed offsets from Atrium.
 
 Clicking the HQ marker quotes the next stage and debits the cost when the
 order starts. A progress bar stays on the map until construction finishes.
