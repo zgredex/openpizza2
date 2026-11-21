@@ -181,8 +181,8 @@ BRANCH after player_slot=0 site_id=0 site=F41E8050 branch_id=100000
   Atrium route. The first 200,000-unit batch arrives at the lifted 09:00
   dispatch. The Rust recipe editor saves a tomato/cheese pizza, adds it to
   Atrium's menu, and the cook's sale consumes that recipe's stock. The player
-  UI also covers opening hours, HQ/rival actions, save/load (and menu Continue),
-  and the London result; see `README.md` under Campaign Start.
+  UI also covers opening hours, HQ/rival actions, save/load, menu Continue, and
+  the rendered London result; see `README.md` under Campaign Start.
 - **Exception handling:** the startup registration routine `0x00555F68` is
   now lifted and dispatchable, but `win32hle`'s
   `SetUnhandledExceptionFilter` shim returns `0` and `RaiseException` exits.

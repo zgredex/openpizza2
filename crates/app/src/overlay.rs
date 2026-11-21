@@ -423,7 +423,7 @@ pub fn draw_status(
         height,
         panel_x + 14,
         y,
-        "O OPEN/CLOSE   -/+ PRICE   SPACE STEP",
+        "O OPEN/CLOSE   P PARTY   -/+ PRICE   SPACE STEP",
         [200, 200, 210, 255],
     );
     Ok(())

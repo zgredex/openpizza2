@@ -81,6 +81,7 @@ struct Args {
     menu: bool,
     menu_script: Option<String>,
     menu_selected: Option<usize>,
+    menu_continue: bool,
     character_select: bool,
     character_script: Option<String>,
     campaign_start: bool,
@@ -123,6 +124,7 @@ impl Default for Args {
             menu: false,
             menu_script: None,
             menu_selected: None,
+            menu_continue: false,
             character_select: false,
             character_script: None,
             campaign_start: false,
@@ -166,6 +168,7 @@ fn usage(program: &str) {
          --menu               rebuild the original main menu screen\n\
          --menu-script SCRIPT headless menu commands: up,down,enter,select:N\n\
          --menu-selected N    initial menu selection (0..5)\n\
+         --menu-continue      activate Continue and load the saved London campaign\n\
          --character-select   original Start New Game character screen\n\
          --character-script S headless character-screen commands\n\
          --campaign-start     load the first installed campaign mission\n\
@@ -271,6 +274,7 @@ fn parse_args() -> Result<Args, String> {
                         .clone(),
                 );
             }
+            "--menu-continue" => args.menu_continue = true,
             "--menu-selected" => {
                 index += 1;
                 args.menu_selected = Some(
@@ -1105,6 +1109,37 @@ fn run_free_play_setup_window(
     Ok(app.free_play_pending)
 }
 
+fn run_menu_continue(args: &Args) -> Result<(), String> {
+    let mut install = GameInstall::open(&args.install)
+        .map_err(|error| format!("cannot open installation: {error}"))?;
+    let mut menu = menu::Menu::load(&mut install)?;
+    let index = menu
+        .items()
+        .iter()
+        .position(|item| item.action == menu::MenuAction::ContinueGame)
+        .ok_or("menu has no Continue action")?;
+    menu.set_selected(index);
+    let action = menu.activate();
+    println!(
+        "menu: action={:?} id=0x{:03x} label=\"{}\"",
+        action,
+        action.control_id(),
+        action.label()
+    );
+    if action != menu::MenuAction::ContinueGame {
+        return Err("Continue action was not selected".into());
+    }
+    let path = campaign_save_path();
+    if !path.is_file() {
+        return Err(format!("no saved campaign at {}", path.display()));
+    }
+    let mut next = args.clone();
+    next.menu_continue = false;
+    next.campaign_start = true;
+    next.campaign_load = Some(path.to_string_lossy().into_owned());
+    run_campaign_start(&next)
+}
+
 fn run_menu(args: &Args) -> Result<(), String> {
     let mut install = GameInstall::open(&args.install)
         .map_err(|error| format!("cannot open installation: {error}"))?;
@@ -1478,6 +1513,17 @@ fn apply_world_command(world: &mut World, command: &str) -> Result<(), String> {
         world.advance_to(end);
     } else if command.eq_ignore_ascii_case("status") {
         println!("campaign: status={}", world.snapshot_json());
+    } else if command.eq_ignore_ascii_case("save") {
+        let path = campaign_save_path();
+        if let Some(parent) = path.parent() {
+            let _ = std::fs::create_dir_all(parent);
+        }
+        world.save_campaign(&path)?;
+        println!("campaign: saved path={}", path.display());
+    } else if command.eq_ignore_ascii_case("load") {
+        let path = campaign_save_path();
+        *world = World::load_campaign(&path)?;
+        println!("campaign: loaded path={}", path.display());
     } else if command.eq_ignore_ascii_case("step") {
         world.step();
     } else if let Some(value) = command.strip_prefix("capacity=") {
@@ -1636,6 +1682,11 @@ fn run_campaign_start(args: &Args) -> Result<(), String> {
         );
     }
     println!("campaign: world={}", world.snapshot_json());
+    println!(
+        "campaign: state_goals={} complete={}",
+        world.mission_goal_text().unwrap_or_default(),
+        world.mission_complete()
+    );
     if let Some(offer) = world.campaign_property_offer() {
         println!(
             "campaign: offer tile={} lease_charge={} fee={} total={} source=lifted_initial_state",
@@ -2083,6 +2134,15 @@ fn main() -> ExitCode {
             return ExitCode::FAILURE;
         }
     };
+    if args.menu_continue {
+        return match run_menu_continue(&args) {
+            Ok(()) => ExitCode::SUCCESS,
+            Err(error) => {
+                eprintln!("menu continue failed: {error}");
+                ExitCode::FAILURE
+            }
+        };
+    }
     if args.character_select {
         return match run_character_select(&args) {
             Ok(()) => ExitCode::SUCCESS,
@@ -3768,6 +3828,240 @@ impl WindowApp {
         }
     }
 
+    fn render_explore_frame(&self) -> Option<Vec<u8>> {
+        let sim = self.sim.as_ref()?;
+        match self.mode {
+            ViewMode::City => {
+                let world = self.city_world.as_ref()?;
+                let mut view =
+                    city_crop(world, self.width, self.height, self.camera_x, self.camera_y);
+                if let Some((x, y)) = world.lease_site {
+                    overlay::draw_lease_marker(
+                        &mut view,
+                        self.width,
+                        self.height,
+                        x - self.camera_x,
+                        y - self.camera_y,
+                    );
+                }
+                if let Some((x, y)) = world.supply_site {
+                    overlay::draw_supply_marker(
+                        &mut view,
+                        self.width,
+                        self.height,
+                        x - self.camera_x,
+                        y - self.camera_y,
+                    );
+                }
+                if let Some((x, y)) = world.hq_site {
+                    overlay::draw_hq_marker(
+                        &mut view,
+                        self.width,
+                        self.height,
+                        x - self.camera_x,
+                        y - self.camera_y,
+                    );
+                }
+                if let Some((x, y)) = world.rival_site {
+                    overlay::draw_rival_marker(
+                        &mut view,
+                        self.width,
+                        self.height,
+                        x - self.camera_x,
+                        y - self.camera_y,
+                    );
+                }
+                overlay::draw_city_status(
+                    &mut view,
+                    self.width,
+                    self.height,
+                    (self.camera_x, self.camera_y),
+                    (world.width, world.height),
+                    city_controls(sim, self.branch_base.is_some(), self.lease_prompt),
+                    campaign_city_summary(sim, self.lease_prompt).as_deref(),
+                )
+                .ok()?;
+                if let Some(summary) = sim.mission_summary() {
+                    overlay::draw_mission_hud(
+                        &mut view,
+                        self.width,
+                        self.height,
+                        &summary,
+                        sim.mission_goal_text().as_deref().unwrap_or(""),
+                        sim.mission_complete(),
+                    );
+                }
+                if let Some(offer) = sim.campaign_property_offer() {
+                    if self.lease_prompt.is_some() {
+                        overlay::draw_lease_terms(
+                            &mut view,
+                            self.width,
+                            self.height,
+                            offer.tile_index,
+                            offer.price,
+                            offer.fee,
+                            sim.snapshot().cash,
+                        )
+                        .ok();
+                        overlay::draw_lease_buttons(&mut view, self.width, self.height).ok();
+                    }
+                }
+                if let (Some(office), Some(branch)) =
+                    (self.employment_office.as_ref(), sim.campaign_branch())
+                {
+                    overlay::draw_employment_office(
+                        &mut view,
+                        self.width,
+                        self.height,
+                        office.selected,
+                        World::campaign_employee_candidates(),
+                        &branch.employees,
+                        branch.branch_id,
+                        office.status.as_deref(),
+                    )
+                    .ok();
+                }
+                if let Some(office) = self.supply_office.as_ref() {
+                    if let Some(branch) = sim.campaign_branch() {
+                        overlay::draw_supply_office(
+                            &mut view,
+                            self.width,
+                            self.height,
+                            branch.warehouse_id,
+                            branch.warehouse_name.as_deref(),
+                            branch.supplier.as_deref(),
+                            branch.deliveries_enabled,
+                            sim.snapshot().stock,
+                            branch.delivery_due_hour,
+                            office.status.as_deref(),
+                        )
+                        .ok();
+                    }
+                }
+                if let Some(panel) = self.mission_panel.as_ref() {
+                    let (title, detail) = match panel.kind {
+                        MissionPanelKind::Headquarters => (
+                            "HEADQUARTERS SITE",
+                            format!(
+                                "LEVEL {}/3   CASH {:.2}",
+                                sim.hq_level(),
+                                sim.snapshot().cash
+                            ),
+                        ),
+                        MissionPanelKind::Rival => (
+                            "RIVAL BRANCH",
+                            format!("RATS DELIVERED {}", sim.rats_placed()),
+                        ),
+                    };
+                    overlay::draw_mission_panel(
+                        &mut view,
+                        self.width,
+                        self.height,
+                        title,
+                        &detail,
+                        panel.status.as_deref(),
+                    )
+                    .ok();
+                }
+                if self.briefing_open {
+                    overlay::draw_briefing(
+                        &mut view,
+                        self.width,
+                        self.height,
+                        sim.scenario()
+                            .map_or("LONDON", |scenario| scenario.city_name.as_str()),
+                        sim.mission_goal_text().as_deref().unwrap_or(""),
+                        &sim.next_action_text(),
+                    )
+                    .ok();
+                }
+                if sim.mission_complete() {
+                    overlay::draw_result_screen(
+                        &mut view,
+                        self.width,
+                        self.height,
+                        sim.scenario()
+                            .map_or("LONDON", |scenario| scenario.city_name.as_str()),
+                        sim.mission_goal_text().as_deref().unwrap_or(""),
+                        sim.snapshot().cash,
+                        sim.player_branches()
+                            .iter()
+                            .map(|branch| branch.revenue)
+                            .sum(),
+                    )
+                    .ok();
+                }
+                Some(view)
+            }
+            ViewMode::Branch => {
+                let base = self.branch_base.as_ref()?;
+                let actors = self.actors.as_ref()?;
+                let mut view = actors::compose(
+                    base,
+                    self.width,
+                    self.height,
+                    actors,
+                    &sim.snapshot(),
+                    sim.customer_visible(),
+                )
+                .ok()?;
+                overlay::draw_status(
+                    &mut view,
+                    self.width,
+                    self.height,
+                    &sim.snapshot(),
+                    sim.profile(),
+                    sim.scenario(),
+                )
+                .ok()?;
+                overlay::draw_branch_reason(
+                    &mut view,
+                    self.width,
+                    self.height,
+                    &sim.branch_status_text(),
+                );
+                if let Some(summary) = sim.mission_summary() {
+                    overlay::draw_mission_hud(
+                        &mut view,
+                        self.width,
+                        self.height,
+                        &summary,
+                        sim.mission_goal_text().as_deref().unwrap_or(""),
+                        sim.mission_complete(),
+                    );
+                }
+                if let Some(editor) = self.recipe_editor.as_ref() {
+                    let recipe = sim.campaign_recipe();
+                    overlay::draw_recipe_editor(
+                        &mut view,
+                        self.width,
+                        self.height,
+                        editor.tomato,
+                        editor.cheese,
+                        editor.saved,
+                        recipe.is_some_and(|recipe| recipe.on_menu),
+                        recipe.map_or(0.0, |recipe| recipe.price),
+                        editor.status.as_deref(),
+                    )
+                    .ok();
+                }
+                if let Some(panel) = self.hours_panel.as_ref() {
+                    overlay::draw_hours_panel(
+                        &mut view,
+                        self.width,
+                        self.height,
+                        panel.open,
+                        panel.close,
+                        panel.edit_close,
+                        panel.status.as_deref(),
+                    )
+                    .ok();
+                }
+                Some(view)
+            }
+        }
+    }
+
     fn confirm_campaign_lease(&mut self) -> bool {
         let Some(sim) = self.sim.as_mut() else {
             return false;
@@ -4465,6 +4759,94 @@ impl WindowApp {
         }
     }
 
+    fn handle_key(&mut self, logical_key: &Key) -> bool {
+        if *logical_key == Key::Named(NamedKey::F5) {
+            self.save_world();
+            return true;
+        }
+        if *logical_key == Key::Named(NamedKey::F9) {
+            self.load_world();
+            return true;
+        }
+        if self.handle_explore_key(logical_key) {
+            return true;
+        }
+        if *logical_key == Key::Named(NamedKey::Escape) {
+            return false;
+        }
+        if self.explore && self.mode == ViewMode::City {
+            return true;
+        }
+        let handled = match logical_key {
+            Key::Character(text) => {
+                let value = text.as_str();
+                if value.eq_ignore_ascii_case("o") {
+                    if let Some(sim) = &mut self.sim {
+                        let open = sim.snapshot().open;
+                        if sim.is_campaign() {
+                            match sim.set_campaign_open(!open) {
+                                Ok(()) => {}
+                                Err(error) => println!("campaign: {error}"),
+                            }
+                        } else {
+                            sim.set_open(!open);
+                        }
+                    }
+                    true
+                } else if value.eq_ignore_ascii_case("p") {
+                    if let Some(sim) = &mut self.sim {
+                        sim.enqueue_party(1);
+                    }
+                    true
+                } else if value == "+" || value == "=" {
+                    if let Some(sim) = &mut self.sim {
+                        let price = sim.snapshot().price;
+                        sim.set_price(price + 1.0);
+                    }
+                    true
+                } else if value == "-" || value == "_" {
+                    if let Some(sim) = &mut self.sim {
+                        let price = sim.snapshot().price;
+                        sim.set_price(price - 1.0);
+                    }
+                    true
+                } else if value.eq_ignore_ascii_case("n") {
+                    if let Some(sim) = &mut self.sim {
+                        sim.step();
+                    }
+                    true
+                } else {
+                    false
+                }
+            }
+            Key::Named(NamedKey::Space) => {
+                if let Some(sim) = &mut self.sim {
+                    sim.step();
+                }
+                true
+            }
+            Key::Named(NamedKey::ArrowUp) => {
+                if let Some(sim) = &mut self.sim {
+                    let price = sim.snapshot().price;
+                    sim.set_price(price + 1.0);
+                }
+                true
+            }
+            Key::Named(NamedKey::ArrowDown) => {
+                if let Some(sim) = &mut self.sim {
+                    let price = sim.snapshot().price;
+                    sim.set_price(price - 1.0);
+                }
+                true
+            }
+            _ => false,
+        };
+        if handled {
+            self.refresh_playable();
+        }
+        handled
+    }
+
     fn refresh_playable(&mut self) {
         if self.explore {
             self.refresh_explore();
@@ -4694,85 +5076,11 @@ impl ApplicationHandler for WindowApp {
                         return;
                     }
                 }
-                if logical_key == Key::Named(NamedKey::F5) {
-                    self.save_world();
-                    return;
-                }
-                if logical_key == Key::Named(NamedKey::F9) {
-                    self.load_world();
-                    return;
-                }
-                if self.handle_explore_key(&logical_key) {
+                if self.handle_key(&logical_key) {
                     return;
                 }
                 if logical_key == Key::Named(NamedKey::Escape) {
                     event_loop.exit();
-                    return;
-                }
-                if self.explore && self.mode == ViewMode::City {
-                    return;
-                }
-                let handled = match &logical_key {
-                    Key::Character(text) => {
-                        let value = text.as_str();
-                        if value.eq_ignore_ascii_case("o") {
-                            if let Some(sim) = &mut self.sim {
-                                let open = sim.snapshot().open;
-                                if sim.is_campaign() {
-                                    match sim.set_campaign_open(!open) {
-                                        Ok(()) => {}
-                                        Err(error) => println!("campaign: {error}"),
-                                    }
-                                } else {
-                                    sim.set_open(!open);
-                                }
-                            }
-                            true
-                        } else if value == "+" || value == "=" {
-                            if let Some(sim) = &mut self.sim {
-                                let price = sim.snapshot().price;
-                                sim.set_price(price + 1.0);
-                            }
-                            true
-                        } else if value == "-" || value == "_" {
-                            if let Some(sim) = &mut self.sim {
-                                let price = sim.snapshot().price;
-                                sim.set_price(price - 1.0);
-                            }
-                            true
-                        } else if value.eq_ignore_ascii_case("n") {
-                            if let Some(sim) = &mut self.sim {
-                                sim.step();
-                            }
-                            true
-                        } else {
-                            false
-                        }
-                    }
-                    Key::Named(NamedKey::Space) => {
-                        if let Some(sim) = &mut self.sim {
-                            sim.step();
-                        }
-                        true
-                    }
-                    Key::Named(NamedKey::ArrowUp) => {
-                        if let Some(sim) = &mut self.sim {
-                            let price = sim.snapshot().price;
-                            sim.set_price(price + 1.0);
-                        }
-                        true
-                    }
-                    Key::Named(NamedKey::ArrowDown) => {
-                        if let Some(sim) = &mut self.sim {
-                            let price = sim.snapshot().price;
-                            sim.set_price(price - 1.0);
-                        }
-                        true
-                    }
-                    _ => false,
-                };
-                if handled {
-                    self.refresh_playable();
                 }
             }
             _ => {}
@@ -4876,6 +5184,25 @@ mod tests {
         assert_ne!(first, moved);
     }
 
+    fn real_ui_scenes() -> Option<(Scene, Scene, actors::Actors)> {
+        let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("..")
+            .join("..")
+            .join("game");
+        if !root.is_dir() {
+            return None;
+        }
+        let mut args = Args::default();
+        args.install = root.clone();
+        args.map = root.join("Isokarten").join("Lon.iso");
+        args.branch_map = root.join("Isokarten").join("Iso_Filiale_einf_klein.iso");
+        let preview = build_scene(&args).ok()?;
+        let city = build_city_world(&args, &preview).ok()?;
+        let branch = load_explore_branch(&args).ok()?;
+        let actors = load_actors(&args).ok()?;
+        Some((city, branch, actors))
+    }
+
     fn campaign_world_with_offer() -> World {
         let scenario = pc2_sim::ScenarioSetup::from_campaign_mission(
             "lon".into(),
@@ -4957,6 +5284,19 @@ mod tests {
             rival_site: Some((400, 120)),
         });
         app.branch_base = Some(Vec::new());
+        if let Some((city, branch, actors)) = real_ui_scenes() {
+            app.city_world = Some(CityWorld {
+                width: city.crop.width,
+                height: city.crop.height,
+                pixels: city.pixels,
+                lease_site: Some((100, 120)),
+                supply_site: Some((200, 120)),
+                hq_site: Some((300, 120)),
+                rival_site: Some((400, 120)),
+            });
+            app.branch_base = Some(branch.pixels);
+            app.actors = Some(actors);
+        }
         app.briefing_open = true;
         assert!(app.handle_explore_key(&Key::Named(NamedKey::Enter)));
 
@@ -4979,8 +5319,10 @@ mod tests {
         assert!(app.handle_explore_key(&Key::Character("r".into())));
         assert!(app.handle_explore_key(&Key::Named(NamedKey::Escape)));
 
-        app.sim.as_mut().unwrap().advance_to(545);
-        app.mode = ViewMode::Branch;
+        assert!(app.handle_key(&Key::Character("b".into())));
+        for _ in 0..109 {
+            assert!(app.handle_key(&Key::Named(NamedKey::Space)));
+        }
         assert!(app.handle_explore_key(&Key::Character("r".into())));
         for _ in 0..3 {
             assert!(app.handle_explore_key(&Key::Character("t".into())));
@@ -4997,15 +5339,30 @@ mod tests {
         assert!(app.handle_explore_key(&Key::Character("h".into())));
         assert!(app.handle_explore_key(&Key::Named(NamedKey::Enter)));
         assert!(app.handle_explore_key(&Key::Named(NamedKey::Escape)));
-        app.sim.as_mut().unwrap().set_campaign_open(true).unwrap();
-        app.sim.as_mut().unwrap().enqueue_party(1);
-        app.sim
-            .as_mut()
-            .unwrap()
-            .advance_queue_ticks(pc2_sim::QUEUE_WALK_TICKS + pc2_sim::PRODUCTION_TICKS);
-        app.sim.as_mut().unwrap().advance_to(22 * 60);
+        assert!(app.handle_key(&Key::Character("o".into())));
+        assert!(app.handle_key(&Key::Character("p".into())));
+        assert!(app.handle_key(&Key::Named(NamedKey::Space)));
+        if let Some(frame) = app.render_explore_frame() {
+            pc2_scene::write_rgba_png(
+                std::path::Path::new("/tmp/opencode/london_branch_frame.png"),
+                800,
+                600,
+                &frame,
+            )
+            .unwrap();
+        }
+        for _ in 0..5 {
+            assert!(app.handle_key(&Key::Named(NamedKey::Space)));
+        }
+        assert!(app.sim.as_ref().unwrap().snapshot().sales > 0);
+        for _ in 0..200 {
+            if !app.sim.as_ref().unwrap().snapshot().open {
+                break;
+            }
+            assert!(app.handle_key(&Key::Named(NamedKey::Space)));
+        }
 
-        app.mode = ViewMode::City;
+        assert!(app.handle_key(&Key::Character("c".into())));
         assert!(app.handle_explore_click(300, 120));
         for _ in 0..3 {
             assert!(app.handle_explore_key(&Key::Named(NamedKey::Enter)));
@@ -5014,8 +5371,17 @@ mod tests {
         assert!(app.handle_explore_click(400, 120));
         assert!(app.handle_explore_key(&Key::Named(NamedKey::Enter)));
         assert!(app.sim.as_ref().unwrap().mission_complete());
-        assert!(app.save_world());
-        assert!(app.load_world());
+        if let Some(frame) = app.render_explore_frame() {
+            pc2_scene::write_rgba_png(
+                std::path::Path::new("/tmp/opencode/london_result_frame.png"),
+                800,
+                600,
+                &frame,
+            )
+            .unwrap();
+        }
+        assert!(app.handle_key(&Key::Named(NamedKey::F5)));
+        assert!(app.handle_key(&Key::Named(NamedKey::F9)));
 
         let mut headless = campaign_world_with_offer();
         headless.lease_campaign_property(13_694).unwrap();

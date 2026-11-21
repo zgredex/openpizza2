@@ -427,6 +427,11 @@ cargo test -p pc2-app city_click_selects_vacant_storefront_and_confirm_leases_it
 
 #### London player-facing UI
 
+This is a playable reconstruction: city/branch maps and actor sprites come
+from the installed game, while the action panels, briefing, recipe preview,
+and result screen are drawn by the Rust UI. It is not an asset- or
+behaviour-identical rebuild of every original screen.
+
 A New Game campaign now opens with a mission briefing panel listing the three
 objectives and the next action. Enter/Esc dismisses it. The city map exposes
 markers and actions for the vacant storefront, Employment Office, Supply
@@ -457,12 +462,22 @@ The UI-control run and the equivalent headless replay are:
 cargo test -p pc2-app london_ui_run_matches_the_headless_campaign_flow -- --nocapture
 
 cargo run -p pc2-app -- --campaign-start --playable-script \
-  'lease=13694;hire=cook;hire=service;hire=errand;hire=errand;warehouse=100000;supplier=central-market;route;branch;advance=545;recipe=30,20;recipe-price=15;recipe-menu;hours=6-22;open;party;ticks=260;ticks=180;ticks=80;advance=1320;hq;hq;hq;rat' \
+  'lease=13694;hire=cook;hire=service;hire=errand;hire=errand;warehouse=100000;supplier=central-market;route;branch;advance=545;recipe=30,20;recipe-price=15;recipe-menu;hours=6-22;open;party;ticks=260;ticks=180;ticks=80;advance=1320;hq;hq;hq;rat;save' \
   --output /tmp/opencode/london_headless_complete.png
+
+cargo run -p pc2-app -- --menu-continue \
+  --output /tmp/opencode/london_menu_continue.png
 ```
 
-Both finish with cash `519009.50`, stock `135000`, price `15.00`, 13 recipe
-sales, the branch closed at 22:00, and all three goals complete:
+The UI test also captures the rendered branch and result frames:
+
+```text
+/tmp/opencode/london_branch_frame.png
+/tmp/opencode/london_result_frame.png
+```
+
+Both paths finish with cash `519009.50`, stock `135000`, price `15.00`, 13
+recipe sales, the branch closed at 22:00, and all three goals complete:
 
 ```text
 campaign: goals=[X] Build HQ level 3 (3/3)
