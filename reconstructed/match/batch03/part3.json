@@ -1,0 +1,202 @@
+[
+  {
+    "address": "0x526850",
+    "name": "Dialog_SetResult",
+    "start": "0x526850",
+    "end": "0x526866",
+    "length": 23,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x526850.c"
+  },
+  {
+    "address": "0x526d10",
+    "name": "UI_SetMenuToggle",
+    "start": "0x526d10",
+    "end": "0x526d23",
+    "length": 20,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x526d10.c"
+  },
+  {
+    "address": "0x5272a0",
+    "name": "UI_SetFontName",
+    "start": "0x5272a0",
+    "end": "0x5272b2",
+    "length": 19,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x5272a0.c"
+  },
+  {
+    "address": "0x5272d0",
+    "name": "UI_SetLayoutParams",
+    "start": "0x5272d0",
+    "end": "0x5272e6",
+    "length": 23,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x5272d0.c"
+  },
+  {
+    "address": "0x527a80",
+    "name": "UI_ApplyChildSpriteTint",
+    "start": "0x527a80",
+    "end": "0x527a97",
+    "length": 24,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x527a80.c"
+  },
+  {
+    "address": "0x527c60",
+    "name": "UI_AddEffectObject",
+    "start": "0x527c60",
+    "end": "0x527c72",
+    "length": 19,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x527c60.c"
+  },
+  {
+    "address": "0x527c80",
+    "name": "UI_RemoveEffectObject",
+    "start": "0x527c80",
+    "end": "0x527c92",
+    "length": 19,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x527c80.c"
+  },
+  {
+    "address": "0x527cf0",
+    "name": "UI_ClearScrollDrag",
+    "start": "0x527cf0",
+    "end": "0x527d04",
+    "length": 21,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x527cf0.c"
+  },
+  {
+    "address": "0x52e830",
+    "name": "Renderer_ReleaseTarget",
+    "start": "0x52e830",
+    "end": "0x52e845",
+    "length": 22,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x52e830.c"
+  },
+  {
+    "address": "0x52f0d0",
+    "name": "Gadget_GetSpriteFrames",
+    "start": "0x52f0d0",
+    "end": "0x52f0e4",
+    "length": 21,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x52f0d0.c"
+  },
+  {
+    "address": "0x52f830",
+    "name": "Gadget_SetText",
+    "start": "0x52f830",
+    "end": "0x52f847",
+    "length": 24,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x52f830.c"
+  },
+  {
+    "address": "0x52f910",
+    "name": "Window_GadgetNotify_Text_SetTextColor",
+    "start": "0x52f910",
+    "end": "0x52f927",
+    "length": 24,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x52f910.c"
+  },
+  {
+    "address": "0x52f930",
+    "name": "Window_GadgetNotify_Text_GetFont",
+    "start": "0x52f930",
+    "end": "0x52f944",
+    "length": 21,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x52f930.c"
+  },
+  {
+    "address": "0x52f950",
+    "name": "Window_GadgetNotify_Text_GetLineCount",
+    "start": "0x52f950",
+    "end": "0x52f964",
+    "length": 21,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x52f950.c"
+  },
+  {
+    "address": "0x52f970",
+    "name": "Window_GadgetNotify_Text_GetHeight",
+    "start": "0x52f970",
+    "end": "0x52f984",
+    "length": 21,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x52f970.c"
+  },
+  {
+    "address": "0x52f990",
+    "name": "Window_GadgetNotify_Text_ResetScroll",
+    "start": "0x52f990",
+    "end": "0x52f9a7",
+    "length": 24,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x52f990.c"
+  },
+  {
+    "address": "0x52f9b0",
+    "name": "Window_GadgetNotify_Text_SetText",
+    "start": "0x52f9b0",
+    "end": "0x52f9c7",
+    "length": 24,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x52f9b0.c"
+  },
+  {
+    "address": "0x52fa20",
+    "name": "Window_GadgetNotify_Text_SetMode",
+    "start": "0x52fa20",
+    "end": "0x52fa37",
+    "length": 24,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x52fa20.c"
+  },
+  {
+    "address": "0x52fb00",
+    "name": "Window_GadgetNotify_Input_SetFilter",
+    "start": "0x52fb00",
+    "end": "0x52fb17",
+    "length": 24,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x52fb00.c"
+  },
+  {
+    "address": "0x52fb20",
+    "name": "Window_GadgetNotify_Input_GetFilter",
+    "start": "0x52fb20",
+    "end": "0x52fb34",
+    "length": 21,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x52fb20.c"
+  },
+  {
+    "address": "0x52fb40",
+    "name": "Window_GadgetNotify_Input_SetNormalColor",
+    "start": "0x52fb40",
+    "end": "0x52fb57",
+    "length": 24,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x52fb40.c"
+  },
+  {
+    "address": "0x52fb60",
+    "name": "Window_GadgetNotify_Input_SetEditingColor",
+    "start": "0x52fb60",
+    "end": "0x52fb77",
+    "length": 24,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x52fb60.c"
+  },
+  {
+    "address": "0x52fb80",
+    "name": "Window_GadgetNotify_Input_SetFocusColor",
+    "start": "0x52fb80",
+    "end": "0x52fb97",
+    "length": 24,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x52fb80.c"
+  },
+  {
+    "address": "0x52fba0",
+    "name": "Window_GadgetNotify_Input_SetSelectionColor",
+    "start": "0x52fba0",
+    "end": "0x52fbb7",
+    "length": 24,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x52fba0.c"
+  },
+  {
+    "address": "0x52fbc0",
+    "name": "Window_GadgetNotify_Input_SetText",
+    "start": "0x52fbc0",
+    "end": "0x52fbd7",
+    "length": 24,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x52fbc0.c"
+  }
+]
