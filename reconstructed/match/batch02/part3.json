@@ -1,0 +1,202 @@
+[
+  {
+    "address": "0x4dca70",
+    "name": "City_GetLocalizedName",
+    "start": "0x4dca70",
+    "end": "0x4dca7d",
+    "length": 14,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4dca70.c"
+  },
+  {
+    "address": "0x4ddcc0",
+    "name": "Game_GetPlayerCity",
+    "start": "0x4ddcc0",
+    "end": "0x4ddcd0",
+    "length": 17,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4ddcc0.c"
+  },
+  {
+    "address": "0x4e4760",
+    "name": "Object_SetField0C",
+    "start": "0x4e4760",
+    "end": "0x4e4769",
+    "length": 10,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4e4760.c"
+  },
+  {
+    "address": "0x4f0e20",
+    "name": "Counter_IncrementShortBA",
+    "start": "0x4f0e20",
+    "end": "0x4f0e2e",
+    "length": 15,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4f0e20.c"
+  },
+  {
+    "address": "0x4f5c70",
+    "name": "Object_SetShort28",
+    "start": "0x4f5c70",
+    "end": "0x4f5c7b",
+    "length": 12,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4f5c70.c"
+  },
+  {
+    "address": "0x4f5fc0",
+    "name": "Object_ClearField28",
+    "start": "0x4f5fc0",
+    "end": "0x4f5fc7",
+    "length": 8,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4f5fc0.c"
+  },
+  {
+    "address": "0x501b70",
+    "name": "Player_AIState_Destroy",
+    "start": "0x501b70",
+    "end": "0x501b7d",
+    "length": 14,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x501b70.c"
+  },
+  {
+    "address": "0x508d40",
+    "name": "Object_ApplyPendingType",
+    "start": "0x508d40",
+    "end": "0x508d4f",
+    "length": 16,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x508d40.c"
+  },
+  {
+    "address": "0x509220",
+    "name": "Object_SetChildShort",
+    "start": "0x509220",
+    "end": "0x509230",
+    "length": 17,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x509220.c"
+  },
+  {
+    "address": "0x50e4a0",
+    "name": "Object_GetChildField2C",
+    "start": "0x50e4a0",
+    "end": "0x50e4b0",
+    "length": 17,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x50e4a0.c"
+  },
+  {
+    "address": "0x50e540",
+    "name": "Object_IsState10",
+    "start": "0x50e540",
+    "end": "0x50e54e",
+    "length": 15,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x50e540.c"
+  },
+  {
+    "address": "0x50e700",
+    "name": "Set_Field168",
+    "start": "0x50e700",
+    "end": "0x50e70c",
+    "length": 13,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x50e700.c"
+  },
+  {
+    "address": "0x50e710",
+    "name": "Object_SetFlag104",
+    "start": "0x50e710",
+    "end": "0x50e71c",
+    "length": 13,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x50e710.c"
+  },
+  {
+    "address": "0x50e720",
+    "name": "Object_SetFieldFC",
+    "start": "0x50e720",
+    "end": "0x50e72c",
+    "length": 13,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x50e720.c"
+  },
+  {
+    "address": "0x50e840",
+    "name": "Object_Reset108",
+    "start": "0x50e840",
+    "end": "0x50e84f",
+    "length": 16,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x50e840.c"
+  },
+  {
+    "address": "0x50efb0",
+    "name": "Object_SetField8",
+    "start": "0x50efb0",
+    "end": "0x50efb9",
+    "length": 10,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x50efb0.c"
+  },
+  {
+    "address": "0x513fe0",
+    "name": "Storage_Destroy",
+    "start": "0x513fe0",
+    "end": "0x513fed",
+    "length": 14,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x513fe0.c"
+  },
+  {
+    "address": "0x514320",
+    "name": "Storage_GetCapacity",
+    "start": "0x514320",
+    "end": "0x51432a",
+    "length": 11,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x514320.c"
+  },
+  {
+    "address": "0x521380",
+    "name": "UI_RealizeSprite",
+    "start": "0x521380",
+    "end": "0x52138a",
+    "length": 11,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x521380.c"
+  },
+  {
+    "address": "0x521b30",
+    "name": "UI_ClipChildRect",
+    "start": "0x521b30",
+    "end": "0x521b3e",
+    "length": 15,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x521b30.c"
+  },
+  {
+    "address": "0x522e60",
+    "name": "Atexit_RegisterListCritSectDtor",
+    "start": "0x522e60",
+    "end": "0x522e6b",
+    "length": 12,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x522e60.c"
+  },
+  {
+    "address": "0x526cf0",
+    "name": "Set_Field228",
+    "start": "0x526cf0",
+    "end": "0x526cfc",
+    "length": 13,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x526cf0.c"
+  },
+  {
+    "address": "0x526d00",
+    "name": "Clear_Field228",
+    "start": "0x526d00",
+    "end": "0x526d0a",
+    "length": 11,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x526d00.c"
+  },
+  {
+    "address": "0x5272c0",
+    "name": "UI_GetTextObject",
+    "start": "0x5272c0",
+    "end": "0x5272ca",
+    "length": 11,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x5272c0.c"
+  },
+  {
+    "address": "0x527940",
+    "name": "UI_SetWindowProc",
+    "start": "0x527940",
+    "end": "0x52794c",
+    "length": 13,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x527940.c"
+  }
+]

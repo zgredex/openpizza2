@@ -1,0 +1,202 @@
+[
+  {
+    "address": "0x401300",
+    "name": "NamedLockable_Destroy",
+    "start": "0x401300",
+    "end": "0x401310",
+    "length": 17,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x401300.c"
+  },
+  {
+    "address": "0x4029d0",
+    "name": "Resource_GetSize",
+    "start": "0x4029d0",
+    "end": "0x4029d9",
+    "length": 10,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4029d0.c"
+  },
+  {
+    "address": "0x403190",
+    "name": "Clear_Ptr",
+    "start": "0x403190",
+    "end": "0x403198",
+    "length": 9,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x403190.c"
+  },
+  {
+    "address": "0x403d40",
+    "name": "Input_LeaveLock",
+    "start": "0x403d40",
+    "end": "0x403d47",
+    "length": 8,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x403d40.c"
+  },
+  {
+    "address": "0x403d60",
+    "name": "MissionBriefing_InitList",
+    "start": "0x403d60",
+    "end": "0x403d6c",
+    "length": 13,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x403d60.c"
+  },
+  {
+    "address": "0x47ee50",
+    "name": "Branch_InvalidateRatingCache",
+    "start": "0x47ee50",
+    "end": "0x47ee5e",
+    "length": 15,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x47ee50.c"
+  },
+  {
+    "address": "0x480060",
+    "name": "Game_UpdateFreeBuildingCount",
+    "start": "0x480060",
+    "end": "0x48006d",
+    "length": 14,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x480060.c"
+  },
+  {
+    "address": "0x4800c0",
+    "name": "Game_CountFreeBuildingsTypeD",
+    "start": "0x4800c0",
+    "end": "0x4800cd",
+    "length": 14,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4800c0.c"
+  },
+  {
+    "address": "0x482710",
+    "name": "Game_GetGlobalTableValue",
+    "start": "0x482710",
+    "end": "0x48271d",
+    "length": 14,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x482710.c"
+  },
+  {
+    "address": "0x482810",
+    "name": "Game_RegisterObject",
+    "start": "0x482810",
+    "end": "0x48281f",
+    "length": 16,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x482810.c"
+  },
+  {
+    "address": "0x482880",
+    "name": "Game_DestroyRootWindow",
+    "start": "0x482880",
+    "end": "0x48288c",
+    "length": 13,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x482880.c"
+  },
+  {
+    "address": "0x482910",
+    "name": "Game_GetActiveScreenOrFallback",
+    "start": "0x482910",
+    "end": "0x482920",
+    "length": 17,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x482910.c"
+  },
+  {
+    "address": "0x483110",
+    "name": "Object_SetField280",
+    "start": "0x483110",
+    "end": "0x48311c",
+    "length": 13,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x483110.c"
+  },
+  {
+    "address": "0x486f20",
+    "name": "Game_MarkObjectsDirtyType6",
+    "start": "0x486f20",
+    "end": "0x486f2d",
+    "length": 14,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x486f20.c"
+  },
+  {
+    "address": "0x489b10",
+    "name": "Game_GetDateField0C",
+    "start": "0x489b10",
+    "end": "0x489b19",
+    "length": 10,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x489b10.c"
+  },
+  {
+    "address": "0x4900a0",
+    "name": "BranchMenu_Category_Load",
+    "start": "0x4900a0",
+    "end": "0x4900b0",
+    "length": 17,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4900a0.c"
+  },
+  {
+    "address": "0x4900c0",
+    "name": "BranchMenu_Category_Save",
+    "start": "0x4900c0",
+    "end": "0x4900d0",
+    "length": 17,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4900c0.c"
+  },
+  {
+    "address": "0x4919b0",
+    "name": "BranchStats_SeriesFlags_Load",
+    "start": "0x4919b0",
+    "end": "0x4919c0",
+    "length": 17,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4919b0.c"
+  },
+  {
+    "address": "0x4919d0",
+    "name": "BranchStats_SeriesFlags_Save",
+    "start": "0x4919d0",
+    "end": "0x4919e0",
+    "length": 17,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4919d0.c"
+  },
+  {
+    "address": "0x492230",
+    "name": "BranchDesign_ColorIndex_Load",
+    "start": "0x492230",
+    "end": "0x492240",
+    "length": 17,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x492230.c"
+  },
+  {
+    "address": "0x492250",
+    "name": "BranchDesign_ColorIndex_Save",
+    "start": "0x492250",
+    "end": "0x492260",
+    "length": 17,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x492250.c"
+  },
+  {
+    "address": "0x4973f0",
+    "name": "Supplier_GetValuePlusOne",
+    "start": "0x4973f0",
+    "end": "0x497401",
+    "length": 18,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4973f0.c"
+  },
+  {
+    "address": "0x499570",
+    "name": "IngredientPanel_Load",
+    "start": "0x499570",
+    "end": "0x499580",
+    "length": 17,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x499570.c"
+  },
+  {
+    "address": "0x499590",
+    "name": "IngredientPanel_Save",
+    "start": "0x499590",
+    "end": "0x4995a0",
+    "length": 17,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x499590.c"
+  },
+  {
+    "address": "0x4a0a60",
+    "name": "SaveGameMenu_DestroyList",
+    "start": "0x4a0a60",
+    "end": "0x4a0a6b",
+    "length": 12,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4a0a60.c"
+  }
+]
