@@ -148,6 +148,41 @@ fixup to `0x55c2f0`. The destructor is still blocked on other relocations,
 including `_fclose`. `--abi-context` adds relevant aliases and existing class
 layout observations to function packets on request.
 
+## Scratch PE verification
+
+`tools/verify_linked_image.py` compiles one candidate from the contiguous
+function inventory and requires a strict match. It writes the COFF body into a
+scratch PE after evaluating its `DIR32` and `REL32` addends with independently
+resolved targets. The complete image must equal the original byte for byte.
+The manifest records both images, source and COFF hashes, the function range,
+relocation evidence, and direct call fixups. Both output paths must be new.
+The current linker accepts one function section with optional trailing padding.
+
+Run the pilot from the repository root with `scratch` pointing to an existing
+scratch installation directory. The executable can then be replayed beside
+the corresponding assets.
+
+```sh
+python3 tools/verify_linked_image.py 0x52f750 \
+  reconstructed/match/batch09/part4/0x52f750.c --length 68 \
+  --entry '?SetButtonColors@Gadget@@QAEXHHHH@Z' --flags '/O2 /TP' \
+  --symbol '?GadgetNotify@Window@@QAEXHHHHH@Z=0x52fdd0' \
+  --out "$scratch/fastfood2.exe" --manifest "$scratch/pilot-manifest.json"
+cmp game/fastfood2.exe "$scratch/fastfood2.exe"
+python3 reconstructed/match/tests/test_linked_image.py
+```
+
+Pass `--image` to use a previously verified byte-identical copy as the input
+for another function. See the [capture guide](../../tools/pcrecomp_pc2/TRACE_CAPTURE.md#replay-a-scratch-image)
+to replay the final copy with the pinned lift.
+
+The VC6 pilot chained `Gadget_SetButtonColors` (`0x52f750`, 68 bytes, three
+call fixups) and `Window_GadgetNotify_Text_SetTextColor` (`0x52f910`, 24 bytes,
+one call fixup).
+The final scratch PE was byte-identical to the original. The headless replay
+used the existing pinned lift and moved from screen 21 to 28, tracing 2 and
+34 entries at the two addresses respectively, with zero unresolved edges.
+
 ## Stock CRT archive identification
 
 ```sh

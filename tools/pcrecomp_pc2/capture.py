@@ -19,6 +19,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 EXPORT = ROOT / "decompiled_fastfood2_named_v2"
 DEFAULT_WORK = Path(os.environ.get("PC2_WORK", "/tmp/opencode/pcrecomp-pc2"))
+GUEST_SHA256 = "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd"
 FORMAT = "pc2.capture.v1"
 EVENT = struct.Struct("<11I")
 OP = dict(zip(("begin", "end", "snapshot", "wait_function", "wait_value", "delay_ms",
@@ -370,6 +371,21 @@ def save_report(directory):
     return 0 if report["complete"] else 1
 
 
+def capture_image(requested):
+    original = ROOT / "game" / "fastfood2.exe"
+    image = requested.absolute() if requested is not None else original
+    with image.open("rb") as stream:
+        guest_hash = hashlib.file_digest(stream, "sha256").hexdigest()
+    if requested is not None:
+        with original.open("rb") as stream:
+            original_hash = hashlib.file_digest(stream, "sha256").hexdigest()
+        if original_hash != GUEST_SHA256:
+            raise ValueError(f"canonical image SHA-256 {original_hash} differs from the lift's pinned image")
+        if guest_hash != original_hash:
+            raise ValueError(f"--image SHA-256 {guest_hash} differs from the canonical image {original_hash}")
+    return image, guest_hash
+
+
 def run_capture(args):
     work = args.work.resolve()
     directory = args.out.resolve()
@@ -377,6 +393,7 @@ def run_capture(args):
     plan = compile_plan(scenario, args.max_events, symbols())
     if not math.isfinite(args.timeout) or args.timeout <= 0:
         raise ValueError("timeout must be positive and finite")
+    image, guest_hash = capture_image(args.image)
     directory.mkdir(parents=True)
     write_json(directory / "scenario.json", scenario)
     (directory / "plan.bin").write_bytes(plan)
@@ -388,7 +405,6 @@ def run_capture(args):
             subprocess.run([str(HERE / "build.sh")], cwd=ROOT, check=True, env={
                 **os.environ, "PC2_WORK": str(work), "PC2_CAPTURE_BUILD": "1", "PC2_BUILD_ONLY": "1",
             })
-    image = ROOT / "game" / "fastfood2.exe"
     with host.open("rb") as executable:
         host_hash = hashlib.file_digest(executable, "sha256").hexdigest()
     # Only the scenario may opt into the legacy PC2 input scripts.
@@ -411,7 +427,7 @@ def run_capture(args):
             status, timed_out = None, True
     write_json(directory / "run.json", {"work": str(work), "host": str(host),
                                         "host_sha256": host_hash,
-                                        "guest_sha256": hashlib.sha256(image.read_bytes()).hexdigest(),
+                                        "guest_image": str(image), "guest_sha256": guest_hash,
                                         "exit_status": status, "timed_out": timed_out,
                                         "timeout_seconds": args.timeout, "max_runtime_events": args.max_events})
     return save_report(directory)
@@ -509,6 +525,7 @@ def main():
     run.add_argument("scenario", type=Path)
     run.add_argument("--out", type=Path, required=True, help="new directory for capture files")
     run.add_argument("--work", type=Path, default=DEFAULT_WORK, help="cached pcrecomp build directory")
+    run.add_argument("--image", type=Path, help="byte-identical copy of the pinned PE beside its assets")
     run.add_argument("--timeout", type=float, default=120)
     run.add_argument("--max-events", type=lambda x: integer(x, "event limit", high=MASK - 1), default=2_000_000,
                      help="limit for runtime records; 0 is unlimited (default: 2,000,000)")

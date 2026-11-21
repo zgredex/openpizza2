@@ -24,6 +24,20 @@ python3 tools/pcrecomp_pc2/capture.py run \
 
 The runner uses Python 3.11 or later on Linux. `--work` defaults to `PC2_WORK` or `/tmp/opencode/pcrecomp-pc2`. Use `--skip-build` when the instrumented host is already current. `--timeout` gives the guest a wall-clock limit in seconds after the build. The default is 120 seconds. The default capture limit is 2,000,000 runtime records, about 88 MB of binary data. `--max-events 0` allows unlimited recording within the time limit. Use short named phases around the action of interest. A scenario whose first step is `begin` starts recording after PE mapping and before the guest CRT entry.
 
+## Replay a scratch image
+
+Use `--image` to map a [verified scratch PE](../../reconstructed/match/README.md#scratch-pe-verification)
+through the pinned lift. The runner checks that the image SHA-256 matches the
+original before starting the host. Keep its installed assets in the image's
+directory, which becomes the host working directory. `run.json` records the
+image path and hash alongside the host hash.
+
+```sh
+python3 tools/pcrecomp_pc2/capture.py run tools/pcrecomp_pc2/scenarios/menu-click.json \
+  --work /tmp/opencode/pcrecomp-pc2-fresh --skip-build \
+  --image "$scratch/fastfood2.exe" --out /tmp/pc2-scratch-menu-click
+```
+
 ## Read the evidence
 
 | File | Contents |
