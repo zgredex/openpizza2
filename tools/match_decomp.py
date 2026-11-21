@@ -182,6 +182,13 @@ def match(address: int, source: Path, obj: Path, vc6: Path, flags: list[str],
     if text is None:
         raise ValueError("candidate has no code section")
     candidate = bytearray(text["raw"])
+    start = entry_symbol["value"] if entry_symbol is not None else 0
+    extra_len = max(0, len(candidate) - (start + length))
+    if extra_len:
+        try:
+            original = read_va(image, address, length + extra_len)
+        except ValueError:
+            extra_len = 0
     strict_issues = []
     relocation_issues = []
     object_bytes = obj.read_bytes()
@@ -225,19 +232,15 @@ def match(address: int, source: Path, obj: Path, vc6: Path, flags: list[str],
         if typ not in (0x06, 0x14):
             raise ValueError(f"unsupported COFF relocation type {typ:#x}")
         candidate[va:va + 4] = original_field
-    if entry_symbol is not None:
-        start = entry_symbol["value"]
-        candidate = candidate[start:start + length]
-    else:
-        start = 0
-        candidate = candidate[:length]
-    if strict and len(text["raw"]) != start + length:
-        extra = text["raw"][start + length:]
-        padding = all(byte in (0x00, 0x90, 0xCC) for byte in extra)
-        if not padding or len(extra) > 15:
+    if extra_len:
+        actual_extra = bytes(candidate[start + length:start + length + extra_len])
+        expected_extra = original[length:length + extra_len]
+        padding = all(byte in (0x00, 0x90, 0xCC) for byte in actual_extra)
+        if actual_extra != expected_extra and not padding:
             strict_issues.append(
                 f"candidate extent {len(text['raw'])} bytes, expected {start + length}"
-                f" (extra={len(extra)} bytes, padding={padding})")
+                f" (extra={extra_len} bytes does not match the original table/padding)")
+    candidate = candidate[start:start + length]
     for section in sections:
         if strict and section["name"].startswith(".text$") and len(section["raw"]):
             strict_issues.append(
@@ -251,9 +254,9 @@ def match(address: int, source: Path, obj: Path, vc6: Path, flags: list[str],
         "address": f"{address:#08x}",
         "length": length,
         "candidate_length": len(candidate),
-        "match": not differences and len(candidate) == len(original)
+        "match": not differences and len(candidate) == length
                  and not relocation_issues,
-        "strict_match": not differences and len(candidate) == len(original)
+        "strict_match": not differences and len(candidate) == length
                         and not strict_issues and not relocation_issues,
         "strict_issues": strict_issues,
         "relocation_issues": relocation_issues,
