@@ -35,7 +35,7 @@ def main() -> int:
         try:
             result = match(address, source, args.directory / f"{record['address']}.obj",
                            args.vc6, args.flags.split(), symbols,
-                           record.get("length"), None)
+                           record.get("length"), None, False)
         except Exception as error:  # keep the batch report
             result = {"address": record["address"], "match": False,
                       "error": str(error)}

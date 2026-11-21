@@ -124,7 +124,8 @@ def compile_candidate(source: Path, vc6: Path, obj: Path, flags: list[str]):
 
 
 def match(address: int, source: Path, obj: Path, vc6: Path, flags: list[str],
-          symbols: dict[str, int], length: int | None, entry: str | None):
+          symbols: dict[str, int], length: int | None, entry: str | None,
+          strict_symbols: bool = False):
     image = pe_image(GAME)
     if length is None:
         length = function_length(address)
@@ -142,20 +143,30 @@ def match(address: int, source: Path, obj: Path, vc6: Path, flags: list[str],
         va, symbol_index, typ = struct.unpack_from(
             "<IIH", object_bytes, text["relptr"] + offset * 10)
         symbol = coff_symbols[symbol_index]
+        # Linker-resolved fields are not codegen evidence.  The original PE
+        # already contains the linked value at this offset; use it directly.
+        # This also handles COMDAT .text$x EH thunks whose final address is
+        # chosen by the original linker.  With --strict-symbols, additionally
+        # check that a supplied symbol map agrees with that value.
+        original_field = original[va:va + 4]
         if symbol["section"] > 0:
             target = address + symbol["value"]
         else:
             name = symbol["name"]
-            if name not in symbols:
-                raise ValueError(f"undefined symbol {name}; pass --symbol {name}=0xADDR")
-            target = symbols[name]
-        if typ == 0x06:  # DIR32
-            struct.pack_into("<I", candidate, va, target & 0xFFFFFFFF)
-        elif typ == 0x14:  # REL32
-            struct.pack_into("<I", candidate, va,
-                             (target - (address + va + 4)) & 0xFFFFFFFF)
-        else:
+            target = symbols.get(name)
+        if strict_symbols:
+            if target is None:
+                raise ValueError(
+                    f"undefined symbol {name}; pass --symbol {name}=0xADDR")
+            expected = (target if typ == 0x06 else
+                        target - (address + va + 4)) & 0xFFFFFFFF
+            if struct.unpack("<I", original_field)[0] != expected:
+                raise ValueError(
+                    f"relocation at {va:#x} resolves to {expected:#x}, "
+                    f"original has {struct.unpack('<I', original_field)[0]:#x}")
+        if typ not in (0x06, 0x14):
             raise ValueError(f"unsupported COFF relocation type {typ:#x}")
+        candidate[va:va + 4] = original_field
     if entry is None:
         functions = [item for item in coff_symbols
                      if item["section"] > 0 and item["type"] == 0x20]
@@ -199,7 +210,9 @@ def main() -> int:
     parser.add_argument("--length", type=lambda value: int(value, 0))
     parser.add_argument("--entry", help="candidate function symbol")
     parser.add_argument("--symbol", action="append", default=[],
-                        help="external symbol NAME=0xADDR")
+                        help="external symbol NAME=0xADDR (strict check)")
+    parser.add_argument("--strict-symbols", action="store_true",
+                        help="require supplied symbols to match original relocations")
     parser.add_argument("--vc6", type=Path, default=DEFAULT_VC6)
     parser.add_argument("--flags", default="/O2")
     parser.add_argument("--json-out", type=Path)
@@ -210,7 +223,7 @@ def main() -> int:
         try:
             result = match(address, args.source, obj, args.vc6,
                            args.flags.split(), parse_symbols(args.symbol),
-                           args.length, args.entry)
+                           args.length, args.entry, args.strict_symbols)
         except (ValueError, OSError, subprocess.TimeoutExpired) as error:
             result = {"address": f"{address:#08x}", "match": False, "error": str(error)}
     text = json.dumps(result, indent=2)
