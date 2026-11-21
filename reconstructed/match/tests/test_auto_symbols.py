@@ -23,10 +23,11 @@ CASES = [
     ("0x401a20", "reconstructed/match/batch01/part1/0x401a20.c",
      204, "??1ResourceManager@@UAE@XZ", "/O2 /GX /TP", "registry_section_anchor",
      "??1Lock@@QAE@XZ"),
-    # Explicit global addresses would be needed for these source-specific names.
+    # The shared g_game fact is registered, but this source-specific method
+    # still has no independent target and must fail closed.
     ("0x477190", "reconstructed/match/batch01/part4/0x477190.c",
-     456, "?SpawnWalkInCustomer@Branch@@QAEXXZ", "/O2 /GX /TP", "decorated_alias",
-     "?g_game@@3PAUGame@@A"),
+     456, "?SpawnWalkInCustomer@Branch@@QAEXXZ", "/O2 /GX /TP", "symbol_registry",
+     "?GetHourlyValue@Map@@QAEHH@Z"),
 ]
 
 
