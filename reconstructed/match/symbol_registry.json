@@ -236,6 +236,70 @@
           "locator": "0x55c828"
         }
       ]
+    },
+    {
+      "symbol": "_NamedLockable_Delete_vtable",
+      "address": "0x55c2e8",
+      "name": "vtable_NamedLockable",
+      "kind": "global",
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/vtables_full.csv",
+          "locator": "0x55c2e8 NamedLockable"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x55c2e8"
+        }
+      ]
+    },
+    {
+      "symbol": "?g_game@@3PAUGame@@A",
+      "address": "0x57c670",
+      "name": "g_Game",
+      "kind": "global",
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/data_symbols.csv",
+          "locator": "0x57c670 g_Game"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x57c670"
+        }
+      ]
+    },
+    {
+      "symbol": "?g_game@@3PAHA",
+      "address": "0x57c670",
+      "name": "g_Game",
+      "kind": "global",
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/data_symbols.csv",
+          "locator": "0x57c670 g_Game"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x57c670"
+        }
+      ]
+    },
+    {
+      "symbol": "?g_game@@3PAUGameObj@@A",
+      "address": "0x57c670",
+      "name": "g_Game",
+      "kind": "global",
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/data_symbols.csv",
+          "locator": "0x57c670 g_Game"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x57c670"
+        }
+      ]
     }
   ]
 }

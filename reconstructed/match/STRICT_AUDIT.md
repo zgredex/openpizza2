@@ -33,11 +33,11 @@ distinct committed C/C++ candidates under the independent relocation gate.
 The other 160 matched the normalized function bodies and lacked complete
 strict evidence. The audit recorded zero tool errors and zero body mismatches.
 The verified set includes all six `runtime01` candidates. The reusable-fact
-pilot below adds sixteen more strict functions, for **1,036 of 1,180**.
+pilot below adds seventeen more strict functions, for **1,037 of 1,180**.
 Pending worktree candidates and stock CRT archive identifications are outside
-this count. The strict matches cover **26.44%** of exported bodies (1,036 of
+this count. The strict matches cover **26.46%** of exported bodies (1,037 of
 3,919) and approximately **4.50%** of estimated inventory code bytes
-(55,637 of 1,236,452).
+(55,654 of 1,236,452).
 
 ### Reusable-fact pilot
 
@@ -45,10 +45,10 @@ this count. The strict matches cover **26.44%** of exported bodies (1,036 of
 248 unresolved names against strict recipes, the symbol registry, the shipped
 function/data maps, the PE import table, the stock CRT report, and the vtable
 inventories. Five independently evidenced CRT/C++/vtable facts were accepted,
-seventeen affected objects were rechecked from the COFF cache, and two vtable
-globals from `vtables_full.csv` finished two functions. Extending address-label
+seventeen affected objects were rechecked from the COFF cache, and three vtable
+globals from `vtables_full.csv` finished three functions. Extending address-label
 resolution to decorated `?DAT_...@@3...`/`@@Y...` names finished fourteen more.
-The sixteen new strict functions total 759 code bytes.
+The seventeen new strict functions total 776 code bytes.
 
 ```sh
 python3 tools/propose_symbol_mappings.py /tmp/pc2-tracked-audit \
