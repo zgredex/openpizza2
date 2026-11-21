@@ -391,3 +391,33 @@ additional stock functions and seven overlaps kept under C ownership. Its
 menu replay reached 120 linked functions with zero unresolved edges. The
 dependency query found 24 exact consumers and no new unresolved matches in
 the current audit. All 17 retained objects selected for cached rechecks passed.
+
+## Replay-driven worklist
+
+Use a verified linker manifest and saved capture reports to queue uncovered
+functions that the scenarios entered. The worklist checks the executable SHA
+across its inputs and reports linked counts and bytes per phase and across the
+deduplicated union. Split bodies count as indexed and are flagged for recipe
+work. Entries without an indexed body and unresolved dispatch are listed
+separately.
+
+```sh
+python3 tools/replay_worklist.py --manifest /tmp/pc2-combined-manifest.json \
+  --capture-report /tmp/pc2-menu-capture/report.json \
+  --capture-report /tmp/pc2-london-capture/report.json \
+  --audit /tmp/pc2-tracked-audit --packets 3 --out /tmp/pc2-replay-worklist
+```
+
+The queue groups observed neighbors and uses direct static relationships as
+secondary evidence. Ranking uses extent readiness, phase reuse, verified
+external dependencies, observed callers, and code bytes. Each bounded packet
+includes shared ABI context, incoming and outgoing call evidence, tracked C/C++
+drafts, and the latest audit or archived first difference where available.
+Coverage uses recorded function entries. Calls in the static graph and missing
+entries can inform work without increasing coverage. Use `--packets 0` for a
+coverage-only comparison.
+
+Across the menu and two London phases, the combined C and stock build covered
+330 of 829 indexed functions and 17,565 indexed code bytes. The earlier PE
+manifest covered 317 functions and 16,356 bytes across the same captures.
+Exactly 13 addresses left the queue, leaving 499 uncovered functions.
