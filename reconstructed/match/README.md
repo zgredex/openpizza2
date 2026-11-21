@@ -35,7 +35,8 @@ batch 6    98 / 100 strict
 batch 7    98 / 100 strict
 batch 8    92 / 100 strict
 batch 9    88 / 100 strict
-total     829 C-only / 784 strict of 853
+batch 10   91 / 100 strict
+total     920 C-only / 875 strict of 953
 ```
 
 Batches 5-9 are the next 500 smallest remaining functions and use the strict

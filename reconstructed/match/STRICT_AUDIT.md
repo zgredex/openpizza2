@@ -62,7 +62,11 @@ batch09 part1  22 / 25 C matches
 batch09 part2  21 / 25 C matches
 batch09 part3  22 / 25 C matches
 batch09 part4  23 / 25 C matches
-total         784 / 853 C matches
+batch10 part1  24 / 25 C matches
+batch10 part2  22 / 25 C matches
+batch10 part3  22 / 25 C matches
+batch10 part4  23 / 25 C matches
+total         875 / 953 C matches
 ```
 
 The remaining strict failures are mostly missing independent symbol maps for
