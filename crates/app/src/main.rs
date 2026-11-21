@@ -6,6 +6,7 @@ mod character_select;
 mod free_play_setup;
 mod menu;
 mod overlay;
+mod recipe_screen;
 mod widgets;
 use std::process::ExitCode;
 use std::sync::Arc;
@@ -2111,6 +2112,9 @@ fn show_explore(
     } else {
         None
     };
+    let recipe_screen = GameInstall::open(&args.install)
+        .ok()
+        .and_then(|mut install| recipe_screen::RecipeScreen::load(&mut install).ok());
     run_explore_window(
         title,
         city_world,
@@ -2122,6 +2126,7 @@ fn show_explore(
         world,
         camera_x,
         camera_y,
+        recipe_screen,
     )
 }
 
@@ -2866,6 +2871,7 @@ struct WindowApp {
     employment_office: Option<EmploymentOffice>,
     supply_office: Option<SupplyOffice>,
     recipe_editor: Option<RecipeEditor>,
+    recipe_screen: Option<recipe_screen::RecipeScreen>,
     hours_panel: Option<HoursPanel>,
     mission_panel: Option<MissionPanel>,
     briefing_open: bool,
@@ -2905,6 +2911,7 @@ impl WindowApp {
             employment_office: None,
             supply_office: None,
             recipe_editor: None,
+            recipe_screen: None,
             hours_panel: None,
             mission_panel: None,
             briefing_open: false,
@@ -2953,6 +2960,7 @@ impl WindowApp {
             employment_office: None,
             supply_office: None,
             recipe_editor: None,
+            recipe_screen: None,
             hours_panel: None,
             mission_panel: None,
             briefing_open: false,
@@ -2985,6 +2993,7 @@ impl WindowApp {
         sim: World,
         camera_x: i32,
         camera_y: i32,
+        recipe_screen: Option<recipe_screen::RecipeScreen>,
     ) -> Self {
         let (branch_base, actors) = branch.unzip();
         let briefing_open = sim
@@ -3008,6 +3017,7 @@ impl WindowApp {
             employment_office: None,
             supply_office: None,
             recipe_editor: None,
+            recipe_screen,
             hours_panel: None,
             mission_panel: None,
             briefing_open,
@@ -3054,6 +3064,7 @@ impl WindowApp {
             employment_office: None,
             supply_office: None,
             recipe_editor: None,
+            recipe_screen: None,
             hours_panel: None,
             mission_panel: None,
             briefing_open: false,
@@ -3100,6 +3111,7 @@ impl WindowApp {
             employment_office: None,
             supply_office: None,
             recipe_editor: None,
+            recipe_screen: None,
             hours_panel: None,
             mission_panel: None,
             briefing_open: false,
@@ -3146,6 +3158,7 @@ impl WindowApp {
             employment_office: None,
             supply_office: None,
             recipe_editor: None,
+            recipe_screen: None,
             hours_panel: None,
             mission_panel: None,
             briefing_open: false,
@@ -3796,18 +3809,31 @@ impl WindowApp {
                     }
                     if let Some(editor) = self.recipe_editor.as_ref() {
                         let recipe = sim.campaign_recipe();
-                        overlay::draw_recipe_editor(
-                            &mut view,
-                            self.width,
-                            self.height,
-                            editor.tomato,
-                            editor.cheese,
-                            editor.saved,
-                            recipe.is_some_and(|recipe| recipe.on_menu),
-                            recipe.map_or(0.0, |recipe| recipe.price),
-                            editor.status.as_deref(),
-                        )
-                        .ok();
+                        if let Some(screen) = self.recipe_screen.as_ref() {
+                            screen.render(
+                                &mut view,
+                                self.width,
+                                self.height,
+                                editor.tomato,
+                                editor.cheese,
+                                recipe.map_or(0.0, |recipe| recipe.price),
+                                recipe.is_some_and(|recipe| recipe.on_menu),
+                                editor.saved,
+                            );
+                        } else {
+                            overlay::draw_recipe_editor(
+                                &mut view,
+                                self.width,
+                                self.height,
+                                editor.tomato,
+                                editor.cheese,
+                                editor.saved,
+                                recipe.is_some_and(|recipe| recipe.on_menu),
+                                recipe.map_or(0.0, |recipe| recipe.price),
+                                editor.status.as_deref(),
+                            )
+                            .ok();
+                        }
                     }
                     if let Some(panel) = self.hours_panel.as_ref() {
                         overlay::draw_hours_panel(
@@ -3825,6 +3851,38 @@ impl WindowApp {
                     println!("explore: branch {}", sim.snapshot_json());
                 }
             }
+        }
+    }
+
+    fn draw_recipe_ui(&self, view: &mut [u8], sim: &World) {
+        let Some(editor) = self.recipe_editor.as_ref() else {
+            return;
+        };
+        let recipe = sim.campaign_recipe();
+        if let Some(screen) = self.recipe_screen.as_ref() {
+            screen.render(
+                view,
+                self.width,
+                self.height,
+                editor.tomato,
+                editor.cheese,
+                recipe.map_or(0.0, |recipe| recipe.price),
+                recipe.is_some_and(|recipe| recipe.on_menu),
+                editor.saved,
+            );
+        } else {
+            overlay::draw_recipe_editor(
+                view,
+                self.width,
+                self.height,
+                editor.tomato,
+                editor.cheese,
+                editor.saved,
+                recipe.is_some_and(|recipe| recipe.on_menu),
+                recipe.map_or(0.0, |recipe| recipe.price),
+                editor.status.as_deref(),
+            )
+            .ok();
         }
     }
 
@@ -4030,21 +4088,7 @@ impl WindowApp {
                         sim.mission_complete(),
                     );
                 }
-                if let Some(editor) = self.recipe_editor.as_ref() {
-                    let recipe = sim.campaign_recipe();
-                    overlay::draw_recipe_editor(
-                        &mut view,
-                        self.width,
-                        self.height,
-                        editor.tomato,
-                        editor.cheese,
-                        editor.saved,
-                        recipe.is_some_and(|recipe| recipe.on_menu),
-                        recipe.map_or(0.0, |recipe| recipe.price),
-                        editor.status.as_deref(),
-                    )
-                    .ok();
-                }
+                self.draw_recipe_ui(&mut view, sim);
                 if let Some(panel) = self.hours_panel.as_ref() {
                     overlay::draw_hours_panel(
                         &mut view,
@@ -5100,10 +5144,21 @@ fn run_explore_window(
     sim: World,
     camera_x: i32,
     camera_y: i32,
+    recipe_screen: Option<recipe_screen::RecipeScreen>,
 ) -> Result<(), String> {
     let event_loop = EventLoop::new().map_err(|error| format!("event loop: {error}"))?;
     let mut app = WindowApp::new_explore(
-        title, city_world, city_view, branch, width, height, max_frames, sim, camera_x, camera_y,
+        title,
+        city_world,
+        city_view,
+        branch,
+        width,
+        height,
+        max_frames,
+        sim,
+        camera_x,
+        camera_y,
+        recipe_screen,
     );
     event_loop
         .run_app(&mut app)
@@ -5184,7 +5239,7 @@ mod tests {
         assert_ne!(first, moved);
     }
 
-    fn real_ui_scenes() -> Option<(Scene, Scene, actors::Actors)> {
+    fn real_ui_scenes() -> Option<(Scene, Scene, actors::Actors, recipe_screen::RecipeScreen)> {
         let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("..")
             .join("..")
@@ -5200,7 +5255,9 @@ mod tests {
         let city = build_city_world(&args, &preview).ok()?;
         let branch = load_explore_branch(&args).ok()?;
         let actors = load_actors(&args).ok()?;
-        Some((city, branch, actors))
+        let mut install = GameInstall::open(&root).ok()?;
+        let screen = recipe_screen::RecipeScreen::load(&mut install).ok()?;
+        Some((city, branch, actors, screen))
     }
 
     fn campaign_world_with_offer() -> World {
@@ -5284,7 +5341,7 @@ mod tests {
             rival_site: Some((400, 120)),
         });
         app.branch_base = Some(Vec::new());
-        if let Some((city, branch, actors)) = real_ui_scenes() {
+        if let Some((city, branch, actors, screen)) = real_ui_scenes() {
             app.city_world = Some(CityWorld {
                 width: city.crop.width,
                 height: city.crop.height,
@@ -5296,6 +5353,7 @@ mod tests {
             });
             app.branch_base = Some(branch.pixels);
             app.actors = Some(actors);
+            app.recipe_screen = Some(screen);
         }
         app.briefing_open = true;
         assert!(app.handle_explore_key(&Key::Named(NamedKey::Enter)));
@@ -5334,6 +5392,15 @@ mod tests {
         assert!(app.handle_explore_key(&Key::Character("a".into())));
         for _ in 0..3 {
             assert!(app.handle_explore_key(&Key::Character("+".into())));
+        }
+        if let Some(frame) = app.render_explore_frame() {
+            pc2_scene::write_rgba_png(
+                std::path::Path::new("/tmp/opencode/original_recipe_frame.png"),
+                800,
+                600,
+                &frame,
+            )
+            .unwrap();
         }
         assert!(app.handle_explore_key(&Key::Named(NamedKey::Escape)));
         assert!(app.handle_explore_key(&Key::Character("h".into())));

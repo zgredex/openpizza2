@@ -182,7 +182,8 @@ BRANCH after player_slot=0 site_id=0 site=F41E8050 branch_id=100000
   dispatch. The Rust recipe editor saves a tomato/cheese pizza, adds it to
   Atrium's menu, and the cook's sale consumes that recipe's stock. The player
   UI also covers opening hours, HQ/rival actions, save/load, menu Continue, and
-  the rendered London result; see `README.md` under Campaign Start.
+  the rendered London result. The recipe editor now uses the original
+  `SUBMENUE`/`R_*` sprites and layout; see `README.md` under Campaign Start.
 - **Exception handling:** the startup registration routine `0x00555F68` is
   now lifted and dispatchable, but `win32hle`'s
   `SetUnhandledExceptionFilter` shim returns `0` and `RaiseException` exits.

@@ -438,16 +438,28 @@ markers and actions for the vacant storefront, Employment Office, Supply
 Office, headquarters site, and rival branch. Property panels show the
 available action and the current state.
 
-The branch UI includes:
+The recipe editor now composites the shipped `SUBMENUE` and `R_*` sprites
+at their original `0x231,0xda` window position, with the original tabs,
+ingredient slots, and Verdana8 text. The branch UI includes:
 
 ```text
 E       city Employment Office: named candidates and roster
 L       city Supply Office: London 1, Central Market Partners, Atrium route
-R       recipe editor: tomato/cheese preview, save, add to menu, price
+R       recipe editor: original SUBMENUE/R_* assets, tomato/cheese slots,
+        save, add to menu, price
 H       opening-hours panel: edit open/close and save
 O       open/close; closing time is enforced by the clock
 F5/F9   save/load the current campaign state
 ```
+
+The recipe-asset renderer is verified by:
+
+```sh
+cargo test -p pc2-app original_recipe_assets_render -- --nocapture
+```
+
+It writes `/tmp/opencode/original_recipe_screen.png`; the handler session also
+captures the in-branch screen at `/tmp/opencode/original_recipe_frame.png`.
 
 The HUD reports the actual recipe menu price, and a closed branch shows the
 configured hours as the reason. Mission HQ and rival markers open confirmation
