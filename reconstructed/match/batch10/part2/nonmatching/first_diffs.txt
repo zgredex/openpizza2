@@ -1,0 +1,45 @@
+0x4d2fd0 length=70 entry=@Game_CanShowObject@4
+{
+  "match": false,
+  "strict_match": false,
+  "difference_count": 4,
+  "first_difference": {
+    "offset": 24,
+    "original": 78,
+    "candidate": 86
+  },
+  "strict_issues": [],
+  "relocation_issues": []
+}
+
+0x4d3020 length=73 entry=?SetCityFromPlayer@MapObject@@QAEXPAXH@Z
+{
+  "match": false,
+  "strict_match": false,
+  "difference_count": 14,
+  "first_difference": {
+    "offset": 54,
+    "original": 76,
+    "candidate": 78
+  },
+  "strict_issues": [
+    "relocation at 0x40 resolves to 0x2270c, original has 0x2270be8"
+  ],
+  "relocation_issues": []
+}
+
+0x4e3d80 length=74 entry=?StopCampaign@Advertising@@QAEXHHH@Z
+{
+  "match": false,
+  "strict_match": false,
+  "difference_count": 41,
+  "first_difference": {
+    "offset": 21,
+    "original": 86,
+    "candidate": 136
+  },
+  "strict_issues": [
+    "relocation at 0x41 resolves to 0x2b, original has 0x29e850"
+  ],
+  "relocation_issues": []
+}
