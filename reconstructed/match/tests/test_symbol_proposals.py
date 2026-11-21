@@ -76,14 +76,15 @@ def test_merge_prefers_verified_address():
 
 def test_end_to_end_ready_group():
     registry = file_sha256(ROOT / "reconstructed/match/symbol_registry.json")
+    synthetic = "?SyntheticBlocked@@YAXXZ"
     strict = audit_row(
         0x401000, 16, "?PushFront@List@@QAEXPAX@Z",
-        [relocation("??2@YAPAXI@Z", 0x54E221, 0x401010, verified=True)],
+        [relocation(synthetic, 0x54E221, 0x401010, verified=True)],
         strict=True, registry_sha=registry,
     )
     blocked = audit_row(
         0x402000, 32, "?Blocked@@YAXXZ",
-        [relocation("??2@YAPAXI@Z", 0x54E221, 0x402010),
+        [relocation(synthetic, 0x54E221, 0x402010),
          relocation("?g_game@@3PAUGame@@A", 0x57C670, 0x402020, kind="DIR32")],
         strict=False, registry_sha=registry,
     )
@@ -103,10 +104,10 @@ def test_end_to_end_ready_group():
         payload = json.loads(output.read_text())
         report_text = report.read_text()
     assert payload["summary"]["body_only_addresses"] == 1
-    assert payload["summary"]["ready_facts"] >= 2
+    assert payload["summary"]["ready_facts"] >= 1
     facts = {fact["symbol"]: fact for fact in payload["facts"]}
-    assert facts["??2@YAPAXI@Z"]["status"] == "ready"
-    assert facts["??2@YAPAXI@Z"]["chosen_address"] == "0x54e221"
+    assert facts[synthetic]["status"] == "ready"
+    assert facts[synthetic]["chosen_address"] == "0x54e221"
     assert facts["?g_game@@3PAUGame@@A"]["status"] == "ready"
     assert any("0x402000" in group["covered_ready"]
                for group in payload["ready_groups"])

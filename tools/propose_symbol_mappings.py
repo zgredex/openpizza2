@@ -921,6 +921,11 @@ def main() -> int:
                                            max(args.top_groups, 500))
     groups = all_groups[:args.top_groups]
     ready_facts = [fact for fact in facts.values() if fact.status == "ready"]
+    registered_symbols = set(registry)
+    new_ready_facts = [fact for fact in ready_facts
+                       if fact.symbol not in registered_symbols]
+    registered_facts = [fact for fact in facts.values()
+                        if fact.symbol in registered_symbols and fact.affected]
     ready_groups = sorted(
         (group for group in all_groups if group["covered_ready_count"]),
         key=lambda item: (-item["covered_ready_count"],
@@ -958,7 +963,8 @@ def main() -> int:
             "body_only_addresses": len(blockers),
             "unresolved_names": len(body_names),
             "all_names": len(facts),
-            "ready_facts": len(ready_facts),
+            "ready_facts": len(new_ready_facts),
+            "registered_facts": len(registered_facts),
             "candidate_facts": len(candidate_facts),
             "ambiguous_facts": len(ambiguous_facts),
             "needs_evidence_facts": len(needs_evidence_facts),
@@ -985,8 +991,8 @@ def main() -> int:
             missing_facts, key=lambda item: (-len(item.affected), item.symbol))],
         "pilot": {
             "ready": [fact_payload(fact) for fact in sorted(
-                (fact for fact in facts.values()
-                 if fact.status == "ready" and is_pilot(fact.symbol, fact.category)),
+                (fact for fact in new_ready_facts
+                 if is_pilot(fact.symbol, fact.category)),
                 key=lambda item: (-len(item.affected), item.symbol))],
             "candidates": [fact_payload(fact) for fact in sorted(
                 (fact for fact in facts.values()
@@ -1007,9 +1013,12 @@ def main() -> int:
                 key=lambda item: item.symbol)[:60]],
         },
         "recheck": {
-            "ready_addresses": sorted({address for fact in ready_facts
+            "ready_addresses": sorted({address for fact in new_ready_facts
                                        for address in fact.affected},
                                       key=lambda value: int(value, 16)),
+            "stale_registered_addresses": sorted(
+                {address for fact in registered_facts for address in fact.affected},
+                key=lambda value: int(value, 16)),
             "candidate_addresses": sorted({address for fact in candidate_facts
                                            for address in fact.affected},
                                           key=lambda value: int(value, 16)),
@@ -1017,9 +1026,11 @@ def main() -> int:
             "cache_eligible_addresses": cache_eligible,
         },
     }
-    pilot_facts = [fact for fact in facts.values()
-                   if fact.status == "ready" and is_pilot(fact.symbol, fact.category)]
-    fragment_facts = pilot_facts if args.pilot else ready_facts
+    pilot_facts = [fact for fact in new_ready_facts
+                   if is_pilot(fact.symbol, fact.category)]
+    fragment_facts = ([fact for fact in pilot_facts
+                       if fact.symbol not in registered_symbols]
+                      if args.pilot else new_ready_facts)
     fragment = {
         "schema": "pc2.symbol_registry.v1",
         "executable_sha256": executable_sha256,
