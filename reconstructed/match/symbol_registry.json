@@ -3,6 +3,85 @@
   "executable_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd",
   "entries": [
     {
+      "symbol": "?CountFreeBuildingsByType@BuildingManager@@QAEXH@Z",
+      "address": "0x4d2ae0",
+      "name": "Game_CountFreeBuildingsByType",
+      "kind": "function",
+      "candidate_declaration": "void __thiscall BuildingManager::CountFreeBuildingsByType(int)",
+      "abi_observation": "The PE takes ECX and one 32-bit stack argument, returns the count in EAX, and pops four bytes. The two candidate wrappers use a void declaration. The original wrappers call and return with EAX intact, and the independent 0x47fed0 caller uses the returned count.",
+      "evidence": [
+        {"path": "decompiled_fastfood2_named_v2/full_game_symbols.json", "locator": "0x4d2ae0"},
+        {"path": "reconstructed/match/batch07/part4/verify_strict.sh", "locator": "0x47fed0 calls the int-returning Game::CountFreeBuildingsByType"},
+        {"path": "game/fastfood2.exe", "locator": "EAX exits at 0x4d2b25 and 0x4d2b2d; wrapper calls and returns at 0x480068–0x48006d and 0x4800c8–0x4800cd"}
+      ]
+    },
+    {
+      "symbol": "?BinarySearch8@ArrayHelper@@QAEHHD@Z",
+      "address": "0x531330",
+      "name": "BinarySearch8",
+      "kind": "function",
+      "candidate_declaration": "int __thiscall ArrayHelper::BinarySearch8(int, char)",
+      "abi_observation": "The PE receives the object in ECX, reads a 32-bit key and the low byte of the second stack slot, returns an index or minus one in EAX, and pops eight bytes.",
+      "evidence": [
+        {"path": "decompiled_fastfood2_named_v2/full_game_symbols.json", "locator": "0x531330"},
+        {"path": "reconstructed/match/batch08/part2/verify_strict.sh", "locator": "0x531740 verifies UI::BinarySearch8 with the same char flag declaration"},
+        {"path": "game/fastfood2.exe", "locator": "key and flag accesses at 0x531358, 0x531345 and 0x5313a5"}
+      ]
+    },
+    {
+      "symbol": "?BinarySearch8@UI@@QAEHHH@Z",
+      "address": "0x531330",
+      "name": "BinarySearch8",
+      "kind": "function",
+      "candidate_declaration": "int __thiscall UI::BinarySearch8(int, int)",
+      "abi_observation": "The PE consumes only the low byte of the second stack slot and pops eight bytes. The candidate passes zero in that slot and checks the EAX result against minus one.",
+      "evidence": [
+        {"path": "decompiled_fastfood2_named_v2/full_game_symbols.json", "locator": "0x531330"},
+        {"path": "reconstructed/match/batch10/part4/verify_strict.sh", "locator": "0x5314a0 explicitly verifies Array::BinarySearch8 with two int arguments"},
+        {"path": "game/fastfood2.exe", "locator": "low-byte flag at 0x531345; original zero argument and return check at 0x531418–0x531425"}
+      ]
+    },
+    {
+      "symbol": "?CRT_Istream_Read@IStream@@QAEXPAXH@Z",
+      "address": "0x54cbc1",
+      "name": "CRT_Istream_Read",
+      "kind": "function",
+      "candidate_declaration": "void __thiscall IStream::CRT_Istream_Read(void *, int)",
+      "abi_observation": "The PE receives ECX and two 32-bit stack arguments, returns the original ECX in EAX, and pops eight bytes. The candidate does not consume the return value.",
+      "evidence": [
+        {"path": "decompiled_fastfood2_named_v2/full_game_symbols.json", "locator": "0x54cbc1"},
+        {"path": "reconstructed/match/batch09/part3/verify_strict.sh", "locator": "0x4d34e0 explicitly verifies IStream::Read"},
+        {"path": "game/fastfood2.exe", "locator": "0x54cbc1–0x54cc08"}
+      ]
+    },
+    {
+      "symbol": "?CRT_Ostream_Write@OStream@@QAEXPAXH@Z",
+      "address": "0x54cc2b",
+      "name": "CRT_Ostream_Write",
+      "kind": "function",
+      "candidate_declaration": "void __thiscall OStream::CRT_Ostream_Write(void *, int)",
+      "abi_observation": "The PE receives ECX and two 32-bit stack arguments, returns the original ECX in EAX, and pops eight bytes. The candidate does not consume the return value.",
+      "evidence": [
+        {"path": "decompiled_fastfood2_named_v2/full_game_symbols.json", "locator": "0x54cc2b"},
+        {"path": "reconstructed/match/batch10/part3/verify_strict.sh", "locator": "0x4f6e20 explicitly verifies OStream::Write"},
+        {"path": "game/fastfood2.exe", "locator": "0x54cc2b–0x54cc6d"}
+      ]
+    },
+    {
+      "symbol": "?DestroyMemberList@MemberList@@QAEXXZ",
+      "address": "0x532510",
+      "name": "UI_Group_DestroyMemberList",
+      "kind": "function",
+      "candidate_declaration": "void __thiscall MemberList::DestroyMemberList()",
+      "abi_observation": "The PE takes its object in ECX, adds four to ECX, and tail-jumps to Array_Destroy. The candidate passes the entry pointer in ECX with no stack arguments.",
+      "evidence": [
+        {"path": "decompiled_fastfood2_named_v2/full_game_symbols.json", "locator": "0x532510"},
+        {"path": "reconstructed/match/tests/test_relocation_guard.py", "locator": "strict match for the 0x532510 body with its independent Array_Destroy target"},
+        {"path": "reconstructed/match/batch10/part4/verify_strict.sh", "locator": "0x5324c0 verifies a call to UI_Group::DestroyMemberList"},
+        {"path": "game/fastfood2.exe", "locator": "0x532510–0x532517"}
+      ]
+    },
+    {
       "symbol": "?Lookup@IDMapHelper@@QAEPAXHPAH@Z",
       "address": "0x4017f0",
       "name": "IDMap_Lookup",

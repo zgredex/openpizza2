@@ -275,6 +275,13 @@ made nine strict on the warm recheck, with all 12 objects reused and three
 functions still blocked. The nine strict functions published 472 code bytes
 in a byte-identical scratch PE.
 
+Six more exact aliases resolved seven of eight cached callers without
+recompiling and linked 502 code bytes into a byte-identical scratch PE.
+`0x531620` still needs the `ObjectHelper::EnsureInit` and
+`ObjectHelper::ClearPendingCommand` targets. The two building-count wrappers
+leave the original callee's EAX result intact despite their local `void`
+declarations, and the independent caller at `0x47fed0` uses that result.
+
 ### Propose reusable symbol facts
 
 `tools/propose_symbol_mappings.py` joins every unresolved COFF name in the
