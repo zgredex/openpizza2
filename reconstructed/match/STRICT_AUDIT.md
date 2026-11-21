@@ -69,8 +69,31 @@ batch10 part1  24 / 25 C matches
 batch10 part2  22 / 25 C matches
 batch10 part3  22 / 25 C matches
 batch10 part4  23 / 25 C matches
-total         906 / 953 C matches
+batch11 part1  21 / 25 C matches
+batch11 part2  18 / 25 C matches
+batch11 part3  23 / 25 C matches
+batch12 part1  18 / 25 C matches
+batch12 part2  20 / 25 C matches
+batch12 part3  23 / 25 C matches
+batch13 part1  12 / 25 C matches
+batch13 part2  16 / 25 C matches
+batch13 part3  16 / 25 C matches
+batch13 part4  13 / 25 C matches
+batch14 part1  15 / 25 C matches
+batch14 part2   6 / 25 C matches
+batch14 part3  18 / 25 C matches
+batch14 part4   5 / 25 C matches
+batch15 part1  16 / 25 C matches
+batch15 part3  10 / 25 C matches
+batch15 part4   4 / 25 C matches
+total        1160 / 1174 C matches
 ```
+
+Batches 11-15 were paused mid-run. The totals above include only committed
+part directories. The following verified work is still uncommitted in the
+worktree: batch11 part4 (17 strict), batch12 part4 (10 strict), and batch15
+part2 (2 strict). If those are committed later the totals become
+1203 C matches, of which 1189 are strict.
 
 This is an increase from 875 strict matches after the checker learned to
 resolve IAT imports, decorated/data symbols, EH funclets, and anchored data

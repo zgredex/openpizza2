@@ -36,7 +36,12 @@ batch 7    98 / 100 strict
 batch 8    92 / 100 strict
 batch 9    88 / 100 strict
 batch 10   91 / 100 strict
-total     920 C-only / 906 strict of 953
+batch 11   62 / 100 committed (part4 paused)
+batch 12   61 / 100 committed (part4 paused)
+batch 13   57 / 100 strict
+batch 14   44 / 100 committed (paused)
+batch 15   30 / 100 committed (part2 paused)
+total     1174 C-only / 1160 strict committed
 ```
 
 Batches 5-9 are the next 500 smallest remaining functions and use the strict
