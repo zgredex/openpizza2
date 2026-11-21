@@ -1,0 +1,18 @@
+{
+  "address": "0x526d30",
+  "length": 132,
+  "candidate_length": 128,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [
+    "relocation at 0x2b resolves to 0x55c280, original has 0xc20055c2"
+  ],
+  "relocation_issues": [],
+  "first_difference": {
+    "offset": 1,
+    "original": 129,
+    "candidate": 145
+  },
+  "difference_count": 109,
+  "source": "reconstructed/match/batch15/part1/0x526d30.c"
+}

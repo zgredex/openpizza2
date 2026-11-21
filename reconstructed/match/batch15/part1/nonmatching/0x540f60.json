@@ -1,0 +1,18 @@
+{
+  "address": "0x540f60",
+  "length": 130,
+  "candidate_length": 128,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [
+    "relocation at 0x66 resolves to 0xcdae, original has 0xcdace844"
+  ],
+  "relocation_issues": [],
+  "first_difference": {
+    "offset": 6,
+    "original": 71,
+    "candidate": 119
+  },
+  "difference_count": 115,
+  "source": "reconstructed/match/batch15/part1/0x540f60.c"
+}

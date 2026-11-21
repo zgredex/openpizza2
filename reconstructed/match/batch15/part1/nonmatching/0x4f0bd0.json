@@ -1,0 +1,18 @@
+{
+  "address": "0x4f0bd0",
+  "length": 131,
+  "candidate_length": 131,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [
+    "candidate extent 144 bytes, expected 131 (extra=13 bytes does not match the original table/padding)"
+  ],
+  "relocation_issues": [],
+  "first_difference": {
+    "offset": 46,
+    "original": 52,
+    "candidate": 74
+  },
+  "difference_count": 36,
+  "source": "reconstructed/match/batch15/part1/0x4f0bd0.c"
+}

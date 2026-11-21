@@ -1,0 +1,16 @@
+{
+  "address": "0x4e2080",
+  "length": 132,
+  "candidate_length": 132,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [],
+  "relocation_issues": [],
+  "first_difference": {
+    "offset": 32,
+    "original": 71,
+    "candidate": 79
+  },
+  "difference_count": 10,
+  "source": "reconstructed/match/batch15/part1/0x4e2080.c"
+}

@@ -1,0 +1,16 @@
+{
+  "address": "0x546f00",
+  "length": 131,
+  "candidate_length": 131,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [],
+  "relocation_issues": [],
+  "first_difference": {
+    "offset": 121,
+    "original": 81,
+    "candidate": 65
+  },
+  "difference_count": 3,
+  "source": "reconstructed/match/batch15/part1/nonmatching/0x546f00.c"
+}
