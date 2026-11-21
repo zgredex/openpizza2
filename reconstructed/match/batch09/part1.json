@@ -1,0 +1,202 @@
+[
+  {
+    "address": "0x4795e0",
+    "name": "Stats_GetAverageValue",
+    "start": "0x4795e0",
+    "end": "0x47961d",
+    "length": 62,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4795e0.c"
+  },
+  {
+    "address": "0x49cf50",
+    "name": "Game_SyncSelectedPlayerCompany",
+    "start": "0x49cf50",
+    "end": "0x49cf8d",
+    "length": 62,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x49cf50.c"
+  },
+  {
+    "address": "0x4a53e0",
+    "name": "UI_DrawNeighborhoodCustomerIcons",
+    "start": "0x4a53e0",
+    "end": "0x4a541d",
+    "length": 62,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4a53e0.c"
+  },
+  {
+    "address": "0x4d2280",
+    "name": "Map_AssignObjectToCell",
+    "start": "0x4d2280",
+    "end": "0x4d22bd",
+    "length": 62,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4d2280.c"
+  },
+  {
+    "address": "0x4d6a90",
+    "name": "Map_FindRecordByFirstField",
+    "start": "0x4d6a90",
+    "end": "0x4d6acd",
+    "length": 62,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4d6a90.c"
+  },
+  {
+    "address": "0x4d80e0",
+    "name": "Game_GetLowestValuePlayer",
+    "start": "0x4d80e0",
+    "end": "0x4d811d",
+    "length": 62,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4d80e0.c"
+  },
+  {
+    "address": "0x4dc720",
+    "name": "Game_PlaceObjectInPlayerCity",
+    "start": "0x4dc720",
+    "end": "0x4dc75d",
+    "length": 62,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4dc720.c"
+  },
+  {
+    "address": "0x4e3510",
+    "name": "Game_FindPlanByTarget",
+    "start": "0x4e3510",
+    "end": "0x4e354d",
+    "length": 62,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4e3510.c"
+  },
+  {
+    "address": "0x4f2a20",
+    "name": "Object_IsKnownId",
+    "start": "0x4f2a20",
+    "end": "0x4f2a5d",
+    "length": 62,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4f2a20.c"
+  },
+  {
+    "address": "0x535cb0",
+    "name": "Palette_FindIndex",
+    "start": "0x535cb0",
+    "end": "0x535ced",
+    "length": 62,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x535cb0.c"
+  },
+  {
+    "address": "0x54ad80",
+    "name": "UI_DestroyBriefingList",
+    "start": "0x54ad80",
+    "end": "0x54adbd",
+    "length": 62,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x54ad80.c"
+  },
+  {
+    "address": "0x551981",
+    "name": "Stub_ReturnZero",
+    "start": "0x551981",
+    "end": "0x5519be",
+    "length": 62,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x551981.c"
+  },
+  {
+    "address": "0x5548a9",
+    "name": "Heap_InitSmallBlock",
+    "start": "0x5548a9",
+    "end": "0x5548e6",
+    "length": 62,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x5548a9.c"
+  },
+  {
+    "address": "0x401440",
+    "name": "List_Node_Reset",
+    "start": "0x401440",
+    "end": "0x40147e",
+    "length": 63,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x401440.c"
+  },
+  {
+    "address": "0x4aa6c0",
+    "name": "StatisticsBalance_Load",
+    "start": "0x4aa6c0",
+    "end": "0x4aa6fe",
+    "length": 63,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4aa6c0.c"
+  },
+  {
+    "address": "0x4aa700",
+    "name": "StatisticsBalance_Save",
+    "start": "0x4aa700",
+    "end": "0x4aa73e",
+    "length": 63,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4aa700.c"
+  },
+  {
+    "address": "0x4d7600",
+    "name": "Game_FindRecordByField24",
+    "start": "0x4d7600",
+    "end": "0x4d763e",
+    "length": 63,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4d7600.c"
+  },
+  {
+    "address": "0x4e2570",
+    "name": "Game_CollectObjectsByOwner",
+    "start": "0x4e2570",
+    "end": "0x4e25ae",
+    "length": 63,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4e2570.c"
+  },
+  {
+    "address": "0x4f3a90",
+    "name": "Grid_GetRandomRecord28",
+    "start": "0x4f3a90",
+    "end": "0x4f3ace",
+    "length": 63,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4f3a90.c"
+  },
+  {
+    "address": "0x4f3ad0",
+    "name": "Array_GetRandomRecord28",
+    "start": "0x4f3ad0",
+    "end": "0x4f3b0e",
+    "length": 63,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4f3ad0.c"
+  },
+  {
+    "address": "0x4f4e90",
+    "name": "Map_ScreenToGridCell",
+    "start": "0x4f4e90",
+    "end": "0x4f4ece",
+    "length": 63,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4f4e90.c"
+  },
+  {
+    "address": "0x50d8f0",
+    "name": "Object_SyncScreenY",
+    "start": "0x50d8f0",
+    "end": "0x50d92e",
+    "length": 63,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x50d8f0.c"
+  },
+  {
+    "address": "0x5238c0",
+    "name": "Movie_ReleasePlayer",
+    "start": "0x5238c0",
+    "end": "0x5238fe",
+    "length": 63,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x5238c0.c"
+  },
+  {
+    "address": "0x47a590",
+    "name": "Matrix_MaxByRow9x8",
+    "start": "0x47a590",
+    "end": "0x47a5cf",
+    "length": 64,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x47a590.c"
+  },
+  {
+    "address": "0x492440",
+    "name": "CompanyMenu_InitStylePage",
+    "start": "0x492440",
+    "end": "0x49247f",
+    "length": 64,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x492440.c"
+  }
+]
