@@ -40,9 +40,13 @@ def current_registry():
 def pe_imports():
     """Map imported names to their IAT slot addresses."""
     global _IMPORTS
-    if _IMPORTS is not None:
-        return _IMPORTS
-    data, base, sections = pe_image(GAME)
+    if _IMPORTS is None:
+        _IMPORTS = image_imports(pe_image(GAME))
+    return _IMPORTS
+
+
+def image_imports(image, *, all_slots=False):
+    data, base, sections = image
     pe = struct.unpack_from("<I", data, 0x3C)[0]
     opt = pe + 24
     import_rva, _ = struct.unpack_from("<II", data, opt + 96 + 8)
@@ -72,9 +76,9 @@ def pe_imports():
                     result.setdefault(name, set()).add(base + first + index * 4)
                 index += 1
             cursor += 20
-    _IMPORTS = {name: next(iter(addresses)) for name, addresses in result.items()
-                if len(addresses) == 1}
-    return _IMPORTS
+    if all_slots:
+        return result
+    return {name: next(iter(addresses)) for name, addresses in result.items() if len(addresses) == 1}
 
 
 @lru_cache(maxsize=None)
@@ -672,6 +676,8 @@ def write_function_audit(result):
               ("address", "source", "source_sha256", "executable_sha256", "entry", "length",
                "compiler", "flags", "strict_requested", "strict_symbols", "auto_symbols",
                "symbol_registry_sha256", "symbol_overrides")}
+    if "stock_plan_sha256" in result:
+        recipe["stock_plan_sha256"] = result["stock_plan_sha256"]
     key = hashlib.sha256(json.dumps(recipe, sort_keys=True).encode()).hexdigest()[:16]
     temp = None
     try:

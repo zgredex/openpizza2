@@ -359,3 +359,35 @@ verified bytes, including 33 with a single identity. `intrncvt.obj` contributes
 three raw matches at `0x555896` (`__CopyMan`), `0x5558b1` (`__FillZeroMan`), and
 `0x5558bd` (`__IsZeroMan`). The JSON records input hashes and relocation
 evidence. Generate the report locally with the command above.
+
+### Automatic stock archive plans
+
+`--stock` uses the pinned VC6 SP3 `LIBC`, `LIBCMT`, `LIBCI`, `LIBCIMT`,
+`LIBCP`, and `LIBCPMT` archives. Unique raw matches and named PE IAT slots
+seed the scan. Each round can use exact bindings established in earlier
+rounds. If a binding becomes ambiguous, the scan revokes it and rechecks the
+dependent proofs. Each plan entry includes the source archive and COFF member
+hashes, complete function range, and independently evaluated relocations.
+
+```sh
+python3 tools/match_crt_archive.py --stock --json-out /tmp/pc2-stock-report.json \
+  --plan-out /tmp/pc2-stock-plan.json
+python3 tools/verify_linked_image.py --archive-plan /tmp/pc2-stock-plan.json \
+  --out "$scratch/fastfood2.exe" --manifest "$scratch/stock-manifest.json"
+python3 tools/audit_symbol_targets.py /tmp/pc2-tracked-audit \
+  --stock-plan /tmp/pc2-stock-plan.json --json-out /tmp/pc2-stock-impact.json
+```
+
+The builder reproduces the plan from the pinned archive, index, and PE
+inputs. Add `--audit` to combine stock ranges with verified C and keep the C
+owner where both cover the same function. For cached dependency rechecks,
+pass the archive plan alongside `--assess --cache-only` and select the affected
+C addresses. An explicit recipe mapping keeps precedence and is still checked.
+
+The six-archive scan found 71 verified locations in four proof rounds and
+linked 55 unambiguous functions (5,670 bytes) into a byte-identical PE. The
+combined build linked 1,128 functions and 63,956 code bytes, including 48
+additional stock functions and seven overlaps kept under C ownership. Its
+menu replay reached 120 linked functions with zero unresolved edges. The
+dependency query found 24 exact consumers and no new unresolved matches in
+the current audit. All 17 retained objects selected for cached rechecks passed.

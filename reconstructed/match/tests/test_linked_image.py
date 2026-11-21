@@ -216,6 +216,19 @@ class LinkedImageTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "partially overlapping linked spans"):
                 linker.merged_spans([("a", [shared]), ("b", [overlap])])
 
+    def test_stock_and_compiled_at_same_va_keep_one_verified_owner(self):
+        body = {"start": "0x401000", "length": 1, "file_offset": "0x1000", "hex_bytes": "c3"}
+        function = {"function": {"start": body["start"]}, "linked_spans": [body]}
+        archive = {**function, "archive_proof": {"member": "fixture.obj"}}
+        writes = []
+        added, deduplicated = linker.append_stock_functions([function], writes, [archive])
+        self.assertEqual((added, writes), ([], []))
+        self.assertEqual(deduplicated, [{"address": body["start"], "owner": "compiled_source",
+                                          "archive_proof": archive["archive_proof"]}])
+        conflicting = {**archive, "linked_spans": [{**body, "hex_bytes": "90"}]}
+        with self.assertRaisesRegex(ValueError, "archive and compiled function conflict"):
+            linker.append_stock_functions([function], [], [conflicting])
+
     def test_reverse_dependencies_distinguish_explicit_and_blocked_facts(self):
         with tempfile.TemporaryDirectory() as tmp:
             directory = Path(tmp)

@@ -17,6 +17,7 @@ import tempfile
 
 from coff_cache import (CACHE_FLAGS, cache_environment, cache_identity, cache_path,
                         hash_bytes as digest, store_object)
+from match_crt_archive import load_stock_plan
 from match_decomp import (DEFAULT_VC6, GAME, ROOT, compile_candidate, compiler_provenance,
                           function_lengths, match_object, match_provenance, parse_coff, parse_symbols,
                           pe_file_span, pe_image, resolve_auto_symbol, write_function_audit)
@@ -178,7 +179,7 @@ def batch_plan(audit, image, executable_sha256, compiler, priorities, limit, onl
 
 
 def verify_recipe(recipe, vc6, scratch, original, cache_dir, cache_key, build_environment=None,
-                  cache_only=False, assess=False):
+                  cache_only=False, assess=False, stock=None):
     source_bytes = recipe.source.read_bytes()
     if digest(source_bytes) != recipe.source_sha256:
         raise ValueError("source changed after planning")
@@ -202,9 +203,21 @@ def verify_recipe(recipe, vc6, scratch, original, cache_dir, cache_key, build_en
         object_bytes, _, _ = parse_coff(obj)
         store_object(cached, object_bytes)
     provenance = match_provenance(recipe.source, vc6, flags, recipe.symbols, True, True)
-    audit = match_object(recipe.address, obj, recipe.symbols, recipe.length, recipe.entry,
+    stock_symbols = stock["symbols"] if stock else {}
+    effective_symbols = {name: int(proof["address"], 16) for name, proof in stock_symbols.items()}
+    effective_symbols.update(recipe.symbols)
+    audit = match_object(recipe.address, obj, effective_symbols, recipe.length, recipe.entry,
                          strict=True, auto_symbols=True)
     audit.update(provenance)
+    if stock:
+        audit["stock_plan_sha256"] = stock["sha256"]
+        for fixup in audit["relocations"]:
+            name = fixup["symbol"]
+            if name in stock_symbols and name not in recipe.symbols and fixup["origin"] == "explicit_symbol":
+                proof = stock_symbols[name]["witness"]
+                fixup["origin"] = "stock_archive_symbol"
+                fixup["evidence"] = [{"path": proof["archive"],
+                                      "locator": f"{proof['member']} at {proof['member_offset']}, section {proof['section']}"}]
     write_function_audit(audit)
     evidence = {
         "audit_record": recipe.audit_record, "address": hex(recipe.address),
@@ -216,6 +229,8 @@ def verify_recipe(recipe, vc6, scratch, original, cache_dir, cache_key, build_en
         "symbol_registry_sha256": audit["symbol_registry_sha256"],
         "symbol_overrides": audit["symbol_overrides"], "relocations": audit["relocations"],
     }
+    if stock:
+        evidence["stock_plan_sha256"] = audit["stock_plan_sha256"]
     if assess:
         evidence.update(match=audit["match"], strict_match=audit["strict_match"],
                         strict_issues=audit["strict_issues"], relocation_issues=audit["relocation_issues"],
@@ -253,10 +268,11 @@ def verify_recipe(recipe, vc6, scratch, original, cache_dir, cache_key, build_en
 
 
 def verify_batch(recipes, jobs, vc6, scratch, original, cache_dir, cache_key, build_environment,
-                 cache_only=False, assess=False):
+                 cache_only=False, assess=False, stock=None):
     def verify(recipe):
         try:
-            return verify_recipe(recipe, vc6, scratch, original, cache_dir, cache_key, build_environment, cache_only, assess)
+            return verify_recipe(recipe, vc6, scratch, original, cache_dir, cache_key, build_environment,
+                                 cache_only, assess, stock)
         except UnsupportedLink as error:
             return None, {"record": recipe.audit_record, "address": hex(recipe.address),
                           "reason": str(error), "phase": "link"}
@@ -296,6 +312,23 @@ def write_assessment(path, results, audit, executable_sha256, cache_only):
     return int(any(status in statuses for status in ("cache_missing", "error")))
 
 
+def append_stock_functions(compiled, link_plans, stock_functions):
+    owners = {item["function"]["start"]: item for item in compiled}
+    added, deduplicated = [], []
+    for item in stock_functions:
+        address = item["function"]["start"]
+        if address in owners:
+            primary = owners[address]["linked_spans"][0]
+            archive = item["linked_spans"][0]
+            if any(primary[key] != archive[key] for key in ("start", "length", "file_offset", "hex_bytes")):
+                raise ValueError(f"archive and compiled function conflict at {address}")
+            deduplicated.append({"address": address, "owner": "compiled_source", "archive_proof": item["archive_proof"]})
+        else:
+            added.append(item)
+            link_plans.append((address, item["linked_spans"]))
+    return added, deduplicated
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("function_address", nargs="?", type=lambda val: int(val, 0), metavar="VA")
@@ -305,6 +338,7 @@ def main():
     parser.add_argument("--flags")
     parser.add_argument("--symbol", action="append", default=[], metavar="NAME=0xADDRESS")
     parser.add_argument("--audit", type=Path, help="strict audit directory containing functions/*.json")
+    parser.add_argument("--archive-plan", type=Path, help="revalidated stock archive plan, alone or with --audit")
     parser.add_argument("--address", action="append", type=lambda val: int(val, 0), default=[],
                         help="prioritize an eligible audit VA (repeatable)")
     parser.add_argument("--only-address", action="append", type=lambda val: int(val, 0), default=[],
@@ -323,14 +357,16 @@ def main():
     parser.add_argument("--out", type=Path, help="new scratch executable (image builds only)")
     parser.add_argument("--manifest", type=Path, help="new JSON path (default: OUT.manifest.json)")
     args = parser.parse_args()
-    if args.audit is None:
+    if not args.audit and not args.archive_plan:
         if args.function_address is None or args.source is None or not args.entry:
             parser.error("provide VA SOURCE --entry SYMBOL or --audit DIR")
         if args.address or args.only_address or args.limit:
             parser.error("--address, --only-address and --limit require --audit")
     elif any((args.function_address is not None, args.source, args.entry, args.length is not None,
               args.flags, args.symbol)):
-        parser.error("--audit uses saved entries, lengths, compiler flags, and symbol overrides")
+        parser.error("audit or archive builds use saved entries and recipes")
+    if not args.audit and (args.address or args.only_address or args.limit):
+        parser.error("--address, --only-address and --limit require --audit")
     if args.include_blocked and not args.only_address:
         parser.error("--include-blocked requires --only-address")
     if args.cache_only and not args.cache:
@@ -361,7 +397,22 @@ def main():
         if image[0] != original[0]:
             raise ValueError("--image must be byte-identical to the canonical executable")
 
+        stock = None
+        if args.archive_plan:
+            plan_digest = digest(args.archive_plan.read_bytes())
+            archive_plan = load_stock_plan(args.archive_plan, image)
+            if digest(args.archive_plan.read_bytes()) != plan_digest:
+                raise ValueError("archive plan changed during verification")
+            lengths = function_lengths()
+            for item in archive_plan["functions"]:
+                func = item["function"]
+                address, length = int(func["start"], 16), func["length"]
+                if lengths.get(address) != length or file_offset(image, address, length) != int(func["file_offset"], 16):
+                    raise ValueError(f"archive plan differs from the pinned function extent at {address:#x}")
+            stock = {"path": str(args.archive_plan.resolve()), "sha256": plan_digest, **archive_plan}
+
         vc6 = args.vc6.resolve()
+        plans, exclusions, record_count, deferred = [], [], 0, 0
         if args.audit:
             plans, exclusions, record_count, deferred = batch_plan(
                 args.audit, image, output_digest, compiler_provenance(vc6)["sha256"], args.address, args.limit,
@@ -370,7 +421,7 @@ def main():
                 raise ValueError(f"no supported strict audit recipes: {dict(Counter(row['reason'] for row in exclusions))}")
             print(f"audit records={record_count} planned={len(plans)} preflight_exclusions={len(exclusions)} "
                   f"deferred={deferred} jobs={args.jobs}", flush=True)
-        else:
+        elif not args.archive_plan:
             address = args.function_address
             length = function_lengths().get(address)
             if length is None:
@@ -388,9 +439,9 @@ def main():
             build_environment = cache_environment()
             cache_key = cache_identity(vc6, ROOT, build_environment)
         with tempfile.TemporaryDirectory(prefix="pc2-verified-image-") as scratch:
-            if args.audit:
+            if args.audit or args.archive_plan:
                 results = verify_batch(plans, args.jobs, vc6, Path(scratch), image[0], cache_dir, cache_key,
-                                       build_environment, args.cache_only, args.assess)
+                                       build_environment, args.cache_only, args.assess, stock) if plans else []
                 if args.assess:
                     if digest(GAME.read_bytes()) != output_digest:
                         raise ValueError("canonical executable changed during verification")
@@ -402,20 +453,32 @@ def main():
                     else:
                         verified.append(evidence)
                         link_plans.append((hex(recipe.address), spans))
-                if not verified:
+                if args.audit and not verified:
                     raise ValueError(f"none of the planned recipes could be linked: {dict(Counter(row['reason'] for row in exclusions))}")
                 if args.only_address and len(verified) != len(plans):
                     raise ValueError("one or more explicitly selected addresses could not be linked")
+                compiled_count = len(verified)
+                archive_items, deduplicated = append_stock_functions(verified, link_plans, stock["functions"]) if stock else ([], [])
+                verified.extend(archive_items)
+                if not verified:
+                    raise ValueError("archive plan contains no unambiguous linked functions")
                 writes = merged_spans(link_plans)
                 code_bytes = sum(item["function"]["length"] for item in verified)
-                summary = {"audit_records": record_count, "planned": len(plans), "deferred": deferred,
+                summary = {"audit_records": record_count,
+                           "planned": len(plans) + len(archive_items), "deferred": deferred,
                            "functions": len(verified), "union_code_bytes": code_bytes,
                            "union_linked_bytes": sum(span["length"] for span in writes), "write_spans": len(writes),
                            "excluded": dict(Counter(f"{row['phase']}: {row['reason']}" for row in exclusions)),
-                           "cache": dict(Counter(row["cache"] for row in verified))}
-                manifest = {"schema": "pc2.verified_linked_image_batch.v1", "audit": str(args.audit.resolve()),
-                            "scope": "selected_addresses" if args.only_address else "limited" if args.limit else "audit",
+                           "cache": dict(Counter(row["cache"] for row in verified if "cache" in row))}
+                manifest = {"schema": "pc2.verified_linked_image_batch.v1",
+                            "audit": str(args.audit.resolve()) if args.audit else None,
+                            "scope": "selected_addresses" if args.only_address else "limited" if args.limit else "audit" if args.audit else "archive",
                             "summary": summary, "functions": verified, "exclusions": exclusions}
+                if stock:
+                    summary.update(compiled_functions=compiled_count, archive_functions=len(archive_items),
+                                   archive_deduplicated=len(deduplicated))
+                    manifest["stock_archive"] = {"path": stock["path"], "sha256": stock["sha256"],
+                                                 "archives": stock["archives"], "deduplicated": deduplicated}
             else:
                 spans, evidence = verify_recipe(plan, vc6, Path(scratch), image[0], cache_dir, cache_key,
                                                 build_environment, args.cache_only)
@@ -435,7 +498,7 @@ def main():
         write_outputs([(out, patched), (manifest_path, encoded)])
     except (OSError, ValueError, TypeError, KeyError, struct.error, subprocess.TimeoutExpired) as error:
         parser.exit(1, f"linked image: {error}\n")
-    if args.audit:
+    if args.audit or args.archive_plan:
         print(f"verified {summary['functions']}/{summary['planned']} planned functions, {summary['union_code_bytes']} "
               f"code bytes, cache={summary['cache']}, image SHA-256 {output_digest}")
     else:

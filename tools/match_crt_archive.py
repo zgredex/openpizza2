@@ -9,14 +9,25 @@ from dataclasses import dataclass
 import hashlib
 import json
 from pathlib import Path
+import re
 import struct
 
-from match_decomp import DEFAULT_VC6, GAME, INDEX, pe_image, read_va
+from match_decomp import (DEFAULT_VC6, GAME, INDEX, function_lengths, image_imports,
+                          pe_file_span, pe_image, read_va, relocation_value)
 
 
 DIR32 = 0x0006
 REL32 = 0x0014
 MASK32 = 0xFFFFFFFF
+STOCK_LIBS = {
+    "LIBC.LIB": "76d536155a582d2cc9dafded92cfc1122aa4234a8f1afba252232ff492b2e13b",
+    "LIBCMT.LIB": "7922ed5dfd9da6d945a601f28b17e1cd67db97a87d995b579bfcade16e6e5765",
+    "LIBCI.LIB": "46db1e51522cd82608ed851d7380d7afbb612ea16e1d1a3957f655044ea8e486",
+    "LIBCIMT.LIB": "a78e4d21e853b385b043a1dfd0d65e8a3030eb0d776f4d66c2f76afeee6c115f",
+    "LIBCP.LIB": "a89e841ccb409885db2756d255be875f6d8ee5a5e3fdaad3162a393590cdf4d3",
+    "LIBCPMT.LIB": "919e3d9c8610a29f7a4a513df25ea2be6500cea742ddd613f5652f24fa4df98c",
+}
+PLAN_SCHEMA = "pc2.stock_archive_plan.v1"
 
 
 @dataclass(frozen=True)
@@ -45,6 +56,8 @@ class LibraryFunction:
     symbol: Symbol
     code: bytes
     relocations: tuple[Relocation, ...]
+    section_name: str = ".text"
+    member_sha256: str | None = None
 
     @property
     def identity(self):
@@ -96,6 +109,7 @@ def coff_functions(archive, member, member_offset, data):
         "<HHIIIHH", checked_slice(data, 0, 20))
     if optional_size or not symbol_count:
         return
+    member_sha256 = hashlib.sha256(data).hexdigest()
     checked_slice(data, 20, section_count * 40)
     header_end = 20 + section_count * 40
     if symbol_ptr < header_end:
@@ -130,6 +144,7 @@ def coff_functions(archive, member, member_offset, data):
 
     for section in range(1, section_count + 1):
         header = 20 + (section - 1) * 40
+        section_name = data[header:header + 8].split(b"\0", 1)[0].decode("latin1")
         raw_size, raw_ptr, reloc_ptr = struct.unpack_from("<III", data, header + 16)
         reloc_count, _, flags = struct.unpack_from("<HHI", data, header + 32)
         if not flags & 0x20 or flags & 0x01000000 or not raw_size:
@@ -168,7 +183,7 @@ def coff_functions(archive, member, member_offset, data):
                 previous_end = offset + 4
             else:
                 yield LibraryFunction(archive, member, member_offset, symbol,
-                                      code[start:end], tuple(fixups))
+                                      code[start:end], tuple(fixups), section_name, member_sha256)
 
 
 def game_functions(image, index):
@@ -186,11 +201,12 @@ def game_functions(image, index):
 def evidence(function, method, relocations=()):
     return {"archive": function.archive, "member": function.member,
             "member_offset": hex(function.member_offset), "symbol": function.symbol.name,
-            "section": function.symbol.section, "section_offset": hex(function.symbol.value),
+            "member_sha256": function.member_sha256, "section": function.symbol.section,
+            "section_name": function.section_name, "section_offset": hex(function.symbol.value),
             "method": method, "relocations": list(relocations)}
 
 
-def compare_relocated(function, address, original, known, known_local):
+def compare_relocated(function, address, original, known, known_local, *, stock=False):
     unresolved = set()
     checked = []
     previous_end = 0
@@ -203,68 +219,54 @@ def compare_relocated(function, address, original, known, known_local):
         if symbol.section == function.symbol.section:
             target = address + symbol.value - function.symbol.value
             basis = "same_section"
+            if stock and not address <= target + relocation.addend < address + len(function.code):
+                return None
         elif function.symbol_slot(symbol) in known_local:
-            target = known_local[function.symbol_slot(symbol)]
-            basis = "exact_member_symbol"
-        elif symbol.storage == 2:
+            binding = known_local[function.symbol_slot(symbol)]
+            target, basis = binding if stock else (binding, "exact_member_symbol")
+        elif symbol.storage == 2 and (not stock or symbol.section == 0):
             target, basis = known.get(symbol.name, (None, "unresolved"))
         else:
             target, basis = None, "unresolved"
         if target is None:
             unresolved.add(symbol.name)
             continue
-        value = target + relocation.addend
-        if relocation.kind == REL32:
-            value -= address + offset + 4
-        if struct.pack("<I", value & MASK32) != original[offset:previous_end]:
+        value = relocation_value(target, relocation.addend, address + offset, relocation.kind)
+        if struct.pack("<I", value) != original[offset:previous_end]:
             return None
         checked.append({"offset": hex(offset), "symbol": symbol.name,
                         "kind": "REL32" if relocation.kind == REL32 else "DIR32",
-                        "target": hex(target), "addend": relocation.addend, "basis": basis})
+                        "target": hex(target), "addend": relocation.addend, "basis": basis,
+                        "value": hex(value)})
     if function.code[previous_end:] != original[previous_end:]:
         return None
     return sorted(unresolved), checked
 
 
-def match_functions(functions, game, explicit):
+def match_inventory(functions, game):
     by_bytes = defaultdict(list)
     by_size = defaultdict(list)
     for address, (_, code) in game.items():
         by_bytes[code].append(address)
         by_size[len(code)].append((address, code))
 
-    matches = defaultdict(list)
-    exact_symbols = defaultdict(set)
-    exact_local = defaultdict(set)
+    exact = defaultdict(list)
     for source in functions:
         if source.relocations:
             continue
         for address in by_bytes.get(source.code, []):
-            matches[address].append((source.identity, evidence(source, "exact")))
-            exact_local[source.symbol_slot(source.symbol)].add(address)
-            if source.symbol.storage == 2:
-                exact_symbols[source.symbol.name].add(address)
+            exact[address].append((source, evidence(source, "exact")))
+    return exact, by_size
 
-    exact_count = len(matches)
-    known = {}
-    known_local = {slot: next(iter(addresses)) for slot, addresses in exact_local.items()
-                   if len(addresses) == 1}
-    for symbol, addresses in exact_symbols.items():
-        if len(addresses) == 1:
-            address = next(iter(addresses))
-            if len({identity for identity, _ in matches[address]}) == 1:
-                known[symbol] = (address, "unique_exact_symbol")
-    for symbol, address in explicit.items():
-        if symbol in known and known[symbol][0] != address:
-            raise ValueError(f"explicit address conflicts with exact match for {symbol}")
-        known[symbol] = (address, "explicit")
 
+def relocated_matches(functions, by_size, exact, known, known_local, *, stock=False):
+    matches = defaultdict(list, {address: list(variants) for address, variants in exact.items()})
     candidates = defaultdict(list)
     for source in functions:
         if not source.relocations or len(source.relocations) * 4 == len(source.code):
             continue
         for address, code in by_size.get(len(source.code), []):
-            comparison = compare_relocated(source, address, code, known, known_local)
+            comparison = compare_relocated(source, address, code, known, known_local, stock=stock)
             if comparison is None:
                 continue
             unresolved, checked = comparison
@@ -273,26 +275,247 @@ def match_functions(functions, game, explicit):
                 variant["unresolved_symbols"] = unresolved
                 candidates[address].append(variant)
             else:
-                matches[address].append((source.identity, variant))
+                matches[address].append((source, variant))
+    return matches, candidates
 
+
+def ambiguities(matches):
     locations = defaultdict(set)
     for address, variants in matches.items():
-        for identity, _ in variants:
-            locations[identity].add(address)
-    records = []
-    for address, variants in sorted(matches.items()):
-        identities = {identity for identity, _ in variants}
+        for source, _ in variants:
+            locations[source.identity].add(address)
+    result = {}
+    for address, variants in matches.items():
+        identities = {source.identity for source, _ in variants}
         ambiguity = []
         if len(identities) > 1:
             ambiguity.append("multiple_archive_identities")
         if any(len(locations[identity]) > 1 for identity in identities):
             ambiguity.append("same_identity_at_multiple_game_addresses")
-        records.append({"address": hex(address), "game_name": game[address][0],
-                        "length": len(game[address][1]), "ambiguity": ambiguity,
-                        "variants": [variant for _, variant in variants]})
+        result[address] = ambiguity
+    return result
+
+
+def match_records(matches, candidates, game, revoked=()):
+    by_address = ambiguities(matches)
+    for address in revoked:
+        by_address[address].append("revoked_stock_identity")
+    records = [{"address": hex(address), "game_name": game[address][0],
+                "length": len(game[address][1]), "ambiguity": by_address[address],
+                "variants": [variant for _, variant in variants]}
+               for address, variants in sorted(matches.items())]
     unresolved_records = [{"address": hex(address), "variants": variants}
                           for address, variants in sorted(candidates.items())]
-    return exact_count, records, unresolved_records
+    return records, unresolved_records
+
+
+def match_functions(functions, game, explicit):
+    exact, by_size = match_inventory(functions, game)
+    exact_symbols, exact_local = defaultdict(set), defaultdict(set)
+    for address, variants in exact.items():
+        for source, _ in variants:
+            exact_local[source.symbol_slot(source.symbol)].add(address)
+            if source.symbol.storage == 2:
+                exact_symbols[source.symbol.name].add(address)
+    known, known_local = {}, {slot: next(iter(addresses)) for slot, addresses in exact_local.items()
+                              if len(addresses) == 1}
+    for symbol, addresses in exact_symbols.items():
+        if len(addresses) == 1:
+            address = next(iter(addresses))
+            if len({source.identity for source, _ in exact[address]}) == 1:
+                known[symbol] = (address, "unique_exact_symbol")
+    for symbol, address in explicit.items():
+        if symbol in known and known[symbol][0] != address:
+            raise ValueError(f"explicit address conflicts with exact match for {symbol}")
+        known[symbol] = (address, "explicit")
+    matches, candidates = relocated_matches(functions, by_size, exact, known, known_local)
+    return len(exact), *match_records(matches, candidates, game)
+
+
+def stock_imports(functions, imports):
+    result = {}
+    for function in functions:
+        for relocation in function.relocations:
+            symbol = relocation.symbol
+            if symbol.section or symbol.storage != 2 or not symbol.name.startswith("__imp_"):
+                continue
+            raw = re.sub(r"@\d+$", "", symbol.name.removeprefix("__imp_"))
+            names = {raw, raw[1:]} if raw.startswith(("_", "@")) else {raw}
+            addresses = {address for name in names for address in imports.get(name, ())}
+            if len(addresses) == 1:
+                result[symbol.name] = next(iter(addresses)), "pe_iat"
+    return result
+
+
+def stock_bindings(matches, suppressed=()):
+    public_locations, member_locations = defaultdict(set), defaultdict(set)
+    for address, variants in matches.items():
+        for source, _ in variants:
+            if source.symbol.storage == 2:
+                public_locations[source.symbol.name].add(address)
+            member_locations[source.symbol_slot(source.symbol)].add(address)
+
+    public, member = {}, {}
+    for address, ambiguity in ambiguities(matches).items():
+        if ambiguity or address in suppressed:
+            continue
+        for source, receipt in matches[address]:
+            slot = source.symbol_slot(source.symbol)
+            if len(member_locations[slot]) == 1:
+                member.setdefault(slot, (address, receipt))
+            name = source.symbol.name
+            if source.symbol.storage == 2 and len(public_locations[name]) == 1:
+                public.setdefault(name, (address, receipt))
+    return public, member
+
+
+def revoked_locations(matches, public, member):
+    return {address for address, variants in matches.items()
+            if any(source.symbol.name in public or source.symbol_slot(source.symbol) in member
+                   for source, _ in variants)}
+
+
+def stock_matches(functions, game, iat):
+    """Grow only from independently proven earlier rounds and revoke ambiguous seeds."""
+    exact, by_size = match_inventory(functions, game)
+    imports = stock_imports(functions, iat)
+    banned_public, banned_member = set(), set()
+    while True:
+        public, member, rounds = {}, {}, []
+        while True:
+            known = {**imports, **{name: (proof["address"], proof["basis"]) for name, proof in public.items()}}
+            known_local = {slot: (proof["address"], proof["basis"]) for slot, proof in member.items()}
+            matches, pending = relocated_matches(functions, by_size, exact, known, known_local, stock=True)
+            public_next, member_next = stock_bindings(matches, revoked_locations(matches, banned_public, banned_member))
+            unsafe_public = {name for name, proof in public.items()
+                             if name not in public_next or public_next[name][0] != proof["address"]}
+            unsafe_member = {slot for slot, proof in member.items()
+                             if slot not in member_next or member_next[slot][0] != proof["address"]}
+            if unsafe_public or unsafe_member:
+                banned_public.update(unsafe_public)
+                banned_member.update(unsafe_member)
+                break
+
+            step = len(rounds) + 1
+            add_public = {name: {"address": address,
+                                 "basis": "unique_exact_symbol" if receipt["method"] == "exact" else "verified_stock_symbol",
+                                 "round": step, "witness": receipt}
+                          for name, (address, receipt) in public_next.items()
+                          if name not in (public.keys() | imports.keys() | banned_public)}
+            add_member = {slot: {"address": address,
+                                 "basis": "exact_member_symbol" if receipt["method"] == "exact" else "verified_member_symbol",
+                                 "round": step, "witness": receipt}
+                          for slot, (address, receipt) in member_next.items()
+                          if slot not in (member.keys() | banned_member)}
+            if not add_public and not add_member:
+                return len(exact), matches, pending, public, member, imports, rounds, {
+                    "public": sorted(banned_public), "member": [list(slot) for slot in sorted(banned_member)]}
+            rounds.append({"round": step, "public": len(add_public), "member": len(add_member)})
+            public.update(add_public)
+            member.update(add_member)
+
+
+def read_archives(paths, expected=None, *, stock=False):
+    functions, inputs = [], []
+    remaining = set(STOCK_LIBS.values()) if stock else None
+    for archive in dict.fromkeys(path.resolve() for path in paths):
+        data = archive.read_bytes()
+        sha256 = hashlib.sha256(data).hexdigest()
+        if expected is not None and expected.get(str(archive)) != sha256:
+            raise ValueError(f"archive SHA-256 changed: {archive}")
+        if remaining is not None:
+            if sha256 not in remaining:
+                raise ValueError(f"wrong or duplicate pinned VC6 archive: {archive}")
+            remaining.remove(sha256)
+        inputs.append({"path": str(archive), "sha256": sha256})
+        for offset, member, contents in archive_members(data):
+            try:
+                functions.extend(coff_functions(str(archive), member, offset, contents))
+            except ValueError as error:
+                raise ValueError(f"{archive.name} member {member}: {error}") from error
+    if remaining:
+        raise ValueError("stock scan requires all six pinned VC6 archives")
+    return functions, inputs
+
+
+def stock_plan(image, game, functions, archives, index_pin):
+    exact, matches, pending, public, member, imports, rounds, banned = stock_matches(
+        functions, game, image_imports(image, all_slots=True))
+    revoked_names = set(banned["public"])
+    revoked_slots = {tuple(slot) for slot in banned["member"]}
+    revoked_addresses = revoked_locations(matches, revoked_names, revoked_slots)
+    records, unresolved = match_records(matches, pending, game, revoked_addresses)
+    placed = []
+    for record in records:
+        if record["ambiguity"]:
+            continue
+        address = int(record["address"], 16)
+        source, witness = matches[address][0]
+        linked = bytearray(source.code)
+        if len(source.relocations) != len(witness["relocations"]):
+            raise ValueError(f"incomplete archive fixup proof at {address:#x}")
+        for relocation, checked in zip(source.relocations, witness["relocations"]):
+            value = relocation_value(int(checked["target"], 16), relocation.addend,
+                                     address + relocation.offset, relocation.kind)
+            struct.pack_into("<I", linked, relocation.offset, value)
+        if linked != game[address][1]:
+            raise ValueError(f"independently linked archive body differs at {address:#x}")
+        length = len(linked)
+        offset, section = pe_file_span(image, address, length)
+        sha256 = hashlib.sha256(linked).hexdigest()
+        span = {"kind": "primary", "section": source.section_name, "section_index": source.symbol.section,
+                "placement": "stock_archive", "pe_section": section,
+                "start": hex(address), "end_exclusive": hex(address + length), "length": length,
+                "source_section_offset": hex(source.symbol.value), "file_offset": hex(offset),
+                "file_end_exclusive": hex(offset + length), "hex_bytes": linked.hex(), "sha256": sha256,
+                "fixup_sites": [hex(address + relocation.offset) for relocation in source.relocations]}
+        placed.append({"address": hex(address), "status": "strict", "provider": "stock_archive",
+                       "function": {"entry": source.symbol.name, "start": hex(address),
+                                    "end_exclusive": hex(address + length), "length": length,
+                                    "file_offset": hex(offset), "file_end_exclusive": hex(offset + length),
+                                    "sha256": sha256}, "archive_proof": witness, "linked_spans": [span]})
+    plan = {"schema": PLAN_SCHEMA, "executable_sha256": hashlib.sha256(image[0]).hexdigest(),
+            "archives": archives, "index": index_pin, "functions": placed,
+            "symbols": {name: {**proof, "address": hex(proof["address"])} for name, proof in sorted(public.items())},
+            "member_symbols": [{"slot": list(slot), **proof, "address": hex(proof["address"])}
+                               for slot, proof in sorted(member.items())],
+            "imports": {name: hex(address) for name, (address, _) in sorted(imports.items())},
+            "rounds": rounds, "revoked": banned}
+    return exact, records, unresolved, plan
+
+
+def read_game(image, index_path, expected=None):
+    contents = index_path.read_bytes()
+    sha256 = hashlib.sha256(contents).hexdigest()
+    if expected is not None and expected != sha256:
+        raise ValueError("archive plan decompile index SHA-256 changed")
+    index = json.loads(contents)
+    executable_sha256 = hashlib.sha256(image[0]).hexdigest()
+    if index.get("target_sha256", executable_sha256) != executable_sha256:
+        raise ValueError("decompile index SHA-256 does not match the executable")
+    return {address: (name, code) for address, name, code in game_functions(image, index)}, {
+        "path": str(index_path.resolve()), "sha256": sha256}
+
+
+def load_stock_plan(path, image):
+    saved = json.loads(path.read_text())
+    if saved["schema"] != PLAN_SCHEMA or saved["executable_sha256"] != hashlib.sha256(image[0]).hexdigest():
+        raise ValueError("archive plan schema or executable SHA-256 differs")
+    game, index = read_game(image, Path(saved["index"]["path"]), saved["index"]["sha256"])
+    archives = {item["path"]: item["sha256"] for item in saved["archives"]}
+    if len(archives) != len(saved["archives"]) or not archives:
+        raise ValueError("archive plan needs distinct source archives")
+    functions, inputs = read_archives(map(Path, archives), archives, stock=True)
+    _, _, _, rebuilt = stock_plan(image, game, functions, inputs, index)
+    if rebuilt != saved:
+        raise ValueError("archive plan does not reproduce from its original archive bytes")
+    lengths = function_lengths()
+    for item in rebuilt["functions"]:
+        function = item["function"]
+        address = int(function["start"], 16)
+        if lengths.get(address) != function["length"]:
+            raise ValueError(f"archive plan differs from the pinned function extent at {address:#x}")
+    return rebuilt
 
 
 def parse_symbol(spec):
@@ -313,10 +536,25 @@ def main():
     parser.add_argument("--index", type=Path, default=INDEX)
     parser.add_argument("--symbol", action="append", type=parse_symbol, default=[])
     parser.add_argument("--json-out", type=Path)
+    parser.add_argument("--stock", action="store_true", help="scan six default archives and propagate independently verified targets")
+    parser.add_argument("--plan-out", type=Path, help="write an independently linked plan (requires --stock)")
     args = parser.parse_args()
-    archives = args.archives or [DEFAULT_VC6 / "LIB" / name for name in ("LIBC.LIB", "LIBCMT.LIB")]
+    if args.plan_out and not args.stock:
+        parser.error("--plan-out requires --stock")
+    if args.stock and args.symbol:
+        parser.error("automatic stock plans use independently verified targets")
+    if args.plan_out and args.json_out and args.plan_out.resolve() == args.json_out.resolve():
+        parser.error("report and plan paths must differ")
+    names = STOCK_LIBS if args.stock else ("LIBC.LIB", "LIBCMT.LIB")
+    archives = args.archives or [DEFAULT_VC6 / "LIB" / name for name in names]
 
     try:
+        sources = [args.exe, args.index, *archives]
+        for output in (args.json_out, args.plan_out):
+            if output and any(output.resolve() == source.resolve()
+                              or (output.is_file() and source.is_file() and output.samefile(source))
+                              for source in sources):
+                raise ValueError(f"output would replace an input: {output}")
         explicit = {}
         for symbol, address in args.symbol:
             if symbol in explicit and explicit[symbol] != address:
@@ -324,22 +562,16 @@ def main():
             explicit[symbol] = address
         image = pe_image(args.exe)
         executable_sha256 = hashlib.sha256(image[0]).hexdigest()
-        index = json.loads(args.index.read_text())
-        if index.get("target_sha256", executable_sha256) != executable_sha256:
-            raise ValueError("decompile index SHA-256 does not match the executable")
-        game = {address: (name, code) for address, name, code in
-                game_functions(image, index)}
-        functions = []
-        archive_inputs = []
-        for archive in dict.fromkeys(path.resolve() for path in archives):
-            data = archive.read_bytes()
-            archive_inputs.append({"path": str(archive), "sha256": hashlib.sha256(data).hexdigest()})
-            for offset, member, contents in archive_members(data):
-                try:
-                    functions.extend(coff_functions(str(archive), member, offset, contents))
-                except ValueError as error:
-                    raise ValueError(f"{archive.name} member {member}: {error}") from error
-        exact, matches, candidates = match_functions(functions, game, explicit)
+        game, index = read_game(image, args.index)
+        functions, archive_inputs = read_archives(archives, stock=args.stock)
+        if args.stock:
+            exact, matches, candidates, plan = stock_plan(image, game, functions, archive_inputs, index)
+            if args.plan_out:
+                with args.plan_out.open("x") as stream:
+                    json.dump(plan, stream, indent=2)
+                    stream.write("\n")
+        else:
+            exact, matches, candidates = match_functions(functions, game, explicit)
         ambiguous = sum(bool(match["ambiguity"]) for match in matches)
         if args.json_out:
             report = {"executable_sha256": executable_sha256,
@@ -347,12 +579,18 @@ def main():
                       "archive_function_variants": len(functions), "raw_exact_locations": exact,
                       "verified_locations": len(matches), "ambiguous_locations": ambiguous,
                       "matches": matches, "unresolved_candidates": candidates}
+            if args.stock:
+                report["stock"] = {"planned_functions": len(plan["functions"]), "public_symbols": len(plan["symbols"]),
+                                   "rounds": plan["rounds"], "revoked": plan["revoked"], "iat_symbols": len(plan["imports"])}
             args.json_out.write_text(json.dumps(report, indent=2) + "\n")
     except (OSError, ValueError, KeyError, TypeError, struct.error) as error:
         parser.exit(1, f"CRT archive matching failed: {error}\n")
     print(f"CRT archive: {len(matches)} byte-verified locations ({exact} raw exact, "
           f"{ambiguous} with ambiguous identity) across {len(game)} game functions; "
           f"{len(candidates)} locations also have unresolved candidates")
+    if args.stock:
+        print(f"stock plan: {len(plan['functions'])} unambiguous functions, {len(plan['symbols'])} public symbols, "
+              f"{len(plan['rounds'])} proof rounds")
     return 0
 
 

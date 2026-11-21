@@ -8,7 +8,8 @@ from collections import Counter, defaultdict
 import json
 from pathlib import Path
 
-from match_decomp import GAME, ROOT, file_sha256
+from match_crt_archive import load_stock_plan
+from match_decomp import GAME, ROOT, file_sha256, pe_image
 from symbol_registry import REGISTRY, load_registry
 
 
@@ -182,6 +183,8 @@ def main():
                         help="select recorded source or evidence path (repeatable)")
     parser.add_argument("--registry-before", type=Path,
                         help="select consumers of exact facts changed from this registry snapshot")
+    parser.add_argument("--stock-plan", type=Path,
+                        help="select exact public consumers from an independently revalidated stock archive plan")
     parser.add_argument("--unverified-only", action="store_true", help="select only unverified fixups")
     parser.add_argument("--json-out", type=Path)
     args = parser.parse_args()
@@ -191,7 +194,7 @@ def main():
         directory = args.audit / "functions"
         if not directory.is_dir():
             raise ValueError(f"audit records directory is missing: {directory}")
-        reverse = args.reverse or args.section_address or args.source or args.registry_before
+        reverse = args.reverse or args.section_address or args.source or args.registry_before or args.stock_plan
         if args.rank_blockers:
             if reverse:
                 raise ValueError("--rank-blockers cannot be combined with reverse dependency queries")
@@ -199,10 +202,15 @@ def main():
             summary = f"ranked {len(payload['symbols'])} unresolved names across {payload['body_only_addresses']} body-only VAs"
         elif reverse:
             changed_symbols = registry_changes(args.registry_before, executable_sha256) if args.registry_before else set()
-            reverse_symbols = symbols if args.reverse and not (args.registry_before or args.source or args.section_address) else set(args.symbol or ())
+            reverse_symbols = symbols if args.reverse and not (args.registry_before or args.source or args.section_address or args.stock_plan) else set(args.symbol or ())
+            stock = load_stock_plan(args.stock_plan, pe_image(GAME)) if args.stock_plan else None
+            if stock:
+                reverse_symbols.update(stock["symbols"])
             payload = reverse_dependencies(directory, reverse_symbols, set(args.section_address or ()),
                                            {path.resolve() for path in args.source or ()}, changed_symbols,
                                            args.unverified_only, executable_sha256)
+            if stock:
+                payload["stock_plan_sha256"] = file_sha256(args.stock_plan.resolve())
             summary = f"selected {len(payload['addresses'])} distinct dependent VAs"
         else:
             targets = select_records(directory, symbols, args.unverified_only, executable_sha256)
