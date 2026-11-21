@@ -42,9 +42,15 @@ batch04 part1  25 / 25 C matches
 batch04 part2  25 / 25 C matches
 batch04 part3  25 / 25 C matches
 batch04 part4  25 / 25 C matches
+batch05 part1  25 / 25 C matches
+batch05 part2  25 / 25 C matches
+batch05 part3  25 / 25 C matches
+batch05 part4  25 / 25 C matches
 batch09 part1  22 / 25 C matches
 batch09 part2  21 / 25 C matches
-total         351 / 403 C matches
+batch09 part3  22 / 25 C matches
+batch09 part4  23 / 25 C matches
+total         496 / 553 C matches
 ```
 
 The remaining strict failures are mostly missing independent symbol maps for
@@ -60,9 +66,11 @@ PC2_STRICT=1 PC2_AUTO_SYMBOLS=1 bash reconstructed/match/batch01/part2/verify_ma
 PC2_STRICT=1 PC2_AUTO_SYMBOLS=1 bash reconstructed/match/batch01/part3/verify_c.sh
 PC2_STRICT=1 PC2_AUTO_SYMBOLS=1 python3 reconstructed/match/batch01/part4/verify.py
 
-# Batch 9 parts 1-2: per-function flags (some C, one /O1).
+# Batch 9: per-function flags (some C, one /O1).
 sh reconstructed/match/batch09/part1/verify_strict.sh
 sh reconstructed/match/batch09/part2/verify_strict.sh
+sh reconstructed/match/batch09/part3/verify_strict.sh
+sh reconstructed/match/batch09/part4/verify_strict.sh
 
 # Batch 2: manifests plus auto symbol resolution.
 for p in 1 2 3 4; do
