@@ -10,7 +10,10 @@ wrong target cannot pass. `--strict` additionally adds:
 - every `DIR32`/`REL32` target and addend checked against the original PE;
 - an independent symbol map (`--symbol` or `--auto-symbols`), not the original
   relocation bytes;
-- rejection of unverified `.text$x` unwind sections.
+- automated resolution of PE import IAT slots, decorated C++ names, and data
+  symbols from `data_symbols.csv`;
+- masked byte-pattern location and relocation verification of `.text$x`,
+  `.xdata$x`, and anchored data COMDATs (vtables) instead of rejecting them.
 
 `tools/match_batch.py --strict --auto-symbols` applies the gate to a whole part.
 The regression test is:
@@ -26,13 +29,13 @@ checked; strict mode rejects it as well. The correct target passes both.
 ## Current strict counts
 
 ```text
-batch01 part1   6 / 9  C matches
-batch01 part2  10 / 15 C matches
-batch01 part3  11 / 12 C matches
-batch01 part4  10 / 17 C matches
-batch02 part1  12 / 25 C matches
-batch02 part2  20 / 25 C matches
-batch02 part3  21 / 25 C matches
+batch01 part1   9 / 9  C matches
+batch01 part2  15 / 15 C matches
+batch01 part3  12 / 12 C matches
+batch01 part4  15 / 17 C matches
+batch02 part1  24 / 25 C matches
+batch02 part2  24 / 25 C matches
+batch02 part3  22 / 25 C matches
 batch02 part4  18 / 25 C matches
 batch03 part1  25 / 25 C matches
 batch03 part2  25 / 25 C matches
@@ -66,12 +69,17 @@ batch10 part1  24 / 25 C matches
 batch10 part2  22 / 25 C matches
 batch10 part3  22 / 25 C matches
 batch10 part4  23 / 25 C matches
-total         875 / 953 C matches
+total         906 / 953 C matches
 ```
 
-The remaining strict failures are mostly missing independent symbol maps for
-calls/globals and unverified `.text$x` unwind data, not byte differences. The
+This is an increase from 875 strict matches after the checker learned to
+resolve IAT imports, decorated/data symbols, EH funclets, and anchored data
+COMDATs. No new C candidates were required for the increase.
+
+The remaining strict failures are mostly unnamed static helpers or data
+objects that have no entry in either symbol map, not byte differences. The
 C-only codegen count remains 53/100 for batch 1 and 100/100 for batch 2.
+Batches 3-10 use the strict gate for every accepted function.
 
 ## Reproduce
 
@@ -81,6 +89,10 @@ PC2_STRICT=1 PC2_AUTO_SYMBOLS=1 sh reconstructed/match/batch01/part1/verify.sh
 PC2_STRICT=1 PC2_AUTO_SYMBOLS=1 bash reconstructed/match/batch01/part2/verify_matches.sh
 PC2_STRICT=1 PC2_AUTO_SYMBOLS=1 bash reconstructed/match/batch01/part3/verify_c.sh
 PC2_STRICT=1 PC2_AUTO_SYMBOLS=1 python3 reconstructed/match/batch01/part4/verify.py
+
+# Auto-symbol and unwind regressions.
+python3 reconstructed/match/tests/test_auto_symbols.py
+python3 reconstructed/match/tests/test_relocation_guard.py
 
 # Batch 9: per-function flags (some C, one /O1).
 sh reconstructed/match/batch09/part1/verify_strict.sh

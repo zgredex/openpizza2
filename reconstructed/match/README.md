@@ -26,8 +26,8 @@ VC6 tree or the game image.
 ## Progress
 
 ```text
-batch 1    53 / 100 C-only   (strict 37)
-batch 2   100 / 100 C-only   (strict 71)
+batch 1    53 / 100 C-only   (strict 51)
+batch 2   100 / 100 C-only   (strict 88)
 batch 3   100 / 100 strict
 batch 4   100 / 100 strict
 batch 5   100 / 100 strict
@@ -36,12 +36,21 @@ batch 7    98 / 100 strict
 batch 8    92 / 100 strict
 batch 9    88 / 100 strict
 batch 10   91 / 100 strict
-total     920 C-only / 875 strict of 953
+total     920 C-only / 906 strict of 953
 ```
 
 Batches 5-9 are the next 500 smallest remaining functions and use the strict
 extent/relocation gate. Nonmatching genuine C/C++ attempts are kept under each
 part's `nonmatching/` directory with first-diff evidence.
+
+The strict gate resolves PE import IAT slots, decorated C++ and data symbols
+from the shipped symbol maps, and locates/validates `.text$x`, `.xdata$x`, and
+anchored vtable COMDATs by masked byte search. Regressions:
+
+```sh
+python3 reconstructed/match/tests/test_relocation_guard.py
+python3 reconstructed/match/tests/test_auto_symbols.py
+```
 
 ## Batch runner
 
