@@ -26,7 +26,8 @@ from symbol_registry import REGISTRY, load_registry
 ROOT = Path(__file__).resolve().parents[1]
 GAME = ROOT / "game/fastfood2.exe"
 INDEX = ROOT / "decompiled_fastfood2_named_v2/full_game_verification/decompile-index.json"
-DEFAULT_VC6 = Path(os.environ.get("PC2_VC6", "/tmp/opencode/vc6-sp3-toolchain/VC98"))
+DATA_HOME = Path(os.environ.get("XDG_DATA_HOME") or Path.home() / ".local/share")
+DEFAULT_VC6 = Path(os.environ.get("PC2_VC6") or DATA_HOME / "pc2/vc6-sp3-toolchain/VC98")
 SYMBOL_INDEX = ROOT / "decompiled_fastfood2_named_v2/full_game_symbols.json"
 DATA_SYMBOLS = ROOT / "decompiled_fastfood2_named_v2/data_symbols.csv"
 _SYMBOLS = None

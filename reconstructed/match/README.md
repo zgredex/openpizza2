@@ -1,9 +1,8 @@
 # Byte-matched PC2 reconstruction
 
-The shipped `game/fastfood2.exe` is MSVC 6.0 SP3: `C2.DLL` 12.00.8447 and
-`LINK.EXE` 6.00.8447. The SP3 command-line tree is kept outside the repository
-under `/tmp/opencode/vc6-sp3-toolchain/VC98`; set `PC2_VC6` to another tree if
-needed.
+The shipped `game/fastfood2.exe` was built with MSVC 6.0 SP3 (`C2.DLL`
+12.00.8447 and `LINK.EXE` 6.00.8447). See the [VC6 toolchain runbook](VC6_TOOLCHAIN.md)
+for the exact download, persistent install path, and strict smoke test.
 
 A candidate is verified when `tools/match_decomp.py --strict` reports
 `"strict_match": true`. It compiles with `/O2` by default, compares the

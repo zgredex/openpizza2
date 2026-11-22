@@ -36,6 +36,8 @@
 
 ## Code changes
 
+- When setting up or restoring matching tools, follow
+  [the pinned VC6 SP3 runbook](reconstructed/match/VC6_TOOLCHAIN.md).
 - Put durable changes in committed source, not in generated C.
 - Add lift seeds in `tools/pcrecomp_pc2/lift.py`; the build asserts seeded
   functions are present in the dispatch table.
