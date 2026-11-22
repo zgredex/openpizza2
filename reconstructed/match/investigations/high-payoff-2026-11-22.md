@@ -37,11 +37,24 @@ The original call displacements also point at the same addresses:
 
 ## Byte recheck
 
-The pinned VC6 SP3 recheck verified six functions totaling 481 bytes and
-linked them into a byte-identical scratch PE. The cached repeat hit all eight
-COFF objects. The two UI factories at `0x52fc00` and `0x531c60` still need
-independent placements for their 21-byte `.text$x` and 40-byte `.xdata$x`
-sections. Their main bodies match.
+The pinned VC6 SP3 recheck verifies all eight functions: 805 code bytes were
+published as a byte-identical scratch PE. The cached repeat hit all eight COFF
+objects.
+
+The two UI factories needed independent placement for their 21-byte `.text$x`
+and 40-byte `.xdata$x` sections. The shipped SEH handler addresses are strictly
+monotonic with function address: 223 functions with the `6a ff 68` prologue
+have 223 unique handlers and no inversion. That gives a link-order anchor
+without using either factory's own handler relocation:
+
+```text
+0x52fc00 rank 159 -> handler 0x55ab2b -> funclet base 0x55ab20; $L298 = base + 0xb
+0x531c60 rank 164 -> handler 0x55ac0b -> funclet base 0x55ac00; $L277 = base + 0xb
+```
+
+`locate_linked_section` then verifies the funclet bytes, the
+`___CxxFrameHandler`/`??3` targets, and the `.xdata$x` back-pointer pair.
+The per-recipe anchors are recorded in `high-payoff-recipes.json`.
 
 ```sh
 scratch=$(mktemp -d)

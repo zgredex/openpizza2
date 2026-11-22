@@ -597,6 +597,28 @@
           "locator": "ClearPendingCommand call"
         }
       ]
+    },
+    {
+      "symbol": "??3@YAXPAX@Z",
+      "address": "0x54dd78",
+      "name": "operator_delete",
+      "kind": "function",
+      "candidate_declaration": "void __cdecl operator delete(void *)",
+      "abi_observation": "The PE takes one stack argument, calls _free at 0x551005, pops ECX, and returns. The stock delete.obj/delop.obj scan matches the bytes and the _free relocation.",
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x54dd78"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x54dd78 calls 0x551005 _free"
+        },
+        {
+          "path": "reconstructed/match/VC6_TOOLCHAIN.md",
+          "locator": "stock CRT archive scan"
+        }
+      ]
     }
   ]
 }

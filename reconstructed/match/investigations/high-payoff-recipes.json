@@ -48,7 +48,10 @@
       "/O2",
       "/GX",
       "/TP"
-    ]
+    ],
+    "symbol_overrides": {
+      "$L298": "0x55ab2b"
+    }
   },
   {
     "address": "0x531c60",
@@ -59,7 +62,10 @@
       "/O2",
       "/GX",
       "/TP"
-    ]
+    ],
+    "symbol_overrides": {
+      "$L277": "0x55ac0b"
+    }
   },
   {
     "address": "0x531570",
