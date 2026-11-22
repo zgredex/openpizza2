@@ -8,7 +8,7 @@ import shutil
 import tempfile
 
 
-CACHE_FLAGS = frozenset(("/O1", "/O2", "/TP", "/TC", "/Os", "/Ot", "/Oy", "/Oy-",
+CACHE_FLAGS = frozenset(("/Od", "/O1", "/O2", "/TP", "/TC", "/Os", "/Ot", "/Oy", "/Oy-",
                          "/Oi", "/Oi-", "/G5", "/G6", "/GX", "/GX-"))
 VOLATILE_SOURCE = (b"#", b"%:", b"??", b"__DATE__", b"__TIME__", b"__TIMESTAMP__",
                    b"__pragma", b"_Pragma", b"\\\n", b"\\\r")

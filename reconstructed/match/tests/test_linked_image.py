@@ -86,17 +86,17 @@ class LinkedImageTests(unittest.TestCase):
             source = root / "source.c"
             source.write_text("void f(void) {}\n")
 
-            def write_record(address, name, length=1, strict=True):
+            def write_record(address, name, length=1, strict=True, flags=("/O2",)):
                 (records / name).write_text(json.dumps({
                     "address": hex(address), "length": length, "strict_match": strict,
                     "source": source.name, "source_sha256": digest(source.read_bytes()),
                     "executable_sha256": "guest", "compiler": {"sha256": compiler},
-                    "linked_sections": ["primary"], "entry": "_f", "flags": ["/O2"],
+                    "linked_sections": ["primary"], "entry": "_f", "flags": flags,
                     "symbol_overrides": {},
                 }))
 
             write_record(base + 1, "a.json")
-            write_record(base + 2, "b.json")
+            write_record(base + 2, "b.json", flags=("/Od",))
             write_record(base + 2, "c.json")
             write_record(base + 3, "d.json", strict=False)
             lengths = {base: 2, base + 1: 1, base + 2: 1}
@@ -104,6 +104,7 @@ class LinkedImageTests(unittest.TestCase):
                   patch.object(linker, "function_lengths", return_value=lengths)):
                 items, excluded, count, deferred = linker.batch_plan(root, image, "guest", compiler, [base + 2], 1)
                 self.assertEqual([(entry.address, entry.audit_record) for entry in items], [(base + 2, "b.json")])
+                self.assertEqual(items[0].flags, ("/Od",))
                 self.assertEqual((count, deferred), (4, 1))
                 self.assertEqual([row["reason"] for row in excluded], ["duplicate VA", "audit was not strict"])
                 with self.assertRaisesRegex(ValueError, "audit executable SHA-256 differs"):

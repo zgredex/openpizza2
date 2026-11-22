@@ -132,7 +132,7 @@ def linked_outputs(path, checked, original):
 
 def compiler_target(recipe):
     variants = []
-    for option, alternatives in (("/O1", {"/O1", "/O2"}), ("/O2", {"/O1", "/O2"}),
+    for option, alternatives in (("/O1", {"/Od", "/O1", "/O2"}), ("/O2", {"/Od", "/O1", "/O2"}),
                                  ("/Oy-", {"/Oy", "/Oy-"}), ("/G6", {"/G3", "/G4", "/G5", "/G6"})):
         if option in recipe.flags:
             continue

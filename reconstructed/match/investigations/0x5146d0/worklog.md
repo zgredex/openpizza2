@@ -50,3 +50,7 @@ candidate_length: 40832
 The function was compiled `/Od`: the frame pointer and per-assignment reload of
 `DAT_00580ad4` are the unoptimized code shape. Matching it recovers about 3.3%
 of the indexed code bytes in one function.
+
+The audited link path also accepts this `/Od` recipe. It verifies and links
+all 40,832 bytes into a byte-identical scratch PE, and the second run reuses
+the compiled object with `--cache-only`.
