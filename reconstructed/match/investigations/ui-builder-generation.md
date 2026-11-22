@@ -159,3 +159,18 @@ original puts the count in EBP and the flag in EDX. The candidate uses EDX
 and EAX. The kitchen updater remains short of a strict match. The same
 verification run reconfirmed Submenu Variant 1 and linked its 893 bytes
 into a byte-identical scratch executable.
+
+### Kitchen updater at two differences
+
+Eight variants tested local reuse across the two tab selections and the
+volatile count read. Reusing one signed local for both selections and the
+direct count snapshot removed 21 of the 23 differences. Four follow-up
+variants tested an existing local, an inline output reference, an inline
+visibility setter, and the setter's integer return type. All retained the
+same two differences.
+
+The independently relocated candidate differs at `+0x150` (`6c` to `44`,
+the count load) and `+0x156` (`ed` to `c0`, the test). The original uses
+EBP and the candidate uses EAX for the same value. The 953-byte extent,
+49 ordered calls, and one-byte flag clear still agree. Kitchen adds zero
+strict bytes. Submenu Variant 1 still verifies and links its 893 bytes.

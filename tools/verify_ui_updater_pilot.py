@@ -245,17 +245,32 @@ def stage_panel_and_count(source, name, count):
               '{\n  *slot = value;\n  return panel;\n}\n\n')
     if name == 'RecipeKitchen_UpdateTabButtons':
         visibility = 'panel->SetChildVisibleByID((int)(0x401), (int)((unsigned int)(0 < companyCount)));'
+        first_tab = '  panel->Button_SetState((int)(0x401),'
+        next_tab = '  panel->Button_SetState((int)(0x404),'
         lookup = ('iVar2 = ((PlayerField *)(*(void **)(DAT_0057c670 + 0x200 + '
                   '*(int *)(DAT_0057c670 + 0x2ec) * 4)))->FindCompanyIndex((int)(*(int *)(DAT_0057c670 + 0x98)));')
-        if body.count(visibility) != 1 or body.count(lookup) != 1:
+        if any(body.count(marker) != 1 for marker in (first_tab, visibility, next_tab, lookup)):
             raise ValueError('cannot identify the kitchen visibility and company lookup')
-        body = body.replace(visibility, 'panel->SetChildVisibleByID(0x401, SnapshotPositive(iVar2, companyCount));')
+        start = body.index(first_tab)
+        end = body.index(next_tab)
+        if visibility not in body[start:end]:
+            raise ValueError('cannot identify the kitchen tab selection window')
+        body = body[:start] + '''  int selected;
+  selected = iVar1 == 5;
+  panel->Button_SetState(0x401, selected);
+  panel->ToggleObjectActive(0x401, selected);
+  selected = companyCount;
+  panel->SetChildVisibleByID(0x401, selected > 0);
+  selected = iVar1 == 6;
+  panel->Button_SetState(0x403, selected);
+  panel->ToggleObjectActive(0x403, selected);
+  uVar4 = iVar3 > 0;
+  panel->SetChildVisibleByID(0x403, uVar4);
+''' + body[end:]
         body = body.replace(lookup, 'const int slot = *(int *)(DAT_0057c670 + 0x2ec);\n'
                             '    const int company = *(int *)(DAT_0057c670 + 0x98);\n'
                             '    iVar2 = (int)(*(void **)(DAT_0057c670 + 0x200 + slot * 4));\n'
                             '    iVar2 = ((PlayerField *)iVar2)->FindCompanyIndex(company);')
-        helper += ('static __forceinline unsigned int SnapshotPositive(int &snapshot, const volatile int &count)\n'
-                   '{\n  snapshot = count;\n  if (snapshot > 0) return 1;\n  return 0;\n}\n\n')
     else:
         predicate = f'0 < {count}'
         if body.count(predicate) != 1:
