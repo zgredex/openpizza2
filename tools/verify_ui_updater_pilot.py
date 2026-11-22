@@ -243,12 +243,26 @@ def stage_panel_and_count(source, name, count):
     # original register and stack staging before the first panel call.
     helper = ('static __forceinline UI *StoreCount(UI *panel, volatile int *slot, int value)\n'
               '{\n  *slot = value;\n  return panel;\n}\n\n')
-    predicate = f'0 < {count}'
-    if body.count(predicate) != 1:
-        raise ValueError('cannot identify the company visibility predicate')
-    body = body.replace(predicate, f'PositiveCount({count})')
-    helper += ('static __forceinline unsigned int PositiveCount(int value)\n'
-               '{\n  if (value > 0) return 1;\n  return 0;\n}\n\n')
+    if name == 'RecipeKitchen_UpdateTabButtons':
+        visibility = 'panel->SetChildVisibleByID((int)(0x401), (int)((unsigned int)(0 < companyCount)));'
+        lookup = ('iVar2 = ((PlayerField *)(*(void **)(DAT_0057c670 + 0x200 + '
+                  '*(int *)(DAT_0057c670 + 0x2ec) * 4)))->FindCompanyIndex((int)(*(int *)(DAT_0057c670 + 0x98)));')
+        if body.count(visibility) != 1 or body.count(lookup) != 1:
+            raise ValueError('cannot identify the kitchen visibility and company lookup')
+        body = body.replace(visibility, 'panel->SetChildVisibleByID(0x401, SnapshotPositive(iVar2, companyCount));')
+        body = body.replace(lookup, 'const int slot = *(int *)(DAT_0057c670 + 0x2ec);\n'
+                            '    const int company = *(int *)(DAT_0057c670 + 0x98);\n'
+                            '    iVar2 = (int)(*(void **)(DAT_0057c670 + 0x200 + slot * 4));\n'
+                            '    iVar2 = ((PlayerField *)iVar2)->FindCompanyIndex(company);')
+        helper += ('static __forceinline unsigned int SnapshotPositive(int &snapshot, const volatile int &count)\n'
+                   '{\n  snapshot = count;\n  if (snapshot > 0) return 1;\n  return 0;\n}\n\n')
+    else:
+        predicate = f'0 < {count}'
+        if body.count(predicate) != 1:
+            raise ValueError('cannot identify the company visibility predicate')
+        body = body.replace(predicate, f'PositiveCount({count})')
+        helper += ('static __forceinline unsigned int PositiveCount(int value)\n'
+                   '{\n  if (value > 0) return 1;\n  return 0;\n}\n\n')
     if 'FindPlayer(' in body:
         helper += ('static __forceinline int FindPlayer(int slot, GameMap *game)\n'
                    '{\n  return game->GetPlayerBySlot(slot);\n}\n\n')

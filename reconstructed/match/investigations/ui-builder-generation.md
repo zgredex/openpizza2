@@ -141,3 +141,21 @@ pairs out of 13. The full pilot verifies all three candidates and emits
 `linked.exe` and its manifest for the strict span. The linked image compares
 byte-for-byte with the original executable. Variant 2 and Kitchen still have
 255 and 194 diagnostic differences, respectively.
+
+### Kitchen updater at 23 differences
+
+Twelve VC6 variants isolated the count read and current-player lookup. The
+best combined candidate snapshots the volatile count into the existing
+integer local, then forms the visibility flag. The lookup names the player
+slot and company ID, then stages the player receiver through that same local.
+The integrated result retains all 49 direct calls in order and the original
+one-byte flag clear.
+
+The candidate has the original 953-byte extent, no unresolved relocation
+checks, and **eight of nine equal block pairs**. All remaining **23 byte
+differences** are in boolean instruction scheduling and register selection
+between offsets `+0x150` and `+0x1db`. At the first count reload, the
+original puts the count in EBP and the flag in EDX. The candidate uses EDX
+and EAX. The kitchen updater remains short of a strict match. The same
+verification run reconfirmed Submenu Variant 1 and linked its 893 bytes
+into a byte-identical scratch executable.
