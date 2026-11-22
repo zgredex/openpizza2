@@ -295,6 +295,8 @@ def write_packet(directory, ordinal, group, export, indexed, observations, inbou
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", required=True, type=Path)
+    parser.add_argument("--overlay-manifest", action="append", default=[], type=Path,
+                        help="additional verified scratch PE manifest, without rebuilding the original batch")
     parser.add_argument("--capture-report", required=True, action="append", type=Path)
     parser.add_argument("--audit", default=[], action="append", type=Path)
     parser.add_argument("--packets", type=int, default=3, choices=range(0, 11), metavar="N")
@@ -312,6 +314,10 @@ def main():
         export = {item["address"].lower(): item for item in index["functions"]}
         indexed = inventory(export)
         covered = verified_functions(read_json(args.manifest), image, indexed, image_sha256)
+        overlays = list(dict.fromkeys(path.resolve() for path in args.overlay_manifest))
+        for path in overlays:
+            for address, provider in verified_functions(read_json(path), image, indexed, image_sha256).items():
+                covered.setdefault(address, provider)
         static_graph = read_json(CALLGRAPH)
         if static_graph["target_sha256"] != image_sha256:
             raise ValueError("static call graph differs from the pinned executable")
@@ -342,6 +348,7 @@ def main():
         total["unindexed_reached"] = len(reached.keys() - indexed.keys())
         worklist = {"schema": "pc2.replay_worklist.v1", "executable_sha256": image_sha256,
                     "manifest": str(args.manifest.resolve()), "audits": [str(path) for path in audit_paths],
+                    "overlay_manifests": [str(path) for path in overlays],
                     "union": total, "phases": phases, "uncovered": [hex(va) for va in sorted(uncovered)], "groups": groups}
         write_json(args.out / "worklist.json", worklist)
         lines = ["# Replay worklist", "", "Coverage counts indexed entries in saved capture phases.", "",

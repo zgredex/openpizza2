@@ -35,17 +35,24 @@ def run_command(argv, environment=None):
     return process.stdout
 
 
-def compile_candidate(routine, source, directory, cc, ld, *, environment=None):
+def compile_candidate(routine, source, directory, cc, ld, *, environment=None, language="c"):
+    if language == "c++":
+        if routine.adapter:
+            raise ValueError("C ABI adapters are unavailable for C++ candidates")
+        language_flags = ["-x", "c++", "-std=c++17", "-fno-exceptions", "-fno-rtti",
+                          "-D__fastcall=__attribute__((fastcall))"]
+    else:
+        language_flags = ["-std=c11", "-Werror=implicit-function-declaration"]
     files = [source]
     if routine.adapter:
         files.append(ROOT / ABI_SOURCE)
     objects = []
     for index, path in enumerate(files):
         obj = directory / f"{index}.o"
-        run_command([cc, "-m32", "-march=i386", "-std=c11", "-O2", "-ffreestanding",
+        run_command([cc, "-m32", "-march=i386", *language_flags, "-O2", "-ffreestanding",
                      "-fno-pic", "-fno-pie", "-fno-stack-protector", "-fwrapv",
                      "-fexcess-precision=standard", "-ffunction-sections", "-fdata-sections",
-                     "-Werror=implicit-function-declaration", "-I", str((ROOT / routine.source).parent),
+                     "-I", str((ROOT / routine.source).parent),
                      "-c", str(path), "-o", str(obj)], environment)
         objects.append(str(obj))
     elf = directory / "candidate.elf"
@@ -83,7 +90,8 @@ def load_original():
     return pefile.PE(data=data, fast_load=True)
 
 
-def run_case(pe, routine, case, candidate=None, *, patches=(), cpuid_edx=None):
+def run_case(pe, routine, case, candidate=None, *, patches=(), cpuid_edx=None,
+             read_ranges=None, original_extent=None):
     import unicorn as u
     from unicorn import x86_const as x
 
@@ -123,6 +131,7 @@ def run_case(pe, routine, case, candidate=None, *, patches=(), cpuid_edx=None):
 
     calls = []
     unexpected_writes = []
+    unexpected_reads = []
     unexpected_original_execution = []
 
     def watch_write(_uc, _access, address, size, _value, _data):
@@ -134,6 +143,14 @@ def run_case(pe, routine, case, candidate=None, *, patches=(), cpuid_edx=None):
             unexpected_writes.append(f"{address:#010x}+{size}")
             uc.emu_stop()
 
+    def watch_read(_uc, _access, address, size, _value, _data):
+        end = address + size
+        if STACK <= address and end <= ENTRY_SP + len(stack):
+            return
+        if not any(start <= address and end <= start + length for start, length in read_ranges):
+            unexpected_reads.append(f"{address:#010x}+{size}")
+            uc.emu_stop()
+
     def watch_call(engine, address, _size, arg_count):
         sp = engine.reg_read(x.UC_X86_REG_ESP)
         args = engine.mem_read(sp + 4, 4 * arg_count) if arg_count else b""
@@ -141,18 +158,22 @@ def run_case(pe, routine, case, candidate=None, *, patches=(), cpuid_edx=None):
                       "arguments": [f"{a:#010x}" for (a,) in struct.iter_unpack("<I", args)]})
 
     def guard_original_code(engine, address, _size, _data):
+        if candidate is None and routine.address <= address < routine.address + original_extent:
+            return
         if not any(start <= address <= end for start, (_, end) in routine.calls.items()):
             unexpected_original_execution.append(address)
             engine.emu_stop()
 
     write_hook = uc.hook_add(u.UC_HOOK_MEM_WRITE, watch_write)
+    if read_ranges is not None:
+        uc.hook_add(u.UC_HOOK_MEM_READ, watch_read)
     if cpuid_edx is not None:
         def captured_cpuid(engine, _data):
             engine.reg_write(x.UC_X86_REG_EDX, cpuid_edx)
             return 1
 
         uc.hook_add(u.UC_HOOK_INSN, captured_cpuid, None, 1, 0, x.UC_X86_INS_CPUID)
-    if candidate is not None:
+    if candidate is not None or original_extent is not None:
         uc.hook_add(u.UC_HOOK_CODE, guard_original_code, begin=header.ImageBase,
                     end=header.ImageBase + header.SizeOfImage - 1)
     for address, (count, _) in routine.calls.items():
@@ -163,6 +184,8 @@ def run_case(pe, routine, case, candidate=None, *, patches=(), cpuid_edx=None):
         raise ValueError(f"{error} at {uc.reg_read(x.UC_X86_REG_EIP):#010x}") from error
     if unexpected_writes:
         raise ValueError(f"unexpected memory write at {unexpected_writes[0]}")
+    if unexpected_reads:
+        raise ValueError(f"unexpected memory read at {unexpected_reads[0]}")
     if unexpected_original_execution:
         raise ValueError(f"candidate entered undeclared original code at {unexpected_original_execution[0]:#010x}")
     if uc.reg_read(x.UC_X86_REG_EIP) != RETURN:

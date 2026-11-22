@@ -168,3 +168,34 @@ three bootless runs against the original. Known-good C probes passed on a cold
 and warm cache for each address, and both deliberate changes were rejected.
 The live UI cases exercised the unclamped path. The seeded reference cases
 also exercise ascending and descending clamp bounds.
+
+## Capture more scalar methods with a plan
+
+`--fixture-plan` accepts reviewed i386 `thiscall` targets that use an ECX
+receiver, scalar stack arguments, and scalar fields on that receiver. A plan
+can observe EAX for a return value and mark fields writable. The isolated
+verifier stops on undeclared memory access or a call out of the original
+function. Use the legacy option for the two specialized fixtures above.
+
+```sh
+scratch=$(mktemp -d)
+python3 tools/pcrecomp_pc2/capture.py run tools/pcrecomp_pc2/scenarios/menu-click.json \
+  --work "$work" --out "$scratch/sprite" --fixture-plan tools/pcrecomp_pc2/fixture-plans/sprite-color-key.json
+python3 tools/pcrecomp_pc2/capture.py run tools/pcrecomp_pc2/scenarios/menu-click.json \
+  --work "$work" --out "$scratch/object" --fixture-plan tools/pcrecomp_pc2/fixture-plans/object-scalar.json --skip-build
+python3 tools/pcrecomp_pc2/function_fixtures.py extract "$scratch/sprite" --out "$scratch/sprite.json"
+python3 tools/pcrecomp_pc2/function_fixtures.py extract "$scratch/object" --out "$scratch/object.json"
+"$work/venv/bin/python" tools/pcrecomp_pc2/function_fixtures.py verify "$scratch/sprite.json" --repeat 3
+"$work/venv/bin/python" tools/pcrecomp_pc2/function_fixtures.py verify "$scratch/object.json" --repeat 3
+```
+
+Set `work` to the pinned host's build directory. The first plan captures
+`Sprite_GetColorKey` and `Sprite_SetColorKey` in one boot. The second plan
+captures `Set_Field9B8` with the same host binary. Both menu replays reached
+screen 28 from screen 21 with zero unresolved dispatch edges. The six
+deduplicated fixtures passed 18 isolated runs against the original. The
+archived C++ getter passed the captured case and its deliberately changed
+return value was rejected.
+
+The replay batch tool can select reviewed profiles for queued addresses and
+generate the plan for you. See [batch verification](../../reconstructed/match/README.md#batch-verification-from-the-worklist).

@@ -1,0 +1,15 @@
+{
+  "schema": "pc2.function_capture_plan.v1",
+  "targets": [
+    {
+      "address": "0x535500",
+      "name": "Set_Field9B8",
+      "argument_words": 1,
+      "return": "void",
+      "max_cases": 8,
+      "fields": [
+        {"offset": "0x9b8", "size": 4, "writable": true}
+      ]
+    }
+  ]
+}

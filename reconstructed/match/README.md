@@ -420,3 +420,43 @@ Across the menu and two London phases, the combined C and stock build covered
 330 of 829 indexed functions and 17,565 indexed code bytes. The earlier PE
 manifest covered 317 functions and 16,356 bytes across the same captures.
 Exactly 13 addresses left the queue, leaving 499 uncovered functions.
+
+## Batch verification from the worklist
+
+Run the strict verifier on current tracked drafts using the worklist's saved
+audit receipts. Use `--audit` to point at newer receipts or `--recipes` for
+reviewed overrides with an address, source, full byte length, COFF entry,
+flags, and optional symbol overrides. Missing or stale recipes remain in the
+report. The batch groups unresolved external symbols by their consumers and
+keeps other strict evidence together for each function.
+
+```sh
+python3 tools/verify_replay_batch.py --worklist "$queue/worklist.json" \
+  --jobs 4 --cache "$scratch/cache" --out "$scratch/batch.json" \
+  --linked-out "$scratch/matched.exe"
+```
+
+Use `--cache-only` to repeat the strict check without Wine. When a batch has
+strictly verified spans, `--linked-out` writes a byte-identical scratch PE
+and its manifest. Pass the manifest back to `replay_worklist.py` with
+`--overlay-manifest "$scratch/matched.exe.manifest.json"` alongside the
+existing base manifest and saved captures. Entries in the overlay count as
+linked in the updated queue.
+
+Use `--fixture-profiles PROFILE.json --plan-out PLAN.json` to select capture
+targets from the queue. Profiles supply reviewed ABI and memory fields. Run
+the plan and extract the fixtures using
+[the capture guide](../../tools/pcrecomp_pc2/TRACE_CAPTURE.md). Pass the
+result back with `--fixture FIXTURE.json`. For a draft that can compile under
+GCC, set `behavior_entry` in its reviewed recipe to the ELF entry symbol.
+Optional `behavior_language` defaults to `c`. The same draft source is used
+for both checks.
+
+The report routes a byte mismatch with reproduced behavior to
+`compiler_tuning`. Use `--matrix-out MATRIX.json` to emit bounded flag
+variants for those drafts, then run `tools/compiler_matrix.py MATRIX.json`.
+A behavioral difference records the first divergence under
+`inspect_mismatch`. A failure to reproduce the captured result on the
+original routes to `review_fixture`. This workflow starts Wine only when
+the strict verifier needs a fresh COFF object and boots the game only when
+collecting new fixtures.

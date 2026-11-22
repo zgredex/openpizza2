@@ -33,6 +33,15 @@ static FILE *events;
 static FILE *imports;
 static FILE *fixtures;
 static _Atomic unsigned fixture_entered[2];
+uint32_t pc2_capture_fixture_mode;
+struct fixture_plan_row {
+    uint32_t address, args, limit, count;
+    struct { uint32_t offset, size; } fields[8];
+};
+_Static_assert(sizeof(struct fixture_plan_row) == 80, "fixture plan row format");
+static struct fixture_plan_row fixture_targets[32];
+static uint32_t fixture_target_count;
+static _Atomic unsigned fixture_hits[32];
 static _Atomic int finished;
 static uint32_t step, function_hits, delay_start;
 static int active, delay_armed;
@@ -115,7 +124,32 @@ void pc2_capture_init(void) {
     }
     events = open_output("PC2_CAPTURE_EVENTS");
     imports = open_output("PC2_CAPTURE_IMPORTS");
-    if (getenv("PC2_CAPTURE_FUNCTION_FIXTURES")) fixtures = open_output("PC2_CAPTURE_FUNCTION_FIXTURES");
+    if (getenv("PC2_CAPTURE_FUNCTION_FIXTURES")) {
+        fixtures = open_output("PC2_CAPTURE_FUNCTION_FIXTURES");
+        pc2_capture_fixture_mode = 1;
+        const char *definition = getenv("PC2_CAPTURE_FIXTURE_PLAN");
+        if (definition) {
+            FILE *plan_file = fopen(definition, "rb");
+            uint32_t header[2];
+            if (!plan_file || fread(header, sizeof header, 1, plan_file) != 1 || header[0] != 0x32584650u ||
+                !header[1] || header[1] > 32 ||
+                fread(fixture_targets, sizeof *fixture_targets, header[1], plan_file) != header[1] ||
+                fgetc(plan_file) != EOF) fail("invalid function fixture plan");
+            fclose(plan_file);
+            fixture_target_count = header[1];
+            for (uint32_t i = 0; i < fixture_target_count; ++i) {
+                const struct fixture_plan_row *target = &fixture_targets[i];
+                if (!target->address || target->args > 4 || !target->limit || target->limit > 64 || target->count > 8 ||
+                    (i && fixture_targets[i - 1].address >= target->address)) fail("invalid function fixture target");
+                for (uint32_t j = 0; j < target->count; ++j) {
+                    uint32_t size = target->fields[j].size;
+                    if ((size != 1 && size != 2 && size != 4) || target->fields[j].offset > 0x10000u - size)
+                        fail("invalid function fixture field");
+                }
+            }
+            if (fwrite(header, sizeof header, 1, fixtures) != 1) fail("could not write function fixture plan header");
+        }
+    }
     hle_proc_hook = trace_message;
     hle_on_exit = pc2_capture_guest_exit;
 }
@@ -195,13 +229,40 @@ static int fixture_words(struct pc2_fixture_scope *scope, uint32_t values[5]) {
     return 1;
 }
 
+static int planned_fixture_words(const struct pc2_fixture_scope *scope, uint32_t values[8]) {
+    const struct fixture_plan_row *target = &fixture_targets[scope->plan_slot - 1];
+    for (uint32_t i = 0; i < target->count; ++i) {
+        uint32_t offset = target->fields[i].offset;
+        if (scope->object > UINT32_MAX - offset ||
+            !read_guest(scope->object + offset, &values[i], target->fields[i].size)) return 0;
+    }
+    return 1;
+}
+
 struct pc2_fixture_scope pc2_capture_fixture_begin(uint32_t address) {
     struct pc2_fixture_scope scope = {0};
     if (!fixtures || !g_ecx || atomic_load_explicit(&finished, memory_order_relaxed)) return scope;
+    if (fixture_target_count) {
+        for (uint32_t i = 0; i < fixture_target_count; ++i) {
+            const struct fixture_plan_row *target = &fixture_targets[i];
+            if (target->address > address) break;
+            if (target->address != address) continue;
+            if (atomic_load_explicit(&fixture_hits[i], memory_order_relaxed) >= target->limit) return scope;
+            scope.object = g_ecx;
+            scope.plan_slot = i + 1;
+            if ((!target->args || (g_esp <= UINT32_MAX - 4 - 4 * target->args &&
+                                   read_guest(g_esp + 4, scope.args, 4 * target->args))) &&
+                planned_fixture_words(&scope, scope.before) && atomic_fetch_add(&fixture_hits[i], 1) < target->limit)
+                scope.address = address;
+            return scope;
+        }
+        return scope;
+    }
+    if (address != 0x539f20 && address != 0x52a3a0) return scope;
     scope.address = address;
     scope.object = g_ecx;
     if (address == 0x52a3a0 &&
-        (!read_guest(g_esp + 4, scope.args, sizeof scope.args) || scope.args[1] > 3)) {
+        (!read_guest(g_esp + 4, scope.args, 2 * sizeof *scope.args) || scope.args[1] > 3)) {
         scope.address = 0;
         return scope;
     }
@@ -212,6 +273,15 @@ struct pc2_fixture_scope pc2_capture_fixture_begin(uint32_t address) {
 
 void pc2_capture_fixture_end(struct pc2_fixture_scope *scope) {
     if (!scope->address) return;
+    if (scope->plan_slot) {
+        uint32_t row[23] = {scope->address, scope->object, 0};
+        for (size_t i = 0; i < 4; ++i) row[2 + i] = scope->args[i];
+        for (size_t i = 0; i < 8; ++i) row[6 + i] = scope->before[i];
+        if (!planned_fixture_words(scope, row + 14)) return;
+        row[22] = g_eax;
+        if (fwrite(row, sizeof row, 1, fixtures) != 1) fail("could not write planned function fixture");
+        return;
+    }
     uint32_t after[5] = {0};
     if (!fixture_words(scope, after)) return;
     uint32_t row[14] = {scope->address, scope->object, scope->args[0], scope->args[1]};

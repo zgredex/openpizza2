@@ -9,7 +9,7 @@ from pathlib import Path
 SITE = re.compile(r"/\* 0x([0-9A-F]{8}):")
 DIRECT = re.compile(r"\b(RECOMP_CALL(?:_SS)?)\((sub_([0-9A-F]{8}))\)")
 INDIRECT = re.compile(r"\b(RECOMP_ICALL(?:_SS)?|RECOMP_ITAIL|RECOMP_RET_JUMP)\(")
-FIXTURE_ENTRY = re.compile(r"^(\s*)PC2_CAPTURE_ENTER\((0x00(?:539F20|52A3A0)u?)\);", re.I)
+FIXTURE_ENTRY = re.compile(r"^(\s*)PC2_CAPTURE_ENTER\((0x[0-9a-f]+u?)\);", re.I)
 INDIRECT_KIND = {
     "RECOMP_ICALL": "PC2_EDGE_INDIRECT",
     "RECOMP_ICALL_SS": "PC2_EDGE_INDIRECT",
@@ -49,7 +49,7 @@ def instrument_generated(source):
             match = SITE.search(line)
             switch_site = f"0x{match[1]}u" if match else "0"
         if "CPUID(" in line and "/* 0x00539F68:" in line:
-            line += "    pc2_fixture.before[1] = edx;\n    pc2_fixture.before[2] = 1;\n"
+            line += "    if (!pc2_fixture.plan_slot) {\n        pc2_fixture.before[1] = edx;\n        pc2_fixture.before[2] = 1;\n    }\n"
         lines.append(line)
     return replace_exactly(
         "".join(lines), '#include "recomp_types.h"\n',

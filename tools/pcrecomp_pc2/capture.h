@@ -24,15 +24,16 @@ void pc2_capture_import(uint32_t address, const char *name);
 void pc2_capture_invoke_shim(uint32_t address, recomp_func_t fn);
 
 struct pc2_fixture_scope {
-    uint32_t address, object, args[2], before[5];
+    uint32_t address, object, plan_slot, args[4], before[8];
 };
 
+extern uint32_t pc2_capture_fixture_mode;
 struct pc2_fixture_scope pc2_capture_fixture_begin(uint32_t address);
 void pc2_capture_fixture_end(struct pc2_fixture_scope *scope);
 
 #define PC2_CAPTURE_FIXTURE_SCOPE(address) \
     struct pc2_fixture_scope pc2_fixture __attribute__((cleanup(pc2_capture_fixture_end))) = \
-        pc2_capture_fixture_begin(address)
+        pc2_capture_fixture_mode ? pc2_capture_fixture_begin(address) : (struct pc2_fixture_scope){0}
 
 static inline recomp_func_t pc2_capture_resolve(uint32_t address) {
     recomp_func_t fn = recomp_resolve(address);

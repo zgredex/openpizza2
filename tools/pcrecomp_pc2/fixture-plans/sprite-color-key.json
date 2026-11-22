@@ -1,0 +1,27 @@
+{
+  "schema": "pc2.function_capture_plan.v1",
+  "targets": [
+    {
+      "address": "0x53d430",
+      "name": "Sprite_GetColorKey",
+      "argument_words": 0,
+      "return": "eax",
+      "max_cases": 8,
+      "fields": [
+        {"offset": "0x4", "size": 1},
+        {"offset": "0x1c", "size": 4}
+      ]
+    },
+    {
+      "address": "0x53d440",
+      "name": "Sprite_SetColorKey",
+      "argument_words": 1,
+      "return": "void",
+      "max_cases": 8,
+      "fields": [
+        {"offset": "0x4", "size": 1, "writable": true},
+        {"offset": "0x1c", "size": 4, "writable": true}
+      ]
+    }
+  ]
+}

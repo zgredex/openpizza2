@@ -1,0 +1,84 @@
+[
+  {
+    "address": "0x513bf0",
+    "source": "reconstructed/match/batch11/part1/0x513bf0.c",
+    "length": 78,
+    "entry": "?ComputeRecipePrice@Branch@@QAEMPAUBranchData@@H@Z",
+    "flags": [
+      "/O2",
+      "/TP"
+    ]
+  },
+  {
+    "address": "0x513c40",
+    "source": "reconstructed/match/batch11/part2/0x513c40.c",
+    "length": 80,
+    "entry": "?GetRecipePriceParts@Branch@@QAEXPAUBranchData@@PAHPAM11@Z",
+    "flags": [
+      "/O2",
+      "/TP"
+    ]
+  },
+  {
+    "address": "0x498ef0",
+    "source": "reconstructed/match/batch11/part1/0x498ef0.c",
+    "length": 80,
+    "entry": "_RecipeMenu_ShowRecipeFileChooser",
+    "flags": [
+      "/O2",
+      "/TP"
+    ]
+  },
+  {
+    "address": "0x49c4d0",
+    "source": "reconstructed/match/batch11/part1/0x49c4d0.c",
+    "length": 80,
+    "entry": "_RecipeMenu_ShowMenuFileChooser",
+    "flags": [
+      "/O2",
+      "/TP"
+    ]
+  },
+  {
+    "address": "0x52fc00",
+    "source": "reconstructed/match/batch01/part4/0x52fc00.c",
+    "length": 191,
+    "entry": "?CreateSlider@UI_Manager@@QAEHHHHIPADHH@Z",
+    "flags": [
+      "/O2",
+      "/GX",
+      "/TP"
+    ]
+  },
+  {
+    "address": "0x531c60",
+    "source": "reconstructed/match/batch01/part4/0x531c60.c",
+    "length": 133,
+    "entry": "?CreateBitmapGadget@UI_Manager@@QAEPAXHHHIHI@Z",
+    "flags": [
+      "/O2",
+      "/GX",
+      "/TP"
+    ]
+  },
+  {
+    "address": "0x531570",
+    "source": "reconstructed/match/batch11/part2/0x531570.c",
+    "length": 83,
+    "entry": "?GetRectByKey@Array@@QAEHHPAH0@Z",
+    "flags": [
+      "/O2",
+      "/TP"
+    ]
+  },
+  {
+    "address": "0x531620",
+    "source": "reconstructed/match/batch11/part2/0x531620.c",
+    "length": 80,
+    "entry": "?ToggleObjectActive@Array@@QAEHHH@Z",
+    "flags": [
+      "/O2",
+      "/TP"
+    ]
+  }
+]

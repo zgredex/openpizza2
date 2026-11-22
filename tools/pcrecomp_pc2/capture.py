@@ -14,6 +14,11 @@ import struct
 import subprocess
 import sys
 
+if __package__:
+    from .fixture_plan import HEADER as FIXTURE_HEADER, MAGIC as FIXTURE_MAGIC, binary_plan, normalize_plan
+else:
+    from fixture_plan import HEADER as FIXTURE_HEADER, MAGIC as FIXTURE_MAGIC, binary_plan, normalize_plan
+
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
@@ -424,6 +429,7 @@ def run_capture(args):
     directory = args.out.resolve()
     scenario = read_json(args.scenario)
     plan = compile_plan(scenario, args.max_events, symbols())
+    fixture_plan = normalize_plan(read_json(args.fixture_plan)) if args.fixture_plan else None
     if not math.isfinite(args.timeout) or args.timeout <= 0:
         raise ValueError("timeout must be positive and finite")
     image, guest_hash = capture_image(args.image)
@@ -432,6 +438,10 @@ def run_capture(args):
     directory.mkdir(parents=True)
     write_json(directory / "scenario.json", scenario)
     (directory / "plan.bin").write_bytes(plan)
+    if fixture_plan:
+        fixture_definition = directory / "function-fixture-plan.json"
+        write_json(fixture_definition, fixture_plan)
+        (directory / "function-fixture-plan.bin").write_bytes(binary_plan(fixture_plan))
     host = work / "pc2-capture" / "pc2"
     if not args.skip_build:
         work.mkdir(parents=True, exist_ok=True)
@@ -454,8 +464,12 @@ def run_capture(args):
                PC2_CAPTURE_EVENTS=str(directory / "events.bin"),
                PC2_CAPTURE_IMPORTS=str(directory / "imports.tsv"))
     fixture_path = directory / "function-fixtures.bin"
-    if args.function_fixtures:
+    env.pop("PC2_CAPTURE_FUNCTION_FIXTURES", None)
+    env.pop("PC2_CAPTURE_FIXTURE_PLAN", None)
+    if args.function_fixtures or fixture_plan:
         env["PC2_CAPTURE_FUNCTION_FIXTURES"] = str(fixture_path)
+    if fixture_plan:
+        env["PC2_CAPTURE_FIXTURE_PLAN"] = str(directory / "function-fixture-plan.bin")
     with (directory / "host.log").open("wb") as log:
         try:
             status = subprocess.run([str(host), image.name], cwd=image.parent, env=env,
@@ -468,13 +482,18 @@ def run_capture(args):
                                         "guest_image": str(image), "guest_sha256": guest_hash,
                                         "exit_status": status, "timed_out": timed_out,
                                         "timeout_seconds": args.timeout, "max_runtime_events": args.max_events}
-    if args.function_fixtures and fixture_path.is_file():
+    if (args.function_fixtures or fixture_plan) and fixture_path.is_file():
         with fixture_path.open("rb") as stream:
-            run["function_fixtures"] = {"format": "pc2.function_snapshots.v1",
-                                        "sha256": hashlib.file_digest(stream, "sha256").hexdigest()}
+            header = stream.read(FIXTURE_HEADER.size) if fixture_plan else b""
+            if not fixture_plan or header == FIXTURE_HEADER.pack(FIXTURE_MAGIC, len(fixture_plan["targets"])):
+                stream.seek(0)
+                run["function_fixtures"] = {"format": "pc2.function_snapshots.v2" if fixture_plan else "pc2.function_snapshots.v1",
+                                            "sha256": hashlib.file_digest(stream, "sha256").hexdigest()}
+    if fixture_plan and "function_fixtures" in run:
+        run["function_fixtures"]["plan_sha256"] = hashlib.sha256(fixture_definition.read_bytes()).hexdigest()
     write_json(directory / "run.json", run)
     result = save_report(directory, args.linked_manifest)
-    if args.function_fixtures and result == 0 and "function_fixtures" not in run:
+    if (args.function_fixtures or fixture_plan) and result == 0 and "function_fixtures" not in run:
         raise ValueError("capture host lacks function fixture support, rebuild without --skip-build")
     return result
 
@@ -573,8 +592,10 @@ def main():
     run.add_argument("--work", type=Path, default=DEFAULT_WORK, help="cached pcrecomp build directory")
     run.add_argument("--image", type=Path, help="byte-identical copy of the pinned PE beside its assets")
     run.add_argument("--linked-manifest", type=Path, help="report captured entries for linked functions")
-    run.add_argument("--function-fixtures", action="store_true",
-                     help="capture bounded snapshots at the reviewed function boundaries")
+    fixture_options = run.add_mutually_exclusive_group()
+    fixture_options.add_argument("--function-fixtures", action="store_true",
+                                 help="capture the two legacy fixture pilots")
+    fixture_options.add_argument("--fixture-plan", type=Path, help="capture targets from a scalar thiscall fixture plan")
     run.add_argument("--timeout", type=float, default=120)
     run.add_argument("--max-events", type=lambda x: integer(x, "event limit", high=MASK - 1), default=2_000_000,
                      help="limit for runtime records; 0 is unlimited (default: 2,000,000)")

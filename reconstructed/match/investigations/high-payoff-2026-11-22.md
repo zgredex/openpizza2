@@ -35,22 +35,21 @@ The original call displacements also point at the same addresses:
 0x531620 -> 0x531330, 0x520cd0, 0x520cf0
 ```
 
-## Pending byte recheck
+## Byte recheck
 
-The pinned VC6 SP3 tree formerly at
-`/tmp/opencode/vc6-sp3-toolchain/VC98` was cleared by the environment reset,
-so the strict matcher cannot compile the candidates. Restore it (or set
-`PC2_VC6`) and run:
+The pinned VC6 SP3 recheck verified six functions totaling 481 bytes and
+linked them into a byte-identical scratch PE. The cached repeat hit all eight
+COFF objects. The two UI factories at `0x52fc00` and `0x531c60` still need
+independent placements for their 21-byte `.text$x` and 40-byte `.xdata$x`
+sections. Their main bodies match.
 
 ```sh
-python3 tools/verify_linked_image.py --audit /tmp/pc2-tracked-audit-final --assess \
-  --only-address 0x513bf0 --only-address 0x513c40 \
-  --only-address 0x498ef0 --only-address 0x49c4d0 \
-  --only-address 0x52fc00 --only-address 0x531c60 \
-  --only-address 0x531570 --only-address 0x531620 \
-  --cache /tmp/pc2-coff-cache --manifest /tmp/pc2-high-payoff-after.json
+scratch=$(mktemp -d)
+python3 tools/verify_replay_batch.py \
+  --recipes reconstructed/match/investigations/high-payoff-recipes.json \
+  --cache "$scratch/cache" --out "$scratch/cold.json" --jobs 4
+python3 tools/verify_replay_batch.py \
+  --recipes reconstructed/match/investigations/high-payoff-recipes.json \
+  --cache "$scratch/cache" --out "$scratch/warm.json" --cache-only \
+  --linked-out "$scratch/fastfood2.exe"
 ```
-
-Then feed the assessment back into `tools/propose_symbol_mappings.py` with the
-tracked audit. The expected direct wins are the eight functions above; any
-remaining blocker will be the next audit entry for this batch.
