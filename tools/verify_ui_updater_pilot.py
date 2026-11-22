@@ -21,6 +21,7 @@ from x86_call_abi import decode_reachable
 TARGETS = (0x4cec60, 0x4cefe0, 0x4cfc80)
 FLAGS = ['/O2', '/TP']
 GROUP = 0x532330
+KITCHEN_FLAG = 0x57ca2c
 EXPORTS = match.ROOT / 'decompiled_fastfood2_named_v2/full_game_verification/functions'
 DRAFT = match.ROOT / 'reconstructed/match/batch01/part2/nonmatching/0x4cec60.c'
 METHODS = {
@@ -190,7 +191,7 @@ def translate(pseudocode, name, grouping):
     parts.append(body[cursor:])
     lines = ['extern "C" unsigned int DAT_0057c670;', GROUP_DECLARATION]
     if 'DAT_0057ca2c' in body:
-        lines.append('extern "C" unsigned int DAT_0057ca2c;')
+        lines.append('extern "C" unsigned char DAT_0057ca2c;')
     if delete_count:
         lines.append('struct CollectedList { virtual ~CollectedList(); };')
     lines.extend(f'struct {owner} {{ {" ".join(members)} }};' for owner, members in owner_members.items())
@@ -217,6 +218,40 @@ def adapt_draft(draft, grouping):
                                          'extern "C" void __cdecl SubMenu_UpdateButtonStatesVariant1(')
 
 
+def stage_panel_and_count(source, name, count):
+    marker = f'extern "C" void __cdecl {name}('
+    header, opening, body = source.partition(marker)
+    if not opening:
+        raise ValueError('cannot find the updater entry')
+    assignment = re.compile(rf'^  {count} = ([^;]+);$', re.M)
+    body, replaced = assignment.subn(lambda line: f'  UI *panel = '
+                                     f'StoreCount(static_cast<UI *>(param_1), &{count}, {line[1]});', body)
+    if replaced != 1:
+        raise ValueError('cannot identify the company count store')
+    for receiver in ('((UI *)param_1)->', '((UI *)(param_1))->', '((UI *)((int)param_1))->'):
+        body = body.replace(receiver, 'panel->')
+    body = body.replace('UI_Group_Create(param_1,', 'UI_Group_Create(panel,')
+    # Passing the receiver and the stored value together gives VC6 their
+    # original register and stack staging before the first panel call.
+    helper = ('static __forceinline UI *StoreCount(UI *panel, volatile int *slot, int value)\n'
+              '{\n  *slot = value;\n  return panel;\n}\n\n')
+    return header + helper + opening + body
+
+
+def kitchen_flag_write(instructions):
+    stores = []
+    for insn in instructions:
+        if insn.id != x.X86_INS_MOV or len(insn.operands) != 2:
+            continue
+        destination, value = insn.operands
+        if (destination.type == x.X86_OP_MEM and not (destination.mem.base or destination.mem.index)
+                and destination.mem.disp == KITCHEN_FLAG):
+            stores.append((insn.address, destination.size, value.type, value.imm))
+    if len(stores) != 1 or stores[0][1:] != (1, x.X86_OP_IMM, 0):
+        raise ValueError('the original kitchen flag is not cleared with a single byte store')
+    return {'instruction': hex(stores[0][0]), 'address': hex(KITCHEN_FLAG), 'width': 1}
+
+
 def extract(address, image, names):
     source_export = EXPORTS / f'{address:#x}.c'
     name = names[hex(address)]
@@ -230,11 +265,15 @@ def extract(address, image, names):
         raise ValueError('exported direct-call order or deleting-destructor count differs from PE')
     if address == TARGETS[0]:
         source = adapt_draft(DRAFT.read_text(), groups)
+        source = stage_panel_and_count(source, name, 'count')
     evidence = {'address': hex(address), 'name': name, 'length': match.function_length(address),
                 'direct_calls': len(direct), 'delete_sites': original_virtual, 'group_arguments': groups,
                 'pseudocode_sha256': match.file_sha256(source_export)}
     if deletes:
         evidence['list_deleting_destructor'] = hex(verify_delete_target(image))
+    if address == TARGETS[2]:
+        evidence['kitchen_flag_write'] = kitchen_flag_write(instructions)
+        source = stage_panel_and_count(source, name, 'companyCount')
     return source, direct, evidence
 
 

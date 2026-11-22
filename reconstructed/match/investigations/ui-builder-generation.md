@@ -88,3 +88,39 @@ All three candidates compiled with pinned VC6 SP3 and `/O2 /TP`.
 Variant 1 and the kitchen updater preserve the full direct-call order.
 Variant 2 emits all 41 direct calls, with a different order between branch
 blocks. The pilot added zero strict bytes.
+
+### Relocation-aware block comparison
+
+```sh
+python tools/compare_match_blocks.py \
+  --object /tmp/pc2-ui-updaters/0x4cec60.obj \
+  --receipt /tmp/pc2-ui-updaters/0x4cec60.match.json \
+  --out /tmp/pc2-ui-updater-blocks.json
+```
+
+The comparison requires the original PE and COFF hashes from the matcher
+receipt. It applies resolved relocations at candidate sites, decodes
+reachable blocks, and pairs them using the entry, unique instruction
+encodings, and corresponding edges with the same call targets. It reports
+the first differing instruction in each pair and lists unpaired blocks and
+unresolved relocations. The pairing is diagnostic. The strict verdict
+comes from the matcher receipt.
+
+The positive control, strict builder `0x4556f0`, gave 29 equal block pairs
+with no unpaired blocks. The original updater pilot objects gave 10 of 13,
+10 of 21, and 6 of 9 equal pairs for Variant 1, Variant 2, and Kitchen.
+
+Four source shapes per function tested the shared count spill in Variant 1
+and Kitchen. An early panel alias, an explicit snapshot of the count, and a
+volatile pointer view all reproduced the baseline code. An inlined helper
+that takes the receiver and stores the count moved both functions past
+`+0x3c` while preserving direct-call order. The comparison also exposed a
+four-byte store to `0x57ca2c` in Kitchen. The original instruction at
+`0x4cff59` clears one byte. The generator now guards the original operand
+width and declares the field as an unsigned byte.
+
+The integrated build has **35 differing bytes and 11 of 13 equal block
+pairs** for Variant 1, and **252 differing bytes and 7 of 9 equal block
+pairs** for Kitchen. The linked Kitchen candidate now clears a single byte.
+Both candidates still miss the strict check. The earlier table records the
+baseline values before these changes.
