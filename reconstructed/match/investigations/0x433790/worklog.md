@@ -24,6 +24,10 @@ compiles with `/O2 /TP`.
 
 ## Near miss
 
+This section records the earlier hand-written draft. The shared generator
+now verifies all 29,960 bytes under `/O2 /TP` and links the function into a
+byte-identical scratch PE. See the [cohort verification](../ui-builder-generation.md#verify-the-full-cohort).
+
 ```text
 original:  83 ec 10 8b 0d e0 c5 57 00 56 57 68 ... 33 ff ...
 candidate: 83 ec 10 8b 0d e0 c5 57 00 55 56 68 ... 33 ed ...

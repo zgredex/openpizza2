@@ -38,6 +38,16 @@ addresses. The tracked strict matches cover **26.92%** of exported bodies
 (1,055 of 3,919) and approximately **4.56%** of estimated inventory code bytes
 (56,383 of 1,236,452); the paused set adds 1,712 bytes.
 
+### Later UI builder verification
+
+The generator now verifies and links all 70 builders in the measured cohort,
+covering 362,189 code bytes. The last batch added 47 strict matches and
+243,174 bytes. Adding documented post-audit strict matches to the full
+tracked audit puts the current estimate at roughly **1,140 indexed
+functions (29%)** and **461,000 indexed code bytes (37%)**. These totals
+combine the full audit and later targeted verifications. See the
+[UI batch runbook](investigations/ui-builder-generation.md#verify-the-full-cohort).
+
 ### Reusable-fact pilot
 
 `tools/propose_symbol_mappings.py` joined the 142 body-only candidates and

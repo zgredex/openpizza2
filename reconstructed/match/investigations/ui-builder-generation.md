@@ -12,7 +12,40 @@ python tools/generate_ui_builder.py \
 
 Both builders passed the strict verifier under pinned VC6 with `/O2 /TP`. `StatisticsView_CreateWindow` matched 1,107 bytes and 43 call sites. `SubMenu_BuildGuardAssignment` matched 1,257 bytes and 51 call sites. The verified spans also linked into a byte-identical scratch PE. `report.json` gives the generation and match verdicts with input hashes, and each `.match.json` preserves the full compiler, relocation, and diff evidence.
 
-For extraction only, omit `--verify`. The same translator accepts `Window_BuildStatisticsBranchBalancePage` at `0x433790` with 1,153 direct sites. This is an extraction result for that address. Use its [investigation](0x433790/worklog.md) for code-generation status. Unsupported statements, mismatched callees, and unsupported control flow stop the translator.
+For extraction only, omit `--verify`. Unsupported statements, mismatched
+callees, and unsupported control flow stop the translator.
+
+## Verify the full cohort
+
+The batch tool selects contiguous indexed functions of at least 900 bytes
+that make at least 18 direct calls to the four common UI methods. At least
+two of those methods must appear, and together they must account for at
+least a third of the function's direct calls. Use a fresh scratch directory.
+
+```sh
+python tools/verify_ui_builder_batch.py --out /tmp/pc2-ui-full --jobs 4
+python tools/verify_ui_builder_batch.py --out /tmp/pc2-ui-full-repeat \
+  --reuse /tmp/pc2-ui-full --jobs 4
+```
+
+Use `--scan-only` for extraction and call verification without VC6.
+`--reuse` checks the previous object and recipe hashes, then reruns strict
+matching against the current PE and symbol facts. It compiles candidates
+without a reusable object. The batch saves `report.json`, full per-function
+receipts, a byte-identical `linked.exe`, and a linked manifest usable by
+`replay_worklist.py --overlay-manifest`.
+
+All **70 builders** in this cohort passed strict verification under
+`/O2 /TP`, covering **362,189 code bytes**. That includes 243,174 bytes
+across 47 newly supported builders and 119,015 bytes across the previous 23.
+`Window_BuildStatisticsBranchBalancePage` now matches all 29,960 bytes
+using the same generator. This cohort accounts for 29.29% of the indexed
+code bytes.
+
+Three shared text-button methods enabled 43 builders. Three named callback
+references and optional whitespace before a call's opening parenthesis
+enabled the last four. Named callback targets must be unique in the
+pinned symbol index and pushed by the original builder.
 
 ## Word-sized layout arguments
 

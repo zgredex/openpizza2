@@ -2,6 +2,7 @@
 """Regenerate scratch C++ for the shipped straight-line UI builder family."""
 
 import argparse
+from functools import lru_cache
 import json
 from pathlib import Path
 import re
@@ -21,6 +22,9 @@ METHODS = {
     "UI_FindWindowByID": (0x528040, "UI *", "int, int *"),
     "UI_AddSprite": (0x531850, "void", "int, int, int, char *"),
     "UI_AddImage": (0x52f5b0, "void", "int, int, int, char *, int, int"),
+    "UI_AddTextButton": (0x52f690, "int", "int, int, int, char *, char *, int, char *"),
+    "Gadget_SetButtonColors": (0x52f750, "void", "int, int, int, int"),
+    "Gadget_SetButtonTextLayout": (0x52f7a0, "void", "int, int, short, short, short, short"),
     "UI_AddText": (0x52f850, "int", "int, int, int, char *, char *"),
     "UI_CreateBitmapGadget": (0x531c60, "int", "int, int, int, int, int, int"),
     "UI_AddAnimation": (0x531a50, "int", "int, int, int, char *"),
@@ -32,15 +36,28 @@ METHODS = {
 GLOBALS = {"DAT_0057c5e0": "UI *"}
 LOCAL_GRADIENT = {"local_10": 0, "local_c": 1, "local_8": 2, "local_4": 3}
 NUMBER = r"-?(?:0x[0-9a-f]+|[0-9]+)"
-CALL = re.compile(r"(?:(iVar1|this)\s*=\s*(?:\(void \*\))?)?(\w+)\((.*)\);")
+CALL = re.compile(r"(?:(iVar1|this)\s*=\s*(?:\(void \*\))?)?(\w+)\s*\((.*)\);")
+
+
+@lru_cache(maxsize=1)
+def native_symbols():
+    return json.loads(SYMBOL_INDEX.read_text())
 
 
 def native_methods():
-    names = json.loads(SYMBOL_INDEX.read_text())
+    names = native_symbols()
     # Require the independently named function at each recorded ABI address.
     addresses = {address: names.get(hex(address)) for address, _, _ in METHODS.values()}
     return {addresses[address]: (name, address, return_type, parameters)
             for name, (address, return_type, parameters) in METHODS.items() if addresses[address]}
+
+
+def callback_address(symbol):
+    label = re.fullmatch(r"LAB_([0-9a-f]{8})", symbol)
+    if label:
+        return int(label[1], 16)
+    addresses = [int(va, 16) for va, name in native_symbols().items() if name == symbol]
+    return addresses[0] if len(addresses) == 1 else None
 
 
 def extract(address, pseudocode, methods, *, null_return="window"):
@@ -56,6 +73,7 @@ def extract(address, pseudocode, methods, *, null_return="window"):
     used = {}
     calls = []
     externs = {}
+    callbacks = {}
     lines = []
     blocks = ["function"]
 
@@ -71,7 +89,6 @@ def extract(address, pseudocode, methods, *, null_return="window"):
             return "gradient"
         ptr = re.fullmatch(r"(?:s_\w+_|&DAT_)([0-9a-f]{8})", value)
         load = re.fullmatch(r"(DAT_[0-9a-f]{8})", value)
-        callback = re.fullmatch(r"&(LAB_[0-9a-f]{8})", value)
         if ptr:
             symbol = f"STR_{ptr[1]}"
             externs[symbol] = f"char {symbol}[]"
@@ -79,9 +96,13 @@ def extract(address, pseudocode, methods, *, null_return="window"):
         if load:
             externs[load[1]] = f"char *{load[1]}"
             return load[1]
-        if callback:
-            externs[callback[1]] = f"void {callback[1]}()"
-            return f"(void *){callback[1]}"
+        if parameter == "void *" and re.fullmatch(r"&?[A-Za-z_]\w*", value):
+            symbol = value.removeprefix("&")
+            target = callback_address(symbol)
+            if target is not None:
+                externs[symbol] = f"void {symbol}()"
+                callbacks["_" + symbol] = target
+                return f"(void *){symbol}"
         raise ValueError(f"unsupported argument {value!r}")
 
     for statement in statements:
@@ -140,7 +161,7 @@ def extract(address, pseudocode, methods, *, null_return="window"):
               f'extern "C" UI *__cdecl {name}(int *param_1) {{',
               *("    " + declaration for declaration in declarations.values()), *lines, "}", ""]
     return {"entry": "_" + name, "source": "\n".join(source), "calls": calls, "methods": used,
-            "callbacks": {"_" + symbol: int(symbol[4:], 16) for symbol in externs if symbol.startswith("LAB_")}}
+            "callbacks": callbacks}
 
 
 def verify_calls(image, address, length, candidate):
@@ -167,16 +188,27 @@ def verify_calls(image, address, length, candidate):
         if exits != {expected}:
             raise ValueError(f"callee {target:#x} cleanup {exits} differs from the {expected}-byte declared ABI")
         cleanup[hex(target)] = expected
-    for callback in candidate["callbacks"].values():
-        if not any(operand.type == x.X86_OP_IMM and operand.imm == callback
-                   for insn in instructions if insn.id == x.X86_INS_PUSH for operand in insn.operands):
-            raise ValueError(f"callback label {callback:#x} is not pushed by the original builder")
+    pushed_addresses = {operand.imm for insn in instructions if insn.id == x.X86_INS_PUSH
+                        for operand in insn.operands if operand.type == x.X86_OP_IMM}
+    for symbol, callback in candidate["callbacks"].items():
+        if not symbol.startswith("_") or callback_address(symbol[1:]) != callback:
+            raise ValueError(f"callback mapping for {symbol} is not unique in the available symbol evidence")
+        if callback not in pushed_addresses:
+            raise ValueError(f"callback {symbol} at {callback:#x} is not pushed by the original builder")
     return {"call_sites": len(calls), "callee_cleanup_bytes": cleanup}
 
 
 def verify(address, length, source, candidate, vc6, flags):
+    compile_candidate(source, vc6, source.with_suffix(".obj"), flags)
+    return verify_object(address, length, source, candidate, vc6, flags)
+
+
+def verify_object(address, length, source, candidate, vc6, flags):
+    """Check a sibling COFF object after the caller establishes its build provenance."""
+    if file_sha256(GAME) != PE_HASH:
+        raise ValueError("UI builder verification requires the pinned executable")
+    verify_calls(pe_image(GAME), address, length, candidate)
     obj = source.with_suffix(".obj")
-    compile_candidate(source, vc6, obj, flags)
     _, _, symbols = parse_coff(obj)
     overrides = candidate["callbacks"].copy()
     pending = candidate["methods"].copy()
