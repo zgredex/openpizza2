@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the bounded VC6 near-match recipe for Ingredient_LoadMarketTable."""
+"""Generate the matching VC6 recipe for Ingredient_LoadMarketTable."""
 
 import argparse
 import collections
@@ -60,11 +60,11 @@ LOOP = '''void IngredientMarket::LoadMarketTable()
         Ingredient *entry = new Ingredient(index + 1);
         int columns = 4;
         unsigned short *high = entry->amounts + 32;
+        unsigned short low_amount;
+        unsigned short high_amount;
         do {
             int rows = 8;
             do {
-                unsigned short low_amount;
-                unsigned short high_amount;
                 DAT_0057c5d8->Read((char *)&low_amount, 2, file);
                 DAT_0057c5d8->Read((char *)&high_amount, 2, file);
                 high[-32] = low_amount;

@@ -7,8 +7,15 @@ python reconstructed/match/investigations/0x4e4930/ingredient_loader.py \
   --out /tmp/pc2-ingredient-loader --verify
 ```
 
-Run with Capstone 5.0.7 and the [pinned VC6 SP3 toolchain](../../VC6_TOOLCHAIN.md). The best candidate uses `/O2 /GX /TP`. Generation alone omits `--verify`. The verifier writes the candidate, COFF, and full receipt in the chosen scratch directory and returns nonzero for a non-strict result.
+Run with Capstone 5.0.7 and the [pinned VC6 SP3 toolchain](../../VC6_TOOLCHAIN.md). The strict recipe uses `/O2 /GX /TP`. Generation alone omits `--verify`. The verifier writes the candidate, COFF, and full receipt in the chosen scratch directory.
 
-The best candidate is **18 code bytes away from a strict match**. Its first difference is at `+0xc3`, where VC6 starts the pair of word loads with the high value in AX. The original starts with the low value in DX. The rest of the loop places the repeated tail at its original address. Independent relocation verifies all 4,880 tail bytes from `0x4e4a4b` through the return, including every descriptor-call chunk. The separate EH code at `0x559530` and data at `0x55f0e0` also verified. The handler anchor is the unique CRT dispatch stub between the independently identified neighboring funclets, and the strict matcher resolves and compares the EH sections.
+The final generator is a **strict match across all 5,163 code bytes**. Declaring both word buffers before the nested row and column loops preserves their lifetime across iterations. With that scope, VC6 loads the low word in DX and stores it before loading the high word in AX, matching the shipped instruction sequence. Independent relocation also compares the 4,880-byte descriptor tail at `0x4e4a4b` and verifies the 21-byte EH code at `0x559530` and 40-byte data at `0x55f0e0`. The EH anchor is the unique CRT dispatch stub between two independently identified neighboring funclets. The verified spans linked into a byte-identical scratch PE.
 
-The initial `/O2 /GX /TP` source had 1,567 code-byte differences. Ordering the outer loop setup and separating its slot and index updates reduced that to 18. The three subsequent inner-loop experiments had 18, 20, and 3,348 differences. This function remains outside the strict totals.
+The initial `/O2 /GX /TP` candidate had 1,567 code-byte differences. Ordering the outer setup and separating the slot and index updates reduced that to 18. The final 12-case matrix held the flags and the rest of the source fixed.
+
+| Word-copy source shape | Cases | Code-byte differences | Relocated tail equal |
+| --- | ---: | ---: | --- |
+| Buffers declared outside the nested loops | 1 | 0 | Yes |
+| Explicit pointer to the low destination | 1 | 8 | Yes |
+| Array or struct buffers, declaration order, signed locals, named copies, comma sequencing | 8 | 18 | Yes |
+| Volatile read or read/write views | 2 | 3,889 | No |
