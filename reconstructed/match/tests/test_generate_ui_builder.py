@@ -52,6 +52,21 @@ class BuilderExtractionTests(unittest.TestCase):
         self.assertEqual(candidate["calls"], [0x52f7a0])
         self.assertIn(f"{method}(0x401, 0, 0x80, -2, 0, 0);", candidate["source"])
 
+    def test_input_field_preserves_dword_width_and_color_arguments(self):
+        add = "UI_AddInputField"
+        color = "Window_GadgetNotify_Input_SetFocusColor"
+        source = EXPORT.replace(
+            f"  {METHOD_NAME}(this,0x401,0,\n                                     0x80,0xffff,0);",
+            f"  iVar1 = {add}(this,0x401,0,0,s_font_00501000,s_input_00502000,0xffff);\n"
+            f"  if (iVar1 != 0) {{\n    {color}(this,0x401,0xffff);\n  }}",
+        )
+        candidate = extract(0x1000, source, {name: (name, *METHODS[name]) for name in (add, color)})
+        self.assertEqual(candidate["calls"], [0x52fa40, 0x52fb80])
+        self.assertIn("AddInputField(int, int, int, char *, char *, int);", candidate["source"])
+        self.assertIn(f"{color}(int, unsigned int);", candidate["source"])
+        self.assertIn("AddInputField(0x401, 0, 0, STR_00501000, STR_00502000, 0xffff);", candidate["source"])
+        self.assertIn(f"{color}(0x401, 0xffff);", candidate["source"])
+
     @unittest.skipUnless(importlib.util.find_spec("capstone"), "requires Capstone")
     def test_named_callback_needs_unique_index_entry_and_original_push(self):
         method = "Window_CreatePictureWindow"

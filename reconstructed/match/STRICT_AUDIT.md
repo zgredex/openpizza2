@@ -40,11 +40,12 @@ addresses. The tracked strict matches cover **26.92%** of exported bodies
 
 ### Later UI builder verification
 
-The generator now verifies and links all 70 builders in the measured cohort,
-covering 362,189 code bytes. The last batch added 47 strict matches and
-243,174 bytes. Adding documented post-audit strict matches to the full
-tracked audit puts the current estimate at roughly **1,140 indexed
-functions (29%)** and **461,000 indexed code bytes (37%)**. These totals
+The generator verifies and links 117 builders, covering 434,769 code bytes.
+The broader scan and input-field support added 47 strict matches and
+72,580 bytes over the original 70 builders. Adding documented post-audit
+strict matches to the full tracked audit puts the current estimate at
+roughly **1,190 indexed functions (30.3%)** and **533,000 indexed code
+bytes (43.1%)**. These totals
 combine the full audit and later targeted verifications. See the
 [UI batch runbook](investigations/ui-builder-generation.md#verify-the-full-cohort).
 

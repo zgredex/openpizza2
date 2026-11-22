@@ -30,6 +30,11 @@ METHODS = {
     "UI_AddAnimation": (0x531a50, "int", "int, int, int, char *"),
     "Window_GadgetNotify_Text_SetTextColor": (0x52f910, "void", "int, int"),
     "Window_GadgetNotify_Text_SetLayout": (0x52f9d0, "void", "int, int, short, short, int"),
+    "UI_AddInputField": (0x52fa40, "int", "int, int, int, char *, char *, int"),
+    "Window_GadgetNotify_Input_SetNormalColor": (0x52fb40, "void", "int, unsigned int"),
+    "Window_GadgetNotify_Input_SetEditingColor": (0x52fb60, "void", "int, unsigned int"),
+    "Window_GadgetNotify_Input_SetFocusColor": (0x52fb80, "void", "int, unsigned int"),
+    "Window_GadgetNotify_Input_SetSelectionColor": (0x52fba0, "void", "int, unsigned int"),
     "UI_CreateSlider": (0x52fc00, "int", "int, int, int, int, char *, int, int"),
     "Window_GadgetNotify_Slider_SetGradientColors": (0x52fcc0, "void", "int, int *"),
 }

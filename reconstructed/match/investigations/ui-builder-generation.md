@@ -17,10 +17,9 @@ callees, and unsupported control flow stop the translator.
 
 ## Verify the full cohort
 
-The batch tool selects contiguous indexed functions of at least 900 bytes
-that make at least 18 direct calls to the four common UI methods. At least
-two of those methods must appear, and together they must account for at
-least a third of the function's direct calls. Use a fresh scratch directory.
+The batch tool selects contiguous indexed functions whose named exports have
+the supported window-builder signature and at least one common UI creation
+call. Use a fresh scratch directory.
 
 ```sh
 python tools/verify_ui_builder_batch.py --out /tmp/pc2-ui-full --jobs 4
@@ -35,17 +34,24 @@ without a reusable object. The batch saves `report.json`, full per-function
 receipts, a byte-identical `linked.exe`, and a linked manifest usable by
 `replay_worklist.py --overlay-manifest`.
 
-All **70 builders** in this cohort passed strict verification under
-`/O2 /TP`, covering **362,189 code bytes**. That includes 243,174 bytes
-across 47 newly supported builders and 119,015 bytes across the previous 23.
-`Window_BuildStatisticsBranchBalancePage` now matches all 29,960 bytes
-using the same generator. This cohort accounts for 29.29% of the indexed
-code bytes.
+The original 70 builders passed strict verification under `/O2 /TP`,
+covering 362,189 code bytes. This included all 29,960 bytes of
+`Window_BuildStatisticsBranchBalancePage`. The broader selector added 44
+strict matches totaling 66,974 bytes, including the main menu, save and
+load screens, and options panels. Recovering `UI_AddInputField` and its
+color setters added Character Select, AI Debug Status, and Request Dialog
+for another 5,606 bytes. The batch now links **117 strict builders covering
+434,769 code bytes** into a byte-identical scratch PE.
 
-Three shared text-button methods enabled 43 builders. Three named callback
-references and optional whitespace before a call's opening parenthesis
-enabled the last four. Named callback targets must be unique in the
-pinned symbol index and pushed by the original builder.
+The broader scan reports three unsupported exports at `0x4275a0`,
+`0x42d990`, and `0x474df0`. The tool saves its report and linked image
+before returning a nonzero exit code for these unsupported inputs.
+
+Three shared text-button methods enabled 43 builders in the original cohort.
+Three named callback references and optional whitespace before a call's
+opening parenthesis enabled the last four in that cohort. Named callback
+targets must be unique in the pinned symbol index and pushed by the
+original builder.
 
 ## Word-sized layout arguments
 

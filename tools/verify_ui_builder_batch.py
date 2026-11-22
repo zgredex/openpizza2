@@ -6,6 +6,7 @@ from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 import json
 from pathlib import Path
+import re
 import struct
 import subprocess
 
@@ -13,27 +14,24 @@ import generate_ui_builder as builder
 from match_decomp import compiler_provenance, function_lengths, resolve_auto_symbol
 from verify_linked_image import assemble_image, merged_spans, write_outputs
 
-SIGNALS = {0x52F850, 0x531850, 0x52FC00, 0x531C60}
+SIGNATURE = re.compile(r"void\s*\*\s*__cdecl\s+\w+\(int \*param_1\)")
+WINDOW_CALL = re.compile(r"\b(?:UI_CreateWindow|Window_CreatePictureWindow|UI_AddSprite|UI_AddText)\s*\(")
 FLAGS = ["/O2", "/TP"]
 
 
 def scan(image, methods):
-    from capstone import Cs, CS_ARCH_X86, CS_MODE_32
-
-    decoder = Cs(CS_ARCH_X86, CS_MODE_32)
     for address, length in sorted(function_lengths().items()):
-        if not 900 <= length <= builder.MAX_EXTENT:
-            continue
-        calls = Counter(int(operand, 16) for _, _, mnemonic, operand
-                        in decoder.disasm_lite(builder.read_va(image, address, length), address)
-                        if mnemonic == "call" and operand.startswith("0x"))
-        hits = sum(calls[target] for target in SIGNALS)
-        if len(calls.keys() & SIGNALS) < 2 or hits < 18 or hits * 3 < sum(calls.values()):
+        if not 0 < length <= builder.MAX_EXTENT:
             continue
         export = builder.EXPORTS / f"{address:#x}.c"
+        if not export.is_file():
+            continue
+        pseudocode = export.read_text()
+        if not SIGNATURE.search(pseudocode) or not WINDOW_CALL.search(pseudocode):
+            continue
         row = {"address": hex(address), "length": length}
         try:
-            candidate = builder.extract(address, export.read_text(), methods)
+            candidate = builder.extract(address, pseudocode, methods)
             row.update(builder.verify_calls(image, address, length, candidate),
                        pseudocode_sha256=builder.file_sha256(export))
         except (OSError, ValueError) as error:
