@@ -51,6 +51,10 @@ bytes (43.7%)**. See the [UI batch runbook](investigations/ui-builder-generation
 the [loader worklog](investigations/0x4e4930/worklog.md), and the
 [direct-call pilot](investigations/direct-call-pilot.md).
 
+The subsequent [UI updater pilot](investigations/ui-builder-generation.md#strict-match-for-submenu-variant-1)
+verified and linked one additional function at `0x4cec60`, adding **893
+strict code bytes** (about 0.07 percentage points of indexed byte coverage).
+
 ### Reusable-fact pilot
 
 `tools/propose_symbol_mappings.py` joined the 142 body-only candidates and

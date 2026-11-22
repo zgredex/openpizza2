@@ -124,3 +124,20 @@ pairs** for Variant 1, and **252 differing bytes and 7 of 9 equal block
 pairs** for Kitchen. The linked Kitchen candidate now clears a single byte.
 Both candidates still miss the strict check. The earlier table records the
 baseline values before these changes.
+
+### Strict match for Submenu Variant 1
+
+Six shared count-read variants tested how VC6 reads the volatile count and
+forms the integer visibility flag. The inlined signed predicate takes the
+count by value, so the call site still performs one volatile read. It
+recreated the reload-before-`xor` sequence in Variant 1 and improved Kitchen
+from 252 to 194 diagnostic differences.
+
+For Variant 1, staging the player slot through an inlined adapter and reusing
+the object-address local for the key after the slot lookup reproduced the
+entire 57-instruction final block. The combined changes pass strict matching
+for all **893 bytes** at `0x4cec60`. The block comparison reports 13 equal
+pairs out of 13. The full pilot verifies all three candidates and emits
+`linked.exe` and its manifest for the strict span. The linked image compares
+byte-for-byte with the original executable. Variant 2 and Kitchen still have
+255 and 194 diagnostic differences, respectively.

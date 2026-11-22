@@ -15,6 +15,7 @@ from capstone import x86_const as x
 from decomp_fixtures import PE_HASH
 import match_decomp as match
 from verify_serializer_pilot import read_arguments
+from verify_ui_builder_batch import link_verified
 from x86_call_abi import decode_reachable
 
 
@@ -212,6 +213,13 @@ def adapt_draft(draft, grouping):
                           + index + '->GetFieldC20()')
     draft = draft.replace('iVar4 = *(int *)((char *)puVar3 + 0x14);', 'iVar2 += *(int *)((char *)puVar3 + 0x14);')
     draft = draft.replace('0 < iVar2 + iVar4', '0 < iVar2')
+    slot_call = '((GameMap *)DAT_0057c670)->GetPlayerBySlot(*(int *)(iVar1 + 8))'
+    lookup = 'iVar1 = (int)((LookupMap *)(iVar2 + 0x180))->Lookup(*(int *)(iVar1 + 0x2c), 0);'
+    if draft.count(slot_call) != 1 or draft.count(lookup) != 1:
+        raise ValueError('tracked draft player-record lookup is no longer unique')
+    draft = draft.replace(slot_call, 'FindPlayer(*(int *)(iVar1 + 8), (GameMap *)DAT_0057c670)')
+    draft = draft.replace(lookup, 'iVar1 = *(int *)(iVar1 + 0x2c);\n'
+                         '      iVar1 = (int)((LookupMap *)(iVar2 + 0x180))->Lookup(iVar1, 0);')
     draft = re.sub(r'UI_Group_Create\(param_1,[^;]+;',
                    f'UI_Group_Create(param_1, {", ".join(hex(value) for value in grouping)});', draft)
     return menu_run_order(draft).replace('void __cdecl SubMenu_UpdateButtonStatesVariant1(',
@@ -235,6 +243,15 @@ def stage_panel_and_count(source, name, count):
     # original register and stack staging before the first panel call.
     helper = ('static __forceinline UI *StoreCount(UI *panel, volatile int *slot, int value)\n'
               '{\n  *slot = value;\n  return panel;\n}\n\n')
+    predicate = f'0 < {count}'
+    if body.count(predicate) != 1:
+        raise ValueError('cannot identify the company visibility predicate')
+    body = body.replace(predicate, f'PositiveCount({count})')
+    helper += ('static __forceinline unsigned int PositiveCount(int value)\n'
+               '{\n  if (value > 0) return 1;\n  return 0;\n}\n\n')
+    if 'FindPlayer(' in body:
+        helper += ('static __forceinline int FindPlayer(int slot, GameMap *game)\n'
+                   '{\n  return game->GetPlayerBySlot(slot);\n}\n\n')
     return header + helper + opening + body
 
 
@@ -322,6 +339,7 @@ def run(address, image, names, output, verify, vc6):
             result = check_object(address, obj, direct, row, source, vc6)
             receipt = source.with_suffix('.match.json')
             receipt.write_text(json.dumps(result, indent=2) + '\n')
+            match.write_function_audit(result)
             row.update(status='strict' if result['strict_match'] else 'miss', receipt=receipt.name,
                        **{key: result.get(key) for key in ('first_difference', 'difference_count', 'ordered_direct_calls_match',
                                                            'candidate_direct_calls', 'candidate_indirect_calls')})
@@ -353,8 +371,11 @@ def main():
                              dict.fromkeys(args.address or TARGETS)))
     for row in rows:
         print(row['address'], row['status'], row['length'], row.get('error', '').splitlines()[:1])
+    strict = [row for row in rows if row['status'] == 'strict']
     report = {'executable_sha256': PE_HASH, 'flags': FLAGS, 'functions': rows,
-              'strict_bytes': sum(row['length'] for row in rows if row['status'] == 'strict')}
+              'strict_bytes': sum(row['length'] for row in strict)}
+    if strict:
+        report['linked_manifest'] = link_verified(output, strict, image[0])
     (output / 'report.json').write_text(json.dumps(report, indent=2) + '\n')
     return int(any(row['status'] == 'error' for row in rows))
 
