@@ -56,3 +56,35 @@ original builder.
 ## Word-sized layout arguments
 
 The first statistics compile matched through byte 723. `Window_GadgetNotify_Text_SetLayout` then received `0x0000ffff` in the generated code where the PE emits `push -1`. The callee at `0x52f9d0` reads only the low word of its third and fourth argument slots. Modeling both as `short` preserves the value the callee reads and lets VC6 emit the same signed push. The declaration applies to all translated builders.
+
+## Panel updater pilot
+
+```sh
+python tools/verify_ui_updater_pilot.py --out /tmp/pc2-ui-updaters --verify --jobs 3
+```
+
+Use a fresh directory. Omit `--verify` to generate the candidates and check
+the original calls without Wine. Use `--address` to select one pilot target.
+The report records recovered variadic group arguments, original and emitted
+call checks, and the strict byte total. Each compile writes a separate
+matcher receipt. Check `strict_bytes` for the match result.
+
+The pilot validates the shared method table's stack cleanup against the pinned
+PE. It recovers the child IDs missing from `UI_Group_Create` exports by reading
+the original pushes and caller cleanup. The two submenu variants call the
+list deleting destructor through vtable slot zero with flag 1. The compiler
+check verifies this dispatch sequence in both emitted functions. The reused
+Variant 1 draft now calls the original player field getter at `0x4e2280` at
+the group-size branch.
+
+All three candidates compiled with pinned VC6 SP3 and `/O2 /TP`.
+
+| Candidate | Original bytes | Differing bytes | First divergence |
+| --- | ---: | ---: | --- |
+| `SubMenu_UpdateButtonStatesVariant1` | 893 | 43 | `+0x3c`, count store scheduled ahead of the panel pointer reload |
+| `SubMenu_UpdateButtonStatesVariant2` | 920 | 255 | `+0x235`, the four hide calls are placed later than in the PE |
+| `RecipeKitchen_UpdateTabButtons` | 953 | 262 | `+0x3c`, count store scheduled ahead of the panel pointer reload |
+
+Variant 1 and the kitchen updater preserve the full direct-call order.
+Variant 2 emits all 41 direct calls, with a different order between branch
+blocks. The pilot added zero strict bytes.
