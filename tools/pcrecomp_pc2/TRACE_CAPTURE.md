@@ -126,3 +126,45 @@ A scenario can set `env` to an object of PC2 option names and string values. Use
 3. Use the same starting state and inputs as a Rust replay fixture. Verify the resulting state, then add another scenario for alternate outcomes.
 
 The report describes the executed lift and the configured state watches. Intra-function branches, per-instruction memory accesses, and untaken code paths have no runtime records in this format. The inventory lists every dispatch entry in the lift, including compiler helpers and aliases. Confirm behavior against the shipped executable when input routing, timers, exception handling, or another `win32hle` behavior could affect the result.
+
+## Recheck a function fixture without booting
+
+Add `--function-fixtures` to capture up to 16 completed calls per reviewed
+routine. The first capture needs an instrumented host rebuild. The runner
+records before and return snapshots for `Surface_ResetFlags` (`0x539f20`) and
+`UI_SetClampedValue` (`0x52a3a0`). These snapshots are separate from the phase
+event budget, so initialization calls can be collected before the first phase.
+
+```sh
+python3 tools/pcrecomp_pc2/capture.py run tools/pcrecomp_pc2/scenarios/menu-click.json \
+  --work /tmp/pc2-fixture-host --out /tmp/pc2-function-capture --function-fixtures
+python3 tools/pcrecomp_pc2/function_fixtures.py extract /tmp/pc2-function-capture \
+  --cache /tmp/pc2-function-cache --out /tmp/pc2-function-fixture.json
+/tmp/pc2-fixture-host/venv/bin/python tools/pcrecomp_pc2/function_fixtures.py verify \
+  /tmp/pc2-function-fixture.json --repeat 3
+```
+
+Extraction checks the capture and snapshot SHA-256s and deduplicates equivalent
+calls. It reports unsupported text callbacks separately. The UI fixture checks
+the selected integer slot, range fields, and guard writes for slots 0–3 when the
+text callback is null. The surface fixture checks the flag at `ECX+0x74` with
+the CPUID feature input seen in the lift. Offline verification executes the
+original PE functions in Unicorn with the recorded inputs and checks the return
+snapshots, stack cleanup, and callee-saved registers.
+
+Use `verify --address 0x52a3a0 --source /path/to/candidate.c` to check a single
+C implementation exposing `pc2_candidate` with the original i386 `thiscall`
+ABI. Each case gets a fresh emulator instance. Add `--cache` to reuse the
+compiled ELF across invocations for self-contained sources. The JSON routes
+passing candidates to `strict_match` and differences to `inspect_mismatch`.
+Run the strict matcher separately for byte verification. `verify --regression`
+deliberately changes the surface flag write and the UI slot write and returns
+nonzero. `reference` creates separate bootless smoke cases from seeded inputs
+and labels their origin accordingly.
+
+The headless menu replay advanced from screen 21 to 28 and had zero unresolved
+dispatch edges. It produced one surface case and 16 UI cases, all of which passed
+three bootless runs against the original. Known-good C probes passed on a cold
+and warm cache for each address, and both deliberate changes were rejected.
+The live UI cases exercised the unclamped path. The seeded reference cases
+also exercise ascending and descending clamp bounds.

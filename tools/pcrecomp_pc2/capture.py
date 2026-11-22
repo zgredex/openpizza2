@@ -453,6 +453,9 @@ def run_capture(args):
                PC2_CAPTURE_PLAN=str(directory / "plan.bin"),
                PC2_CAPTURE_EVENTS=str(directory / "events.bin"),
                PC2_CAPTURE_IMPORTS=str(directory / "imports.tsv"))
+    fixture_path = directory / "function-fixtures.bin"
+    if args.function_fixtures:
+        env["PC2_CAPTURE_FUNCTION_FIXTURES"] = str(fixture_path)
     with (directory / "host.log").open("wb") as log:
         try:
             status = subprocess.run([str(host), image.name], cwd=image.parent, env=env,
@@ -460,12 +463,20 @@ def run_capture(args):
             timed_out = False
         except subprocess.TimeoutExpired:
             status, timed_out = None, True
-    write_json(directory / "run.json", {"work": str(work), "host": str(host),
+    run = {"work": str(work), "host": str(host),
                                         "host_sha256": host_hash,
                                         "guest_image": str(image), "guest_sha256": guest_hash,
                                         "exit_status": status, "timed_out": timed_out,
-                                        "timeout_seconds": args.timeout, "max_runtime_events": args.max_events})
-    return save_report(directory, args.linked_manifest)
+                                        "timeout_seconds": args.timeout, "max_runtime_events": args.max_events}
+    if args.function_fixtures and fixture_path.is_file():
+        with fixture_path.open("rb") as stream:
+            run["function_fixtures"] = {"format": "pc2.function_snapshots.v1",
+                                        "sha256": hashlib.file_digest(stream, "sha256").hexdigest()}
+    write_json(directory / "run.json", run)
+    result = save_report(directory, args.linked_manifest)
+    if args.function_fixtures and result == 0 and "function_fixtures" not in run:
+        raise ValueError("capture host lacks function fixture support, rebuild without --skip-build")
+    return result
 
 
 def show_events(args):
@@ -562,6 +573,8 @@ def main():
     run.add_argument("--work", type=Path, default=DEFAULT_WORK, help="cached pcrecomp build directory")
     run.add_argument("--image", type=Path, help="byte-identical copy of the pinned PE beside its assets")
     run.add_argument("--linked-manifest", type=Path, help="report captured entries for linked functions")
+    run.add_argument("--function-fixtures", action="store_true",
+                     help="capture bounded snapshots at the reviewed function boundaries")
     run.add_argument("--timeout", type=float, default=120)
     run.add_argument("--max-events", type=lambda x: integer(x, "event limit", high=MASK - 1), default=2_000_000,
                      help="limit for runtime records; 0 is unlimited (default: 2,000,000)")

@@ -28,14 +28,14 @@ def sha256(data):
     return hashlib.sha256(data).hexdigest()
 
 
-def run_command(argv):
-    process = subprocess.run(argv, cwd=ROOT, text=True, capture_output=True, timeout=30)
+def run_command(argv, environment=None):
+    process = subprocess.run(argv, cwd=ROOT, text=True, capture_output=True, timeout=30, env=environment)
     if process.returncode:
         raise ValueError(f"{' '.join(map(str, argv))}\n{process.stderr.strip()}")
     return process.stdout
 
 
-def compile_candidate(routine, source, directory, cc, ld):
+def compile_candidate(routine, source, directory, cc, ld, *, environment=None):
     files = [source]
     if routine.adapter:
         files.append(ROOT / ABI_SOURCE)
@@ -46,12 +46,12 @@ def compile_candidate(routine, source, directory, cc, ld):
                      "-fno-pic", "-fno-pie", "-fno-stack-protector", "-fwrapv",
                      "-fexcess-precision=standard", "-ffunction-sections", "-fdata-sections",
                      "-Werror=implicit-function-declaration", "-I", str((ROOT / routine.source).parent),
-                     "-c", str(path), "-o", str(obj)])
+                     "-c", str(path), "-o", str(obj)], environment)
         objects.append(str(obj))
     elf = directory / "candidate.elf"
     symbols = [f"--defsym={name}={address:#x}" for name, address in routine.symbols.items()]
     run_command([ld, "-m", "elf_i386", "-Ttext=0x01001000", "--gc-sections", "--fatal-warnings",
-                 f"--entry={routine.entry}", *symbols, *objects, "-o", str(elf)])
+                 f"--entry={routine.entry}", *symbols, *objects, "-o", str(elf)], environment)
     return elf.read_bytes()
 
 
@@ -83,7 +83,7 @@ def load_original():
     return pefile.PE(data=data, fast_load=True)
 
 
-def run_case(pe, routine, case, candidate=None):
+def run_case(pe, routine, case, candidate=None, *, patches=(), cpuid_edx=None):
     import unicorn as u
     from unicorn import x86_const as x
 
@@ -91,6 +91,8 @@ def run_case(pe, routine, case, candidate=None):
     header = pe.OPTIONAL_HEADER
     uc.mem_map(header.ImageBase, header.SizeOfImage, u.UC_PROT_ALL)
     uc.mem_write(header.ImageBase, pe.get_memory_mapped_image())
+    for address, data in patches:
+        uc.mem_write(address, data)
     uc.mem_map(STACK, STACK_SIZE, u.UC_PROT_READ | u.UC_PROT_WRITE)
     uc.mem_map(SCRATCH, 0x10000, u.UC_PROT_READ | u.UC_PROT_WRITE)
     uc.mem_map(RETURN, PAGE, u.UC_PROT_ALL)
@@ -144,6 +146,12 @@ def run_case(pe, routine, case, candidate=None):
             engine.emu_stop()
 
     write_hook = uc.hook_add(u.UC_HOOK_MEM_WRITE, watch_write)
+    if cpuid_edx is not None:
+        def captured_cpuid(engine, _data):
+            engine.reg_write(x.UC_X86_REG_EDX, cpuid_edx)
+            return 1
+
+        uc.hook_add(u.UC_HOOK_INSN, captured_cpuid, None, 1, 0, x.UC_X86_INS_CPUID)
     if candidate is not None:
         uc.hook_add(u.UC_HOOK_CODE, guard_original_code, begin=header.ImageBase,
                     end=header.ImageBase + header.SizeOfImage - 1)

@@ -31,6 +31,8 @@ static struct command *commands;
 static struct watch *watches;
 static FILE *events;
 static FILE *imports;
+static FILE *fixtures;
+static _Atomic unsigned fixture_entered[2];
 static _Atomic int finished;
 static uint32_t step, function_hits, delay_start;
 static int active, delay_armed;
@@ -66,7 +68,7 @@ static void emit_runtime(struct event event) {
 }
 
 static void flush(void) {
-    if (fflush(events) || fflush(imports)) fail("could not flush capture files");
+    if (fflush(events) || fflush(imports) || (fixtures && fflush(fixtures))) fail("could not flush capture files");
 }
 
 static void write_finish(enum finish_reason reason, int status) {
@@ -113,6 +115,7 @@ void pc2_capture_init(void) {
     }
     events = open_output("PC2_CAPTURE_EVENTS");
     imports = open_output("PC2_CAPTURE_IMPORTS");
+    if (getenv("PC2_CAPTURE_FUNCTION_FIXTURES")) fixtures = open_output("PC2_CAPTURE_FUNCTION_FIXTURES");
     hle_proc_hook = trace_message;
     hle_on_exit = pc2_capture_guest_exit;
 }
@@ -172,6 +175,51 @@ static int read_guest(uint32_t address, void *output, uint32_t size) {
     struct iovec local = {output, size};
     struct iovec remote = {hle_ptr(address), size};
     return process_vm_readv(getpid(), &local, 1, &remote, 1, 0) == (ssize_t)size;
+}
+
+static int fixture_words(struct pc2_fixture_scope *scope, uint32_t values[5]) {
+    uint32_t offsets[5] = {0x74};
+    size_t count = 1;
+    if (scope->address == 0x52a3a0) {
+        offsets[0] = 0x8c + 4 * scope->args[1];
+        offsets[1] = 0x9c;
+        offsets[2] = 0xa0;
+        offsets[3] = 0xb8;
+        offsets[4] = 0x388;
+        count = 5;
+    }
+    for (size_t i = 0; i < count; ++i) {
+        if (scope->object > UINT32_MAX - offsets[i] ||
+            !read_guest(scope->object + offsets[i], &values[i], 4)) return 0;
+    }
+    return 1;
+}
+
+struct pc2_fixture_scope pc2_capture_fixture_begin(uint32_t address) {
+    struct pc2_fixture_scope scope = {0};
+    if (!fixtures || !g_ecx || atomic_load_explicit(&finished, memory_order_relaxed)) return scope;
+    scope.address = address;
+    scope.object = g_ecx;
+    if (address == 0x52a3a0 &&
+        (!read_guest(g_esp + 4, scope.args, sizeof scope.args) || scope.args[1] > 3)) {
+        scope.address = 0;
+        return scope;
+    }
+    if (!fixture_words(&scope, scope.before) ||
+        atomic_fetch_add(&fixture_entered[address == 0x52a3a0], 1) >= 16) scope.address = 0;
+    return scope;
+}
+
+void pc2_capture_fixture_end(struct pc2_fixture_scope *scope) {
+    if (!scope->address) return;
+    uint32_t after[5] = {0};
+    if (!fixture_words(scope, after)) return;
+    uint32_t row[14] = {scope->address, scope->object, scope->args[0], scope->args[1]};
+    for (size_t i = 0; i < 5; ++i) {
+        row[4 + i] = scope->before[i];
+        row[9 + i] = after[i];
+    }
+    if (fwrite(row, sizeof row, 1, fixtures) != 1) fail("could not write function fixture");
 }
 
 static struct event read_watch(uint32_t index) {

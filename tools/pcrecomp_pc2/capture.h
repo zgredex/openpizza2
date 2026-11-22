@@ -23,6 +23,17 @@ void pc2_capture_host_call(uint32_t target, int resolved, int nargs);
 void pc2_capture_import(uint32_t address, const char *name);
 void pc2_capture_invoke_shim(uint32_t address, recomp_func_t fn);
 
+struct pc2_fixture_scope {
+    uint32_t address, object, args[2], before[5];
+};
+
+struct pc2_fixture_scope pc2_capture_fixture_begin(uint32_t address);
+void pc2_capture_fixture_end(struct pc2_fixture_scope *scope);
+
+#define PC2_CAPTURE_FIXTURE_SCOPE(address) \
+    struct pc2_fixture_scope pc2_fixture __attribute__((cleanup(pc2_capture_fixture_end))) = \
+        pc2_capture_fixture_begin(address)
+
 static inline recomp_func_t pc2_capture_resolve(uint32_t address) {
     recomp_func_t fn = recomp_resolve(address);
     pc2_capture_resolved(address, fn != NULL);
