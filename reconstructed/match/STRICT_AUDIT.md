@@ -43,11 +43,13 @@ addresses. The tracked strict matches cover **26.92%** of exported bodies
 The generator verifies and links 117 builders, covering 434,769 code bytes.
 The broader scan and input-field support added 47 strict matches and
 72,580 bytes over the original 70 builders. The market table loader
-subsequently contributed another 5,163 strict bytes. Adding documented
+subsequently contributed another 5,163 strict bytes, and the direct-call
+pilot contributed 2,211. Adding documented
 post-audit matches to the full tracked audit puts the current estimate at
-roughly **1,190 indexed functions (30.3%)** and **538,000 indexed code
-bytes (43.5%)**. See the [UI batch runbook](investigations/ui-builder-generation.md#verify-the-full-cohort)
-and the [loader worklog](investigations/0x4e4930/worklog.md).
+roughly **1,200 indexed functions (30.5%)** and **541,000 indexed code
+bytes (43.7%)**. See the [UI batch runbook](investigations/ui-builder-generation.md#verify-the-full-cohort),
+the [loader worklog](investigations/0x4e4930/worklog.md), and the
+[direct-call pilot](investigations/direct-call-pilot.md).
 
 ### Reusable-fact pilot
 
