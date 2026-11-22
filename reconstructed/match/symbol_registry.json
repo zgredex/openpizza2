@@ -379,6 +379,224 @@
           "locator": "0x57c670"
         }
       ]
+    },
+    {
+      "symbol": "?GetBuildingValue@BranchValue@@QAEMXZ",
+      "address": "0x47fd90",
+      "name": "Branch_GetBuildingValue",
+      "kind": "function",
+      "candidate_declaration": "float __thiscall BranchValue::GetBuildingValue()",
+      "abi_observation": "The PE reads the object from ECX, returns a float in ST0, and ends with ret (no stack arguments). The candidate calls it on the BranchValue view of the branch data at 0x513bf0/0x513c40.",
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x47fd90"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x47fd90 ECX this, float return, ret"
+        },
+        {
+          "path": "reconstructed/match/batch11/part1/0x513bf0.c",
+          "locator": "BranchValue::GetBuildingValue call"
+        },
+        {
+          "path": "reconstructed/match/batch11/part2/0x513c40.c",
+          "locator": "BranchValue::GetBuildingValue call"
+        }
+      ]
+    },
+    {
+      "symbol": "?GetFloat44@BranchValue@@QAEMXZ",
+      "address": "0x510570",
+      "name": "Get_Float44",
+      "kind": "function",
+      "candidate_declaration": "float __thiscall BranchValue::GetFloat44()",
+      "abi_observation": "The PE is exactly flds [ecx+0x44]; ret, so it is a no-argument thiscall returning the float at +0x44. Both BranchValue callers use that layout.",
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x510570"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x510570 flds [ecx+0x44]; ret"
+        },
+        {
+          "path": "reconstructed/match/batch11/part1/0x513bf0.c",
+          "locator": "BranchValue::GetFloat44 call"
+        },
+        {
+          "path": "reconstructed/match/batch11/part2/0x513c40.c",
+          "locator": "BranchValue::GetFloat44 call"
+        }
+      ]
+    },
+    {
+      "symbol": "?ShowConfirmationDialog@UIHelper@@QAEXHHHH@Z",
+      "address": "0x482b70",
+      "name": "Game_ShowConfirmationDialog",
+      "kind": "function",
+      "candidate_declaration": "void __thiscall UIHelper::ShowConfirmationDialog(int, int, int, int)",
+      "abi_observation": "The PE reads the UI object from ECX, consumes four stack arguments, and ends with ret 0x10. Both recipe-menu callers pass four arguments.",
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x482b70"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x482b70 ECX this, ret 0x10"
+        },
+        {
+          "path": "reconstructed/match/batch11/part1/0x498ef0.c",
+          "locator": "ShowConfirmationDialog call"
+        },
+        {
+          "path": "reconstructed/match/batch11/part1/0x49c4d0.c",
+          "locator": "ShowConfirmationDialog call"
+        }
+      ]
+    },
+    {
+      "symbol": "?ShowScrollingListDialog@UIHelper@@QAEXHHHHHH@Z",
+      "address": "0x483210",
+      "name": "UI_ShowScrollingListDialog",
+      "kind": "function",
+      "candidate_declaration": "void __thiscall UIHelper::ShowScrollingListDialog(int, int, int, int, int, int)",
+      "abi_observation": "The PE reads the UI object from ECX, consumes six stack arguments, and ends with ret 0x18. Both recipe-menu callers pass six arguments.",
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x483210"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x483210 ECX this, ret 0x18"
+        },
+        {
+          "path": "reconstructed/match/batch11/part1/0x498ef0.c",
+          "locator": "ShowScrollingListDialog call"
+        },
+        {
+          "path": "reconstructed/match/batch11/part1/0x49c4d0.c",
+          "locator": "ShowScrollingListDialog call"
+        }
+      ]
+    },
+    {
+      "symbol": "?EnsureObjectArray@UI_Manager@@QAEXPAXH@Z",
+      "address": "0x530f80",
+      "name": "UI_EnsureObjectArray",
+      "kind": "function",
+      "candidate_declaration": "void __thiscall UI_Manager::EnsureObjectArray(void *, int)",
+      "abi_observation": "The PE reads the UI manager from ECX, consumes a pointer and an integer on the stack, and ends with ret 8.",
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x530f80"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x530f80 ECX this, ret 8"
+        },
+        {
+          "path": "reconstructed/match/batch01/part4/0x52fc00.c",
+          "locator": "EnsureObjectArray call"
+        },
+        {
+          "path": "reconstructed/match/batch01/part4/0x531c60.c",
+          "locator": "EnsureObjectArray call"
+        }
+      ]
+    },
+    {
+      "symbol": "??0UI_Bar@@QAE@HHHHIPAXPADHAAH@Z",
+      "address": "0x528930",
+      "name": "UI_Bar_Construct",
+      "kind": "function",
+      "candidate_declaration": "UI_Bar::UI_Bar(int, int, int, int, unsigned, void *, char *, int, int &)",
+      "abi_observation": "The PE reads the object from ECX, consumes nine arguments, and ends with ret 0x24. The CreateSlider caller passes nine arguments and reuses the ECX result.",
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x528930"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x528930 ECX this, ret 0x24"
+        },
+        {
+          "path": "reconstructed/match/batch01/part4/0x52fc00.c",
+          "locator": "UI_Bar construction"
+        }
+      ]
+    },
+    {
+      "symbol": "??0UI_ImageChild@@QAE@HHHIHIPAX@Z",
+      "address": "0x521000",
+      "name": "UI_ImageChild_Construct",
+      "kind": "function",
+      "candidate_declaration": "UI_ImageChild::UI_ImageChild(int, int, int, unsigned, int, unsigned, void *)",
+      "abi_observation": "The PE reads the object from ECX, consumes seven arguments, and ends with ret 0x1c. CreateBitmapGadget passes seven arguments and returns the ECX result.",
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x521000"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x521000 ECX this, ret 0x1c"
+        },
+        {
+          "path": "reconstructed/match/batch01/part4/0x531c60.c",
+          "locator": "UI_ImageChild construction"
+        }
+      ]
+    },
+    {
+      "symbol": "?EnsureInit@ObjectHelper@@QAEXXZ",
+      "address": "0x520cd0",
+      "name": "Object_EnsureInit",
+      "kind": "function",
+      "candidate_declaration": "void __thiscall ObjectHelper::EnsureInit()",
+      "abi_observation": "The PE reads ECX, has no stack arguments, and ends with ret. The active branch of ToggleObjectActive calls it on the object at items[index].",
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x520cd0"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x520cd0 ECX this, ret"
+        },
+        {
+          "path": "reconstructed/match/batch11/part2/0x531620.c",
+          "locator": "EnsureInit call"
+        }
+      ]
+    },
+    {
+      "symbol": "?ClearPendingCommand@ObjectHelper@@QAEXXZ",
+      "address": "0x520cf0",
+      "name": "UI_ClearPendingCommand",
+      "kind": "function",
+      "candidate_declaration": "void __thiscall ObjectHelper::ClearPendingCommand()",
+      "abi_observation": "The PE reads ECX, has no stack arguments, and ends with ret. The inactive branch of ToggleObjectActive calls it on the object at items[index].",
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x520cf0"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x520cf0 ECX this, ret"
+        },
+        {
+          "path": "reconstructed/match/batch11/part2/0x531620.c",
+          "locator": "ClearPendingCommand call"
+        }
+      ]
     }
   ]
 }
