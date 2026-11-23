@@ -1,0 +1,298 @@
+{
+  "address": "0x47f670",
+  "entry": "?RemoveAttachedBuildingObjects@Company@@QAEHXZ",
+  "length": 266,
+  "candidate_length": 266,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [
+    "candidate extent 272 bytes, expected 266 (extra=6 bytes does not match the original table/padding)"
+  ],
+  "relocation_issues": [
+    ".text relocation at 0x6b resolves to 0x57c670, original has 0x10c",
+    ".text relocation at 0xab resolves to 0x899c1, original has 0x88361",
+    ".text relocation at 0xb2 resolves to 0x8835a, original has 0x899ba",
+    ".text relocation at 0xe7 resolves to 0x57c670, original has 0x8b0057c6",
+    ".text relocation at 0xf2 resolves to 0xfff81bda, original has 0x85fff81b"
+  ],
+  "relocations": [
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x47f672",
+      "offset": "0x2",
+      "symbol": "_g_Game",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x57c670",
+      "expected": "0x57c670",
+      "target": "0x57c670",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x47f684",
+      "offset": "0x14",
+      "symbol": "@CS_Enter@4",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xfff81c98",
+      "expected": "0xfff81c98",
+      "target": "0x401320",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x47f694",
+      "offset": "0x24",
+      "symbol": "_g_Game",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x57c670",
+      "expected": "0x57c670",
+      "target": "0x57c670",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x47f69f",
+      "offset": "0x2f",
+      "symbol": "@CS_Leave@4",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xfff81c9d",
+      "expected": "0xfff81c9d",
+      "target": "0x401340",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x47f6c6",
+      "offset": "0x56",
+      "symbol": "?MapRecordToGlobal@Game@@QAEPAXH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x53396",
+      "expected": "0x53396",
+      "target": "0x4d2a60",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x47f6db",
+      "offset": "0x6b",
+      "symbol": "_g_Game",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x10c",
+      "expected": "0x57c670",
+      "target": "0x57c670",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x47f6ec",
+      "offset": "0x7c",
+      "symbol": "?Lookup@IDMapHelper@@QAEPAXHPAH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xfff82100",
+      "expected": "0xfff82100",
+      "target": "0x4017f0",
+      "origin": "symbol_registry",
+      "verified": true,
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x4017f0"
+        },
+        {
+          "path": "reconstructed/match/batch10/part1/verify_strict.sh",
+          "locator": "0x40bab0 calls IDMap::Lookup"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x4017f0\u20130x4018ba"
+        }
+      ]
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x47f710",
+      "offset": "0xa0",
+      "symbol": "?CanContinuePath@Person@@QAEHXZ",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x8f08c",
+      "expected": "0x8f08c",
+      "target": "0x50e7a0",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x47f71b",
+      "offset": "0xab",
+      "symbol": "?DetachChildRecord@UI@@QAEXXZ",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x88361",
+      "expected": "0x899c1",
+      "target": "0x5090e0",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x47f722",
+      "offset": "0xb2",
+      "symbol": "?TruncatePathToCurrentStep@Person@@QAEXXZ",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x899ba",
+      "expected": "0x8835a",
+      "target": "0x507a80",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x47f72b",
+      "offset": "0xbb",
+      "symbol": "?SetState@Object@@QAEXH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x8f161",
+      "expected": "0x8f161",
+      "target": "0x50e890",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x47f734",
+      "offset": "0xc4",
+      "symbol": "?SetFieldA4Locked@Object@@QAEXH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x8f118",
+      "expected": "0x8f118",
+      "target": "0x50e850",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x47f73c",
+      "offset": "0xcc",
+      "symbol": "?RemoveBuildingObject@Branch@@QAEXPAX@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xfffffe80",
+      "expected": "0xfffffe80",
+      "target": "0x47f5c0",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x47f757",
+      "offset": "0xe7",
+      "symbol": "_g_Game",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x8b0057c6",
+      "expected": "0x57c670",
+      "target": "0x57c670",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x47f762",
+      "offset": "0xf2",
+      "symbol": "@CS_Leave@4",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x85fff81b",
+      "expected": "0xfff81bda",
+      "target": "0x401340",
+      "origin": "decorated_alias",
+      "verified": false
+    }
+  ],
+  "object_sha256": "9719ed933ea16e132eaa436c80b6cf2c031c3961e35d2ccf9145c5de7582d9af",
+  "linked_spans": [],
+  "link_plan_issues": [],
+  "blocked_sections": [],
+  "linked_sections": [
+    {
+      "section": ".text",
+      "index": 2,
+      "address": "0x47f670",
+      "origin": "candidate_entry"
+    }
+  ],
+  "first_difference": {
+    "offset": 106,
+    "original": 135,
+    "candidate": 21
+  },
+  "difference_count": 34,
+  "source": "reconstructed/match/batch20/part2/nonmatching/0x47f670.c",
+  "source_sha256": "8d7285082f833e10b8f244b48e1c7580088f07a9d0ec856933fede4c9bee95f3",
+  "executable_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd",
+  "compiler": {
+    "path": "/home/patryk/.local/share/pc2/vc6-sp3-toolchain/VC98",
+    "sha256": {
+      "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+      "C1.DLL": "d1b25d84da1d3d0d460996ea298488cb183b857e1b90628147983114ac4ab55f",
+      "C1XX.DLL": "28c355499c2f8090910624734faff31fe719a69a8aac7dd44b2ce64addf96ee2",
+      "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153"
+    }
+  },
+  "flags": [
+    "/O2",
+    "/TP"
+  ],
+  "strict_requested": true,
+  "strict_symbols": false,
+  "auto_symbols": true,
+  "symbol_registry_sha256": "e70a0a1124d4f83bd2fd48c4e28c535aacc6ecfdacef8ccf1f7b0bc357e618fe",
+  "symbol_overrides": {}
+}
