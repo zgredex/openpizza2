@@ -153,6 +153,16 @@ driver. It can run without SDL video or a compositor.
 
 ## Full game renderer acceptance
 
+To isolate the main-menu frame, set `PC2_TRACE_MENU_COMPOSITION=1` in the
+menu-click capture scenario. The bounded `[menu-draw]` log records source
+format, renderer object, and backing pixel pointer on settled screen 21.
+The verified replay showed a 16-bit `Sprite_Blit24Bit` background, 8-bit
+`0x17` alpha sprites, and `Font_DrawGlyphClipped` writing the renderer
+that `Surface_BlitRectRetry` presents. The renderer object stayed constant
+across the sampled presents while the backing pointer changed. A native
+menu frame needs all three source-draw paths in order and a GPU-owned
+replacement for that backbuffer and present operation.
+
 Replay the menu through character select, then London through camera
 scrolling and opening a branch panel. At each checkpoint record actual
 Vulkan submissions by draw family and compare the GPU frame against the

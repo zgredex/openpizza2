@@ -128,6 +128,35 @@ def patch_sprite_format(text: str) -> str:
     return text.replace(needle, needle + hook, 1)
 
 
+def patch_menu_composition(text: str) -> str:
+    """Identify the pixel buffer shared by source draws and presentation."""
+    entries = (
+        ("0053A780", "indexed_or_alpha", "MEM32(esp + 4)", "MEM8(ecx + 4)", "MEM8(ecx + 5)"),
+        ("005374E0", "bitmap", "MEM32(esp + 4)", "0", "MEM8(ecx + 0x10)"),
+        ("005358D0", "glyph", "MEM32(esp + 4)", "0", "0"),
+        ("00538DA0", "present", "ecx", "0", "0"),
+    )
+    for address, label, renderer, flags, depth in entries:
+        entry = f"    RECOMP_ENTER(0x{address}u);\n"
+        marker = f"[menu-draw] {label} "
+        if marker in text or entry not in text:
+            continue
+        hook = (
+            "    { static unsigned pc2_menu_samples;\n"
+            '      if (pc2_menu_samples < 32 && getenv("PC2_TRACE_MENU_COMPOSITION") &&\n'
+            "          MEM32(0x0057C5B8u) == 21 && MEM32(0x0056386Cu) == 0 && ecx) {\n"
+            f"        uint32_t target = {renderer};\n"
+            "        if (target) {\n"
+            "          ++pc2_menu_samples;\n"
+            f'          fprintf(stderr, "{marker}source=%08X target=%08X pixels=%08X flags=%02X depth=%u\\n",\n'
+            f"                  ecx, target, MEM32(target + 0x28), (unsigned)({flags}), (unsigned)({depth}));\n"
+            "        }\n"
+            "      } }\n"
+        )
+        text = text.replace(entry, entry + hook, 1)
+    return text
+
+
 def patch_word_fill(text: str) -> str:
     entry = "    RECOMP_ENTER(0x0053A3C0u);\n"
     if "pc2_capture_word_fill(" in text:
@@ -308,7 +337,8 @@ def main() -> int:
         changed |= did
         text, did = patch_payment(text)
         changed |= did
-        patched = patch_word_fill(patch_sprite_fixture(patch_sprite_format(patch_draw_entries(text))))
+        patched = patch_menu_composition(patch_word_fill(
+            patch_sprite_fixture(patch_sprite_format(patch_draw_entries(text)))))
         changed |= patched != text
         text = patched
         if changed or any(f"{name}(" in text for name in TRACE_DECLARATIONS):
