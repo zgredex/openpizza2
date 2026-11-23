@@ -1,0 +1,19 @@
+{
+ "address": "0x54c910",
+ "name": "Sound_DestroyAllChannels",
+ "entry": "?DestroyAllChannels@SoundManager@@QAEXXZ",
+ "status": "fail",
+ "first_difference": {
+  "offset": 60,
+  "original": 142,
+  "candidate": 134
+ },
+ "strict_issues": [
+  ".text relocation at 0x6: unresolved symbol ?ShutdownThread@SoundManager@@QAEXXZ",
+  ".text relocation at 0xa2: unresolved symbol _CloseHandle@4",
+  ".text relocation at 0xb8: unresolved symbol _CloseHandle@4",
+  ".text relocation at 0xce: unresolved symbol _CloseHandle@4",
+  "candidate extent 224 bytes, expected 217 (extra=7 bytes does not match the original table/padding)"
+ ],
+ "relocation_issues": []
+}

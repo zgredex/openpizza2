@@ -1,0 +1,17 @@
+{
+ "address": "0x4aecc0",
+ "name": "Stats_BuildObjectProductMatrix",
+ "entry": "_Stats_BuildObjectProductMatrix",
+ "status": "fail",
+ "first_difference": {
+  "offset": 46,
+  "original": 93,
+  "candidate": 82
+ },
+ "strict_issues": [],
+ "relocation_issues": [
+  ".text relocation at 0x57 resolves to 0x57d64c, original has 0xd64c2d8b",
+  ".text relocation at 0x61 resolves to 0x569f0c, original has 0x9f0cad0c",
+  ".text relocation at 0x77 resolves to 0x57c670, original has 0xc6834229"
+ ]
+}

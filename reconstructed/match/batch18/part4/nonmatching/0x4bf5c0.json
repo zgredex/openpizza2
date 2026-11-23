@@ -1,0 +1,16 @@
+{
+ "address": "0x4bf5c0",
+ "name": "Stats_BuildCompetitorMatrix",
+ "entry": "_Stats_BuildCompetitorMatrix",
+ "status": "fail",
+ "first_difference": {
+  "offset": 46,
+  "original": 95,
+  "candidate": 83
+ },
+ "strict_issues": [],
+ "relocation_issues": [
+  ".text relocation at 0x54 resolves to 0x57c670, original has 0x700d8bd2",
+  ".text relocation at 0x78 resolves to 0x57c670, original has 0x83422989"
+ ]
+}

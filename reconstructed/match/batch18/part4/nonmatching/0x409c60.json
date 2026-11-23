@@ -1,0 +1,17 @@
+{
+ "address": "0x409c60",
+ "name": "AdCampaign_GoToNextQueuedBuilding",
+ "entry": "?GoToNextQueuedBuilding@AdCampaign@@QAEHPAXPAD@Z",
+ "status": "fail",
+ "first_difference": {
+  "offset": 73,
+  "original": 103,
+  "candidate": 100
+ },
+ "strict_issues": [],
+ "relocation_issues": [
+  ".text relocation at 0x9b resolves to 0xe6fc1, original has 0xbee8016a",
+  ".text relocation at 0xa3 resolves to 0xfe089, original has 0x86e8ce8b",
+  ".text relocation at 0xb5 resolves to 0xffff7997, original has 0x94e8cd8b"
+ ]
+}

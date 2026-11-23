@@ -1,0 +1,13 @@
+{
+ "address": "0x50d810",
+ "name": "UI_UpdateValueBar",
+ "entry": "?UpdateValueBar@UI@@QAEXPAXH@Z",
+ "status": "fail",
+ "first_difference": {
+  "offset": 79,
+  "original": 135,
+  "candidate": 151
+ },
+ "strict_issues": [],
+ "relocation_issues": []
+}

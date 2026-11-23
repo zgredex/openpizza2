@@ -1,0 +1,16 @@
+{
+ "address": "0x48c6d0",
+ "name": "Game_RedirectPersonDestination",
+ "entry": "?RedirectPersonDestination@Game@@QAEXPAX@Z",
+ "status": "fail",
+ "first_difference": {
+  "offset": 20,
+  "original": 20,
+  "candidate": 16
+ },
+ "strict_issues": [],
+ "relocation_issues": [
+  ".text relocation at 0x63 resolves to 0xfff750b9, original has 0x488d5200",
+  ".text relocation at 0x7c resolves to 0xfff750a0, original has 0xf7509fe8"
+ ]
+}

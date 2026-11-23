@@ -1,0 +1,25 @@
+{
+ "address": "0x4016b0",
+ "name": "IDMap_RemoveRecursive",
+ "entry": "?RemoveRecursive@IDMap@@QAEHH@Z",
+ "status": "fail",
+ "first_difference": {
+  "offset": 16,
+  "original": 81,
+  "candidate": 85
+ },
+ "strict_issues": [],
+ "relocation_issues": [
+  ".text relocation at 0x3b resolves to 0xffffffc1, original has 0x5e5fffff",
+  ".text relocation at 0x40 resolves to 0x579af0, original has 0x4c25bc0",
+  ".text relocation at 0x45 resolves to 0xfffffc47, original has 0xe8ce8b50",
+  ".text relocation at 0x55 resolves to 0x579af0, original has 0x5e5fffff",
+  ".text relocation at 0x5a resolves to 0xfffffc32, original has 0x1",
+  ".text relocation at 0x70 resolves to 0x579af0, original has 0xfffbfbe8",
+  ".text relocation at 0x75 resolves to 0xfffffbf7, original has 0x8b0c4e8b",
+  ".text relocation at 0xa6 resolves to 0x14cad6, original has 0x5304768b",
+  ".text relocation at 0xb8 resolves to 0x14cac4, original has 0xb918c483",
+  ".text relocation at 0xc0 resolves to 0x579af0, original has 0xfffbcbe8",
+  ".text relocation at 0xc5 resolves to 0xfffffbc7, original has 0x1b85e5f"
+ ]
+}

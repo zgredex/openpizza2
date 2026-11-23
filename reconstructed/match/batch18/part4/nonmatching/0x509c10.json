@@ -1,0 +1,23 @@
+{
+ "address": "0x509c10",
+ "name": "Building_PruneStaleListRow",
+ "entry": "?PruneStaleListRow@Building@@QAEXXZ",
+ "status": "fail",
+ "first_difference": {
+  "offset": 14,
+  "original": 157,
+  "candidate": 133
+ },
+ "strict_issues": [],
+ "relocation_issues": [
+  ".text relocation at 0x41 resolves to 0x417eb, original has 0xc8868b",
+  ".text relocation at 0x54 resolves to 0x417d8, original has 0x14488d57",
+  ".text relocation at 0x7e resolves to 0x417ae, original has 0x82448b40",
+  ".text relocation at 0x88 resolves to 0x57c670, original has 0x8e8b2874",
+  ".text relocation at 0x93 resolves to 0xffef7699, original has 0x96e814c1",
+  ".text relocation at 0x9d resolves to 0xffffff3f, original has 0x70158bc3",
+  ".text relocation at 0xa5 resolves to 0xffffdc67, original has 0x2408a",
+  ".text relocation at 0xaa resolves to 0x57c670, original has 0xef7681e8",
+  ".text relocation at 0xb5 resolves to 0xffef7677, original has 0xffffff27"
+ ]
+}

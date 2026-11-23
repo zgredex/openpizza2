@@ -1,0 +1,16 @@
+{
+ "address": "0x479960",
+ "name": "Map_ComputeBuildableAverage",
+ "entry": "?ComputeBuildableAverage@Map@@QAEXPAD@Z",
+ "status": "fail",
+ "first_difference": {
+  "offset": 9,
+  "original": 51,
+  "candidate": 86
+ },
+ "strict_issues": [],
+ "relocation_issues": [
+  ".text relocation at 0x55 resolves to 0xfffffd97, original has 0xdb102444",
+  ".text relocation at 0x98 resolves to 0xfff89e54, original has 0xaeb0000"
+ ]
+}

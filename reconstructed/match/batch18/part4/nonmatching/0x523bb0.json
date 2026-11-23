@@ -1,0 +1,22 @@
+{
+ "address": "0x523bb0",
+ "name": "UI_CreateWindow",
+ "entry": "_UI_CreateWindow",
+ "status": "fail",
+ "first_difference": {
+  "offset": 0,
+  "original": 106,
+  "candidate": 83
+ },
+ "strict_issues": [],
+ "relocation_issues": [
+  ".text relocation at 0x11 resolves to 0xffedd75b, original has 0x0",
+  ".text relocation at 0x2c resolves to 0xffffffd0, original has 0x50ce8b10",
+  ".text relocation at 0x38 resolves to 0x2a635, original has 0xe88b0000",
+  ".text relocation at 0x5f resolves to 0xacdd, original has 0x10568b34",
+  ".text relocation at 0x6c resolves to 0x57c1e0, original has 0x52510c56",
+  ".text relocation at 0x72 resolves to 0x574184, original has 0xaf48e8c8",
+  ".text relocation at 0x7d resolves to 0x26a2f, original has 0x8b14ae44",
+  ".text relocation at 0x87 resolves to 0xffedd705, original has 0x23c968b"
+ ]
+}

@@ -1,0 +1,13 @@
+{
+ "address": "0x4dec10",
+ "name": "Company_RecordDailyStatistics",
+ "entry": "?RecordDailyStatistics@Company@@QAEXXZ",
+ "status": "fail",
+ "first_difference": {
+  "offset": 197,
+  "original": 68,
+  "candidate": 76
+ },
+ "strict_issues": [],
+ "relocation_issues": []
+}

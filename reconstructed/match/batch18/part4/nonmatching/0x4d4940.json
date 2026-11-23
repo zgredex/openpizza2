@@ -1,0 +1,24 @@
+{
+ "address": "0x4d4940",
+ "name": "City_SpawnPerson",
+ "entry": "?SpawnPerson@City@@QAEPAUCharacter@@H@Z",
+ "status": "fail",
+ "first_difference": {
+  "offset": 0,
+  "original": 100,
+  "candidate": 83
+ },
+ "strict_issues": [
+  ".text relocation at 0x61: unresolved symbol ?SetMotivation@Character@@QAEXI@Z"
+ ],
+ "relocation_issues": [
+  ".text relocation at 0x14 resolves to 0xfff2eb78, original has 0x8b565300",
+  ".text relocation at 0x23 resolves to 0x798ba, original has 0x6a036a",
+  ".text relocation at 0x39 resolves to 0x11b43, original has 0xc4830007",
+  ".text relocation at 0x56 resolves to 0xfff2eb36, original has 0xffed95e8",
+  ".text relocation at 0x68 resolves to 0x79875, original has 0xc084ffff",
+  ".text relocation at 0x81 resolves to 0xffffef4b, original has 0xcf8b08c4",
+  ".text relocation at 0x89 resolves to 0x36263, original has 0x86affff",
+  ".text relocation at 0x95 resolves to 0xfff2cad7, original has 0xd74c085"
+ ]
+}

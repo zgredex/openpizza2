@@ -1,0 +1,13 @@
+{
+ "address": "0x4da550",
+ "name": "City_SpawnResidentInPreferredCity",
+ "entry": "?SpawnResidentInPreferredCity@City@@QAEXXZ",
+ "status": "fail",
+ "first_difference": {
+  "offset": 21,
+  "original": 186,
+  "candidate": 176
+ },
+ "strict_issues": [],
+ "relocation_issues": []
+}

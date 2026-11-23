@@ -1,0 +1,17 @@
+{
+ "address": "0x47c9a0",
+ "name": "Game_GetAverageRecordValueByByte8",
+ "entry": "?GetAverageRecordValueByByte8@Map@@QAEED@Z",
+ "status": "fail",
+ "first_difference": {
+  "offset": 27,
+  "original": 178,
+  "candidate": 170
+ },
+ "strict_issues": [],
+ "relocation_issues": [
+  ".text relocation at 0x8c resolves to 0xfff86e20, original has 0x448b42c8",
+  ".text relocation at 0xa1 resolves to 0x55c2e4, original has 0x44d90004",
+  ".text relocation at 0xba resolves to 0xfff86df2, original has 0x448b0000"
+ ]
+}

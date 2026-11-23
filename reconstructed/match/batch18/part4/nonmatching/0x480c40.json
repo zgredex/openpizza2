@@ -1,0 +1,22 @@
+{
+ "address": "0x480c40",
+ "name": "Branch_PickRandomActiveCounter",
+ "entry": "_Branch_PickRandomActiveCounter",
+ "status": "fail",
+ "first_difference": {
+  "offset": 0,
+  "original": 106,
+  "candidate": 131
+ },
+ "strict_issues": [
+  ".text relocation at 0x49: unresolved symbol ?Add@IDMap@@QAEXPAX@Z"
+ ],
+ "relocation_issues": [
+  ".text relocation at 0xd resolves to 0xfff8074f, original has 0x25896450",
+  ".text relocation at 0x34 resolves to 0xfff80b78, original has 0x3424",
+  ".text relocation at 0x64 resolves to 0xfff807d8, original has 0x7cf33b46",
+  ".text relocation at 0x77 resolves to 0xfff82815, original has 0xf82814e8",
+  ".text relocation at 0x86 resolves to 0xfff80b26, original has 0x8dfff80b",
+  ".text relocation at 0x94 resolves to 0xfff807a8, original has 0xff342444"
+ ]
+}

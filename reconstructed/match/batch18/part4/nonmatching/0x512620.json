@@ -1,0 +1,13 @@
+{
+ "address": "0x512620",
+ "name": "Recipe_RecomputeAllStats",
+ "entry": "?RecomputeAllStats@Recipe@@QAEXH@Z",
+ "status": "fail",
+ "first_difference": {
+  "offset": 9,
+  "original": 141,
+  "candidate": 51
+ },
+ "strict_issues": [],
+ "relocation_issues": []
+}

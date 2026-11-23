@@ -1,0 +1,17 @@
+{
+ "address": "0x4d5cf0",
+ "name": "Map_CountNearbyObjects",
+ "entry": "?CountNearbyObjects@Map@@QAEXPAXPAH11@Z",
+ "status": "fail",
+ "first_difference": {
+  "offset": 82,
+  "original": 120,
+  "candidate": 122
+ },
+ "strict_issues": [
+  "candidate extent 224 bytes, expected 213 (extra=11 bytes does not match the original table/padding)"
+ ],
+ "relocation_issues": [
+  ".text relocation at 0x77 resolves to 0xffffc5f5, original has 0xc5f3e8f0"
+ ]
+}

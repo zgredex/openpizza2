@@ -1,0 +1,19 @@
+{
+ "address": "0x48b420",
+ "name": "Game_ReassignDestroyedObjectReferences",
+ "entry": "?ReassignDestroyedObjectReferences@Game@@QAEXPAX@Z",
+ "status": "fail",
+ "first_difference": {
+  "offset": 45,
+  "original": 160,
+  "candidate": 166
+ },
+ "strict_issues": [
+  "candidate extent 240 bytes, expected 219 (extra=21 bytes does not match the original table/padding)"
+ ],
+ "relocation_issues": [
+  ".text relocation at 0x61 resolves to 0x4c03b, original has 0x4c03ae8",
+  ".text relocation at 0x71 resolves to 0x4c02b, original has 0x890004c0",
+  ".text relocation at 0xaf resolves to 0x4bfed, original has 0x74c08500"
+ ]
+}

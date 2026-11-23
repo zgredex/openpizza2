@@ -1,0 +1,15 @@
+{
+ "address": "0x534880",
+ "name": "RecordList_BlitRecordSprite",
+ "entry": "?BlitRecordSprite@RecordList@@QAE_NHHH@Z",
+ "status": "fail",
+ "first_difference": {
+  "offset": 4,
+  "original": 86,
+  "candidate": 83
+ },
+ "strict_issues": [
+  "candidate extent 224 bytes, expected 215 (extra=9 bytes does not match the original table/padding)"
+ ],
+ "relocation_issues": []
+}
