@@ -39,6 +39,7 @@ Genuine C++ attempts are under `nonmatching/`; first difference is
 | 0x4c1ae0 | DeliveryMenu_FillProductRows | 276 | 0: `51`/`83` | two-argument `__cdecl` row filler; the current candidate allocates an 8-byte frame and reorders the count clamp, growing the extent by 28 bytes |
 | 0x479290 | Game_ComputeCategoryDominance | 281 | 3: `33`/`53` | five-entry count table; original interleaves the zero stores with the callee-saved pushes and borrows `edi` inside the first loop; candidate groups the pushes |
 | 0x529160 | UI_LayoutChildElements | 278 | 6: `57`/`8b` | rectangle arithmetic and three `Sprite_GetSize` calls; original materialises the four source fields before adding, so it needs `edi` and pushes it, while the candidate reuses `ecx` and the frame shrinks by four bytes |
+| 0x508c20 | Object_RebindRenderList | 280 | 70: `92`/`86` | `switch (mode)` now reproduces the `sub/dec` dispatch and the `CS_Enter` fastcall locks; the `type == 0x10` path still differs: the original round-trips the `unsigned char` index through the dead second-argument home (`mov [esp+0xc],cl; mov edx,[esp+0xc]; and edx,0xff`), 8 bytes the candidate keeps in a register, shifting every later block |
 
 ## Skipped: C++ EH functions
 
