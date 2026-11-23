@@ -3,6 +3,17 @@
   "family": "destructor-helpers",
   "recipes": [
     {
+      "address": "0x53ef60",
+      "name": "RefCount_AddRef",
+      "length": 16,
+      "entry": "_RefCount_AddRef@4",
+      "source": "reconstructed/match/investigations/destructor-family/gemma-53ef60/0x53ef60.c",
+      "flags": [
+        "/O2",
+        "/TP"
+      ]
+    },
+    {
       "address": "0x53efd0",
       "name": "SoundBuffer_SetBaseVTable",
       "length": 7,
@@ -14,11 +25,11 @@
       ]
     },
     {
-      "address": "0x53ef60",
-      "name": "RefCount_AddRef",
-      "length": 16,
-      "entry": "_RefCount_AddRef@4",
-      "source": "reconstructed/match/investigations/destructor-family/gemma-53ef60/0x53ef60.c",
+      "address": "0x53fd90",
+      "name": "CS_Delete",
+      "length": 8,
+      "entry": "@CS_Delete@4",
+      "source": "reconstructed/match/investigations/destructor-family/gemma-cs-delete/0x53fd90.c",
       "flags": [
         "/O2",
         "/TP"

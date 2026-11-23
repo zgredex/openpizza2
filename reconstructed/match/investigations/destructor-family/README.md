@@ -92,6 +92,7 @@ The local Gemma worker matched two shared helpers:
 ```text
 0x53ef60  RefCount_AddRef              strict  16/16 bytes
 0x53efd0  SoundBuffer_SetBaseVTable    strict   7/7 bytes
+0x53fd90  CS_Delete                     strict   8/8 bytes
 ```
 
 They are verified by `verify_helpers.sh` and `helpers.json`. The AddRef
@@ -171,10 +172,13 @@ member layout change.
 | explicit `buffer.release()` / scope | not expressible | no source-level EH-state store |
 
 The state-0 store is a VC6 destructor-scope scheduling artifact; ordinary
-C++ scope exit does not emit it before an implicit member destructor. The
-only obvious way to force it is an explicit destructor call, which would
-double-free the field and violates the semantic gate. SoundTrack is parked
-as a 29-byte near miss.
+C++ scope exit does not emit it before an implicit member destructor. Minimal
+SP3 repros with a virtual base plus a member destructor — simple free, free
+loop, virtual call, explicit member destructor call, and explicit base
+destructor call — all failed to emit `movb [esp+state],0`. This suggests the
+original `0x541f30`/`0x5408b0` state store may come from a different C2/EH
+codegen revision or a non-obvious local scope, not a missing member shape.
+SoundTrack is parked as a 29-byte near miss; `0x5408b0` has the same wall.
 
 ## Next destructor targets
 
