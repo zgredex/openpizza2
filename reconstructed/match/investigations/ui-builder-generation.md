@@ -40,8 +40,10 @@ covering 362,189 code bytes. This included all 29,960 bytes of
 strict matches totaling 66,974 bytes, including the main menu, save and
 load screens, and options panels. Recovering `UI_AddInputField` and its
 color setters added Character Select, AI Debug Status, and Request Dialog
-for another 5,606 bytes. The batch now links **117 strict builders covering
-434,769 code bytes** into a byte-identical scratch PE.
+for another 5,606 bytes. A final parser fix accepts whitespace before a
+call's closing semicolon; this added `Screen_MissionGoals` (`0x42d990`,
+1,105 bytes). The batch now links **118 strict builders covering 435,874
+code bytes** into a byte-identical scratch PE.
 
 The broader scan reports three unsupported exports at `0x4275a0`,
 `0x42d990`, and `0x474df0`. The tool saves its report and linked image

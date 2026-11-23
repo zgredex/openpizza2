@@ -41,7 +41,7 @@ METHODS = {
 GLOBALS = {"DAT_0057c5e0": "UI *"}
 LOCAL_GRADIENT = {"local_10": 0, "local_c": 1, "local_8": 2, "local_4": 3}
 NUMBER = r"-?(?:0x[0-9a-f]+|[0-9]+)"
-CALL = re.compile(r"(?:(iVar1|this)\s*=\s*(?:\(void \*\))?)?(\w+)\s*\((.*)\);")
+CALL = re.compile(r"(?:(iVar1|this)\s*=\s*(?:\(void \*\))?)?(\w+)\s*\((.*)\)\s*;")
 
 
 @lru_cache(maxsize=1)

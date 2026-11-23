@@ -48,7 +48,7 @@ def load_ui_scan(path):
     root = path.parent
     ready = {}
     for row in payload.get("functions", []):
-        if row.get("status") != "ready":
+        if row.get("status") not in {"ready", "strict"}:
             continue
         address = int(row["address"], 0)
         source = row.get("source")
