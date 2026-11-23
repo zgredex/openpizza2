@@ -47,6 +47,12 @@ void pc2_vk_draw(pc2_vk *ctx, pc2_vk_texture *texture,
                  float x, float y, float w, float h,
                  float u0, float v0, float u1, float v1,
                  int clip_x, int clip_y, int clip_w, int clip_h);
+/* Draw an RGB565 alpha sprite into the active target, sampling the prior
+ * composition from a separate target. The 64×16 table stores signed channel
+ * deltas as red bytes with a bias of 128. */
+int pc2_vk_draw_legacy_blend(pc2_vk *ctx, pc2_vk_texture *sprite,
+                            pc2_vk_texture *destination, pc2_vk_texture *table,
+                            int x, int y, int w, int h, int cx, int cy, int cw, int ch);
 /* Source coordinates use texture pixels. An out-of-bounds source rectangle
  * clips the destination proportionally. The clip rectangle is destination space. */
 void pc2_vk_draw_rect(pc2_vk *ctx, pc2_vk_texture *texture,

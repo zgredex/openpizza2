@@ -58,6 +58,7 @@ struct pc2_vk {
     VkPipelineLayout layout;
     quad_pass swap_pass;
     quad_pass target_pass;
+    quad_pass legacy_blend_pass;
     VkRenderPass target_load_pass;
     VkDescriptorSetLayout descriptor_layout;
     VkDescriptorPool descriptor_pool;
@@ -221,10 +222,10 @@ static int render_pass_create(pc2_vk *r, VkFormat format, int offscreen, int loa
     return gpu_ok(r,vkCreateRenderPass(r->device,&rp,NULL,pass),"render pass");
 }
 
-static int quad_pass_create(pc2_vk *r, quad_pass *quad, VkFormat format, int offscreen) {
+static int quad_pass_create(pc2_vk *r, quad_pass *quad, VkFormat format, int offscreen, int legacy) {
     if (!render_pass_create(r,format,offscreen,0,&quad->pass)) return 0;
     VkShaderModule vert=shader_load(r,"quad.vert.spv");
-    VkShaderModule frag=shader_load(r,"quad.frag.spv");
+    VkShaderModule frag=shader_load(r,legacy ? "legacy_blend.frag.spv" : "quad.frag.spv");
     if (!vert || !frag) {
         if (vert) vkDestroyShaderModule(r->device,vert,NULL);
         if (frag) vkDestroyShaderModule(r->device,frag,NULL);
@@ -246,7 +247,7 @@ static int quad_pass_create(pc2_vk *r, quad_pass *quad, VkFormat format, int off
         .frontFace=VK_FRONT_FACE_COUNTER_CLOCKWISE,.lineWidth=1};
     VkPipelineMultisampleStateCreateInfo ms={.sType=VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO,
         .rasterizationSamples=VK_SAMPLE_COUNT_1_BIT};
-    VkPipelineColorBlendAttachmentState ba={.blendEnable=VK_TRUE,
+    VkPipelineColorBlendAttachmentState ba={.blendEnable=legacy ? VK_FALSE : VK_TRUE,
         .srcColorBlendFactor=VK_BLEND_FACTOR_SRC_ALPHA,
         .dstColorBlendFactor=VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
         .colorBlendOp=VK_BLEND_OP_ADD,
@@ -265,7 +266,7 @@ static int quad_pass_create(pc2_vk *r, quad_pass *quad, VkFormat format, int off
         .renderPass=quad->pass,.subpass=0};
     int ok=gpu_ok(r,vkCreateGraphicsPipelines(r->device,VK_NULL_HANDLE,1,&ci,NULL,&quad->rgba),
                   "sprite pipeline");
-    if (ok) {
+    if (ok && !legacy) {
         ba.srcColorBlendFactor=VK_BLEND_FACTOR_ONE;
         ok=gpu_ok(r,vkCreateGraphicsPipelines(r->device,VK_NULL_HANDLE,1,&ci,NULL,&quad->premultiplied),
                   "premultiplied sprite pipeline");
@@ -320,7 +321,7 @@ static int swap_create(pc2_vk *r) {
     if (!r->images||!r->views||!r->framebuffers||!r->render_done)
         return fail(r,"swapchain array allocation failed");
     vkGetSwapchainImagesKHR(r->device,r->swapchain,&r->image_count,r->images);
-    if (!quad_pass_create(r,&r->swap_pass,r->swap_format,0)) return 0;
+    if (!quad_pass_create(r,&r->swap_pass,r->swap_format,0,0)) return 0;
     VkSemaphoreCreateInfo semi={.sType=VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO};
     for (uint32_t i=0;i<r->image_count;++i) {
         VkImageViewCreateInfo vi={.sType=VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
@@ -431,8 +432,9 @@ static pc2_vk *renderer_create(SDL_Window *window, const char *shader_dir) {
         .bindingCount=1,.pBindings=&binding};
     if (!gpu_ok(r,vkCreateDescriptorSetLayout(r->device,&dli,NULL,&r->descriptor_layout),"descriptor layout")) goto bad;
     VkPushConstantRange range={.stageFlags=VK_SHADER_STAGE_VERTEX_BIT,.offset=0,.size=48};
+    VkDescriptorSetLayout layouts[3] = {r->descriptor_layout, r->descriptor_layout, r->descriptor_layout};
     VkPipelineLayoutCreateInfo pli={.sType=VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
-        .setLayoutCount=1,.pSetLayouts=&r->descriptor_layout,.pushConstantRangeCount=1,.pPushConstantRanges=&range};
+        .setLayoutCount=3,.pSetLayouts=layouts,.pushConstantRangeCount=1,.pPushConstantRanges=&range};
     if (!gpu_ok(r,vkCreatePipelineLayout(r->device,&pli,NULL,&r->layout),"pipeline layout")) goto bad;
     VkDescriptorPoolSize dps={VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,16384};
     VkDescriptorPoolCreateInfo dpi={.sType=VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
@@ -525,7 +527,7 @@ pc2_vk_texture *pc2_vk_target_create(pc2_vk *r, uint32_t w, uint32_t h) {
     uint32_t pitch=0;
     if (!r || w > r->max_target_width || h > r->max_target_height ||
         !source_pitch(w,h,&pitch,PIXELS_RGBA8)) return NULL;
-    if (!r->target_pass.pass && !quad_pass_create(r,&r->target_pass,TEXTURE_FORMAT,1)) return NULL;
+    if (!r->target_pass.pass && !quad_pass_create(r,&r->target_pass,TEXTURE_FORMAT,1,0)) return NULL;
     pc2_vk_texture *t=texture_alloc(r,w,h,VK_IMAGE_USAGE_SAMPLED_BIT|
                                           VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT|
                                           VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
@@ -711,8 +713,9 @@ int pc2_vk_begin_target_load(pc2_vk *r, pc2_vk_texture *t) {
     return begin_target(r,t,NULL);
 }
 
-void pc2_vk_draw(pc2_vk *r,pc2_vk_texture *t,float x,float y,float w,float h,
-                 float u0,float v0,float u1,float v1,int cx,int cy,int cw,int ch) {
+static void draw_quad(pc2_vk *r, pc2_vk_texture *t, float x,float y,float w,float h,
+                      float u0,float v0,float u1,float v1,int cx,int cy,int cw,int ch,
+                      pc2_vk_texture *destination, pc2_vk_texture *table) {
     if (!r||!r->active||!t||t->owner!=r||t->retired||!t->layout_initialized||
         t==r->active_target||w<=0||h<=0||cw<=0||ch<=0) return;
     float canvas_w=CANVAS_W, canvas_h=CANVAS_H;
@@ -741,7 +744,8 @@ void pc2_vk_draw(pc2_vk *r,pc2_vk_texture *t,float x,float y,float w,float h,
         scissor.extent.width=extent.width-scissor.offset.x;
     if (scissor.offset.y+(int)scissor.extent.height>(int)extent.height)
         scissor.extent.height=extent.height-scissor.offset.y;
-    VkPipeline pipeline=t->framebuffer ? pass->premultiplied : pass->rgba;
+    VkPipeline pipeline=destination ? r->legacy_blend_pass.rgba :
+                        t->framebuffer ? pass->premultiplied : pass->rgba;
     if (pipeline!=r->bound_pipeline) {
         vkCmdBindPipeline(r->command,VK_PIPELINE_BIND_POINT_GRAPHICS,pipeline);
         r->bound_pipeline=pipeline;
@@ -751,7 +755,34 @@ void pc2_vk_draw(pc2_vk *r,pc2_vk_texture *t,float x,float y,float w,float h,
         {x,y,w,h},{u0,v0,u1,v1},{canvas_w,canvas_h},{0,0}};
     vkCmdPushConstants(r->command,r->layout,VK_SHADER_STAGE_VERTEX_BIT,0,sizeof push,&push);
     vkCmdBindDescriptorSets(r->command,VK_PIPELINE_BIND_POINT_GRAPHICS,r->layout,0,1,&t->set,0,NULL);
+    if (destination) {
+        VkDescriptorSet inputs[] = {destination->set, table->set};
+        vkCmdBindDescriptorSets(r->command,VK_PIPELINE_BIND_POINT_GRAPHICS,r->layout,1,2,inputs,0,NULL);
+    }
     vkCmdDraw(r->command,6,1,0,0);
+}
+
+void pc2_vk_draw(pc2_vk *r,pc2_vk_texture *t,float x,float y,float w,float h,
+                 float u0,float v0,float u1,float v1,int cx,int cy,int cw,int ch) {
+    draw_quad(r,t,x,y,w,h,u0,v0,u1,v1,cx,cy,cw,ch,NULL,NULL);
+}
+
+int pc2_vk_draw_legacy_blend(pc2_vk *r, pc2_vk_texture *sprite,
+                             pc2_vk_texture *destination, pc2_vk_texture *table,
+                             int x,int y,int w,int h,int cx,int cy,int cw,int ch) {
+    if (!r || !r->active_target || !sprite || !destination || !table ||
+        sprite->owner != r || sprite->retired || !sprite->layout_initialized ||
+        sprite == r->active_target || w <= 0 || h <= 0 || cw <= 0 || ch <= 0 ||
+        destination == r->active_target || destination->owner != r || table->owner != r ||
+        table == r->active_target || table->retired || destination->retired ||
+        !destination->layout_initialized || !table->layout_initialized ||
+        destination->width != r->active_target->width ||
+        destination->height != r->active_target->height || table->width != 64 || table->height != 16)
+        return 0;
+    if (!r->legacy_blend_pass.pass &&
+        !quad_pass_create(r,&r->legacy_blend_pass,TEXTURE_FORMAT,1,1)) return 0;
+    draw_quad(r,sprite,x,y,w,h,0,0,1,1,cx,cy,cw,ch,destination,table);
+    return 1;
 }
 
 void pc2_vk_draw_rect(pc2_vk *r, pc2_vk_texture *t,
@@ -861,6 +892,7 @@ void pc2_vk_destroy(pc2_vk *r) {
         release_retired_textures(r);
         if (r->target_load_pass) vkDestroyRenderPass(r->device,r->target_load_pass,NULL);
         quad_pass_destroy(r,&r->target_pass);
+        quad_pass_destroy(r,&r->legacy_blend_pass);
         if (r->acquired) vkDestroySemaphore(r->device,r->acquired,NULL);
         if (r->sampler) vkDestroySampler(r->device,r->sampler,NULL);
         if (r->descriptor_pool) vkDestroyDescriptorPool(r->device,r->descriptor_pool,NULL);

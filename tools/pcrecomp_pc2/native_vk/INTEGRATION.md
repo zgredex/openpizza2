@@ -174,11 +174,13 @@ character select with zero unresolved dispatches.
 The same capture option mirrors up to 32 menu alpha draws into that target
 while the guest renderer and pixel buffer still match the background
 draw. It checks pixels touched by the sprite, including a second comparison
-after converting the Vulkan result back to RGB565. On the first draw,
-ordinary Vulkan blending differed at 367 of 418 touched pixels and 359
-still differed after RGB565 conversion. The legacy path uses per-channel
-integer lookup-table blending. The GPU target is diagnostic and still
-needs that blend rule and the missing glyph commands before publication.
+after converting the Vulkan result back to RGB565. Ordinary Vulkan
+blending differed at 359 of 418 pixels on the first draw after that
+conversion. The replacement fragment shader samples the previous Vulkan
+target and applies the game's 64×16 signed channel-delta table. It
+matched all 9,690 touched pixels across 32 alpha draws on 32-bit RADV.
+Build `legacy_blend.frag.spv` alongside the quad shaders. The GPU target
+still needs the glyph commands and final presentation before publication.
 
 Replay the menu through character select, then London through camera
 scrolling and opening a branch panel. At each checkpoint record actual

@@ -324,6 +324,8 @@ void pc2_capture_indexed_sprite_after(int actions)
 static atomic_int menu_bitmap_claimed;
 static pc2_vk *menu_vk;
 static pc2_vk_texture *menu_target;
+static pc2_vk_texture *menu_scratch;
+static pc2_vk_texture *menu_blend_table;
 static uint32_t menu_pixels;
 static uint32_t menu_renderer;
 static _Thread_local int menu_owner;
@@ -335,6 +337,8 @@ static int alpha_left, alpha_top, alpha_right, alpha_bottom;
 static void close_menu_target(void)
 {
     pc2_vk_texture_destroy(menu_vk, menu_target);
+    pc2_vk_texture_destroy(menu_vk, menu_scratch);
+    pc2_vk_texture_destroy(menu_vk, menu_blend_table);
     pc2_vk_destroy(menu_vk);
 }
 
@@ -421,16 +425,28 @@ static int menu_alpha_before(uint32_t sprite, uint32_t stack)
                                      (const void *)ADDR(palette), 512, 1,
                                      menu_alpha_source, sizeof menu_alpha_source))
         return 0;
+    if (!menu_scratch) menu_scratch = pc2_vk_target_create(menu_vk, 800, 600);
+    if (!menu_blend_table) {
+        uint8_t table[64 * 16 * 4] = {0};
+        for (unsigned i = 0; i < 64 * 16; ++i)
+            table[i * 4] = (uint8_t)((int8_t)MEM8(0x00584518u + i * 4) + 128);
+        menu_blend_table = pc2_vk_texture_create(menu_vk, 64, 16, table, 0);
+    }
+    if (!menu_scratch || !menu_blend_table) return 0;
     pc2_vk_texture *texture = pc2_vk_texture_create(menu_vk, w, h, menu_alpha_source, 0);
     if (!texture) return 0;
-    int ok = pc2_vk_begin_target_load(menu_vk, menu_target);
+    int ok = pc2_vk_begin_target(menu_vk, menu_scratch, 0, 0, 0, 1);
     if (ok) {
-        pc2_vk_draw(menu_vk, texture, x, y, w, h, 0, 0, 1, 1,
-                    left, top, right - left, bottom - top);
-        ok = pc2_vk_end(menu_vk);
+        pc2_vk_draw(menu_vk, menu_target, 0, 0, 800, 600, 0, 0, 1, 1, 0, 0, 800, 600);
+        int drawn = pc2_vk_draw_legacy_blend(menu_vk, texture, menu_target, menu_blend_table,
+                                              x, y, w, h, left, top, right - left, bottom - top);
+        ok = pc2_vk_end(menu_vk) && drawn;
     }
     pc2_vk_texture_destroy(menu_vk, texture);
     if (!ok) return 0;
+    pc2_vk_texture *previous = menu_target;
+    menu_target = menu_scratch;
+    menu_scratch = previous;
     alpha_x = x; alpha_y = y; alpha_w = w; alpha_h = h;
     alpha_left = left > x ? left : x;
     alpha_top = top > y ? top : y;

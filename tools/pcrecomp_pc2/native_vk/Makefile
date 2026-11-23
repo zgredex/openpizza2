@@ -7,7 +7,7 @@ PKG_CONFIG ?= pkg-config
 PKGS = sdl2 vulkan libavformat libavcodec libavutil libswscale libswresample
 CFLAGS += -std=c11 -O2 -Wall -Wextra -Wno-missing-field-initializers $(shell $(PKG_CONFIG) --cflags $(PKGS))
 LDFLAGS += $(shell $(PKG_CONFIG) --libs $(PKGS)) -lm
-SHADERS = shaders/quad.vert.spv shaders/quad.frag.spv
+SHADERS = shaders/quad.vert.spv shaders/quad.frag.spv shaders/legacy_blend.frag.spv
 
 all: $(SHADERS) smoke
 
