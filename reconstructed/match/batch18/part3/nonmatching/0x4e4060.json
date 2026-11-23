@@ -1,0 +1,18 @@
+{
+ "address": "0x4e4060",
+ "name": "Game_ComputePrice",
+ "entry": "?ComputePrice@Game@@QAEHPAX@Z",
+ "status": "fail",
+ "first_difference": {
+  "offset": 175,
+  "original": 220,
+  "candidate": 221
+ },
+ "strict_issues": [
+  "unverified .rdata section (4 bytes)",
+  ".text relocation at 0xba: unresolved symbol __real@4@3ff8a3d70a0000000000"
+ ],
+ "relocation_issues": [
+  ".text relocation at 0xc2 resolves to 0xfff1f72a, original has 0xc4831024"
+ ]
+}

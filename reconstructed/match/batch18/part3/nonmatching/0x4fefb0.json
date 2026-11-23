@@ -1,0 +1,25 @@
+{
+ "address": "0x4fefb0",
+ "name": "AI_Annoy_SendGangsterGroup",
+ "entry": "?SendGangsterGroup@AI@@QAEHPAX0@Z",
+ "status": "fail",
+ "first_difference": {
+  "offset": 0,
+  "original": 81,
+  "candidate": 83
+ },
+ "strict_issues": [],
+ "relocation_issues": [
+  ".text relocation at 0xc resolves to 0x57c670, original has 0xd8b3045",
+  ".text relocation at 0x17 resolves to 0xfff89c15, original has 0x1424",
+  ".text relocation at 0x20 resolves to 0xfffe2f0c, original has 0x5c8bfff8",
+  ".text relocation at 0x33 resolves to 0x3a9, original has 0x8a840f",
+  ".text relocation at 0x49 resolves to 0xfff044d3, original has 0x3be057f",
+  ".text relocation at 0x53 resolves to 0x649, original has 0xf044c8e8",
+  ".text relocation at 0x74 resolves to 0x5a8, original has 0x75c08500",
+  ".text relocation at 0x83 resolves to 0x57c670, original has 0x850008c2",
+  ".text relocation at 0x8b resolves to 0xfff837e1, original has 0xe8cf8b53",
+  ".text relocation at 0x94 resolves to 0x57ba0c, original has 0xb10244c",
+  ".text relocation at 0x9a resolves to 0x49d22, original has 0x10244c89"
+ ]
+}

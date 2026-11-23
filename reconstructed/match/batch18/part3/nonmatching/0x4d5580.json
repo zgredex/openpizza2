@@ -1,0 +1,30 @@
+{
+ "address": "0x4d5580",
+ "name": "Branch_ExpelCustomers",
+ "entry": "_Branch_ExpelCustomers@4",
+ "status": "fail",
+ "first_difference": {
+  "offset": 14,
+  "original": 232,
+  "candidate": 51
+ },
+ "strict_issues": [
+  ".text relocation at 0x11: unresolved symbol ?Enter@CriticalSection@@QAEXXZ",
+  ".text relocation at 0x82: unresolved symbol ?DetachChildRecord@Person@@QAEXXZ",
+  ".text relocation at 0x92: unresolved symbol ?SetDestinationAndTarget@Person@@QAEXHH@Z",
+  ".text relocation at 0x9b: unresolved symbol ?SetState@Person@@QAEXH@Z",
+  ".text relocation at 0xb6: unresolved symbol ?Leave@CriticalSection@@QAEXXZ",
+  ".text relocation at 0xcd: unresolved symbol ?Leave@CriticalSection@@QAEXXZ",
+  "candidate extent 224 bytes, expected 207 (extra=17 bytes does not match the original table/padding)"
+ ],
+ "relocation_issues": [
+  ".text relocation at 0x17 resolves to 0x57c670, original has 0xff6a0057",
+  ".text relocation at 0x30 resolves to 0x57c670, original has 0x488d5700",
+  ".text relocation at 0x3b resolves to 0xfff2c231, original has 0x307e83f0",
+  ".text relocation at 0x62 resolves to 0x57c670, original has 0x27e847ff",
+  ".text relocation at 0x6a resolves to 0xfffb1322, original has 0x8bbd7cf8",
+  ".text relocation at 0x77 resolves to 0x391a5, original has 0x42e80000",
+  ".text relocation at 0xab resolves to 0x57c670, original has 0x39261",
+  ".text relocation at 0xc2 resolves to 0x57c670, original has 0xf7e80000"
+ ]
+}

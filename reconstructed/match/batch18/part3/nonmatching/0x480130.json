@@ -1,0 +1,17 @@
+{
+ "address": "0x480130",
+ "name": "Game_CountGoalTargets",
+ "entry": "?CountGoalTargets@Game@@QAEHH@Z",
+ "status": "fail",
+ "first_difference": {
+  "offset": 0,
+  "original": 83,
+  "candidate": 81
+ },
+ "strict_issues": [
+  "candidate extent 224 bytes, expected 206 (extra=18 bytes does not match the original table/padding)"
+ ],
+ "relocation_issues": [
+  ".text relocation at 0x2f resolves to 0x528fd, original has 0x83057449"
+ ]
+}

@@ -1,0 +1,19 @@
+{
+ "address": "0x544620",
+ "name": "SoundBuffer_StopPlaybackLocked",
+ "entry": "?StopPlaybackLocked@SoundBuffer@@QAEHXZ",
+ "status": "fail",
+ "first_difference": {
+  "offset": 0,
+  "original": 106,
+  "candidate": 86
+ },
+ "strict_issues": [
+  ".text relocation at 0x8: unresolved symbol _EnterCriticalSection",
+  ".text relocation at 0x1f: unresolved symbol _LeaveCriticalSection",
+  ".text relocation at 0x63: unresolved symbol _LeaveCriticalSection",
+  ".text relocation at 0x84: unresolved symbol _LeaveCriticalSection",
+  ".text relocation at 0xbe: unresolved symbol _LeaveCriticalSection"
+ ],
+ "relocation_issues": []
+}

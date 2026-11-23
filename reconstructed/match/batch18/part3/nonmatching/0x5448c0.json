@@ -1,0 +1,18 @@
+{
+ "address": "0x5448c0",
+ "name": "Sound_QueryStatusLocked",
+ "entry": "?QueryStatusLocked@SoundBuffer@@QAEHPAXPAH@Z",
+ "status": "fail",
+ "first_difference": {
+  "offset": 0,
+  "original": 106,
+  "candidate": 81
+ },
+ "strict_issues": [
+  ".text relocation at 0xe: unresolved symbol _EnterCriticalSection",
+  ".text relocation at 0x23: unresolved symbol _LeaveCriticalSection",
+  ".text relocation at 0x41: unresolved symbol _LeaveCriticalSection",
+  ".text relocation at 0x96: unresolved symbol _LeaveCriticalSection"
+ ],
+ "relocation_issues": []
+}

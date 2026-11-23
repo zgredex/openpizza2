@@ -1,0 +1,19 @@
+{
+ "address": "0x53fcc0",
+ "name": "SoundPakManager_Destruct",
+ "entry": "?Destroy@SoundPakManager@@QAEXXZ",
+ "status": "fail",
+ "first_difference": {
+  "offset": 0,
+  "original": 106,
+  "candidate": 86
+ },
+ "strict_issues": [
+  ".text relocation at 0x86: unresolved symbol _DeleteCriticalSection"
+ ],
+ "relocation_issues": [
+  ".text relocation at 0x2d resolves to 0xe1f3, original has 0x1",
+  ".text relocation at 0x49 resolves to 0xe06b, original has 0x85208e4c",
+  ".text relocation at 0x6a resolves to 0xe04a, original has 0x8e548bc8"
+ ]
+}

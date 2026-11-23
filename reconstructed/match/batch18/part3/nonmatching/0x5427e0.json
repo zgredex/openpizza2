@@ -1,0 +1,20 @@
+{
+ "address": "0x5427e0",
+ "name": "SoundMixerThread_Destroy",
+ "entry": "?Destroy@SoundMixerThread@@QAEXXZ",
+ "status": "fail",
+ "first_difference": {
+  "offset": 0,
+  "original": 106,
+  "candidate": 86
+ },
+ "strict_issues": [
+  ".text relocation at 0x16: unresolved symbol _SetEvent@4",
+  ".text relocation at 0x26: unresolved symbol _WaitForSingleObject@8",
+  ".text relocation at 0x2f: unresolved symbol _CloseHandle@4",
+  ".text relocation at 0x56: unresolved symbol _DeleteCriticalSection"
+ ],
+ "relocation_issues": [
+  ".text relocation at 0x6a resolves to 0xb52a, original has 0x8b50008b"
+ ]
+}

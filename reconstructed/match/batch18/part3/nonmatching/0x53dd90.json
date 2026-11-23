@@ -1,0 +1,17 @@
+{
+ "address": "0x53dd90",
+ "name": "Sprite_FillColor8",
+ "entry": "?FillColor8@Sprite@@QAEHXZ",
+ "status": "fail",
+ "first_difference": {
+  "offset": 10,
+  "original": 117,
+  "candidate": 15
+ },
+ "strict_issues": [
+  "candidate extent 224 bytes, expected 207 (extra=17 bytes does not match the original table/padding)"
+ ],
+ "relocation_issues": [
+  ".text relocation at 0x27 resolves to 0xfffffa85, original has 0xfffa84e8"
+ ]
+}

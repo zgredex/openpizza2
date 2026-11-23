@@ -1,0 +1,18 @@
+{
+ "address": "0x4ed980",
+ "name": "Map_ComputeVisibleTileRange",
+ "entry": "?ComputeVisibleTileRange@Map@@QAEXPAH00000@Z",
+ "status": "fail",
+ "first_difference": {
+  "offset": 104,
+  "original": 4,
+  "candidate": 16
+ },
+ "strict_issues": [
+  ".text relocation at 0x41: unresolved symbol ?Grid_GetCell@Map@@QAEPAHHH@Z",
+  ".text relocation at 0x5e: unresolved symbol ?Grid_GetCell@Map@@QAEPAHHH@Z",
+  ".text relocation at 0x97: unresolved symbol ?Grid_GetCell@Map@@QAEPAHHH@Z",
+  ".text relocation at 0xae: unresolved symbol ?Grid_GetCell@Map@@QAEPAHHH@Z"
+ ],
+ "relocation_issues": []
+}

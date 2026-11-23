@@ -1,0 +1,20 @@
+{
+ "address": "0x4f5660",
+ "name": "Sprite_LoadIntoSlot78",
+ "entry": "?LoadIntoSlot78@Object@@QAEXH@Z",
+ "status": "fail",
+ "first_difference": {
+  "offset": 0,
+  "original": 100,
+  "candidate": 81
+ },
+ "strict_issues": [],
+ "relocation_issues": [
+  ".text relocation at 0x2 resolves to 0x57c670, original has 0x0",
+  ".text relocation at 0x1b resolves to 0xfff0bca1, original has 0x8b5608ec",
+  ".text relocation at 0x2f resolves to 0x58b8e, original has 0x8b0674c9",
+  ".text relocation at 0x55 resolves to 0x57c5c8, original has 0x6a006a",
+  ".text relocation at 0x5e resolves to 0x4712e, original has 0x8d0002bf",
+  ".text relocation at 0x8b resolves to 0xfff0bc51, original has 0x784689c9"
+ ]
+}

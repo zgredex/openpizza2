@@ -1,0 +1,19 @@
+{
+ "address": "0x51ee80",
+ "name": "Renderer_ApplySpriteTint",
+ "entry": "?ApplySpriteTint@Renderer@@QAEXHH@Z",
+ "status": "fail",
+ "first_difference": {
+  "offset": 11,
+  "original": 189,
+  "candidate": 188
+ },
+ "strict_issues": [],
+ "relocation_issues": [
+  ".text relocation at 0x74 resolves to 0x1e948, original has 0x1e947e8",
+  ".text relocation at 0x83 resolves to 0x1ee89, original has 0x1ee88e8",
+  ".text relocation at 0x94 resolves to 0x1e178, original has 0x1e177e8",
+  ".text relocation at 0xb9 resolves to 0x7df3, original has 0x7df2e8",
+  ".text relocation at 0xc7 resolves to 0xffee23f5, original has 0xee23f4e8"
+ ]
+}

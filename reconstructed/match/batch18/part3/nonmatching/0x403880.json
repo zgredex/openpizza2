@@ -1,0 +1,15 @@
+{
+ "address": "0x403880",
+ "name": "String_CompareLocalizedNoCase",
+ "entry": "_String_CompareLocalizedNoCase",
+ "status": "fail",
+ "first_difference": {
+  "offset": 1,
+  "original": 68,
+  "candidate": 76
+ },
+ "strict_issues": [
+  "candidate extent 224 bytes, expected 210 (extra=14 bytes does not match the original table/padding)"
+ ],
+ "relocation_issues": []
+}

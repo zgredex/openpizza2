@@ -1,0 +1,20 @@
+{
+ "address": "0x52bc80",
+ "name": "UI_Text_Construct",
+ "entry": "?Construct@UI_TextElement@@QAEPAHHHHPAD0PAXPAH@Z",
+ "status": "fail",
+ "first_difference": {
+  "offset": 0,
+  "original": 106,
+  "candidate": 139
+ },
+ "strict_issues": [
+  ".text relocation at 0x5e: unresolved symbol _LoadFontByName",
+  ".text relocation at 0xbb: unresolved symbol ?SetMarkupText@Font@@QAEXPAD@Z",
+  ".text relocation at 0xc6: unresolved symbol ?Measure@Font@@QAEHXZ",
+  "candidate extent 224 bytes, expected 206 (extra=18 bytes does not match the original table/padding)"
+ ],
+ "relocation_issues": [
+  ".text relocation at 0x19 resolves to 0xffff4de3, original has 0x24548b1c"
+ ]
+}

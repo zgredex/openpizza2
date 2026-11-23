@@ -1,0 +1,21 @@
+{
+ "address": "0x5390b0",
+ "name": "Surface_GetDescription",
+ "entry": "?GetDescription@Image@@QAEXPAH0@Z",
+ "status": "fail",
+ "first_difference": {
+  "offset": 4,
+  "original": 85,
+  "candidate": 86
+ },
+ "strict_issues": [
+  ".text relocation at 0x4f: unresolved symbol _WaitForExit",
+  ".text relocation at 0x59: unresolved symbol _Sleep",
+  ".text relocation at 0x99: unresolved symbol ?Reset@Image@@QAEXXZ",
+  ".text relocation at 0xb4: unresolved symbol _SetRect"
+ ],
+ "relocation_issues": [
+  ".text relocation at 0x24 resolves to 0x5844fc, original has 0x2444c700",
+  ".text relocation at 0x3e resolves to 0xfffffeae, original has 0x6a51016a"
+ ]
+}

@@ -1,0 +1,24 @@
+{
+ "address": "0x4eb280",
+ "name": "IsoMap_ConstructFromStream",
+ "entry": "_IsoMap_ConstructFromStream",
+ "status": "fail",
+ "first_difference": {
+  "offset": 0,
+  "original": 106,
+  "candidate": 86
+ },
+ "strict_issues": [
+  ".text relocation at 0x53: unresolved symbol ?SetWindowOffsets@IsoMap@@QAEXXZ",
+  ".text relocation at 0x5a: unresolved symbol ?UpdateObjectScreenBounds@IsoMap@@QAEXXZ",
+  ".text relocation at 0x69: unresolved symbol ?SetScrollPosition@IsoMap@@QAEXHH@Z",
+  ".text relocation at 0x82: unresolved symbol ?CompactVisibleDrawRecords@IsoMap@@QAEXXZ"
+ ],
+ "relocation_issues": [
+  ".text relocation at 0x11 resolves to 0xfff1610b, original has 0x0",
+  ".text relocation at 0x1e resolves to 0xfff160fe, original has 0x8d0c2474",
+  ".text relocation at 0x4c resolves to 0x630, original has 0x88ce8b52",
+  ".text relocation at 0x8d resolves to 0x57c5c8, original has 0xe8968b",
+  ".text relocation at 0x96 resolves to 0x90e6, original has 0x8b000000"
+ ]
+}

@@ -1,0 +1,13 @@
+{
+ "address": "0x540960",
+ "name": "SoundBuffer_Init",
+ "entry": "?Init@SoundBuffer@@QAEXPAXPADH@Z",
+ "status": "fail",
+ "first_difference": {
+  "offset": 0,
+  "original": 106,
+  "candidate": 83
+ },
+ "strict_issues": [],
+ "relocation_issues": []
+}

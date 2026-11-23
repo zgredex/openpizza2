@@ -1,0 +1,13 @@
+{
+ "address": "0x4d8140",
+ "name": "Game_FindBestCompositeRatedBranch",
+ "entry": "_Game_FindBestCompositeRatedBranch",
+ "status": "fail",
+ "first_difference": {
+  "offset": 181,
+  "original": 68,
+  "candidate": 116
+ },
+ "strict_issues": [],
+ "relocation_issues": []
+}

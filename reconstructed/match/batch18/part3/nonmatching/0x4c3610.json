@@ -1,0 +1,32 @@
+{
+ "address": "0x4c3610",
+ "name": "FurnitureMenu_InitOvenPage",
+ "entry": "_UI_InitOvenPage",
+ "status": "fail",
+ "first_difference": {
+  "offset": 5,
+  "original": 199,
+  "candidate": 129
+ },
+ "strict_issues": [],
+ "relocation_issues": [
+  ".text relocation at 0xd resolves to 0x57d738, original has 0xec810000",
+  ".text relocation at 0x1e resolves to 0x57d734, original has 0x8b0057d7",
+  ".text relocation at 0x2b resolves to 0xfffb9c31, original has 0x9c2fe8c8",
+  ".text relocation at 0x30 resolves to 0x57d73c, original has 0xd73ca3ff",
+  ".text relocation at 0x43 resolves to 0xfff3e199, original has 0xe197e8c8",
+  ".text relocation at 0x49 resolves to 0x57d734, original has 0xd734053b",
+  ".text relocation at 0x51 resolves to 0x57d738, original has 0xd7383589",
+  ".text relocation at 0x56 resolves to 0x57d73c, original has 0xd73ca100",
+  ".text relocation at 0x6a resolves to 0x4c32f0, original has 0x32f06800",
+  ".text relocation at 0x71 resolves to 0x6ec8b, original has 0xec89e8ce",
+  ".text relocation at 0x76 resolves to 0x57d734, original has 0xd734a100",
+  ".text relocation at 0x80 resolves to 0xfffffc7c, original has 0xfc7ae856",
+  ".text relocation at 0x86 resolves to 0x57d734, original has 0xd734158b",
+  ".text relocation at 0x8c resolves to 0x57c670, original has 0xc6700d8b",
+  ".text relocation at 0x9d resolves to 0xfff3e13f, original has 0xe13de850",
+  ".text relocation at 0xaa resolves to 0x56ae18, original has 0xae186808",
+  ".text relocation at 0xb0 resolves to 0x8a6bf, original has 0xa6bde850",
+  ".text relocation at 0xc4 resolves to 0x6e238, original has 0xe236e8ce"
+ ]
+}

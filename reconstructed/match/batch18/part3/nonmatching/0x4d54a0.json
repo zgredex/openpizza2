@@ -1,0 +1,23 @@
+{
+ "address": "0x4d54a0",
+ "name": "City_SpawnFlyerBoy",
+ "entry": "_City_SpawnFlyerBoy",
+ "status": "fail",
+ "first_difference": {
+  "offset": 0,
+  "original": 106,
+  "candidate": 86
+ },
+ "strict_issues": [
+  ".text relocation at 0x7f: unresolved symbol ?WanderToLinkedCell@Object@@QAEXXZ"
+ ],
+ "relocation_issues": [
+  ".text relocation at 0xa resolves to 0x78d73, original has 0x50000000",
+  ".text relocation at 0x29 resolves to 0x10ff3, original has 0x850c2444",
+  ".text relocation at 0x31 resolves to 0x580b40, original has 0x18",
+  ".text relocation at 0x4d resolves to 0x57c670, original has 0xebd88b00",
+  ".text relocation at 0x53 resolves to 0xfffad299, original has 0x403d8bdb",
+  ".text relocation at 0x63 resolves to 0x39229, original has 0x2bd1f7ae",
+  ".text relocation at 0x78 resolves to 0x39374, original has 0xa5f302e9"
+ ]
+}

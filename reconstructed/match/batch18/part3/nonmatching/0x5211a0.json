@@ -1,0 +1,20 @@
+{
+ "address": "0x5211a0",
+ "name": "UI_CustomControl_Destructor",
+ "entry": "?DestroyControl@UI_CustomControl@@QAEXXZ",
+ "status": "fail",
+ "first_difference": {
+  "offset": 0,
+  "original": 106,
+  "candidate": 86
+ },
+ "strict_issues": [
+  ".text relocation at 0xa: unresolved symbol ?DetachObject@UI_Child@@QAEXXZ",
+  ".text relocation at 0x83: unresolved symbol _SetObjectRangeByKey",
+  ".text relocation at 0x98: unresolved symbol _SetChildVisibleByID"
+ ],
+ "relocation_issues": [
+  ".text relocation at 0xa7 resolves to 0x1cd5, original has 0x102444",
+  ".text relocation at 0xb1 resolves to 0xfffff8bb, original has 0x2444c7ce"
+ ]
+}

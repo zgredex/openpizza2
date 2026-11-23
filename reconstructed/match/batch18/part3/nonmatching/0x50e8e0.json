@@ -1,0 +1,16 @@
+{
+ "address": "0x50e8e0",
+ "name": "Player_Construct",
+ "entry": "?Construct@Player@@QAEPAU1@PAH@Z",
+ "status": "fail",
+ "first_difference": {
+  "offset": 0,
+  "original": 106,
+  "candidate": 83
+ },
+ "strict_issues": [],
+ "relocation_issues": [
+  ".text relocation at 0xf resolves to 0xffef2aad, original has 0x2589",
+  ".text relocation at 0x28 resolves to 0x394, original has 0xffef2a94"
+ ]
+}

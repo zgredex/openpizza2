@@ -1,0 +1,22 @@
+{
+ "address": "0x540a80",
+ "name": "SoundBuffer_LockSample",
+ "entry": "?LockSample@SoundBuffer@@QAEHHH@Z",
+ "status": "fail",
+ "first_difference": {
+  "offset": 3,
+  "original": 139,
+  "candidate": 87
+ },
+ "strict_issues": [
+  ".text relocation at 0x3d: unresolved symbol ?Lock@CSound@@QAEHHHPAH0HHH@Z",
+  ".text relocation at 0x52: unresolved symbol ?Restore@CSound@@QAEHXZ",
+  ".text relocation at 0x72: unresolved symbol ?Lock@CSound@@QAEHHHPAH0HHH@Z"
+ ],
+ "relocation_issues": [
+  ".text relocation at 0x98 resolves to 0x574f98, original has 0x5fc0330c",
+  ".text relocation at 0xa5 resolves to 0x574fa8, original has 0x986850d7",
+  ".text relocation at 0xaa resolves to 0x585578, original has 0x78680057",
+  ".text relocation at 0xaf resolves to 0xffffe56d, original has 0x3c70058"
+ ]
+}
