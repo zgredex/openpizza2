@@ -87,15 +87,18 @@ special syntax. `if (state < 3)` produced a single `cmp/jge` block and a
 
 ## Shared helper matched by Gemma
 
-The local Gemma worker matched the 7-byte base-vtable cleanup at `0x53efd0`:
+The local Gemma worker matched two shared helpers:
 
 ```text
-0x53efd0  SoundBuffer_SetBaseVTable  strict  7/7 bytes
+0x53ef60  RefCount_AddRef              strict  16/16 bytes
+0x53efd0  SoundBuffer_SetBaseVTable    strict   7/7 bytes
 ```
 
-It is verified by `verify_helpers.sh` and `helpers.json`. This is a small
-but useful audit win: the same bytes are the cleanup thunk referenced by the
-destructor unwind maps.
+They are verified by `verify_helpers.sh` and `helpers.json`. The AddRef
+extent is 16 bytes; a 14-byte check only passes by splitting the `ret 4`
+immediate into an inline tail, so the recipe uses the true extent. The
+base-vtable bytes are the cleanup thunk referenced by the destructor unwind
+maps.
 
 ## Member subobjects and unwind checks
 

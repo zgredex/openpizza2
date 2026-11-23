@@ -8,7 +8,21 @@
       "length": 7,
       "entry": "@SoundBuffer_SetBaseVTable@4",
       "source": "reconstructed/match/investigations/destructor-family/gemma-53efd0/0x53efd0.c",
-      "flags": ["/O2", "/TP"]
+      "flags": [
+        "/O2",
+        "/TP"
+      ]
+    },
+    {
+      "address": "0x53ef60",
+      "name": "RefCount_AddRef",
+      "length": 16,
+      "entry": "_RefCount_AddRef@4",
+      "source": "reconstructed/match/investigations/destructor-family/gemma-53ef60/0x53ef60.c",
+      "flags": [
+        "/O2",
+        "/TP"
+      ]
     }
   ]
 }
