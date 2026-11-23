@@ -1,0 +1,133 @@
+{
+  "address": "0x4f7b90",
+  "entry": "_AI_ComputePlanScores",
+  "length": 158,
+  "candidate_length": 158,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [
+    "candidate extent 176 bytes, expected 158 (extra=18 bytes does not match the original table/padding)"
+  ],
+  "relocation_issues": [
+    ".text relocation at 0x55 resolves to 0xfff803f7, original has 0x57557",
+    ".text relocation at 0x5a resolves to 0x57552, original has 0xff6aff6a",
+    ".text relocation at 0x6a resolves to 0xfff80492, original has 0x57542",
+    ".text relocation at 0x6f resolves to 0x5753d, original has 0x2b14244c"
+  ],
+  "relocations": [
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4f7b91",
+      "offset": "0x1",
+      "symbol": "?DAT_0057c670@@3HA",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x57c670",
+      "expected": "0x57c670",
+      "target": "0x57c670",
+      "origin": "address_label",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4f7be5",
+      "offset": "0x55",
+      "symbol": "?SumFilteredFloats@Stats@@QAEMHHH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x57557",
+      "expected": "0xfff803f7",
+      "target": "0x477fe0",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4f7bea",
+      "offset": "0x5a",
+      "symbol": "__ftol",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xff6aff6a",
+      "expected": "0x57552",
+      "target": "0x54f140",
+      "origin": "exact_symbol",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4f7bfa",
+      "offset": "0x6a",
+      "symbol": "?SumFilteredFloats2@Stats@@QAEMHHH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x57542",
+      "expected": "0xfff80492",
+      "target": "0x478090",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4f7bff",
+      "offset": "0x6f",
+      "symbol": "__ftol",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x2b14244c",
+      "expected": "0x5753d",
+      "target": "0x54f140",
+      "origin": "exact_symbol",
+      "verified": false
+    }
+  ],
+  "object_sha256": "dd3132cd11dca03d07065fe76a465f267ac73ed86fad89ba2a428f0e59c8e5cc",
+  "linked_spans": [],
+  "link_plan_issues": [],
+  "blocked_sections": [],
+  "linked_sections": [
+    {
+      "section": ".text",
+      "index": 2,
+      "address": "0x4f7b90",
+      "origin": "candidate_entry"
+    }
+  ],
+  "first_difference": {
+    "offset": 5,
+    "original": 139,
+    "candidate": 83
+  },
+  "difference_count": 106,
+  "source": "reconstructed/match/batch16/part3/nonmatching/0x4f7b90.c",
+  "source_sha256": "2115b071f953e0d6e55687ad3464c80623b67a5267270ec2c146c32bb4c008ec",
+  "executable_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd",
+  "compiler": {
+    "path": "/home/patryk/.local/share/pc2/vc6-sp3-toolchain/VC98",
+    "sha256": {
+      "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+      "C1.DLL": "d1b25d84da1d3d0d460996ea298488cb183b857e1b90628147983114ac4ab55f",
+      "C1XX.DLL": "28c355499c2f8090910624734faff31fe719a69a8aac7dd44b2ce64addf96ee2",
+      "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153"
+    }
+  },
+  "flags": [
+    "/O2",
+    "/TP"
+  ],
+  "strict_requested": true,
+  "strict_symbols": false,
+  "auto_symbols": true,
+  "symbol_registry_sha256": "e70a0a1124d4f83bd2fd48c4e28c535aacc6ecfdacef8ccf1f7b0bc357e618fe",
+  "symbol_overrides": {}
+}

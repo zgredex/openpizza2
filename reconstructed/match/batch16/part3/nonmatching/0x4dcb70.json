@@ -1,0 +1,149 @@
+{
+  "address": "0x4dcb70",
+  "entry": "?SwapOneOfFour@Object@@QAEHHIH@Z",
+  "length": 159,
+  "candidate_length": 159,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [
+    "candidate extent 176 bytes, expected 159 (extra=17 bytes does not match the original table/padding)"
+  ],
+  "relocation_issues": [
+    ".text relocation at 0x23 resolves to 0x4dcc0c, original has 0x4dcc10",
+    ".text relocation at 0x9c resolves to 0x4dcb97, original has 0x90000cc2",
+    ".text relocation at 0xa0 resolves to 0x4dcbb3, original has 0x4dcb97",
+    ".text relocation at 0xa4 resolves to 0x4dcbcf, original has 0x4dcbb5",
+    ".text relocation at 0xa8 resolves to 0x4dcbeb, original has 0x4dcbd3"
+  ],
+  "relocations": [
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4dcb80",
+      "offset": "0x10",
+      "symbol": "_Random_RangeFast",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xfff2694c",
+      "expected": "0xfff2694c",
+      "target": "0x4034d0",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4dcb93",
+      "offset": "0x23",
+      "symbol": "$L269",
+      "target_section_index": 2,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x4dcc10",
+      "expected": "0x4dcc0c",
+      "target": "0x4dcc0c",
+      "origin": "candidate_entry",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4dcc0c",
+      "offset": "0x9c",
+      "symbol": "$L244",
+      "target_section_index": 2,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x90000cc2",
+      "expected": "0x4dcb97",
+      "target": "0x4dcb97",
+      "origin": "candidate_entry",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4dcc10",
+      "offset": "0xa0",
+      "symbol": "$L249",
+      "target_section_index": 2,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x4dcb97",
+      "expected": "0x4dcbb3",
+      "target": "0x4dcbb3",
+      "origin": "candidate_entry",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4dcc14",
+      "offset": "0xa4",
+      "symbol": "$L254",
+      "target_section_index": 2,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x4dcbb5",
+      "expected": "0x4dcbcf",
+      "target": "0x4dcbcf",
+      "origin": "candidate_entry",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4dcc18",
+      "offset": "0xa8",
+      "symbol": "$L259",
+      "target_section_index": 2,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x4dcbd3",
+      "expected": "0x4dcbeb",
+      "target": "0x4dcbeb",
+      "origin": "candidate_entry",
+      "verified": false
+    }
+  ],
+  "object_sha256": "c6090f2b1a191571530bd1a9c282d144d2efd8d864e3cc9b86eff7e6182de32c",
+  "linked_spans": [],
+  "link_plan_issues": [],
+  "blocked_sections": [],
+  "linked_sections": [
+    {
+      "section": ".text",
+      "index": 2,
+      "address": "0x4dcb70",
+      "origin": "candidate_entry"
+    }
+  ],
+  "first_difference": {
+    "offset": 1,
+    "original": 139,
+    "candidate": 86
+  },
+  "difference_count": 113,
+  "source": "reconstructed/match/batch16/part3/nonmatching/0x4dcb70.c",
+  "source_sha256": "ba641ba56ab05027acf69ef975d2d623d1f8be1761f36591236e83d248f44769",
+  "executable_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd",
+  "compiler": {
+    "path": "/home/patryk/.local/share/pc2/vc6-sp3-toolchain/VC98",
+    "sha256": {
+      "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+      "C1.DLL": "d1b25d84da1d3d0d460996ea298488cb183b857e1b90628147983114ac4ab55f",
+      "C1XX.DLL": "28c355499c2f8090910624734faff31fe719a69a8aac7dd44b2ce64addf96ee2",
+      "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153"
+    }
+  },
+  "flags": [
+    "/O2",
+    "/TP"
+  ],
+  "strict_requested": true,
+  "strict_symbols": false,
+  "auto_symbols": true,
+  "symbol_registry_sha256": "e70a0a1124d4f83bd2fd48c4e28c535aacc6ecfdacef8ccf1f7b0bc357e618fe",
+  "symbol_overrides": {}
+}

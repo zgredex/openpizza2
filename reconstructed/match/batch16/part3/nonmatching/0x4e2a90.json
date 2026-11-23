@@ -1,0 +1,104 @@
+{
+  "address": "0x4e2a90",
+  "entry": "?GetTopActionIndices@AI@@QAEXPAH0@Z",
+  "length": 162,
+  "candidate_length": 162,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [
+    "candidate extent 176 bytes, expected 162 (extra=14 bytes does not match the original table/padding)"
+  ],
+  "relocation_issues": [
+    ".text relocation at 0x40 resolves to 0xfff1ed1c, original has 0x8318244c",
+    ".text relocation at 0x6a resolves to 0x4e2b40, original has 0x86a004e",
+    ".text relocation at 0x78 resolves to 0x6bf83, original has 0x8c8b0006"
+  ],
+  "relocations": [
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4e2ad0",
+      "offset": "0x40",
+      "symbol": "?Lookup@IDMap@@QAEPAXHPAH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x8318244c",
+      "expected": "0xfff1ed1c",
+      "target": "0x4017f0",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4e2afa",
+      "offset": "0x6a",
+      "symbol": "_CompareActionIndices",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x86a004e",
+      "expected": "0x4e2b40",
+      "target": "0x4e2b40",
+      "origin": "explicit_symbol",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4e2b08",
+      "offset": "0x78",
+      "symbol": "_CRT_QSort",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x8c8b0006",
+      "expected": "0x6bf83",
+      "target": "0x54ea8f",
+      "origin": "decorated_alias",
+      "verified": false
+    }
+  ],
+  "object_sha256": "19061a7162c400ee674b7fb6717612f71d971deadc7c4bb9b091acce1061884c",
+  "linked_spans": [],
+  "link_plan_issues": [],
+  "blocked_sections": [],
+  "linked_sections": [
+    {
+      "section": ".text",
+      "index": 2,
+      "address": "0x4e2a90",
+      "origin": "candidate_entry"
+    }
+  ],
+  "first_difference": {
+    "offset": 8,
+    "original": 83,
+    "candidate": 85
+  },
+  "difference_count": 106,
+  "source": "reconstructed/match/batch16/part3/nonmatching/0x4e2a90.c",
+  "source_sha256": "54d6e5250f16a9c3f0b8aa5e6c984040e9ea7b30eaa7f17d7b7d7c81eb381abd",
+  "executable_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd",
+  "compiler": {
+    "path": "/home/patryk/.local/share/pc2/vc6-sp3-toolchain/VC98",
+    "sha256": {
+      "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+      "C1.DLL": "d1b25d84da1d3d0d460996ea298488cb183b857e1b90628147983114ac4ab55f",
+      "C1XX.DLL": "28c355499c2f8090910624734faff31fe719a69a8aac7dd44b2ce64addf96ee2",
+      "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153"
+    }
+  },
+  "flags": [
+    "/O2",
+    "/TP"
+  ],
+  "strict_requested": true,
+  "strict_symbols": false,
+  "auto_symbols": true,
+  "symbol_registry_sha256": "e70a0a1124d4f83bd2fd48c4e28c535aacc6ecfdacef8ccf1f7b0bc357e618fe",
+  "symbol_overrides": {
+    "_CompareActionIndices": "0x4e2b40"
+  }
+}

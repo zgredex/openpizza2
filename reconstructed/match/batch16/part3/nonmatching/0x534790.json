@@ -1,0 +1,84 @@
+{
+  "address": "0x534790",
+  "entry": "?GetScreenOffset@Record@@QAEXHPAH0@Z",
+  "length": 159,
+  "candidate_length": 144,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [],
+  "relocation_issues": [
+    ".text relocation at 0x43 resolves to 0x1a969, original has 0x44dc5046",
+    ".text relocation at 0x70 resolves to 0x1a93c, original has 0xbf0fc303"
+  ],
+  "relocations": [
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x5347d3",
+      "offset": "0x43",
+      "symbol": "__ftol",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x44dc5046",
+      "expected": "0x1a969",
+      "target": "0x54f140",
+      "origin": "exact_symbol",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x534800",
+      "offset": "0x70",
+      "symbol": "__ftol",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xbf0fc303",
+      "expected": "0x1a93c",
+      "target": "0x54f140",
+      "origin": "exact_symbol",
+      "verified": false
+    }
+  ],
+  "object_sha256": "5389a698415aca757acba18ae6d13dc9f290ec09a4892786a7947fdc8f3f50c1",
+  "linked_spans": [],
+  "link_plan_issues": [],
+  "blocked_sections": [],
+  "linked_sections": [
+    {
+      "section": ".text",
+      "index": 2,
+      "address": "0x534790",
+      "origin": "candidate_entry"
+    }
+  ],
+  "first_difference": {
+    "offset": 4,
+    "original": 83,
+    "candidate": 86
+  },
+  "difference_count": 130,
+  "source": "reconstructed/match/batch16/part3/nonmatching/0x534790.c",
+  "source_sha256": "72e31ae167de8feaede89910c74eec1062c3e1cea39227f49c4f1ab1d1f6c3f6",
+  "executable_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd",
+  "compiler": {
+    "path": "/home/patryk/.local/share/pc2/vc6-sp3-toolchain/VC98",
+    "sha256": {
+      "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+      "C1.DLL": "d1b25d84da1d3d0d460996ea298488cb183b857e1b90628147983114ac4ab55f",
+      "C1XX.DLL": "28c355499c2f8090910624734faff31fe719a69a8aac7dd44b2ce64addf96ee2",
+      "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153"
+    }
+  },
+  "flags": [
+    "/O2",
+    "/TP"
+  ],
+  "strict_requested": true,
+  "strict_symbols": false,
+  "auto_symbols": true,
+  "symbol_registry_sha256": "e70a0a1124d4f83bd2fd48c4e28c535aacc6ecfdacef8ccf1f7b0bc357e618fe",
+  "symbol_overrides": {}
+}
