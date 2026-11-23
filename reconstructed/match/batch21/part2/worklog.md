@@ -14,6 +14,7 @@ length (156 bytes each) and the exact candidate entry symbol.
 | 0x50f6b0 | `GamePlan_SaveRecord` | /O2 /TP | `?SaveRecord@GamePlan@@QAEXPAVOStream@@@Z` | |
 | 0x50f750 | `GamePlan_LoadRecord` | /O2 /TP | `?LoadRecord@GamePlan@@QAEXPAVIStream@@@Z` | |
 | 0x549e80 | `Sound_PlayBuildingSpecialSfx` | /O2 /TP | `?PlayBuildingSpecialSfx@Sound@@QAEXH@Z` | |
+| 0x50b5e0 | `Person_AssignBranchStaffRole` | /O2 /TP | `?AssignBranchStaffRole@Person@@QAEXHHHD@Z` | |
 
 Notes:
 
@@ -26,3 +27,14 @@ Notes:
   strings at `0x576308`..`0x57632c` and the format string at `0x5762e0`.
   `Sound_PlayChannel` is called as a `Sound` member (thiscall), which is why
   `mov ecx,esi` precedes the call.
+* `0x50b5e0`: the switch must be written with plain `break` in all three
+  cases and the single `field10C = role` store *after* the switch. MSVC 6
+  then duplicates the store and epilogue into cases 2 and 1, while case 0
+  falls into the shared tail with `default`. Writing `field10C = role;
+  return;` inside the cases folds the store to an immediate 1/2 and misses.
+
+## Non-matching evidence
+
+| address | function | diff bytes | first diff | diagnosis |
+|---|---|---:|---|---|
+| 0x4be490 | `LeaseBuilding_UpdatePage` | 11 | offset 0x1e: original `mov ecx,ebx; lea eax,[esi+8]`, candidate `lea ecx,[esi+8]` then `mov ecx,ebx` after the pushes | Size and all other instructions/relocations match. The shipped code assigns ECX=ui before computing the text pointer, so the pointer lands in EAX; 15 source shapes (`UI*`/`UI&` parameter, local window pointer, reference, named text local, `player->name`, varargs, int* arithmetic, inline helper) all let MSVC choose ECX for the `lea` and delay the ECX=ui move. Saved under `nonmatching/0x4be490.c` with JSON. |
