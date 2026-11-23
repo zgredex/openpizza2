@@ -23,7 +23,7 @@ class PortBatchTests(unittest.TestCase):
             "  return;\n"
             "}\n"
         )
-        self.assertIn("void *self", code)
+        self.assertIn("char *self", code)
         self.assertIn("value1", code)
         self.assertIn("uint32_t", code)
         self.assertIn("intptr_t", code)
@@ -40,7 +40,7 @@ class PortBatchTests(unittest.TestCase):
             self.assertEqual(item["address"], "0x401000")
             self.assertEqual(item["name"], "Alpha")
 
-    def test_translate_rejects_external_references(self):
+    def test_translate_accepts_external_references(self):
         with tempfile.TemporaryDirectory() as td:
             path = pathlib.Path(td) / "0x401000.c"
             path.write_text(
@@ -48,8 +48,20 @@ class PortBatchTests(unittest.TestCase):
                 "// pseudocode: provider\nvoid Beta(void) { FUN_00401000(); }\n"
             )
             item, reason = mod.translate(path)
+            self.assertIsNone(reason)
+            self.assertIsNotNone(item)
+            self.assertIn("FUN_00401000", item["code"])
+
+    def test_translate_rejects_missing_body(self):
+        with tempfile.TemporaryDirectory() as td:
+            path = pathlib.Path(td) / "0x401000.c"
+            path.write_text(
+                "// name: Gamma\n// address: 0x401000\n// body: missing\n"
+                "// pseudocode: provider\n"
+            )
+            item, reason = mod.translate(path)
             self.assertIsNone(item)
-            self.assertIn("external", reason)
+            self.assertIn("body", reason)
 
     def test_render_has_original_marker(self):
         text = mod.render({"address": "0x401000", "name": "Alpha", "code": "int Alpha(void) {}\n"})
