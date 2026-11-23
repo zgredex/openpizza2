@@ -42,11 +42,12 @@ recorded beside the source. All use the manifest length, exact entry, and
 | --- | --- | --- | --- | --- |
 | 0x47f670 | `Company::RemoveAttachedBuildingObjects` | 0x6a: 0x87 vs 0x15 | 34 | Loop, condition tests, callee order and lock handling match. The shipped code forms the map `this` as `mov ecx,[g_Game]; add ecx,0x3c` with the person key already in EAX, while every C form tried (`g_Game->persons`, cast expression, map local, named key) loads `g_Game` into EDX/EAX and uses `lea`. The owner compare is likewise EDX/EAX versus EAX/ECX. |
 | 0x4da000 | `City::TrySendPoliceToDistrict` | 0x5: 0xee vs 0x8d | 233 | The entry-slot loops and stores match until variable coloring; an explicit `int j = 0`/`int zero = 0` pair changes which of EBX/EBP/ESI holds `this`, the shared zero and the lookup index. The shipped prologue reserves EBX for `this`, EBX/ECX/ESI for the three loop counters and keeps a shared zero in EBP. |
+| 0x4d9ef0 | `City::SendPoliceToDistrict` | 0x5: 0xd9 vs 0x5c | 224 | Void sibling of 0x4da000 with the same entry-table loops (district slot type 0x1b). The early `int j = 0` live across the whole body makes this C2 coloring place `this` in EBP and the parameter in EBX; the shipped code uses EBX for `this` and a zero in EBP. |
 | 0x52ee10 | `Dialog::InitBase` | 0x0: 0x53 vs 0x8b | 223 | The field list, offsets, order, `Renderer::CreateChild`, imported `SetRect` and the four 0xff000000 fills were recovered from disassembly, but MSVC hoists the parameter loads/stores to the top of the function and interleaves them differently from the shipped schedule (shipped stores param3 at +0x48 and param2 at +0x134 only after the first eight zero stores). |
 
 ## Not attempted
 
-The remaining 21 records were not reached in this pass and have no candidate:
+The remaining 20 records were not reached in this pass and have no candidate:
 
 `0x4fdbe0`, `0x54a660`, `0x50d5e0`, `0x500470`, `0x506c00`, `0x521270`,
 `0x526480`, `0x479ef0`, `0x4de360`, `0x499f30`, `0x5246e0`, `0x477e40`,
