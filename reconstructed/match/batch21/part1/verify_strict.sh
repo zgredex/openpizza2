@@ -39,6 +39,7 @@ check 0x513c90 153 '??0Storage@@QAE@PAUIStream@@@Z' '/O2 /TP /GX' \
     --symbol '??1List@@QAE@XZ=0x401480'
 check 0x5317b0 152 '?CreateMovieWindow@UI@@QAEHHHHHH@Z' '/O2 /TP /GX' \
     --symbol '??0MovieWindow@@QAE@HHHHPAXPADH0@Z=0x52ae20'
+check 0x49f640 156 '?UI_RecordList_SetVisibleRange@@YAXPAUUI@@HH@Z' '/O2 /TP'
 
 echo "strict matches: $pass/$((pass + fail))"
 [ "$fail" -eq 0 ]

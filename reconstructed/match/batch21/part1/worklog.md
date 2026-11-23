@@ -17,7 +17,7 @@ Reproduce with:
 sh reconstructed/match/batch21/part1/verify_strict.sh
 ```
 
-Result: **6 / 9 strict matches**, 9 / 9 records attempted. The three
+Result: **7 / 9 strict matches**, 9 / 9 records attempted. The two
 remaining records have genuine C/C++ candidates under `nonmatching/` with the
 matcher JSON beside them.
 
@@ -31,6 +31,7 @@ matcher JSON beside them.
 | 0x4a1940 | `SaveGame_Scan` | /O2 /TP /GX | `?SaveGame_Scan@@YAXPAUList@@H@Z` | Genuine C++ `new UI_ListEntry(...)` with a declared destructor. The compiler-generated `.text$x` funclet/handler and `.xdata$x` FuncInfo/unwind map match the shipped image at 0x558870/0x55e2c8 and are located from the original handler immediate. Needs `??0UI_ListEntry@@QAE@HH@Z=0x403370`. |
 | 0x513c90 | `Storage::Storage` | /O2 /TP /GX | `??0Storage@@QAE@PAUIStream@@@Z` | Genuine constructor with a `List` member subobject at +0x44; the member-initializer try region reproduces the shipped `.text$x` (0x55a4f0) and `.xdata$x` (0x55fe00). The vptr store is written as `*(void **)this = DAT_0055c700;` so no local vtable is emitted. Needs `??0List@@QAE@H@Z=0x4013a0` and `??1List@@QAE@XZ=0x401480`. |
 | 0x5317b0 | `UI::CreateMovieWindow` | /O2 /TP /GX | `?CreateMovieWindow@UI@@QAEHHHHHH@Z` | Genuine C++ `new MovieWindow(...)` with a declared destructor. The 0x44-byte frame is a `MovieParams { char name[0x40]; int value; }`; the fourth argument initializes `params.value` and `&params` is the constructor's descriptor argument, which reproduces the shipped temp slot and the `[ebp+0x10]` cleanup funclet. Needs `??0MovieWindow@@QAE@HHHHPAXPADH0@Z=0x52ae20`. |
+| 0x49f640 | `UI_RecordList_SetVisibleRange` | /O2 /TP | `?UI_RecordList_SetVisibleRange@@YAXPAUUI@@HH@Z` | The 6-byte `Slot` passed to `ReadSlot98`/`SetSlot6_98` is `{ short value; short last; short reserved; }`: the shipped code only writes offsets 0 and 2, so the visible range ends at +2, not +4. The out-parameter must be a separate local (`int outId;`) so `id` stays a plain value parameter and is cached in ESI across the first call. |
 
 ## Non-matching evidence
 
@@ -40,7 +41,6 @@ the manifest length, the exact entry, `/O2 /TP`, `--strict --auto-symbols`.
 | address | function | first diff | differing bytes | diagnosis |
 | --- | --- | --- | --- | --- |
 | 0x47cb70 | `Game::GetAverageCompanyValueByByte8` | 0x60: original 0x44 (`mov eax,[esp+0x18]`) vs candidate 0x4c (`mov ecx,[esp+0x18]`) | 2 | Everything through the loop body is byte-identical, including the double/float accumulation order (`fld qword [eax+0x70]; fadd dword [esp+0x10]`) and the count/sum slot reuse. Only the scratch register used to reload the spilled `this` for the loop bound differs (EAX vs ECX). Fifteen source variants (do/while, for, while, unsigned `i`, `this->`, `Game&`, `Game*` aliases, declaration/initializer permutations) all produce the same ECX choice. |
-| 0x49f640 | `UI_RecordList_SetVisibleRange` | 0x00: original 0x83 (`sub esp,8`) vs candidate 0x8b (`mov eax,[esp+8]` hoisted) | 114 | The shipped prologue caches the second argument in ESI across `UI_ClearButtonRecordAnimation` (`mov esi,[esp+0x18]; push esi` ... `push esi`). This build keeps it in EAX and reloads it after the call; consequently `ui` lands in EDI instead of EBX and the whole body shifts. With a non-address-taken copy (`int buttonId = id`) the copy takes ESI and `ui` still lands in EDI. The rest of the sequence (slot struct, if/else layout, `&param_2` out-argument) is identical. |
 | 0x535c10 | `Font::WrapText` | 0x03: original 0x89 (`mov [esp],ecx`) vs candidate 0x53 (`push ebx`) | 133 | The shipped body keeps `text` in ECX / reloads it from the argument slot after each `GetCharWidth` and defers the EBX/EBP pushes until after the newline loop. This build caches `text` in EBP and shrink-wraps the pushes to the function entry, which shifts the entire body (the local allocation i=EBX, width=ESI, lastSpace=EDI is otherwise identical). Variants with a char temp, helper inlining, `volatile` text and reordered declarations did not change the `text`-in-EBP choice and the char-temp form additionally spills the char. |
 
 ## Compiler-pattern findings
@@ -72,6 +72,11 @@ the manifest length, the exact entry, `/O2 /TP`, `--strict --auto-symbols`.
   makes MSVC read the IAT slot directly; when the function is called twice the
   compiler hoists the slot load into EDI (`mov edi,ds:IAT`), matching the
   shipped `GetFileAttributes` probe.
+* **Slots are 6 bytes but the visible range is 2 shorts.** `RecordList`
+  slots copy 6 bytes, but the record/variant writes in the shipped
+  `UI_RecordList_SetVisibleRange` touch only +0 and +2. Declaring the middle
+  `short first` field moved the range end to +4 and left a 2-byte residue; the
+  matched layout is `{ short value; short last; short reserved; }`.
 * **Signed power-of-two test.** The shipped second probe is
   `and eax,0x8000000f; jns; dec; or 0xfffffff0; inc; jne`, which is VC6's
   signed `% 16` sequence, not an `and 0x10` test.
@@ -82,7 +87,8 @@ the manifest length, the exact entry, `/O2 /TP`, `--strict --auto-symbols`.
 | --- | --- |
 | `99cf69ff` | three strict matches (0x5086e0, 0x522f40, 0x404460) |
 | `06720d67` | three strict C++ EH matches (0x4a1940, 0x513c90, 0x5317b0) plus the EH findings |
-| (next) | near-miss evidence for 0x47cb70, 0x49f640, 0x535c10 and the final worklog |
+| `bf760570` | near-miss evidence for 0x47cb70, 0x49f640, 0x535c10 (0x49f640 was later promoted) |
+| (next) | promote 0x49f640 to strict and record the final 7/9 result |
 
 ## Reproduction
 

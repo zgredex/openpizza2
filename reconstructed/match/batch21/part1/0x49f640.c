@@ -1,15 +1,16 @@
-/* UI_RecordList_SetVisibleRange (0x49f640) - closest genuine C/C++ attempt.
-   Difference: the shipped body caches the second argument in ESI across the
-   first call (mov esi,[esp+0x18]); this build keeps it in EAX / reloads it.
-   Everything after the two-argument prologue has the same shape. */
+/* UI_RecordList_SetVisibleRange (0x49f640).
+   The 6-byte slot copies through ReadSlot98/SetSlot6_98, but only its first
+   two shorts are range fields; the third short is untouched. The button id
+   passed to GetButtonContext is a separate local so that `id` stays a plain
+   value parameter and is cached in ESI across the first call. */
 struct Sound;
 
 extern "C" struct Sound *g_SoundManager;
 
 struct Slot {
     short value;
-    short first;
     short last;
+    short reserved;
 };
 
 struct Record {
@@ -37,11 +38,12 @@ void __cdecl UI_RecordList_SetVisibleRange(UI *ui, int id, int visible)
     Slot slot;
     RecordList *list;
 
+    int outId;
     ui->ClearButtonRecordAnimation(id);
-    list = (RecordList *)ui->GetButtonContext(id, &id);
+    list = (RecordList *)ui->GetButtonContext(id, &outId);
     if (list != 0) {
         list->ReadSlot98(1, 0, &slot);
-        int value = ((Record *)list)->GetValue48(id);
+        int value = ((Record *)list)->GetValue48(outId);
         int count = list->GetCount();
         slot.value = (short)value;
         if (visible != 0) {
