@@ -41,6 +41,31 @@ def load_features(path):
     return families
 
 
+def load_ui_scan(path):
+    payload = json.loads(path.read_text())
+    if payload.get("schema") != "pc2.ui_builder_batch.v1":
+        raise ValueError("expected a pc2.ui_builder_batch.v1 report")
+    root = path.parent
+    ready = {}
+    for row in payload.get("functions", []):
+        if row.get("status") != "ready":
+            continue
+        address = int(row["address"], 0)
+        source = row.get("source")
+        if source and (root / source).is_file():
+            resolved = (root / source).resolve()
+            try:
+                source = str(resolved.relative_to(ROOT))
+            except ValueError:
+                source = str(resolved)
+        ready[address] = {
+            "entry": row.get("entry"),
+            "length": row.get("length"),
+            "source": source,
+        }
+    return ready
+
+
 def scan_sources():
     sources = defaultdict(list)
     for path in (ROOT / "reconstructed" / "match").rglob("0x*.c*"):
@@ -88,7 +113,7 @@ def scan_metadata(audit):
     return records
 
 
-def build(inventory, sources, metadata, features=None):
+def build(inventory, sources, metadata, features=None, ui_ready=None):
     lengths = function_lengths()
     families = []
     all_families = list(inventory["families"]) + (features or [])
@@ -96,19 +121,28 @@ def build(inventory, sources, metadata, features=None):
         members = []
         strict_functions = strict_bytes = 0
         candidate_functions = candidate_bytes = 0
+        generated_functions = generated_bytes = 0
         missing_functions = missing_bytes = 0
         for member in family["members"]:
             address = int(member["address"], 0)
+            generated = (ui_ready or {}).get(address)
             source = (sources.get(address) or [None])[0]
+            if generated and generated.get("source"):
+                source = generated["source"]
             meta = metadata.get(address, {})
-            entry = meta.get("entry")
-            flags = meta.get("flags")
+            entry = generated.get("entry") if generated else meta.get("entry")
+            flags = ["/O2", "/TP"] if generated else meta.get("flags")
             length = member.get("length") or lengths.get(address, 0)
             strict = bool(meta.get("strict"))
-            status = "strict" if strict else "candidate" if source and entry and flags else "source_only" if source else "missing"
+            status = ("strict" if strict else "generated" if generated else
+                      "candidate" if source and entry and flags else
+                      "source_only" if source else "missing")
             if status == "strict":
                 strict_functions += 1
                 strict_bytes += length
+            elif status == "generated":
+                generated_functions += 1
+                generated_bytes += length
             elif status == "candidate":
                 candidate_functions += 1
                 candidate_bytes += length
@@ -135,11 +169,13 @@ def build(inventory, sources, metadata, features=None):
             "strict_bytes": strict_bytes,
             "candidate_functions": candidate_functions,
             "candidate_bytes": candidate_bytes,
+            "generated_functions": generated_functions,
+            "generated_bytes": generated_bytes,
             "missing_functions": missing_functions,
             "missing_bytes": missing_bytes,
             "members": members,
         })
-    families.sort(key=lambda row: (-(row["strict_bytes"] + row["candidate_bytes"]), -row["indexed_bytes"], row["cleanup_target"]))
+    families.sort(key=lambda row: (-(row["strict_bytes"] + row["generated_bytes"] + row["candidate_bytes"]), -row["indexed_bytes"], row["cleanup_target"]))
     return {
         "schema": "pc2.family_registry.v1",
         "executable_sha256": file_sha256(GAME),
@@ -153,6 +189,8 @@ def write_specs(registry, directory):
     for family in registry["families"]:
         recipes = []
         for member in family["members"]:
+            if member["status"] == "generated":
+                continue
             if not (member["source"] and member["entry"] and member["flags"]):
                 continue
             recipe = {
@@ -181,6 +219,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--inventory", required=True, type=Path)
     parser.add_argument("--features", type=Path, help="optional pc2.feature_families.v1 inventory")
+    parser.add_argument("--ui-scan", type=Path, help="optional pc2.ui_builder_batch.v1 report")
     parser.add_argument("--audit", type=Path, help="directory containing functions/*.json")
     parser.add_argument("--out", required=True, type=Path)
     parser.add_argument("--report", type=Path)
@@ -189,7 +228,8 @@ def main():
     try:
         inventory = load_inventory(args.inventory)
         features = load_features(args.features) if args.features else []
-        registry = build(inventory, scan_sources(), scan_metadata(args.audit), features)
+        ui_ready = load_ui_scan(args.ui_scan) if args.ui_scan else {}
+        registry = build(inventory, scan_sources(), scan_metadata(args.audit), features, ui_ready)
         args.out.parent.mkdir(parents=True, exist_ok=True)
         args.out.write_text(json.dumps(registry, indent=2) + "\n")
         if args.specs_out:
@@ -200,14 +240,15 @@ def main():
             lines = [
                 "# Cleanup family registry",
                 "",
-                "| cleanup | name | functions | bytes | strict | candidate | missing |",
-                "|---|---|---:|---:|---:|---:|---:|",
+                "| cleanup | name | functions | bytes | strict | generated | candidate | missing |",
+                "|---|---|---:|---:|---:|---:|---:|---:|",
             ]
             for family in registry["families"]:
                 lines.append(
                     f"| {family['cleanup_target']} | {family['cleanup_name'] or ''} | "
                     f"{family['functions']} | {family['indexed_bytes']:,} | "
                     f"{family['strict_functions']}/{family['strict_bytes']:,} | "
+                    f"{family['generated_functions']}/{family['generated_bytes']:,} | "
                     f"{family['candidate_functions']}/{family['candidate_bytes']:,} | "
                     f"{family['missing_functions']}/{family['missing_bytes']:,} |")
             args.report.write_text("\n".join(lines) + "\n")
@@ -215,7 +256,7 @@ def main():
         for family in registry["families"][:12]:
             print(f"  {family['cleanup_target']} {family['cleanup_name'] or '':24s} "
                   f"{family['functions']:3d} fns {family['indexed_bytes']:7,d} B  "
-                  f"strict {family['strict_functions']:3d}  candidate {family['candidate_functions']:3d}")
+                  f"strict {family['strict_functions']:3d}  generated {family['generated_functions']:3d}  candidate {family['candidate_functions']:3d}")
     except (OSError, ValueError, KeyError) as error:
         parser.exit(1, f"family registry: {error}\n")
 

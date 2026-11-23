@@ -261,10 +261,11 @@ list pilot        6/7 strict     466/632 bytes     1 near miss (1 byte)
 small guard       1/5 strict     223/1,072 bytes   EH sections exact
 ```
 
-The largest unmeasured opportunity is the UI call-target group
-(`0x523bb0`, 79 functions / 259,523 bytes and `0x531c60`, 26 functions /
-138,825 bytes), which is already covered by the existing UI builder
-generator rather than the tracked-source join.
+The UI call-target groups are already covered by the existing UI builder
+generator: `0x523bb0` is 78/79 generated (258,418 bytes), `0x531c60` is 26/26
+(138,825 bytes), and `0x523c90` is 6/7 (26,925 bytes). Across the five UI
+families the generator covers **434,769 bytes**. Only `Screen_MissionGoals`,
+`Screen_MissionBriefing`, and `OfficeView_CreateWindow` remain unsupported.
 
 ### List family pilot
 
