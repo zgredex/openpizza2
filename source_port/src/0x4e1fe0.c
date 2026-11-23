@@ -1,0 +1,34 @@
+// AI_FindTargetWithMinA8: ported from Pizza Connection 2 at 0x4e1fe0.
+// Readable source-port phase; this is not a byte-verified match.
+// original: 0x4e1fe0
+#include "pc2_port.h"
+
+int * __thiscall AI_FindTargetWithMinA8(void *self,int arg1)
+
+{
+  int *ptr1;
+  int value2;
+  int value3;
+  int value4;
+  int *local_8;
+  
+  value4 = 0;
+  local_8 = (int *)0x0;
+  value3 = 0x65;
+  ptr1 = (int *)0x0;
+  if (0 < *(int *)((intptr_t)self + 0x1cc)) {
+    do {
+      ptr1 = (int *)IDMap_Lookup((void *)((intptr_t)self + 0x1b8),value4,(int *)0x0);
+      value2 = IDMap_Lookup((void *)(DAT_0057c670 + 0x3c),*ptr1,(int *)0x0);
+      if ((((ptr1[1] == arg1) && (*(int *)(value2 + 0xa4) == -1)) &&
+          (*(int *)(value2 + 0xfc) != 0)) &&
+         ((*(char *)(value2 + 0x104) != '\0' && (*(int *)(value2 + 0xa8) < value3)))) {
+        value3 = *(int *)(value2 + 0xa8);
+        local_8 = ptr1;
+      }
+      value4 = value4 + 1;
+    } while (value4 < *(int *)((intptr_t)self + 0x1cc));
+    ptr1 = local_8;
+  }
+  return ptr1;
+}

@@ -1,0 +1,28 @@
+// Game_CountFreeBuildingsByType: ported from Pizza Connection 2 at 0x4d2ae0.
+// Readable source-port phase; this is not a byte-verified match.
+// original: 0x4d2ae0
+#include "pc2_port.h"
+
+int __thiscall Game_CountFreeBuildingsByType(void *self,int arg1)
+
+{
+  int value1;
+  int value2;
+  int value3;
+  int value4;
+  
+  value3 = 0;
+  value4 = 0;
+  if (*(int *)((intptr_t)self + 0x8c) < 1) {
+    return 0;
+  }
+  do {
+    value1 = Game_MapRecordToGlobal(self,value4);
+    value2 = State_Is2DOr2E(value1);
+    if (((value2 == 0) && (value1 != 0)) && (*(int *)(value1 + 0x30) == arg1)) {
+      value3 = value3 + 1;
+    }
+    value4 = value4 + 1;
+  } while (value4 < *(int *)((intptr_t)self + 0x8c));
+  return value3;
+}

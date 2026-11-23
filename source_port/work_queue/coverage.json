@@ -1,0 +1,12 @@
+{
+  "schema": "pc2.readable_port_coverage.v1",
+  "executable_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd",
+  "exported": 3919,
+  "compiled_recovered": 3826,
+  "explicitly_unsupported": 93,
+  "queued": 0,
+  "batch_size": 500,
+  "build": "source_port/build.sh",
+  "pe": "source_port/build/pc2_port.exe",
+  "note": "Compiled sources are structurally integrated, not behaviorally verified. Unsupported files are marked PORT_STATUS: STUB and are not counted as recovered."
+}

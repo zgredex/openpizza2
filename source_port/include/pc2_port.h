@@ -33,13 +33,16 @@ typedef unsigned char uchar;
 typedef unsigned char byte;
 typedef signed char sbyte;
 typedef double float10;
-typedef void code;
+typedef intptr_t (*code)();
+typedef uint32_t int3;
+typedef uint32_t uint3;
 
 /*
  * Recovered shared engine shapes. The bulk-port batch uses raw offsets from
  * the pseudocode; these declarations are the common vocabulary for the
  * hand-written, well-understood subsystems that follow.
  */
+#ifdef __cplusplus
 struct IDMap {
     void *Lookup(int index, int *out);
 };
@@ -47,6 +50,11 @@ struct IDMap {
 struct Game {
     void *GetPlayerBySlot(int slot);
 };
+#else
+typedef int bool;
+#define true 1
+#define false 0
+#endif
 
 #ifdef __cplusplus
 #define PC2_EXTERN_C extern "C"
@@ -63,6 +71,56 @@ typedef unsigned short WORD;
 typedef unsigned char BYTE;
 typedef int BOOL;
 typedef void *LPVOID;
+typedef void *PVOID;
+typedef struct _EXCEPTION_RECORD {
+    uint32_t ExceptionCode;
+    uint32_t ExceptionFlags;
+    struct _EXCEPTION_RECORD *ExceptionRecord;
+    void *ExceptionAddress;
+    uint32_t NumberParameters;
+    uintptr_t ExceptionInformation[15];
+} EXCEPTION_RECORD, *PEXCEPTION_RECORD;
+typedef void *LPOPENFILENAMEA;
+typedef void *LPSECURITY_ATTRIBUTES;
+typedef char CHAR;
+typedef unsigned short WCHAR;
+typedef unsigned char *LPBYTE;
+typedef void *HCURSOR;
+typedef void *HBRUSH;
+typedef void *HPEN;
+typedef void *HFONT;
+typedef void *HMONITOR;
+typedef void *HGDIOBJ;
+typedef unsigned int *LPDWORD;
+typedef unsigned short *LPWORD;
+typedef uintptr_t SIZE_T;
+typedef uintptr_t ULONG_PTR;
+typedef uintptr_t DWORD_PTR;
+typedef intptr_t INT_PTR;
+typedef short SHORT;
+typedef unsigned short USHORT;
+typedef unsigned short ATOM;
+typedef unsigned short LANGID;
+typedef intptr_t (*FARPROC)();
+typedef intptr_t LPARAM;
+typedef uint32_t WPARAM;
+typedef intptr_t LRESULT;
+typedef struct _FILE {
+    unsigned char *_ptr;
+    int _cnt;
+    unsigned char *_base;
+    int _flag;
+    int _file;
+    int _charbuf;
+    int _bufsiz;
+    unsigned char *_tmpfname;
+} FILE;
+typedef struct tagRECT tagRECT;
+typedef union _LARGE_INTEGER {
+    struct { uint32_t LowPart; int32_t HighPart; };
+    struct { uint32_t LowPart; int32_t HighPart; } s;
+    int64_t QuadPart;
+} LARGE_INTEGER;
 typedef const char *LPCSTR;
 typedef char *LPSTR;
 typedef const unsigned short *LPCWSTR;
@@ -94,37 +152,55 @@ typedef struct POINT {
     LONG y;
 } POINT, *LPPOINT;
 
+static inline intptr_t pc2_bits(double value)
+{
+    union { double d; intptr_t i[2]; } u;
+    u.d = value;
+    return u.i[0];
+}
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-void __stdcall EnterCriticalSection(void *section);
-void __stdcall LeaveCriticalSection(void *section);
-void __stdcall DeleteCriticalSection(void *section);
-void __stdcall InitializeCriticalSection(void *section);
-DWORD __stdcall GetCurrentThreadId(void);
-DWORD __stdcall GetTickCount(void);
-void __stdcall Sleep(DWORD milliseconds);
-int CRT_Atexit(intptr_t function);
-void *CRT_GetThreadData(void *module, int slot);
-long __ftol(void);
-void Mem_Free(void *block);
-void *IDMap_Lookup(void *map, int index, int *out);
-LONG RegCloseKey(HKEY key);
-void Window_GadgetNotify_Text_SetText(void *window, int id, const char *text);
-void Window_GadgetNotify(...);
-void Game_CountFreeBuildingsByType(void *game, int type);
-void CRT_Ostream_Write(...);
-void CRT_Istream_Read(...);
-void CRT_DoExit(...);
-int SetRect(LPRECT rect, int left, int top, int right, int bottom);
-int ShowWindow(void *window, int command);
-int MoveWindow(void *window, int x, int y, int width, int height, int repaint);
-int GetWindowRect(void *window, LPRECT rect);
-void *Map_LookupLinear(...);
-extern void *PTR_GamePlan_Delete_0055c688;
-extern void *PTR_SpriteBase_Delete_0055c828;
+void __stdcall EnterCriticalSection();
+void __stdcall LeaveCriticalSection();
+void __stdcall DeleteCriticalSection();
+void __stdcall InitializeCriticalSection();
+DWORD __stdcall GetCurrentThreadId();
+DWORD __stdcall GetTickCount();
+void __stdcall Sleep();
+int CRT_Atexit();
+void *CRT_GetThreadData();
+LONG RegCloseKey();
+void CRT_Ostream_Write();
+void CRT_Istream_Read();
+void CRT_DoExit();
+int SetRect();
+int ShowWindow();
+int MoveWindow();
+int GetWindowRect();
 #ifdef __cplusplus
 }
 #endif
+
+
+extern void *ExceptionList;
+
+/* Ghidra helper macros, compile-only approximations. */
+#define CONCAT11(a,b) ((uint16_t)(((uint16_t)(uint8_t)(a) << 8) | (uint8_t)(b)))
+#define CONCAT12(a,b) ((uint32_t)(((uint32_t)(uint8_t)(a) << 16) | (uint16_t)(b)))
+#define CONCAT13(a,b) ((uint32_t)(((uint32_t)(uint8_t)(a) << 24) | ((uint32_t)(b) & 0xffffff)))
+#define CONCAT14(a,b) ((uint64_t)(((uint64_t)(uint8_t)(a) << 32) | (uint32_t)(b)))
+#define CONCAT21(a,b) ((uint32_t)(((uint32_t)(uint16_t)(a) << 8) | (uint8_t)(b)))
+#define CONCAT22(a,b) ((uint32_t)(((uint32_t)(uint16_t)(a) << 16) | (uint16_t)(b)))
+#define CONCAT24(a,b) ((uint64_t)(((uint64_t)(uint16_t)(a) << 32) | (uint32_t)(b)))
+#define CONCAT31(a,b) ((uint32_t)(((uint32_t)(a) << 8) | (uint8_t)(b)))
+#define CONCAT44(a,b) ((uint64_t)(((uint64_t)(a) << 32) | (uint32_t)(b)))
+#define SUB41(a,b) ((uint8_t)((uint32_t)(a) - (uint32_t)(b)))
+#define SUB42(a,b) ((uint16_t)((uint32_t)(a) - (uint32_t)(b)))
+#define SUB44(a,b) ((uint32_t)((uint32_t)(a) - (uint32_t)(b)))
+#define SUB84(a,b) ((uint64_t)((uint64_t)(a) - (uint32_t)(b)))
+
+#include "pc2_generated_symbols.h"
 
 #endif /* PC2_PORT_H */

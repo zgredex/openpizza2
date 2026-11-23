@@ -1,0 +1,348 @@
+// SubMenu_BuildMenuOverview: ported from Pizza Connection 2 at 0x417590.
+// Readable source-port phase; this is not a byte-verified match.
+// original: 0x417590
+#include "pc2_port.h"
+
+
+void * __cdecl SubMenu_BuildMenuOverview(int *arg1)
+
+{
+  int value1;
+  void *self;
+  uint32_t local_10;
+  uint32_t local_c;
+  uint32_t local_8;
+  uint32_t local_4;
+  
+                    /* Builds the restaurant menu overview page. */
+  value1 = UI_CreateWindow(DAT_0057c5e0,0x231,0xda,s_SUBMENUE_spr_0056402c,&LAB_00496be0);
+  *arg1 = value1;
+  self = (void *)UI_FindWindowByID(DAT_0057c5e0,value1,(int *)0x0);
+  if (self == (void *)0x0) {
+    return (void *)0x0;
+  }
+  UI_AddSprite(self,0x461,99,0x13b,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(self,0x462,99,0x13b,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(self,0x463,99,0x13b,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(self,0x464,99,0x13b,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(self,0x465,99,0x13b,s_BEWERTUNG__04_spr_00563fc8);
+  UI_AddSprite(self,0x466,99,0x13b,s_BEWERTUNG__05_spr_00563fb4);
+  UI_AddSprite(self,0x467,99,0x13b,s_BEWERTUNG__06_spr_00563fa0);
+  UI_AddSprite(self,0x468,99,0x13b,s_BEWERTUNG__07_spr_00563f8c);
+  UI_AddSprite(self,0x469,99,0x13b,s_BEWERTUNG__08_spr_00563f78);
+  UI_AddSprite(self,0x46a,99,0x13b,s_BEWERTUNG__09_spr_00563f64);
+  UI_AddSprite(self,0x46b,99,0x13b,s_BEWERTUNG__10_spr_00563f50);
+  UI_AddSprite(self,0x46c,99,0x13b,s_BEWERTUNG__11_spr_00563f3c);
+  UI_AddSprite(self,0x46d,99,0x13b,s_BEWERTUNG__12_spr_00563f28);
+  UI_AddSprite(self,0x46e,99,0x13b,s_BEWERTUNG__13_spr_00563f14);
+  UI_AddSprite(self,0x46f,99,0x13b,s_BEWERTUNG__14_spr_00563f00);
+  UI_AddSprite(self,0x470,99,0x13b,s_BEWERTUNG__15_spr_00563eec);
+  UI_AddSprite(self,0x471,99,0x13b,s_BEWERTUNG__16_spr_00563ed8);
+  UI_AddSprite(self,0x472,0x95,0x13b,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(self,0x473,0x95,0x13b,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(self,0x474,0x95,0x13b,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(self,0x475,0x95,0x13b,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(self,0x476,0x95,0x13b,s_BEWERTUNG__04_spr_00563fc8);
+  UI_AddSprite(self,0x477,0x95,0x13b,s_BEWERTUNG__05_spr_00563fb4);
+  UI_AddSprite(self,0x478,0x95,0x13b,s_BEWERTUNG__06_spr_00563fa0);
+  UI_AddSprite(self,0x479,0x95,0x13b,s_BEWERTUNG__07_spr_00563f8c);
+  UI_AddSprite(self,0x47a,0x95,0x13b,s_BEWERTUNG__08_spr_00563f78);
+  UI_AddSprite(self,0x47b,0x95,0x13b,s_BEWERTUNG__09_spr_00563f64);
+  UI_AddSprite(self,0x47c,0x95,0x13b,s_BEWERTUNG__10_spr_00563f50);
+  UI_AddSprite(self,0x47d,0x95,0x13b,s_BEWERTUNG__11_spr_00563f3c);
+  UI_AddSprite(self,0x47e,0x95,0x13b,s_BEWERTUNG__12_spr_00563f28);
+  UI_AddSprite(self,0x47f,0x95,0x13b,s_BEWERTUNG__13_spr_00563f14);
+  UI_AddSprite(self,0x480,0x95,0x13b,s_BEWERTUNG__14_spr_00563f00);
+  UI_AddSprite(self,0x481,0x95,0x13b,s_BEWERTUNG__15_spr_00563eec);
+  UI_AddSprite(self,0x482,0x95,0x13b,s_BEWERTUNG__16_spr_00563ed8);
+  UI_AddSprite(self,0x483,199,0x13b,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(self,0x484,199,0x13b,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(self,0x485,199,0x13b,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(self,0x486,199,0x13b,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(self,0x487,199,0x13b,s_BEWERTUNG__04_spr_00563fc8);
+  UI_AddSprite(self,0x488,199,0x13b,s_BEWERTUNG__05_spr_00563fb4);
+  UI_AddSprite(self,0x489,199,0x13b,s_BEWERTUNG__06_spr_00563fa0);
+  UI_AddSprite(self,0x48a,199,0x13b,s_BEWERTUNG__07_spr_00563f8c);
+  UI_AddSprite(self,0x48b,199,0x13b,s_BEWERTUNG__08_spr_00563f78);
+  UI_AddSprite(self,0x48c,199,0x13b,s_BEWERTUNG__09_spr_00563f64);
+  UI_AddSprite(self,0x48d,199,0x13b,s_BEWERTUNG__10_spr_00563f50);
+  UI_AddSprite(self,0x48e,199,0x13b,s_BEWERTUNG__11_spr_00563f3c);
+  UI_AddSprite(self,0x48f,199,0x13b,s_BEWERTUNG__12_spr_00563f28);
+  UI_AddSprite(self,0x490,199,0x13b,s_BEWERTUNG__13_spr_00563f14);
+  UI_AddSprite(self,0x491,199,0x13b,s_BEWERTUNG__14_spr_00563f00);
+  UI_AddSprite(self,0x492,199,0x13b,s_BEWERTUNG__15_spr_00563eec);
+  UI_AddSprite(self,0x493,199,0x13b,s_BEWERTUNG__16_spr_00563ed8);
+  UI_AddSprite(self,0x494,0x31,0x15e,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(self,0x495,0x31,0x15e,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(self,0x496,0x31,0x15e,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(self,0x497,0x31,0x15e,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(self,0x498,0x31,0x15e,s_BEWERTUNG__04_spr_00563fc8);
+  UI_AddSprite(self,0x499,0x31,0x15e,s_BEWERTUNG__05_spr_00563fb4);
+  UI_AddSprite(self,0x49a,0x31,0x15e,s_BEWERTUNG__06_spr_00563fa0);
+  UI_AddSprite(self,0x49b,0x31,0x15e,s_BEWERTUNG__07_spr_00563f8c);
+  UI_AddSprite(self,0x49c,0x31,0x15e,s_BEWERTUNG__08_spr_00563f78);
+  UI_AddSprite(self,0x49d,0x31,0x15e,s_BEWERTUNG__09_spr_00563f64);
+  UI_AddSprite(self,0x49e,0x31,0x15e,s_BEWERTUNG__10_spr_00563f50);
+  UI_AddSprite(self,0x49f,0x31,0x15e,s_BEWERTUNG__11_spr_00563f3c);
+  UI_AddSprite(self,0x4a0,0x31,0x15e,s_BEWERTUNG__12_spr_00563f28);
+  UI_AddSprite(self,0x4a1,0x31,0x15e,s_BEWERTUNG__13_spr_00563f14);
+  UI_AddSprite(self,0x4a2,0x31,0x15e,s_BEWERTUNG__14_spr_00563f00);
+  UI_AddSprite(self,0x4a3,0x31,0x15e,s_BEWERTUNG__15_spr_00563eec);
+  UI_AddSprite(self,0x4a4,0x31,0x15e,s_BEWERTUNG__16_spr_00563ed8);
+  UI_AddSprite(self,0x4a5,99,0x15e,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(self,0x4a6,99,0x15e,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(self,0x4a7,99,0x15e,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(self,0x4a8,99,0x15e,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(self,0x4a9,99,0x15e,s_BEWERTUNG__04_spr_00563fc8);
+  UI_AddSprite(self,0x4aa,99,0x15e,s_BEWERTUNG__05_spr_00563fb4);
+  UI_AddSprite(self,0x4ab,99,0x15e,s_BEWERTUNG__06_spr_00563fa0);
+  UI_AddSprite(self,0x4ac,99,0x15e,s_BEWERTUNG__07_spr_00563f8c);
+  UI_AddSprite(self,0x4ad,99,0x15e,s_BEWERTUNG__08_spr_00563f78);
+  UI_AddSprite(self,0x4ae,99,0x15e,s_BEWERTUNG__09_spr_00563f64);
+  UI_AddSprite(self,0x4af,99,0x15e,s_BEWERTUNG__10_spr_00563f50);
+  UI_AddSprite(self,0x4b0,99,0x15e,s_BEWERTUNG__11_spr_00563f3c);
+  UI_AddSprite(self,0x4b1,99,0x15e,s_BEWERTUNG__12_spr_00563f28);
+  UI_AddSprite(self,0x4b2,99,0x15e,s_BEWERTUNG__13_spr_00563f14);
+  UI_AddSprite(self,0x4b3,99,0x15e,s_BEWERTUNG__14_spr_00563f00);
+  UI_AddSprite(self,0x4b4,99,0x15e,s_BEWERTUNG__15_spr_00563eec);
+  UI_AddSprite(self,0x4b5,99,0x15e,s_BEWERTUNG__16_spr_00563ed8);
+  UI_AddSprite(self,0x4b6,0x95,0x15e,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(self,0x4b7,0x95,0x15e,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(self,0x4b8,0x95,0x15e,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(self,0x4b9,0x95,0x15e,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(self,0x4ba,0x95,0x15e,s_BEWERTUNG__04_spr_00563fc8);
+  UI_AddSprite(self,0x4bb,0x95,0x15e,s_BEWERTUNG__05_spr_00563fb4);
+  UI_AddSprite(self,0x4bc,0x95,0x15e,s_BEWERTUNG__06_spr_00563fa0);
+  UI_AddSprite(self,0x4bd,0x95,0x15e,s_BEWERTUNG__07_spr_00563f8c);
+  UI_AddSprite(self,0x4be,0x95,0x15e,s_BEWERTUNG__08_spr_00563f78);
+  UI_AddSprite(self,0x4bf,0x95,0x15e,s_BEWERTUNG__09_spr_00563f64);
+  UI_AddSprite(self,0x4c0,0x95,0x15e,s_BEWERTUNG__10_spr_00563f50);
+  UI_AddSprite(self,0x4c1,0x95,0x15e,s_BEWERTUNG__11_spr_00563f3c);
+  UI_AddSprite(self,0x4c2,0x95,0x15e,s_BEWERTUNG__12_spr_00563f28);
+  UI_AddSprite(self,0x4c3,0x95,0x15e,s_BEWERTUNG__13_spr_00563f14);
+  UI_AddSprite(self,0x4c4,0x95,0x15e,s_BEWERTUNG__14_spr_00563f00);
+  UI_AddSprite(self,0x4c5,0x95,0x15e,s_BEWERTUNG__15_spr_00563eec);
+  UI_AddSprite(self,0x4c6,0x95,0x15e,s_BEWERTUNG__16_spr_00563ed8);
+  UI_AddSprite(self,0x4c7,199,0x15e,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(self,0x4c8,199,0x15e,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(self,0x4c9,199,0x15e,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(self,0x4ca,199,0x15e,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(self,0x4cb,199,0x15e,s_BEWERTUNG__04_spr_00563fc8);
+  UI_AddSprite(self,0x4cc,199,0x15e,s_BEWERTUNG__05_spr_00563fb4);
+  UI_AddSprite(self,0x4cd,199,0x15e,s_BEWERTUNG__06_spr_00563fa0);
+  UI_AddSprite(self,0x4ce,199,0x15e,s_BEWERTUNG__07_spr_00563f8c);
+  UI_AddSprite(self,0x4cf,199,0x15e,s_BEWERTUNG__08_spr_00563f78);
+  UI_AddSprite(self,0x4d0,199,0x15e,s_BEWERTUNG__09_spr_00563f64);
+  UI_AddSprite(self,0x4d1,199,0x15e,s_BEWERTUNG__10_spr_00563f50);
+  UI_AddSprite(self,0x4d2,199,0x15e,s_BEWERTUNG__11_spr_00563f3c);
+  UI_AddSprite(self,0x4d3,199,0x15e,s_BEWERTUNG__12_spr_00563f28);
+  UI_AddSprite(self,0x4d4,199,0x15e,s_BEWERTUNG__13_spr_00563f14);
+  UI_AddSprite(self,0x4d5,199,0x15e,s_BEWERTUNG__14_spr_00563f00);
+  UI_AddSprite(self,0x4d6,199,0x15e,s_BEWERTUNG__15_spr_00563eec);
+  UI_AddSprite(self,0x4d7,199,0x15e,s_BEWERTUNG__16_spr_00563ed8);
+  UI_AddSprite(self,0x4d8,0x31,0x13b,s_BEWERTUNG__00_spr_00564018);
+  UI_AddSprite(self,0x4d9,0x31,0x13b,s_BEWERTUNG__01_spr_00564004);
+  UI_AddSprite(self,0x4da,0x31,0x13b,s_BEWERTUNG__02_spr_00563ff0);
+  UI_AddSprite(self,0x4db,0x31,0x13b,s_BEWERTUNG__03_spr_00563fdc);
+  UI_AddSprite(self,0x4dc,0x31,0x13b,s_BEWERTUNG__04_spr_00563fc8);
+  UI_AddSprite(self,0x4dd,0x31,0x13b,s_BEWERTUNG__05_spr_00563fb4);
+  UI_AddSprite(self,0x4de,0x31,0x13b,s_BEWERTUNG__06_spr_00563fa0);
+  UI_AddSprite(self,0x4df,0x31,0x13b,s_BEWERTUNG__07_spr_00563f8c);
+  UI_AddSprite(self,0x4e0,0x31,0x13b,s_BEWERTUNG__08_spr_00563f78);
+  UI_AddSprite(self,0x4e1,0x31,0x13b,s_BEWERTUNG__09_spr_00563f64);
+  UI_AddSprite(self,0x4e2,0x31,0x13b,s_BEWERTUNG__10_spr_00563f50);
+  UI_AddSprite(self,0x4e3,0x31,0x13b,s_BEWERTUNG__11_spr_00563f3c);
+  UI_AddSprite(self,0x4e4,0x31,0x13b,s_BEWERTUNG__12_spr_00563f28);
+  UI_AddSprite(self,0x4e5,0x31,0x13b,s_BEWERTUNG__13_spr_00563f14);
+  UI_AddSprite(self,0x4e6,0x31,0x13b,s_BEWERTUNG__14_spr_00563f00);
+  UI_AddSprite(self,0x4e7,0x31,0x13b,s_BEWERTUNG__15_spr_00563eec);
+  UI_AddSprite(self,0x4e8,0x31,0x13b,s_BEWERTUNG__16_spr_00563ed8);
+  value1 = UI_AddText(self,0x4e9,0x27,0x130,s_VERDANA7_fnt_00563ec8,DAT_00580bec);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x4e9,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x4e9,2,0x32,0,0);
+  }
+  value1 = UI_AddText(self,0x4ea,0x58,0x130,s_VERDANA7_fnt_00563ec8,DAT_005816d4);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x4ea,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x4ea,2,0x32,0,0);
+  }
+  value1 = UI_AddText(self,0x4eb,0x8a,0x130,s_VERDANA7_fnt_00563ec8,DAT_00582974);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x4eb,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x4eb,2,0x32,0,0);
+  }
+  value1 = UI_AddText(self,0x4ec,0xbc,0x130,s_VERDANA7_fnt_00563ec8,DAT_0058234c);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x4ec,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x4ec,2,0x32,0,0);
+  }
+  value1 = UI_AddText(self,0x4ed,0x27,0x154,s_VERDANA7_fnt_00563ec8,DAT_00580e64);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x4ed,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x4ed,2,0x32,0,0);
+  }
+  value1 = UI_AddText(self,0x4ee,0x58,0x154,s_VERDANA7_fnt_00563ec8,DAT_00582e08);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x4ee,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x4ee,2,0x32,0,0);
+  }
+  value1 = UI_AddText(self,0x4ef,0x89,0x154,s_VERDANA7_fnt_00563ec8,DAT_00582770);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x4ef,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x4ef,2,0x32,0,0);
+  }
+  value1 = UI_AddText(self,0x4f0,0xba,0x154,s_VERDANA7_fnt_00563ec8,DAT_005810a4);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x4f0,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x4f0,2,0x32,0,0);
+  }
+  UI_AddImage(self,0x502,0x32,0x3c,s_TABPB01__00_spr_00564670,1,0);
+  UI_AddImage(self,0x503,0x32,0x51,s_TABPB01__00_spr_00564670,1,0);
+  UI_AddImage(self,0x504,0x32,0x66,s_TABPB01__00_spr_00564670,1,0);
+  UI_AddImage(self,0x505,0x32,0x7b,s_TABPB01__00_spr_00564670,1,0);
+  UI_AddSprite(self,0x408,0x27,0x129,s_TRENNZEILE_spr_00563eb8);
+  UI_AddSprite(self,0x434,0x27,0xf2,s_TRENNZEILE_spr_00563eb8);
+  value1 = UI_CreateSlider(self,0x428,0xde,0x43,0x75,s_SL01_00_spr_0056448c,0,1);
+  if (value1 != 0) {
+    local_10 = 0;
+    local_c = 0;
+    local_8 = 0;
+    local_4 = 0;
+    Window_GadgetNotify_Slider_SetGradientColors(self,0x428,&local_10);
+  }
+  value1 = UI_CreateSlider(self,0x42c,0x46,0x120,0x8c,s_SLHOR01_00_spr_00564660,0,0);
+  if (value1 != 0) {
+    local_10 = 0;
+    local_c = 0;
+    local_8 = 0;
+    local_4 = 0;
+    Window_GadgetNotify_Slider_SetGradientColors(self,0x42c,&local_10);
+  }
+  value1 = UI_AddText(self,0x447,0x2c,5,s_TIMESFONT_fnt_00563ea8,DAT_0058274c);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x447,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x447,2,0xbe,0,0);
+  }
+  value1 = UI_AddText(self,0x448,0x84,0x10a,s_VERDANA8_fnt_00563e98,DAT_00580eac);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x448,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x448,0,100,0xffff,0);
+  }
+  value1 = UI_AddText(self,0x4f1,0x3b,0x10a,s_VERDANA8_fnt_00563e98,s____30__00564658);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x4f1,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x4f1,2,0x3c,0,0);
+  }
+  value1 = UI_AddTextButton(self,0x4f7,0x31,0x24,s_VERDANA7_fnt_00563ec8,
+                           s__Kein_Spezialrezept_00564640,0,s_TEXTPB05__00_spr_00564160);
+  if (value1 != 0) {
+    Gadget_SetButtonColors(self,0x4f7,0,0,0);
+    Gadget_SetButtonTextLayout(self,0x4f7,0,0xa4,0,0,0xfffe);
+  }
+  UI_AddImage(self,0x4f8,0x31,0xbf,s_PB05x__00_spr_00564630,1,0);
+  UI_AddImage(self,0x4f9,0x85,0xbf,s_PB05x__00_spr_00564630,1,0);
+  UI_AddImage(self,0x4fa,0x31,0xd8,s_PB05x__00_spr_00564630,1,0);
+  UI_AddImage(self,0x4fb,0x85,0xd8,s_PB05x__00_spr_00564630,1,0);
+  value1 = UI_AddText(self,0x4fe,0x4a,0xc4,s_VERDANA7_fnt_00563ec8,DAT_00580f24);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x4fe,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x4fe,0,0x3c,0,0);
+  }
+  value1 = UI_AddText(self,0x4ff,0x4a,0xdd,s_VERDANA7_fnt_00563ec8,DAT_00581dc8);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x4ff,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x4ff,0,0x3c,0,0);
+  }
+  value1 = UI_AddText(self,0x500,0x9e,0xc4,s_VERDANA7_fnt_00563ec8,DAT_00581b34);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x500,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x500,0,0x4b,0,0);
+  }
+  value1 = UI_AddText(self,0x501,0x9e,0xdd,s_VERDANA7_fnt_00563ec8,DAT_00581f6c);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x501,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x501,0,0x4b,0,0);
+  }
+  UI_AddImage(self,0x506,0x32,0x90,s_TABPB01__00_spr_00564670,1,0);
+  UI_AddImage(self,0x507,0x32,0xa5,s_TABPB01__00_spr_00564670,1,0);
+  value1 = UI_AddText(self,0x50d,0x35,0xa8,s_VERDANA8_fnt_00563e98,s__Margerita_00564624);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x50d,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x50d,0,0x6e,0,0);
+  }
+  value1 = UI_AddText(self,0x50e,0x35,0x93,s_VERDANA8_fnt_00563e98,s__Margerita_00564624);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x50e,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x50e,0,0x6e,0,0);
+  }
+  value1 = UI_AddText(self,0x50f,0x35,0x7e,s_VERDANA8_fnt_00563e98,s__Margerita_00564624);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x50f,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x50f,0,0x6e,0,0);
+  }
+  value1 = UI_AddText(self,0x510,0x35,0x69,s_VERDANA8_fnt_00563e98,s__Margerita_00564624);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x510,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x510,0,0x6e,0,0);
+  }
+  value1 = UI_AddText(self,0x511,0x35,0x54,s_VERDANA8_fnt_00563e98,s__Margerita_00564624);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x511,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x511,0,0x6e,0,0);
+  }
+  value1 = UI_AddText(self,0x512,0x35,0x3f,s_VERDANA8_fnt_00563e98,s__Margerita_00564624);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x512,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x512,0,0x6e,0,0);
+  }
+  value1 = UI_AddText(self,0x513,0x89,0x93,s_VERDANA8_fnt_00563e98,&DAT_0056461c);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x513,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x513,1,0x46,0,0);
+  }
+  value1 = UI_AddText(self,0x514,0x89,0xa8,s_VERDANA8_fnt_00563e98,&DAT_0056461c);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x514,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x514,1,0x46,0,0);
+  }
+  value1 = UI_AddText(self,0x517,0x89,0x3f,s_VERDANA8_fnt_00563e98,&DAT_0056461c);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x517,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x517,1,0x46,0,0);
+  }
+  value1 = UI_AddText(self,0x518,0x89,0x54,s_VERDANA8_fnt_00563e98,&DAT_0056461c);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x518,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x518,1,0x46,0,0);
+  }
+  value1 = UI_AddText(self,0x519,0x89,0x69,s_VERDANA8_fnt_00563e98,&DAT_0056461c);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x519,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x519,1,0x46,0,0);
+  }
+  value1 = UI_AddText(self,0x51a,0x89,0x7e,s_VERDANA8_fnt_00563e98,&DAT_0056461c);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x51a,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x51a,1,0x46,0,0);
+  }
+  value1 = UI_AddText(self,0x51d,0xa5,0x28,s_VERDANA7_fnt_00563ec8,&DAT_0056461c);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x51d,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x51d,1,0x28,0,0);
+  }
+  UI_AddImage(self,8000,0xb,-1,s_HILFEBUTTONSNIP_00_spr_00563e4c,1,0);
+  value1 = UI_AddText(self,0x1f41,0x84,0xfc,s_VERDANA8_fnt_00563e98,DAT_0058107c);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x1f41,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x1f41,0,100,0xffff,0);
+  }
+  UI_AddImage(self,0x1f42,0x2f,0xf7,s_PB26_00_spr_00564610,0,0);
+  value1 = UI_AddText(self,0x1f43,0x47,0xfc,s_VERDANA8_fnt_00563e98,&DAT_00564608);
+  if (value1 != 0) {
+    Window_GadgetNotify_Text_SetTextColor(self,0x1f43,0);
+    Window_GadgetNotify_Text_SetLayout(self,0x1f43,2,0x23,0,0);
+  }
+  UI_AddImage(self,0x1f44,0x68,0xf7,s_PB27_00_spr_005645fc,0,0);
+  return self;
+}

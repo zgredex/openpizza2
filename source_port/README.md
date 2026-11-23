@@ -9,19 +9,32 @@ syntactically and structurally integrated. It does **not** prove behavioural
 equivalence with the original game. No byte comparison, strict matching or
 equivalence testing is part of this phase.
 
-## Current batch
+## Current coverage
 
 ```text
-recovered and compiled   443 functions
-submitted to queue       443
-generated but rejected    77 (compile errors recorded)
-stub module                1 (Win32/CRT/global link scaffolding)
+exported pseudocode functions   3,919
+compiled recovered functions    3,826
+explicitly unsupported             93
+still queued                        0
+PE32 output                    2.3 MB, runs under Wine with exit 0
 ```
 
-The queue still lists 3,476 functions as available. The 77 rejected files were
-generated mechanically from pseudocode that needs pointer/integer cleanup or
-additional interfaces; they were removed from `src/` and are listed with their
-exact compiler errors in `work_queue/compile_report.json`.
+All functions are covered by a decision: compiled into the port, or recorded
+under `unsupported/` with `PORT_STATUS: STUB` and the exact first compiler
+error. Unsupported files are not counted as recovered. The queue reports zero
+remaining work.
+
+The batch pipeline processed 500 functions at a time. Beyond the initial
+dependency-free batch, later batches allowed DAT_/FUN_/indirect-call functions
+and used a temporary `/force:unresolved /force:multiple` link scaffold. Repair
+passes then attacked shared categories: Win32/CRT types, generated data
+symbols, Ghidra bitfield extraction and insertion, parameter/local pointer
+retyping, string globals, and generated struct fields. The remaining 93 are
+genuinely structural cases (nested field types, non-constant switch labels,
+pointer arithmetic on `void *`, and malformed bitfield expressions).
+
+Compiled means **structurally integrated**, not behaviorally verified. No byte
+comparison, strict matching or equivalence testing is part of this phase.
 
 ## Layout
 
@@ -61,14 +74,11 @@ from `port_entry.cpp` as an integration smoke test.
 
 ## Next batch
 
-1. Work through the remaining 77 compiler-error categories by fixing the
-   shared types/interfaces once (pointer-to-integer assignments, `DWORD *`
-   returns, registry/Win32 declarations).
-2. Add dependency-bearing functions from `work_queue/queue.csv`, generating
-   shared globals and declarations in `include/` and stubs only for unresolved
-   externals.
-3. Prefer well-understood subsystems (math/rating helpers, list/map accessors,
-   sound lock guards, UI geometry) so the recovered source becomes more than a
-   mechanical pseudocode dump.
-4. Re-run `tools/port_work_queue.py` after each batch and keep the compiled
-   source reports current.
+1. Revisit the 93 structural unsupported cases with recursive field typing,
+   switch-label rewriting, and pointer-arithmetic cleanup.
+2. Replace the mechanical first-pass naming/offset style in well-understood
+   subsystems (math/rating helpers, list/map accessors, sound lock guards, UI
+   geometry) with shared structs and named fields.
+3. Replace the `/force:unresolved` scaffold with real implementations or
+   explicit stubs for the startup path, then start the actual game flow.
+4. Keep the compiled vs behaviorally-verified distinction in every report.

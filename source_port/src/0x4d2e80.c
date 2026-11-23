@@ -1,0 +1,91 @@
+// Building_GetSpriteVariant: ported from Pizza Connection 2 at 0x4d2e80.
+// Readable source-port phase; this is not a byte-verified match.
+// original: 0x4d2e80
+#include "pc2_port.h"
+
+uint32_t __fastcall Building_GetSpriteVariant(int arg1)
+
+{
+  uint32_t uvalue1;
+  
+  uvalue1 = 0xffffffff;
+  switch(*(uint32_t *)(arg1 + 0x20)) {
+  case 0x81c:
+  case 0x81d:
+  case 0x81e:
+  case 0x81f:
+  case 0x834:
+  case 0x835:
+  case 0x836:
+  case 0x837:
+  case 0x840:
+  case 0x841:
+  case 0x842:
+  case 0x843:
+  case 0x84c:
+  case 0x84d:
+  case 0x84e:
+  case 0x84f:
+  case 0x858:
+  case 0x859:
+  case 0x85a:
+  case 0x85b:
+    return 0;
+  case 0x820:
+  case 0x821:
+  case 0x822:
+  case 0x823:
+  case 0x838:
+  case 0x839:
+  case 0x83a:
+  case 0x83b:
+  case 0x844:
+  case 0x845:
+  case 0x846:
+  case 0x847:
+  case 0x850:
+  case 0x851:
+  case 0x852:
+  case 0x853:
+  case 0x85c:
+  case 0x85d:
+  case 0x85e:
+  case 0x85f:
+    return 1;
+  case 0x824:
+  case 0x825:
+  case 0x826:
+  case 0x827:
+  case 0x83c:
+  case 0x83d:
+  case 0x83e:
+  case 0x83f:
+  case 0x848:
+  case 0x849:
+  case 0x84a:
+  case 0x84b:
+  case 0x854:
+  case 0x855:
+  case 0x856:
+  case 0x857:
+  case 0x860:
+  case 0x861:
+  case 0x862:
+  case 0x863:
+    return 2;
+  case 0x828:
+  case 0x829:
+  case 0x82a:
+  case 0x82b:
+  case 0x82c:
+  case 0x82d:
+  case 0x82e:
+  case 0x82f:
+  case 0x830:
+  case 0x831:
+  case 0x832:
+  case 0x833:
+    uvalue1 = 3;
+  }
+  return uvalue1;
+}

@@ -1,0 +1,30 @@
+// SoundBuffer_DestructBase: ported from Pizza Connection 2 at 0x53f020.
+// Readable source-port phase; this is not a byte-verified match.
+// original: 0x53f020
+#include "pc2_port.h"
+
+
+void __fastcall SoundBuffer_DestructBase(uint32_t *arg1)
+
+{
+  int *ptr1;
+  void *pvStack_c;
+  uint8_t *puStack_8;
+  uint32_t local_4;
+  
+  puStack_8 = &LAB_0055ae08;
+  pvStack_c = ExceptionList;
+  ExceptionList = &pvStack_c;
+  *arg1 = &PTR_LAB_0055c830;
+  ptr1 = (int *)arg1[2];
+  local_4 = 0;
+  if (ptr1 != (int *)0x0) {
+    (**(code **)(*ptr1 + 8))(ptr1);
+  }
+  if (*(char *)(arg1 + 3) != '\0') {
+    CoUninitialize();
+  }
+  *arg1 = &PTR_LAB_0055c840;
+  ExceptionList = pvStack_c;
+  return;
+}
