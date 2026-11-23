@@ -14,7 +14,7 @@ for f in src/*.c src/*.cpp stubs/*.c; do
     "$CC" --target=i686-windows-gnu -x c -std=gnu99 -ffreestanding \
         -fno-stack-protector -fno-asynchronous-unwind-tables \
         -mno-stack-arg-probe -w -Wno-int-conversion \
-        -Wno-implicit-function-declaration -Wno-incompatible-pointer-types -Iinclude -c "$f" -o "$obj"
+        -Wno-implicit-function-declaration -Wno-incompatible-pointer-types -Wno-pointer-arith -Iinclude -c "$f" -o "$obj"
 done
 "$LINK" /entry:main /subsystem:console /nodefaultlib /force:unresolved /force:multiple \
     /out:"$OUT/pc2_port.exe" "$OUT"/*.obj

@@ -10,7 +10,7 @@ void __cdecl PersonnelPlan_WindowProc(void *arg1,int arg2,uint32_t arg3,int arg4
   int *ptr2;
   uint32_t uvalue3;
   uint32_t *uptr4;
-  void *pvVar5;
+  char *pvVar5;
   int value6;
   int value7;
   int value8;
@@ -19,7 +19,7 @@ void __cdecl PersonnelPlan_WindowProc(void *arg1,int arg2,uint32_t arg3,int arg4
   uint8_t local_100 [256];
   
                     /* Handles input for the staff-planning page and edits employee attributes. */
-  switch(arg3) {
+  switch((intptr_t)arg3) {
   case 1:
     if ((DAT_0056872c == -1) && (arg2 < 8000)) {
       return;
@@ -29,7 +29,7 @@ void __cdecl PersonnelPlan_WindowProc(void *arg1,int arg2,uint32_t arg3,int arg4
     }
     if (arg2 < 0x485) {
       if (arg2 != 0x484) {
-        switch(arg2) {
+        switch((intptr_t)arg2) {
         case 0x44f:
           pvVar5 = (void *)IDMap_Lookup((void *)((intptr_t)DAT_0057c6d0 + 0x148),DAT_00568728,(int *)0x0)
           ;
@@ -121,7 +121,7 @@ void __cdecl PersonnelPlan_WindowProc(void *arg1,int arg2,uint32_t arg3,int arg4
       default:
       }
       value1 = Game_GetCostForType(pvVar5,1);
-      uvalue3 = Game_CanAffordWithCurrency(DAT_0057c6d0,local_104,(float)value1,'\x01',0xffffffff);
+      uvalue3 = Game_CanAffordWithCurrency(DAT_0057c6d0,local_104,(float)(intptr_t)(value1),'\x01',0xffffffff);
       if ((char)uvalue3 != '\0') {
         BuildingValue_ApplyUpgrade((void *)*ptr2,1);
         String_Format(local_100,&DAT_005686f4,*(uint32_t *)(*ptr2 + 0x3c));
@@ -216,7 +216,7 @@ void __cdecl PersonnelPlan_WindowProc(void *arg1,int arg2,uint32_t arg3,int arg4
     if (arg2 < 0x177e) {
       if (arg2 == 0x177d) goto switchD_004946c9_caseD_1779;
       if (0x1776 < arg2) {
-        switch(arg2) {
+        switch((intptr_t)arg2) {
         case 0x1777:
         case 0x177b:
           goto switchD_004946c9_caseD_1777;
@@ -263,7 +263,7 @@ switchD_004946c9_caseD_177a:
       value1 = arg2 + -0x1772;
     }
     else {
-      switch(arg2) {
+      switch((intptr_t)arg2) {
       case 0x177e:
       case 0x1782:
       case 0x1786:
@@ -315,7 +315,7 @@ LAB_00494704:
       Game_CloseSelectionDialog((intptr_t)DAT_0057c670);
     }
     value1 = arg2 + -6000;
-    switch(value1) {
+    switch((intptr_t)value1) {
     case 0:
     case 4:
     case 8:
@@ -403,7 +403,7 @@ switchD_00494441_default:
     }
     break;
   case 0x23:
-    switch(arg2) {
+    switch((intptr_t)arg2) {
     case -0x18696:
       pvVar5 = (void *)IDMap_Lookup((void *)((intptr_t)DAT_0057c6d0 + 0x148),DAT_00568728,(int *)0x0);
       uptr4 = (uint32_t *)IDMap_Lookup((void *)((intptr_t)pvVar5 + 0x1500),DAT_0056872c,(int *)0x0);
@@ -417,7 +417,7 @@ switchD_00494441_default:
       else {
         local_104 = 0;
       }
-      uvalue3 = Game_CanAfford(pvVar5,0xb,(float)local_104,'\x01',-1);
+      uvalue3 = Game_CanAfford(pvVar5,0xb,(float)(intptr_t)(local_104),'\x01',-1);
       if ((char)uvalue3 != '\0') {
         BuildingValue_ApplyUpgrade((void *)*uptr4,0);
         PersonnelPlan_UpdateEmployeeDetail(arg1,(intptr_t)DAT_0057c6d0,DAT_00568728,'\0',DAT_0056872c)
@@ -449,7 +449,7 @@ joined_r0x0049408a:
       else {
         local_104 = 0;
       }
-      uvalue3 = Game_CanAfford(pvVar5,0xb,(float)local_104,'\x01',-1);
+      uvalue3 = Game_CanAfford(pvVar5,0xb,(float)(intptr_t)(local_104),'\x01',-1);
       if ((char)uvalue3 != '\0') {
         BuildingValue_ApplyUpgrade((void *)*uptr4,3);
         PersonnelPlan_UpdateEmployeeDetail(arg1,(intptr_t)DAT_0057c6d0,DAT_00568728,'\0',DAT_0056872c)
@@ -473,7 +473,7 @@ joined_r0x0049408a:
         local_104 = 0;
       }
       pvVar5 = (void *)IDMap_Lookup((void *)((intptr_t)DAT_0057c6d0 + 0x148),DAT_00568728,(int *)0x0);
-      uvalue3 = Game_CanAfford(pvVar5,0xb,(float)local_104,'\x01',-1);
+      uvalue3 = Game_CanAfford(pvVar5,0xb,(float)(intptr_t)(local_104),'\x01',-1);
       if ((char)uvalue3 != '\0') {
         BuildingValue_ApplyUpgrade((void *)*uptr4,2);
         value1 = *(int *)(*(int *)((intptr_t)DAT_0057c670 + 0x224) + 0xa8);

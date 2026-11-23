@@ -2,8 +2,8 @@
 
 Exported pseudocode bodies: 3919
 Available for porting: 0
-Submitted source (not build verified): 3826
-Explicit stubs excluded from recovery: 93
+Submitted source (not build verified): 3919
+Explicit stubs excluded from recovery: 0
 
 ## First candidates (lowest estimated complexity)
 

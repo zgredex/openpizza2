@@ -3,7 +3,6 @@
 // original: 0x54f1de
 #include "pc2_port.h"
 
-
 uint32_t CRT_ThreadStart(LPVOID arg1)
 
 {

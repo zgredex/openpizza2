@@ -7,10 +7,10 @@ void __cdecl FurnitureMenu_WindowProc(void *arg1,int arg2,int arg3)
 
 {
   void *pvVar1;
-  void *self;
+  char *self;
   int value2;
   int value3;
-  void *pvVar4;
+  char *pvVar4;
   int value5;
   int value6;
   int value7;
@@ -44,7 +44,7 @@ void __cdecl FurnitureMenu_WindowProc(void *arg1,int arg2,int arg3)
             } while (value7 < value2);
             arg2 = value6;
           }
-          Game_CanAfford(self,5,(float)arg2,'\0',-1);
+          Game_CanAfford(self,5,(float)(intptr_t)(arg2),'\0',-1);
           value2 = *(int *)((intptr_t)self + 0x170c);
           value3 = 0;
           if (0 < value2) {

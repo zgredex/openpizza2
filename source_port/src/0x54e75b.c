@@ -3,8 +3,9 @@
 // original: 0x54e75b
 #include "pc2_port.h"
 
+struct pc2_obj_0x54e75b_arg1 { intptr_t ExceptionFlags; };
 uint32_t __cdecl
-CRT_SeTranslatorFrameHandler(PEXCEPTION_RECORD arg1,PVOID arg2,DWORD arg3)
+CRT_SeTranslatorFrameHandler(struct pc2_obj_0x54e75b_arg1 *arg1,PVOID arg2,DWORD arg3)
 
 {
   uint32_t uvalue1;

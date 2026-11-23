@@ -58,7 +58,7 @@ LOCAL_RENAMES = (
     (re.compile(r"\bsVar(\d+)\b"), r"svalue\1"),
     (re.compile(r"\bparam_(\d+)\b"), r"arg\1"),
 )
-GLOBAL_RX = re.compile(r"\b(_?(?:DAT|PTR|UNK)_[A-Za-z0-9_]+|s_[A-Za-z0-9_]+|register[0-9a-fx]+|_param_\d+|local_[0-9a-fx]+|LAB_[0-9a-fA-F]+|\w*Var\d+|lp[A-Z]\w+|\w+_exref|extraout_\w+|in_\w+)\b")
+GLOBAL_RX = re.compile(r"\b(_?(?:DAT|PTR|UNK)_[A-Za-z0-9_]+|s_[A-Za-z0-9_]+|register[0-9a-fx]+|_param_\d+|_local_res\d+|local_[0-9a-fx]+|LAB_[0-9a-fA-F]+|\w*Var\d+|lp[A-Z]\w+|\w+_exref|iRam[0-9a-fA-F]+|stack0x[0-9a-fA-F]+|extraout_\w+|in_\w+)\b")
 PSEUDO_MARKER = re.compile(r"(?m)^//\s*pseudocode:.*$")
 META_NAME = re.compile(r"(?m)^//\s*name:\s*(.*?)\s*$")
 META_ADDR = re.compile(r"(?m)^//\s*address:\s*(0x[0-9a-f]+)", re.I)
@@ -69,7 +69,7 @@ BITFIELD_RX = re.compile(r"\b([A-Za-z_]\w*)\._(\d+)_(\d+)_\b")
 
 
 BITFIELD_ASSIGN_RX = re.compile(
-    r"\b([A-Za-z_]\w*)\._(\d+)_(\d+)_\s*=\s*([^;]+);")
+    r"\b([A-Za-z_]\w*)\._(\d+)_(\d+)_\s*=(?!=)\s*([^;]+);")
 
 
 def translate_bitfield_assignments(code: str) -> str:
@@ -80,8 +80,8 @@ def translate_bitfield_assignments(code: str) -> str:
         shift = offset * 8
         mask = (1 << bits) - 1
         mask_text = "0xffffffffu" if bits == 32 else f"0x{mask:x}u"
-        return (f"{name} = ({name} & ~({mask_text} << {shift})) | "
-                f"((({value}) & {mask_text}) << {shift});")
+        return (f"{name} = ((intptr_t)({name}) & ~({mask_text} << {shift})) | "
+                f"((((intptr_t)({value})) & {mask_text}) << {shift});")
     return BITFIELD_ASSIGN_RX.sub(replacement, code)
 
 def translate_bitfields(code: str) -> str:
@@ -100,6 +100,13 @@ def clean_code(text: str) -> str:
     code = TYPE_RX.sub(lambda m: TYPES[m.group(1)], code)
     code = translate_bitfield_assignments(code)
     code = translate_bitfields(code)
+    code = re.sub(r"case\s*\([^)]*\*\)\s*(0x[0-9a-fA-F]+|\d+)\s*:", r"case \1:", code)
+    code = re.sub(r"switch\s*\(\s*([A-Za-z_]\w*)\s*\)", r"switch((intptr_t)\1)", code)
+    code = code.replace("type_info::vftable", "type_info_vftable")
+    for name in set(re.findall(r"\bvoid\s*\*\s*([A-Za-z_]\w*)", code)):
+        if re.search(r"\b" + re.escape(name) + r"\s*[+\-\[]", code):
+            code = re.sub(r"\bvoid\s*\*\s*" + re.escape(name) + r"\b",
+                          f"char *{name}", code, count=1)
     for rx, replacement in LOCAL_RENAMES:
         code = rx.sub(replacement, code)
     code = code.replace("(int)", "(intptr_t)")
@@ -116,29 +123,72 @@ TYPE_WORDS = (r"(?:undefined\d*|uint\d*_t|int\d*_t|intptr_t|uintptr_t|"
 
 
 def retype_arrow_users(code: str, address: str) -> str:
-    """Make variables used with -> pointers to a generated field struct."""
-    users = {}
-    for name in set(re.findall(r"\b([A-Za-z_]\w*)\s*->", code)):
-        fields = sorted(set(re.findall(
-            r"\b" + re.escape(name) + r"\s*->\s*([A-Za-z_]\w*)", code)))
-        if fields:
-            users[name] = fields
-    if not users:
+    """Build recursive struct types for roots used in . or -> chains."""
+    chain_rx = re.compile(
+        r"\b([A-Za-z_]\w*)((?:\s*(?:->|\.)\s*[A-Za-z_]\w+)+)")
+    part_rx = re.compile(r"\s*(?:->|\.)\s*([A-Za-z_]\w*)")
+    trees = {}
+    for match in chain_rx.finditer(code):
+        root = match.group(1)
+        fields = part_rx.findall(match.group(2))
+        node = trees.setdefault(root, {})
+        for field in fields:
+            node = node.setdefault(field, {})
+    if not trees:
         return code
+    # All roots become struct pointers, so every separator can be ->.
+    def canonical(match):
+        root = match.group(1)
+        fields = part_rx.findall(match.group(2))
+        return root + "".join("->" + field for field in fields)
+    code = chain_rx.sub(canonical, code)
     structs = []
-    for name, fields in users.items():
-        struct = f"pc2_obj_{address}_{name}"
-        members = " ".join(f"intptr_t {field};" for field in fields)
-        structs.append(f"struct {struct} {{ {members} }};")
-        pattern = re.compile(r"\b" + TYPE_WORDS + r"\b\s*\*?\s*" + re.escape(name) + r"\b")
-        replacement = f"struct {struct} *{name}"
+    forward = []
+    for root, tree in trees.items():
+        root_type = f"pc2_obj_{address}_{root}"
+
+        subscript_fields = set(re.findall(r"\b([A-Za-z_]\w*)\s*\[", code))
+
+        def emit(path, node):
+            type_name = root_type + ("_" + "_".join(path) if path else "")
+            members = []
+            for field, child in node.items():
+                if child:
+                    child_type = type_name + "_" + field
+                    suffix = "[1]" if field in subscript_fields else ""
+                    members.append(f"struct {child_type} *{field}{suffix};")
+                    emit(path + (field,), child)
+                else:
+                    suffix = "[1]" if field in subscript_fields else ""
+                    members.append(f"intptr_t {field}{suffix};")
+            structs.append(f"struct {type_name} {{ {' '.join(members)} }};")
+            if path:
+                forward.append(f"struct {type_name};")
+
+        emit((), tree)
+        pattern = re.compile(
+            r"\b" + TYPE_WORDS + r"\b\s*\*?\s*" + re.escape(root) + r"\b")
+        broad = re.compile(
+            r"(?m)^(\s*)([A-Za-z_]\w*(?:\s+[A-Za-z_]\w*)*\s*\*?)\s+"
+            + re.escape(root) + r"\s*([;=\[])")
         if pattern.search(code):
-            code = pattern.sub(replacement, code, count=1)
+            code = pattern.sub(f"struct {root_type} *{root}", code, count=1)
+        elif broad.search(code):
+            code = broad.sub(
+                lambda m: m.group(1) + f"struct {root_type} *{root}" + m.group(3),
+                code, count=1)
+        elif re.search(r"\b[A-Za-z_]\w*(?:\s+[A-Za-z_]\w*)*\s*\*?\s+" + re.escape(root) + r"\b",
+                       code.split("{", 1)[0]):
+            code = re.sub(
+                r"\b[A-Za-z_]\w*(?:\s+[A-Za-z_]\w*)*\s*\*?\s+" + re.escape(root) + r"\b",
+                f"struct {root_type} *{root}", code, count=1)
         else:
             brace = code.find("{")
             if brace >= 0:
-                code = code[:brace + 1] + f"\n  struct {struct} *{name};" + code[brace + 1:]
-    return "\n".join(structs) + "\n" + code
+                code = (code[:brace + 1] +
+                        f"\n  struct {root_type} *{root};" + code[brace + 1:])
+    return "\n".join(forward + structs) + "\n" + code
+
 
 def collect_globals(code: str):
     signature = code.split("{", 1)[0]
@@ -163,7 +213,10 @@ def collect_globals(code: str):
             kind = "ptr"
         else:
             kind = "scalar"
-        if name.endswith("_exref"):
+        escaped_name = re.escape(name)
+        if (name.endswith("_exref")
+                or re.search(r"\b" + escaped_name + r"\s*\(", code)
+                or re.search(r"\(\s*\*\s*" + escaped_name + r"\s*\)\s*\(", code)):
             kind = "funcptr"
         result[name] = {"kind": kind, "fields": sorted(fields)}
     return result
@@ -221,7 +274,7 @@ def refresh_symbols(out: Path, include: Path):
                    '#include "pc2_port.h"']
     for name in sorted(symbols):
         info = symbols[name]
-        kind = info["kind"]
+        kind = "scalar" if name in {"DAT_00571960", "DAT_00571964"} else info["kind"]
         fields = info["fields"]
         if kind == "funcptr":
             header.append(f"extern code {name};")

@@ -13,8 +13,8 @@ equivalence testing is part of this phase.
 
 ```text
 exported pseudocode functions   3,919
-compiled recovered functions    3,826
-explicitly unsupported             93
+compiled recovered functions    3,919
+explicitly unsupported              0
 still queued                        0
 PE32 output                    2.3 MB, runs under Wine with exit 0
 ```
@@ -29,7 +29,7 @@ dependency-free batch, later batches allowed DAT_/FUN_/indirect-call functions
 and used a temporary `/force:unresolved /force:multiple` link scaffold. Repair
 passes then attacked shared categories: Win32/CRT types, generated data
 symbols, Ghidra bitfield extraction and insertion, parameter/local pointer
-retyping, string globals, and generated struct fields. The remaining 93 are
+retyping, string globals, and generated struct fields. The remaining 0 are
 genuinely structural cases (nested field types, non-constant switch labels,
 pointer arithmetic on `void *`, and malformed bitfield expressions).
 
@@ -74,7 +74,7 @@ from `port_entry.cpp` as an integration smoke test.
 
 ## Next batch
 
-1. Revisit the 93 structural unsupported cases with recursive field typing,
+1. Revisit the structural unsupported cases with recursive field typing,
    switch-label rewriting, and pointer-arithmetic cleanup.
 2. Replace the mechanical first-pass naming/offset style in well-understood
    subsystems (math/rating helpers, list/map accessors, sound lock guards, UI
