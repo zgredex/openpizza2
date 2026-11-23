@@ -35,3 +35,25 @@ The first ten variants compiled with `/O2 /GX /TP`. They narrowed the sprite-nam
 All ten preserved the 345 ordered direct calls, 159 validated animation rows, and 163 unwind states. They retained the baseline's exact 1,336-byte unwind table and one differing cleanup byte. After aligning each animation span by its allocation and rebasing relocations, all candidates scored **151 equal-length spans, zero exact spans, and a median of 18 differing bytes** among the equal-length spans. Each reserved `0x16c` bytes and saved `this` at `[esp+0x50]` in the prologue. The original uses `0x164` and `[esp+0x68]` at the same point.
 
 Two additional variants introduced block-local graphics, archive, and status-pointer variables immediately before each animation allocation. One evaluated graphics before archive and the other reversed the order. Both compiled with the same frame and unwind result. Both moved the graphics and archive loads ahead of `operator new`, whereas the original performs both reads after allocation in the non-null branch. The animation verifier rejected both variants at their first constructor call, offset `0x2ff`. The baseline remains the best verified source.
+
+
+## Matcher pass: name-buffer and frame closure
+
+Using the matching-decomp loop, the 260-byte `spriteName` buffer was tested
+against the original frame. The original reserves `0x164` bytes; the baseline
+generator reserved `0x16c`. A 256-byte name buffer reproduces the original
+frame and moves the first primary difference from `0x4e64dd` to the saved
+`this` home at `0x4e64e8`:
+
+```text
+original   sub esp,0x164   mov [esp+0x68],ebx   lea [esp+0x70],spriteName
+candidate  sub esp,0x164   mov [esp+0x4c],ebx   lea [esp+0x74],spriteName
+```
+
+Primary differing bytes drop from 11,432 to 10,963. All 345 direct calls,
+159 animation rows and 163 unwind states remain intact. Declaration-order
+permutations of the four locals do not move the `this` home. The remaining
+wall is the original's early coordinate-array materialization and its stack
+slot ordering; the candidate sinks the coordinate stores to the later
+`SetPointPairs` loop. The EH `.text$x` cleanup byte and `$L...` section
+verification remain separate open items.

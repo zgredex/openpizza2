@@ -103,7 +103,7 @@ struct Game {
 PREFIX = '''Game::Game(void *archive) : list(0)
 {
     int coordinates[8];
-    char spriteName[260];
+    char spriteName[256];
     int status;
     double x, y, p, q;
 
