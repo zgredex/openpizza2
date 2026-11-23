@@ -45,6 +45,9 @@ static int verify(FILE *fixture, const char *shader_dir)
     int ok = base && sprite && target && result && pc2_vk_begin_target(vk, target, 0, 0, 0, 1);
     if (ok) {
         pc2_vk_draw(vk, base, 0, 0, width, height, 0, 0, 1, 1, 0, 0, width, height);
+        ok = pc2_vk_end(vk) && pc2_vk_begin_target_load(vk, target);
+    }
+    if (ok) {
         pc2_vk_draw(vk, sprite, 0, 0, width, source_height, 0, 0, 1, 1, 0, 0, width, height);
         ok = pc2_vk_end(vk) && pc2_vk_begin_target(vk, result, 0, 0, 0, 1);
     }

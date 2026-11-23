@@ -36,6 +36,8 @@ void pc2_vk_texture_destroy(pc2_vk *ctx, pc2_vk_texture *texture);
  * passes use the game's logical 800x600 space. */
 pc2_vk_texture *pc2_vk_target_create(pc2_vk *ctx, uint32_t width, uint32_t height);
 int pc2_vk_begin_target(pc2_vk *ctx, pc2_vk_texture *target, float r, float g, float b, float a);
+/* Begin another pass without clearing a target that has completed a pass. */
+int pc2_vk_begin_target_load(pc2_vk *ctx, pc2_vk_texture *target);
 /* Read resulting premultiplied RGBA8 after end, with optional row padding.
  * pitch == 0 means tightly packed. Do not call during an active pass. */
 int pc2_vk_target_read_rgba(pc2_vk *ctx, pc2_vk_texture *target,

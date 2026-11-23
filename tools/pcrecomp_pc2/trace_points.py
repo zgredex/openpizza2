@@ -141,13 +141,13 @@ def patch_sprite_fixture(text: str) -> str:
         begin = (
             "#ifdef PC2_CAPTURE\n"
             "    extern int pc2_capture_indexed_sprite_before(uint32_t, uint32_t);\n"
-            "    extern void pc2_capture_indexed_sprite_after(void);\n"
+            "    extern void pc2_capture_indexed_sprite_after(int);\n"
             "    int pc2_sprite_fixture = pc2_capture_indexed_sprite_before(ecx, esp);\n"
             "#endif\n"
         )
         end = (
             "#ifdef PC2_CAPTURE\n"
-            "    if (pc2_sprite_fixture) pc2_capture_indexed_sprite_after();\n"
+            "    if (pc2_sprite_fixture) pc2_capture_indexed_sprite_after(pc2_sprite_fixture);\n"
             "#endif\n"
         )
         body = body.replace(entry, entry + begin, 1)

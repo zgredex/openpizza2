@@ -58,6 +58,7 @@ struct pc2_vk {
     VkPipelineLayout layout;
     quad_pass swap_pass;
     quad_pass target_pass;
+    VkRenderPass target_load_pass;
     VkDescriptorSetLayout descriptor_layout;
     VkDescriptorPool descriptor_pool;
     VkSampler sampler;
@@ -193,10 +194,12 @@ static VkShaderModule shader_load(pc2_vk *r, const char *file) {
     }
     free(data);return mod;
 }
-static int quad_pass_create(pc2_vk *r, quad_pass *quad, VkFormat format, int offscreen) {
+static int render_pass_create(pc2_vk *r, VkFormat format, int offscreen, int load,
+                              VkRenderPass *pass) {
     VkAttachmentDescription att={.format=format,.samples=VK_SAMPLE_COUNT_1_BIT,
-        .loadOp=VK_ATTACHMENT_LOAD_OP_CLEAR,.storeOp=VK_ATTACHMENT_STORE_OP_STORE,
-        .initialLayout=VK_IMAGE_LAYOUT_UNDEFINED,
+        .loadOp=load ? VK_ATTACHMENT_LOAD_OP_LOAD : VK_ATTACHMENT_LOAD_OP_CLEAR,
+        .storeOp=VK_ATTACHMENT_STORE_OP_STORE,
+        .initialLayout=load ? VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_UNDEFINED,
         .finalLayout=offscreen ? VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
                                : VK_IMAGE_LAYOUT_PRESENT_SRC_KHR};
     VkAttachmentReference ref={0,VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL};
@@ -204,8 +207,9 @@ static int quad_pass_create(pc2_vk *r, quad_pass *quad, VkFormat format, int off
         .colorAttachmentCount=1,.pColorAttachments=&ref};
     VkSubpassDependency deps[2]={{.srcSubpass=VK_SUBPASS_EXTERNAL,.dstSubpass=0,
         .srcStageMask=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+        .srcAccessMask=offscreen ? VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT : 0,
         .dstStageMask=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-        .dstAccessMask=VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT},
+        .dstAccessMask=VK_ACCESS_COLOR_ATTACHMENT_READ_BIT|VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT},
         {.srcSubpass=0,.dstSubpass=VK_SUBPASS_EXTERNAL,
          .srcStageMask=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
          .dstStageMask=VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT|VK_PIPELINE_STAGE_TRANSFER_BIT,
@@ -214,7 +218,11 @@ static int quad_pass_create(pc2_vk *r, quad_pass *quad, VkFormat format, int off
     VkRenderPassCreateInfo rp={.sType=VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO,
         .attachmentCount=1,.pAttachments=&att,.subpassCount=1,.pSubpasses=&sub,
         .dependencyCount=offscreen ? 2u : 1u,.pDependencies=deps};
-    if (!gpu_ok(r,vkCreateRenderPass(r->device,&rp,NULL,&quad->pass),"render pass")) return 0;
+    return gpu_ok(r,vkCreateRenderPass(r->device,&rp,NULL,pass),"render pass");
+}
+
+static int quad_pass_create(pc2_vk *r, quad_pass *quad, VkFormat format, int offscreen) {
+    if (!render_pass_create(r,format,offscreen,0,&quad->pass)) return 0;
     VkShaderModule vert=shader_load(r,"quad.vert.spv");
     VkShaderModule frag=shader_load(r,"quad.frag.spv");
     if (!vert || !frag) {
@@ -656,7 +664,7 @@ static int begin_pass(pc2_vk *r, VkRenderPass pass, VkFramebuffer framebuffer, V
     if (!gpu_ok(r,vkBeginCommandBuffer(r->command,&cb),"command begin")) return 0;
     VkRenderPassBeginInfo rp={.sType=VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
         .renderPass=pass,.framebuffer=framebuffer,
-        .renderArea={{0,0},extent},.clearValueCount=1,.pClearValues=clear};
+        .renderArea={{0,0},extent},.clearValueCount=clear ? 1u : 0u,.pClearValues=clear};
     vkCmdBeginRenderPass(r->command,&rp,VK_SUBPASS_CONTENTS_INLINE);
     vkCmdSetViewport(r->command,0,1,viewport);
     r->bound_pipeline=VK_NULL_HANDLE;
@@ -676,14 +684,31 @@ int pc2_vk_begin(pc2_vk *r,float red,float green,float blue,float alpha) {
     return begin_pass(r,r->swap_pass.pass,r->framebuffers[r->current_image],r->extent,&r->viewport,&clear);
 }
 
-int pc2_vk_begin_target(pc2_vk *r, pc2_vk_texture *t, float red,float green,float blue,float alpha) {
-    if (!r||!t||t->owner!=r||t->retired||!t->framebuffer||r->active||!wait_frame(r)) return 0;
+static int begin_target(pc2_vk *r, pc2_vk_texture *t, const VkClearValue *clear) {
+    if (!r||!t||t->owner!=r||t->retired||!t->framebuffer||r->active||
+        (!clear&&!t->layout_initialized)||!wait_frame(r)) return 0;
+    VkRenderPass pass=r->target_pass.pass;
+    if (!clear) {
+        /* Both passes use the same attachment and dependencies. The load
+           operation and initial layout may differ without affecting compatibility. */
+        if (!r->target_load_pass && !render_pass_create(r,TEXTURE_FORMAT,1,1,&r->target_load_pass))
+            return 0;
+        pass=r->target_load_pass;
+    }
     VkExtent2D extent={t->width,t->height};
     VkViewport viewport=target_viewport(t);
-    VkClearValue clear={.color={{red*alpha,green*alpha,blue*alpha,alpha}}};
-    if (!begin_pass(r,r->target_pass.pass,t->framebuffer,extent,&viewport,&clear)) return 0;
+    if (!begin_pass(r,pass,t->framebuffer,extent,&viewport,clear)) return 0;
     r->active_target=t;
     return 1;
+}
+
+int pc2_vk_begin_target(pc2_vk *r, pc2_vk_texture *t, float red,float green,float blue,float alpha) {
+    const VkClearValue clear={.color={{red*alpha,green*alpha,blue*alpha,alpha}}};
+    return begin_target(r,t,&clear);
+}
+
+int pc2_vk_begin_target_load(pc2_vk *r, pc2_vk_texture *t) {
+    return begin_target(r,t,NULL);
 }
 
 void pc2_vk_draw(pc2_vk *r,pc2_vk_texture *t,float x,float y,float w,float h,
@@ -834,6 +859,7 @@ void pc2_vk_destroy(pc2_vk *r) {
     swap_destroy(r);
     if (r->device) {
         release_retired_textures(r);
+        if (r->target_load_pass) vkDestroyRenderPass(r->device,r->target_load_pass,NULL);
         quad_pass_destroy(r,&r->target_pass);
         if (r->acquired) vkDestroySemaphore(r->device,r->acquired,NULL);
         if (r->sampler) vkDestroySampler(r->device,r->sampler,NULL);

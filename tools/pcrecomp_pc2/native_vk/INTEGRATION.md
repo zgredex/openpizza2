@@ -92,8 +92,23 @@ bytes at sprite offset `0x18`. These match the shapes and compressed lengths
 of the installed `sc_03.spr`, `sc_04.spr` and `sc_05.spr` assets. The indexed
 decoder accepts the exact source payload and the game's 256-entry palette
 for that draw. The source-quad smoke covers decoding, upload, color-key
-transparency and GPU readback. Live dispatch still needs Vulkan render
-targets for the game-owned surfaces.
+transparency and GPU readback.
+
+### Live indexed panel comparison
+
+Set `PC2_VK_LIVE_INDEXED_SHADERS` in the capture scenario's `env` to the
+absolute directory containing `quad.vert.spv` and `quad.frag.spv`. Build
+the capture host and run the existing menu-click replay. This enables a
+diagnostic Vulkan mirror for the first compatible 8-bit indexed surface.
+It seeds the initial target once from the legacy pixels, then preserves
+the Vulkan target across up to 32 live draws in game order. The original
+blitter supplies the reference after each draw. Check `host.log` for
+`[vk-live]` and require zero mismatches for every draw.
+
+The menu replay produced 32 zero-mismatch reads on its 400×15 target and
+reached character select with zero unresolved dispatches. The game still
+uses the legacy surface for final presentation. The mirror currently covers
+one target, optional bottom clipping, and RGB565 indexed RLE.
 
 ### Indexed sprite target parity
 
