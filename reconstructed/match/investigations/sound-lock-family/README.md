@@ -39,6 +39,9 @@ Useful existing verifications:
 ```sh
 sh reconstructed/match/batch21/part3/verify_strict.sh
 # strict matches: 8/8
+
+sh reconstructed/match/batch21/part1/verify_strict.sh
+# strict matches: 7/7
 ```
 
 The new resolver was validated by `0x406cd0` without the manually bound
@@ -414,7 +417,10 @@ Validated:
 - The three sound candidates locate `.text$x`, `.xdata$x`, and the
   `0x53ff80` destructor section by derivation; no secondary-section bytes
   differ.
-- `sh reconstructed/match/batch21/part3/verify_strict.sh` remains 8/8.
+- `0x4a1940`, `0x513c90`, and `0x5317b0` are strict C++ EH matches whose
+  `.text$x`/`.xdata$x` spans are located as `derived_section_anchor`.
+- `sh reconstructed/match/batch21/part3/verify_strict.sh` remains 8/8;
+  `batch21/part1` is 7/7.
 
 ## Constraints / pitfalls
 
