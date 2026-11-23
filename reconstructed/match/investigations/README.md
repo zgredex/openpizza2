@@ -21,6 +21,39 @@ Use `--symbol NAME=0xADDRESS` for independently established addresses. A JSON
 `symbols` object can supply defaults per config, target, or variant. Narrower
 scopes override broader ones, and command-line mappings take precedence.
 
+## Cached near-miss pilot
+
+Use the pinned VC6 toolchain and Capstone 5.0.7. Run a cold pass and then
+point a warm pass at the same cache.
+
+```sh
+scratch=$(mktemp -d)
+python3 tools/verify_near_miss_pilot.py \
+  --recipes reconstructed/match/investigations/near-miss-pilot.json \
+  --cache "$scratch/cache" --out "$scratch/cold" --jobs 4
+python3 tools/verify_near_miss_pilot.py \
+  --recipes reconstructed/match/investigations/near-miss-pilot.json \
+  --cache "$scratch/cache" --out "$scratch/warm" --jobs 4 --cache-only
+```
+
+Each recipe references a tracked matcher receipt and source. A moved source
+can override the receipt's path if its hash still agrees. Variants apply
+reviewed, unique text substitutions to the pinned source. The pilot holds
+the compiler, flags, entry, and symbol bindings fixed. Keep generated C++
+and all objects and reports in scratch.
+
+The report records the strict verdict, cache hit, first relocated block
+differences, and review route for each attempt. A missing cache object makes
+the cache-only run fail without compiling. Compare variants by gained and
+lost equal blocks and use the strict matcher to certify any new match.
+
+The pilot checked ten drafts. The final warm run reused all 22 objects with
+zero compiler invocations and reproduced their hashes and comparison
+results. Reusing locals for existing values improved `Sound_UpdateBufferFade`
+(`0x542630`, 9 to 2 differing bytes) and `Game_FindTargetWithMinA8`
+(`0x4e1fe0`, 27 to 23). The pilot added zero strict bytes. It also routed
+`0x4cb950` to secondary-section review and `0x47f670` to extent review.
+
 ## Historical matrices
 
 Compiler hashes recorded for `matrix01.json`:

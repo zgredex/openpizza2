@@ -1,0 +1,193 @@
+{
+  "schema": "pc2.near_miss_pilot.v1",
+  "recipes": [
+    {
+      "receipt": "reconstructed/match/batch16/part4/nonmatching/0x4fe370.json",
+      "source": "reconstructed/match/batch16/part4/nonmatching/0x4fe370.c",
+      "variants": [
+        {
+          "name": "named-local",
+          "edits": [
+            {
+              "before": "            ((Company *)param_1)->RemoveStaffMember(*piVar2);",
+              "after": "            int member = *piVar2;\n            ((Company *)param_1)->RemoveStaffMember(member);"
+            }
+          ]
+        },
+        {
+          "name": "reuse-local",
+          "edits": [
+            {
+              "before": "            ((Company *)param_1)->RemoveStaffMember(*piVar2);",
+              "after": "            iVar1 = *piVar2;\n            ((Company *)param_1)->RemoveStaffMember(iVar1);"
+            }
+          ]
+        },
+        {
+          "name": "separate-receiver-argument",
+          "edits": [
+            {
+              "before": "extern \"C\" int __stdcall Company_AssignStaffToBranch",
+              "after": "static __forceinline void RemoveMember(int member, Company *company)\n{\n    company->RemoveStaffMember(member);\n}\n\nextern \"C\" int __stdcall Company_AssignStaffToBranch"
+            },
+            {
+              "before": "            ((Company *)param_1)->RemoveStaffMember(*piVar2);",
+              "after": "            RemoveMember(*piVar2, (Company *)param_1);"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "receipt": "reconstructed/match/batch19/part3/nonmatching/0x4fd520.json",
+      "source": "reconstructed/match/batch19/part3/nonmatching/0x4fd520.c",
+      "variants": [
+        {
+          "name": "reverse-comparison-operands",
+          "edits": [
+            {
+              "before": "index < *(int *)(*list + 0x15c)",
+              "after": "*(int *)(*list + 0x15c) > index"
+            }
+          ]
+        },
+        {
+          "name": "named-local",
+          "edits": [
+            {
+              "before": "    int index = 0;",
+              "after": "    int index = 0;\n    int loopObject;"
+            },
+            {
+              "before": "        index++;\n    } while (index < *(int *)(*list + 0x15c));",
+              "after": "        index++;\n        loopObject = *list;\n    } while (index < *(int *)(loopObject + 0x15c));"
+            }
+          ]
+        },
+        {
+          "name": "reuse-local",
+          "edits": [
+            {
+              "before": "    int index = 0;",
+              "after": "    int index = 0;\n    int object;"
+            },
+            {
+              "before": "            int object = *list;",
+              "after": "            object = *list;"
+            },
+            {
+              "before": "        index++;\n    } while (index < *(int *)(*list + 0x15c));",
+              "after": "        index++;\n        object = *list;\n    } while (index < *(int *)(object + 0x15c));"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "receipt": "reconstructed/match/batch16/part4/nonmatching/0x47ec70.json",
+      "source": "reconstructed/match/batch16/part4/nonmatching/0x47ec70.c",
+      "variants": [
+        {
+          "name": "named-local",
+          "edits": [
+            {
+              "before": "    iVar2 = ((Game *)param_1)->CountObjectsByType(0);",
+              "after": "    Game *game = (Game *)param_1;\n    iVar2 = game->CountObjectsByType(0);"
+            }
+          ]
+        },
+        {
+          "name": "separate-receiver-argument",
+          "edits": [
+            {
+              "before": "extern \"C\" void __fastcall Game_ToggleObjectFlag2",
+              "after": "static __forceinline int CountObjects(int type, Game *game)\n{\n    return game->CountObjectsByType(type);\n}\n\nextern \"C\" void __fastcall Game_ToggleObjectFlag2"
+            },
+            {
+              "before": "    iVar2 = ((Game *)param_1)->CountObjectsByType(0);",
+              "after": "    iVar2 = CountObjects(0, (Game *)param_1);"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "receipt": "reconstructed/match/batch16/part1/nonmatching/0x4e1e40.json",
+      "source": "reconstructed/match/batch16/part1/nonmatching/0x4e1e40.c",
+      "variants": [
+        {
+          "name": "reverse-comparison-operands",
+          "edits": [
+            {
+              "before": "record->type == type",
+              "after": "type == record->type"
+            }
+          ]
+        },
+        {
+          "name": "split-short-circuit",
+          "edits": [
+            {
+              "before": "            if (((State *)staff)->Is2DOr2E() == 0 && record->type == type &&\n                staff->fieldA4 == -1 && staff->fieldFC != 0 &&\n                staff->field104 != 0 && staff->field74 == 0)\n                return record;",
+              "after": "            if (((State *)staff)->Is2DOr2E() == 0) {\n                if (type == record->type && staff->fieldA4 == -1 && staff->fieldFC != 0 &&\n                    staff->field104 != 0 && staff->field74 == 0)\n                    return record;\n            }"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "receipt": "reconstructed/match/batch19/part3/nonmatching/0x542630.json",
+      "source": "reconstructed/match/batch19/part3/nonmatching/0x542630.c",
+      "variants": [
+        {
+          "name": "reuse-local",
+          "edits": [
+            {
+              "before": "        EnterCriticalSection(self->lock);",
+              "after": "        void *section = self->lock;\n        EnterCriticalSection(section);"
+            },
+            {
+              "before": "        LeaveCriticalSection(self->lock);",
+              "after": "        section = self->lock;\n        LeaveCriticalSection(section);"
+            },
+            {
+              "before": "        result = self->buffer->SetBufferVolume(self->volume);",
+              "after": "        value = self->volume;\n        result = self->buffer->SetBufferVolume(value);"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "receipt": "reconstructed/match/batch20/part1/nonmatching/0x4bd230.json",
+      "source": "reconstructed/match/batch20/part1/nonmatching/0x4bd230.c"
+    },
+    {
+      "receipt": "reconstructed/match/batch16/part1/nonmatching/0x4d8be0.json",
+      "source": "reconstructed/match/batch16/part1/nonmatching/0x4d8be0.c"
+    },
+    {
+      "receipt": "reconstructed/match/batch16/part1/nonmatching/0x4e1fe0.json",
+      "source": "reconstructed/match/batch16/part1/nonmatching/0x4e1fe0.c",
+      "variants": [
+        {
+          "name": "reuse-local",
+          "edits": [
+            {
+              "before": "staff->field104 != 0 && staff->fieldA8 < minimum) {\n                minimum = staff->fieldA8;\n                best = record;",
+              "after": "staff->field104 != 0) {\n                int score = staff->fieldA8;\n                if (minimum > score) {\n                    best = record;\n                    minimum = score;\n                }"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "receipt": "reconstructed/match/batch20/part1/nonmatching/0x4cb950.json",
+      "source": "reconstructed/match/batch20/part1/nonmatching/0x4cb950.c"
+    },
+    {
+      "receipt": "reconstructed/match/batch20/part2/nonmatching/0x47f670.json",
+      "source": "reconstructed/match/batch20/part2/nonmatching/0x47f670.c"
+    }
+  ]
+}
