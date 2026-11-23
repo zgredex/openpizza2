@@ -34,13 +34,36 @@ def field_block(fields, first_offset=4):
     return "\n".join(declarations)
 
 
+def member_source(member):
+    fields = field_block(member.get("fields", []), first_offset=0)
+    body = "\n".join(f"    {line}" for line in member.get("body", []))
+    if member.get("inline"):
+        return f"""struct {member['class']} {{
+{fields}
+    ~{member['class']}() {{
+{body}
+    }}
+}};"""
+    return f"""struct {member['class']} {{
+{fields}
+    ~{member['class']}();
+}};
+
+{member['class']}::~{member['class']}()
+{{
+{body}
+}}"""
+
+
 def source_for(spec, item):
     base = spec["base"]["class"]
     body = "\n".join(f"    {line}" for line in item["body"])
     fields = field_block(item.get("fields", []))
     common = spec.get("common", "")
+    members = "\n\n".join(member_source(member) for member in spec.get("members", []))
     return f"""{spec.get('prelude', '')}
 {common}
+{members}
 struct {base} {{
     virtual void m0();
     virtual void m1();
@@ -69,6 +92,9 @@ def symbols_for(spec, item):
         symbols[f"?m{index}@{base['class']}@@UAEXXZ"] = parse_address(address)
     symbols[f"??_7{item['class']}@@6B@"] = parse_address(item["vtable"])
     symbols[f"??_E{item['class']}@@UAEPAXI@Z"] = parse_address(item["deleting"])
+    for member in spec.get("members", []):
+        if member.get("address"):
+            symbols[f"??1{member['class']}@@QAE@XZ"] = parse_address(member["address"])
     return symbols
 
 
@@ -79,10 +105,17 @@ def build_one(out, item, spec, vc6, scratch):
     flags = item.get("flags", ["/O2", "/GX", "/TP"])
     match.compile_candidate(source, vc6, obj, flags)
     entry = item.get("entry", f"??1{item['class']}@@UAE@XZ")
+    symbols = symbols_for(spec, item)
     result = match.match_object(
-        parse_address(item["address"]), obj, symbols_for(spec, item),
+        parse_address(item["address"]), obj, symbols,
         length=int(item["length"]), entry=entry, strict=True, auto_symbols=True)
-    return source, result, entry, flags
+    unwind = None
+    try:
+        import compare_vc6_unwind as unwind_tool
+        unwind = unwind_tool.compare(parse_address(item["address"]), obj, entry, symbols)
+    except (OSError, ValueError, ImportError):
+        pass
+    return source, result, entry, flags, unwind
 
 
 def main():
@@ -101,7 +134,7 @@ def main():
         recipes = []
         rows = []
         for item in spec["classes"]:
-            source, result, entry, flags = build_one(out, item, spec, args.vc6.resolve(), scratch)
+            source, result, entry, flags, unwind = build_one(out, item, spec, args.vc6.resolve(), scratch)
             rows.append({
                 "address": item["address"], "class": item["class"],
                 "strict_match": result["strict_match"], "match": result["match"],
@@ -110,6 +143,11 @@ def main():
                 "first_difference": result["first_difference"],
                 "strict_issues": result["strict_issues"],
                 "relocation_issues": result["relocation_issues"],
+                "unwind": None if unwind is None else {
+                    "original_states": len(unwind["original"]["states"]),
+                    "candidate_states": len(unwind["candidate"]["states"]),
+                    "differences": unwind["difference_counts"],
+                },
             })
             try:
                 source_path = str(source.relative_to(match.ROOT))

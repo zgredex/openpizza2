@@ -12,7 +12,14 @@
       "difference_count": 0,
       "first_difference": null,
       "strict_issues": [],
-      "relocation_issues": []
+      "relocation_issues": [],
+      "unwind": {
+        "original_states": 1,
+        "candidate_states": 1,
+        "differences": {
+          "transfers": 1
+        }
+      }
     },
     {
       "address": "0x53f5d0",
@@ -24,7 +31,14 @@
       "difference_count": 0,
       "first_difference": null,
       "strict_issues": [],
-      "relocation_issues": []
+      "relocation_issues": [],
+      "unwind": {
+        "original_states": 1,
+        "candidate_states": 1,
+        "differences": {
+          "transfers": 1
+        }
+      }
     },
     {
       "address": "0x546750",
@@ -36,7 +50,14 @@
       "difference_count": 0,
       "first_difference": null,
       "strict_issues": [],
-      "relocation_issues": []
+      "relocation_issues": [],
+      "unwind": {
+        "original_states": 1,
+        "candidate_states": 1,
+        "differences": {
+          "transfers": 1
+        }
+      }
     }
   ]
 }

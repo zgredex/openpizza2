@@ -85,18 +85,60 @@ special syntax. `if (state < 3)` produced a single `cmp/jge` block and a
 41-byte mismatch; the three-case switch reproduces the shipped
 `sub/dec/dec` chain and two release tails.
 
-## Experimental members
+## Member subobjects and unwind checks
 
-`experimental.json` holds the next class:
+The generator now supports a `members` list. Each member emits a real class
+definition with explicit field padding, an optional inline destructor, and a
+bound destructor symbol:
 
-```text
-0x541f30 SoundTrack      138 bytes  diff 29
+```json
+"members": [
+  {
+    "class": "TrackBuffer",
+    "address": "0x541f00",
+    "inline": true,
+    "fields": [
+      {"decl": "char pad0[8];", "offset": 0},
+      {"decl": "void *field8;", "offset": 8}
+    ],
+    "body": ["if (field8 != 0) { Mem_Free(field8); }"]
+  }
+]
 ```
 
-`SoundTrack` has two unwind states. State 1's cleanup at `0x541f00` frees
-`[ebp-8]`, a local cleanup object; the candidate only models the base vtable
-state. It needs a `locals`/`states` extension to the generator, not just a
-body change.
+Member classes are placed with a normal field entry:
+
+```json
+{"decl": "TrackBuffer buffer;", "offset": "0x3c", "size": "0xc"}
+```
+
+The report also decodes the generated object's unwind with
+`compare_vc6_unwind.compare` and records:
+
+```json
+"unwind": {
+  "original_states": 2,
+  "candidate_states": 2,
+  "differences": {"transfers": 2}
+}
+```
+
+## Experimental members
+
+`experimental.json` holds `0x541f30 SoundTrack` (138 bytes). The member
+subobject now gives the candidate the correct **two unwind states**, but the
+state-1 cleanup transfers still differ and the primary body is 29 bytes off:
+
+```text
+0x541f30 SoundTrack  diff 29
+  original_states=2 candidate_states=2
+  differences={"transfers": 2}
+```
+
+The blocker is now the state transition: the original disables state 1
+before the inline member free, while the 3/3 generated classes keep the base
+cleanup state active. A `release`/`states` body form is the next extension,
+not another field or member layout change.
 
 ## Next destructor targets
 

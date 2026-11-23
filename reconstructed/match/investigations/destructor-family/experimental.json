@@ -37,16 +37,36 @@
           "offset": 52
         },
         {
-          "decl": "void *field44;",
-          "offset": 68
+          "decl": "TrackBuffer buffer;",
+          "offset": 60,
+          "size": 12
         }
       ],
       "body": [
         "if (field28 != 0) { field28->Release(); }",
         "if (field2c != 0) { field2c->Release(); }",
         "if (field34 != 0) { field34->Release2(); }",
-        "if (field30 != 0) { field30->Release(); }",
-        "if (field44 != 0) { Mem_Free(field44); }"
+        "if (field30 != 0) { field30->Release(); }"
+      ]
+    }
+  ],
+  "members": [
+    {
+      "class": "TrackBuffer",
+      "address": "0x541f00",
+      "inline": true,
+      "fields": [
+        {
+          "decl": "char pad0[8];",
+          "offset": 0
+        },
+        {
+          "decl": "void *field8;",
+          "offset": 8
+        }
+      ],
+      "body": [
+        "if (field8 != 0) { Mem_Free(field8); }"
       ]
     }
   ]

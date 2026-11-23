@@ -17,6 +17,7 @@ struct ComObject {
     virtual void __stdcall Release();
     virtual void __stdcall Release2();
 };
+
 struct SoundBufferBase {
     virtual void m0();
     virtual void m1();
