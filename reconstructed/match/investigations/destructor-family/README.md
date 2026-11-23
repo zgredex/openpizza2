@@ -126,19 +126,25 @@ The report also decodes the generated object's unwind with
 ## Experimental members
 
 `experimental.json` holds `0x541f30 SoundTrack` (138 bytes). The member
-subobject now gives the candidate the correct **two unwind states**, but the
-state-1 cleanup transfers still differ and the primary body is 29 bytes off:
+subobject now gives the candidate the correct **two unwind states**:
 
 ```text
 0x541f30 SoundTrack  diff 29
   original_states=2 candidate_states=2
-  differences={"transfers": 2}
+  compare_vc6_unwind: differences={"transfers": 2}
 ```
 
-The blocker is now the state transition: the original disables state 1
-before the inline member free, while the 3/3 generated classes keep the base
-cleanup state active. A `release`/`states` body form is the next extension,
-not another field or member layout change.
+The `transfers: 2` line is a reporting artifact, not a wrong cleanup: the
+strict locator places the candidate's two cleanup thunks at `0x53efd0` and
+`0x541f00`, matching the original. `compare_vc6_unwind` leaves internal COMDAT
+targets as `(section, offset)` and therefore cannot compare them to the
+original VAs.
+
+The real blocker is the primary state transition: the original writes the
+EH state `0` **before** the inline member free (`movb [esp+0x10],0`), while
+the candidate keeps state 1 active through the member destructor. The next
+generator form needs to express that explicit state release, not another
+member layout change.
 
 ## Next destructor targets
 
