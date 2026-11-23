@@ -30,8 +30,34 @@ static struct indexed_target *live_active;
 static int live_pending;
 static uint8_t live_readback[512 * 32 * 4];
 static uint8_t live_source_rgba[32 * 32 * 4];
+struct word_fill {
+    uint32_t pixels, words;
+    uint16_t color;
+};
+static _Thread_local struct word_fill recent_fills[16];
+static _Thread_local unsigned fill_cursor;
 enum { INDEXED_LIVE = 1, INDEXED_FIXTURE = 2, INDEXED_PUBLISH = 4 };
 
+void pc2_capture_word_fill(uint32_t pixels, uint32_t color, uint32_t words)
+{
+    recent_fills[fill_cursor++ % 16] = (struct word_fill){pixels, words, (uint16_t)color};
+}
+
+static int recorded_clear(const struct indexed_target *slot, const uint16_t *pixels, uint16_t *color)
+{
+    unsigned count = (unsigned)slot->width * slot->height;
+    for (unsigned i = 0; i < 16; ++i) {
+        const struct word_fill *fill = &recent_fills[(fill_cursor - 1 - i) % 16];
+        if (fill->pixels != slot->pixels) continue;
+        if (fill->words < count) return 0;
+        /* The clear may have been followed by an unported draw. */
+        for (unsigned j = 0; j < count; ++j)
+            if (pixels[j] != fill->color) return 0;
+        *color = fill->color;
+        return 1;
+    }
+    return 0;
+}
 static void close_live_surface(void)
 {
     for (size_t i = 0; i < sizeof live_targets / sizeof live_targets[0]; ++i)
@@ -62,15 +88,27 @@ static int sync_surface(struct indexed_target *slot)
             cleared += pixels[i] == 0;
         }
     }
-    pc2_vk_texture *base = pc2_vk_texture_create_rgb565(
-        live_vk, slot->width, slot->height, pixels, slot->width * 2, -1);
-    int ok = base && pc2_vk_begin_target(live_vk, slot->texture, 0, 0, 0, 1);
-    if (ok) {
-        pc2_vk_draw(live_vk, base, 0, 0, slot->width, slot->height, 0, 0, 1, 1,
-                    0, 0, slot->width, slot->height);
-        ok = pc2_vk_end(live_vk);
+    uint16_t color;
+    int ok;
+    if (recorded_clear(slot, pixels, &color)) {
+        ok = pc2_vk_begin_target(live_vk, slot->texture,
+                 (((color >> 11) & 31) * 255 / 31) / 255.0f,
+                 (((color >> 5) & 63) * 255 / 63) / 255.0f,
+                 ((color & 31) * 255 / 31) / 255.0f, 1) && pc2_vk_end(live_vk);
+        if (ok)
+            fprintf(stderr, "[vk-live] cleared target %dx%d color=%04X surface=%08X\n",
+                    slot->width, slot->height, color, slot->guest_target);
+    } else {
+        pc2_vk_texture *base = pc2_vk_texture_create_rgb565(
+            live_vk, slot->width, slot->height, pixels, slot->width * 2, -1);
+        ok = base && pc2_vk_begin_target(live_vk, slot->texture, 0, 0, 0, 1);
+        if (ok) {
+            pc2_vk_draw(live_vk, base, 0, 0, slot->width, slot->height, 0, 0, 1, 1,
+                        0, 0, slot->width, slot->height);
+            ok = pc2_vk_end(live_vk);
+        }
+        pc2_vk_texture_destroy(live_vk, base);
     }
-    pc2_vk_texture_destroy(live_vk, base);
     if (!ok) {
         slot->synchronized = 0;
         return 0;

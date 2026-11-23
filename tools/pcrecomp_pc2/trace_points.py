@@ -128,6 +128,17 @@ def patch_sprite_format(text: str) -> str:
     return text.replace(needle, needle + hook, 1)
 
 
+def patch_word_fill(text: str) -> str:
+    entry = "    RECOMP_ENTER(0x0053A3C0u);\n"
+    if "pc2_capture_word_fill(" in text:
+        return text
+    return text.replace(entry, entry +
+        "#ifdef PC2_CAPTURE\n"
+        "    extern void pc2_capture_word_fill(uint32_t, uint32_t, uint32_t);\n"
+        "    pc2_capture_word_fill(MEM32(esp + 4), MEM32(esp + 8), MEM32(esp + 12));\n"
+        "#endif\n", 1)
+
+
 def patch_sprite_fixture(text: str) -> str:
     pattern = r"(^void sub_0053A780\(void\) \{\n.*?^\}\n)"
     def instrument(match: re.Match[str]) -> str:
@@ -297,7 +308,7 @@ def main() -> int:
         changed |= did
         text, did = patch_payment(text)
         changed |= did
-        patched = patch_sprite_fixture(patch_sprite_format(patch_draw_entries(text)))
+        patched = patch_word_fill(patch_sprite_fixture(patch_sprite_format(patch_draw_entries(text))))
         changed |= patched != text
         text = patched
         if changed or any(f"{name}(" in text for name in TRACE_DECLARATIONS):

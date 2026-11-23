@@ -123,6 +123,15 @@ matched the 800×600 CPU menu capture byte for byte and reached character
 select with zero unresolved dispatches. Final composition and presentation
 still use the legacy surface in this capture-only mode.
 
+The capture host records guest `Mem_FillWord` commands. When a recorded
+fill covers a tracked target and its contents confirm there have been no
+later writes, the target is initialized or reset with a Vulkan clear.
+In the menu-click replay all four target initializations and resets used
+this clear path with RGB565 color `0x07c0`, including the 175×8 reuse before
+draw 16. The mirror matched all 98 draws, and publication retained the
+byte-identical menu frame. Other guest pixel changes still use the
+compatibility upload path.
+
 ### Indexed sprite target parity
 
 Add `"PC2_INDEXED_SPRITE_FIXTURE": "/tmp/pc2-menu-indexed.spr1"` to the
