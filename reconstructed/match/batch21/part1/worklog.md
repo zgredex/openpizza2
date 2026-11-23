@@ -88,7 +88,7 @@ the manifest length, the exact entry, `/O2 /TP`, `--strict --auto-symbols`.
 | `99cf69ff` | three strict matches (0x5086e0, 0x522f40, 0x404460) |
 | `06720d67` | three strict C++ EH matches (0x4a1940, 0x513c90, 0x5317b0) plus the EH findings |
 | `bf760570` | near-miss evidence for 0x47cb70, 0x49f640, 0x535c10 (0x49f640 was later promoted) |
-| (next) | promote 0x49f640 to strict and record the final 7/9 result |
+| `c75bd011` | promote 0x49f640 to strict and record the final 7/9 result |
 
 ## Reproduction
 
