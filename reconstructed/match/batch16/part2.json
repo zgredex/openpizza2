@@ -1,0 +1,202 @@
+[
+  {
+    "address": "0x47ed20",
+    "name": "Game_UpdateObjectList2",
+    "start": "0x47ed20",
+    "end": "0x47edba",
+    "length": 155,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x47ed20.c"
+  },
+  {
+    "address": "0x4803c0",
+    "name": "Game_RemoveMapObjectAtPoint",
+    "start": "0x4803c0",
+    "end": "0x48045a",
+    "length": 155,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4803c0.c"
+  },
+  {
+    "address": "0x4da200",
+    "name": "Game_SetCompanyAdvancementScore",
+    "start": "0x4da200",
+    "end": "0x4da29a",
+    "length": 155,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4da200.c"
+  },
+  {
+    "address": "0x5086e0",
+    "name": "UI_ShiftChildRect",
+    "start": "0x5086e0",
+    "end": "0x50877a",
+    "length": 155,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x5086e0.c"
+  },
+  {
+    "address": "0x522f40",
+    "name": "Array_InsertGrow",
+    "start": "0x522f40",
+    "end": "0x522fda",
+    "length": 155,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x522f40.c"
+  },
+  {
+    "address": "0x535c10",
+    "name": "Font_WrapText",
+    "start": "0x535c10",
+    "end": "0x535caa",
+    "length": 155,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x535c10.c"
+  },
+  {
+    "address": "0x404460",
+    "name": "ResourceManager_OpenArchivePath",
+    "start": "0x404460",
+    "end": "0x4044fb",
+    "length": 156,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x404460.c"
+  },
+  {
+    "address": "0x47cb70",
+    "name": "Game_GetAverageCompanyValueByByte8",
+    "start": "0x47cb70",
+    "end": "0x47cc0b",
+    "length": 156,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x47cb70.c"
+  },
+  {
+    "address": "0x49f640",
+    "name": "UI_RecordList_SetVisibleRange",
+    "start": "0x49f640",
+    "end": "0x49f6db",
+    "length": 156,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x49f640.c"
+  },
+  {
+    "address": "0x4af250",
+    "name": "Glossary_IngredientList_Update",
+    "start": "0x4af250",
+    "end": "0x4af2eb",
+    "length": 156,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4af250.c"
+  },
+  {
+    "address": "0x4be490",
+    "name": "LeaseBuilding_UpdatePage",
+    "start": "0x4be490",
+    "end": "0x4be52b",
+    "length": 156,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4be490.c"
+  },
+  {
+    "address": "0x50b5e0",
+    "name": "Person_AssignBranchStaffRole",
+    "start": "0x50b5e0",
+    "end": "0x50b67b",
+    "length": 156,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x50b5e0.c"
+  },
+  {
+    "address": "0x50f6b0",
+    "name": "GamePlan_SaveRecord",
+    "start": "0x50f6b0",
+    "end": "0x50f74b",
+    "length": 156,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x50f6b0.c"
+  },
+  {
+    "address": "0x50f750",
+    "name": "GamePlan_LoadRecord",
+    "start": "0x50f750",
+    "end": "0x50f7eb",
+    "length": 156,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x50f750.c"
+  },
+  {
+    "address": "0x523930",
+    "name": "UI_AllocWindowSlot",
+    "start": "0x523930",
+    "end": "0x5239cb",
+    "length": 156,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x523930.c"
+  },
+  {
+    "address": "0x532580",
+    "name": "UI_Group_SelectMemberByKey",
+    "start": "0x532580",
+    "end": "0x53261b",
+    "length": 156,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x532580.c"
+  },
+  {
+    "address": "0x549e80",
+    "name": "Sound_PlayBuildingSpecialSfx",
+    "start": "0x549e80",
+    "end": "0x549f1b",
+    "length": 156,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x549e80.c"
+  },
+  {
+    "address": "0x54b070",
+    "name": "MessageList_FindFreeSlot",
+    "start": "0x54b070",
+    "end": "0x54b10b",
+    "length": 156,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x54b070.c"
+  },
+  {
+    "address": "0x4dd4f0",
+    "name": "GameCalendar_Save",
+    "start": "0x4dd4f0",
+    "end": "0x4dd58c",
+    "length": 157,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4dd4f0.c"
+  },
+  {
+    "address": "0x4e9d90",
+    "name": "Game_ReleaseConstructionSpriteLists",
+    "start": "0x4e9d90",
+    "end": "0x4e9e2c",
+    "length": 157,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4e9d90.c"
+  },
+  {
+    "address": "0x501f90",
+    "name": "Game_GetBestBuildingRatingBand",
+    "start": "0x501f90",
+    "end": "0x50202c",
+    "length": 157,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x501f90.c"
+  },
+  {
+    "address": "0x50f590",
+    "name": "PlayerCompany_InitDefaults",
+    "start": "0x50f590",
+    "end": "0x50f62c",
+    "length": 157,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x50f590.c"
+  },
+  {
+    "address": "0x527ee0",
+    "name": "UI_BringWindowToFront",
+    "start": "0x527ee0",
+    "end": "0x527f7c",
+    "length": 157,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x527ee0.c"
+  },
+  {
+    "address": "0x403200",
+    "name": "RegistryKey_ReadValue",
+    "start": "0x403200",
+    "end": "0x40329d",
+    "length": 158,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x403200.c"
+  },
+  {
+    "address": "0x406cd0",
+    "name": "Config_SaveOptionsToRegistry",
+    "start": "0x406cd0",
+    "end": "0x406d6d",
+    "length": 158,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x406cd0.c"
+  }
+]

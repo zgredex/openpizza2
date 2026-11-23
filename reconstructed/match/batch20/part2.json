@@ -1,0 +1,202 @@
+[
+  {
+    "address": "0x4fdbe0",
+    "name": "Game_PickRandomIdleObject",
+    "start": "0x4fdbe0",
+    "end": "0x4fdce6",
+    "length": 263,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4fdbe0.c"
+  },
+  {
+    "address": "0x54a660",
+    "name": "DebugConsole_Printf",
+    "start": "0x54a660",
+    "end": "0x54a766",
+    "length": 263,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x54a660.c"
+  },
+  {
+    "address": "0x50d5e0",
+    "name": "AI_TestActionChance",
+    "start": "0x50d5e0",
+    "end": "0x50d6e7",
+    "length": 264,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x50d5e0.c"
+  },
+  {
+    "address": "0x500470",
+    "name": "Map_FindEdgeDot",
+    "start": "0x500470",
+    "end": "0x500578",
+    "length": 265,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x500470.c"
+  },
+  {
+    "address": "0x506c00",
+    "name": "Person_DecideWaitOrLeaveHouse",
+    "start": "0x506c00",
+    "end": "0x506d08",
+    "length": 265,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x506c00.c"
+  },
+  {
+    "address": "0x521270",
+    "name": "UI_UpdateCustomControl",
+    "start": "0x521270",
+    "end": "0x521378",
+    "length": 265,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x521270.c"
+  },
+  {
+    "address": "0x526480",
+    "name": "UI_LoadSpriteSet",
+    "start": "0x526480",
+    "end": "0x526588",
+    "length": 265,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x526480.c"
+  },
+  {
+    "address": "0x479ef0",
+    "name": "Game_InitStatBaselines",
+    "start": "0x479ef0",
+    "end": "0x479ff9",
+    "length": 266,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x479ef0.c"
+  },
+  {
+    "address": "0x47f670",
+    "name": "Company_RemoveAttachedBuildingObjects",
+    "start": "0x47f670",
+    "end": "0x47f779",
+    "length": 266,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x47f670.c"
+  },
+  {
+    "address": "0x4de360",
+    "name": "Stats_GetMaxDailyFilteredSum",
+    "start": "0x4de360",
+    "end": "0x4de469",
+    "length": 266,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4de360.c"
+  },
+  {
+    "address": "0x499f30",
+    "name": "Company_GenerateUniqueName",
+    "start": "0x499f30",
+    "end": "0x49a03a",
+    "length": 267,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x499f30.c"
+  },
+  {
+    "address": "0x5246e0",
+    "name": "Window_BlitToDC",
+    "start": "0x5246e0",
+    "end": "0x5247ea",
+    "length": 267,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x5246e0.c"
+  },
+  {
+    "address": "0x477e40",
+    "name": "Game_CanAfford",
+    "start": "0x477e40",
+    "end": "0x477f4b",
+    "length": 268,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x477e40.c"
+  },
+  {
+    "address": "0x47e750",
+    "name": "Game_PickFreeConstructionPlot",
+    "start": "0x47e750",
+    "end": "0x47e85b",
+    "length": 268,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x47e750.c"
+  },
+  {
+    "address": "0x48d110",
+    "name": "Game_GetDataByIndex",
+    "start": "0x48d110",
+    "end": "0x48d21b",
+    "length": 268,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x48d110.c"
+  },
+  {
+    "address": "0x52ee10",
+    "name": "Dialog_InitBase",
+    "start": "0x52ee10",
+    "end": "0x52ef1b",
+    "length": 268,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x52ee10.c"
+  },
+  {
+    "address": "0x5343d0",
+    "name": "RecordList_DrawVariantSprite",
+    "start": "0x5343d0",
+    "end": "0x5344db",
+    "length": 268,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x5343d0.c"
+  },
+  {
+    "address": "0x4fdcf0",
+    "name": "City_MoveResidentIntoVacantHouse",
+    "start": "0x4fdcf0",
+    "end": "0x4fddfc",
+    "length": 269,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4fdcf0.c"
+  },
+  {
+    "address": "0x49e160",
+    "name": "RecipeInfo_FillNutritionRows",
+    "start": "0x49e160",
+    "end": "0x49e26d",
+    "length": 270,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x49e160.c"
+  },
+  {
+    "address": "0x49e830",
+    "name": "RecipePreview_FillNutritionRows",
+    "start": "0x49e830",
+    "end": "0x49e93d",
+    "length": 270,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x49e830.c"
+  },
+  {
+    "address": "0x4da000",
+    "name": "City_TrySendPoliceToDistrict",
+    "start": "0x4da000",
+    "end": "0x4da10d",
+    "length": 270,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4da000.c"
+  },
+  {
+    "address": "0x4aca80",
+    "name": "StatisticsBranchBalance_DrawColumn",
+    "start": "0x4aca80",
+    "end": "0x4acb8e",
+    "length": 271,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4aca80.c"
+  },
+  {
+    "address": "0x53ec60",
+    "name": "Sound_DecodeADPCM",
+    "start": "0x53ec60",
+    "end": "0x53ed6e",
+    "length": 271,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x53ec60.c"
+  },
+  {
+    "address": "0x548570",
+    "name": "Sound_ApplyVolumePreset",
+    "start": "0x548570",
+    "end": "0x54867e",
+    "length": 271,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x548570.c"
+  },
+  {
+    "address": "0x4d9de0",
+    "name": "City_SendPoliceToDistrictWithSiren",
+    "start": "0x4d9de0",
+    "end": "0x4d9eef",
+    "length": 272,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4d9de0.c"
+  }
+]

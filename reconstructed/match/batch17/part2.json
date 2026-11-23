@@ -1,0 +1,202 @@
+[
+  {
+    "address": "0x535e50",
+    "name": "Palette_Convert256",
+    "start": "0x535e50",
+    "end": "0x535efe",
+    "length": 175,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x535e50.c"
+  },
+  {
+    "address": "0x47e470",
+    "name": "Game_GetHourlyValue",
+    "start": "0x47e470",
+    "end": "0x47e51f",
+    "length": 176,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x47e470.c"
+  },
+  {
+    "address": "0x47f230",
+    "name": "Game_ComputeCityPriceShare",
+    "start": "0x47f230",
+    "end": "0x47f2df",
+    "length": 176,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x47f230.c"
+  },
+  {
+    "address": "0x4c6f90",
+    "name": "CharacterSelect_FillAttributes",
+    "start": "0x4c6f90",
+    "end": "0x4c703f",
+    "length": 176,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4c6f90.c"
+  },
+  {
+    "address": "0x4f7dd0",
+    "name": "City_AssignPersonToBuilding",
+    "start": "0x4f7dd0",
+    "end": "0x4f7e7f",
+    "length": 176,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4f7dd0.c"
+  },
+  {
+    "address": "0x5321f0",
+    "name": "UI_ClipRect",
+    "start": "0x5321f0",
+    "end": "0x53229f",
+    "length": 176,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x5321f0.c"
+  },
+  {
+    "address": "0x47c2b0",
+    "name": "Object_AttachBuildingValue",
+    "start": "0x47c2b0",
+    "end": "0x47c360",
+    "length": 177,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x47c2b0.c"
+  },
+  {
+    "address": "0x4e09e0",
+    "name": "Stats_SumFilteredFloats3",
+    "start": "0x4e09e0",
+    "end": "0x4e0a90",
+    "length": 177,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4e09e0.c"
+  },
+  {
+    "address": "0x4e0aa0",
+    "name": "Stats_SumFilteredFloats4",
+    "start": "0x4e0aa0",
+    "end": "0x4e0b50",
+    "length": 177,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4e0aa0.c"
+  },
+  {
+    "address": "0x4e33a0",
+    "name": "Game_BuildStatusTextByIndex",
+    "start": "0x4e33a0",
+    "end": "0x4e3450",
+    "length": 177,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4e33a0.c"
+  },
+  {
+    "address": "0x52e8f0",
+    "name": "Dialog_Construct",
+    "start": "0x52e8f0",
+    "end": "0x52e9a0",
+    "length": 177,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x52e8f0.c"
+  },
+  {
+    "address": "0x547a00",
+    "name": "Sound_ConvertVolumeSetting",
+    "start": "0x547a00",
+    "end": "0x547ab0",
+    "length": 177,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x547a00.c"
+  },
+  {
+    "address": "0x54c4f0",
+    "name": "Sound_StopThread",
+    "start": "0x54c4f0",
+    "end": "0x54c5a0",
+    "length": 177,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x54c4f0.c"
+  },
+  {
+    "address": "0x531d10",
+    "name": "UI_MoveElementToIndex",
+    "start": "0x531d10",
+    "end": "0x531dc1",
+    "length": 178,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x531d10.c"
+  },
+  {
+    "address": "0x4e3550",
+    "name": "Game_FindNearestObjectByPosition",
+    "start": "0x4e3550",
+    "end": "0x4e3602",
+    "length": 179,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4e3550.c"
+  },
+  {
+    "address": "0x507a80",
+    "name": "Person_TruncatePathToCurrentStep",
+    "start": "0x507a80",
+    "end": "0x507b32",
+    "length": 179,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x507a80.c"
+  },
+  {
+    "address": "0x5395a0",
+    "name": "Surface_FillClippedRect",
+    "start": "0x5395a0",
+    "end": "0x539652",
+    "length": 179,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x5395a0.c"
+  },
+  {
+    "address": "0x4e4860",
+    "name": "Game_SetBuildingDesc",
+    "start": "0x4e4860",
+    "end": "0x4e4913",
+    "length": 180,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4e4860.c"
+  },
+  {
+    "address": "0x514100",
+    "name": "Storage_DistributeCostToShops",
+    "start": "0x514100",
+    "end": "0x5141b4",
+    "length": 181,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x514100.c"
+  },
+  {
+    "address": "0x52f850",
+    "name": "UI_AddText",
+    "start": "0x52f850",
+    "end": "0x52f904",
+    "length": 181,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x52f850.c"
+  },
+  {
+    "address": "0x531850",
+    "name": "UI_AddSprite",
+    "start": "0x531850",
+    "end": "0x531904",
+    "length": 181,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x531850.c"
+  },
+  {
+    "address": "0x538870",
+    "name": "Renderer_CopyState",
+    "start": "0x538870",
+    "end": "0x538924",
+    "length": 181,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x538870.c"
+  },
+  {
+    "address": "0x53c710",
+    "name": "Sprite_CreateRaw",
+    "start": "0x53c710",
+    "end": "0x53c7c4",
+    "length": 181,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x53c710.c"
+  },
+  {
+    "address": "0x540ff0",
+    "name": "Sound_ReleaseInactiveVoices",
+    "start": "0x540ff0",
+    "end": "0x5410a4",
+    "length": 181,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x540ff0.c"
+  },
+  {
+    "address": "0x483eb0",
+    "name": "UI_GetActionDuration",
+    "start": "0x483eb0",
+    "end": "0x483f65",
+    "length": 182,
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x483eb0.c"
+  }
+]
