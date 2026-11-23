@@ -11,12 +11,21 @@ length (156 bytes each) and the exact candidate entry symbol.
 
 | address | function | flags | entry | commit |
 |---|---|---|---|---|
-| 0x50f6b0 | `GamePlan_SaveRecord` | /O2 /TP | `?SaveRecord@GamePlan@@QAEXPAVOStream@@@Z` | |
-| 0x50f750 | `GamePlan_LoadRecord` | /O2 /TP | `?LoadRecord@GamePlan@@QAEXPAVIStream@@@Z` | |
-| 0x549e80 | `Sound_PlayBuildingSpecialSfx` | /O2 /TP | `?PlayBuildingSpecialSfx@Sound@@QAEXH@Z` | |
-| 0x50b5e0 | `Person_AssignBranchStaffRole` | /O2 /TP | `?AssignBranchStaffRole@Person@@QAEXHHHD@Z` | |
-| 0x523930 | `UI_AllocWindowSlot` | /O2 /TP | `?AllocWindowSlot@UI@@QAEHPAH@Z` | |
-| 0x532580 | `UI_Group_SelectMemberByKey` | /O2 /TP | `?SelectMemberByKey@UI_Group@@QAEXH@Z` | |
+| 0x50f6b0 | `GamePlan_SaveRecord` | /O2 /TP | `?SaveRecord@GamePlan@@QAEXPAVOStream@@@Z` | 4e88ecf8 |
+| 0x50f750 | `GamePlan_LoadRecord` | /O2 /TP | `?LoadRecord@GamePlan@@QAEXPAVIStream@@@Z` | 4e88ecf8 |
+| 0x549e80 | `Sound_PlayBuildingSpecialSfx` | /O2 /TP | `?PlayBuildingSpecialSfx@Sound@@QAEXH@Z` | 4e88ecf8 |
+| 0x50b5e0 | `Person_AssignBranchStaffRole` | /O2 /TP | `?AssignBranchStaffRole@Person@@QAEXHHHD@Z` | 4bc09073 |
+| 0x523930 | `UI_AllocWindowSlot` | /O2 /TP | `?AllocWindowSlot@UI@@QAEHPAH@Z` | 14acaaa3 |
+| 0x532580 | `UI_Group_SelectMemberByKey` | /O2 /TP | `?SelectMemberByKey@UI_Group@@QAEXH@Z` | 3ad9afbd |
+
+Result: **6 / 8 strict matches**; the other two records are documented
+genuine-C near misses under `nonmatching/` with matcher JSON and first diff.
+All eight records were attempted. Verify with:
+
+```sh
+sh reconstructed/match/batch21/part2/verify_strict.sh
+# strict matches: 6/6
+```
 
 Notes:
 
@@ -51,5 +60,5 @@ Notes:
 
 | address | function | diff bytes | first diff | diagnosis |
 |---|---|---:|---|---|
-| 0x4af250 | `Glossary_IngredientList_Update` | 90 | offset 0x8: original `lea ebx,[eax+eax*2]` (row) / `lea eax,[eax+eax*2]`, candidate `lea ecx,[eax+eax*2]` / `lea edx,[eax+eax*2-0x42c]` | Size 156 and loop/branch skeleton match, but the allocator derives `row` from `3*entry - 0x42c + id` (spilling that base) instead of keeping a second induction variable in EBX as shipped. About 20 source shapes tried (`do/while`, `for`, reused entry, reordered increments, inverted branch, bool/int compare) either derive row from id or promote `id+0xb74` to the induction (`esi=0xfa0`). Saved under `nonmatching/0x4af250.c` with JSON. |
-| 0x4be490 | `LeaseBuilding_UpdatePage` | 11 | offset 0x1e: original `mov ecx,ebx; lea eax,[esi+8]`, candidate `lea ecx,[esi+8]` then `mov ecx,ebx` after the pushes | Size and all other instructions/relocations match. The shipped code assigns ECX=ui before computing the text pointer, so the pointer lands in EAX; 15 source shapes (`UI*`/`UI&` parameter, local window pointer, reference, named text local, `player->name`, varargs, int* arithmetic, inline helper) all let MSVC choose ECX for the `lea` and delay the ECX=ui move. Saved under `nonmatching/0x4be490.c` with JSON. |
+| 0x4af250 | `Glossary_IngredientList_Update` | 90 | offset 0x8: original `lea ebx,[eax+eax*2]` (row) / `lea eax,[eax+eax*2]`, candidate `lea ecx,[eax+eax*2]` / `lea edx,[eax+eax*2-0x42c]` | Size 156 and loop/branch skeleton match, but the allocator derives `row` from `3*entry - 0x42c + id` (spilling that base) instead of keeping a second induction variable in EBX as shipped. About 20 source shapes tried (`do/while`, `for`, reused entry, reordered increments, inverted branch, bool/int compare, local `id2`, goto) either derive row from id or promote `id+0xb74` to the induction (`esi=0xfa0`); the shipped code keeps `row` in EBX and spills it only around the `row < 0x38` arm. Saved under `nonmatching/0x4af250.c` with JSON. |
+| 0x4be490 | `LeaseBuilding_UpdatePage` | 11 | offset 0x1e: original `mov ecx,ebx; lea eax,[esi+8]`, candidate `lea ecx,[esi+8]` then `mov ecx,ebx` after the pushes | Size and all other instructions/relocations match. The shipped code assigns ECX=ui before computing the text pointer, so the pointer lands in EAX; 16 source shapes (`UI*`/`UI&` parameter, local window pointer, reference, named text local, `player->name`, varargs, int* arithmetic, inline helper, return-value SetText) all let MSVC choose ECX for the `lea` and delay the ECX=ui move. Saved under `nonmatching/0x4be490.c` with JSON. |
