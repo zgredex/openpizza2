@@ -16,6 +16,7 @@ length (156 bytes each) and the exact candidate entry symbol.
 | 0x549e80 | `Sound_PlayBuildingSpecialSfx` | /O2 /TP | `?PlayBuildingSpecialSfx@Sound@@QAEXH@Z` | |
 | 0x50b5e0 | `Person_AssignBranchStaffRole` | /O2 /TP | `?AssignBranchStaffRole@Person@@QAEXHHHD@Z` | |
 | 0x523930 | `UI_AllocWindowSlot` | /O2 /TP | `?AllocWindowSlot@UI@@QAEHPAH@Z` | |
+| 0x532580 | `UI_Group_SelectMemberByKey` | /O2 /TP | `?SelectMemberByKey@UI_Group@@QAEXH@Z` | |
 
 Notes:
 
@@ -38,6 +39,13 @@ Notes:
   MSVC strength-reduces the index to a pointer and emits the shipped
   check-value/increment/compare loop; the explicit `do/while` form is rotated
   and peeled. `count` is loaded once and `slot` stays in EDI.
+* `0x532580`: the loop must be a top-tested `while (index < count)` with
+  `if (found != -1) goto found;` and a bare `return;` before the `found:`
+  label. The compiler then folds the loop-exit condition into the back edge
+  (`cmp edi,eax; jl loop`), puts the return epilogue directly after the loop,
+  and lays the found block out of line exactly as shipped. `break` plus an
+  `index == count` check, or processing inside the loop, both add a check or
+  invert the back edge.
 
 ## Non-matching evidence
 

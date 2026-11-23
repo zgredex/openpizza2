@@ -32,6 +32,7 @@ check 0x50f750 '?LoadRecord@GamePlan@@QAEXPAVIStream@@@Z'
 check 0x549e80 '?PlayBuildingSpecialSfx@Sound@@QAEXH@Z'
 check 0x50b5e0 '?AssignBranchStaffRole@Person@@QAEXHHHD@Z'
 check 0x523930 '?AllocWindowSlot@UI@@QAEHPAH@Z'
+check 0x532580 '?SelectMemberByKey@UI_Group@@QAEXH@Z'
 
 echo "strict matches: $pass/$((pass + fail))"
 [ "$fail" -eq 0 ]
