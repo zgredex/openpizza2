@@ -1,0 +1,83 @@
+[
+  {
+    "address": "0x5317b0",
+    "name": "UI_CreateMovieWindow",
+    "length": 152,
+    "start": "0x5317b0",
+    "end": "0x531847",
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x5317b0.c",
+    "source_part": "batch16/part1"
+  },
+  {
+    "address": "0x513c90",
+    "name": "Storage_Construct",
+    "length": 153,
+    "start": "0x513c90",
+    "end": "0x513d28",
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x513c90.c",
+    "source_part": "batch16/part1"
+  },
+  {
+    "address": "0x4a1940",
+    "name": "SaveGame_Scan",
+    "length": 154,
+    "start": "0x4a1940",
+    "end": "0x4a19d9",
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4a1940.c",
+    "source_part": "batch16/part1"
+  },
+  {
+    "address": "0x5086e0",
+    "name": "UI_ShiftChildRect",
+    "length": 155,
+    "start": "0x5086e0",
+    "end": "0x50877a",
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x5086e0.c",
+    "source_part": "batch16/part2"
+  },
+  {
+    "address": "0x522f40",
+    "name": "Array_InsertGrow",
+    "length": 155,
+    "start": "0x522f40",
+    "end": "0x522fda",
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x522f40.c",
+    "source_part": "batch16/part2"
+  },
+  {
+    "address": "0x535c10",
+    "name": "Font_WrapText",
+    "length": 155,
+    "start": "0x535c10",
+    "end": "0x535caa",
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x535c10.c",
+    "source_part": "batch16/part2"
+  },
+  {
+    "address": "0x404460",
+    "name": "ResourceManager_OpenArchivePath",
+    "length": 156,
+    "start": "0x404460",
+    "end": "0x4044fb",
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x404460.c",
+    "source_part": "batch16/part2"
+  },
+  {
+    "address": "0x47cb70",
+    "name": "Game_GetAverageCompanyValueByByte8",
+    "length": 156,
+    "start": "0x47cb70",
+    "end": "0x47cc0b",
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x47cb70.c",
+    "source_part": "batch16/part2"
+  },
+  {
+    "address": "0x49f640",
+    "name": "UI_RecordList_SetVisibleRange",
+    "length": 156,
+    "start": "0x49f640",
+    "end": "0x49f6db",
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x49f640.c",
+    "source_part": "batch16/part2"
+  }
+]

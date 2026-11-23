@@ -1,0 +1,74 @@
+[
+  {
+    "address": "0x54b070",
+    "name": "MessageList_FindFreeSlot",
+    "length": 156,
+    "start": "0x54b070",
+    "end": "0x54b10b",
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x54b070.c",
+    "source_part": "batch16/part2"
+  },
+  {
+    "address": "0x4dd4f0",
+    "name": "GameCalendar_Save",
+    "length": 157,
+    "start": "0x4dd4f0",
+    "end": "0x4dd58c",
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4dd4f0.c",
+    "source_part": "batch16/part2"
+  },
+  {
+    "address": "0x4e9d90",
+    "name": "Game_ReleaseConstructionSpriteLists",
+    "length": 157,
+    "start": "0x4e9d90",
+    "end": "0x4e9e2c",
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x4e9d90.c",
+    "source_part": "batch16/part2"
+  },
+  {
+    "address": "0x501f90",
+    "name": "Game_GetBestBuildingRatingBand",
+    "length": 157,
+    "start": "0x501f90",
+    "end": "0x50202c",
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x501f90.c",
+    "source_part": "batch16/part2"
+  },
+  {
+    "address": "0x50f590",
+    "name": "PlayerCompany_InitDefaults",
+    "length": 157,
+    "start": "0x50f590",
+    "end": "0x50f62c",
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x50f590.c",
+    "source_part": "batch16/part2"
+  },
+  {
+    "address": "0x527ee0",
+    "name": "UI_BringWindowToFront",
+    "length": 157,
+    "start": "0x527ee0",
+    "end": "0x527f7c",
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x527ee0.c",
+    "source_part": "batch16/part2"
+  },
+  {
+    "address": "0x403200",
+    "name": "RegistryKey_ReadValue",
+    "length": 158,
+    "start": "0x403200",
+    "end": "0x40329d",
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x403200.c",
+    "source_part": "batch16/part2"
+  },
+  {
+    "address": "0x406cd0",
+    "name": "Config_SaveOptionsToRegistry",
+    "length": 158,
+    "start": "0x406cd0",
+    "end": "0x406d6d",
+    "pseudocode": "decompiled_fastfood2_named_v2/full_game_verification/functions/0x406cd0.c",
+    "source_part": "batch16/part2"
+  }
+]
