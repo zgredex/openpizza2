@@ -10,7 +10,6 @@
 typedef void *HKEY;
 
 extern "C" void __fastcall Clear_Ptr(void **slot);
-extern "C" void __fastcall RegistryKey_CloseThunk(void **key);
 extern char STR_00563c5c[];
 extern char STR_00563c54[];
 extern char STR_00563c4c[];

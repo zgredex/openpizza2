@@ -61,9 +61,9 @@ void PlayerCompany::InitDefaults()
     f30 = DAT_0057c244;
     *(int *)(state + 0x40) = DAT_0057c248;
 
-    int *dst = copy;
     int *src = &DAT_0057c228;
+    int i = 0;
     do {
-        *dst++ = *src++;
+        copy[i++] = *src++;
     } while ((int)src < 0x57c240);
 }
