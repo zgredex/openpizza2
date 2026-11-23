@@ -112,14 +112,16 @@ a successful readback. The lifted sprite traversal still runs and preserves
 the guest calling convention. Transparent pixels keep their existing values.
 Look for `[vk-live] published indexed draw` in `host.log`.
 
-The publication replay handled 68 draws across two 400×15 panels, including
-the right-clipped last tiles. Its 800×600 menu capture matched the CPU
-control byte for byte, and both reached character select with zero
-unresolved dispatches. Publication is limited to the verified panel shape.
-Mirror mode also found a 175×8 target with its first divergence on draw
-16, at 632 of 1,400 pixels. Trace other writes and surface reuse on that
-target before enabling publication. This capture-only mode still uses the
-legacy surface for final composition and presentation.
+The publication replay handled 98 indexed draws across three surfaces.
+Before draw 16 on the 175×8 surface, the renderer released and reconfigured
+the same guest object. `Mem_FillWord` then filled its reused pixel buffer
+with `0x07c0`. The old mirror kept stale pixels because both addresses were
+unchanged. It now checks for guest writes before each draw and refreshes the
+Vulkan target if needed. The replay detected 660 changed pixels before the
+draw and matched the CPU surface after all 98 draws. The publication replay
+matched the 800×600 CPU menu capture byte for byte and reached character
+select with zero unresolved dispatches. Final composition and presentation
+still use the legacy surface in this capture-only mode.
 
 ### Indexed sprite target parity
 
