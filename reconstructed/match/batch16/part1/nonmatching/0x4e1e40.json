@@ -1,0 +1,111 @@
+{
+  "address": "0x4e1e40",
+  "entry": "?FindFreeStaffRecord@Game@@QAEPAUStaffId@@H@Z",
+  "length": 151,
+  "candidate_length": 151,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [],
+  "relocation_issues": [],
+  "relocations": [
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4e1e61",
+      "offset": "0x21",
+      "symbol": "?Lookup@IDMap@@QAEPAXHPAH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xfff1f98b",
+      "expected": "0xfff1f98b",
+      "target": "0x4017f0",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4e1e67",
+      "offset": "0x27",
+      "symbol": "?DAT_0057c670@@3PADA",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x57c670",
+      "expected": "0x57c670",
+      "target": "0x57c670",
+      "origin": "address_label",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4e1e76",
+      "offset": "0x36",
+      "symbol": "?Lookup@IDMap@@QAEPAXHPAH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xfff1f976",
+      "expected": "0xfff1f976",
+      "target": "0x4017f0",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4e1e7f",
+      "offset": "0x3f",
+      "symbol": "?Is2DOr2E@State@@QAEHXZ",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x2bd4d",
+      "expected": "0x2bd4d",
+      "target": "0x50dbd0",
+      "origin": "decorated_alias",
+      "verified": true
+    }
+  ],
+  "object_sha256": "9f58c5f31e649c27394c3267de01f0a6aecc34e84554f1bc4feeb8b4d9d79ac5",
+  "linked_spans": [],
+  "link_plan_issues": [],
+  "blocked_sections": [],
+  "linked_sections": [
+    {
+      "section": ".text",
+      "index": 2,
+      "address": "0x4e1e40",
+      "origin": "candidate_entry"
+    }
+  ],
+  "first_difference": {
+    "offset": 72,
+    "original": 68,
+    "candidate": 84
+  },
+  "difference_count": 5,
+  "source": "reconstructed/match/batch16/part1/nonmatching/0x4e1e40.c",
+  "source_sha256": "5d0f8ff44473e0a984e06f81e9118c5b27d51bc7344bcecf4cadf89d4387b31c",
+  "executable_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd",
+  "compiler": {
+    "path": "/home/patryk/.local/share/pc2/vc6-sp3-toolchain/VC98",
+    "sha256": {
+      "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+      "C1.DLL": "d1b25d84da1d3d0d460996ea298488cb183b857e1b90628147983114ac4ab55f",
+      "C1XX.DLL": "28c355499c2f8090910624734faff31fe719a69a8aac7dd44b2ce64addf96ee2",
+      "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153"
+    }
+  },
+  "flags": [
+    "/O2",
+    "/TP"
+  ],
+  "strict_requested": true,
+  "strict_symbols": false,
+  "auto_symbols": true,
+  "symbol_registry_sha256": "e70a0a1124d4f83bd2fd48c4e28c535aacc6ecfdacef8ccf1f7b0bc357e618fe",
+  "symbol_overrides": {}
+}
