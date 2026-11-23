@@ -56,6 +56,12 @@ struct ComInterface19 {
     virtual void __stdcall s17();
     virtual int __stdcall s18();
 };
+
+struct ComSlot8 {
+    virtual void a0();
+    virtual void a1();
+    virtual void __stdcall Release();
+};
 struct CriticalSection {
     char raw[0x18];
     ~CriticalSection() {

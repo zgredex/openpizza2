@@ -80,7 +80,7 @@
     },
     {
       "address": "0x5408b0",
-      "class": "List",
+      "class": "SoundBufferList",
       "strict_match": true,
       "match": true,
       "length": 169,
@@ -113,6 +113,44 @@
         "candidate_states": 2,
         "differences": {
           "transfers": 2
+        }
+      }
+    },
+    {
+      "address": "0x541660",
+      "class": "SoundStreamLayer",
+      "strict_match": true,
+      "match": true,
+      "length": 195,
+      "candidate_length": 195,
+      "difference_count": 0,
+      "first_difference": null,
+      "strict_issues": [],
+      "relocation_issues": [],
+      "unwind": {
+        "original_states": 3,
+        "candidate_states": 3,
+        "differences": {
+          "transfers": 3
+        }
+      }
+    },
+    {
+      "address": "0x541790",
+      "class": "SoundStreamBuffer",
+      "strict_match": true,
+      "match": true,
+      "length": 225,
+      "candidate_length": 225,
+      "difference_count": 0,
+      "first_difference": null,
+      "strict_issues": [],
+      "relocation_issues": [],
+      "unwind": {
+        "original_states": 4,
+        "candidate_states": 4,
+        "differences": {
+          "transfers": 4
         }
       }
     }

@@ -100,9 +100,9 @@
     },
     {
       "address": "0x5408b0",
-      "name": "List",
+      "name": "SoundBufferList",
       "length": 169,
-      "entry": "??1List@@UAE@XZ",
+      "entry": "??1SoundBufferList@@UAE@XZ",
       "source": "reconstructed/match/investigations/destructor-family/generated/0x005408b0.cpp",
       "flags": [
         "/O2",
@@ -115,8 +115,9 @@
         "?m0@SoundBufferBase@@UAEXXZ": "0x53ef60",
         "?m1@SoundBufferBase@@UAEXXZ": "0x53ef70",
         "?m2@SoundBufferBase@@UAEXXZ": "0x53ef90",
-        "??_7List@@6B@": "0x55c874",
-        "??_EList@@UAEPAXI@Z": "0x540890",
+        "??_7SoundBufferList@@6B@": "0x55c874",
+        "??_ESoundBufferList@@UAEPAXI@Z": "0x540890",
+        "?DestroyObjects@SoundBufferList@@QAEXXZ": "0x540f60",
         "??1CriticalSection@@QAE@XZ": "0x53fd90",
         "??1StreamList@@QAE@XZ": "0x541250",
         "??1TrackBuffer@@QAE@XZ": "0x541f00"
@@ -141,6 +142,65 @@
         "?m2@SoundBufferBase@@UAEXXZ": "0x53ef90",
         "??_7SoundTrack@@6B@": "0x55c8e0",
         "??_ESoundTrack@@UAEPAXI@Z": "0x541f10",
+        "??1CriticalSection@@QAE@XZ": "0x53fd90",
+        "??1StreamList@@QAE@XZ": "0x541250",
+        "??1TrackBuffer@@QAE@XZ": "0x541f00"
+      }
+    },
+    {
+      "address": "0x541660",
+      "name": "SoundStreamLayer",
+      "length": 195,
+      "entry": "??1SoundStreamLayer@@UAE@XZ",
+      "source": "reconstructed/match/investigations/destructor-family/generated/0x00541660.cpp",
+      "flags": [
+        "/O2",
+        "/GX",
+        "/TP"
+      ],
+      "symbols": {
+        "??_7SoundBufferBase@@6B@": "0x55c840",
+        "??_ESoundBufferBase@@UAEPAXI@Z": "0x53efe0",
+        "?m0@SoundBufferBase@@UAEXXZ": "0x53ef60",
+        "?m1@SoundBufferBase@@UAEXXZ": "0x53ef70",
+        "?m2@SoundBufferBase@@UAEXXZ": "0x53ef90",
+        "??_7SoundBufferList@@6B@": "0x55c874",
+        "??_ESoundBufferList@@UAEPAXI@Z": "0x540890",
+        "??1SoundBufferList@@UAE@XZ": "0x5408b0",
+        "?DestroyObjects@SoundBufferList@@QAEXXZ": "0x540f60",
+        "??_7SoundStreamLayer@@6B@": "0x55c8c8",
+        "??_ESoundStreamLayer@@UAEPAXI@Z": "0x541730",
+        "??1CriticalSection@@QAE@XZ": "0x53fd90",
+        "??1StreamList@@QAE@XZ": "0x541250",
+        "??1TrackBuffer@@QAE@XZ": "0x541f00"
+      }
+    },
+    {
+      "address": "0x541790",
+      "name": "SoundStreamBuffer",
+      "length": 225,
+      "entry": "??1SoundStreamBuffer@@UAE@XZ",
+      "source": "reconstructed/match/investigations/destructor-family/generated/0x00541790.cpp",
+      "flags": [
+        "/O2",
+        "/GX",
+        "/TP"
+      ],
+      "symbols": {
+        "??_7SoundBufferBase@@6B@": "0x55c840",
+        "??_ESoundBufferBase@@UAEPAXI@Z": "0x53efe0",
+        "?m0@SoundBufferBase@@UAEXXZ": "0x53ef60",
+        "?m1@SoundBufferBase@@UAEXXZ": "0x53ef70",
+        "?m2@SoundBufferBase@@UAEXXZ": "0x53ef90",
+        "??_7SoundBufferList@@6B@": "0x55c874",
+        "??_ESoundBufferList@@UAEPAXI@Z": "0x540890",
+        "??1SoundBufferList@@UAE@XZ": "0x5408b0",
+        "?DestroyObjects@SoundBufferList@@QAEXXZ": "0x540f60",
+        "??_7SoundStreamLayer@@6B@": "0x55c8c8",
+        "??_ESoundStreamLayer@@UAEPAXI@Z": "0x541730",
+        "??1SoundStreamLayer@@UAE@XZ": "0x541660",
+        "??_7SoundStreamBuffer@@6B@": "0x55c8b0",
+        "??_ESoundStreamBuffer@@UAEPAXI@Z": "0x541770",
         "??1CriticalSection@@QAE@XZ": "0x53fd90",
         "??1StreamList@@QAE@XZ": "0x541250",
         "??1TrackBuffer@@QAE@XZ": "0x541f00"

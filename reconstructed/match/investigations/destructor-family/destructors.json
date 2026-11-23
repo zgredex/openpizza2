@@ -1,7 +1,7 @@
 {
   "family": "sound-destructors",
   "prelude": "extern \"C\" void __cdecl Mem_Free(void *);\nextern \"C\" __declspec(dllimport) void __stdcall CoUninitialize(void);\nextern \"C\" __declspec(dllimport) void __stdcall DeleteCriticalSection(void *);",
-  "common": "struct Child {\n    virtual void slot0();\n    virtual void slot1();\n    virtual void __stdcall Destroy();\n};\n\nstruct SoundStream {\n    virtual void slot0();\n    virtual void __stdcall Release();\n    void Close(int length);\n};\n\nstruct ComObject {\n    virtual void slot0();\n    virtual void __stdcall Release();\n    virtual void __stdcall Release2();\n};\n\nstruct Entry {\n    void *stream;\n    void *buffer;\n    char pad8[0x10];\n    int flag;\n};\n\nstruct Node {\n    char pad0[0x50];\n    Node *next;\n};\n\nstruct ListNode {\n    char pad0[4];\n    ListNode *next;\n};\n\nstruct ComInterface19 {\n    virtual void __stdcall s0();\n    virtual void __stdcall s1();\n    virtual void __stdcall s2();\n    virtual void __stdcall s3();\n    virtual void __stdcall s4();\n    virtual void __stdcall s5();\n    virtual void __stdcall s6();\n    virtual void __stdcall s7();\n    virtual void __stdcall s8();\n    virtual void __stdcall s9();\n    virtual void __stdcall s10();\n    virtual void __stdcall s11();\n    virtual void __stdcall s12();\n    virtual void __stdcall s13(int);\n    virtual void __stdcall s14();\n    virtual void __stdcall s15();\n    virtual void __stdcall s16();\n    virtual void __stdcall s17();\n    virtual int __stdcall s18();\n};",
+  "common": "struct Child {\n    virtual void slot0();\n    virtual void slot1();\n    virtual void __stdcall Destroy();\n};\n\nstruct SoundStream {\n    virtual void slot0();\n    virtual void __stdcall Release();\n    void Close(int length);\n};\n\nstruct ComObject {\n    virtual void slot0();\n    virtual void __stdcall Release();\n    virtual void __stdcall Release2();\n};\n\nstruct Entry {\n    void *stream;\n    void *buffer;\n    char pad8[0x10];\n    int flag;\n};\n\nstruct Node {\n    char pad0[0x50];\n    Node *next;\n};\n\nstruct ListNode {\n    char pad0[4];\n    ListNode *next;\n};\n\nstruct ComInterface19 {\n    virtual void __stdcall s0();\n    virtual void __stdcall s1();\n    virtual void __stdcall s2();\n    virtual void __stdcall s3();\n    virtual void __stdcall s4();\n    virtual void __stdcall s5();\n    virtual void __stdcall s6();\n    virtual void __stdcall s7();\n    virtual void __stdcall s8();\n    virtual void __stdcall s9();\n    virtual void __stdcall s10();\n    virtual void __stdcall s11();\n    virtual void __stdcall s12();\n    virtual void __stdcall s13(int);\n    virtual void __stdcall s14();\n    virtual void __stdcall s15();\n    virtual void __stdcall s16();\n    virtual void __stdcall s17();\n    virtual int __stdcall s18();\n};\n\nstruct ComSlot8 {\n    virtual void a0();\n    virtual void a1();\n    virtual void __stdcall Release();\n};",
   "base": {
     "class": "SoundBufferBase",
     "vtable": "0x55c840",
@@ -147,7 +147,7 @@
       ]
     },
     {
-      "class": "List",
+      "class": "SoundBufferList",
       "address": "0x5408b0",
       "length": 169,
       "vtable": "0x55c874",
@@ -181,7 +181,10 @@
         "    }",
         "    field48->s2();",
         "}"
-      ]
+      ],
+      "symbols": {
+        "?DestroyObjects@SoundBufferList@@QAEXXZ": "0x540f60"
+      }
     },
     {
       "class": "SoundTrack",
@@ -218,6 +221,42 @@
         "if (field2c != 0) { field2c->Release(); }",
         "if (field34 != 0) { field34->Release2(); }",
         "if (field30 != 0) { field30->Release(); }"
+      ]
+    },
+    {
+      "class": "SoundStreamLayer",
+      "address": "0x541660",
+      "length": 195,
+      "vtable": "0x55c8c8",
+      "deleting": "0x541730",
+      "base": "SoundBufferList",
+      "prelude": "void Mem_Free(void *);\nextern \"C\" __declspec(dllimport) void __stdcall DeleteCriticalSection(void *);",
+      "fields": [
+        {
+          "decl": "ComSlot8 *field5c;",
+          "offset": 92
+        }
+      ],
+      "body": [
+        "if (field5c != 0) { field5c->Release(); }"
+      ]
+    },
+    {
+      "class": "SoundStreamBuffer",
+      "address": "0x541790",
+      "length": 225,
+      "vtable": "0x55c8b0",
+      "deleting": "0x541770",
+      "base": "SoundStreamLayer",
+      "prelude": "void Mem_Free(void *);\nextern \"C\" __declspec(dllimport) void __stdcall DeleteCriticalSection(void *);",
+      "fields": [
+        {
+          "decl": "ComSlot8 *fieldAC;",
+          "offset": 172
+        }
+      ],
+      "body": [
+        "if (fieldAC != 0) { fieldAC->Release(); }"
       ]
     }
   ],

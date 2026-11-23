@@ -56,6 +56,12 @@ struct ComInterface19 {
     virtual void __stdcall s17();
     virtual int __stdcall s18();
 };
+
+struct ComSlot8 {
+    virtual void a0();
+    virtual void a1();
+    virtual void __stdcall Release();
+};
 struct CriticalSection {
     char raw[0x18];
     ~CriticalSection() {
@@ -95,17 +101,17 @@ struct SoundBufferBase {
     virtual ~SoundBufferBase() {}
 };
 
-struct List : SoundBufferBase {
+struct SoundBufferList : SoundBufferBase {
     char pad0[0x30];
     unsigned char enabled;
     char pad1[0x3];
     StreamList list;
     ComInterface19 *field48;
     void DestroyObjects();
-    virtual ~List();
+    virtual ~SoundBufferList();
 };
 
-List::~List()
+SoundBufferList::~SoundBufferList()
 {
     if (enabled != 0) { DestroyObjects(); }
     if (field48 != 0) {

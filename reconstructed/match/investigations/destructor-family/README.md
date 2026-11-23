@@ -9,16 +9,18 @@ and writes a `family.json` for `tools/run_family_batch.py`.
 ## Result
 
 ```text
-sound-destructors: 6/6 strict, 830/830 bytes
-  0x53f020   91  SoundBuffer      (vtable 0x55c830, deleting 0x53f000)
-  0x53f5d0  126  SoundSample      (vtable 0x55c850, deleting 0x53f5b0)
-  0x5408b0  169  List             (vtable 0x55c874, deleting 0x540890)
-  0x541f30  138  SoundTrack       (vtable 0x55c8e0, deleting 0x541f10)
-  0x546750   99  SoundBuffer2     (vtable 0x55cb14, deleting 0x546730)
-  0x53fcc0  207  SoundPakManager  (vtable 0x55c864, deleting 0x53fca0)
+sound-destructors: 8/8 strict, 1,250/1,250 bytes
+  0x53f020   91  SoundBuffer          (vtable 0x55c830, deleting 0x53f000)
+  0x53f5d0  126  SoundSample          (vtable 0x55c850, deleting 0x53f5b0)
+  0x5408b0  169  SoundBufferList      (vtable 0x55c874, deleting 0x540890)
+  0x541660  195  SoundStreamLayer     (vtable 0x55c8c8, deleting 0x541730)
+  0x541790  225  SoundStreamBuffer    (vtable 0x55c8b0, deleting 0x541770)
+  0x541f30  138  SoundTrack           (vtable 0x55c8e0, deleting 0x541f10)
+  0x546750   99  SoundBuffer2         (vtable 0x55cb14, deleting 0x546730)
+  0x53fcc0  207  SoundPakManager      (vtable 0x55c864, deleting 0x53fca0)
 ```
 
-All six candidates reproduce the primary body, `.text$x`, `.xdata$x`, the
+All eight candidates reproduce the primary body, `.text$x`, `.xdata$x`, the
 `0x53efd0` cleanup thunk, the derived/base vtables, and the shared
 AddRef/Release/QueryInterface method targets.
 
@@ -54,7 +56,7 @@ base deleting destructor = 0x53efe0
 
 ```sh
 sh reconstructed/match/investigations/destructor-family/verify_strict.sh
-# 6/6 strict
+# 8/8 strict
 
 python3 tools/generate_destructor_family.py \
   --spec reconstructed/match/investigations/destructor-family/destructors.json \
@@ -202,11 +204,38 @@ test edi,edi; jne ...` exactly.
 The array loop uses a 20-entry array at `+8` (stride `0x1c`, fields at
 `+0/+4/+0x18`), a count at `+0x238`, and a list head at `+0x628`.
 
-## Next destructor targets
+## Destructor inheritance chains
+
+`0x541660` and `0x541790` are one single-inheritance chain:
 
 ```text
-0x541790 SoundStreamBuffer_Destruct  225 bytes  vtables 0x55c8b0/0x55c8c8/0x55c874
+SoundBufferBase        vtable 0x55c840
+  SoundBufferList      vtable 0x55c874  dtor 0x5408b0
+    SoundStreamLayer   vtable 0x55c8c8  dtor 0x541660
+      SoundStreamBuffer vtable 0x55c8b0 dtor 0x541790
 ```
+
+The spec expresses this with a `base` field and a per-class `symbols` map. The
+generator resolves the ancestry automatically and emits the ancestor classes
+with **inline** destructor bodies; the target destructor is declared
+out-of-line and defined after the classes. That is the shape VC6 needs:
+
+- an inline ancestor destructor is inlined into the derived destructor;
+- the out-of-line target destructor forces emission of the entry COMDAT and of
+  the ancestor vtables/deleting destructors;
+- defining the ancestors out-of-line instead leaves real calls and produces a
+  96-byte target instead of 225.
+
+The target body only releases its own interface at `+0xac`; the inlined chain
+then performs the `+0x5c` release, the `List` teardown, and the base vtable
+reset, with EH states numbered 0/1/2/3 by the compiler.
+
+## Next destructor targets
+
+The indexed sound-destructor set is complete. The next destructor-shaped work
+is the other classes in the cleanup registry (`0x53fcc0`-like pak managers,
+stream/base buffers, and vtable-linked COM wrappers), which should be grouped
+by their unwind-map shape before hand-matching.
 
 The generator should be extended with a `states` field for extra unwind
 cleanup actions and a `switch`/`if` body form, then the remaining members can

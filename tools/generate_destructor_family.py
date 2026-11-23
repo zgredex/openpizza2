@@ -55,29 +55,72 @@ def member_source(member):
 }}"""
 
 
-def source_for(spec, item):
-    base = spec["base"]["class"]
-    body = "\n".join(f"    {line}" for line in item["body"])
-    fields = field_block(item.get("fields", []))
+def class_size(item):
+    """Largest field end offset; the vptr occupies the first four bytes."""
+    cursor = 4
+    for field in item.get("fields", []):
+        cursor = max(cursor, int(field.get("offset", cursor)) + int(field.get("size", 4)))
+    return cursor
+
+
+def ancestry(spec, item):
+    """Return (root-first ancestor items, immediate base name)."""
+    by_name = {entry["class"]: entry for entry in spec.get("classes", [])}
+    base_name = item.get("base", spec["base"]["class"])
+    chain = []
+    seen = set()
+    name = base_name
+    while name in by_name and name not in seen:
+        seen.add(name)
+        chain.append(by_name[name])
+        name = by_name[name].get("base", spec["base"]["class"])
+    chain.reverse()
+    return chain, base_name
+
+
+def class_definition(item, base, first_offset, inline):
+    fields = field_block(item.get("fields", []), first_offset)
     declarations = "".join(
         f"\n    {line}" for line in item.get("declarations", []))
+    name = item["class"]
+    if inline:
+        body = "\n".join(f"        {line}" for line in item["body"])
+        destructor = f"    virtual ~{name}() {{\n{body}\n    }}"
+    else:
+        destructor = f"    virtual ~{name}();"
+    return f"""struct {name} : {base} {{
+{fields}{declarations}
+{destructor}
+}};"""
+
+
+def source_for(spec, item):
+    shared_base = spec["base"]["class"]
+    body = "\n".join(f"    {line}" for line in item["body"])
     common = spec.get("common", "")
     members = "\n\n".join(member_source(member) for member in spec.get("members", []))
     prelude = item.get("prelude", spec.get("prelude", ""))
+    chain, base_name = ancestry(spec, item)
+    definitions = []
+    first_offset = 4
+    parent = shared_base
+    for ancestor in chain:
+        definitions.append(class_definition(ancestor, parent, first_offset, inline=True))
+        parent = ancestor["class"]
+        first_offset = class_size(ancestor)
+    definitions.append(class_definition(item, parent, first_offset, inline=False))
+    classes = "\n\n".join(definitions)
     return f"""{prelude}
 {common}
 {members}
-struct {base} {{
+struct {shared_base} {{
     virtual void m0();
     virtual void m1();
     virtual void m2();
-    virtual ~{base}() {{}}
+    virtual ~{shared_base}() {{}}
 }};
 
-struct {item['class']} : {base} {{
-{fields}{declarations}
-    virtual ~{item['class']}();
-}};
+{classes}
 
 {item['class']}::~{item['class']}()
 {{
@@ -93,8 +136,17 @@ def symbols_for(spec, item):
     symbols[f"??_E{base['class']}@@UAEPAXI@Z"] = parse_address(base["deleting"])
     for index, address in enumerate(base["methods"]):
         symbols[f"?m{index}@{base['class']}@@UAEXXZ"] = parse_address(address)
+    chain, _ = ancestry(spec, item)
+    for ancestor in chain:
+        symbols[f"??_7{ancestor['class']}@@6B@"] = parse_address(ancestor["vtable"])
+        symbols[f"??_E{ancestor['class']}@@UAEPAXI@Z"] = parse_address(ancestor["deleting"])
+        symbols[f"??1{ancestor['class']}@@UAE@XZ"] = parse_address(ancestor["address"])
+        for name, address in ancestor.get("symbols", {}).items():
+            symbols[name] = parse_address(address)
     symbols[f"??_7{item['class']}@@6B@"] = parse_address(item["vtable"])
     symbols[f"??_E{item['class']}@@UAEPAXI@Z"] = parse_address(item["deleting"])
+    for name, address in item.get("symbols", {}).items():
+        symbols[name] = parse_address(address)
     for member in spec.get("members", []):
         if member.get("address"):
             symbols[f"??1{member['class']}@@QAE@XZ"] = parse_address(member["address"])
