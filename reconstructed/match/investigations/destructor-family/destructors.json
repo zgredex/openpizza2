@@ -1,0 +1,78 @@
+{
+  "family": "sound-destructors",
+  "prelude": "extern \"C\" void __cdecl Mem_Free(void *);\nextern \"C\" __declspec(dllimport) void __stdcall CoUninitialize(void);",
+  "common": "struct Child {\n    virtual void slot0();\n    virtual void slot1();\n    virtual void __stdcall Destroy();\n};\n\nstruct SoundStream {\n    virtual void slot0();\n    virtual void __stdcall Release();\n    void Close(int length);\n};\n\nstruct ComObject {\n    virtual void slot0();\n    virtual void __stdcall Release();\n    virtual void __stdcall Release2();\n};",
+  "base": {
+    "class": "SoundBufferBase",
+    "vtable": "0x55c840",
+    "methods": [
+      "0x53ef60",
+      "0x53ef70",
+      "0x53ef90"
+    ],
+    "deleting": "0x53efe0"
+  },
+  "classes": [
+    {
+      "class": "SoundBuffer",
+      "address": "0x53f020",
+      "length": 91,
+      "vtable": "0x55c830",
+      "deleting": "0x53f000",
+      "fields": [
+        {
+          "decl": "int field4;",
+          "offset": 4
+        },
+        {
+          "decl": "Child *child;",
+          "offset": 8
+        },
+        {
+          "decl": "unsigned char initialized;",
+          "offset": 12,
+          "size": 1
+        }
+      ],
+      "body": [
+        "if (child != 0) { child->Destroy(); }",
+        "if (initialized != 0) { CoUninitialize(); }"
+      ]
+    },
+    {
+      "class": "SoundSample",
+      "address": "0x53f5d0",
+      "length": 126,
+      "vtable": "0x55c850",
+      "deleting": "0x53f5b0",
+      "fields": [
+        {
+          "decl": "int field4;",
+          "offset": 4
+        },
+        {
+          "decl": "SoundStream *stream;",
+          "offset": 8
+        },
+        {
+          "decl": "int streamLength;",
+          "offset": 12
+        },
+        {
+          "decl": "void *field10;",
+          "offset": 16
+        },
+        {
+          "decl": "void *field3c;",
+          "offset": 60
+        }
+      ],
+      "body": [
+        "if (field3c != 0) { Mem_Free(field3c); }",
+        "if (streamLength != 0) { stream->Close(streamLength); }",
+        "if (field10 != 0) { Mem_Free(field10); }",
+        "if (stream != 0) { stream->Release(); }"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "schema": "pc2.destructor_family.v1",
+  "family": "sound-destructors",
+  "classes": [
+    {
+      "address": "0x53f020",
+      "class": "SoundBuffer",
+      "strict_match": true,
+      "match": true,
+      "length": 91,
+      "candidate_length": 91,
+      "difference_count": 0,
+      "first_difference": null,
+      "strict_issues": [],
+      "relocation_issues": []
+    },
+    {
+      "address": "0x53f5d0",
+      "class": "SoundSample",
+      "strict_match": true,
+      "match": true,
+      "length": 126,
+      "candidate_length": 126,
+      "difference_count": 0,
+      "first_difference": null,
+      "strict_issues": [],
+      "relocation_issues": []
+    }
+  ]
+}

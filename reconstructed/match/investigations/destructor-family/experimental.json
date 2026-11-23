@@ -1,0 +1,73 @@
+{
+  "family": "sound-destructors-experimental",
+  "prelude": "extern \"C\" void __cdecl Mem_Free(void *);\nextern \"C\" __declspec(dllimport) void __stdcall CoUninitialize(void);",
+  "common": "struct Child {\n    virtual void slot0();\n    virtual void slot1();\n    virtual void __stdcall Destroy();\n};\n\nstruct SoundStream {\n    virtual void slot0();\n    virtual void __stdcall Release();\n    void Close(int length);\n};\n\nstruct ComObject {\n    virtual void slot0();\n    virtual void __stdcall Release();\n    virtual void __stdcall Release2();\n};",
+  "base": {
+    "class": "SoundBufferBase",
+    "vtable": "0x55c840",
+    "methods": [
+      "0x53ef60",
+      "0x53ef70",
+      "0x53ef90"
+    ],
+    "deleting": "0x53efe0"
+  },
+  "classes": [
+    {
+      "class": "SoundTrack",
+      "address": "0x541f30",
+      "length": 138,
+      "vtable": "0x55c8e0",
+      "deleting": "0x541f10",
+      "fields": [
+        {
+          "decl": "ComObject *field28;",
+          "offset": 40
+        },
+        {
+          "decl": "ComObject *field2c;",
+          "offset": 44
+        },
+        {
+          "decl": "ComObject *field30;",
+          "offset": 48
+        },
+        {
+          "decl": "ComObject *field34;",
+          "offset": 52
+        },
+        {
+          "decl": "void *field44;",
+          "offset": 68
+        }
+      ],
+      "body": [
+        "if (field28 != 0) { field28->Release(); }",
+        "if (field2c != 0) { field2c->Release(); }",
+        "if (field34 != 0) { field34->Release2(); }",
+        "if (field30 != 0) { field30->Release(); }",
+        "if (field44 != 0) { Mem_Free(field44); }"
+      ]
+    },
+    {
+      "class": "SoundBuffer2",
+      "address": "0x546750",
+      "length": 99,
+      "vtable": "0x55cb14",
+      "deleting": "0x546730",
+      "fields": [
+        {
+          "decl": "ComObject *field8;",
+          "offset": 8
+        },
+        {
+          "decl": "int state;",
+          "offset": 12
+        }
+      ],
+      "body": [
+        "if (state < 3) { field8->Release(); }"
+      ]
+    }
+  ]
+}

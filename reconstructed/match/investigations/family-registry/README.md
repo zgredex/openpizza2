@@ -89,6 +89,7 @@ call:0x488be0   12/13 strict     817/919 bytes     1 blocked
 call:0x54f140   13/14 strict   1,512/1,671 bytes   1 mismatch
 list pilot        6/7 strict     466/632 bytes     1 near miss (1 byte)
 small guard       1/5 strict     223/1,072 bytes   EH sections exact
+sound destructors 2/2 strict     217/217 bytes     generator emitted
 ```
 
 The `0x4017f0` family is the stats/object utility group. Its five near misses
@@ -106,6 +107,10 @@ one is a blocked secondary section.
   batch job, not 31 hand matches.
 - Add two more lenses: vtable-reference families (constructors/destructors)
   and string-reference families (UI text/game tables).
+- Extend the new destructor generator
+  (`reconstructed/match/investigations/destructor-family/`) with extra
+  unwind states and switch-shaped bodies; the next sound destructors are
+  `0x541f30`, `0x546750`, `0x5408b0`, `0x541790`, and `0x53fcc0`.
 - For each family with more than ~30% missing members, extract the shared
   source shape and write a generator; do not hand-match individual members.
 - Route one-byte/register walls to the permuter lane and keep them out of the
