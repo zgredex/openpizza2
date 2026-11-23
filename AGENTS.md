@@ -20,6 +20,10 @@
   `hle_screen_gl_picture`, the win32hle window/frame-hook presenter, or the
   `screen.c` module; the Makefile excludes it. `PC2_HEADLESS=1` is the native
   headless capture path.
+- `Movie_Play` is native: `pc2_native_movie.c` reads `movie.pak` and
+  `native_vk/pc2_movie.c` decodes it with the private 32-bit FFmpeg build.
+  Do not reintroduce `bink.c` or the Bink DLL calls; `PC2_MOVIE_CAPTURE` is the
+  frame-level check and headless runs intentionally skip movies.
 - Use the headless capture runner for UI work:
   `python3 tools/pcrecomp_pc2/capture.py run <scenario> --work ... --out ...`.
   Use `--skip-build` when the instrumented host is already current.

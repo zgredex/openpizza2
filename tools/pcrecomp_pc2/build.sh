@@ -30,6 +30,7 @@ VULKAN_TAG=vulkan-sdk-1.4.363.0
 VULKAN_URL="https://github.com/KhronosGroup/Vulkan-Headers/archive/refs/tags/${VULKAN_TAG}.tar.gz"
 VULKAN_SHA256=4a078be12bef21cfebc09d878b77a63cff9d68f899254a0b00d0e37ef73e7f7e
 VULKAN="$WORK/vulkan-headers"
+FFMPEG32="$WORK/ffmpeg32"
 
 need() {
     command -v "$1" >/dev/null 2>&1 || { echo "missing required tool: $1" >&2; exit 1; }
@@ -150,6 +151,11 @@ for seed in $PC2_SEEDS; do
 done
 
 python3 "$REPO_ROOT/tools/pcrecomp_pc2/trace_points.py" "$GEN"
+python3 "$REPO_ROOT/tools/pcrecomp_pc2/movie_port.py" "$GEN"
+if [ ! -f "$FFMPEG32/lib/libavcodec.a" ]; then
+    echo "building 32-bit FFmpeg Bink decoder..."
+    sh "$REPO_ROOT/tools/pcrecomp_pc2/build_ffmpeg32.sh" "$FFMPEG32" || exit 1
+fi
 
 CAPTURE=${PC2_CAPTURE_BUILD:-0}
 BUILD_LOG="$WORK/host-build.log"
@@ -163,7 +169,7 @@ fi
 
 mkdir -p "$HOSTDIR"
 if ! make -C "$REPO_ROOT/tools/pcrecomp_pc2" \
-    PC="$PC" GEN="$GEN" SYS="$SYS" VULKAN="$VULKAN" CAPTURE="$CAPTURE" \
+    PC="$PC" GEN="$GEN" SYS="$SYS" VULKAN="$VULKAN" FFMPEG32="$FFMPEG32" CAPTURE="$CAPTURE" \
     OUT="$HOSTDIR/pc2" OBJ_DIR="$HOSTDIR/obj" \
     -j "${JOBS:-4}" > "$BUILD_LOG" 2>&1; then
     tail -40 "$BUILD_LOG" >&2

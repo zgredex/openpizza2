@@ -9,6 +9,7 @@
 #include "win32hle.h"
 #include "ddraw_int.h"
 #include "pc2_vulkan.h"
+#include "pc2_native_movie.h"
 #ifdef PC2_CAPTURE
 #include "capture.h"
 #endif
@@ -775,6 +776,14 @@ int main(int argc, char **argv) {
     hle_guest_path(argv[1], guest, sizeof guest);
     snprintf(cmdline, sizeof cmdline, "\"%s\"", guest);
     hle_set_command_line(cmdline);
+
+    /* Native movie assets come from the same install as the executable. */
+    char asset_root[1024];
+    snprintf(asset_root, sizeof(asset_root), "%s", argv[1]);
+    char *last_slash = strrchr(asset_root, '/');
+    if (last_slash) *last_slash = 0;
+    else snprintf(asset_root, sizeof(asset_root), ".");
+    pc2_native_movie_set_root(asset_root);
 
     if (recomp_host_boot_permissive(argv[1]) != 0) {
         return 1;

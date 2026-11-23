@@ -33,6 +33,19 @@ static void p_BinkGetSummary(void) {
     RET(0, 2);
 }
 
+
+/* The native movie player replaces Movie_Play. These Bink exports stay bound
+ * only so the executable's import table resolves; no path calls them. */
+static void p_BinkOpen(void) { RET(0, 2); }
+static void p_BinkOpenDirectSound(void) { RET(0, 1); }
+static void p_BinkDoFrame(void) { RET(0, 1); }
+static void p_BinkCopyToBuffer(void) { RET(0, 7); }
+static void p_BinkNextFrame(void) { RET(0, 1); }
+static void p_BinkWait(void) { RET(0, 1); }
+static void p_BinkGoto(void) { RET(0, 3); }
+static void p_BinkClose(void) { RET(0, 1); }
+static void p_BinkSetSoundSystem(void) { RET(0, 2); }
+
 static const win32hle_shim pc2_shims[] = {
     { "IsIconic", p_IsIconic },
     { "GetSystemMenu", p_GetSystemMenu },
@@ -40,6 +53,15 @@ static const win32hle_shim pc2_shims[] = {
     { "UnregisterClassA", p_UnregisterClassA },
     { "GetSaveFileNameA", p_GetSaveFileNameA },
     { "_BinkGetSummary@8", p_BinkGetSummary },
+    { "_BinkOpen@8", p_BinkOpen },
+    { "_BinkOpenDirectSound@4", p_BinkOpenDirectSound },
+    { "_BinkDoFrame@4", p_BinkDoFrame },
+    { "_BinkCopyToBuffer@28", p_BinkCopyToBuffer },
+    { "_BinkNextFrame@4", p_BinkNextFrame },
+    { "_BinkWait@4", p_BinkWait },
+    { "_BinkGoto@12", p_BinkGoto },
+    { "_BinkClose@4", p_BinkClose },
+    { "_BinkSetSoundSystem@8", p_BinkSetSoundSystem },
     { 0, 0 }
 };
 

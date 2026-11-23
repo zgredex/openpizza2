@@ -13,6 +13,7 @@ guest's 800x600 RGB565 framebuffer is presented by a native Vulkan swapchain.
 | pcrecomp | commit `621860a9d22c9b25ae2be4575b956596f4ddaeeb` |
 | SDL2 | 2.30.9, SHA-256 `24b574f71c87a763f50704bbb630cbe38298d544a1f890f099a4696b1d6beba4` |
 | SDL2_ttf | 2.22.0, SHA-256 `d48cbd1ce475b9e178206bf3b72d56b66d84d44f64ac05803328396234d67723` |
+| FFmpeg (32-bit Bink) | 7.1, SHA-256 `40973d44970dbc83ef302b0609f2e74982be2d85916dd2ee7472d30678a7abe6` |
 | Python packages | capstone 5.0.7, pefile 2024.8.26, unicorn 2.1.4 |
 
 The recipe was tested with GCC 16.2.1, CMake 4.5.0 and Ninja 1.13.2 on Arch
@@ -125,6 +126,38 @@ PC2_VULKAN_SOURCE=/tmp/opencode/src-menu.ppm \
 | `PC2_TRACE_INPUT=1` | Trace `WM_MOUSE*` messages delivered to the guest. |
 | `PC2_TEST_CLICK=x,y` | One deterministic SDL click in guest coordinates; input smoke test. |
 
+## Native Bink movies
+
+The startup movies no longer use `binkw32.dll` or win32hle's `bink.c`. The
+`Movie_Play 0x004CE9D0` entry is replaced with a native player that:
+
+- reads the requested `movies\*.bik` entry directly from
+  `Resources/movie.pak`;
+- decodes it with the patch's FFmpeg Bink decoder (`native_vk/pc2_movie.c`);
+- converts the decoded RGBA frame to the game's 16-bit presentation format
+  and presents it through the same Vulkan window;
+- waits on the movie timestamps, responds to Escape/Space/click as a skip, and
+  skips playback immediately in `PC2_HEADLESS` mode.
+
+The host build now produces a private minimal 32-bit FFmpeg (Bink demuxer and
+decoder only) in `$PC2_WORK/ffmpeg32`; `build_ffmpeg32.sh` downloads and pins
+FFmpeg 7.1. The shipped movie assets are unchanged.
+
+Verified:
+
+```text
+32-bit host: s2000_s.bik   400x268 @ 29.97, 76 frames
+32-bit host: intro_*_s.bik 400x200 @ 25.00, 23-39 frames
+captured decoded frame: 400x200, 12645 colors, nonzero 207085/240000 bytes
+headless: movies skipped, menu digest 1abdbb3f unchanged
+```
+
+The ten Bink imports are bound to safe stubs only so the executable's import
+table resolves; no active path calls them. `bink.c` is excluded from the host
+link. The standalone `native_vk` directory also contains a 32-bit-capable
+Vulkan sprite renderer (`pc2_vk`) and a 64-bit FFmpeg movie smoke; it is not
+yet the game's renderer.
+
 Wayland is the next display milestone. This SDL build uses X11 because the
 32-bit `libxkbcommon` package is not installed; under a Wayland session the
 Vulkan window currently runs through XWayland.
@@ -190,6 +223,9 @@ They live in `pc2_shims.c`; the shared runtime is unmodified.
   `hle_screen_gl` path and `screen.c` is not built. See [Native Vulkan
   presentation](#native-vulkan-presentation) for the verified frame digest,
   resize path and capture switches.
+- **Native movies:** `Movie_Play` now reads `movie.pak` and decodes Bink with
+  the private 32-bit FFmpeg build; `bink.c` is not linked. See [Native Bink
+  movies](#native-bink-movies).
 - The four PC2 `.pak` archives, `language.ldf`, `sound.pak`, the loading image
   and the main-menu assets (`PE_STARTSCREEN.TGA`, `TIMESFONT.fnt`,
   `TEXTPBTRANSPGELB_*.spr`) open successfully through `Resource_Open`.
