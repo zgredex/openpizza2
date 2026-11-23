@@ -6,7 +6,7 @@ toolchain (`~/.local/share/pc2/vc6-sp3-toolchain/VC98`; runtime smoke test
 All candidates are genuine C++ and compile with `/O2 /TP`; no inline assembly,
 no `stdint.h`, and no explicit `--symbol` overrides (auto-resolution only).
 
-Result: **2 / 25 strict matches** (`"strict_match": true` with
+Result: **3 / 25 strict matches** (`"strict_match": true` with
 `tools/match_decomp.py --strict --auto-symbols`) and with
 `verify_strict.sh`, which passes the manifest length and the exact entry symbol
 for every function.
@@ -16,11 +16,12 @@ for every function.
 | address | function | bytes | notes |
 |---|---:|---:|---|
 | 0x485700 | Game_RefreshDaylightCurve | 284 | 25-entry `int` table materialised on the stack, per-entry `fild/fmul/fiadd/__ftol`, all 25 stores identical; `DAT_0057ba00` float global |
+| 0x488a10 | Game_UpdateDateLabels | 288 | two 32-byte strings; `strcpy`/`String_Format` branch order and the `(day*5)&0xff` argument order match; `CS_Enter`/`CS_Leave` are `__fastcall` (lock in ECX, no stack cleanup) |
 | 0x4aef90 | Glossary_BranchesPage_Init | 292 | `__cdecl` page initialiser; `GetPairByKey` output pointers reuse the incoming argument home; varargs `UI_Group_Create` and slider setter chains; all 14 static call sites lay out identically |
 
 No explicit symbol mappings were needed; the shipped name map resolves
 `Array_GetPairByKey`, `Window_GadgetNotify_*`, `UI_RemoveObjectByKey` and
-`Glossary_*` via decorated aliases. `0x485700` only uses `__ftol`.
+`Glossary_*`, `CS_Enter`, `CS_Leave` and `Array_GetRecordByKeyPtr` via decorated aliases. `0x485700` only uses `__ftol`.
 
 ## Unmatched
 

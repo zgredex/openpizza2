@@ -1,5 +1,5 @@
 #!/bin/sh
-# Strict byte-match verification for batch20/part4 (2 of 25 functions).
+# Strict byte-match verification for batch20/part4 (3 of 25 functions).
 # Toolchain: pinned VC6 SP3 tree (C2.DLL 12.00.8447); no stdint.h.
 # Every check passes the manifest length and the exact candidate entry symbol and
 # requires tools/match_decomp.py --strict --auto-symbols to report strict_match.
@@ -29,6 +29,7 @@ check() {
 }
 
 check 0x485700 284 '?RefreshDaylightCurve@Game@@QAEHM@Z' --flags "/O2 /TP"
+check 0x488a10 288 '?UpdateDateLabels@Game@@QAEXPAUWindow@@@Z' --flags "/O2 /TP"
 check 0x4aef90 292 '?Glossary_BranchesPage_Init@@YAXPAX@Z' --flags "/O2 /TP"
 
 echo "strict $pass/$((pass + fail))"

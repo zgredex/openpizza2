@@ -38,6 +38,7 @@ Genuine C++ attempts are under `nonmatching/`; first difference is
 | 0x406a90 | Settings_InitDefaults | 280 | 256: `89`/`0f` | loop tail is identical except the original stores `[eax-0x30]`/`[eax-0x18]` before `setl dl`; VC6 hoists `setl` in every source permutation tried |
 | 0x4c1ae0 | DeliveryMenu_FillProductRows | 276 | 0: `51`/`83` | two-argument `__cdecl` row filler; the current candidate allocates an 8-byte frame and reorders the count clamp, growing the extent by 28 bytes |
 | 0x479290 | Game_ComputeCategoryDominance | 281 | 3: `33`/`53` | five-entry count table; original interleaves the zero stores with the callee-saved pushes and borrows `edi` inside the first loop; candidate groups the pushes |
+| 0x529160 | UI_LayoutChildElements | 278 | 6: `57`/`8b` | rectangle arithmetic and three `Sprite_GetSize` calls; original materialises the four source fields before adding, so it needs `edi` and pushes it, while the candidate reuses `ecx` and the frame shrinks by four bytes |
 
 ## Skipped: C++ EH functions
 
