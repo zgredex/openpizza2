@@ -1,0 +1,154 @@
+{
+  "address": "0x47cb70",
+  "entry": "?GetAverageCompanyValueByByte8@Game@@QAEHD@Z",
+  "length": 156,
+  "candidate_length": 156,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [],
+  "relocation_issues": [],
+  "relocations": [
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x47cb9d",
+      "offset": "0x2d",
+      "symbol": "?Lookup@IDMapHelper@@QAEPAXHPAH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xfff84c4f",
+      "expected": "0xfff84c4f",
+      "target": "0x4017f0",
+      "origin": "symbol_registry",
+      "verified": true,
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x4017f0"
+        },
+        {
+          "path": "reconstructed/match/batch10/part1/verify_strict.sh",
+          "locator": "0x40bab0 calls IDMap::Lookup"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x4017f0\u20130x4018ba"
+        }
+      ]
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x47cba6",
+      "offset": "0x36",
+      "symbol": "?GetPlayerByte8@Game@@QAEDXZ",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x69246",
+      "expected": "0x69246",
+      "target": "0x4e5df0",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x47cbb1",
+      "offset": "0x41",
+      "symbol": "_g_Game",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x57c670",
+      "expected": "0x57c670",
+      "target": "0x57c670",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x47cbbf",
+      "offset": "0x4f",
+      "symbol": "?Lookup@IDMapHelper@@QAEPAXHPAH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xfff84c2d",
+      "expected": "0xfff84c2d",
+      "target": "0x4017f0",
+      "origin": "symbol_registry",
+      "verified": true,
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x4017f0"
+        },
+        {
+          "path": "reconstructed/match/batch10/part1/verify_strict.sh",
+          "locator": "0x40bab0 calls IDMap::Lookup"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x4017f0\u20130x4018ba"
+        }
+      ]
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x47cbf3",
+      "offset": "0x83",
+      "symbol": "_Math_RoundFloat",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xfff86c59",
+      "expected": "0xfff86c59",
+      "target": "0x403850",
+      "origin": "decorated_alias",
+      "verified": true
+    }
+  ],
+  "object_sha256": "77598f08a37ff7ff19c60a9b45bee05a6d265dcc66aab4e87661aef2fd662ced",
+  "linked_spans": [],
+  "link_plan_issues": [],
+  "blocked_sections": [],
+  "linked_sections": [
+    {
+      "section": ".text",
+      "index": 2,
+      "address": "0x47cb70",
+      "origin": "candidate_entry"
+    }
+  ],
+  "first_difference": {
+    "offset": 96,
+    "original": 68,
+    "candidate": 76
+  },
+  "difference_count": 2,
+  "source": "reconstructed/match/batch21/part1/nonmatching/0x47cb70.c",
+  "source_sha256": "e2d953d99df1b2aba341bff15b508ea9c77400bb1af18cdf711b7528ca93b186",
+  "executable_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd",
+  "compiler": {
+    "path": "/home/patryk/.local/share/pc2/vc6-sp3-toolchain/VC98",
+    "sha256": {
+      "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+      "C1.DLL": "d1b25d84da1d3d0d460996ea298488cb183b857e1b90628147983114ac4ab55f",
+      "C1XX.DLL": "28c355499c2f8090910624734faff31fe719a69a8aac7dd44b2ce64addf96ee2",
+      "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153"
+    }
+  },
+  "flags": [
+    "/O2",
+    "/TP"
+  ],
+  "strict_requested": true,
+  "strict_symbols": false,
+  "auto_symbols": true,
+  "symbol_registry_sha256": "e70a0a1124d4f83bd2fd48c4e28c535aacc6ecfdacef8ccf1f7b0bc357e618fe",
+  "symbol_overrides": {}
+}

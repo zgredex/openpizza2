@@ -1,4 +1,9 @@
-/* Font::WrapText (0x535c10). */
+/* Font::WrapText (0x535c10) - closest genuine C/C++ attempt.
+   The shipped body keeps `text` in ECX / reloads it from the argument slot
+   after each GetCharWidth call and defers the EBX/EBP pushes until after the
+   newline loop. This build caches `text` in EBP, shrink-wraps the pushes
+   before the first loop and therefore shifts the body; the local allocation
+   i=EBX, width=ESI, lastSpace=EDI is otherwise the same. */
 class Font {
 public:
     int GetCharWidth(char c);
@@ -7,11 +12,12 @@ public:
 
 void Font::WrapText(char *text, int maxWidth)
 {
-    char *p;
     int i;
     int width;
     int lastSpace;
     int savedWidth;
+    char *p;
+    int charWidth;
 
     for (p = text; *p != 0; p++) {
         if (*p == '\n')
@@ -22,18 +28,17 @@ void Font::WrapText(char *text, int maxWidth)
     lastSpace = -1;
     if (*text != 0) {
         do {
-            char c = text[i];
-            if (c == ' ') {
+            if (text[i] == ' ') {
                 lastSpace = i;
                 savedWidth = width;
             }
-            if (c == '\r') {
+            if (text[i] == '\r') {
                 width = 0;
                 lastSpace = -1;
                 i++;
                 continue;
             }
-            int charWidth = GetCharWidth(c);
+            charWidth = GetCharWidth(text[i]);
             if (width + charWidth > maxWidth && lastSpace != -1) {
                 text[lastSpace] = '\n';
                 width -= savedWidth + GetCharWidth(' ');

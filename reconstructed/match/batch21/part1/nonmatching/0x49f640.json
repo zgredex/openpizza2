@@ -1,0 +1,197 @@
+{
+  "address": "0x49f640",
+  "entry": "?UI_RecordList_SetVisibleRange@@YAXPAUUI@@HH@Z",
+  "length": 156,
+  "candidate_length": 156,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [
+    "candidate extent 160 bytes, expected 156 (extra=4 bytes does not match the original table/padding)"
+  ],
+  "relocation_issues": [
+    ".text relocation at 0x22 resolves to 0x9252a, original has 0xf685f08b",
+    ".text relocation at 0x39 resolves to 0x95363, original has 0x1c24548b",
+    ".text relocation at 0x45 resolves to 0x952d7, original has 0xf88bce8b",
+    ".text relocation at 0x4e resolves to 0x9533e, original has 0x20244c8b",
+    ".text relocation at 0x62 resolves to 0x57ba0c, original has 0x660d6a48",
+    ".text relocation at 0x6f resolves to 0xa898d, original has 0xc76607eb",
+    ".text relocation at 0x88 resolves to 0x95364, original has 0x3868016a",
+    ".text relocation at 0x96 resolves to 0x92496, original has 0xc4835b5e"
+  ],
+  "relocations": [
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x49f651",
+      "offset": "0x11",
+      "symbol": "?ClearButtonRecordAnimation@UI@@QAEXH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x924fb",
+      "expected": "0x924fb",
+      "target": "0x531b50",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x49f662",
+      "offset": "0x22",
+      "symbol": "?GetButtonContext@UI@@QAEPAXHPAH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xf685f08b",
+      "expected": "0x9252a",
+      "target": "0x531b90",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x49f679",
+      "offset": "0x39",
+      "symbol": "?ReadSlot98@RecordList@@QAEXHHPAUSlot@@@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x1c24548b",
+      "expected": "0x95363",
+      "target": "0x5349e0",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x49f685",
+      "offset": "0x45",
+      "symbol": "?GetValue48@Record@@QAEHH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xf88bce8b",
+      "expected": "0x952d7",
+      "target": "0x534960",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x49f68e",
+      "offset": "0x4e",
+      "symbol": "?GetCount@RecordList@@QAEHXZ",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x20244c8b",
+      "expected": "0x9533e",
+      "target": "0x5349d0",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x49f6a2",
+      "offset": "0x62",
+      "symbol": "_g_SoundManager",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x660d6a48",
+      "expected": "0x57ba0c",
+      "target": "0x57ba0c",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x49f6af",
+      "offset": "0x6f",
+      "symbol": "?TriggerSoundById@Sound@@QAEXH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xc76607eb",
+      "expected": "0xa898d",
+      "target": "0x548040",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x49f6c8",
+      "offset": "0x88",
+      "symbol": "?SetSlot6_98@Record@@QAEXHHPAUSlot@@@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x3868016a",
+      "expected": "0x95364",
+      "target": "0x534a30",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x49f6d6",
+      "offset": "0x96",
+      "symbol": "?SetButtonRecordVariant@UI@@QAEXHH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xc4835b5e",
+      "expected": "0x92496",
+      "target": "0x531b70",
+      "origin": "decorated_alias",
+      "verified": false
+    }
+  ],
+  "object_sha256": "ee1a47b0d4278eaff6af69198f93585bb44d42c3ae03b575d524bc3d230ea99f",
+  "linked_spans": [],
+  "link_plan_issues": [],
+  "blocked_sections": [],
+  "linked_sections": [
+    {
+      "section": ".text",
+      "index": 2,
+      "address": "0x49f640",
+      "origin": "candidate_entry"
+    }
+  ],
+  "first_difference": {
+    "offset": 0,
+    "original": 131,
+    "candidate": 139
+  },
+  "difference_count": 114,
+  "source": "reconstructed/match/batch21/part1/nonmatching/0x49f640.c",
+  "source_sha256": "74d54b1502fce9f2e2cb62b0dfcd44144f8d78e1e9307419ad6c24221af2d2ca",
+  "executable_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd",
+  "compiler": {
+    "path": "/home/patryk/.local/share/pc2/vc6-sp3-toolchain/VC98",
+    "sha256": {
+      "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+      "C1.DLL": "d1b25d84da1d3d0d460996ea298488cb183b857e1b90628147983114ac4ab55f",
+      "C1XX.DLL": "28c355499c2f8090910624734faff31fe719a69a8aac7dd44b2ce64addf96ee2",
+      "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153"
+    }
+  },
+  "flags": [
+    "/O2",
+    "/TP"
+  ],
+  "strict_requested": true,
+  "strict_symbols": false,
+  "auto_symbols": true,
+  "symbol_registry_sha256": "e70a0a1124d4f83bd2fd48c4e28c535aacc6ecfdacef8ccf1f7b0bc357e618fe",
+  "symbol_overrides": {}
+}
