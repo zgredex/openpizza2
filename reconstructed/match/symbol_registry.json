@@ -619,6 +619,28 @@
           "locator": "stock CRT archive scan"
         }
       ]
+    },
+    {
+      "symbol": "?GetRecordByteC@Record@@QAEHXZ",
+      "address": "0x4e5e10",
+      "name": "Game_GetRecordByteC",
+      "kind": "function",
+      "candidate_declaration": "int __thiscall Record::GetRecordByteC()",
+      "abi_observation": "The PE keeps the record in ECX, reads its byte field, returns it in EAX, and ends with ret. The 0x47ccd0 caller masks the return with 0xff.",
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x4e5e10"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x47ccd0 calls 0x4e5e10 at 0x47cd03 and masks EAX at 0x47cd08"
+        },
+        {
+          "path": "reconstructed/match/batch12/part2/0x47ccd0.c",
+          "locator": "Record::GetRecordByteC call"
+        }
+      ]
     }
   ]
 }
