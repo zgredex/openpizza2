@@ -1,0 +1,482 @@
+{
+  "executable_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd",
+  "addresses": {
+    "0x53fcc0": {
+      "kind": "sound_destructor_seed",
+      "first_instructions": [
+        {
+          "va": "0x53fcc0",
+          "op": "push   0xffffffff"
+        },
+        {
+          "va": "0x53fcc2",
+          "op": "push   0x55ae76"
+        },
+        {
+          "va": "0x53fcc7",
+          "op": "mov    eax,fs:0x0"
+        },
+        {
+          "va": "0x53fccd",
+          "op": "push   eax"
+        },
+        {
+          "va": "0x53fcce",
+          "op": "mov    DWORD PTR fs:0x0,esp"
+        },
+        {
+          "va": "0x53fcd5",
+          "op": "push   ecx"
+        },
+        {
+          "va": "0x53fcd6",
+          "op": "push   esi"
+        },
+        {
+          "va": "0x53fcd7",
+          "op": "mov    esi,ecx"
+        },
+        {
+          "va": "0x53fcd9",
+          "op": "mov    DWORD PTR [esp+0x4],esi"
+        },
+        {
+          "va": "0x53fcdd",
+          "op": "mov    DWORD PTR [esi],0x55c864"
+        },
+        {
+          "va": "0x53fce3",
+          "op": "mov    eax,DWORD PTR [esi+0x238]"
+        },
+        {
+          "va": "0x53fce9",
+          "op": "mov    DWORD PTR [esp+0x10],0x1"
+        }
+      ]
+    },
+    "0x541f30": {
+      "kind": "sound_destructor_seed",
+      "first_instructions": [
+        {
+          "va": "0x541f30",
+          "op": "push   0xffffffff"
+        },
+        {
+          "va": "0x541f32",
+          "op": "push   0x55b013"
+        },
+        {
+          "va": "0x541f37",
+          "op": "mov    eax,fs:0x0"
+        },
+        {
+          "va": "0x541f3d",
+          "op": "push   eax"
+        },
+        {
+          "va": "0x541f3e",
+          "op": "mov    DWORD PTR fs:0x0,esp"
+        },
+        {
+          "va": "0x541f45",
+          "op": "push   ecx"
+        },
+        {
+          "va": "0x541f46",
+          "op": "push   esi"
+        },
+        {
+          "va": "0x541f47",
+          "op": "mov    esi,ecx"
+        },
+        {
+          "va": "0x541f49",
+          "op": "mov    DWORD PTR [esp+0x4],esi"
+        },
+        {
+          "va": "0x541f4d",
+          "op": "mov    DWORD PTR [esi],0x55c8e0"
+        },
+        {
+          "va": "0x541f53",
+          "op": "mov    eax,DWORD PTR [esi+0x28]"
+        },
+        {
+          "va": "0x541f56",
+          "op": "mov    DWORD PTR [esp+0x10],0x1"
+        }
+      ]
+    },
+    "0x546750": {
+      "kind": "sound_destructor_seed",
+      "first_instructions": [
+        {
+          "va": "0x546750",
+          "op": "push   0xffffffff"
+        },
+        {
+          "va": "0x546752",
+          "op": "push   0x55b798"
+        },
+        {
+          "va": "0x546757",
+          "op": "mov    eax,fs:0x0"
+        },
+        {
+          "va": "0x54675d",
+          "op": "push   eax"
+        },
+        {
+          "va": "0x54675e",
+          "op": "mov    DWORD PTR fs:0x0,esp"
+        },
+        {
+          "va": "0x546765",
+          "op": "push   ecx"
+        },
+        {
+          "va": "0x546766",
+          "op": "push   esi"
+        },
+        {
+          "va": "0x546767",
+          "op": "mov    esi,ecx"
+        },
+        {
+          "va": "0x546769",
+          "op": "mov    DWORD PTR [esp+0x4],esi"
+        },
+        {
+          "va": "0x54676d",
+          "op": "mov    DWORD PTR [esi],0x55cb14"
+        },
+        {
+          "va": "0x546773",
+          "op": "mov    eax,DWORD PTR [esi+0xc]"
+        },
+        {
+          "va": "0x546776",
+          "op": "mov    DWORD PTR [esp+0x10],0x0"
+        }
+      ]
+    },
+    "0x5408b0": {
+      "kind": "sound_destructor_seed",
+      "first_instructions": [
+        {
+          "va": "0x5408b0",
+          "op": "push   0xffffffff"
+        },
+        {
+          "va": "0x5408b2",
+          "op": "push   0x55aef3"
+        },
+        {
+          "va": "0x5408b7",
+          "op": "mov    eax,fs:0x0"
+        },
+        {
+          "va": "0x5408bd",
+          "op": "push   eax"
+        },
+        {
+          "va": "0x5408be",
+          "op": "mov    DWORD PTR fs:0x0,esp"
+        },
+        {
+          "va": "0x5408c5",
+          "op": "push   ecx"
+        },
+        {
+          "va": "0x5408c6",
+          "op": "push   ebx"
+        },
+        {
+          "va": "0x5408c7",
+          "op": "push   esi"
+        },
+        {
+          "va": "0x5408c8",
+          "op": "mov    esi,ecx"
+        },
+        {
+          "va": "0x5408ca",
+          "op": "mov    DWORD PTR [esp+0x8],esi"
+        },
+        {
+          "va": "0x5408ce",
+          "op": "mov    DWORD PTR [esi],0x55c874"
+        },
+        {
+          "va": "0x5408d4",
+          "op": "mov    al,BYTE PTR [esi+0x34]"
+        }
+      ]
+    },
+    "0x541790": {
+      "kind": "sound_destructor_seed",
+      "first_instructions": [
+        {
+          "va": "0x541790",
+          "op": "push   0xffffffff"
+        },
+        {
+          "va": "0x541792",
+          "op": "push   0x55af93"
+        },
+        {
+          "va": "0x541797",
+          "op": "mov    eax,fs:0x0"
+        },
+        {
+          "va": "0x54179d",
+          "op": "push   eax"
+        },
+        {
+          "va": "0x54179e",
+          "op": "mov    DWORD PTR fs:0x0,esp"
+        },
+        {
+          "va": "0x5417a5",
+          "op": "push   ecx"
+        },
+        {
+          "va": "0x5417a6",
+          "op": "push   ebx"
+        },
+        {
+          "va": "0x5417a7",
+          "op": "push   esi"
+        },
+        {
+          "va": "0x5417a8",
+          "op": "mov    esi,ecx"
+        },
+        {
+          "va": "0x5417aa",
+          "op": "mov    DWORD PTR [esp+0x8],esi"
+        },
+        {
+          "va": "0x5417ae",
+          "op": "mov    DWORD PTR [esi],0x55c8b0"
+        },
+        {
+          "va": "0x5417b4",
+          "op": "mov    eax,DWORD PTR [esi+0xac]"
+        }
+      ]
+    },
+    "0x544620": {
+      "kind": "sound_lock_pending",
+      "first_instructions": [
+        {
+          "va": "0x544620",
+          "op": "push   0xffffffff"
+        },
+        {
+          "va": "0x544622",
+          "op": "push   0x55b378"
+        },
+        {
+          "va": "0x544627",
+          "op": "mov    eax,fs:0x0"
+        },
+        {
+          "va": "0x54462d",
+          "op": "push   eax"
+        },
+        {
+          "va": "0x54462e",
+          "op": "mov    DWORD PTR fs:0x0,esp"
+        },
+        {
+          "va": "0x544635",
+          "op": "push   ecx"
+        },
+        {
+          "va": "0x544636",
+          "op": "push   ebx"
+        },
+        {
+          "va": "0x544637",
+          "op": "push   esi"
+        },
+        {
+          "va": "0x544638",
+          "op": "mov    esi,ecx"
+        },
+        {
+          "va": "0x54463a",
+          "op": "push   edi"
+        },
+        {
+          "va": "0x54463b",
+          "op": "mov    edi,DWORD PTR [esi+0x38]"
+        },
+        {
+          "va": "0x54463e",
+          "op": "push   edi"
+        }
+      ]
+    },
+    "0x5448c0": {
+      "kind": "sound_lock_pending",
+      "first_instructions": [
+        {
+          "va": "0x5448c0",
+          "op": "push   0xffffffff"
+        },
+        {
+          "va": "0x5448c2",
+          "op": "push   0x55b3b8"
+        },
+        {
+          "va": "0x5448c7",
+          "op": "mov    eax,fs:0x0"
+        },
+        {
+          "va": "0x5448cd",
+          "op": "push   eax"
+        },
+        {
+          "va": "0x5448ce",
+          "op": "mov    DWORD PTR fs:0x0,esp"
+        },
+        {
+          "va": "0x5448d5",
+          "op": "push   ecx"
+        },
+        {
+          "va": "0x5448d6",
+          "op": "push   esi"
+        },
+        {
+          "va": "0x5448d7",
+          "op": "mov    esi,DWORD PTR [esp+0x18]"
+        },
+        {
+          "va": "0x5448db",
+          "op": "push   edi"
+        },
+        {
+          "va": "0x5448dc",
+          "op": "lea    edi,[esi+0xa0]"
+        },
+        {
+          "va": "0x5448e2",
+          "op": "push   edi"
+        },
+        {
+          "va": "0x5448e3",
+          "op": "mov    DWORD PTR [esp+0xc],edi"
+        }
+      ]
+    },
+    "0x544760": {
+      "kind": "sound_lock_strict_control",
+      "first_instructions": [
+        {
+          "va": "0x544760",
+          "op": "push   0xffffffff"
+        },
+        {
+          "va": "0x544762",
+          "op": "push   0x55b398"
+        },
+        {
+          "va": "0x544767",
+          "op": "mov    eax,fs:0x0"
+        },
+        {
+          "va": "0x54476d",
+          "op": "push   eax"
+        },
+        {
+          "va": "0x54476e",
+          "op": "mov    DWORD PTR fs:0x0,esp"
+        },
+        {
+          "va": "0x544775",
+          "op": "push   ecx"
+        },
+        {
+          "va": "0x544776",
+          "op": "push   ebx"
+        },
+        {
+          "va": "0x544777",
+          "op": "push   esi"
+        },
+        {
+          "va": "0x544778",
+          "op": "push   edi"
+        },
+        {
+          "va": "0x544779",
+          "op": "mov    edi,DWORD PTR [esp+0x20]"
+        },
+        {
+          "va": "0x54477d",
+          "op": "lea    esi,[edi+0xa0]"
+        },
+        {
+          "va": "0x544783",
+          "op": "push   esi"
+        }
+      ]
+    },
+    "0x5449a0": {
+      "kind": "sound_lock_pending",
+      "first_instructions": [
+        {
+          "va": "0x5449a0",
+          "op": "push   0xffffffff"
+        },
+        {
+          "va": "0x5449a2",
+          "op": "push   0x55b3e0"
+        },
+        {
+          "va": "0x5449a7",
+          "op": "mov    eax,fs:0x0"
+        },
+        {
+          "va": "0x5449ad",
+          "op": "push   eax"
+        },
+        {
+          "va": "0x5449ae",
+          "op": "mov    DWORD PTR fs:0x0,esp"
+        },
+        {
+          "va": "0x5449b5",
+          "op": "push   ecx"
+        },
+        {
+          "va": "0x5449b6",
+          "op": "push   ebx"
+        },
+        {
+          "va": "0x5449b7",
+          "op": "mov    ebx,DWORD PTR ds:0x55c1b8"
+        },
+        {
+          "va": "0x5449bd",
+          "op": "push   ebp"
+        },
+        {
+          "va": "0x5449be",
+          "op": "push   esi"
+        },
+        {
+          "va": "0x5449bf",
+          "op": "mov    esi,DWORD PTR [esp+0x20]"
+        },
+        {
+          "va": "0x5449c3",
+          "op": "lea    ebp,[esi+0xa0]"
+        }
+      ]
+    }
+  }
+}
