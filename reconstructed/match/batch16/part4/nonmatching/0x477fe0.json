@@ -1,0 +1,96 @@
+{
+  "address": "0x477fe0",
+  "entry": "?SumFilteredFloats@Stats@@QAEMHHH@Z",
+  "length": 166,
+  "candidate_length": 160,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [
+    "unverified .rdata section (4 bytes)",
+    ".text relocation at 0x1a: unresolved symbol __real@4@00000000000000000000"
+  ],
+  "relocation_issues": [
+    ".text relocation at 0x40 resolves to 0xfff897cc, original has 0x74d73b04"
+  ],
+  "relocations": [
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x477ffa",
+      "offset": "0x1a",
+      "symbol": "__real@4@00000000000000000000",
+      "target_section_index": 3,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x55537f7e",
+      "expected": null,
+      "target": null,
+      "origin": null,
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x478020",
+      "offset": "0x40",
+      "symbol": "?Lookup@IDMap@@QAEPAXHPAH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x74d73b04",
+      "expected": "0xfff897cc",
+      "target": "0x4017f0",
+      "origin": "decorated_alias",
+      "verified": false
+    }
+  ],
+  "object_sha256": "c956dd73e4132eb71cf7ee7ca5fb3ad7822de9c296a23843ef6754edc8c28bbe",
+  "linked_spans": [],
+  "link_plan_issues": [],
+  "blocked_sections": [
+    {
+      "section": ".rdata",
+      "index": 3,
+      "symbols": [
+        ".rdata",
+        "__real@4@00000000000000000000"
+      ],
+      "expected_addresses": []
+    }
+  ],
+  "linked_sections": [
+    {
+      "section": ".text",
+      "index": 2,
+      "address": "0x477fe0",
+      "origin": "candidate_entry"
+    }
+  ],
+  "first_difference": {
+    "offset": 12,
+    "original": 199,
+    "candidate": 137
+  },
+  "difference_count": 138,
+  "source": "reconstructed/match/batch16/part4/nonmatching/0x477fe0.c",
+  "source_sha256": "89414748b0eee03c170678e464983545af08aedb9a6c68eeeb25df78ddfa20bf",
+  "executable_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd",
+  "compiler": {
+    "path": "/home/patryk/.local/share/pc2/vc6-sp3-toolchain/VC98",
+    "sha256": {
+      "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+      "C1.DLL": "d1b25d84da1d3d0d460996ea298488cb183b857e1b90628147983114ac4ab55f",
+      "C1XX.DLL": "28c355499c2f8090910624734faff31fe719a69a8aac7dd44b2ce64addf96ee2",
+      "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153"
+    }
+  },
+  "flags": [
+    "/O2",
+    "/TP"
+  ],
+  "strict_requested": true,
+  "strict_symbols": false,
+  "auto_symbols": true,
+  "symbol_registry_sha256": "e70a0a1124d4f83bd2fd48c4e28c535aacc6ecfdacef8ccf1f7b0bc357e618fe",
+  "symbol_overrides": {}
+}

@@ -1,0 +1,171 @@
+{
+  "address": "0x4fe370",
+  "entry": "_Company_AssignStaffToBranch@8",
+  "length": 166,
+  "candidate_length": 166,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [],
+  "relocation_issues": [],
+  "relocations": [
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4fe381",
+      "offset": "0x11",
+      "symbol": "?CountObjectsForOwner@Game@@QAEHHH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xfffe43cb",
+      "expected": "0xfffe43cb",
+      "target": "0x4e2750",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4fe395",
+      "offset": "0x25",
+      "symbol": "?FindAssignedSubrecord@Game@@QAEPAHHH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xfffe44c7",
+      "expected": "0xfffe44c7",
+      "target": "0x4e2860",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4fe3a5",
+      "offset": "0x35",
+      "symbol": "?FindAssignedSubrecord@Game@@QAEPAHHH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xfffe44b7",
+      "expected": "0xfffe44b7",
+      "target": "0x4e2860",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4fe3b9",
+      "offset": "0x49",
+      "symbol": "?DAT_0057c670@@3HA",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x57c670",
+      "expected": "0x57c670",
+      "target": "0x57c670",
+      "origin": "address_label",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4fe3c4",
+      "offset": "0x54",
+      "symbol": "?Lookup@IDMap@@QAEPAXHPAH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xfff03428",
+      "expected": "0xfff03428",
+      "target": "0x4017f0",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4fe3e8",
+      "offset": "0x78",
+      "symbol": "?SetRouteToBuilding@Person@@QAEXH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xbc94",
+      "expected": "0xbc94",
+      "target": "0x50a080",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4fe3f4",
+      "offset": "0x84",
+      "symbol": "?RemoveStaffMember@Company@@QAEXH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xfffe3d18",
+      "expected": "0xfffe3d18",
+      "target": "0x4e2110",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4fe3fd",
+      "offset": "0x8d",
+      "symbol": "?SetFieldA4Locked@Object@@QAEXH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x1044f",
+      "expected": "0x1044f",
+      "target": "0x50e850",
+      "origin": "decorated_alias",
+      "verified": true
+    }
+  ],
+  "object_sha256": "fa19e43714e6c33122780683d119deef12ce74afb8320c9e3e47d854b1cf9577",
+  "linked_spans": [],
+  "link_plan_issues": [],
+  "blocked_sections": [],
+  "linked_sections": [
+    {
+      "section": ".text",
+      "index": 2,
+      "address": "0x4fe370",
+      "origin": "candidate_entry"
+    }
+  ],
+  "first_difference": {
+    "offset": 127,
+    "original": 6,
+    "candidate": 22
+  },
+  "difference_count": 2,
+  "source": "reconstructed/match/batch16/part4/nonmatching/0x4fe370.c",
+  "source_sha256": "1ba8546bbcfc7ac06aa903301a3440f34c32404ff7b79168961560c24c098994",
+  "executable_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd",
+  "compiler": {
+    "path": "/home/patryk/.local/share/pc2/vc6-sp3-toolchain/VC98",
+    "sha256": {
+      "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+      "C1.DLL": "d1b25d84da1d3d0d460996ea298488cb183b857e1b90628147983114ac4ab55f",
+      "C1XX.DLL": "28c355499c2f8090910624734faff31fe719a69a8aac7dd44b2ce64addf96ee2",
+      "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153"
+    }
+  },
+  "flags": [
+    "/O2",
+    "/TP"
+  ],
+  "strict_requested": true,
+  "strict_symbols": false,
+  "auto_symbols": true,
+  "symbol_registry_sha256": "e70a0a1124d4f83bd2fd48c4e28c535aacc6ecfdacef8ccf1f7b0bc357e618fe",
+  "symbol_overrides": {}
+}
