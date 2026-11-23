@@ -259,7 +259,7 @@ call:0x488be0   12/13 strict     817/919 bytes     1 blocked
 call:0x54f140   13/14 strict   1,512/1,671 bytes   1 mismatch
 list pilot        6/7 strict     466/632 bytes     1 near miss (1 byte)
 small guard       1/5 strict     223/1,072 bytes   EH sections exact
-sound destructors 2/2 strict     217/217 bytes     generator emitted
+sound destructors 3/3 strict     316/316 bytes     generator emitted
 ```
 
 The UI call-target groups are already covered by the existing UI builder

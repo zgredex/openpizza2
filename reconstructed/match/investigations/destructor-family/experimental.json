@@ -48,26 +48,6 @@
         "if (field30 != 0) { field30->Release(); }",
         "if (field44 != 0) { Mem_Free(field44); }"
       ]
-    },
-    {
-      "class": "SoundBuffer2",
-      "address": "0x546750",
-      "length": 99,
-      "vtable": "0x55cb14",
-      "deleting": "0x546730",
-      "fields": [
-        {
-          "decl": "ComObject *field8;",
-          "offset": 8
-        },
-        {
-          "decl": "int state;",
-          "offset": 12
-        }
-      ],
-      "body": [
-        "if (state < 3) { field8->Release(); }"
-      ]
     }
   ]
 }

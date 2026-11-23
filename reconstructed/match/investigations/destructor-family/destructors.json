@@ -73,6 +73,36 @@
         "if (field10 != 0) { Mem_Free(field10); }",
         "if (stream != 0) { stream->Release(); }"
       ]
+    },
+    {
+      "class": "SoundBuffer2",
+      "address": "0x546750",
+      "length": 99,
+      "vtable": "0x55cb14",
+      "deleting": "0x546730",
+      "fields": [
+        {
+          "decl": "ComObject *field8;",
+          "offset": 8
+        },
+        {
+          "decl": "int state;",
+          "offset": 12
+        }
+      ],
+      "body": [
+        "switch (state) {",
+        "case 0:",
+        "    field8->Release();",
+        "    break;",
+        "case 1:",
+        "    field8->Release();",
+        "    break;",
+        "case 2:",
+        "    field8->Release();",
+        "    break;",
+        "}"
+      ]
     }
   ]
 }

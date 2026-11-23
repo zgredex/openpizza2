@@ -9,9 +9,10 @@ and writes a `family.json` for `tools/run_family_batch.py`.
 ## Result
 
 ```text
-sound-destructors: 2/2 strict, 217/217 bytes
-  0x53f020   91  SoundBuffer   (vtable 0x55c830, deleting 0x53f000)
-  0x53f5d0  126  SoundSample   (vtable 0x55c850, deleting 0x53f5b0)
+sound-destructors: 3/3 strict, 316/316 bytes
+  0x53f020   91  SoundBuffer    (vtable 0x55c830, deleting 0x53f000)
+  0x53f5d0  126  SoundSample    (vtable 0x55c850, deleting 0x53f5b0)
+  0x546750   99  SoundBuffer2   (vtable 0x55cb14, deleting 0x546730)
 ```
 
 Both candidates reproduce the primary body, `.text$x`, `.xdata$x`, the
@@ -61,23 +62,41 @@ python3 tools/run_family_batch.py \
   --out /tmp/pc2-destructor-batch --jobs 2
 ```
 
+## Switch body form
+
+`SoundBuffer2` matches with a real switch, not a range test:
+
+```cpp
+switch (state) {
+case 0:
+    field8->Release();
+    break;
+case 1:
+    field8->Release();
+    break;
+case 2:
+    field8->Release();
+    break;
+}
+```
+
+The generator accepts arbitrary body lines, so the switch form needs no
+special syntax. `if (state < 3)` produced a single `cmp/jge` block and a
+41-byte mismatch; the three-case switch reproduces the shipped
+`sub/dec/dec` chain and two release tails.
+
 ## Experimental members
 
-`experimental.json` holds the next two classes:
+`experimental.json` holds the next class:
 
 ```text
 0x541f30 SoundTrack      138 bytes  diff 29
-0x546750 SoundBuffer2     99 bytes  diff 41
 ```
 
-Both compile with the shared base/vtable but need extra source structure:
-
-- `SoundTrack` has two unwind states. State 1's cleanup at `0x541f00`
-  releases a member; the candidate only models the base vtable state.
-- `SoundBuffer2` needs the switch-shaped `state` release (`state == 0/1/2`
-  falls through to `field8->Release()`) rather than `if (state < 3)`.
-
-Do not merge them into `destructors.json` until their strict checks pass.
+`SoundTrack` has two unwind states. State 1's cleanup at `0x541f00` frees
+`[ebp-8]`, a local cleanup object; the candidate only models the base vtable
+state. It needs a `locals`/`states` extension to the generator, not just a
+body change.
 
 ## Next destructor targets
 
