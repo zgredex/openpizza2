@@ -6,7 +6,7 @@ C2.DLL 12.00.8447). Every accepted function is genuine C/C++ and passes
 `tools/match_decomp.py --strict --auto-symbols` with the manifest length and
 the exact candidate entry symbol.
 
-## Result: 17 / 25 strict matches
+## Result: 18 / 25 strict matches
 
 Reproduce with:
 
@@ -35,6 +35,7 @@ Matches (all `/O2 /TP`):
 | 0x48bef0 | Game_OpenObjectView | `?OpenObjectView@Game@@QAEXH@Z` |
 | 0x4e3780 | Player_ComputeNetStatTotal | `?ComputeNetStatTotal@Player@@QAEMXZ` |
 | 0x535d70 | Palette_Init | `?Initialize@Palette@@QAEPAV1@HPAHH@Z` |
+| 0x49a040 | Game_IsCompanyNameTaken | `_Game_IsCompanyNameTaken` |
 
 No explicit `--symbol` mappings were required; all external calls resolve
 through `--auto-symbols` (decorated aliases, PE IAT slots, or address labels
@@ -42,6 +43,10 @@ such as `DAT_004e2c10` used as the `qsort` comparator pointer).
 
 Notes:
 
+- 0x49a040 initializes the boolean result before deriving the company-list
+  pointer. That keeps the result in CL and pushes the slot scratch to EDX; with
+  the result initialized after the list, VC6 uses ECX for the slot and AL for
+  the result and loses six bytes.
 - 0x4e2b70 calls `CRT_QSort` through the `CRT::QSort` alias and passes the
   comparator at 0x4e2c10 as an address-label constant. The seven-int global
   accumulator at 0x57dfc0 is declared as `DAT_0057dfc0[7]`.
@@ -60,7 +65,6 @@ The closest genuine C/C++ attempts are kept in `nonmatching/` with their full
 | 0x4e1e40 | Game_FindFreeStaffRecord | 0x48: 0x44 vs 0x54 | 5 |
 | 0x4d8be0 | Game_FindNearestTransportBuilding | 0x66: 0x8e vs 0x4c | 18 |
 | 0x4e1fe0 | AI_FindTargetWithMinA8 | 0x09: 0x55 vs 0x53 | 27 |
-| 0x49a040 | Game_IsCompanyNameTaken | 0x09: 0x90 vs 0x88 | 118 |
 | 0x4d6c10 | City_RemovePersonAndMaintainPopulation | 0x05: 0xd9 vs 0x5c | 115 |
 
 Three manifest entries could not be attempted as genuine C because their

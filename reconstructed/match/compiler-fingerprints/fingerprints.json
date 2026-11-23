@@ -269,6 +269,28 @@
         "value-local",
         "x87"
       ]
+    },
+    {
+      "id": "bool-result-live-range",
+      "title": "Initialize a boolean result before deriving a pointer so it takes CL",
+      "symptom": "Candidate uses ECX for a slot index and AL for the boolean result ('xor al,al'); original uses EDX for the index and CL for the result ('xor cl,cl', early return 'mov al,cl').",
+      "cause": "The live range of the boolean result starts before the slot/list computation. VC6 gives it CL and moves the index scratch to EDX. Initializing the result after the list gives the index ECX and the result AL, changing the prologue and the early-exit epilogue.",
+      "source_pattern": "bool result = false; int slot = *(int *)(DAT + 0x2ec); char *list = *(char **)(DAT + 0x200 + slot * 4); ... return result;",
+      "counter_pattern": "int slot = ...; char *list = ...; bool result = false;",
+      "evidence": [
+        {
+          "address": "0x49a040",
+          "file": "reconstructed/match/batch16/part1/0x49a040.c",
+          "locator": "result before list"
+        }
+      ],
+      "tags": [
+        "register-allocation",
+        "bool",
+        "declaration-order",
+        "cl",
+        "edx"
+      ]
     }
   ]
 }
