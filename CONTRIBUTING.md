@@ -42,6 +42,11 @@ The toolchain is normally installed at:
 
 The highest-yield work is a recurring code shape. Use the family tools:
 
+If you want a ranked queue instead of reading the raw registry, use the
+[fast-lane protocol](reconstructed/match/investigations/fast-lane/AGENT_FAST_LANE.md)
+and `tools/roi_family_queue.py`; it subtracts audited strict addresses and
+de-duplicates overlapping families.
+
 ```sh
 # Functions grouped by VC6 unwind cleanup target
 python3 tools/map_vc6_cleanup_families.py --out /tmp/pc2-cleanup.json
@@ -64,6 +69,9 @@ python3 tools/build_family_registry.py \
 
 The checked-in registry snapshot is
 [`reconstructed/match/investigations/family-registry/`](reconstructed/match/investigations/family-registry/).
+For throughput-oriented triage, rank it with `tools/roi_family_queue.py` as
+described in
+[`reconstructed/match/investigations/fast-lane/`](reconstructed/match/investigations/fast-lane/).
 Prefer families with many members and shared structure. Do not hand-match a
 one-off register wall unless it unlocks a generator.
 
@@ -74,6 +82,21 @@ Pilot a family on three functions:
 3. a held-out sibling you did not use to design the generator.
 
 Only scale when the held-out sibling matches without hand tuning.
+
+## Check what is already known
+
+Before investigating a byte difference from scratch, search the
+[compiler fingerprints](reconstructed/match/compiler-fingerprints/README.md):
+
+```sh
+python3 tools/lookup_fingerprint.py --list
+python3 tools/lookup_fingerprint.py --query state-release
+python3 tools/lookup_fingerprint.py --address 0x5408b0
+```
+
+The library records the symptom, compiler cause, matching source pattern and
+counter-pattern for behaviours that already have a strict proof. Add an entry
+only after a held-out member confirms the shape generalizes.
 
 ## Reconstruct one function
 

@@ -1,0 +1,217 @@
+{
+  "schema": "pc2.compiler_fingerprints.v1",
+  "executable_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd",
+  "compiler": "MSVC 6.0 SP3, C2.DLL 12.00.8447",
+  "entries": [
+    {
+      "id": "eh-frame-requires-cpp-call",
+      "title": "A destructor loses its whole fs:[0] frame when the body only calls extern \"C\" functions",
+      "symptom": "Candidate starts with 'push esi' instead of 'push -1'; no .text$x/.xdata$x; function is ~40 bytes short. Example: 0x53fcc0 was 160 bytes vs 207.",
+      "cause": "VC6 /GX does not create a try region for calls declared extern \"C\". If the destructor has no virtual call, no member destructor, and no C++-linkage call, it emits no EH frame at all.",
+      "source_pattern": "Declare the CRT-like callees with C++ linkage in the TU: 'void Mem_Free(void *);' and 'int CRT_Fclose(void *);'. A throwing call in the body restores the two-state unwind frame.",
+      "counter_pattern": "'extern \"C\" void __cdecl Mem_Free(void *);' plus plain extern \"C\" calls in the body.",
+      "evidence": [
+        {
+          "address": "0x53fcc0",
+          "file": "reconstructed/match/investigations/destructor-family/destructors.json",
+          "locator": "SoundPakManager per-class prelude"
+        },
+        {
+          "address": "0x53fcc0",
+          "file": "reconstructed/match/investigations/destructor-family/README.md",
+          "locator": "SoundPakManager body and call linkage"
+        }
+      ],
+      "tags": [
+        "eh",
+        "linkage",
+        "destructor",
+        "prologue"
+      ]
+    },
+    {
+      "id": "state-release-cpp-linkage",
+      "title": "Missing 'mov [esp+state],0' before an inlined member destructor",
+      "symptom": "Two unwind states and correct funclets exist, but the candidate never writes state 0 before the inlined member destruction; first difference is that store. Examples: 0x5408b0 and 0x541f30 (parked as 29-byte near misses).",
+      "cause": "The member destructor's call was declared extern \"C\" and is treated as nothrow, so VC6 keeps state 1 active through the inline. A potentially throwing member destructor makes the compiler deactivate the outer state first.",
+      "source_pattern": "Give the member destructor's callee C++ linkage: 'void Mem_Free(void *);' rather than 'extern \"C\" void __cdecl Mem_Free(void *);'.",
+      "counter_pattern": "extern \"C\" declaration for the member destructor's free/close call.",
+      "evidence": [
+        {
+          "address": "0x5408b0",
+          "file": "reconstructed/match/investigations/destructor-family/generated/0x005408b0.cpp",
+          "locator": "StreamList destructor"
+        },
+        {
+          "address": "0x541f30",
+          "file": "reconstructed/match/investigations/destructor-family/generated/0x00541f30.cpp",
+          "locator": "TrackBuffer destructor"
+        },
+        {
+          "address": "0x5408b0",
+          "file": "reconstructed/match/investigations/destructor-family/README.md",
+          "locator": "State release resolved"
+        }
+      ],
+      "tags": [
+        "eh",
+        "linkage",
+        "destructor",
+        "state-store",
+        "member-destructor"
+      ]
+    },
+    {
+      "id": "com-stdcall-vtable-slot",
+      "title": "COM-style virtual calls push 'this'; declare the interface methods __stdcall",
+      "symptom": "Candidate emits 'mov ecx,[obj]; call *off(ecx)' but the original emits 'push obj; mov ecx,[obj]; call *off(ecx)' (and pushes stack arguments first).",
+      "cause": "A thiscall virtual method receives 'this' in ECX and needs no push. A __stdcall COM method receives 'this' as the first stack argument, so VC6 pushes it.",
+      "source_pattern": "virtual void __stdcall Release(); virtual int __stdcall Query();",
+      "counter_pattern": "virtual void Release(); (thiscall) for a COM-style interface slot.",
+      "evidence": [
+        {
+          "address": "0x5408b0",
+          "file": "reconstructed/match/investigations/destructor-family/destructors.json",
+          "locator": "ComInterface19 slots 0x8/0x34/0x48"
+        },
+        {
+          "address": "0x541f30",
+          "file": "reconstructed/match/investigations/destructor-family/destructors.json",
+          "locator": "ComObject Release/Release2"
+        }
+      ],
+      "tags": [
+        "calling-convention",
+        "stdcall",
+        "virtual-call",
+        "com"
+      ]
+    },
+    {
+      "id": "destructor-chain-inline-ancestors",
+      "title": "Multi-level destructor chains need inline ancestor destructors and an out-of-line target",
+      "symptom": "Derived destructor candidate is much shorter and contains a call to the base destructor; the original inlines the whole chain and has one EH frame with several states. Example: 0x541790 was 96 bytes vs 225.",
+      "cause": "VC6 does not inline an ancestor destructor that is defined out-of-line in the same TU (the 169-byte List body is not inlined). Defining ancestors inside their class bodies makes them inline into the derived destructor.",
+      "source_pattern": "Define each ancestor destructor inside its class ('virtual ~Base() { body }'). Declare the target destructor in the class and define it out-of-line after the class definitions; that forces emission of the entry COMDAT plus ancestor vtables and deleting destructors.",
+      "counter_pattern": "All destructors defined out-of-line, or all inline (the target COMDAT then may not be emitted at all).",
+      "evidence": [
+        {
+          "address": "0x541790",
+          "file": "reconstructed/match/investigations/destructor-family/generated/0x00541790.cpp",
+          "locator": "SoundStreamBuffer chain"
+        },
+        {
+          "address": "0x541660",
+          "file": "reconstructed/match/investigations/destructor-family/generated/0x00541660.cpp",
+          "locator": "SoundStreamLayer chain"
+        },
+        {
+          "address": "0x541790",
+          "file": "reconstructed/match/investigations/destructor-family/README.md",
+          "locator": "Destructor inheritance chains"
+        }
+      ],
+      "tags": [
+        "inheritance",
+        "inline",
+        "destructor",
+        "chain",
+        "eh"
+      ]
+    },
+    {
+      "id": "list-teardown-free-before-store",
+      "title": "List teardown order: free the node before storing the next head",
+      "symptom": "Four-byte shift and an extra head reload; original keeps next in a register across the call: 'mov edi,[eax+4]; push eax; call; mov [head],edi; test edi,edi; jne'. Candidate stores head before the call and reloads it after.",
+      "cause": "Source order changes the scheduler's store placement. 'head = next; free(node);' stores first; 'next = head->next; free(head); head = next;' frees first and matches.",
+      "source_pattern": "while (head != 0) { Node *next = head->next; Mem_Free(head); head = next; }",
+      "counter_pattern": "while (head != 0) { Node *node = head; head = node->next; Mem_Free(node); }",
+      "evidence": [
+        {
+          "address": "0x53fcc0",
+          "file": "reconstructed/match/investigations/destructor-family/destructors.json",
+          "locator": "SoundPakManager linked-list loop"
+        },
+        {
+          "address": "0x5408b0",
+          "file": "reconstructed/match/investigations/destructor-family/generated/0x005408b0.cpp",
+          "locator": "StreamList teardown"
+        }
+      ],
+      "tags": [
+        "schedule",
+        "list",
+        "teardown",
+        "store-order"
+      ]
+    },
+    {
+      "id": "zero-constant-in-ebx",
+      "title": "VC6 materializes a shared zero in EBX ('xor ebx,ebx; cmp bl,al')",
+      "symptom": "Original uses 'xor ebx,ebx' and then 'cmp bl,al', 'cmp ebx,eax', 'push ebx', 'mov [member],ebx'. Candidate uses 'test al,al', 'test eax,eax', 'push 0' and immediate stores.",
+      "cause": "The zero is reused across byte/pointer compares, an integer argument, and member stores. VC6 hoists it into EBX when the surrounding code makes those uses one common value; it is usually a consequence of correct EH/linkage shape rather than a separate source variable.",
+      "source_pattern": "Recover the natural multi-use zero first (throwable calls, member destructor, several zero stores). Do not add a fake 'int zero = 0;' to steer allocation.",
+      "counter_pattern": "Literal-only uses that the instruction selector folds to immediate/test forms.",
+      "evidence": [
+        {
+          "address": "0x5408b0",
+          "file": "reconstructed/match/investigations/destructor-family/generated/0x005408b0.cpp",
+          "locator": "enabled/field48/list teardown"
+        }
+      ],
+      "tags": [
+        "register-allocation",
+        "zero",
+        "ebx",
+        "schedule"
+      ]
+    },
+    {
+      "id": "eh-auto-anchors",
+      "title": "Do not hand-bind $L/$T anchors; the matcher derives them from the PE",
+      "symptom": "EH funclet or .xdata$x relocations remain unresolved when a recipe binds section-local $L/$T labels by hand.",
+      "cause": "tools/match_decomp.py derives the original EH section anchors from the target PE's unwind tables and text spans. Hand bindings fight that derivation and are not independent evidence.",
+      "source_pattern": "Compile with /GX, pass '--strict --auto-symbols', and bind only real functions, vtables, and data symbols. Let the matcher place $L/$T anchors.",
+      "counter_pattern": "--symbol '$L123=0x...' or manual .text$x offsets.",
+      "evidence": [
+        {
+          "address": "0x406cd0",
+          "file": "tools/match_decomp.py",
+          "locator": "derived EH section anchors"
+        },
+        {
+          "address": "0x406cd0",
+          "file": "reconstructed/match/batch21/part1/verify_strict.sh",
+          "locator": "7/7 without hand-bound anchors"
+        }
+      ],
+      "tags": [
+        "tooling",
+        "matcher",
+        "eh",
+        "anchors"
+      ]
+    },
+    {
+      "id": "generator-field-size-default",
+      "title": "Generator field arrays need an explicit size or the next field shifts by four",
+      "symptom": "A member field lands 4 bytes too far (e.g. TrackBuffer field8 at +0xc instead of +0x8); one-byte diff at the first member access.",
+      "cause": "generate_destructor_family.field_block advances the cursor by the field's 'size' (default 4). A declaration like 'char pad0[8];' without \"size\": 8 advances by 4 and inserts an unintended 4-byte pad before the next field.",
+      "source_pattern": "{\"decl\": \"char pad0[8];\", \"offset\": 0, \"size\": 8}",
+      "counter_pattern": "{\"decl\": \"char pad0[8];\", \"offset\": 0} followed by a field at offset 8.",
+      "evidence": [
+        {
+          "address": "0x541f30",
+          "file": "reconstructed/match/investigations/destructor-family/destructors.json",
+          "locator": "TrackBuffer member fields"
+        }
+      ],
+      "tags": [
+        "tooling",
+        "generator",
+        "field-layout",
+        "spec"
+      ]
+    }
+  ]
+}
