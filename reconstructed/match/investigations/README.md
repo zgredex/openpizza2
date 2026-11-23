@@ -93,6 +93,42 @@ Changing that displacement in a scratch object preserved the inferred
 anchor and failed strict verification. The three verified replacements
 linked into a byte-identical scratch PE.
 
+### Wider retained-draft sweep
+
+```sh
+scratch=$(mktemp -d)
+python3 tools/sweep_vc6_drafts.py --cache "$scratch/coff" \
+  --out "$scratch/drafts" --exclude 0x4cb950 --exclude 0x4cec60 --jobs 8
+python3 tools/propose_symbol_mappings.py "$scratch/drafts" \
+  --json-out "$scratch/symbols.json" --report-out "$scratch/symbols.md"
+```
+
+The sweep selects tracked nonmatching C/C++ sources with contiguous
+indexed extents and skips addresses with a tracked candidate outside
+`nonmatching/`. Pass `--exclude` for strict generator matches that keep a
+historical draft. It reuses current source-hash-verified recipes where
+available and records the defaults used on older sources. `--eh-only`
+selects the supported original prologue and `--address` narrows the set.
+Full matcher receipts go in `functions/`. Eligible sources use the same
+COFF cache as the near-miss pilot. `--cache-only` reports unavailable
+objects without compiling.
+
+The broader run checked 303 drafts. After retrying two entry and compiler
+mode errors, every draft received a matcher receipt. A warm run reproduced
+the 297 cache-eligible results. Six sources bypassed caching. The EH
+resolver inferred six anchors among 28 EH drafts. All six still have
+primary code differences, and three retain blocked secondary sections.
+The symbol pass found no promotable
+body-only matches. Forty-five drafts were within eight diagnostic bytes,
+and the sweep added zero strict bytes.
+
+The wider flag screen added 28 drafts and 84 attempts in two shards.
+The warm screen reused all 84 objects. `Person_RefreshShopChoices`
+(`0x4dcd00`) gained two equal blocks under `/O2 /TP /Oy-`, reaching
+eight of 19. The other profiles added no net equal blocks and no strict
+matches. A bounded source-shape check of the three clean one-byte misses
+and a pair of hiring functions also left their strict status unchanged.
+
 ## Historical matrices
 
 Compiler hashes recorded for `matrix01.json`:
