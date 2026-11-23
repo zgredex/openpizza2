@@ -81,7 +81,7 @@ python3 tools/run_family_batch.py \
 ## Measured family scoreboards
 
 ```text
-call:0x4017f0   73/78 strict   5,094/5,898 bytes   4 near misses, 1 blocked
+call:0x4017f0   75/78 strict   5,426/5,898 bytes   2 near misses, 1 blocked
 call:0x54cc2b   22/23 strict   1,418/1,546 bytes   1 blocked
 call:0x54cbc1   20/21 strict   1,135/1,265 bytes   1 blocked
 call:0x488be0   12/13 strict     817/919 bytes     1 blocked

@@ -7,7 +7,11 @@ Every accepted function is genuine C/C++ and passes
 `tools/match_decomp.py --strict --auto-symbols` with the manifest length and
 the exact candidate entry symbol.
 
-## Result: 5 / 25 strict matches
+## Result: 8 verified functions, 8 strict
+
+The three additions are the 0x477f50/0x477fe0/0x478090 filter-sum family. The
+older 0x477fe0/0x478090 near-miss receipts remain under `nonmatching/` as
+history; the accepted sources are the ones in this directory.
 
 Reproduce with:
 
@@ -24,6 +28,9 @@ Matches:
 | 0x50e550 | Game_GetObjectStatusLevel | /O2 /TP | `@Game_GetObjectStatusLevel@4` |
 | 0x50e600 | Person_ChooseWanderTarget | /O2 /TP | `?ChooseWanderTarget@Person@@QAEXPAX@Z` |
 | 0x527d10 | UI_SetWaitCursor | /O2 /TP | `?SetWaitCursor@UI@@QAEXH@Z` |
+| 0x477f50 | Stats_SumFilteredRecordFloats20 | /O2 /TP | `?SumFilteredRecordFloats20@Stats@@QAEMHH@Z` |
+| 0x477fe0 | Stats_SumFilteredFloats | /O2 /TP | `?SumFilteredFloats@Stats@@QAEMHHH@Z` |
+| 0x478090 | Stats_SumFilteredFloats2 | /O2 /TP | `?SumFilteredFloats2@Stats@@QAEMHHH@Z` |
 
 Notes:
 
@@ -39,6 +46,12 @@ Notes:
 - `0x527d10` resolves all Win32 imports through PE IAT slots
   (`LoadCursorA`, `GetCurrentThreadId`, `SetClassLongA`, `SetCursor`,
   `ResetEvent`, `PostMessageA`, `WaitForSingleObject`).
+- The filter-sum trio must load both record fields into locals before the
+  compound condition (`int rf = record->field; int ri = record->index;`) and
+  compare `index == ri`. Inline `record->field`/`record->index` comparisons
+  fold to memory operands and lose four bytes. The single-column add needs a
+  value local (`float value = record->values[column]; total += value;`) to
+  keep the record load before the accumulator load.
 
 ## Non-matching evidence
 
@@ -47,8 +60,6 @@ The following are genuine C/C++ attempts. Sources and full
 
 | address | function | first diff (offset: original vs candidate) | differing bytes |
 | --- | --- | --- | --- |
-| 0x477fe0 | Stats_SumFilteredFloats | 0x0c: 0xc7 vs 0x89 | 138 |
-| 0x478090 | Stats_SumFilteredFloats2 | 0x0c: 0xc7 vs 0x89 | 138 |
 | 0x478eb0 | Stats_ComputeWeightedTotals | 0x00: 0x53 vs 0x51 | 155 |
 | 0x47ec70 | Game_ToggleObjectFlag2 | 0x26: 0x6a vs 0x8b | 4 |
 | 0x4f1f70 | Object_UpdateState | 0x00: 0x56 vs 0x8b | 164 |

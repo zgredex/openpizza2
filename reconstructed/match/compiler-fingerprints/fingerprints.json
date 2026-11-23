@@ -212,6 +212,63 @@
         "field-layout",
         "spec"
       ]
+    },
+    {
+      "id": "eager-field-locals-compound-filter",
+      "title": "Two filter fields in one condition must be materialized as locals",
+      "symptom": "Original loads both record fields before the first branch ('mov edx,[eax+8]; mov ecx,[eax+4]; cmp edx,edi'). Candidate folds them into memory operands ('cmp edi,[eax+8]'; 'cmp ebp,[eax+4]') and is four bytes short; the first visible difference is the short jump displacement.",
+      "cause": "VC6 treats each single-use field comparison as a memory operand. Naming both fields as locals forces the loads into registers and keeps the second value live across the first branch, which is the shipped schedule.",
+      "source_pattern": "int rf = record->field; int ri = record->index; if ((rf == field || field == -1) && (index == -1 || index == ri)) { ... }",
+      "counter_pattern": "if ((record->field == field || field == -1) && (index == -1 || record->index == index))",
+      "evidence": [
+        {
+          "address": "0x477f50",
+          "file": "reconstructed/match/batch16/part4/0x477f50.c",
+          "locator": "two-local filter"
+        },
+        {
+          "address": "0x477fe0",
+          "file": "reconstructed/match/batch16/part4/0x477fe0.c",
+          "locator": "two-local filter plus column branch"
+        },
+        {
+          "address": "0x478090",
+          "file": "reconstructed/match/batch16/part4/0x478090.c",
+          "locator": "twenty-five-value sibling"
+        }
+      ],
+      "tags": [
+        "register-allocation",
+        "condition",
+        "field-load",
+        "scheduling"
+      ]
+    },
+    {
+      "id": "fp-add-value-local",
+      "title": "FP accumulation with a memory array element needs a value local to fix operand order",
+      "symptom": "Candidate emits 'flds [total]; fadds [record+col*4]' while the original emits 'flds [record+col*4]; fadds [total]'; first difference is in the single-column path.",
+      "cause": "Both operands are memory. VC6 chooses the accumulator as the first load unless the array element is first made a value; the value local forces the record load before the accumulator load.",
+      "source_pattern": "float value = record->values[column]; total += value;",
+      "counter_pattern": "total += record->values[column];",
+      "evidence": [
+        {
+          "address": "0x477fe0",
+          "file": "reconstructed/match/batch16/part4/0x477fe0.c",
+          "locator": "single-column path"
+        },
+        {
+          "address": "0x478090",
+          "file": "reconstructed/match/batch16/part4/0x478090.c",
+          "locator": "same shape, 25 values"
+        }
+      ],
+      "tags": [
+        "floating-point",
+        "operand-order",
+        "value-local",
+        "x87"
+      ]
     }
   ]
 }

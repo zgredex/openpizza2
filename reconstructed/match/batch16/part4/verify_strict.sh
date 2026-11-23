@@ -33,6 +33,9 @@ check 0x4dc0f0 166 '?PlaceScenarioBranches@ScenarioCompany@@QAEXPAX@Z' --flags "
 check 0x50e550 165 '@Game_GetObjectStatusLevel@4' --flags "/O2 /TP"
 check 0x50e600 170 '?ChooseWanderTarget@Person@@QAEXPAX@Z' --flags "/O2 /TP"
 check 0x527d10 165 '?SetWaitCursor@UI@@QAEXH@Z' --flags "/O2 /TP"
+check 0x477f50 131 '?SumFilteredRecordFloats20@Stats@@QAEMHH@Z' --flags "/O2 /TP"
+check 0x477fe0 166 '?SumFilteredFloats@Stats@@QAEMHHH@Z' --flags "/O2 /TP"
+check 0x478090 166 '?SumFilteredFloats2@Stats@@QAEMHHH@Z' --flags "/O2 /TP"
 
 echo "strict $pass/$((pass + fail))"
 [ "$fail" -eq 0 ]

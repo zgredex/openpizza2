@@ -41,6 +41,8 @@ dependency on the game executable.
 | `zero-constant-in-ebx` | VC6 hoists a shared zero into EBX for byte/pointer compares, an argument, and member stores |
 | `eh-auto-anchors` | do not hand-bind `$L`/`$T`; the matcher derives them from the PE |
 | `generator-field-size-default` | generator field arrays need an explicit `size` or the next field shifts by four |
+| `eager-field-locals-compound-filter` | two filter fields in one condition must be locals to force register loads |
+| `fp-add-value-local` | FP accumulation needs a value local to put the array load before the accumulator load |
 
 ## Add an entry
 
