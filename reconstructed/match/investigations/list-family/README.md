@@ -8,17 +8,22 @@ primitives and adds one new strict match.
 ## Result
 
 ```text
-list-operations: 3/4 strict, 345/511 bytes
+list-operations: 6/7 strict, 466/632 bytes
   0x401480  43   List_Node_Destroy      strict
   0x4014b0 251   List_Add               strict (new)
+  0x4f1370  59   List_AppendNode        strict (new)
+  0x539e00  32   List_PushFront         strict
   0x541250  51   List_FreeAll           strict
   0x544af0 166   List_RemoveNodeLocked  1 byte remaining
+  0x545b00  30   List_ContainerDestroy  strict
 ```
 
-Cold run compiles four objects; a warm run reuses all four with no compiler
+Cold run compiles seven objects; a warm run reuses all seven with no compiler
 invocation.
 
-## New strict match: `List_Add` (`0x4014b0`, 251 bytes)
+## New strict matches: `List_Add` and `List_AppendNode`
+
+### `List_Add` (`0x4014b0`, 251 bytes)
 
 Source: `reconstructed/match/batch19/part4/0x4014b0.cpp`
 
@@ -100,6 +105,29 @@ python3 tools/match_decomp.py 0x4014b0 \
   --symbol '?Leave@CriticalSection@@QAEXXZ=0x401340'
 ```
 
+### `List_AppendNode` (`0x4f1370`, 59 bytes)
+
+Source: `reconstructed/match/batch08/part4/0x4f1370.c`
+
+The winning shape re-reads the head for the loop cursor after the null check:
+
+```cpp
+Node *head = *(Node **)((char *)this + 0xbc);
+if (head == 0) {
+    *(Node **)((char *)this + 0xbc) = node;
+    node->next = 0;
+    return;
+}
+Node *current = *(Node **)((char *)this + 0xbc);
+while (current->next != 0)
+    current = current->next;
+current->next = node;
+node->next = 0;
+```
+
+Using `current = head` encoded the peeled first test as `mov eax,[eax+0x70]`; the
+re-read keeps the cursor in ECX and matches the shipped `mov eax,[ecx+0x70]`.
+
 ## Near miss: `List_RemoveNodeLocked` (`0x544af0`, 166 bytes)
 
 Source: `reconstructed/match/batch16/part4/nonmatching/0x544af0.cpp`
@@ -148,12 +176,11 @@ constructors/destructors and list utilities. Use the family runner to score
 them in groups; do not hand-match one at a time. Candidates worth extracting
 next:
 
-- `0x539e00` List_PushFront (32 bytes)
-- `0x4f1370` List_AppendNode (59 bytes)
-- `0x545b00` List_ContainerDestroy (30 bytes)
 - `0x4014b0` siblings that use the same two-array growth layout
 - the small `Player_Construct`/`Recipe_Destroy`/`UI_BriefingList_Destroy`
   destructors that call `List_Node_Destroy`
+- the 43-function `List_Node_Destroy` group as a generator once the member
+  layout variants are known
 
 The payoff is a generator/spec that accepts a list member signature, field
 offsets, growth increment and lock object, and emits the family member.

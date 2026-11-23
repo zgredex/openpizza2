@@ -19,7 +19,7 @@ void List2::AppendNode(Node *node)
         node->next = 0;
         return;
     }
-    Node *current = head;
+    Node *current = *(Node **)((char *)this + 0xbc);
     while (current->next != 0)
         current = current->next;
     current->next = node;

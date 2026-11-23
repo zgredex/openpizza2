@@ -1,5 +1,5 @@
 #!/bin/sh
-# Strict byte-match verification for batch08/part4 (25 functions, 22 matched).
+# Strict byte-match verification for batch08/part4 (25 functions, 23 matched).
 # Toolchain: /tmp/opencode/vc6-sp3-toolchain/VC98 (CL 12.00.8168, C2.DLL 12.00.8447).
 # Every check passes the manifest length and the exact entry symbol and requires
 # tools/match_decomp.py --strict --auto-symbols to report strict_match.
@@ -48,6 +48,7 @@ check 0x4e34a0 61 '?FindRecordType2ByKey@Player@@QAEPAXH@Z'
 check 0x4e6300 61 '?SetModeByte@Game@@QAEXI@Z'
 check 0x4ea400 61 '?BlitScaledObjectSprite@Game@@QAEXXZ'
 check 0x508d50 61 '?ApplyDeferredType@Object@@QAEXH@Z'
+check 0x4f1370 59 '?AppendNode@List2@@QAEXPAUNode@@@Z'
 
 echo "strict $pass/$((pass + fail))"
 [ "$fail" -eq 0 ]

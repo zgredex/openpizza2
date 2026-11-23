@@ -244,15 +244,20 @@ all five objects without invoking VC6.
 ### List family pilot
 
 `reconstructed/match/investigations/list-family/README.md` applies the same
-cached batch runner to the `List_Node_Destroy` family. The pilot is **3/4
-strict, 345/511 bytes**: `List_Node_Destroy` (43), `List_Add` (251, new strict
-match) and `List_FreeAll` (51). `List_RemoveNodeLocked` is one byte away.
+cached batch runner to the `List_Node_Destroy` family. The pilot is **6/7
+strict, 466/632 bytes**: `List_Node_Destroy` (43), `List_Add` (251, new strict
+match), `List_AppendNode` (59, new strict match), `List_PushFront` (32),
+`List_FreeAll` (51) and `List_ContainerDestroy` (30).
+`List_RemoveNodeLocked` is one byte away.
 
 `List_Add` is the first new list-family match from the inventory. Its source
 uses `if (count >= capacity)` to reproduce the shipped `cmp count,capacity;
 jl` operand order, and `memcpy(new, old, capacity * 4)` to reproduce the
 inline `rep movsl`/`rep movsb` growth copies. The global lock is `0x579af0`
 with `Enter`/`Leave` at `0x401320`/`0x401340`.
+
+`List_AppendNode` matches after re-reading `this+0xbc` for the loop cursor;
+using the `head` local left the peeled first test in EAX instead of ECX.
 
 ## Next experiments
 

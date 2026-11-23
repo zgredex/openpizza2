@@ -4,7 +4,7 @@ Batch 8 part 4 (`reconstructed/match/batch08/part4.json`, 25 functions).
 Toolchain: `/tmp/opencode/vc6-sp3-toolchain/VC98` (CL 12.00.8168 front end,
 C2.DLL 12.00.8447), matcher `tools/match_decomp.py`, flags `/O2 /TP`.
 
-**Result: 22 of 25 functions report `"strict_match": true`.** Run
+**Result: 23 of 25 functions report `"strict_match": true`.** Run
 `sh reconstructed/match/batch08/part4/verify_strict.sh` to re-check every
 match; each check passes the manifest length and the exact entry symbol and
 uses `--strict --auto-symbols`. The three failed final candidates are under
@@ -36,12 +36,12 @@ uses `--strict --auto-symbols`. The three failed final candidates are under
 | 0x4e6300 | Game_SetModeByte | mode byte plus control-panel command |
 | 0x4ea400 | Game_BlitScaledObjectSprite | `Gfx::BlitRLEScaled` with inlined `Sprite::GetPixelBuffer` argument |
 | 0x508d50 | Object_ApplyDeferredType | inverted `if (type != 0x10)` places the 0x10 body last |
+| 0x4f1370 | List_AppendNode | re-reading `this+0xbc` for the loop cursor keeps the peeled first test in ECX; `current = head` encoded EAX and left one byte |
 
 ## Nonmatching
 
 | address | name | first diff | cause |
 |---|---|---|---|
-| 0x4f1370 | List_AppendNode | offset 0x1f: original `0x41` (`mov eax,[ecx+0x70]`), candidate `0x40` (`mov eax,[eax+0x70]`) | Single ModRM byte. The loop body itself matches exactly; VC6 reuses `eax` in the peeled first condition test where the original encoded `ecx`. Every equivalent loop spelling tested produced the same one-byte difference. |
 | 0x403790 | Profiler_StartTimer | offset 5: original `0x85` (`test eax,eax`), candidate `0x56` (`push esi`) | VC6 hoists the `push esi` prologue above the `DAT_0057b558` guard; the original saves `esi` only inside the active path and the zero path is a bare `ret`. Tried `if/return`, `if` body, `goto`, and a local copy. 31 differing bytes. |
 | 0x549930 | Employee_NextSpriteVariant | offset 3: original `0x04` (`mov edx,[esp+4]`), candidate `0x08` (`mov edx,[esp+8]`) | Parameter registers differ: original `edx=slot`, `esi=cur`, `edi=limit`; VC6 assigns `edx=cur`, `esi=limit`, `edi=slot`. Tested member/free `__fastcall`, local copies, struct copies, and unsigned slot; all kept the swapped allocation. 16 differing bytes. |
 

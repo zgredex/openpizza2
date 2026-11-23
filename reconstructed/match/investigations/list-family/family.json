@@ -3,12 +3,25 @@
   "family": "list-operations",
   "recipes": [
     {
+      "address": "0x401480",
+      "name": "List_Node_Destroy",
+      "length": 43,
+      "entry": "@List_Node_Destroy@8",
+      "source": "reconstructed/match/batch06/part4/0x401480.c",
+      "flags": [
+        "/O2"
+      ]
+    },
+    {
       "address": "0x4014b0",
       "name": "List_Add",
       "length": 251,
       "entry": "?Add@List@@QAEHH@Z",
       "source": "reconstructed/match/batch19/part4/0x4014b0.cpp",
-      "flags": ["/O2", "/TP"],
+      "flags": [
+        "/O2",
+        "/TP"
+      ],
       "symbols": {
         "?g_listLock@@3UCriticalSection@@A": "0x579af0",
         "?Enter@CriticalSection@@QAEXXZ": "0x401320",
@@ -16,12 +29,29 @@
       }
     },
     {
-      "address": "0x401480",
-      "name": "List_Node_Destroy",
-      "length": 43,
-      "entry": "@List_Node_Destroy@8",
-      "source": "reconstructed/match/batch06/part4/0x401480.c",
-      "flags": ["/O2"]
+      "address": "0x4f1370",
+      "name": "List_AppendNode",
+      "length": 59,
+      "entry": "?AppendNode@List2@@QAEXPAUNode@@@Z",
+      "source": "reconstructed/match/batch08/part4/0x4f1370.c",
+      "flags": [
+        "/O2",
+        "/TP"
+      ]
+    },
+    {
+      "address": "0x539e00",
+      "name": "List_PushFront",
+      "length": 32,
+      "entry": "?PushFront@List@@QAEXPAX@Z",
+      "source": "reconstructed/match/batch05/part3/0x539e00.c",
+      "flags": [
+        "/O2",
+        "/TP"
+      ],
+      "symbols": {
+        "??2@YAPAXI@Z": "0x54e221"
+      }
     },
     {
       "address": "0x541250",
@@ -29,7 +59,10 @@
       "length": 51,
       "entry": "?FreeAll@List@@QAEXXZ",
       "source": "reconstructed/match/batch07/part4/0x541250.c",
-      "flags": ["/O2", "/TP"]
+      "flags": [
+        "/O2",
+        "/TP"
+      ]
     },
     {
       "address": "0x544af0",
@@ -37,7 +70,21 @@
       "length": 166,
       "entry": "?RemoveNodeLocked@LockedList@@QAEXPAULockedListNode@@@Z",
       "source": "reconstructed/match/batch16/part4/nonmatching/0x544af0.cpp",
-      "flags": ["/O2", "/GX", "/TP"]
+      "flags": [
+        "/O2",
+        "/GX",
+        "/TP"
+      ]
+    },
+    {
+      "address": "0x545b00",
+      "name": "List_ContainerDestroy",
+      "length": 30,
+      "entry": "@List_ContainerDestroy@12",
+      "source": "reconstructed/match/batch05/part2/0x545b00.c",
+      "flags": [
+        "/O2"
+      ]
     }
   ]
 }
