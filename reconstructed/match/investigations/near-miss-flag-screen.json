@@ -1,0 +1,385 @@
+{
+  "schema": "pc2.near_miss_flag_screen.v1",
+  "recipes": [
+    {
+      "receipt": "reconstructed/match/batch16/part4/nonmatching/0x4fe370.json",
+      "source": "reconstructed/match/batch16/part4/nonmatching/0x4fe370.c",
+      "focus": "call argument scratch register",
+      "profiles": [
+        {
+          "name": "o1",
+          "flags": [
+            "/O1",
+            "/TP"
+          ]
+        },
+        {
+          "name": "g5",
+          "flags": [
+            "/O2",
+            "/TP",
+            "/G5"
+          ]
+        },
+        {
+          "name": "g6",
+          "flags": [
+            "/O2",
+            "/TP",
+            "/G6"
+          ]
+        }
+      ]
+    },
+    {
+      "receipt": "reconstructed/match/batch19/part3/nonmatching/0x4fd520.json",
+      "source": "reconstructed/match/batch19/part3/nonmatching/0x4fd520.c",
+      "focus": "loop latch operand and branch layout",
+      "profiles": [
+        {
+          "name": "o1",
+          "flags": [
+            "/O1",
+            "/TP"
+          ]
+        },
+        {
+          "name": "size",
+          "flags": [
+            "/O2",
+            "/TP",
+            "/Os"
+          ]
+        },
+        {
+          "name": "g6",
+          "flags": [
+            "/O2",
+            "/TP",
+            "/G6"
+          ]
+        }
+      ]
+    },
+    {
+      "receipt": "reconstructed/match/batch16/part4/nonmatching/0x47ec70.json",
+      "source": "reconstructed/match/batch16/part4/nonmatching/0x47ec70.c",
+      "focus": "literal push and receiver instruction order",
+      "profiles": [
+        {
+          "name": "o1",
+          "flags": [
+            "/O1",
+            "/TP"
+          ]
+        },
+        {
+          "name": "g5",
+          "flags": [
+            "/O2",
+            "/TP",
+            "/G5"
+          ]
+        },
+        {
+          "name": "g6",
+          "flags": [
+            "/O2",
+            "/TP",
+            "/G6"
+          ]
+        }
+      ]
+    },
+    {
+      "receipt": "reconstructed/match/batch16/part1/nonmatching/0x4e1e40.json",
+      "source": "reconstructed/match/batch16/part1/nonmatching/0x4e1e40.c",
+      "focus": "stack operand register selection",
+      "profiles": [
+        {
+          "name": "o1",
+          "flags": [
+            "/O1",
+            "/TP"
+          ]
+        },
+        {
+          "name": "frame",
+          "flags": [
+            "/O2",
+            "/TP",
+            "/Oy-"
+          ]
+        },
+        {
+          "name": "g6",
+          "flags": [
+            "/O2",
+            "/TP",
+            "/G6"
+          ]
+        }
+      ]
+    },
+    {
+      "receipt": "reconstructed/match/batch19/part3/nonmatching/0x542630.json",
+      "source": "reconstructed/match/batch19/part3/nonmatching/0x542630.c",
+      "focus": "method receiver and scalar load order",
+      "profiles": [
+        {
+          "name": "o1",
+          "flags": [
+            "/O1",
+            "/TP"
+          ]
+        },
+        {
+          "name": "g5",
+          "flags": [
+            "/O2",
+            "/TP",
+            "/G5"
+          ]
+        },
+        {
+          "name": "g6",
+          "flags": [
+            "/O2",
+            "/TP",
+            "/G6"
+          ]
+        }
+      ]
+    },
+    {
+      "receipt": "reconstructed/match/batch20/part1/nonmatching/0x4bd230.json",
+      "source": "reconstructed/match/batch20/part1/nonmatching/0x4bd230.c",
+      "focus": "callee-saved register allocation",
+      "profiles": [
+        {
+          "name": "o1",
+          "flags": [
+            "/O1",
+            "/TP"
+          ]
+        },
+        {
+          "name": "frame",
+          "flags": [
+            "/O2",
+            "/TP",
+            "/Oy-"
+          ]
+        },
+        {
+          "name": "g6",
+          "flags": [
+            "/O2",
+            "/TP",
+            "/G6"
+          ]
+        }
+      ]
+    },
+    {
+      "receipt": "reconstructed/match/batch16/part1/nonmatching/0x4d8be0.json",
+      "source": "reconstructed/match/batch16/part1/nonmatching/0x4d8be0.c",
+      "focus": "receiver and frame spill scheduling",
+      "profiles": [
+        {
+          "name": "o1",
+          "flags": [
+            "/O1",
+            "/TP"
+          ]
+        },
+        {
+          "name": "frame",
+          "flags": [
+            "/O2",
+            "/TP",
+            "/Oy-"
+          ]
+        },
+        {
+          "name": "g6",
+          "flags": [
+            "/O2",
+            "/TP",
+            "/G6"
+          ]
+        }
+      ]
+    },
+    {
+      "receipt": "reconstructed/match/batch16/part1/nonmatching/0x4e1fe0.json",
+      "source": "reconstructed/match/batch16/part1/nonmatching/0x4e1fe0.c",
+      "focus": "callee-saved register save order",
+      "profiles": [
+        {
+          "name": "o1",
+          "flags": [
+            "/O1",
+            "/TP"
+          ]
+        },
+        {
+          "name": "frame",
+          "flags": [
+            "/O2",
+            "/TP",
+            "/Oy-"
+          ]
+        },
+        {
+          "name": "g6",
+          "flags": [
+            "/O2",
+            "/TP",
+            "/G6"
+          ]
+        }
+      ]
+    },
+    {
+      "receipt": "reconstructed/match/batch16/part4/nonmatching/0x4ffe00.json",
+      "source": "reconstructed/match/batch16/part4/nonmatching/0x4ffe00.c",
+      "focus": "stack-local address staging",
+      "profiles": [
+        {
+          "name": "o1",
+          "flags": [
+            "/O1",
+            "/TP"
+          ]
+        },
+        {
+          "name": "frame",
+          "flags": [
+            "/O2",
+            "/TP",
+            "/Oy-"
+          ]
+        },
+        {
+          "name": "g6",
+          "flags": [
+            "/O2",
+            "/TP",
+            "/G6"
+          ]
+        }
+      ]
+    },
+    {
+      "receipt": "reconstructed/match/batch16/part3/nonmatching/0x49c5d0.json",
+      "source": "reconstructed/match/batch16/part3/nonmatching/0x49c5d0.c",
+      "focus": "global receiver staging",
+      "profiles": [
+        {
+          "name": "o1",
+          "flags": [
+            "/O1",
+            "/TP"
+          ]
+        },
+        {
+          "name": "g6",
+          "flags": [
+            "/O2",
+            "/TP",
+            "/G6"
+          ]
+        }
+      ]
+    },
+    {
+      "receipt": "reconstructed/match/batch19/part3/nonmatching/0x52bad0.json",
+      "source": "reconstructed/match/batch19/part3/nonmatching/0x52bad0.c",
+      "focus": "conditional branch disposition",
+      "profiles": [
+        {
+          "name": "o1",
+          "flags": [
+            "/O1",
+            "/TP"
+          ]
+        },
+        {
+          "name": "size",
+          "flags": [
+            "/O2",
+            "/TP",
+            "/Os"
+          ]
+        }
+      ]
+    },
+    {
+      "receipt": "reconstructed/match/batch16/part3/nonmatching/0x4fc990.json",
+      "source": "reconstructed/match/batch16/part3/nonmatching/0x4fc990.c",
+      "focus": "prologue register and frame selection",
+      "profiles": [
+        {
+          "name": "o1",
+          "flags": [
+            "/O1",
+            "/TP"
+          ]
+        },
+        {
+          "name": "frame",
+          "flags": [
+            "/O2",
+            "/TP",
+            "/Oy-"
+          ]
+        }
+      ]
+    },
+    {
+      "receipt": "reconstructed/match/batch19/part3/nonmatching/0x523e20.json",
+      "source": "reconstructed/match/batch19/part3/nonmatching/0x523e20.c",
+      "focus": "conditional branch target layout",
+      "profiles": [
+        {
+          "name": "o1",
+          "flags": [
+            "/O1",
+            "/TP"
+          ]
+        },
+        {
+          "name": "size",
+          "flags": [
+            "/O2",
+            "/TP",
+            "/Os"
+          ]
+        }
+      ]
+    },
+    {
+      "receipt": "reconstructed/match/batch16/part4/nonmatching/0x4f1f70.json",
+      "source": "reconstructed/match/batch16/part4/nonmatching/0x4f1f70.c",
+      "focus": "entry prologue and register allocation",
+      "profiles": [
+        {
+          "name": "o1",
+          "flags": [
+            "/O1",
+            "/TP"
+          ]
+        },
+        {
+          "name": "frame",
+          "flags": [
+            "/O2",
+            "/TP",
+            "/Oy-"
+          ]
+        }
+      ]
+    }
+  ]
+}

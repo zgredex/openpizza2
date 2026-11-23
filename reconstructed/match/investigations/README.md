@@ -54,6 +54,45 @@ results. Reusing locals for existing values improved `Sound_UpdateBufferFade`
 (`0x4e1fe0`, 27 to 23). The pilot added zero strict bytes. It also routed
 `0x4cb950` to secondary-section review and `0x47f670` to extent review.
 
+### Compiler profile screen
+
+Use `near-miss-flag-screen.json` with the same runner and cache. Its
+profiles hold the source, symbol bindings, language, and exception model
+fixed. Each profile varies a selected optimization axis. The report
+groups profiles with identical emitted bytes and relocations for each
+address and ranks exact paired blocks ahead of a raw byte count.
+
+The screen ran 51 attempts on 14 drafts, recompiling 43 and reusing eight
+existing objects. It found 44 distinct emitted signatures. The warm pass
+reproduced all 51 results without compiler calls. No profile gained an
+equal block or passed strict matching. `/Oy-` reduced the raw count for
+`0x4f1f70` from 164 to 157 with the same four equal blocks. `/O1` reduced
+that raw count to 121 while losing all four equal blocks.
+
+### Automatic VC6 unwind anchors
+
+```sh
+python3 reconstructed/match/investigations/0x4cb950/verify_strict.py
+```
+
+`tools/verify_vc6_eh_anchor.py` brackets the requested function with
+neighboring indexed handlers and requires a unique compatible handler
+shape. It omits the requested function's own handler operand during
+anchor inference. The strict matcher then verifies that operand, the
+primary code, and the relocated secondary sections. The pilot supports
+the VC6 frame prologue and simple unwind-map format covered by
+`compare_vc6_unwind.py`.
+
+The new resolver reproduced the slider and bitmap gadget factory anchors
+from the existing [controls](high-payoff-2026-11-22.md). The slider
+interval contained two stubs with different unwind graphs. The resolver
+selected the one-state graph. The registry reader at `0x4cb950` gained
+**257 strict code bytes** with the inferred `$L270 = 0x558bb8` anchor.
+The actual cleanup in both original and candidate uses `[ebp-0x14]`.
+Changing that displacement in a scratch object preserved the inferred
+anchor and failed strict verification. The three verified replacements
+linked into a byte-identical scratch PE.
+
 ## Historical matrices
 
 Compiler hashes recorded for `matrix01.json`:

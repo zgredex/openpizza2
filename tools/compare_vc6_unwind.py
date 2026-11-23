@@ -58,12 +58,15 @@ def original_operand(read, location, offset, kind):
     return value or None
 
 
-def handler_from_prologue(read, resolve, entry):
-    prefix = read(entry, 32)
+def handler_field_offset(prefix):
     marker = prefix.find(b"\x6a\xff\x68")
     if marker < 0 or prefix[marker + 7:marker + 13] != b"\x64\xa1\0\0\0\0":
         raise ValueError("entry does not establish the supported VC6 EH frame")
-    return resolve(entry, marker + 3, 0x06)
+    return marker + 3
+
+
+def handler_from_prologue(read, resolve, entry):
+    return resolve(entry, handler_field_offset(read(entry, 32)), 0x06)
 
 
 def cleanup_signature(disasm, read, resolve, location):

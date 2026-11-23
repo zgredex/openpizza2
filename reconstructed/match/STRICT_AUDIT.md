@@ -55,6 +55,10 @@ The subsequent [UI updater pilot](investigations/ui-builder-generation.md#strict
 verified and linked one additional function at `0x4cec60`, adding **893
 strict code bytes** (about 0.07 percentage points of indexed byte coverage).
 
+The [automatic VC6 unwind anchor pilot](investigations/README.md#automatic-vc6-unwind-anchors)
+verified and linked one additional function, `0x4cb950`, adding **257
+strict code bytes**.
+
 ### Reusable-fact pilot
 
 `tools/propose_symbol_mappings.py` joined the 142 body-only candidates and
