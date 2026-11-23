@@ -1,5 +1,6 @@
 /* Optional X11 readback regression for native source textures and clipping. */
 #include "pc2_vk.h"
+#include "pc2_sprite_decode.h"
 #include <SDL2/SDL_syswm.h>
 #include <X11/Xutil.h>
 #include <stdio.h>
@@ -25,6 +26,7 @@ static int check_pixels(SDL_Window *window)
         {80, 100, 0}, {120, 100, 0}, {160, 100, 0x00ff00},
         {120, 140, 0xffffff}, {160, 140, 0xffff00},
         {260, 110, 0}, {300, 110, 0x0000ff}, {160, 500, 0},
+        {420, 110, 0xff0000}, {460, 110, 0}, {500, 110, 0x0000ff},
     };
     for (unsigned retry = 0; retry < 40; ++retry) {
         SDL_PumpEvents();
@@ -71,6 +73,17 @@ static int draw_sources(pc2_vk *renderer)
     pc2_vk_draw_rect(renderer, sprite, 60, 80, 120, 80, 0, 0, 3, 2, 100, 80, 80, 80);
     pc2_vk_draw_rect(renderer, sprite, 240, 90, 80, 40, -1, 1, 2, 1, 0, 0, 800, 600);
     pc2_vk_texture_destroy(renderer, sprite);
+
+    const uint8_t indexed[] = {1, 0xe6, 1, 2};
+    const uint8_t palette[512] = { [3] = 0x7c, [4] = 0x1f };
+    uint8_t rgba[12];
+    if (!pc2_sprite_decode_indexed_rle(indexed, sizeof indexed, 3, 1, 0xe6,
+                                      palette, sizeof palette, 0, rgba, sizeof rgba))
+        return 0;
+    sprite = pc2_vk_texture_create(renderer, 3, 1, rgba, sizeof rgba);
+    if (!sprite) return 0;
+    pc2_vk_draw_rect(renderer, sprite, 400, 90, 120, 40, 0, 0, 3, 1, 0, 0, 800, 600);
+    pc2_vk_texture_destroy(renderer, sprite);
     return pc2_vk_end(renderer);
 }
 
@@ -90,7 +103,7 @@ int main(void)
     }
     pc2_vk *renderer = pc2_vk_create(window, "shaders");
     int ok = renderer && draw_sources(renderer) && check_pixels(window);
-    if (ok) puts("source quad smoke passed 8 pixel checks");
+    if (ok) puts("source quad smoke passed 11 pixel checks");
     pc2_vk_destroy(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();

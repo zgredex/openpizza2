@@ -22,13 +22,19 @@ smoke: smoke.c pc2_vk.c pc2_movie.c pc2_vk.h pc2_movie.h $(SHADERS)
 # Optional X11 readback test; it only needs the 2D renderer's dependencies.
 QUAD_TEST_CFLAGS ?= $(shell $(PKG_CONFIG) --cflags sdl2 vulkan x11)
 QUAD_TEST_LIBS ?= $(shell $(PKG_CONFIG) --libs sdl2 vulkan x11) -lm
-source-quad-smoke: source_quad_smoke.c pc2_vk.c pc2_vk.h $(SHADERS)
+source-quad-smoke: source_quad_smoke.c pc2_vk.c pc2_vk.h pc2_sprite_decode.c pc2_sprite_decode.h $(SHADERS)
 	$(CC) $(CPPFLAGS) -std=c11 -O2 -Wall -Wextra $(QUAD_TEST_CFLAGS) -o $@ \
-		source_quad_smoke.c pc2_vk.c $(QUAD_TEST_LIBS)
+		source_quad_smoke.c pc2_vk.c pc2_sprite_decode.c $(QUAD_TEST_LIBS)
 
 check-source-quads: source-quad-smoke
 	./source-quad-smoke
 
+sprite-decode-test: sprite_decode_test.c pc2_sprite_decode.c pc2_sprite_decode.h
+	$(CC) $(CPPFLAGS) -std=c11 -O2 -Wall -Wextra -o $@ sprite_decode_test.c pc2_sprite_decode.c
+
+check-sprite-decode: sprite-decode-test
+	./sprite-decode-test
+
 clean:
-	rm -f smoke source-quad-smoke $(SHADERS)
-.PHONY: all clean check-source-quads
+	rm -f smoke source-quad-smoke sprite-decode-test $(SHADERS)
+.PHONY: all clean check-source-quads check-sprite-decode

@@ -82,6 +82,30 @@ entries. It hit `Surface_BlitRectRetry` and did not sample any
 and glyph calls and the DirectDraw presentation branch. Start with
 `Sprite_BlitAlphaRLEAlt` and track its target separately from
 `Sprite_Blit24Bit`, which used a different target in the sampled calls.
+The `[draw-source]` records for `Sprite_BlitAlphaRLEAlt` include the
+runtime encoding flags, depth, dimensions, transparency key, placement and
+destination pixel format. Decode against these observed inputs before choosing
+which sprite variants to enable in the Vulkan path.
+The first 64 sampled calls used flags `0x03`, depth 8 and color key
+`0xe6`. The three 12×17 sprites reported source lengths of 82, 82 and 94
+bytes at sprite offset `0x18`. These match the shapes and compressed lengths
+of the installed `sc_03.spr`, `sc_04.spr` and `sc_05.spr` assets. The indexed
+decoder accepts the exact source payload and the game's 256-entry palette
+for that draw. The source-quad smoke covers decoding, upload, color-key
+transparency and GPU readback. Live dispatch still needs Vulkan render
+targets for the game-owned surfaces.
+
+## Full game renderer acceptance
+
+Replay the menu through character select, then London through camera
+scrolling and opening a branch panel. At each checkpoint record actual
+Vulkan submissions by draw family and compare the GPU frame against the
+legacy renderer under identical input. Include fonts, cursor, effects and
+transitions in the comparison. The native renderer must allocate and update
+its own render targets, including intermediate targets used as later inputs.
+Run the suite on native Wayland. Complete the cutover by building and running
+the supported scenarios with the DirectDraw and GDI raster implementations
+removed from the game host link.
 
 `pc2_vk_draw` is a **quad** draw. A full sprite renderer must additionally
 reconstruct source and destination rectangle clipping, palette decode,

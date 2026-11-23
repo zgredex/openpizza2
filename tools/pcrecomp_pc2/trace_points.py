@@ -104,6 +104,30 @@ def patch_draw_entries(text: str) -> str:
     return text
 
 
+def patch_sprite_format(text: str) -> str:
+    """Record which source encodings the live renderer actually uses."""
+    needle = "    RECOMP_ENTER(0x0053A780u);\n"
+    if "[draw-source] AlphaRLEAlt" in text or needle not in text:
+        return text
+    hook = (
+        "    { static unsigned pc2_source_samples;\n"
+        "      if (pc2_source_samples < 64 && ecx && MEM32(esp + 4) &&\n"
+        '          MEM32(esp + 8) && getenv("PC2_TRACE_DRAW")) {\n'
+        "        ++pc2_source_samples;\n"
+        '        fprintf(stderr, "[draw-source] AlphaRLEAlt sprite=%08X target=%08X '
+        'pixels=%08X flags=%02X depth=%u width_field=%d height=%d size_field=%u key=%08X '
+        'x=%d y=%d width_override=%d height_override=%d target_format=%u\\n",\n'
+        "                ecx, MEM32(esp + 4), MEM32(esp + 8),\n"
+        "                (unsigned)MEM8(ecx + 4), (unsigned)MEM8(ecx + 5),\n"
+        "                (int)(int16_t)MEM16(ecx + 6), (int)(int16_t)MEM16(ecx + 8),\n"
+        "                MEM32(ecx + 0x18), MEM32(ecx + 0x1c), (int32_t)MEM32(esp + 16),\n"
+        "                (int32_t)MEM32(esp + 20), (int32_t)MEM32(esp + 24),\n"
+        "                (int32_t)MEM32(esp + 28), (unsigned)MEM8(MEM32(esp + 4) + 0x18));\n"
+        "      } }\n"
+    )
+    return text.replace(needle, needle + hook, 1)
+
+
 def repair_broken_entries(text: str) -> str:
     """Repair trace strings written by an older non-idempotent patcher."""
     text = re.sub(r'(\[trace\] [A-Za-z0-9_]+ (?:enter|return))\n"\);',
@@ -238,7 +262,7 @@ def main() -> int:
         changed |= did
         text, did = patch_payment(text)
         changed |= did
-        patched = patch_draw_entries(text)
+        patched = patch_sprite_format(patch_draw_entries(text))
         changed |= patched != text
         text = patched
         if changed or any(f"{name}(" in text for name in TRACE_DECLARATIONS):
