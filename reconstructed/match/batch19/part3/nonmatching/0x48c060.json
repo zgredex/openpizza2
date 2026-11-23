@@ -1,0 +1,177 @@
+{
+  "address": "0x48c060",
+  "entry": "?ComputeWeightedAveragePrice@Market@@QAENPAHPAX@Z",
+  "length": 242,
+  "candidate_length": 242,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [
+    "unverified .rdata section (8 bytes)",
+    "unverified .rdata section (4 bytes)",
+    ".text relocation at 0x23: unresolved symbol __real@8@00000000000000000000",
+    ".text relocation at 0x38: unresolved symbol __real@8@00000000000000000000",
+    ".text relocation at 0xcc: unresolved symbol __real@4@4005c800000000000000",
+    "candidate extent 272 bytes, expected 242 (extra=30 bytes does not match the original table/padding)"
+  ],
+  "relocation_issues": [
+    ".text relocation at 0x4e resolves to 0x51d2e, original has 0x7489f685",
+    ".text relocation at 0x66 resolves to 0x51d66, original has 0x80840f",
+    ".text relocation at 0xa5 resolves to 0x55c428, original has 0x748b1024"
+  ],
+  "relocations": [
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x48c083",
+      "offset": "0x23",
+      "symbol": "__real@8@00000000000000000000",
+      "target_section_index": 5,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0xd9117518",
+      "expected": null,
+      "target": null,
+      "origin": null,
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x48c098",
+      "offset": "0x38",
+      "symbol": "__real@8@00000000000000000000",
+      "target_section_index": 5,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x5618244c",
+      "expected": null,
+      "target": null,
+      "origin": null,
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x48c0ae",
+      "offset": "0x4e",
+      "symbol": "?CountActiveCompanies@Game@@QAEHXZ",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x7489f685",
+      "expected": "0x51d2e",
+      "target": "0x4ddde0",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x48c0c6",
+      "offset": "0x66",
+      "symbol": "?GetActiveCompanyById@Game@@QAEHH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x80840f",
+      "expected": "0x51d66",
+      "target": "0x4dde30",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x48c105",
+      "offset": "0xa5",
+      "symbol": "__real@8@3ff583126e978d4fe000",
+      "target_section_index": 4,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x748b1024",
+      "expected": "0x55c428",
+      "target": "0x55c428",
+      "origin": "unique_section_signature",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x48c12c",
+      "offset": "0xcc",
+      "symbol": "__real@4@4005c800000000000000",
+      "target_section_index": 3,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x1c24448b",
+      "expected": null,
+      "target": null,
+      "origin": null,
+      "verified": false
+    }
+  ],
+  "object_sha256": "e85b4f8272a34d08b07de54a766ec17d088900831e0a2e246610c8b85a9bcf1c",
+  "linked_spans": [],
+  "link_plan_issues": [],
+  "blocked_sections": [
+    {
+      "section": ".rdata",
+      "index": 5,
+      "symbols": [
+        ".rdata",
+        "__real@8@00000000000000000000"
+      ],
+      "expected_addresses": []
+    },
+    {
+      "section": ".rdata",
+      "index": 3,
+      "symbols": [
+        ".rdata",
+        "__real@4@4005c800000000000000"
+      ],
+      "expected_addresses": []
+    }
+  ],
+  "linked_sections": [
+    {
+      "section": ".text",
+      "index": 2,
+      "address": "0x48c060",
+      "origin": "candidate_entry"
+    },
+    {
+      "section": ".rdata",
+      "index": 4,
+      "address": "0x55c428",
+      "origin": "unique_section_signature"
+    }
+  ],
+  "first_difference": {
+    "offset": 0,
+    "original": 139,
+    "candidate": 131
+  },
+  "difference_count": 207,
+  "source": "reconstructed/match/batch19/part3/0x48c060.c",
+  "source_sha256": "56cc6460359130fe742afa2798222e18dc6d4df9da900eb6e3d29dafd9def401",
+  "executable_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd",
+  "compiler": {
+    "path": "/home/patryk/.local/share/pc2/vc6-sp3-toolchain/VC98",
+    "sha256": {
+      "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+      "C1.DLL": "d1b25d84da1d3d0d460996ea298488cb183b857e1b90628147983114ac4ab55f",
+      "C1XX.DLL": "28c355499c2f8090910624734faff31fe719a69a8aac7dd44b2ce64addf96ee2",
+      "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153"
+    }
+  },
+  "flags": [
+    "/O2",
+    "/TP"
+  ],
+  "strict_requested": true,
+  "strict_symbols": false,
+  "auto_symbols": true,
+  "symbol_registry_sha256": "e70a0a1124d4f83bd2fd48c4e28c535aacc6ecfdacef8ccf1f7b0bc357e618fe",
+  "symbol_overrides": {}
+}

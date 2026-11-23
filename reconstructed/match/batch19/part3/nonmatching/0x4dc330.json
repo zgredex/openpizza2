@@ -1,0 +1,242 @@
+{
+  "address": "0x4dc330",
+  "entry": "?ResetPoliceDistrictSlot@City@@QAEXHH@Z",
+  "length": 235,
+  "candidate_length": 235,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [],
+  "relocation_issues": [
+    ".text relocation at 0x5e resolves to 0x57c670, original has 0xc6700d8b",
+    ".text relocation at 0x64 resolves to 0xfffac848, original has 0xc846e856",
+    ".text relocation at 0x78 resolves to 0x57c670, original has 0xc6700d8b",
+    ".text relocation at 0x7e resolves to 0xfffac82e, original has 0xc82ce856",
+    ".text relocation at 0xa2 resolves to 0x57c670, original has 0xc6700d8b",
+    ".text relocation at 0xa8 resolves to 0xfffac804, original has 0xc802e853",
+    ".text relocation at 0xb7 resolves to 0xfff270e5, original has 0x70e3e800",
+    ".text relocation at 0xbd resolves to 0x57c670, original has 0xc6700d8b",
+    ".text relocation at 0xc8 resolves to 0xfffac7e4, original has 0xc7e2e853",
+    ".text relocation at 0xd6 resolves to 0xfff253e6, original has 0x53e4e800",
+    ".text relocation at 0xde resolves to 0xffffdade, original has 0xdadce8cd"
+  ],
+  "relocations": [
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4dc38e",
+      "offset": "0x5e",
+      "symbol": "?DAT_0057c670@@3PAUGame@@A",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0xc6700d8b",
+      "expected": "0x57c670",
+      "target": "0x57c670",
+      "origin": "address_label",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4dc394",
+      "offset": "0x64",
+      "symbol": "?GetPlayerBySlot@Game@@QAEPAUPlayer@@H@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xc846e856",
+      "expected": "0xfffac848",
+      "target": "0x488be0",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4dc3a8",
+      "offset": "0x78",
+      "symbol": "?DAT_0057c670@@3PAUGame@@A",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0xc6700d8b",
+      "expected": "0x57c670",
+      "target": "0x57c670",
+      "origin": "address_label",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4dc3ae",
+      "offset": "0x7e",
+      "symbol": "?GetPlayerBySlot@Game@@QAEPAUPlayer@@H@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xc82ce856",
+      "expected": "0xfffac82e",
+      "target": "0x488be0",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4dc3d2",
+      "offset": "0xa2",
+      "symbol": "?DAT_0057c670@@3PAUGame@@A",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0xc6700d8b",
+      "expected": "0x57c670",
+      "target": "0x57c670",
+      "origin": "address_label",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4dc3d8",
+      "offset": "0xa8",
+      "symbol": "?GetPlayerBySlot@Game@@QAEPAUPlayer@@H@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xc802e853",
+      "expected": "0xfffac804",
+      "target": "0x488be0",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4dc3e7",
+      "offset": "0xb7",
+      "symbol": "_Random_RangeFast",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x70e3e800",
+      "expected": "0xfff270e5",
+      "target": "0x4034d0",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4dc3ed",
+      "offset": "0xbd",
+      "symbol": "?DAT_0057c670@@3PAUGame@@A",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0xc6700d8b",
+      "expected": "0x57c670",
+      "target": "0x57c670",
+      "origin": "address_label",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4dc3f8",
+      "offset": "0xc8",
+      "symbol": "?GetPlayerBySlot@Game@@QAEPAUPlayer@@H@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xc7e2e853",
+      "expected": "0xfffac7e4",
+      "target": "0x488be0",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4dc406",
+      "offset": "0xd6",
+      "symbol": "?Lookup@IDMapHelper@@QAEPAXHPAH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x53e4e800",
+      "expected": "0xfff253e6",
+      "target": "0x4017f0",
+      "origin": "symbol_registry",
+      "verified": false,
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x4017f0"
+        },
+        {
+          "path": "reconstructed/match/batch10/part1/verify_strict.sh",
+          "locator": "0x40bab0 calls IDMap::Lookup"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x4017f0\u20130x4018ba"
+        }
+      ]
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4dc40e",
+      "offset": "0xde",
+      "symbol": "?SendPoliceToDistrict@City@@QAEXPAX@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xdadce8cd",
+      "expected": "0xffffdade",
+      "target": "0x4d9ef0",
+      "origin": "decorated_alias",
+      "verified": false
+    }
+  ],
+  "object_sha256": "e26b6a7a0dfe4f2e864aa6a723dbea1130f0a0c03ce66340891a950166943234",
+  "linked_spans": [],
+  "link_plan_issues": [],
+  "blocked_sections": [],
+  "linked_sections": [
+    {
+      "section": ".text",
+      "index": 2,
+      "address": "0x4dc330",
+      "origin": "candidate_entry"
+    }
+  ],
+  "first_difference": {
+    "offset": 27,
+    "original": 140,
+    "candidate": 68
+  },
+  "difference_count": 133,
+  "source": "reconstructed/match/batch19/part3/0x4dc330.c",
+  "source_sha256": "d715859656ee832ceaab06cfb8a371de0d20faa175cd91add0cb1220cb612920",
+  "executable_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd",
+  "compiler": {
+    "path": "/home/patryk/.local/share/pc2/vc6-sp3-toolchain/VC98",
+    "sha256": {
+      "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+      "C1.DLL": "d1b25d84da1d3d0d460996ea298488cb183b857e1b90628147983114ac4ab55f",
+      "C1XX.DLL": "28c355499c2f8090910624734faff31fe719a69a8aac7dd44b2ce64addf96ee2",
+      "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153"
+    }
+  },
+  "flags": [
+    "/O2",
+    "/TP"
+  ],
+  "strict_requested": true,
+  "strict_symbols": false,
+  "auto_symbols": true,
+  "symbol_registry_sha256": "e70a0a1124d4f83bd2fd48c4e28c535aacc6ecfdacef8ccf1f7b0bc357e618fe",
+  "symbol_overrides": {}
+}

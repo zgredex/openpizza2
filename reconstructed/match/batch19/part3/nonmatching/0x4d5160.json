@@ -1,0 +1,198 @@
+{
+  "address": "0x4d5160",
+  "entry": "?CreateExplosionEffect@City@@QAEPAXHHPAURecord@@@Z",
+  "length": 240,
+  "candidate_length": 208,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [],
+  "relocation_issues": [
+    ".text relocation at 0xe resolves to 0x790af, original has 0x258964",
+    ".text relocation at 0x2d resolves to 0x2f47f, original has 0xc7c08514",
+    ".text relocation at 0x34 resolves to 0x56cd20, original has 0x0",
+    ".text relocation at 0x5b resolves to 0x57c670, original has 0x33ffc983",
+    ".text relocation at 0x60 resolves to 0xfffad5cc, original has 0xf204538d",
+    ".text relocation at 0x75 resolves to 0xffffdfd7, original has 0xc1ffffff",
+    ".text relocation at 0x88 resolves to 0x30cc4, original has 0xa1e80057",
+    ".text relocation at 0x91 resolves to 0x3969b, original has 0x4c8d3024"
+  ],
+  "relocations": [
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4d516e",
+      "offset": "0xe",
+      "symbol": "??2@YAPAXI@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x258964",
+      "expected": "0x790af",
+      "target": "0x54e221",
+      "origin": "symbol_registry",
+      "verified": false,
+      "evidence": [
+        {
+          "path": "reconstructed/match/batch05/part3/0x539e00.c",
+          "locator": "0x539e00 calls operator new"
+        },
+        {
+          "path": "reconstructed/match/batch05/part3/verify_strict.sh",
+          "locator": "0x539e00 explicit operator new mapping"
+        },
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x54e221"
+        },
+        {
+          "path": "reconstructed/match/README.md",
+          "locator": "stock CRT archive identification"
+        }
+      ]
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4d518d",
+      "offset": "0x2d",
+      "symbol": "?Construct@Object@@QAEPAXHHHHH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xc7c08514",
+      "expected": "0x2f47f",
+      "target": "0x504610",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4d5194",
+      "offset": "0x34",
+      "symbol": "?DAT_0056cd20@@3PADA",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x0",
+      "expected": "0x56cd20",
+      "target": "0x56cd20",
+      "origin": "address_label",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4d51bb",
+      "offset": "0x5b",
+      "symbol": "?DAT_0057c670@@3PADA",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x33ffc983",
+      "expected": "0x57c670",
+      "target": "0x57c670",
+      "origin": "address_label",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4d51c0",
+      "offset": "0x60",
+      "symbol": "?AddObjectToRegistry@Game@@QAEXPAX@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xf204538d",
+      "expected": "0xfffad5cc",
+      "target": "0x482790",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4d51d5",
+      "offset": "0x75",
+      "symbol": "?GetCenteredRectForRecord@UI@@QAEXPAH0@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xc1ffffff",
+      "expected": "0xffffdfd7",
+      "target": "0x4d31b0",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4d51e8",
+      "offset": "0x88",
+      "symbol": "?PlaceSpriteAtCenter@Object@@QAEXHHH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xa1e80057",
+      "expected": "0x30cc4",
+      "target": "0x505eb0",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4d51f1",
+      "offset": "0x91",
+      "symbol": "?SetState@Object@@QAEXH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x4c8d3024",
+      "expected": "0x3969b",
+      "target": "0x50e890",
+      "origin": "decorated_alias",
+      "verified": false
+    }
+  ],
+  "object_sha256": "e7f81a3725360981721c5178b1de662f526e70b0865d4f8a2a190189d0d3fc6f",
+  "linked_spans": [],
+  "link_plan_issues": [],
+  "blocked_sections": [],
+  "linked_sections": [
+    {
+      "section": ".text",
+      "index": 2,
+      "address": "0x4d5160",
+      "origin": "candidate_entry"
+    }
+  ],
+  "first_difference": {
+    "offset": 0,
+    "original": 106,
+    "candidate": 131
+  },
+  "difference_count": 167,
+  "source": "reconstructed/match/batch19/part3/0x4d5160.c",
+  "source_sha256": "1309147d449a5bc77ed86e35442fa87e116c12045341bc793af9619ec25aeb75",
+  "executable_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd",
+  "compiler": {
+    "path": "/home/patryk/.local/share/pc2/vc6-sp3-toolchain/VC98",
+    "sha256": {
+      "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+      "C1.DLL": "d1b25d84da1d3d0d460996ea298488cb183b857e1b90628147983114ac4ab55f",
+      "C1XX.DLL": "28c355499c2f8090910624734faff31fe719a69a8aac7dd44b2ce64addf96ee2",
+      "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153"
+    }
+  },
+  "flags": [
+    "/O2",
+    "/TP"
+  ],
+  "strict_requested": true,
+  "strict_symbols": false,
+  "auto_symbols": true,
+  "symbol_registry_sha256": "e70a0a1124d4f83bd2fd48c4e28c535aacc6ecfdacef8ccf1f7b0bc357e618fe",
+  "symbol_overrides": {}
+}

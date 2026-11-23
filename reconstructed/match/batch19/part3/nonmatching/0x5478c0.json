@@ -1,0 +1,134 @@
+{
+  "address": "0x5478c0",
+  "entry": "@Sound_LoadSpeechSet@4",
+  "length": 242,
+  "candidate_length": 242,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [
+    "candidate extent 272 bytes, expected 242 (extra=30 bytes does not match the original table/padding)"
+  ],
+  "relocation_issues": [
+    ".text relocation at 0x33 resolves to 0x575091, original has 0xb184",
+    ".text relocation at 0x6c resolves to 0x582530, original has 0x55082454",
+    ".text relocation at 0x83 resolves to 0x575170, original has 0x1074c985",
+    ".text relocation at 0xbe resolves to 0x6401, original has 0x168b2851",
+    ".text relocation at 0xf5 resolves to 0x575190, original has 0x90909090"
+  ],
+  "relocations": [
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x5478f3",
+      "offset": "0x33",
+      "symbol": "?DAT_00575090@@3PADA",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 1,
+      "original": "0xb184",
+      "expected": "0x575091",
+      "target": "0x575090",
+      "origin": "address_label",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x54792c",
+      "offset": "0x6c",
+      "symbol": "?DAT_00582530@@3PADA",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x55082454",
+      "expected": "0x582530",
+      "target": "0x582530",
+      "origin": "address_label",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x547943",
+      "offset": "0x83",
+      "symbol": "?DAT_00575170@@3PAPADA",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x1074c985",
+      "expected": "0x575170",
+      "target": "0x575170",
+      "origin": "address_label",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x54797e",
+      "offset": "0xbe",
+      "symbol": "_String_Format",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x168b2851",
+      "expected": "0x6401",
+      "target": "0x54dd83",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x5479b5",
+      "offset": "0xf5",
+      "symbol": "?DAT_00575170@@3PAPADA",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 32,
+      "original": "0x90909090",
+      "expected": "0x575190",
+      "target": "0x575170",
+      "origin": "address_label",
+      "verified": false
+    }
+  ],
+  "object_sha256": "ca7f8f33e3ed6c09cb6608a6734be0e21a169c0ca23abe90fe5dfb1bb708524a",
+  "linked_spans": [],
+  "link_plan_issues": [],
+  "blocked_sections": [],
+  "linked_sections": [
+    {
+      "section": ".text",
+      "index": 2,
+      "address": "0x5478c0",
+      "origin": "candidate_entry"
+    }
+  ],
+  "first_difference": {
+    "offset": 6,
+    "original": 51,
+    "candidate": 86
+  },
+  "difference_count": 205,
+  "source": "reconstructed/match/batch19/part3/0x5478c0.c",
+  "source_sha256": "575f37adff1c987d35062219715108da11f2966e72fc07160d19e51a5122bded",
+  "executable_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd",
+  "compiler": {
+    "path": "/home/patryk/.local/share/pc2/vc6-sp3-toolchain/VC98",
+    "sha256": {
+      "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+      "C1.DLL": "d1b25d84da1d3d0d460996ea298488cb183b857e1b90628147983114ac4ab55f",
+      "C1XX.DLL": "28c355499c2f8090910624734faff31fe719a69a8aac7dd44b2ce64addf96ee2",
+      "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153"
+    }
+  },
+  "flags": [
+    "/O2",
+    "/TP"
+  ],
+  "strict_requested": true,
+  "strict_symbols": false,
+  "auto_symbols": true,
+  "symbol_registry_sha256": "e70a0a1124d4f83bd2fd48c4e28c535aacc6ecfdacef8ccf1f7b0bc357e618fe",
+  "symbol_overrides": {}
+}

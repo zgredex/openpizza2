@@ -1,0 +1,264 @@
+{
+  "address": "0x487940",
+  "entry": "?SerializeRuntimeList@SaveGame@@QAEXPAUOStream@@@Z",
+  "length": 240,
+  "candidate_length": 240,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [],
+  "relocation_issues": [
+    ".text relocation at 0x55 resolves to 0xc5292, original has 0x1282444",
+    ".text relocation at 0x67 resolves to 0xac9c5, original has 0x51501024",
+    ".text relocation at 0x75 resolves to 0xc5272, original has 0x46a1024",
+    ".text relocation at 0x83 resolves to 0xc5264, original has 0x46a1424",
+    ".text relocation at 0x8b resolves to 0xad0b1, original has 0xc525c",
+    ".text relocation at 0x9d resolves to 0xc524a, original has 0x89cf8b51",
+    ".text relocation at 0xc4 resolves to 0xc5223, original has 0xc7046a20"
+  ],
+  "relocations": [
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x487944",
+      "offset": "0x4",
+      "symbol": "?DAT_0057c5cc@@3PADA",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x57c5cc",
+      "expected": "0x57c5cc",
+      "target": "0x57c5cc",
+      "origin": "address_label",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x487961",
+      "offset": "0x21",
+      "symbol": "?DAT_0057c5cc@@3PADA",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x57c5cc",
+      "expected": "0x57c5cc",
+      "target": "0x57c5cc",
+      "origin": "address_label",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x487995",
+      "offset": "0x55",
+      "symbol": "?Write@OStream@@QAEXPAXH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x1282444",
+      "expected": "0xc5292",
+      "target": "0x54cc2b",
+      "origin": "symbol_registry",
+      "verified": false,
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x54cc2b"
+        },
+        {
+          "path": "reconstructed/match/batch10/part3/verify_strict.sh",
+          "locator": "0x4f6e20"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x54cc2b\u20130x54cc6d"
+        }
+      ]
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4879a7",
+      "offset": "0x67",
+      "symbol": "?GetTwoFloats48@Record@@QAEXHPAH0@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x51501024",
+      "expected": "0xac9c5",
+      "target": "0x534370",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4879b5",
+      "offset": "0x75",
+      "symbol": "?Write@OStream@@QAEXPAXH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x46a1024",
+      "expected": "0xc5272",
+      "target": "0x54cc2b",
+      "origin": "symbol_registry",
+      "verified": false,
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x54cc2b"
+        },
+        {
+          "path": "reconstructed/match/batch10/part3/verify_strict.sh",
+          "locator": "0x4f6e20"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x54cc2b\u20130x54cc6d"
+        }
+      ]
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4879c3",
+      "offset": "0x83",
+      "symbol": "?Write@OStream@@QAEXPAXH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x46a1424",
+      "expected": "0xc5264",
+      "target": "0x54cc2b",
+      "origin": "symbol_registry",
+      "verified": false,
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x54cc2b"
+        },
+        {
+          "path": "reconstructed/match/batch10/part3/verify_strict.sh",
+          "locator": "0x4f6e20"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x54cc2b\u20130x54cc6d"
+        }
+      ]
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4879cb",
+      "offset": "0x8b",
+      "symbol": "?GetTypeIndex48@Record@@QAEHH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xc525c",
+      "expected": "0xad0b1",
+      "target": "0x534a80",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4879dd",
+      "offset": "0x9d",
+      "symbol": "?Write@OStream@@QAEXPAXH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x89cf8b51",
+      "expected": "0xc524a",
+      "target": "0x54cc2b",
+      "origin": "symbol_registry",
+      "verified": false,
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x54cc2b"
+        },
+        {
+          "path": "reconstructed/match/batch10/part3/verify_strict.sh",
+          "locator": "0x4f6e20"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x54cc2b\u20130x54cc6d"
+        }
+      ]
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x487a04",
+      "offset": "0xc4",
+      "symbol": "?Write@OStream@@QAEXPAXH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xc7046a20",
+      "expected": "0xc5223",
+      "target": "0x54cc2b",
+      "origin": "symbol_registry",
+      "verified": false,
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x54cc2b"
+        },
+        {
+          "path": "reconstructed/match/batch10/part3/verify_strict.sh",
+          "locator": "0x4f6e20"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x54cc2b\u20130x54cc6d"
+        }
+      ]
+    }
+  ],
+  "object_sha256": "ba2cb74e9e82edfd7474fe144fc1290118da44bd36613dcf667b0342bcbcdfc5",
+  "linked_spans": [],
+  "link_plan_issues": [],
+  "blocked_sections": [],
+  "linked_sections": [
+    {
+      "section": ".text",
+      "index": 2,
+      "address": "0x487940",
+      "origin": "candidate_entry"
+    }
+  ],
+  "first_difference": {
+    "offset": 44,
+    "original": 145,
+    "candidate": 130
+  },
+  "difference_count": 158,
+  "source": "reconstructed/match/batch19/part3/0x487940.c",
+  "source_sha256": "03ac8bf5dc030243d23f798facbaa261fb015d9500c597427261f2577988639d",
+  "executable_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd",
+  "compiler": {
+    "path": "/home/patryk/.local/share/pc2/vc6-sp3-toolchain/VC98",
+    "sha256": {
+      "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+      "C1.DLL": "d1b25d84da1d3d0d460996ea298488cb183b857e1b90628147983114ac4ab55f",
+      "C1XX.DLL": "28c355499c2f8090910624734faff31fe719a69a8aac7dd44b2ce64addf96ee2",
+      "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153"
+    }
+  },
+  "flags": [
+    "/O2",
+    "/TP"
+  ],
+  "strict_requested": true,
+  "strict_symbols": false,
+  "auto_symbols": true,
+  "symbol_registry_sha256": "e70a0a1124d4f83bd2fd48c4e28c535aacc6ecfdacef8ccf1f7b0bc357e618fe",
+  "symbol_overrides": {}
+}

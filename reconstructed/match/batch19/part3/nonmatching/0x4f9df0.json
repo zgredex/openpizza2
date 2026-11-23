@@ -1,0 +1,256 @@
+{
+  "address": "0x4f9df0",
+  "entry": "?CreateFromTile@City@@QAEXPAHHGGDHH@Z",
+  "length": 236,
+  "candidate_length": 236,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [],
+  "relocation_issues": [
+    ".text relocation at 0x13 resolves to 0x57c670, original has 0x5030408b",
+    ".text relocation at 0x87 resolves to 0x57c670, original has 0x6a0057c6",
+    ".text relocation at 0x92 resolves to 0xfff0796a, original has 0x8bfff079",
+    ".text relocation at 0xaa resolves to 0xfffffeb2, original has 0x83fffffe",
+    ".text relocation at 0xd1 resolves to 0xfffea19b, original has 0xe8fffea1",
+    ".text relocation at 0xd6 resolves to 0x55276, original has 0x89000552",
+    ".text relocation at 0xe2 resolves to 0xfff075da, original has 0x5ffff075"
+  ],
+  "relocations": [
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4f9e03",
+      "offset": "0x13",
+      "symbol": "?DAT_0057c670@@3PAUGame@@A",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x5030408b",
+      "expected": "0x57c670",
+      "target": "0x57c670",
+      "origin": "address_label",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4f9e08",
+      "offset": "0x18",
+      "symbol": "?GetPlayerBySlot@Game@@QAEPAUPlayer@@H@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xfff8edd4",
+      "expected": "0xfff8edd4",
+      "target": "0x488be0",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4f9e0f",
+      "offset": "0x1f",
+      "symbol": "?GetPlayerCity@Game@@QAEHXZ",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xfffe3ead",
+      "expected": "0xfffe3ead",
+      "target": "0x4ddcc0",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4f9e1a",
+      "offset": "0x2a",
+      "symbol": "??2@YAPAXI@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x54403",
+      "expected": "0x54403",
+      "target": "0x54e221",
+      "origin": "symbol_registry",
+      "verified": true,
+      "evidence": [
+        {
+          "path": "reconstructed/match/batch05/part3/0x539e00.c",
+          "locator": "0x539e00 calls operator new"
+        },
+        {
+          "path": "reconstructed/match/batch05/part3/verify_strict.sh",
+          "locator": "0x539e00 explicit operator new mapping"
+        },
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x54e221"
+        },
+        {
+          "path": "reconstructed/match/README.md",
+          "locator": "stock CRT archive identification"
+        }
+      ]
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4f9e6b",
+      "offset": "0x7b",
+      "symbol": "?FindListContainingValue@City@@QAEXHPAH0@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xfffffe21",
+      "expected": "0xfffffe21",
+      "target": "0x4f9c90",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4f9e77",
+      "offset": "0x87",
+      "symbol": "?DAT_0057c670@@3PAUGame@@A",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x6a0057c6",
+      "expected": "0x57c670",
+      "target": "0x57c670",
+      "origin": "address_label",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4f9e82",
+      "offset": "0x92",
+      "symbol": "?Lookup@IDMapHelper@@QAEPAXHPAH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x8bfff079",
+      "expected": "0xfff0796a",
+      "target": "0x4017f0",
+      "origin": "symbol_registry",
+      "verified": false,
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x4017f0"
+        },
+        {
+          "path": "reconstructed/match/batch10/part1/verify_strict.sh",
+          "locator": "0x40bab0 calls IDMap::Lookup"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x4017f0\u20130x4018ba"
+        }
+      ]
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4f9e9a",
+      "offset": "0xaa",
+      "symbol": "?GetLevelFromType@Building@@QAEHH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x83fffffe",
+      "expected": "0xfffffeb2",
+      "target": "0x4f9d50",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4f9ec1",
+      "offset": "0xd1",
+      "symbol": "?ComputePrice@Game@@QAEMH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xe8fffea1",
+      "expected": "0xfffea19b",
+      "target": "0x4e4060",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4f9ec6",
+      "offset": "0xd6",
+      "symbol": "__ftol",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x89000552",
+      "expected": "0x55276",
+      "target": "0x54f140",
+      "origin": "exact_symbol",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4f9ed2",
+      "offset": "0xe2",
+      "symbol": "?Add@List@@QAEXPAX@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x5ffff075",
+      "expected": "0xfff075da",
+      "target": "0x4014b0",
+      "origin": "decorated_alias",
+      "verified": false
+    }
+  ],
+  "object_sha256": "4dac877c89be008039fd870f5879f00a10023012555101d5eb40f04c0a291fd4",
+  "linked_spans": [],
+  "link_plan_issues": [],
+  "blocked_sections": [],
+  "linked_sections": [
+    {
+      "section": ".text",
+      "index": 2,
+      "address": "0x4f9df0",
+      "origin": "candidate_entry"
+    }
+  ],
+  "first_difference": {
+    "offset": 6,
+    "original": 86,
+    "candidate": 139
+  },
+  "difference_count": 153,
+  "source": "reconstructed/match/batch19/part3/0x4f9df0.c",
+  "source_sha256": "abb0e1db214166ffa337de243b549dc68ce3d448e792c5609092a10665541c20",
+  "executable_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd",
+  "compiler": {
+    "path": "/home/patryk/.local/share/pc2/vc6-sp3-toolchain/VC98",
+    "sha256": {
+      "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+      "C1.DLL": "d1b25d84da1d3d0d460996ea298488cb183b857e1b90628147983114ac4ab55f",
+      "C1XX.DLL": "28c355499c2f8090910624734faff31fe719a69a8aac7dd44b2ce64addf96ee2",
+      "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153"
+    }
+  },
+  "flags": [
+    "/O2",
+    "/TP"
+  ],
+  "strict_requested": true,
+  "strict_symbols": false,
+  "auto_symbols": true,
+  "symbol_registry_sha256": "e70a0a1124d4f83bd2fd48c4e28c535aacc6ecfdacef8ccf1f7b0bc357e618fe",
+  "symbol_overrides": {}
+}

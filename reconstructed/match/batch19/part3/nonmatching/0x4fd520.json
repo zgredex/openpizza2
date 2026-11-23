@@ -1,0 +1,230 @@
+{
+  "address": "0x4fd520",
+  "entry": "?EnsurePedestrianCoverage@City@@QAEXH@Z",
+  "length": 240,
+  "candidate_length": 240,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [],
+  "relocation_issues": [],
+  "relocations": [
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4fd562",
+      "offset": "0x42",
+      "symbol": "?GetPlayerSubrecord@Game@@QAEPAXHHH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x391a",
+      "expected": "0x391a",
+      "target": "0x500e80",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4fd571",
+      "offset": "0x51",
+      "symbol": "?DAT_0057c670@@3PADA",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x57c670",
+      "expected": "0x57c670",
+      "target": "0x57c670",
+      "origin": "address_label",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4fd57c",
+      "offset": "0x5c",
+      "symbol": "?Lookup@IDMapHelper@@QAEPAXHPAH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xfff04270",
+      "expected": "0xfff04270",
+      "target": "0x4017f0",
+      "origin": "symbol_registry",
+      "verified": true,
+      "evidence": [
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x4017f0"
+        },
+        {
+          "path": "reconstructed/match/batch10/part1/verify_strict.sh",
+          "locator": "0x40bab0 calls IDMap::Lookup"
+        },
+        {
+          "path": "game/fastfood2.exe",
+          "locator": "0x4017f0\u20130x4018ba"
+        }
+      ]
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4fd585",
+      "offset": "0x65",
+      "symbol": "?CountFreeResidentialBuildings@Game@@QAEHXZ",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xfff82947",
+      "expected": "0xfff82947",
+      "target": "0x47fed0",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4fd59a",
+      "offset": "0x7a",
+      "symbol": "?CountFreeBuildingsByType@Game@@QAEHH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xfffd5542",
+      "expected": "0xfffd5542",
+      "target": "0x4d2ae0",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4fd5aa",
+      "offset": "0x8a",
+      "symbol": "?DAT_0055c640@@3NA",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x55c640",
+      "expected": "0x55c640",
+      "target": "0x55c640",
+      "origin": "address_label",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4fd5bc",
+      "offset": "0x9c",
+      "symbol": "?DAT_0057c670@@3PADA",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x57c670",
+      "expected": "0x57c670",
+      "target": "0x57c670",
+      "origin": "address_label",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4fd5c3",
+      "offset": "0xa3",
+      "symbol": "?CountFilteredObjects@Game@@QAEHHHHH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xfff8cb69",
+      "expected": "0xfff8cb69",
+      "target": "0x48a130",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4fd5d2",
+      "offset": "0xb2",
+      "symbol": "?DAT_0057c670@@3PADA",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x57c670",
+      "expected": "0x57c670",
+      "target": "0x57c670",
+      "origin": "address_label",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4fd5d9",
+      "offset": "0xb9",
+      "symbol": "?CountFilteredObjects@Game@@QAEHHHHH@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xfff8cb53",
+      "expected": "0xfff8cb53",
+      "target": "0x48a130",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4fd5e7",
+      "offset": "0xc7",
+      "symbol": "?HireExterminator@Branch@@QAEXHPAX@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xfffd7c65",
+      "expected": "0xfffd7c65",
+      "target": "0x4d5250",
+      "origin": "decorated_alias",
+      "verified": true
+    }
+  ],
+  "object_sha256": "da398cc1a0efeb2c06e0177cef67e5d0279acbb0a95f52692264f88349ff5c6e",
+  "linked_spans": [],
+  "link_plan_issues": [],
+  "blocked_sections": [],
+  "linked_sections": [
+    {
+      "section": ".text",
+      "index": 2,
+      "address": "0x4fd520",
+      "origin": "candidate_entry"
+    }
+  ],
+  "first_difference": {
+    "offset": 213,
+    "original": 15,
+    "candidate": 7
+  },
+  "difference_count": 2,
+  "source": "reconstructed/match/batch19/part3/0x4fd520.c",
+  "source_sha256": "13919bfa6adaac63d966154664564e0821670ae20537f69f9b6e5b1a37534d75",
+  "executable_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd",
+  "compiler": {
+    "path": "/home/patryk/.local/share/pc2/vc6-sp3-toolchain/VC98",
+    "sha256": {
+      "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+      "C1.DLL": "d1b25d84da1d3d0d460996ea298488cb183b857e1b90628147983114ac4ab55f",
+      "C1XX.DLL": "28c355499c2f8090910624734faff31fe719a69a8aac7dd44b2ce64addf96ee2",
+      "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153"
+    }
+  },
+  "flags": [
+    "/O2",
+    "/TP"
+  ],
+  "strict_requested": true,
+  "strict_symbols": false,
+  "auto_symbols": true,
+  "symbol_registry_sha256": "e70a0a1124d4f83bd2fd48c4e28c535aacc6ecfdacef8ccf1f7b0bc357e618fe",
+  "symbol_overrides": {}
+}
