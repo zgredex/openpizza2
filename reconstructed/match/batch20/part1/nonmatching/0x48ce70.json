@@ -1,0 +1,196 @@
+{
+  "address": "0x48ce70",
+  "entry": "_Palette_Expand@12",
+  "length": 258,
+  "candidate_length": 258,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [
+    "candidate extent 304 bytes, expected 258 (extra=46 bytes does not match the original table/padding)"
+  ],
+  "relocation_issues": [
+    ".text relocation at 0x55 resolves to 0x48cf74, original has 0xcf749d24",
+    ".text relocation at 0x104 resolves to 0x48cec9, original has 0x48cecb",
+    ".text relocation at 0x108 resolves to 0x48ced1, original has 0x48ced3",
+    ".text relocation at 0x10c resolves to 0x48ced9, original has 0x48cedb",
+    ".text relocation at 0x118 resolves to 0x48cef4, original has 0x48cef3",
+    ".text relocation at 0x11c resolves to 0x48cefc, original has 0x48cef7",
+    ".text relocation at 0x120 resolves to 0x48cf04, original has 0x48ceff"
+  ],
+  "relocations": [
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x48cec5",
+      "offset": "0x55",
+      "symbol": "$L255",
+      "target_section_index": 2,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0xcf749d24",
+      "expected": "0x48cf74",
+      "target": "0x48cf74",
+      "origin": "candidate_entry",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x48cf74",
+      "offset": "0x104",
+      "symbol": "$L238",
+      "target_section_index": 2,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x48cecb",
+      "expected": "0x48cec9",
+      "target": "0x48cec9",
+      "origin": "candidate_entry",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x48cf78",
+      "offset": "0x108",
+      "symbol": "$L239",
+      "target_section_index": 2,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x48ced3",
+      "expected": "0x48ced1",
+      "target": "0x48ced1",
+      "origin": "candidate_entry",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x48cf7c",
+      "offset": "0x10c",
+      "symbol": "$L240",
+      "target_section_index": 2,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x48cedb",
+      "expected": "0x48ced9",
+      "target": "0x48ced9",
+      "origin": "candidate_entry",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x48cf80",
+      "offset": "0x110",
+      "symbol": "$L241",
+      "target_section_index": 2,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x48cee1",
+      "expected": "0x48cee1",
+      "target": "0x48cee1",
+      "origin": "candidate_entry",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x48cf84",
+      "offset": "0x114",
+      "symbol": "$L242",
+      "target_section_index": 2,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x48cee9",
+      "expected": "0x48cee9",
+      "target": "0x48cee9",
+      "origin": "candidate_entry",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x48cf88",
+      "offset": "0x118",
+      "symbol": "$L243",
+      "target_section_index": 2,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x48cef3",
+      "expected": "0x48cef4",
+      "target": "0x48cef4",
+      "origin": "candidate_entry",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x48cf8c",
+      "offset": "0x11c",
+      "symbol": "$L244",
+      "target_section_index": 2,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x48cef7",
+      "expected": "0x48cefc",
+      "target": "0x48cefc",
+      "origin": "candidate_entry",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x48cf90",
+      "offset": "0x120",
+      "symbol": "$L245",
+      "target_section_index": 2,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x48ceff",
+      "expected": "0x48cf04",
+      "target": "0x48cf04",
+      "origin": "candidate_entry",
+      "verified": false
+    }
+  ],
+  "object_sha256": "0ed564528f405dbcc2b3fb501a5d9e3043c537da6fbdde65f7bcd2d54c0799a2",
+  "linked_spans": [],
+  "link_plan_issues": [],
+  "blocked_sections": [],
+  "linked_sections": [
+    {
+      "section": ".text",
+      "index": 2,
+      "address": "0x48ce70",
+      "origin": "candidate_entry"
+    }
+  ],
+  "first_difference": {
+    "offset": 11,
+    "original": 8,
+    "candidate": 24
+  },
+  "difference_count": 209,
+  "source": "reconstructed/match/batch20/part1/nonmatching/0x48ce70.c",
+  "source_sha256": "996ff67a877bbaa82ab2a08e401b4f3aa022e741843c1302b868b38d883e4b88",
+  "executable_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd",
+  "compiler": {
+    "path": "/home/patryk/.local/share/pc2/vc6-sp3-toolchain/VC98",
+    "sha256": {
+      "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+      "C1.DLL": "d1b25d84da1d3d0d460996ea298488cb183b857e1b90628147983114ac4ab55f",
+      "C1XX.DLL": "28c355499c2f8090910624734faff31fe719a69a8aac7dd44b2ce64addf96ee2",
+      "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153"
+    }
+  },
+  "flags": [
+    "/O2",
+    "/TP"
+  ],
+  "strict_requested": true,
+  "strict_symbols": false,
+  "auto_symbols": true,
+  "symbol_registry_sha256": "e70a0a1124d4f83bd2fd48c4e28c535aacc6ecfdacef8ccf1f7b0bc357e618fe",
+  "symbol_overrides": {}
+}
