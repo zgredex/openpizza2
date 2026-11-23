@@ -146,6 +146,21 @@ the candidate keeps state 1 active through the member destructor. The next
 generator form needs to express that explicit state release, not another
 member layout change.
 
+### State-release experiments
+
+| source shape | diff | result |
+|---|---:|---|
+| member subobject, inline destructor | 29 | correct 2 states/targets, missing state-0 store |
+| member subobject, out-of-line destructor | 21 | emits `call` instead of the inline free |
+| `Buffer` base subobject | 33 | adds null-adjustor checks and 6 extra bytes |
+| explicit `buffer.release()` / scope | not expressible | no source-level EH-state store |
+
+The state-0 store is a VC6 destructor-scope scheduling artifact; ordinary
+C++ scope exit does not emit it before an implicit member destructor. The
+only obvious way to force it is an explicit destructor call, which would
+double-free the field and violates the semantic gate. SoundTrack is parked
+as a 29-byte near miss.
+
 ## Next destructor targets
 
 ```text
