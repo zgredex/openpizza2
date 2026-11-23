@@ -55,8 +55,11 @@ The following are genuine C/C++ attempts. Sources and full
 | 0x4fe370 | Company_AssignStaffToBranch | 0x7f: 0x06 vs 0x16 | 2 |
 | 0x4ffe00 | Game_RefreshObjectCategoryBins | 0x6b: 0x10 vs 0x0c | 45 |
 | 0x5219a0 | Sprite_FillRectColor | 0x28: 0x89 vs 0x8b | 111 |
+| 0x544af0 | List_RemoveNodeLocked | 0x47: 0x06 vs 0x03 | 1 |
 | 0x547810 | Sound_LoadEffectBuffers | 0x00: 0x81 vs 0xa1 | 129 |
 | 0x4cba60 | Config_WriteRegistryBlock | 0x3d: 0x22 vs 0x1a | 71 |
+
+`0x544af0` now has the exact 166-byte extent, EH sections, relocations and guard destructor; the last byte is the `jne` displacement around the conditional `current` update. The candidate uses a null-first ternary, which reproduces the shipped EAX register choice.
 
 `0x4cba60` reaches the shipped EH prologue only when the candidate is given
 C++ linkage (`/O2 /TP /GX`); the attempt then differs in the first EH state
@@ -80,7 +83,6 @@ No candidate was produced for these manifest entries:
 - `0x502220` Game_GetGlobalStatsBand
 - `0x502b80` AI_SelectActionForType
 - `0x5408b0` SoundBuffer_DestructDerived
-- `0x544af0` List_RemoveNodeLocked
 - `0x545b20` List_ContainerDestruct
 - `0x50e9e0` Player_Destroy
 

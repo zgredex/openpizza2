@@ -1,0 +1,43 @@
+{
+  "schema": "pc2.family_batch.v1",
+  "family": "list-operations",
+  "recipes": [
+    {
+      "address": "0x4014b0",
+      "name": "List_Add",
+      "length": 251,
+      "entry": "?Add@List@@QAEHH@Z",
+      "source": "reconstructed/match/batch19/part4/0x4014b0.cpp",
+      "flags": ["/O2", "/TP"],
+      "symbols": {
+        "?g_listLock@@3UCriticalSection@@A": "0x579af0",
+        "?Enter@CriticalSection@@QAEXXZ": "0x401320",
+        "?Leave@CriticalSection@@QAEXXZ": "0x401340"
+      }
+    },
+    {
+      "address": "0x401480",
+      "name": "List_Node_Destroy",
+      "length": 43,
+      "entry": "@List_Node_Destroy@8",
+      "source": "reconstructed/match/batch06/part4/0x401480.c",
+      "flags": ["/O2"]
+    },
+    {
+      "address": "0x541250",
+      "name": "List_FreeAll",
+      "length": 51,
+      "entry": "?FreeAll@List@@QAEXXZ",
+      "source": "reconstructed/match/batch07/part4/0x541250.c",
+      "flags": ["/O2", "/TP"]
+    },
+    {
+      "address": "0x544af0",
+      "name": "List_RemoveNodeLocked",
+      "length": 166,
+      "entry": "?RemoveNodeLocked@LockedList@@QAEXPAULockedListNode@@@Z",
+      "source": "reconstructed/match/batch16/part4/nonmatching/0x544af0.cpp",
+      "flags": ["/O2", "/GX", "/TP"]
+    }
+  ]
+}

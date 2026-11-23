@@ -1,0 +1,46 @@
+{
+  "schema": "pc2.family_batch.v1",
+  "family": "small-lock-guard",
+  "recipes": [
+    {
+      "address": "0x544760",
+      "name": "Sound_GetPlayPosition",
+      "length": 223,
+      "entry": "?Sound_GetPlayPosition@@YGHPAUSoundBuffer@@PAHPAI@Z",
+      "source": "reconstructed/match/batch19/part1/0x544760.cpp",
+      "flags": ["/O2", "/GX", "/TP"]
+    },
+    {
+      "address": "0x5448c0",
+      "name": "Sound_QueryStatusLocked",
+      "length": 210,
+      "entry": "?QueryStatusLocked@@YGHPAUSoundBuffer@@PAXPAH@Z",
+      "source": "reconstructed/match/investigations/sound-lock-family/0x5448c0-virtual-char.cpp",
+      "flags": ["/O2", "/GX", "/TP"]
+    },
+    {
+      "address": "0x544620",
+      "name": "SoundBuffer_StopPlaybackLocked",
+      "length": 211,
+      "entry": "?StopPlaybackLocked@SoundBuffer@@QAEHXZ",
+      "source": "reconstructed/match/investigations/sound-lock-family/0x544620-guard.cpp",
+      "flags": ["/O2", "/GX", "/TP"]
+    },
+    {
+      "address": "0x5449a0",
+      "name": "Media_QueryFlagLocked",
+      "length": 262,
+      "entry": "?Media_QueryFlagLocked@@YGHPAUSoundBuffer@@PAXPAE@Z",
+      "source": "reconstructed/match/investigations/sound-lock-family/0x5449a0-nested.cpp",
+      "flags": ["/O2", "/GX", "/TP"]
+    },
+    {
+      "address": "0x544af0",
+      "name": "List_RemoveNodeLocked",
+      "length": 166,
+      "entry": "?RemoveNodeLocked@LockedList@@QAEXPAULockedListNode@@@Z",
+      "source": "reconstructed/match/batch16/part4/nonmatching/0x544af0.cpp",
+      "flags": ["/O2", "/GX", "/TP"]
+    }
+  ]
+}

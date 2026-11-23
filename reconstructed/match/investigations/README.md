@@ -184,10 +184,75 @@ shared RAII `LockGuard` recipe for `0x544620`, `0x5448c0`, `0x544760`, and
 `0x5449a0`. The candidates reproduce the EH sections, the out-of-line
 destructor at `0x53ff80`, and (for `0x5448c0`/`0x544760`) the exact function
 extent. Remaining differences are primary-code scheduling and register
-allocation: `0x544760` has 33 differing bytes, `0x5448c0` 51, and `0x544620`
-124. Two ABI corrections are important: the free functions are `__stdcall`
+allocation. `0x544760` is a 223-byte strict match. `0x5448c0`, `0x544620`,
+and `0x5449a0` remain deferred. Two ABI corrections are important: the free functions are `__stdcall`
 with `self` on the stack (not `__thiscall`), and the `view` calls are virtual
 COM calls (`mov ecx,(%eax); call *slot(%ecx)`), not function-pointer members.
+
+#### Whole-executable cleanup inventory
+
+```sh
+python3 tools/map_vc6_cleanup_families.py \
+  --cleanup 0x53ff80 --cleanup 0x401480 --out /tmp/pc2-cleanup-families.json
+```
+
+The inventory decodes 226 supported unwind maps. It groups functions by
+the cleanup targets actually called by their unwind actions, recording the
+handler, state transitions, and frame offsets. The lock-guard destructor
+at `0x53ff80` appears in 24 functions covering 9,730 indexed bytes.
+`List_Node_Destroy` at `0x401480` appears in 43 functions covering 36,931
+indexed bytes. The counts describe search scope. A function can appear in
+several groups, and sharing a cleanup target establishes an unwind
+dependency.
+
+The first new lock-guard holdout was `List_RemoveNodeLocked` at `0x544af0`.
+Using the existing guard recovered the exact 166-byte extent, call
+relocations, unwind sections, and emitted destructor. A null-first ternary
+for the `current` update reduced the mismatch from 11 to **1 byte**; the
+remaining byte is the `jne` displacement around the conditional store.
+
+```sh
+python3 tools/match_decomp.py 0x544af0 \
+  reconstructed/match/batch16/part4/nonmatching/0x544af0.cpp \
+  --length 166 --entry '?RemoveNodeLocked@LockedList@@QAEXPAULockedListNode@@@Z' \
+  --flags '/O2 /GX /TP' --strict --auto-symbols
+```
+
+#### Cached family batch runner
+
+`tools/run_family_batch.py` compiles, caches, strict-verifies and scores a
+JSON family spec. The small lock-guard spec is tracked at
+`reconstructed/match/investigations/sound-lock-family/family.json`.
+
+```sh
+python3 tools/run_family_batch.py \
+  --config reconstructed/match/investigations/sound-lock-family/family.json \
+  --out /tmp/pc2-family-lock --cache /tmp/pc2-family-cache --jobs 4
+
+# Warm run: no compiler invocations, every object reused.
+python3 tools/run_family_batch.py \
+  --config reconstructed/match/investigations/sound-lock-family/family.json \
+  --out /tmp/pc2-family-lock-warm --cache /tmp/pc2-family-cache \
+  --jobs 4 --cache-only
+```
+
+Current scoreboard: **1/5 strict, 223/1,072 bytes**. `0x544760` is strict;
+`0x544af0` is 1 byte away; `0x5448c0` is 51 bytes away; `0x544620` is 124
+bytes away; `0x5449a0` is 86 bytes away and 6 bytes short. A warm run reuses
+all five objects without invoking VC6.
+
+### List family pilot
+
+`reconstructed/match/investigations/list-family/README.md` applies the same
+cached batch runner to the `List_Node_Destroy` family. The pilot is **3/4
+strict, 345/511 bytes**: `List_Node_Destroy` (43), `List_Add` (251, new strict
+match) and `List_FreeAll` (51). `List_RemoveNodeLocked` is one byte away.
+
+`List_Add` is the first new list-family match from the inventory. Its source
+uses `if (count >= capacity)` to reproduce the shipped `cmp count,capacity;
+jl` operand order, and `memcpy(new, old, capacity * 4)` to reproduce the
+inline `rep movsl`/`rep movsb` growth copies. The global lock is `0x579af0`
+with `Enter`/`Leave` at `0x401320`/`0x401340`.
 
 ## Next experiments
 
