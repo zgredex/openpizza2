@@ -32,6 +32,10 @@ Before a new shape investigation, query
 with `tools/lookup_fingerprint.py`. Reuse a proven source pattern before
 spending compile attempts.
 
+A UI batch report with per-function `"status": "strict"` is counted as strict
+by `tools/build_family_registry.py`. Without `--ui-scan` the 120 generated
+builder functions reappear as Lane B gaps and dominate the ranking.
+
 Read `/tmp/pc2-queue.md`. Lane A is already-sourced work to verify; Lane B is
 missing-source work to group by a repeated compiler/source shape. A shared
 call target or cleanup target is only a discovery lens, not proof that the
@@ -45,3 +49,14 @@ members share a source template.
   switch families when a proposal stops changing the fingerprint.
 - Run the affected verifier per iteration and the full `verify_all.py` only at
   commits or milestones.
+
+## Attempts log
+
+[`attempts.jsonl`](attempts.jsonl) is append-only. Each line is one source
+shape tried against one address, with the executable SHA-256, VC6 provenance,
+first differing offset/bytes, outcome, and the fingerprint it confirmed or
+refuted. Append a row when a shape stops changing the mismatch fingerprint,
+and cite the fingerprint id instead of re-describing the compiler cause.
+
+Do not rewrite or reorder old rows. When a parked case is solved, append the
+strict row; the history remains the evidence that the wall was real.

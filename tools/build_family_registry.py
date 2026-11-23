@@ -62,6 +62,7 @@ def load_ui_scan(path):
             "entry": row.get("entry"),
             "length": row.get("length"),
             "source": source,
+            "strict": row.get("status") == "strict",
         }
     return ready
 
@@ -133,7 +134,7 @@ def build(inventory, sources, metadata, features=None, ui_ready=None):
             entry = generated.get("entry") if generated else meta.get("entry")
             flags = ["/O2", "/TP"] if generated else meta.get("flags")
             length = member.get("length") or lengths.get(address, 0)
-            strict = bool(meta.get("strict"))
+            strict = bool(meta.get("strict")) or bool(generated and generated.get("strict"))
             status = ("strict" if strict else "generated" if generated else
                       "candidate" if source and entry and flags else
                       "source_only" if source else "missing")
