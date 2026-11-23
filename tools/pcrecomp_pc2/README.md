@@ -158,9 +158,18 @@ link. The standalone `native_vk` directory also contains a 32-bit-capable
 Vulkan sprite renderer (`pc2_vk`) and a 64-bit FFmpeg movie smoke; it is not
 yet the game's renderer.
 
-Wayland is the next display milestone. This SDL build uses X11 because the
-32-bit `libxkbcommon` package is not installed; under a Wayland session the
-Vulkan window currently runs through XWayland.
+The bundled SDL build enables native Wayland and X11. To verify Wayland,
+run the Vulkan capture command above from a Wayland session with
+`SDL_VIDEODRIVER=wayland` in place of `DISPLAY=:0`. The host log should
+report `driver=wayland`. The 32-bit host needs the 32-bit Wayland client,
+cursor, EGL, and xkbcommon libraries at runtime, plus a 32-bit Vulkan driver.
+The SDL build needs the corresponding development headers, `pkg-config`,
+and `wayland-scanner`.
+
+With `DISPLAY` unset, the 32-bit Wayland host decoded both intro movies and
+captured the menu on RADV RENOIR. At 125% compositor scaling, all 750,000
+Vulkan readback pixels matched the expected nearest-neighbor output from
+the 800×600 guest frame.
 
 ## Verified trace
 

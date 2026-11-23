@@ -13,6 +13,6 @@ void main() {
     vec2 t = corners[gl_VertexIndex];
     vec2 p = pc.dst.xy + t * pc.dst.zw;
     gl_Position = vec4(p.x * 2.0 / pc.canvas.x - 1.0,
-                       1.0 - p.y * 2.0 / pc.canvas.y, 0, 1);
+                       p.y * 2.0 / pc.canvas.y - 1.0, 0, 1);
     texcoord = mix(pc.uv.xy, pc.uv.zw, t);
 }

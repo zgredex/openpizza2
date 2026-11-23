@@ -46,6 +46,8 @@ need sha256sum
 need tar
 need make
 need glslangValidator
+need pkg-config
+need wayland-scanner
 
 actual=$(sha256sum "$EXE" | cut -d' ' -f1)
 if [ "$actual" != "$EXE_SHA256" ]; then
@@ -85,7 +87,7 @@ if ! "$VENV/bin/python" -c 'import capstone, pefile, unicorn' >/dev/null 2>&1; t
     "$VENV/bin/pip" -q install capstone==5.0.7 pefile==2024.8.26 unicorn==2.1.4
 fi
 
-SDL2_CONFIG="x11=on wayland=off vulkan=on alsa=off pulseaudio=off pipewire=off"
+SDL2_CONFIG="x11=on wayland=shared libdecor=off vulkan=on alsa=off pulseaudio=off pipewire=off"
 SDL2_STAMP="$SYS/lib/.pc2-sdl2-config"
 if [ ! -f "$SYS/lib/libSDL2.a" ] || [ "$(cat "$SDL2_STAMP" 2>/dev/null || true)" != "$SDL2_CONFIG" ]; then
     rm -rf "$WORK/src/SDL2-build32"
@@ -101,19 +103,27 @@ if [ ! -f "$SYS/lib/libSDL2.a" ] || [ "$(cat "$SDL2_STAMP" 2>/dev/null || true)"
         -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 \
         -DCMAKE_EXE_LINKER_FLAGS=-m32 -DCMAKE_SHARED_LINKER_FLAGS=-m32 \
         -DSDL_SHARED=OFF -DSDL_STATIC=ON -DSDL_TEST=OFF -DSDL_TESTS=OFF \
-        -DSDL_X11=ON -DSDL_WAYLAND=OFF \
+        -DSDL_X11=ON -DSDL_WAYLAND=ON -DSDL_WAYLAND_SHARED=ON -DSDL_WAYLAND_LIBDECOR=OFF \
         -DSDL_VULKAN=ON -DVulkan_INCLUDE_DIR="$VULKAN/include" -DVulkan_LIBRARY=/usr/lib32/libvulkan.so \
         -DSDL_ALSA=OFF -DSDL_PULSEAUDIO=OFF -DSDL_JACK=OFF -DSDL_ESD=OFF -DSDL_NAS=OFF \
         -DSDL_PIPEWIRE=OFF -DSDL_SNDIO=OFF -DSDL_DSP=OFF \
         -DSDL_DISKAUDIO=ON -DSDL_DUMMYAUDIO=ON \
         -DSDL_DBUS=OFF -DSDL_IBUS=OFF -DSDL_LIBUDEV=OFF \
         -DSDL_OPENGL=OFF -DSDL_RPATH=OFF > "$WORK/sdl2-configure.log" 2>&1
+    if ! grep -q '^#define SDL_VIDEO_DRIVER_WAYLAND_DYNAMIC ' \
+        "$WORK/src/SDL2-build32/include-config-release/SDL2/SDL_config.h"; then
+        echo "SDL2 did not configure its dynamic Wayland backend. See $WORK/sdl2-configure.log." >&2
+        exit 1
+    fi
     cmake --build "$WORK/src/SDL2-build32" -j "${JOBS:-4}" > "$WORK/sdl2-build.log" 2>&1
     cmake --install "$WORK/src/SDL2-build32" > "$WORK/sdl2-install.log" 2>&1
     echo "$SDL2_CONFIG" > "$SDL2_STAMP"
 fi
 
-if [ ! -f "$SYS/lib/libSDL2_ttf.so" ]; then
+SDL2TTF_STAMP="$SYS/lib/.pc2-sdl2-ttf-config"
+SDL2TTF_CONFIG="$SDL2_CONFIG ttf=static freetype=vendored"
+if [ ! -f "$SYS/lib/libSDL2_ttf.a" ] || [ ! -f "$SYS/lib/libfreetype.a" ] || \
+    [ "$(cat "$SDL2TTF_STAMP" 2>/dev/null || true)" != "$SDL2TTF_CONFIG" ]; then
     if [ ! -f "$WORK/SDL2_ttf-${SDL2TTF_VERSION}.tar.gz" ]; then
         curl -fL "$SDL2TTF_URL" -o "$WORK/SDL2_ttf-${SDL2TTF_VERSION}.tar.gz"
     fi
@@ -125,10 +135,12 @@ if [ ! -f "$SYS/lib/libSDL2_ttf.so" ]; then
         -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 \
         -DCMAKE_EXE_LINKER_FLAGS=-m32 -DCMAKE_SHARED_LINKER_FLAGS=-m32 \
         -DCMAKE_PREFIX_PATH="$SYS" -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+        -DBUILD_SHARED_LIBS=OFF \
         -DSDL2TTF_VENDORED=ON -DSDL2TTF_HARFBUZZ=OFF \
         -DSDL2TTF_SAMPLES=OFF -DSDL2TTF_TESTS=OFF > "$WORK/ttf-configure.log" 2>&1
     cmake --build "$WORK/src/SDL2_ttf-build32" -j "${JOBS:-4}" > "$WORK/ttf-build.log" 2>&1
     cmake --install "$WORK/src/SDL2_ttf-build32" > "$WORK/ttf-install.log" 2>&1
+    echo "$SDL2TTF_CONFIG" > "$SDL2TTF_STAMP"
 fi
 
 PC2_SEEDS='0x00504980u 0x00553C9Du 0x00555F68u'

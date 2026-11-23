@@ -21,6 +21,7 @@ struct pc2_vk_texture {
     VkDescriptorSet set;
     uint32_t width, height;
     int layout_initialized;
+    pc2_vk_texture *retired_next;
 };
 struct pc2_vk {
     SDL_Window *window;
@@ -49,6 +50,7 @@ struct pc2_vk {
     VkDescriptorPool descriptor_pool;
     VkSampler sampler;
     VkViewport viewport;
+    pc2_vk_texture *retired_textures;
     int active;
     char error[256];
     char shader_dir[512];
@@ -92,8 +94,13 @@ static int buffer_create(pc2_vk *r, VkDeviceSize size, VkBufferUsageFlags usage,
                             VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, mem)) {
         vkDestroyBuffer(r->device, *buf, NULL); *buf = VK_NULL_HANDLE; return 0;
     }
-    vkBindBufferMemory(r->device, *buf, *mem, 0);
-    return 1;
+    if (gpu_ok(r, vkBindBufferMemory(r->device, *buf, *mem, 0), "bind staging buffer"))
+        return 1;
+    vkDestroyBuffer(r->device, *buf, NULL);
+    vkFreeMemory(r->device, *mem, NULL);
+    *buf = VK_NULL_HANDLE;
+    *mem = VK_NULL_HANDLE;
+    return 0;
 }
 static int one_time_begin(pc2_vk *r, VkCommandBuffer *cmd) {
     VkCommandBufferAllocateInfo ai = { .sType=VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
@@ -393,9 +400,21 @@ bad:
     pc2_vk_destroy(r);
     return NULL;
 }
-pc2_vk_texture *pc2_vk_texture_create(pc2_vk *r,uint32_t w,uint32_t h,
-                                        const uint8_t *rgba,uint32_t pitch) {
-    if (!r||!w||!h||!rgba||w>16384||h>16384||pitch<w*4u) return NULL;
+enum { PIXELS_RGBA8, PIXELS_RGB565 };
+
+static int source_pitch(uint32_t w, uint32_t h, uint32_t *pitch, int format) {
+    if (!w || !h || w > 16384 || h > 16384) return 0;
+    uint32_t row = w * (format == PIXELS_RGB565 ? 2u : 4u);
+    if (!*pitch) *pitch = row;
+    return *pitch >= row && (h - 1u) <= (SIZE_MAX - row) / *pitch;
+}
+
+static int upload_texture(pc2_vk *r, pc2_vk_texture *t, const uint8_t *pixels,
+                          uint32_t pitch, int format, int key);
+
+static pc2_vk_texture *texture_create(pc2_vk *r, uint32_t w, uint32_t h,
+                                     const void *pixels, uint32_t pitch, int format, int key) {
+    if (!r || !pixels || !source_pitch(w, h, &pitch, format)) return NULL;
     pc2_vk_texture *t=calloc(1,sizeof *t);
     if (!t) return NULL;
     t->width=w;t->height=h;
@@ -408,7 +427,7 @@ pc2_vk_texture *pc2_vk_texture_create(pc2_vk *r,uint32_t w,uint32_t h,
     if (!gpu_ok(r,vkCreateImage(r->device,&ii,NULL,&t->image),"sprite image")) goto bad;
     VkMemoryRequirements req; vkGetImageMemoryRequirements(r->device,t->image,&req);
     if (!alloc_memory(r,req,VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,&t->memory)) goto bad;
-    vkBindImageMemory(r->device,t->image,t->memory,0);
+    if (!gpu_ok(r,vkBindImageMemory(r->device,t->image,t->memory,0),"bind sprite image")) goto bad;
     VkImageViewCreateInfo vi={.sType=VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
         .image=t->image,.viewType=VK_IMAGE_VIEW_TYPE_2D,.format=VK_FORMAT_R8G8B8A8_UNORM,
         .subresourceRange={VK_IMAGE_ASPECT_COLOR_BIT,0,1,0,1}};
@@ -422,22 +441,64 @@ pc2_vk_texture *pc2_vk_texture_create(pc2_vk *r,uint32_t w,uint32_t h,
         .dstSet=t->set,.dstBinding=0,.descriptorCount=1,
         .descriptorType=VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,.pImageInfo=&image};
     vkUpdateDescriptorSets(r->device,1,&write,0,NULL);
-    if (!pc2_vk_texture_update(r,t,rgba,pitch)) goto bad;
+    if (!upload_texture(r,t,pixels,pitch,format,key)) goto bad;
     return t;
 bad: pc2_vk_texture_destroy(r,t);return NULL;
 }
-int pc2_vk_texture_update(pc2_vk *r,pc2_vk_texture *t,const uint8_t *rgba,uint32_t pitch) {
-    if (!r||!t||!rgba||pitch<t->width*4u||r->active) return 0;
-    /* Each resource update happens between frames; never copy to an image
-       still referenced by the in-flight graphics command buffer. */
-    vkQueueWaitIdle(r->queue);
+
+pc2_vk_texture *pc2_vk_texture_create(pc2_vk *r, uint32_t w, uint32_t h,
+                                     const uint8_t *rgba, uint32_t pitch) {
+    return texture_create(r, w, h, rgba, pitch, PIXELS_RGBA8, -1);
+}
+
+pc2_vk_texture *pc2_vk_texture_create_rgb565(pc2_vk *r, uint32_t w, uint32_t h,
+                                            const void *pixels, uint32_t pitch, int key) {
+    if (key < -1 || key > 0xffff) return NULL;
+    return texture_create(r, w, h, pixels, pitch, PIXELS_RGB565, key);
+}
+
+int pc2_vk_texture_update(pc2_vk *r, pc2_vk_texture *t, const uint8_t *rgba, uint32_t pitch) {
+    if (!r || !t || !rgba || r->active || !source_pitch(t->width, t->height, &pitch, PIXELS_RGBA8))
+        return 0;
+    return upload_texture(r, t, rgba, pitch, PIXELS_RGBA8, -1);
+}
+
+int pc2_vk_texture_update_rgb565(pc2_vk *r, pc2_vk_texture *t,
+                                const void *pixels, uint32_t pitch, int key) {
+    if (!r || !t || !pixels || r->active || key < -1 || key > 0xffff ||
+        !source_pitch(t->width, t->height, &pitch, PIXELS_RGB565))
+        return 0;
+    return upload_texture(r, t, pixels, pitch, PIXELS_RGB565, key);
+}
+
+static void rgb565_to_rgba(uint8_t *rgba, const uint8_t *pixels, uint32_t width, int key) {
+    for (uint32_t x = 0; x < width; ++x) {
+        int value = pixels[2*x] | (pixels[2*x+1] << 8);
+        rgba[4*x]   = (uint8_t)(((value >> 11) & 31) * 255 / 31);
+        rgba[4*x+1] = (uint8_t)(((value >> 5) & 63) * 255 / 63);
+        rgba[4*x+2] = (uint8_t)((value & 31) * 255 / 31);
+        rgba[4*x+3] = value == key ? 0 : 255;
+    }
+}
+
+static int upload_texture(pc2_vk *r, pc2_vk_texture *t, const uint8_t *pixels,
+                          uint32_t pitch, int format, int key) {
+    /* A fresh texture can be uploaded during graphics command recording.
+       An existing image may only change between frames so queued quads keep
+       their original pixels. Both operations complete on the graphics queue. */
+    if (t->layout_initialized && !gpu_ok(r, vkQueueWaitIdle(r->queue), "sprite upload wait"))
+        return 0;
     VkDeviceSize bytes=(VkDeviceSize)t->width*t->height*4u;
     VkBuffer stage=VK_NULL_HANDLE; VkDeviceMemory memory=VK_NULL_HANDLE;
     if (!buffer_create(r,bytes,VK_BUFFER_USAGE_TRANSFER_SRC_BIT,&stage,&memory)) return 0;
     void *mapped=NULL;
     if (!gpu_ok(r,vkMapMemory(r->device,memory,0,bytes,0,&mapped),"map sprite upload")) goto bad;
-    for (uint32_t y=0;y<t->height;++y)
-        memcpy((uint8_t*)mapped+(size_t)y*t->width*4,rgba+(size_t)y*pitch,(size_t)t->width*4);
+    for (uint32_t y = 0; y < t->height; ++y) {
+        uint8_t *dest = (uint8_t *)mapped + (size_t)y*t->width*4;
+        const uint8_t *source = pixels + (size_t)y*pitch;
+        if (format == PIXELS_RGB565) rgb565_to_rgba(dest, source, t->width, key);
+        else memcpy(dest, source, (size_t)t->width*4);
+    }
     vkUnmapMemory(r->device,memory);
     VkCommandBuffer cmd;
     if (!one_time_begin(r,&cmd)) goto bad;
@@ -462,18 +523,36 @@ bad:
     if (memory) vkFreeMemory(r->device,memory,NULL);
     return 0;
 }
-void pc2_vk_texture_destroy(pc2_vk *r,pc2_vk_texture *t) {
-    if (!r||!t) return;
-    vkDeviceWaitIdle(r->device);
+static void release_texture(pc2_vk *r, pc2_vk_texture *t) {
     if (t->set) vkFreeDescriptorSets(r->device,r->descriptor_pool,1,&t->set);
     if (t->view) vkDestroyImageView(r->device,t->view,NULL);
     if (t->image) vkDestroyImage(r->device,t->image,NULL);
     if (t->memory) vkFreeMemory(r->device,t->memory,NULL);
     free(t);
 }
+
+static void release_retired_textures(pc2_vk *r) {
+    while (r->retired_textures) {
+        pc2_vk_texture *t = r->retired_textures;
+        r->retired_textures = t->retired_next;
+        release_texture(r, t);
+    }
+}
+
+void pc2_vk_texture_destroy(pc2_vk *r,pc2_vk_texture *t) {
+    if (!r || !t) return;
+    if (!t->layout_initialized) {
+        release_texture(r, t);
+        return;
+    }
+    t->retired_next = r->retired_textures;
+    r->retired_textures = t;
+}
+
 int pc2_vk_begin(pc2_vk *r,float red,float green,float blue,float alpha) {
     if (!r||r->active) return 0;
-    vkQueueWaitIdle(r->queue);
+    if (!gpu_ok(r, vkQueueWaitIdle(r->queue), "frame wait")) return 0;
+    release_retired_textures(r);
     VkResult v=vkAcquireNextImageKHR(r->device,r->swapchain,UINT64_MAX,r->acquired,
                                       VK_NULL_HANDLE,&r->current_image);
     if (v==VK_ERROR_OUT_OF_DATE_KHR) {if (!pc2_vk_resize(r)) return 0;
@@ -498,8 +577,11 @@ void pc2_vk_draw(pc2_vk *r,pc2_vk_texture *t,float x,float y,float w,float h,
     if (!r||!r->active||!t||w<=0||h<=0||cw<=0||ch<=0) return;
     float scale=r->viewport.width/CANVAS_W;
     float left=r->viewport.x+cx*scale, top=r->viewport.y+cy*scale;
-    float right=r->viewport.x+(cx+cw)*scale,bottom=r->viewport.y+(cy+ch)*scale;
-    if (left<0)left=0;if(top<0)top=0;
+    float right=r->viewport.x+((float)cx+cw)*scale,bottom=r->viewport.y+((float)cy+ch)*scale;
+    if (left<r->viewport.x) left=r->viewport.x;
+    if (top<r->viewport.y) top=r->viewport.y;
+    right=fminf(right,r->viewport.x+r->viewport.width);
+    bottom=fminf(bottom,r->viewport.y+r->viewport.height);
     if (right>(float)r->extent.width)right=(float)r->extent.width;
     if (bottom>(float)r->extent.height)bottom=(float)r->extent.height;
     if (right<=left||bottom<=top) return;
@@ -516,6 +598,34 @@ void pc2_vk_draw(pc2_vk *r,pc2_vk_texture *t,float x,float y,float w,float h,
     vkCmdBindDescriptorSets(r->command,VK_PIPELINE_BIND_POINT_GRAPHICS,r->layout,0,1,&t->set,0,NULL);
     vkCmdDraw(r->command,6,1,0,0);
 }
+
+void pc2_vk_draw_rect(pc2_vk *r, pc2_vk_texture *t,
+                     float x, float y, float w, float h,
+                     int sx, int sy, int sw, int sh,
+                     int cx, int cy, int cw, int ch) {
+    if (!t || sw <= 0 || sh <= 0) return;
+    int left = sx < 0 ? 0 : sx;
+    int top = sy < 0 ? 0 : sy;
+    int64_t right = (int64_t)sx + sw;
+    int64_t bottom = (int64_t)sy + sh;
+    if (right > t->width) right = t->width;
+    if (bottom > t->height) bottom = t->height;
+    if (right <= left || bottom <= top) return;
+    if (left != sx || right != (int64_t)sx + sw) {
+        float scale = w / sw;
+        x += (float)((int64_t)left - sx) * scale;
+        w = (float)(right - left) * scale;
+    }
+    if (top != sy || bottom != (int64_t)sy + sh) {
+        float scale = h / sh;
+        y += (float)((int64_t)top - sy) * scale;
+        h = (float)(bottom - top) * scale;
+    }
+    pc2_vk_draw(r, t, x, y, w, h,
+                (float)left / t->width, (float)top / t->height,
+                (float)right / t->width, (float)bottom / t->height, cx, cy, cw, ch);
+}
+
 int pc2_vk_end(pc2_vk *r) {
     if (!r||!r->active) return 0;
     r->active=0;
@@ -538,6 +648,7 @@ void pc2_vk_destroy(pc2_vk *r) {
     if (!r) return;
     swap_destroy(r);
     if (r->device) {
+        release_retired_textures(r);
         if (r->acquired) vkDestroySemaphore(r->device,r->acquired,NULL);
         if (r->sampler) vkDestroySampler(r->device,r->sampler,NULL);
         if (r->descriptor_pool) vkDestroyDescriptorPool(r->device,r->descriptor_pool,NULL);

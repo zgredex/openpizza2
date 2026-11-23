@@ -19,6 +19,16 @@ shaders/%.frag.spv: shaders/%.frag
 smoke: smoke.c pc2_vk.c pc2_movie.c pc2_vk.h pc2_movie.h $(SHADERS)
 	$(CC) $(CFLAGS) -o $@ smoke.c pc2_vk.c pc2_movie.c $(LDFLAGS)
 
+# Optional X11 readback test; it only needs the 2D renderer's dependencies.
+QUAD_TEST_CFLAGS ?= $(shell $(PKG_CONFIG) --cflags sdl2 vulkan x11)
+QUAD_TEST_LIBS ?= $(shell $(PKG_CONFIG) --libs sdl2 vulkan x11) -lm
+source-quad-smoke: source_quad_smoke.c pc2_vk.c pc2_vk.h $(SHADERS)
+	$(CC) $(CPPFLAGS) -std=c11 -O2 -Wall -Wextra $(QUAD_TEST_CFLAGS) -o $@ \
+		source_quad_smoke.c pc2_vk.c $(QUAD_TEST_LIBS)
+
+check-source-quads: source-quad-smoke
+	./source-quad-smoke
+
 clean:
-	rm -f smoke $(SHADERS)
-.PHONY: all clean
+	rm -f smoke source-quad-smoke $(SHADERS)
+.PHONY: all clean check-source-quads

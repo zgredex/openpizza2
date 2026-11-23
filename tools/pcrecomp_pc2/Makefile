@@ -13,7 +13,8 @@ CFLAGS := -m32 -O0 -w -no-pie -D_GNU_SOURCE \
           -I$(VULKAN)/include -I$(FFMPEG32)/include -Inative_vk -I. -I$(OBJ_DIR) \
           -include $(GEN)/recomp_funcs.h
 LDFLAGS := -m32 -no-pie -Wl,--wrap=sub_00403D90
-LIBS := -L$(SYS)/lib -lSDL2_ttf -lSDL2 -L$(FFMPEG32)/lib -lavformat -lavcodec -lswscale -lswresample -lavutil -L/usr/lib32 -lvulkan -lpthread -lm -ldl
+SDL_LIBS := $(SYS)/lib/libSDL2_ttf.a $(SYS)/lib/libfreetype.a $(SYS)/lib/libSDL2.a
+LIBS := $(SDL_LIBS) -L$(FFMPEG32)/lib -lavformat -lavcodec -lswscale -lswresample -lavutil -L/usr/lib32 -lvulkan -lpthread -lm -ldl
 
 HLE_SRC := $(filter-out %_selftest.c %/screen.c %/bink.c,$(wildcard $(PC)/runtime/win32hle/*.c))
 GEN_SRC := $(wildcard $(GEN)/recomp_*.c)
@@ -26,7 +27,7 @@ OBJ := $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRC))
 
 all: $(OUT)
 
-$(OUT): $(OBJ)
+$(OUT): $(OBJ) Makefile $(SDL_LIBS)
 	$(CC) $(LDFLAGS) $(OBJ) $(LIBS) -o $@
 
 $(OBJ_DIR)/%.o: %.c

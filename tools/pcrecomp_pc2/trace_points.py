@@ -66,6 +66,43 @@ TRACE_DECLARATIONS = {
     "pc2_trace_payment_after": "void",
 }
 
+# Each tuple identifies the lifted entry and the stack argument holding its
+# render target. Final blits take different types of targets and only log the
+# renderer/receiver.
+DRAW_ENTRIES = (
+    ("005243C0", "Window_RenderFrame", None),
+    ("00523E20", "UI_RenderScene", None),
+    ("0053A780", "Sprite_BlitAlphaRLEAlt", 4),
+    ("0053B300", "Sprite_BlitAlphaRLE", 4),
+    ("005374E0", "Sprite_Blit24Bit", 4),
+    ("005376B0", "Sprite_Blit24BitClipped", 4),
+    ("005358D0", "Font_DrawGlyphClipped", None),
+    ("004F03F0", "Map_DrawTileCursorDiamond", None),
+    ("004EA400", "Game_BlitScaledObjectSprite", None),
+    ("00539980", "Gfx_BlitClipped16", None),
+    ("00538DA0", "Surface_BlitRectRetry", None),
+)
+
+
+def patch_draw_entries(text: str) -> str:
+    for address, label, target_offset in DRAW_ENTRIES:
+        marker = f"[draw] {label} "
+        needle = f"    RECOMP_ENTER(0x{address}u);\n"
+        if marker in text or needle not in text:
+            continue
+        target = f"MEM32(esp + {target_offset})" if target_offset else "0u"
+        # Bound each stream independently so hot sprite calls cannot hide
+        # final presentation or less frequent glyph paths.
+        hook = (
+            "    { static unsigned pc2_draw_samples;\n"
+            '      if (pc2_draw_samples < 32 && getenv("PC2_TRACE_DRAW")) {\n'
+            "        ++pc2_draw_samples;\n"
+            f'        fprintf(stderr, "{marker}this=%08X target=%08X\\n", ecx, {target});\n'
+            "      } }\n"
+        )
+        text = text.replace(needle, needle + hook, 1)
+    return text
+
 
 def repair_broken_entries(text: str) -> str:
     """Repair trace strings written by an older non-idempotent patcher."""
@@ -201,6 +238,9 @@ def main() -> int:
         changed |= did
         text, did = patch_payment(text)
         changed |= did
+        patched = patch_draw_entries(text)
+        changed |= patched != text
+        text = patched
         if changed or any(f"{name}(" in text for name in TRACE_DECLARATIONS):
             text = add_includes(text)
         if changed or text != repaired:

@@ -1,9 +1,9 @@
 # Native Vulkan sprite and Bink source patch — integration requirements
 
-This patch **adds a native 2D Vulkan renderer and a native Bink 1 FFmpeg decoder**.
-It does not fake completion of the full game renderer port. It is a concrete
-implementation of the GPU destination, deliberately not an RGB565 frame uploader
-or a DirectDraw/Win32 API replacement. The recovered game is not wired to it yet.
+The game host presents the CPU-rendered RGB565 frame through Vulkan and plays
+Bink movies through FFmpeg. The separate native quad renderer supports source
+textures, color keys, and clipping. The game still needs to emit source draws
+to that renderer.
 
 ## Build and run separately (requires development packages)
 
@@ -12,6 +12,7 @@ cd tools/pcrecomp_pc2/native_vk
 make
 ./smoke                         # colored GPU sprites with clipping/blending
 ./smoke /path/to/extracted.bik  # Bink -> FFmpeg -> Vulkan movie + SDL audio
+make check-source-quads        # optional X11 pixel readback test
 ```
 
 This code requires: SDL2, Vulkan headers/loader/driver, `glslc`, and FFmpeg
@@ -25,10 +26,9 @@ is for the existing headless test host, not this graphical smoke test.
 
 ## How the real game must be rewired
 
-The public `main.c` still assigns `hle_dd_frame_hook = pc2_dd_frame_hook` and
-calls `hle_screen_open`, which lives in `win32hle`. Those are NOT part of this
-native backend. Do not simply point the frame hook at `pc2_vk_draw`—that would
-keep the CPU renderer and fail the full-port goal.
+The host opens its SDL Vulkan window through `pc2_vulkan_open` and retrieves
+completed frames in `pc2_native_present` from DirectDraw or the GDI window.
+Maintain one swapchain owner when replacing that presentation path.
 
 Delete DirectDraw as the game's render architecture only after the recovered
 renderer can dispatch these operations directly into `pc2_vk_*`:
@@ -49,8 +49,9 @@ renderer can dispatch these operations directly into `pc2_vk_*`:
    dispatch ABI and guest-pointer layout must be preserved until its native
    calls are replaced deliberately, not by one global `memcpy`/blit hook.
 
-The Bink replacement is also a **direct gameplay call-site replacement**, not a
-`BinkOpen` shim:
+The existing Bink replacement already intercepts `Movie_Play` and reads
+compressed data from `movie.pak`. When switching swapchain owners, route movies
+through the same renderer as sprites:
 
 - `0x4ce9d0 Movie_Play` owns the movie window/cutscene lifecycle.
 - The decoder API calls are concentrated in the original code near
@@ -65,6 +66,22 @@ The Bink replacement is also a **direct gameplay call-site replacement**, not a
   not available in the installed FFmpeg release.
 
 ## Native draw semantics still needing code work
+
+Set `"env": {"PC2_TRACE_DRAW": "1"}` in a copy of an existing capture scenario,
+build the capture host, and run the scenario with `capture.py run`. Read the
+`[draw]` entries in `host.log`. The hook logs up to 32 entries per sampled
+function. Sprite entries record the guest receiver and render target argument.
+Use these values to identify which operations populate each render target
+before choosing the source decoder and frame boundary to port.
+
+The menu-to-character-select replay reached screens 21 and 28 with
+zero unresolved dispatches in the captured click phase. Its draw log contained
+`Sprite_BlitAlphaRLEAlt`, `Sprite_Blit24Bit`, and `Font_DrawGlyphClipped`
+entries. It hit `Surface_BlitRectRetry` and did not sample any
+`Gfx_BlitClipped16` entries. A cutover for this replay needs the source sprite
+and glyph calls and the DirectDraw presentation branch. Start with
+`Sprite_BlitAlphaRLEAlt` and track its target separately from
+`Sprite_Blit24Bit`, which used a different target in the sampled calls.
 
 `pc2_vk_draw` is a **quad** draw. A full sprite renderer must additionally
 reconstruct source and destination rectangle clipping, palette decode,
