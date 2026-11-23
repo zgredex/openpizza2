@@ -9,14 +9,16 @@ and writes a `family.json` for `tools/run_family_batch.py`.
 ## Result
 
 ```text
-sound-destructors: 4/4 strict, 523/523 bytes
+sound-destructors: 6/6 strict, 830/830 bytes
   0x53f020   91  SoundBuffer      (vtable 0x55c830, deleting 0x53f000)
   0x53f5d0  126  SoundSample      (vtable 0x55c850, deleting 0x53f5b0)
+  0x5408b0  169  List             (vtable 0x55c874, deleting 0x540890)
+  0x541f30  138  SoundTrack       (vtable 0x55c8e0, deleting 0x541f10)
   0x546750   99  SoundBuffer2     (vtable 0x55cb14, deleting 0x546730)
   0x53fcc0  207  SoundPakManager  (vtable 0x55c864, deleting 0x53fca0)
 ```
 
-All four candidates reproduce the primary body, `.text$x`, `.xdata$x`, the
+All six candidates reproduce the primary body, `.text$x`, `.xdata$x`, the
 `0x53efd0` cleanup thunk, the derived/base vtables, and the shared
 AddRef/Release/QueryInterface method targets.
 
@@ -52,7 +54,7 @@ base deleting destructor = 0x53efe0
 
 ```sh
 sh reconstructed/match/investigations/destructor-family/verify_strict.sh
-# 4/4 strict
+# 6/6 strict
 
 python3 tools/generate_destructor_family.py \
   --spec reconstructed/match/investigations/destructor-family/destructors.json \
@@ -140,46 +142,26 @@ The report also decodes the generated object's unwind with
 }
 ```
 
-## Experimental members
+## State release resolved (0x541f30 and 0x5408b0)
 
-`experimental.json` holds `0x541f30 SoundTrack` (138 bytes). The member
-subobject now gives the candidate the correct **two unwind states**:
+Both parked members now match. The missing `mov [esp+state],0` was not a C2
+revision or a scope artifact: it depends on whether the member destructor can
+throw. With `extern "C"` `Mem_Free`, VC6 keeps state 1 active through the
+inlined member destruction. Declaring `Mem_Free` as a C++ function makes the
+member destructor a throw site and VC6 emits the state-0 store before inlining
+it, exactly as in the original:
 
-```text
-0x541f30 SoundTrack  diff 29
-  original_states=2 candidate_states=2
-  compare_vc6_unwind: differences={"transfers": 2}
+```cpp
+void Mem_Free(void *);          // C++ linkage, can throw
 ```
 
-The `transfers: 2` line is a reporting artifact, not a wrong cleanup: the
-strict locator places the candidate's two cleanup thunks at `0x53efd0` and
-`0x541f00`, matching the original. `compare_vc6_unwind` leaves internal COMDAT
-targets as `(section, offset)` and therefore cannot compare them to the
-original VAs.
-
-The real blocker is the primary state transition: the original writes the
-EH state `0` **before** the inline member free (`movb [esp+0x10],0`), while
-the candidate keeps state 1 active through the member destructor. The next
-generator form needs to express that explicit state release, not another
-member layout change.
-
-### State-release experiments
-
-| source shape | diff | result |
-|---|---:|---|
-| member subobject, inline destructor | 29 | correct 2 states/targets, missing state-0 store |
-| member subobject, out-of-line destructor | 21 | emits `call` instead of the inline free |
-| `Buffer` base subobject | 33 | adds null-adjustor checks and 6 extra bytes |
-| explicit `buffer.release()` / scope | not expressible | no source-level EH-state store |
-
-The state-0 store is a VC6 destructor-scope scheduling artifact; ordinary
-C++ scope exit does not emit it before an implicit member destructor. Minimal
-SP3 repros with a virtual base plus a member destructor — simple free, free
-loop, virtual call, explicit member destructor call, and explicit base
-destructor call — all failed to emit `movb [esp+state],0`. This suggests the
-original `0x541f30`/`0x5408b0` state store may come from a different C2/EH
-codegen revision or a non-obvious local scope, not a missing member shape.
-SoundTrack is parked as a 29-byte near miss; `0x5408b0` has the same wall.
+The same distinction explains the `0x541f30` near miss: the experimental spec
+used `extern "C" void __cdecl Mem_Free` and also advanced the `TrackBuffer`
+cursor by four bytes too many (`char pad0[8]` without `"size": 8`), placing
+`field8` at `+0xc` instead of `+0x8`. With the C++ declaration and the corrected
+field size, both `0x541f30` and `0x5408b0` are byte-identical. `experimental.json`
+is retained as the single-class reproduction; the classes are also in the main
+`destructors.json`.
 
 ## SoundPakManager body and call linkage
 
@@ -223,10 +205,7 @@ The array loop uses a 20-entry array at `+8` (stride `0x1c`, fields at
 ## Next destructor targets
 
 ```text
-0x5408b0 SoundBuffer_DestructDerived   169 bytes  vtable 0x55c874
-0x541790 SoundStreamBuffer_Destruct    225 bytes  vtables 0x55c8b0/0x55c8c8/0x55c874
-0x546750 SoundBuffer_Destructor         99 bytes  experimental above
-0x541f30 SoundTrack_Destruct           138 bytes  experimental above
+0x541790 SoundStreamBuffer_Destruct  225 bytes  vtables 0x55c8b0/0x55c8c8/0x55c874
 ```
 
 The generator should be extended with a `states` field for extra unwind

@@ -77,6 +77,44 @@
           "transfers": 2
         }
       }
+    },
+    {
+      "address": "0x5408b0",
+      "class": "List",
+      "strict_match": true,
+      "match": true,
+      "length": 169,
+      "candidate_length": 169,
+      "difference_count": 0,
+      "first_difference": null,
+      "strict_issues": [],
+      "relocation_issues": [],
+      "unwind": {
+        "original_states": 2,
+        "candidate_states": 2,
+        "differences": {
+          "transfers": 2
+        }
+      }
+    },
+    {
+      "address": "0x541f30",
+      "class": "SoundTrack",
+      "strict_match": true,
+      "match": true,
+      "length": 138,
+      "candidate_length": 138,
+      "difference_count": 0,
+      "first_difference": null,
+      "strict_issues": [],
+      "relocation_issues": [],
+      "unwind": {
+        "original_states": 2,
+        "candidate_states": 2,
+        "differences": {
+          "transfers": 2
+        }
+      }
     }
   ]
 }

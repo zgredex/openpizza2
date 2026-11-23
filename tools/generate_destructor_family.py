@@ -59,6 +59,8 @@ def source_for(spec, item):
     base = spec["base"]["class"]
     body = "\n".join(f"    {line}" for line in item["body"])
     fields = field_block(item.get("fields", []))
+    declarations = "".join(
+        f"\n    {line}" for line in item.get("declarations", []))
     common = spec.get("common", "")
     members = "\n\n".join(member_source(member) for member in spec.get("members", []))
     prelude = item.get("prelude", spec.get("prelude", ""))
@@ -73,7 +75,7 @@ struct {base} {{
 }};
 
 struct {item['class']} : {base} {{
-{fields}
+{fields}{declarations}
     virtual ~{item['class']}();
 }};
 

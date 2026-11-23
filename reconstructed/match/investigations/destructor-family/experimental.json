@@ -1,6 +1,6 @@
 {
   "family": "sound-destructors-experimental",
-  "prelude": "extern \"C\" void __cdecl Mem_Free(void *);\nextern \"C\" __declspec(dllimport) void __stdcall CoUninitialize(void);",
+  "prelude": "void Mem_Free(void *);\nextern \"C\" __declspec(dllimport) void __stdcall CoUninitialize(void);",
   "common": "struct Child {\n    virtual void slot0();\n    virtual void slot1();\n    virtual void __stdcall Destroy();\n};\n\nstruct SoundStream {\n    virtual void slot0();\n    virtual void __stdcall Release();\n    void Close(int length);\n};\n\nstruct ComObject {\n    virtual void slot0();\n    virtual void __stdcall Release();\n    virtual void __stdcall Release2();\n};",
   "base": {
     "class": "SoundBufferBase",
@@ -58,7 +58,8 @@
       "fields": [
         {
           "decl": "char pad0[8];",
-          "offset": 0
+          "offset": 0,
+          "size": 8
         },
         {
           "decl": "void *field8;",
