@@ -93,6 +93,23 @@ typedef struct {
 
 static vk_state vk;
 
+/* The win32hle window/presenter module (screen.c) is not built. These are the
+ * only platform hooks the rest of win32hle still needs: the guest cursor
+ * visibility hook used by the native pump, and the desktop size used by
+ * DirectDraw mode enumeration. */
+int (*hle_screen_cursor_hook)(void);
+int hle_screen_desktop(int *w, int *h)
+{
+    SDL_DisplayMode mode;
+    int display = vk.window ? SDL_GetWindowDisplayIndex(vk.window) : 0;
+    if (!SDL_WasInit(SDL_INIT_VIDEO) ||
+        SDL_GetDesktopDisplayMode(display < 0 ? 0 : display, &mode) != 0)
+        return 0;
+    *w = mode.w;
+    *h = mode.h;
+    return 1;
+}
+
 static int vk_ok(VkResult result, const char *what)
 {
     if (result == VK_SUCCESS) return 0;

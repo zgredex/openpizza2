@@ -17,9 +17,9 @@
 
 - The non-headless Vulkan path owns its SDL window, Vulkan surface and input
   pump in `pc2_vulkan.c`. Do not reintroduce `hle_screen_gl`,
-  `hle_screen_gl_picture` or the win32hle window/frame-hook presenter.
-  `PC2_RENDERER=sdl` is the explicit fallback and `PC2_HEADLESS=1` is the
-  capture path.
+  `hle_screen_gl_picture`, the win32hle window/frame-hook presenter, or the
+  `screen.c` module; the Makefile excludes it. `PC2_HEADLESS=1` is the native
+  headless capture path.
 - Use the headless capture runner for UI work:
   `python3 tools/pcrecomp_pc2/capture.py run <scenario> --work ... --out ...`.
   Use `--skip-build` when the instrumented host is already current.

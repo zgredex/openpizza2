@@ -53,8 +53,9 @@ viewport centered with black bars. Add `PC2_VULKAN_STATS=1` to log every 300
 presented frames and the current swapchain size while resizing the window.
 `PC2_TRACE_INPUT=1` records the `WM_MOUSE*` messages, and
 `PC2_TEST_CLICK=x,y` injects one deterministic SDL click in guest coordinates
-for an input smoke test. `PC2_RENDERER=sdl` selects the old SDL-renderer
-fallback explicitly; Vulkan failures do not fall back silently.
+for an input smoke test. The host has no SDL-renderer fallback: if Vulkan
+cannot initialize, the process exits instead of silently using another
+renderer.
 
 ## Replay a scratch image
 

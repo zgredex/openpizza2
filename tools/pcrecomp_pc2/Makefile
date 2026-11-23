@@ -14,7 +14,7 @@ CFLAGS := -m32 -O0 -w -no-pie -D_GNU_SOURCE \
 LDFLAGS := -m32 -no-pie -Wl,--wrap=sub_00403D90
 LIBS := -L$(SYS)/lib -lSDL2_ttf -lSDL2 -L/usr/lib32 -lvulkan -lpthread -lm -ldl
 
-HLE_SRC := $(filter-out %_selftest.c,$(wildcard $(PC)/runtime/win32hle/*.c))
+HLE_SRC := $(filter-out %_selftest.c %/screen.c,$(wildcard $(PC)/runtime/win32hle/*.c))
 GEN_SRC := $(wildcard $(GEN)/recomp_*.c)
 SRC := $(HLE_SRC) $(GEN_SRC) main.c pc2_shims.c pc2_vulkan.c trace_winmain.c
 ifeq ($(CAPTURE),1)

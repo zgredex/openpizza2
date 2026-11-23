@@ -117,8 +117,7 @@ PC2_VULKAN_SOURCE=/tmp/opencode/src-menu.ppm \
 
 | Variable | Effect |
 |---|---|
-| `PC2_RENDERER=vulkan` | Explicit native Vulkan mode (default when not headless). |
-| `PC2_RENDERER=sdl` | Explicit SDL-renderer fallback; never used silently. |
+| `PC2_RENDERER=vulkan` | The only non-headless renderer (native Vulkan). |
 | `PC2_VULKAN_WINDOW=WxH` | Initial window size; the swapchain follows resizes. |
 | `PC2_VULKAN_CAPTURE=file.ppm` | Read back the first presented menu frame. |
 | `PC2_VULKAN_SOURCE=file.ppm` | Write the guest RGB565 frame used for that capture. |
@@ -188,8 +187,7 @@ They live in `pc2_shims.c`; the shared runtime is unmodified.
 - **Native presentation:** the non-headless host opens a Vulkan window and
   presents the guest RGB565 frame through `pc2_vulkan.c`; that module also owns
   the SDL input pump and mouse mapping, so there is no win32hle window or
-  `hle_screen_gl` path. SDL's renderer is used only with
-  `PC2_RENDERER=sdl`. See [Native Vulkan
+  `hle_screen_gl` path and `screen.c` is not built. See [Native Vulkan
   presentation](#native-vulkan-presentation) for the verified frame digest,
   resize path and capture switches.
 - The four PC2 `.pak` archives, `language.ldf`, `sound.pak`, the loading image

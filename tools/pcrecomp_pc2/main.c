@@ -458,7 +458,6 @@ static void pc2_test_click(void) {
     int vx, vy, vw, vh, ww, wh, dw, dh;
     pc2_vulkan_viewport(&vx, &vy, &vw, &vh);
     SDL_Window *win = pc2_vulkan_window();
-    if (!win) win = hle_screen_sdl_window();
     if (!win || vw <= 0 || vh <= 0) return;
     SDL_GetWindowSize(win, &ww, &wh);
     SDL_Vulkan_GetDrawableSize(win, &dw, &dh);
@@ -668,6 +667,14 @@ static void pc2_poll(void) {
     }
 }
 
+/* Headless and capture builds have no window; the guest message loop still
+ * needs the checkpoint/scripted-click poll and the frame dump/trace hook. */
+static void pc2_native_present(void);
+static void pc2_headless_pump(void) {
+    pc2_poll();
+    pc2_native_present();
+}
+
 static void pc2_frame_hook(const uint8_t *px, int w, int h, int pitch, int bpp) {
     static int shown;
     static int dumped;
@@ -784,17 +791,17 @@ int main(int argc, char **argv) {
 
     int headless = getenv("PC2_HEADLESS") != NULL;
     const char *renderer = getenv("PC2_RENDERER");
-    int use_vulkan = !headless && (!renderer || !*renderer ||
-                                   !strcmp(renderer, "vulkan") || !strcmp(renderer, "auto"));
-    if (use_vulkan) {
-        if (pc2_vulkan_open("Pizza Connection 2", pc2_poll, pc2_native_present) != 0) return 3;
-        hle_dd_primary_hook = pc2_native_present;
-        hle_gdi_window_hook = pc2_native_present;
-    } else {
-        if (hle_screen_open("Pizza Connection 2", 0, headless) != 0) return 2;
-        if (getenv("PC2_TRACE_FRAMES")) hle_screen_frame_hook = pc2_frame_hook;
+    if (renderer && *renderer && strcmp(renderer, "vulkan") && strcmp(renderer, "auto")) {
+        fprintf(stderr, "[host] unsupported renderer '%s': native Vulkan only\n", renderer);
+        return 2;
     }
-    hle_screen_poll_hook = pc2_poll;
+    if (!headless) {
+        if (pc2_vulkan_open("Pizza Connection 2", pc2_poll, pc2_native_present) != 0) return 3;
+    } else {
+        hle_set_pump_hook(pc2_headless_pump);
+    }
+    hle_dd_primary_hook = pc2_native_present;
+    hle_gdi_window_hook = pc2_native_present;
     if (getenv("PC2_TRACE_INPUT")) hle_proc_hook = pc2_proc_hook;
 
 #ifdef PC2_CAPTURE
