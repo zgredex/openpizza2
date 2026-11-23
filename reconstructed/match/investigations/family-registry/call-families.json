@@ -1,0 +1,6125 @@
+{
+  "schema": "pc2.feature_families.v1",
+  "families": [
+    {
+      "key": "0x00523bb0",
+      "callee_frequency": 113,
+      "functions": 79,
+      "indexed_bytes": 259523,
+      "members": [
+        {
+          "address": "0x430fd0",
+          "name": "Screen_StatisticsBalance",
+          "length": 10175
+        },
+        {
+          "address": "0x4132a0",
+          "name": "SubMenu_BuildPersonnelPlan",
+          "length": 9081
+        },
+        {
+          "address": "0x4632c0",
+          "name": "Screen_PersonnelRecord",
+          "length": 9022
+        },
+        {
+          "address": "0x415620",
+          "name": "Screen_PersonnelOverview",
+          "length": 8035
+        },
+        {
+          "address": "0x4602d0",
+          "name": "SubMenu_CreateFurniturePage",
+          "length": 6214
+        },
+        {
+          "address": "0x4240a0",
+          "name": "SubMenu_BuildRecipeIngredients",
+          "length": 6175
+        },
+        {
+          "address": "0x41a800",
+          "name": "SubMenu_BuildRecipeList",
+          "length": 6130
+        },
+        {
+          "address": "0x45d3e0",
+          "name": "Screen_Warehouse",
+          "length": 6122
+        },
+        {
+          "address": "0x417590",
+          "name": "SubMenu_BuildMenuOverview",
+          "length": 6094
+        },
+        {
+          "address": "0x459300",
+          "name": "SubMenu_BuildBranchStorerooms",
+          "length": 6091
+        },
+        {
+          "address": "0x461b20",
+          "name": "SubMenu_BuildKitchen",
+          "length": 6039
+        },
+        {
+          "address": "0x422900",
+          "name": "Window_BuildRecipeEditorPage",
+          "length": 6038
+        },
+        {
+          "address": "0x41ed20",
+          "name": "SubMenu_BuildMenuPlan",
+          "length": 6000
+        },
+        {
+          "address": "0x411b90",
+          "name": "Window_BuildBranchPriceSettingsPage",
+          "length": 5904
+        },
+        {
+          "address": "0x41d610",
+          "name": "SubMenu_BuildRecipeCheck",
+          "length": 5890
+        },
+        {
+          "address": "0x45ebd0",
+          "name": "SubMenu_BuildSupplierInfo",
+          "length": 5880
+        },
+        {
+          "address": "0x45aad0",
+          "name": "SubMenu_BuildWarehouse",
+          "length": 5754
+        },
+        {
+          "address": "0x41c000",
+          "name": "SubMenu_BuildNewRecipe",
+          "length": 5646
+        },
+        {
+          "address": "0x466b10",
+          "name": "SubMenu_BuildPosterAdvertisingStatus",
+          "length": 5497
+        },
+        {
+          "address": "0x421380",
+          "name": "SubMenu_BuildContestRecipe",
+          "length": 5494
+        },
+        {
+          "address": "0x43cee0",
+          "name": "Glossary_BuildTargetGroupsPage",
+          "length": 5447
+        },
+        {
+          "address": "0x418d60",
+          "name": "SubMenu_BuildBranchAdvertising",
+          "length": 5444
+        },
+        {
+          "address": "0x42ddf0",
+          "name": "Screen_BuildingProject",
+          "length": 5444
+        },
+        {
+          "address": "0x465600",
+          "name": "SubMenu_BuildPosterAdvertisingSetup",
+          "length": 5377
+        },
+        {
+          "address": "0x443ab0",
+          "name": "SubMenu_BuildAnnoyances",
+          "length": 5163
+        },
+        {
+          "address": "0x447310",
+          "name": "SubMenu_BuildCompetitorBranchInfo",
+          "length": 4924
+        },
+        {
+          "address": "0x46ac80",
+          "name": "SubMenu_BuildAdvertisingCampaign",
+          "length": 4887
+        },
+        {
+          "address": "0x40bc50",
+          "name": "SubMenu_BuildBranchExpansion",
+          "length": 4752
+        },
+        {
+          "address": "0x45c150",
+          "name": "Screen_BranchOffer",
+          "length": 4752
+        },
+        {
+          "address": "0x468bd0",
+          "name": "SubMenu_BuildStadiumInfo",
+          "length": 4699
+        },
+        {
+          "address": "0x4281e0",
+          "name": "SubMenu_BuildSyndicate",
+          "length": 4268
+        },
+        {
+          "address": "0x420490",
+          "name": "SubMenu_BuildPizzaContest",
+          "length": 3819
+        },
+        {
+          "address": "0x43b940",
+          "name": "Glossary_BuildCityBuildingsPage",
+          "length": 3733
+        },
+        {
+          "address": "0x458140",
+          "name": "SubMenu_BuildCriminalHiring",
+          "length": 3589
+        },
+        {
+          "address": "0x444ee0",
+          "name": "SubMenu_BuildAttacks",
+          "length": 3473
+        },
+        {
+          "address": "0x429fb0",
+          "name": "SubMenu_BuildGuards",
+          "length": 3448
+        },
+        {
+          "address": "0x43aca0",
+          "name": "Glossary_BuildCompanyBuildingsPage",
+          "length": 3219
+        },
+        {
+          "address": "0x40cee0",
+          "name": "SubMenu_BuildBranchBalance",
+          "length": 2995
+        },
+        {
+          "address": "0x42b220",
+          "name": "SubMenu_BuildTownBalance",
+          "length": 2995
+        },
+        {
+          "address": "0x42fe10",
+          "name": "SubMenu_BuildPolice",
+          "length": 2867
+        },
+        {
+          "address": "0x468090",
+          "name": "SubMenu_CreatePolicePage",
+          "length": 2867
+        },
+        {
+          "address": "0x456450",
+          "name": "SubMenu_BuildPersonnelChoice",
+          "length": 2833
+        },
+        {
+          "address": "0x44d8c0",
+          "name": "SubMenu_BuildBranchReport",
+          "length": 2760
+        },
+        {
+          "address": "0x46a390",
+          "name": "SubMenu_BuildGuardOverview",
+          "length": 2279
+        },
+        {
+          "address": "0x4756e0",
+          "name": "FreePlaySubMenu_BuildLoadSavegame",
+          "length": 2212
+        },
+        {
+          "address": "0x455be0",
+          "name": "SubMenu_BuildCriminalOrderStatus",
+          "length": 2152
+        },
+        {
+          "address": "0x476100",
+          "name": "HighScore_BuildCityListWindow",
+          "length": 2072
+        },
+        {
+          "address": "0x44cc90",
+          "name": "SubMenu_BuildPizzaContestInvitation",
+          "length": 2052
+        },
+        {
+          "address": "0x453760",
+          "name": "SubMenu_BuildGuardHiring",
+          "length": 1876
+        },
+        {
+          "address": "0x426200",
+          "name": "SubMenu_BuildLoadSavegame",
+          "length": 1590
+        },
+        {
+          "address": "0x426c30",
+          "name": "SubMenu_BuildSaveGame",
+          "length": 1590
+        },
+        {
+          "address": "0x4750b0",
+          "name": "Screen_SubStartMenu_A",
+          "length": 1572
+        },
+        {
+          "address": "0x46cc70",
+          "name": "UI_CreateScrollListWindow",
+          "length": 1562
+        },
+        {
+          "address": "0x469e30",
+          "name": "PestMenu_CreateWindow",
+          "length": 1361
+        },
+        {
+          "address": "0x46e960",
+          "name": "Screen_SubStartMenu_B",
+          "length": 1302
+        },
+        {
+          "address": "0x42ad30",
+          "name": "BauenPage_Create",
+          "length": 1256
+        },
+        {
+          "address": "0x42d990",
+          "name": "Screen_MissionGoals",
+          "length": 1105
+        },
+        {
+          "address": "0x42d560",
+          "name": "Screen_BranchList",
+          "length": 1068
+        },
+        {
+          "address": "0x426840",
+          "name": "SoundOptionsPage_Create",
+          "length": 1006
+        },
+        {
+          "address": "0x46d400",
+          "name": "MissionOfferDialog_Create",
+          "length": 970
+        },
+        {
+          "address": "0x458f50",
+          "name": "SubMenu_BuildConstructionInfo",
+          "length": 941
+        },
+        {
+          "address": "0x427270",
+          "name": "GameOptionsPage_Create",
+          "length": 806
+        },
+        {
+          "address": "0x46d910",
+          "name": "RecipeSelectPopup_CreateWindow",
+          "length": 698
+        },
+        {
+          "address": "0x46cad0",
+          "name": "HelpTopicDialog_Create",
+          "length": 407
+        },
+        {
+          "address": "0x46c690",
+          "name": "Dialog_Confirm",
+          "length": 393
+        },
+        {
+          "address": "0x474c70",
+          "name": "LoadingScreen_Create",
+          "length": 379
+        },
+        {
+          "address": "0x475f90",
+          "name": "MissionFailedScreen_Create",
+          "length": 368
+        },
+        {
+          "address": "0x46d290",
+          "name": "MissionHintWindow_Create",
+          "length": 359
+        },
+        {
+          "address": "0x40bb00",
+          "name": "Screen_BuildGameSidebar",
+          "length": 329
+        },
+        {
+          "address": "0x427930",
+          "name": "UI_CreateInfoPanelGangster",
+          "length": 329
+        },
+        {
+          "address": "0x46d7d0",
+          "name": "UI_CreateMessageBoxSubmenu",
+          "length": 311
+        },
+        {
+          "address": "0x41a6d0",
+          "name": "Screen_RecipeInfoPanel",
+          "length": 301
+        },
+        {
+          "address": "0x427a80",
+          "name": "UI_CreateInfoPanel",
+          "length": 301
+        },
+        {
+          "address": "0x430950",
+          "name": "UI_CreateInfoPanelPolice",
+          "length": 301
+        },
+        {
+          "address": "0x443980",
+          "name": "UI_CreateRestaurantInfoPanel",
+          "length": 301
+        },
+        {
+          "address": "0x46c570",
+          "name": "Dialog_Loading",
+          "length": 283
+        },
+        {
+          "address": "0x430ed0",
+          "name": "UI_CreateInfoPanelBranch",
+          "length": 242
+        },
+        {
+          "address": "0x474b90",
+          "name": "LoadingWindow_Create",
+          "length": 224
+        },
+        {
+          "address": "0x425e70",
+          "name": "Screen_BuildOptionsSidebar",
+          "length": 189
+        }
+      ]
+    },
+    {
+      "key": "0x00531c60",
+      "callee_frequency": 93,
+      "functions": 26,
+      "indexed_bytes": 138825,
+      "members": [
+        {
+          "address": "0x433790",
+          "name": "Window_BuildStatisticsBranchBalancePage",
+          "length": 29960
+        },
+        {
+          "address": "0x43edb0",
+          "name": "Screen_StatisticsPersonnel",
+          "length": 15037
+        },
+        {
+          "address": "0x449a80",
+          "name": "Screen_CompetitorDetails",
+          "length": 6941
+        },
+        {
+          "address": "0x451dd0",
+          "name": "Screen_BranchDetails",
+          "length": 6543
+        },
+        {
+          "address": "0x40daa0",
+          "name": "SubMenu_BuildFurnishings",
+          "length": 5932
+        },
+        {
+          "address": "0x44b5a0",
+          "name": "Window_BuildBranchProductsPage",
+          "length": 5872
+        },
+        {
+          "address": "0x445c80",
+          "name": "Window_BuildBranchManagerPage",
+          "length": 5765
+        },
+        {
+          "address": "0x40f1d0",
+          "name": "SubMenu_BuildBranchInformation",
+          "length": 5474
+        },
+        {
+          "address": "0x4508a0",
+          "name": "SubMenu_BuildBranchOverview",
+          "length": 5414
+        },
+        {
+          "address": "0x410740",
+          "name": "SubMenu_BuildInteriorDesigner",
+          "length": 5199
+        },
+        {
+          "address": "0x448650",
+          "name": "SubMenu_BuildRatingComparison",
+          "length": 5156
+        },
+        {
+          "address": "0x44ee20",
+          "name": "SubMenu_BuildBranchRating",
+          "length": 5010
+        },
+        {
+          "address": "0x456f70",
+          "name": "SubMenu_BuildSchool",
+          "length": 4551
+        },
+        {
+          "address": "0x453ec0",
+          "name": "SubMenu_BuildHeadquarters",
+          "length": 4119
+        },
+        {
+          "address": "0x429290",
+          "name": "SubMenu_BuildCompanyComparison",
+          "length": 3359
+        },
+        {
+          "address": "0x42bde0",
+          "name": "Window_BuildCompanyProfilePage",
+          "length": 3255
+        },
+        {
+          "address": "0x442870",
+          "name": "StatisticsRecipes_CreateWindow",
+          "length": 3244
+        },
+        {
+          "address": "0x42f340",
+          "name": "SubMenu_BuildTownAdministration",
+          "length": 2764
+        },
+        {
+          "address": "0x42caa0",
+          "name": "Window_BuildMarketAnalysisPage",
+          "length": 2738
+        },
+        {
+          "address": "0x44e390",
+          "name": "SubMenu_BuildMayor",
+          "length": 2700
+        },
+        {
+          "address": "0x43e430",
+          "name": "Screen_StatisticsBackdrop",
+          "length": 2429
+        },
+        {
+          "address": "0x454ee0",
+          "name": "SubMenu_BuildStockInformation",
+          "length": 2059
+        },
+        {
+          "address": "0x4501c0",
+          "name": "SubMenu_BuildCourierMission",
+          "length": 1755
+        },
+        {
+          "address": "0x427bb0",
+          "name": "HeadquartersExpansionPage_Create",
+          "length": 1583
+        },
+        {
+          "address": "0x4556f0",
+          "name": "SubMenu_BuildGuardAssignment",
+          "length": 1257
+        },
+        {
+          "address": "0x425f30",
+          "name": "GraphicsOptionsPage_Create",
+          "length": 709
+        }
+      ]
+    },
+    {
+      "key": "0x00523c90",
+      "callee_frequency": 8,
+      "functions": 7,
+      "indexed_bytes": 27616,
+      "members": [
+        {
+          "address": "0x46f9c0",
+          "name": "Screen_EndResults",
+          "length": 13269
+        },
+        {
+          "address": "0x472da0",
+          "name": "Screen_FreePlaySetup",
+          "length": 7659
+        },
+        {
+          "address": "0x46ee80",
+          "name": "SubMenu_BuildEndResult",
+          "length": 2874
+        },
+        {
+          "address": "0x4258c0",
+          "name": "Screen_BuildOfficeDesk",
+          "length": 1445
+        },
+        {
+          "address": "0x443520",
+          "name": "StatisticsView_CreateWindow",
+          "length": 1107
+        },
+        {
+          "address": "0x474df0",
+          "name": "Screen_MissionBriefing",
+          "length": 691
+        },
+        {
+          "address": "0x476920",
+          "name": "Screen_MainMenu",
+          "length": 571
+        }
+      ]
+    },
+    {
+      "key": "0x004017f0",
+      "callee_frequency": 1136,
+      "functions": 112,
+      "indexed_bytes": 12633,
+      "members": [
+        {
+          "address": "0x4e2f30",
+          "name": "Game_BuildCompanyStatusText",
+          "length": 994
+        },
+        {
+          "address": "0x5133c0",
+          "name": "Game_ComputeMarketFactors",
+          "length": 458
+        },
+        {
+          "address": "0x4af620",
+          "name": "Stats_BuildCategoryMatrix",
+          "length": 375
+        },
+        {
+          "address": "0x4f6bd0",
+          "name": "Game_InitDateState",
+          "length": 337
+        },
+        {
+          "address": "0x4af7a0",
+          "name": "Character_ComputeRatingArray",
+          "length": 330
+        },
+        {
+          "address": "0x5101d0",
+          "name": "AI_CountPlanSteps",
+          "length": 284
+        },
+        {
+          "address": "0x5100b0",
+          "name": "Stats_SumMaskedMapFloats",
+          "length": 283
+        },
+        {
+          "address": "0x4f7320",
+          "name": "Map_UpdateVisibleTiles",
+          "length": 252
+        },
+        {
+          "address": "0x48c920",
+          "name": "Game_GetCategoryShare",
+          "length": 233
+        },
+        {
+          "address": "0x4e2e40",
+          "name": "Game_IsValueAssignedToCompany",
+          "length": 231
+        },
+        {
+          "address": "0x4bf5c0",
+          "name": "Stats_BuildCompetitorMatrix",
+          "length": 218
+        },
+        {
+          "address": "0x4aecc0",
+          "name": "Stats_BuildObjectProductMatrix",
+          "length": 216
+        },
+        {
+          "address": "0x50fec0",
+          "name": "PlayerStats_Reset",
+          "length": 191
+        },
+        {
+          "address": "0x4e09e0",
+          "name": "Stats_SumFilteredFloats3",
+          "length": 177
+        },
+        {
+          "address": "0x4e0aa0",
+          "name": "Stats_SumFilteredFloats4",
+          "length": 177
+        },
+        {
+          "address": "0x478eb0",
+          "name": "Stats_ComputeWeightedTotals",
+          "length": 168
+        },
+        {
+          "address": "0x477fe0",
+          "name": "Stats_SumFilteredFloats",
+          "length": 166
+        },
+        {
+          "address": "0x478090",
+          "name": "Stats_SumFilteredFloats2",
+          "length": 166
+        },
+        {
+          "address": "0x4e0880",
+          "name": "Game_FindDailyStatRecord",
+          "length": 159
+        },
+        {
+          "address": "0x54b070",
+          "name": "MessageList_FindFreeSlot",
+          "length": 156
+        },
+        {
+          "address": "0x4e1fe0",
+          "name": "AI_FindTargetWithMinA8",
+          "length": 154
+        },
+        {
+          "address": "0x49a040",
+          "name": "Game_IsCompanyNameTaken",
+          "length": 150
+        },
+        {
+          "address": "0x4e0df0",
+          "name": "Stats_GetFilteredFloatDelta",
+          "length": 150
+        },
+        {
+          "address": "0x48cdd0",
+          "name": "Game_CountProductUsageByCategory",
+          "length": 147
+        },
+        {
+          "address": "0x477f50",
+          "name": "Stats_SumFilteredRecordFloats20",
+          "length": 143
+        },
+        {
+          "address": "0x4e1ee0",
+          "name": "AI_CountAvailableTargets",
+          "length": 142
+        },
+        {
+          "address": "0x4e27d0",
+          "name": "Game_CountPlayerObjectsByType",
+          "length": 140
+        },
+        {
+          "address": "0x4f9c10",
+          "name": "City_FindMatchingCity",
+          "length": 128
+        },
+        {
+          "address": "0x4fcc30",
+          "name": "Object_AdjustShortPercent",
+          "length": 128
+        },
+        {
+          "address": "0x4e2860",
+          "name": "Game_FindAssignedSubrecord",
+          "length": 126
+        },
+        {
+          "address": "0x48c2c0",
+          "name": "Game_ApplyPercentChange",
+          "length": 124
+        },
+        {
+          "address": "0x4e2750",
+          "name": "Game_CountObjectsForOwner",
+          "length": 120
+        },
+        {
+          "address": "0x4e0e90",
+          "name": "Game_SelectLeastUsedCategory",
+          "length": 118
+        },
+        {
+          "address": "0x510030",
+          "name": "Stats_SumValuesByCategory",
+          "length": 115
+        },
+        {
+          "address": "0x4e2a20",
+          "name": "Game_GetMostCommonTypeIndex",
+          "length": 110
+        },
+        {
+          "address": "0x513f50",
+          "name": "Game_DecayProductValues",
+          "length": 109
+        },
+        {
+          "address": "0x47c830",
+          "name": "City_ComputeServiceLevel",
+          "length": 105
+        },
+        {
+          "address": "0x47ee60",
+          "name": "Stats_GetAverageFlaggedValue",
+          "length": 101
+        },
+        {
+          "address": "0x489750",
+          "name": "Game_FindRecordByTripleKey",
+          "length": 101
+        },
+        {
+          "address": "0x477120",
+          "name": "AI_IsDirectionOnRoute",
+          "length": 100
+        },
+        {
+          "address": "0x4d8780",
+          "name": "Game_CountRecordsByOwner",
+          "length": 99
+        },
+        {
+          "address": "0x4e1f70",
+          "name": "Game_FindSubrecordByObject",
+          "length": 99
+        },
+        {
+          "address": "0x4781e0",
+          "name": "Game_ComputeRecordMapPercent",
+          "length": 97
+        },
+        {
+          "address": "0x489b60",
+          "name": "Game_AdvanceAnimFrame",
+          "length": 94
+        },
+        {
+          "address": "0x4e3f50",
+          "name": "Game_ScalePlayerStat80",
+          "length": 93
+        },
+        {
+          "address": "0x47ccd0",
+          "name": "Game_CountRecordsByByteC",
+          "length": 92
+        },
+        {
+          "address": "0x47aac0",
+          "name": "Game_CountObjectsByType",
+          "length": 91
+        },
+        {
+          "address": "0x47cc70",
+          "name": "Game_CountRecordsByPair",
+          "length": 91
+        },
+        {
+          "address": "0x4e2950",
+          "name": "Game_RefreshBuildingCondition",
+          "length": 90
+        },
+        {
+          "address": "0x4897c0",
+          "name": "City_GetListEndpoints",
+          "length": 86
+        },
+        {
+          "address": "0x4ddeb0",
+          "name": "Game_GetActiveCompanyOrdinal",
+          "length": 86
+        },
+        {
+          "address": "0x4fb600",
+          "name": "Stats_SumRecordCounts",
+          "length": 84
+        },
+        {
+          "address": "0x4d6ba0",
+          "name": "Game_CountObjectsByType2",
+          "length": 83
+        },
+        {
+          "address": "0x477c20",
+          "name": "Stats_FindRecordByType",
+          "length": 81
+        },
+        {
+          "address": "0x48b960",
+          "name": "Game_FindIdleObjectByClass",
+          "length": 79
+        },
+        {
+          "address": "0x47e130",
+          "name": "Game_FindRecordByPairChecked",
+          "length": 78
+        },
+        {
+          "address": "0x4de6c0",
+          "name": "Game_CountRecordsByField34",
+          "length": 77
+        },
+        {
+          "address": "0x5144a0",
+          "name": "Stats_GetAverageRecordValue",
+          "length": 75
+        },
+        {
+          "address": "0x47cd30",
+          "name": "Game_FindRecordByPair",
+          "length": 74
+        },
+        {
+          "address": "0x47c370",
+          "name": "IDMap_FindIndexByValue",
+          "length": 73
+        },
+        {
+          "address": "0x54b110",
+          "name": "MessageList_FindKeyByValue",
+          "length": 73
+        },
+        {
+          "address": "0x40bab0",
+          "name": "Game_UpdateIdleCars",
+          "length": 71
+        },
+        {
+          "address": "0x480bf0",
+          "name": "Game_ContainsObjectPointer",
+          "length": 71
+        },
+        {
+          "address": "0x4a1aa0",
+          "name": "IDMap_DestroyAllObjects",
+          "length": 71
+        },
+        {
+          "address": "0x4de710",
+          "name": "Game_CountRecordsWithFlag16F4",
+          "length": 71
+        },
+        {
+          "address": "0x4f7a00",
+          "name": "Game_FillNearbyTypeCompanyMatrix",
+          "length": 71
+        },
+        {
+          "address": "0x481140",
+          "name": "Branch_GetCachedBillboards",
+          "length": 70
+        },
+        {
+          "address": "0x4ead00",
+          "name": "Game_TickWorldObjects",
+          "length": 70
+        },
+        {
+          "address": "0x4d2360",
+          "name": "Game_GetObjectBottom",
+          "length": 69
+        },
+        {
+          "address": "0x486910",
+          "name": "Game_CountObjectsByState",
+          "length": 68
+        },
+        {
+          "address": "0x5102f0",
+          "name": "Stats_GetMinMapField10",
+          "length": 68
+        },
+        {
+          "address": "0x47e180",
+          "name": "Game_FindRecordByField20",
+          "length": 67
+        },
+        {
+          "address": "0x4e0f40",
+          "name": "Game_HasRecordField14DC",
+          "length": 67
+        },
+        {
+          "address": "0x478250",
+          "name": "Game_AverageObjectField0C",
+          "length": 66
+        },
+        {
+          "address": "0x510340",
+          "name": "UI_GetMaxChildField10",
+          "length": 66
+        },
+        {
+          "address": "0x4ddde0",
+          "name": "Game_CountActiveCompanies",
+          "length": 65
+        },
+        {
+          "address": "0x4e3d30",
+          "name": "Advertising_StartCampaignAgainstPlayer",
+          "length": 65
+        },
+        {
+          "address": "0x4d2320",
+          "name": "Game_GetObjectCenterY",
+          "length": 64
+        },
+        {
+          "address": "0x4d7e90",
+          "name": "Array_FindIndexByPtr",
+          "length": 64
+        },
+        {
+          "address": "0x4dde30",
+          "name": "Game_GetActiveCompanyById",
+          "length": 64
+        },
+        {
+          "address": "0x4dde70",
+          "name": "Game_FindCompanyIndex",
+          "length": 64
+        },
+        {
+          "address": "0x4e2370",
+          "name": "Game_FindSubrecordIndex",
+          "length": 64
+        },
+        {
+          "address": "0x4d7600",
+          "name": "Game_FindRecordByField24",
+          "length": 63
+        },
+        {
+          "address": "0x4d2280",
+          "name": "Map_AssignObjectToCell",
+          "length": 62
+        },
+        {
+          "address": "0x4d6a90",
+          "name": "Map_FindRecordByFirstField",
+          "length": 62
+        },
+        {
+          "address": "0x4e3510",
+          "name": "Game_FindPlanByTarget",
+          "length": 62
+        },
+        {
+          "address": "0x4e34a0",
+          "name": "Player_FindRecordType2ByKey",
+          "length": 61
+        },
+        {
+          "address": "0x500e80",
+          "name": "Game_GetPlayerSubrecord",
+          "length": 59
+        },
+        {
+          "address": "0x510580",
+          "name": "Game_CountRecordsWithoutFlag",
+          "length": 59
+        },
+        {
+          "address": "0x512820",
+          "name": "IDMap_FindIndexByPointer",
+          "length": 59
+        },
+        {
+          "address": "0x4e1b80",
+          "name": "Game_ResetRecordTurnCounters",
+          "length": 58
+        },
+        {
+          "address": "0x47ebc0",
+          "name": "Game_FindRecordByField10",
+          "length": 55
+        },
+        {
+          "address": "0x4ddce0",
+          "name": "Game_FindRecordByField4",
+          "length": 55
+        },
+        {
+          "address": "0x4ddd20",
+          "name": "Company_InvalidateAllBranchRatings",
+          "length": 55
+        },
+        {
+          "address": "0x4e2330",
+          "name": "Game_FindRecordByField34",
+          "length": 55
+        },
+        {
+          "address": "0x4ead50",
+          "name": "Game_HideAllLinkedElements",
+          "length": 55
+        },
+        {
+          "address": "0x4e2280",
+          "name": "Game_GetPlayerFieldC20",
+          "length": 51
+        },
+        {
+          "address": "0x54b2e0",
+          "name": "IDMap_FindByField34",
+          "length": 49
+        },
+        {
+          "address": "0x4e34e0",
+          "name": "Player_GetFirstRecordType1",
+          "length": 48
+        },
+        {
+          "address": "0x4d2a60",
+          "name": "Game_MapRecordToGlobal",
+          "length": 35
+        },
+        {
+          "address": "0x4e5ff0",
+          "name": "Game_GetRecordByte14",
+          "length": 35
+        },
+        {
+          "address": "0x483120",
+          "name": "UI_SyncSelectedChild",
+          "length": 34
+        },
+        {
+          "address": "0x48bda0",
+          "name": "Game_OnObjectListSelection",
+          "length": 34
+        },
+        {
+          "address": "0x4cda50",
+          "name": "NameMap_GetRecordString",
+          "length": 30
+        },
+        {
+          "address": "0x4e5df0",
+          "name": "Game_GetPlayerByte8",
+          "length": 30
+        },
+        {
+          "address": "0x4e5e10",
+          "name": "Game_GetRecordByteC",
+          "length": 30
+        },
+        {
+          "address": "0x54b2c0",
+          "name": "MessageList_SetField34",
+          "length": 29
+        },
+        {
+          "address": "0x4cda30",
+          "name": "NameMap_GetString",
+          "length": 26
+        },
+        {
+          "address": "0x4d8120",
+          "name": "Game_GetOwnedObjectByIndex",
+          "length": 24
+        },
+        {
+          "address": "0x4d3910",
+          "name": "Game_GetRecordByField814",
+          "length": 23
+        },
+        {
+          "address": "0x47f400",
+          "name": "RecordMap_Lookup1998",
+          "length": 21
+        },
+        {
+          "address": "0x4d6ad0",
+          "name": "Game_LookupObjectByIndex",
+          "length": 21
+        }
+      ]
+    },
+    {
+      "key": "0x0054dd78",
+      "callee_frequency": 818,
+      "functions": 611,
+      "indexed_bytes": 10100,
+      "members": [
+        {
+          "address": "0x54c910",
+          "name": "Sound_DestroyAllChannels",
+          "length": 217
+        },
+        {
+          "address": "0x540ff0",
+          "name": "Sound_ReleaseInactiveVoices",
+          "length": 181
+        },
+        {
+          "address": "0x54cad0",
+          "name": "Thread_StopAndDestroy",
+          "length": 140
+        },
+        {
+          "address": "0x541f30",
+          "name": "SoundTrack_Destruct",
+          "length": 138
+        },
+        {
+          "address": "0x540f60",
+          "name": "List_DestroyObjects",
+          "length": 130
+        },
+        {
+          "address": "0x4055d0",
+          "name": "Game_ShutdownSubsystems",
+          "length": 105
+        },
+        {
+          "address": "0x528700",
+          "name": "UI_ContextMenu_Destroy",
+          "length": 87
+        },
+        {
+          "address": "0x4810e0",
+          "name": "Game_FreeSubmapObjects",
+          "length": 82
+        },
+        {
+          "address": "0x539e20",
+          "name": "List_RemoveByValue",
+          "length": 77
+        },
+        {
+          "address": "0x401440",
+          "name": "List_Node_Reset",
+          "length": 63
+        },
+        {
+          "address": "0x402fe0",
+          "name": "FileObject_Destroy",
+          "length": 59
+        },
+        {
+          "address": "0x4fc0b0",
+          "name": "IDMap_FreeValuesAndDestroy",
+          "length": 58
+        },
+        {
+          "address": "0x4043e0",
+          "name": "GameMain",
+          "length": 54
+        },
+        {
+          "address": "0x541250",
+          "name": "List_FreeAll",
+          "length": 51
+        },
+        {
+          "address": "0x520b10",
+          "name": "UI_Child_Destroy",
+          "length": 48
+        },
+        {
+          "address": "0x54dcd4",
+          "name": "Stream_AttachBuffer",
+          "length": 48
+        },
+        {
+          "address": "0x53fc10",
+          "name": "DirectSoundBuffer_Delete",
+          "length": 44
+        },
+        {
+          "address": "0x401480",
+          "name": "List_Node_Destroy",
+          "length": 43
+        },
+        {
+          "address": "0x403480",
+          "name": "UI_ListEntry_Destroy",
+          "length": 43
+        },
+        {
+          "address": "0x521da0",
+          "name": "RefCounted_Free",
+          "length": 40
+        },
+        {
+          "address": "0x54c7e0",
+          "name": "CRT_FreeBufferNode",
+          "length": 40
+        },
+        {
+          "address": "0x522ef0",
+          "name": "Array_Clear",
+          "length": 37
+        },
+        {
+          "address": "0x544ab0",
+          "name": "SoundSystem_Delete",
+          "length": 34
+        },
+        {
+          "address": "0x401020",
+          "name": "StatsPeriodReport_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x401a00",
+          "name": "ResourceManager_ScalarDeletingDestructor",
+          "length": 30
+        },
+        {
+          "address": "0x402ef0",
+          "name": "FileObject_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x403350",
+          "name": "UI_ListEntry_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x476fe0",
+          "name": "Branch_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x4817a0",
+          "name": "GameWorld_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x4d1b80",
+          "name": "RecipeTopping_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x4d1d80",
+          "name": "MapObject_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x4d3240",
+          "name": "Car_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x4d3710",
+          "name": "Character_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x4d47e0",
+          "name": "City_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x4dd2e0",
+          "name": "GameClock_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x4dd8d0",
+          "name": "Company_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x4e4030",
+          "name": "FurnitureType_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x4e4320",
+          "name": "BuildingValue_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x4e47c0",
+          "name": "Ingredient_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x4e5da0",
+          "name": "ConstructionOrder_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x4e9d70",
+          "name": "Game_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x4eade0",
+          "name": "IsoMap_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x4f5e20",
+          "name": "Player_MissionState_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x4f6db0",
+          "name": "Game_CompanyManager_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x501a10",
+          "name": "AwardNode_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x501b50",
+          "name": "Player_AIState_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x50e9c0",
+          "name": "Player_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x50f670",
+          "name": "GamePlan_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x50fdd0",
+          "name": "Recipe_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x513d30",
+          "name": "Storage_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x51f210",
+          "name": "UI_ImageElement_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x521160",
+          "name": "UI_Viewport_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x5221c0",
+          "name": "UI_LabelElement_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x523590",
+          "name": "UI_Manager_ScalarDeletingDestructor",
+          "length": 30
+        },
+        {
+          "address": "0x5286e0",
+          "name": "UI_ContextMenu_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x529140",
+          "name": "UI_Slider_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x52b210",
+          "name": "MovieWindow_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x52bd50",
+          "name": "UI_TextElement_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x52d690",
+          "name": "UI_ButtonElement_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x52e510",
+          "name": "UI_Tooltip_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x52e9b0",
+          "name": "Dialog_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x532c20",
+          "name": "Animation_ScalarDeletingDestructor",
+          "length": 30
+        },
+        {
+          "address": "0x534db0",
+          "name": "Gfx_RectList_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x536140",
+          "name": "Window_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x537d60",
+          "name": "Renderer_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x53c7d0",
+          "name": "Sprite_ScalarDeletingDestructor",
+          "length": 30
+        },
+        {
+          "address": "0x53fca0",
+          "name": "SoundPakManager_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x540890",
+          "name": "SoundBuffer_DeleteObject",
+          "length": 30
+        },
+        {
+          "address": "0x541730",
+          "name": "SoundBuffer_ScalarDeletingDestructor",
+          "length": 30
+        },
+        {
+          "address": "0x541770",
+          "name": "SoundStreamBuffer_DeleteObject",
+          "length": 30
+        },
+        {
+          "address": "0x541f10",
+          "name": "SoundTrack_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x545b00",
+          "name": "List_ContainerDestroy",
+          "length": 30
+        },
+        {
+          "address": "0x546730",
+          "name": "SoundBuffer_Delete2",
+          "length": 30
+        },
+        {
+          "address": "0x54a610",
+          "name": "DebugConsole_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x54b620",
+          "name": "EmployeeAvatar_Delete",
+          "length": 30
+        },
+        {
+          "address": "0x520d70",
+          "name": "Buffer_ReleaseField0C",
+          "length": 28
+        },
+        {
+          "address": "0x54cdab",
+          "name": "CRT_Filebuf_Delete",
+          "length": 28
+        },
+        {
+          "address": "0x54d8bb",
+          "name": "CRT_Ios_Delete",
+          "length": 28
+        },
+        {
+          "address": "0x54fe4e",
+          "name": "CRT_TypeInfo_Delete",
+          "length": 28
+        },
+        {
+          "address": "0x54c4d0",
+          "name": "Memory_FreeAndClear",
+          "length": 26
+        },
+        {
+          "address": "0x522f20",
+          "name": "Array_Destroy",
+          "length": 21
+        },
+        {
+          "address": "0x5354e0",
+          "name": "Image_FreePixelData",
+          "length": 18
+        },
+        {
+          "address": "0x534dd0",
+          "name": "Gfx_RectList_Destroy",
+          "length": 17
+        },
+        {
+          "address": "0x541f00",
+          "name": "Buffer_ReleaseField8",
+          "length": 15
+        },
+        {
+          "address": "0x535e10",
+          "name": "Palette_Free",
+          "length": 14
+        },
+        {
+          "address": "0x557c60",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x557c6e",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x557c7c",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x557c8a",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x557c98",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x557cb0",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x557cbe",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x557ce0",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x557cee",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x558230",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55823e",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x558400",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5584f0",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5584fe",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5585c0",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5585e0",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5585ee",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x558610",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55861e",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x558640",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x558680",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5586e0",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5586ee",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x558730",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55873e",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x558760",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x558780",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x558820",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x558840",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55884e",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x558980",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55898e",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x558bf0",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x558de2",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x558df0",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x558e40",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559120",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55912e",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55913c",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55914a",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559158",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559166",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559240",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559561",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55956f",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55957d",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55958b",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559599",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5595a7",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5595b5",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5595c3",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5595d1",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5595df",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5595ed",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5595fb",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559609",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559617",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559625",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559633",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559641",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55964f",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55965d",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55966b",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559679",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559687",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559695",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5596a3",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5596b1",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5596bf",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5596cd",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5596db",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5596e9",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5596f7",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559705",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559713",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559721",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55972f",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55973d",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55974b",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559759",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559767",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559775",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559783",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559791",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55979f",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5597ad",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5597bb",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5597c9",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5597d7",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5597e5",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5597f3",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559801",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55980f",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55981d",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55982b",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559839",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559847",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559855",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559863",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559871",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55987f",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55988d",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55989b",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5598a9",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5598b7",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5598c5",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5598d3",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5598e1",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5598ef",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5598fd",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55990b",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559919",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559927",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559935",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559943",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559951",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55995f",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55996d",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55997b",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559989",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559997",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5599a5",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5599b3",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5599c1",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5599cf",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5599dd",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5599eb",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x5599f9",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559a07",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559a15",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559a23",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559a31",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559a3f",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559a4d",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559a5b",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559a69",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559a77",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559a85",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559a93",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559aa1",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559aaf",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559abd",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559acb",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559ad9",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559ae7",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559af5",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559b03",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559b11",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559b1f",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559b2d",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559b3b",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559b49",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559b57",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559b65",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559b73",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559b81",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559b8f",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559b9d",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559bab",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559bb9",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559bc7",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559bd5",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559be3",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559bf1",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559bff",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559c0d",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559c1b",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559c29",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559c37",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559c45",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559c53",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559c61",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559c6f",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559c7d",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559c8b",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559c99",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559ca7",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559cb5",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559cc3",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559cd1",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559cdf",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559ced",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559cfb",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559d09",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559d17",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559d25",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559d33",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559d41",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559d4f",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559d5d",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559d6b",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559d79",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559d87",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559d95",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559da3",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559db1",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559dbf",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559dcd",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559ddb",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559de9",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559df7",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559e05",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559e13",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559e21",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559e2f",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559e90",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559e9e",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559eac",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559eba",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559ec8",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559ed6",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559f12",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559f90",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559f9e",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559fac",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559fd0",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x559fde",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55a060",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55a120",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55a1a0",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55a490",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55a4b0",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55a790",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55a810",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55a83b",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55ac6b",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55ac79",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55acc0",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55acce",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55acf0",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55ad10",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55ad7b",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55ad89",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55ad97",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55ada5",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55b040",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55b0b3",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x55b9b0",
+          "name": null,
+          "length": 14
+        },
+        {
+          "address": "0x557c40",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x557c4b",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x557d10",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x557d30",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x557e2e",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x557e39",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x557e44",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x557e4f",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x557f00",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x557f20",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x557f40",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x557f4b",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x557f56",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x557f61",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x557f80",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x557fa0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x557fc0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558070",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558090",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55809b",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558143",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55814e",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558159",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558164",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55816f",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55817a",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558185",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558190",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55819b",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5581b0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5581bb",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5581c6",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5581d1",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5581f0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558210",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558260",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55826b",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558276",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558281",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55828c",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558297",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5582a2",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5582c0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558340",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5583a0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5583c0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5583cb",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5583e0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558420",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55842b",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558436",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558450",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55845b",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558466",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558471",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55847c",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5584a0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5584ab",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5584b6",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5584c1",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5584cc",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5584d7",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558520",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55852b",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558536",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558550",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55855b",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558566",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558571",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55857c",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558587",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558592",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55859d",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558660",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5586a0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5586ab",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5586c0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5586cb",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558710",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5587a0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5587ab",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5587c0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5587e0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5587eb",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558800",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558870",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558890",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5588b0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5588bb",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5588c6",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5588d1",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5588dc",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5588e7",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5588f2",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5588fd",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558920",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55892b",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558940",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55894b",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558956",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558961",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5589b0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5589d0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5589db",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5589e6",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558a00",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558a0b",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558a20",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558a2b",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558a40",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558a4b",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558a60",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558a6b",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558a76",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558a81",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558a8c",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558ab0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558abb",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558ad0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558adb",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558af0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558b10",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558b1b",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558b26",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558b31",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558b3c",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558b47",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558b52",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558b5d",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558b68",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558b73",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558c10",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558c1b",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558c26",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558c31",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558c3c",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558c47",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558c52",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558c5d",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558c68",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558c73",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558c7e",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558ca0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558cab",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558cc0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558ccb",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558ce0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558d20",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558d60",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558d80",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558da0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558dab",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558e60",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558e80",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558e8b",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558e96",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558ea1",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558eac",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558eb7",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558ec2",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558ecd",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558ed8",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558ee3",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558eee",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558ef9",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558f10",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558f30",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558f50",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558f70",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558f90",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558fb0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558fd0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x558ff0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x559010",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x559030",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x559050",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x559070",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x559090",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55909b",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5590e0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x559100",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x559180",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5591a0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5591ab",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5591b6",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5591c1",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5591e0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5591eb",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x559200",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x559220",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x559260",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5592e2",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5592ed",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x559310",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55931b",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x559326",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5593b0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5593d0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5593f0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x559410",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55941b",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x559426",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x559431",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55943c",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x559447",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x5594d0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x559510",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55951b",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x559530",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x559e70",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x559e7b",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a000",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a020",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a040",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a0a0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a0c0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a0e0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a140",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a160",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a16b",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a180",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a1c0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a290",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a2b0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a2f0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a390",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a39b",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a3a6",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a3b1",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a3d0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a3db",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a3fb",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a410",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a430",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a43b",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a4d0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a510",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a570",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a5a6",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a5e0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a65c",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a667",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a672",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a67d",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a6d0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a6f0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a710",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a730",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a750",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a770",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a7b0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a7d0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a7f0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a888",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55a940",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55aa0c",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55aa30",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55aa80",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55aaa0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55aac0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55aae0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55ab00",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55ab20",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55ab40",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55ab4b",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55ab60",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55ab80",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55aba0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55abc0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55abcb",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55abe0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55ac00",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55ac20",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55ac40",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55ad30",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55afa0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55afab",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55afc0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55b548",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55b588",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55b5b8",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55b608",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55b698",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55b6b8",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55b6e8",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55b9d0",
+          "name": null,
+          "length": 11
+        },
+        {
+          "address": "0x55ba02",
+          "name": null,
+          "length": 10
+        },
+        {
+          "address": "0x55ba52",
+          "name": null,
+          "length": 10
+        }
+      ]
+    },
+    {
+      "key": "0x00488be0",
+      "callee_frequency": 276,
+      "functions": 28,
+      "indexed_bytes": 8728,
+      "members": [
+        {
+          "address": "0x4ca310",
+          "name": "EndResults_FillSyndicatePage",
+          "length": 716
+        },
+        {
+          "address": "0x4c9610",
+          "name": "EndResultPoints_FillMissionTable",
+          "length": 698
+        },
+        {
+          "address": "0x4c90e0",
+          "name": "EndResultPoints_FillOverview",
+          "length": 680
+        },
+        {
+          "address": "0x4ca070",
+          "name": "EndResults_FillRecipePage",
+          "length": 664
+        },
+        {
+          "address": "0x4ca5e0",
+          "name": "EndResults_FillRatingPage",
+          "length": 664
+        },
+        {
+          "address": "0x4c9dd0",
+          "name": "EndResults_FillAdvertisingPage",
+          "length": 661
+        },
+        {
+          "address": "0x4c98d0",
+          "name": "EndResultPoints_FillPersonnelTable",
+          "length": 640
+        },
+        {
+          "address": "0x4c9390",
+          "name": "EndResultPoints_FillBuildingTable",
+          "length": 639
+        },
+        {
+          "address": "0x4c9b50",
+          "name": "EndResults_FillBalancePage",
+          "length": 637
+        },
+        {
+          "address": "0x4b0710",
+          "name": "Stats_GetGlobalMaximum",
+          "length": 487
+        },
+        {
+          "address": "0x4c8110",
+          "name": "Stats_GetGlobalMaxByMode",
+          "length": 487
+        },
+        {
+          "address": "0x4dfcd0",
+          "name": "Game_FillCompanyRankingStats",
+          "length": 355
+        },
+        {
+          "address": "0x499f30",
+          "name": "Company_GenerateUniqueName",
+          "length": 267
+        },
+        {
+          "address": "0x5022d0",
+          "name": "Game_GetMarketRank",
+          "length": 135
+        },
+        {
+          "address": "0x489950",
+          "name": "Game_CountPlayerRecordsByField34",
+          "length": 117
+        },
+        {
+          "address": "0x4b0020",
+          "name": "StatisticsBackdrop_UpdateCompanyValues",
+          "length": 102
+        },
+        {
+          "address": "0x48e000",
+          "name": "Game_IsPlayerBestInStat",
+          "length": 94
+        },
+        {
+          "address": "0x4da700",
+          "name": "Stats_GetPlayerSharePercent",
+          "length": 89
+        },
+        {
+          "address": "0x4da760",
+          "name": "Game_ComputeRatingShare",
+          "length": 89
+        },
+        {
+          "address": "0x4da6b0",
+          "name": "Player_HasRecordWithField30",
+          "length": 80
+        },
+        {
+          "address": "0x4da7c0",
+          "name": "Game_RecordPlayerStat",
+          "length": 79
+        },
+        {
+          "address": "0x4d80e0",
+          "name": "Game_GetLowestValuePlayer",
+          "length": 62
+        },
+        {
+          "address": "0x49d150",
+          "name": "Game_GetNthFreePlayerSlot",
+          "length": 58
+        },
+        {
+          "address": "0x48e060",
+          "name": "Game_HasIdleOtherPlayer",
+          "length": 56
+        },
+        {
+          "address": "0x4dcb30",
+          "name": "Game_IncrementPlayerCounterC20",
+          "length": 55
+        },
+        {
+          "address": "0x489820",
+          "name": "Game_GetPlayerSubmapValue",
+          "length": 40
+        },
+        {
+          "address": "0x489850",
+          "name": "Game_GetPlayerMapValue",
+          "length": 40
+        },
+        {
+          "address": "0x50f560",
+          "name": "Game_GetPlayerTotalValue",
+          "length": 37
+        }
+      ]
+    },
+    {
+      "key": "0x00531a50",
+      "callee_frequency": 48,
+      "functions": 5,
+      "indexed_bytes": 5897,
+      "members": [
+        {
+          "address": "0x43c7e0",
+          "name": "Glossary_BuildHeadSymbolsPage",
+          "length": 1783
+        },
+        {
+          "address": "0x430a80",
+          "name": "CityMapView_CreateWindow",
+          "length": 1100
+        },
+        {
+          "address": "0x41a2b0",
+          "name": "CityDetailView_CreateOwnCityWindow",
+          "length": 1056
+        },
+        {
+          "address": "0x44d4a0",
+          "name": "CityDetailView_CreateForeignCityWindow",
+          "length": 1056
+        },
+        {
+          "address": "0x4275a0",
+          "name": "OfficeView_CreateWindow",
+          "length": 902
+        }
+      ]
+    },
+    {
+      "key": "0x0054f140",
+      "callee_frequency": 352,
+      "functions": 28,
+      "indexed_bytes": 5783,
+      "members": [
+        {
+          "address": "0x53e5a0",
+          "name": "Gfx_DrawFilledEllipse",
+          "length": 1117
+        },
+        {
+          "address": "0x5123f0",
+          "name": "Screen_AccumulateColorHistogram",
+          "length": 557
+        },
+        {
+          "address": "0x513270",
+          "name": "Rating_StoreClampedScores",
+          "length": 326
+        },
+        {
+          "address": "0x485700",
+          "name": "Game_RefreshDaylightCurve",
+          "length": 284
+        },
+        {
+          "address": "0x548570",
+          "name": "Sound_ApplyVolumePreset",
+          "length": 271
+        },
+        {
+          "address": "0x4d6390",
+          "name": "Stats_GetCombinedValue",
+          "length": 254
+        },
+        {
+          "address": "0x5282c0",
+          "name": "UI_FillFadeRect",
+          "length": 233
+        },
+        {
+          "address": "0x533310",
+          "name": "Record_CopyTemplate98",
+          "length": 226
+        },
+        {
+          "address": "0x512e50",
+          "name": "Screen_ScoreColorHistogram",
+          "length": 191
+        },
+        {
+          "address": "0x547340",
+          "name": "Sound_PlayChannel",
+          "length": 190
+        },
+        {
+          "address": "0x479120",
+          "name": "Company_ComputeTypePercentages",
+          "length": 187
+        },
+        {
+          "address": "0x547a00",
+          "name": "Sound_ConvertVolumeSetting",
+          "length": 177
+        },
+        {
+          "address": "0x48c7b0",
+          "name": "Game_GetRatingPercent",
+          "length": 163
+        },
+        {
+          "address": "0x534790",
+          "name": "Record_GetScreenOffset",
+          "length": 159
+        },
+        {
+          "address": "0x4ff650",
+          "name": "Math_CompareRounded",
+          "length": 143
+        },
+        {
+          "address": "0x541130",
+          "name": "Sound_SetVolumeLogarithmic",
+          "length": 140
+        },
+        {
+          "address": "0x5003e0",
+          "name": "Game_UpdateCompanyAccount",
+          "length": 138
+        },
+        {
+          "address": "0x5410b0",
+          "name": "Sound_SetBufferVolume",
+          "length": 125
+        },
+        {
+          "address": "0x4782a0",
+          "name": "Stats_GetAverageSpend",
+          "length": 120
+        },
+        {
+          "address": "0x5340d0",
+          "name": "Record_GetScreenRect48",
+          "length": 115
+        },
+        {
+          "address": "0x534c30",
+          "name": "UI_SetListEntryPosition",
+          "length": 96
+        },
+        {
+          "address": "0x53a140",
+          "name": "Gfx_BuildBlendTable",
+          "length": 90
+        },
+        {
+          "address": "0x541cf0",
+          "name": "Sound_AlignBufferSize",
+          "length": 87
+        },
+        {
+          "address": "0x5472a0",
+          "name": "Sound_SetPosition",
+          "length": 84
+        },
+        {
+          "address": "0x534370",
+          "name": "Record_GetTwoFloats48",
+          "length": 82
+        },
+        {
+          "address": "0x511fa0",
+          "name": "Math_TruncateDouble",
+          "length": 79
+        },
+        {
+          "address": "0x5411c0",
+          "name": "SoundBuffer_SetVolume",
+          "length": 77
+        },
+        {
+          "address": "0x533560",
+          "name": "Sprite_GetPointPair",
+          "length": 72
+        }
+      ]
+    },
+    {
+      "key": "0x0052fa40",
+      "callee_frequency": 5,
+      "functions": 3,
+      "indexed_bytes": 5606,
+      "members": [
+        {
+          "address": "0x46dbd0",
+          "name": "Screen_CharacterSelect",
+          "length": 3458
+        },
+        {
+          "address": "0x46bfa0",
+          "name": "AI_DebugStatusWindow_Create",
+          "length": 1473
+        },
+        {
+          "address": "0x46c820",
+          "name": "RequestDialog_Create",
+          "length": 675
+        }
+      ]
+    },
+    {
+      "key": "0x0054cc2b",
+      "callee_frequency": 604,
+      "functions": 27,
+      "indexed_bytes": 4436,
+      "members": [
+        {
+          "address": "0x4ec4f0",
+          "name": "IsoMap_Save",
+          "length": 1586
+        },
+        {
+          "address": "0x510640",
+          "name": "Recipe_SaveToStream",
+          "length": 660
+        },
+        {
+          "address": "0x4d3ba0",
+          "name": "Character_Save",
+          "length": 333
+        },
+        {
+          "address": "0x501cb0",
+          "name": "Player_AIState_Save",
+          "length": 311
+        },
+        {
+          "address": "0x4dd4f0",
+          "name": "GameCalendar_Save",
+          "length": 157
+        },
+        {
+          "address": "0x50f6b0",
+          "name": "GamePlan_SaveRecord",
+          "length": 156
+        },
+        {
+          "address": "0x4f5ee0",
+          "name": "Player_MissionState_Save",
+          "length": 138
+        },
+        {
+          "address": "0x54b1b0",
+          "name": "UI_BriefingList_Save",
+          "length": 128
+        },
+        {
+          "address": "0x4d1ba0",
+          "name": "RecipeTopping_Save",
+          "length": 117
+        },
+        {
+          "address": "0x4e5e30",
+          "name": "ConstructionOrder_Save",
+          "length": 117
+        },
+        {
+          "address": "0x401200",
+          "name": "StatsPeriodReport_Save",
+          "length": 97
+        },
+        {
+          "address": "0x4eaaa0",
+          "name": "Game_SaveTileNameTable",
+          "length": 82
+        },
+        {
+          "address": "0x4e43f0",
+          "name": "BuildingValue_Save",
+          "length": 78
+        },
+        {
+          "address": "0x4f6e20",
+          "name": "AI_CompanySlots_Save",
+          "length": 69
+        },
+        {
+          "address": "0x4aa700",
+          "name": "StatisticsBalance_Save",
+          "length": 63
+        },
+        {
+          "address": "0x4ac400",
+          "name": "StatisticsBranchBalance_Save",
+          "length": 49
+        },
+        {
+          "address": "0x4b3ce0",
+          "name": "CompanyOverview_Save",
+          "length": 49
+        },
+        {
+          "address": "0x501a40",
+          "name": "Player_Event_Save",
+          "length": 39
+        },
+        {
+          "address": "0x498130",
+          "name": "CityCompanyList_Save",
+          "length": 35
+        },
+        {
+          "address": "0x49ad00",
+          "name": "AdvertisingPanel_Save",
+          "length": 35
+        },
+        {
+          "address": "0x49b490",
+          "name": "CompanyMarketShare_Save",
+          "length": 35
+        },
+        {
+          "address": "0x4900c0",
+          "name": "BranchMenu_Category_Save",
+          "length": 17
+        },
+        {
+          "address": "0x4919d0",
+          "name": "BranchStats_SeriesFlags_Save",
+          "length": 17
+        },
+        {
+          "address": "0x492250",
+          "name": "BranchDesign_ColorIndex_Save",
+          "length": 17
+        },
+        {
+          "address": "0x499590",
+          "name": "IngredientPanel_Save",
+          "length": 17
+        },
+        {
+          "address": "0x4b0d60",
+          "name": "Personnel_Save",
+          "length": 17
+        },
+        {
+          "address": "0x4c0d60",
+          "name": "WarehouseProduct_Save",
+          "length": 17
+        }
+      ]
+    },
+    {
+      "key": "0x0047a670",
+      "callee_frequency": 7,
+      "functions": 4,
+      "indexed_bytes": 4177,
+      "members": [
+        {
+          "address": "0x4a5bb0",
+          "name": "FinancePage_UpdateBalanceSheet",
+          "length": 2668
+        },
+        {
+          "address": "0x48fad0",
+          "name": "FinanceScreen_UpdateStatement",
+          "length": 1277
+        },
+        {
+          "address": "0x4de4f0",
+          "name": "Stats_SumGroupScores",
+          "length": 124
+        },
+        {
+          "address": "0x47a7b0",
+          "name": "Stats_GetMaxGroupScore",
+          "length": 108
+        }
+      ]
+    },
+    {
+      "key": "0x00531bb0",
+      "callee_frequency": 5,
+      "functions": 3,
+      "indexed_bytes": 3831,
+      "members": [
+        {
+          "address": "0x4ae180",
+          "name": "Glossary_ShowCompanyBuildingDetail",
+          "length": 2307
+        },
+        {
+          "address": "0x4af8f0",
+          "name": "GlossaryWeapons_FillWeaponPage",
+          "length": 1041
+        },
+        {
+          "address": "0x4aeda0",
+          "name": "Glossary_ShowCityBuildingDetail",
+          "length": 483
+        }
+      ]
+    },
+    {
+      "key": "0x0054e221",
+      "callee_frequency": 598,
+      "functions": 20,
+      "indexed_bytes": 3595,
+      "members": [
+        {
+          "address": "0x536ea0",
+          "name": "Sprite_ConvertTo16Bit",
+          "length": 859
+        },
+        {
+          "address": "0x4f37d0",
+          "name": "Map_CollectObjectIDsByType",
+          "length": 696
+        },
+        {
+          "address": "0x4067d0",
+          "name": "UI_Init",
+          "length": 309
+        },
+        {
+          "address": "0x402f10",
+          "name": "NamePool_AddName",
+          "length": 206
+        },
+        {
+          "address": "0x523800",
+          "name": "UI_CreateContextMenu",
+          "length": 188
+        },
+        {
+          "address": "0x403200",
+          "name": "RegistryKey_ReadValue",
+          "length": 158
+        },
+        {
+          "address": "0x4013a0",
+          "name": "List_Construct",
+          "length": 126
+        },
+        {
+          "address": "0x520d90",
+          "name": "UI_SetLabelIdText",
+          "length": 110
+        },
+        {
+          "address": "0x54b3d0",
+          "name": "Array_Grow",
+          "length": 108
+        },
+        {
+          "address": "0x539ea0",
+          "name": "Renderer_CreateChild",
+          "length": 96
+        },
+        {
+          "address": "0x49c110",
+          "name": "Game_ResizeGlobalArray",
+          "length": 88
+        },
+        {
+          "address": "0x4c1e90",
+          "name": "Game_ResizeGlobalArray2",
+          "length": 88
+        },
+        {
+          "address": "0x4d2a00",
+          "name": "BuildingValue_CreateDefault",
+          "length": 88
+        },
+        {
+          "address": "0x4033c0",
+          "name": "String_SetOwned",
+          "length": 87
+        },
+        {
+          "address": "0x403420",
+          "name": "String_SetField48",
+          "length": 87
+        },
+        {
+          "address": "0x520d10",
+          "name": "UI_SetTextString",
+          "length": 87
+        },
+        {
+          "address": "0x522e80",
+          "name": "Array_Construct",
+          "length": 77
+        },
+        {
+          "address": "0x4986f0",
+          "name": "Game_ResizeGlobalArray3",
+          "length": 69
+        },
+        {
+          "address": "0x54b390",
+          "name": "MessageList_Construct",
+          "length": 36
+        },
+        {
+          "address": "0x539e00",
+          "name": "List_PushFront",
+          "length": 32
+        }
+      ]
+    },
+    {
+      "key": "0x00532520",
+      "callee_frequency": 15,
+      "functions": 6,
+      "indexed_bytes": 3321,
+      "members": [
+        {
+          "address": "0x4cf690",
+          "name": "RestaurantInfoPanel_UpdateTabButtons",
+          "length": 898
+        },
+        {
+          "address": "0x4951f0",
+          "name": "PersonnelOverview_Refresh",
+          "length": 741
+        },
+        {
+          "address": "0x4cfa20",
+          "name": "BranchScreen_UpdateTabButtons",
+          "length": 604
+        },
+        {
+          "address": "0x49cf90",
+          "name": "CompanyRating_InitCompanyList",
+          "length": 434
+        },
+        {
+          "address": "0x4d0040",
+          "name": "UI_InfoPanelBranch_InitTabStates",
+          "length": 370
+        },
+        {
+          "address": "0x4d01c0",
+          "name": "Screen_OptionsSidebar_SelectPage",
+          "length": 274
+        }
+      ]
+    },
+    {
+      "key": "0x004013a0",
+      "callee_frequency": 117,
+      "functions": 17,
+      "indexed_bytes": 2848,
+      "members": [
+        {
+          "address": "0x4e1bc0",
+          "name": "Company_CollectUnprofitableBranches",
+          "length": 378
+        },
+        {
+          "address": "0x477000",
+          "name": "Branch_ConstructFromStream",
+          "length": 247
+        },
+        {
+          "address": "0x4d5ab0",
+          "name": "Map_CollectObjectsOnFlaggedTiles",
+          "length": 221
+        },
+        {
+          "address": "0x50e8e0",
+          "name": "Player_Construct",
+          "length": 210
+        },
+        {
+          "address": "0x512750",
+          "name": "Recipe_FindIngredientsByCategory",
+          "length": 204
+        },
+        {
+          "address": "0x489880",
+          "name": "Game_BuildCompetitorBuildingList",
+          "length": 201
+        },
+        {
+          "address": "0x4ddab0",
+          "name": "Company_Construct",
+          "length": 196
+        },
+        {
+          "address": "0x48c340",
+          "name": "City_CollectVacantLots",
+          "length": 187
+        },
+        {
+          "address": "0x4d5b90",
+          "name": "City_CollectBranchBuildings",
+          "length": 173
+        },
+        {
+          "address": "0x4d5c40",
+          "name": "City_CollectBusinessBuildings",
+          "length": 173
+        },
+        {
+          "address": "0x50ff80",
+          "name": "Recipe_AppendSalesRecord",
+          "length": 173
+        },
+        {
+          "address": "0x513c90",
+          "name": "Storage_Construct",
+          "length": 153
+        },
+        {
+          "address": "0x488b30",
+          "name": "Ingredient_CollectByCategory",
+          "length": 132
+        },
+        {
+          "address": "0x5049a0",
+          "name": "Person_ConstructFromSave",
+          "length": 116
+        },
+        {
+          "address": "0x54a880",
+          "name": "UI_BriefingList_Construct",
+          "length": 58
+        },
+        {
+          "address": "0x403d60",
+          "name": "MissionBriefing_InitList",
+          "length": 13
+        },
+        {
+          "address": "0x4cb390",
+          "name": "MissionMap_InitList",
+          "length": 13
+        }
+      ]
+    },
+    {
+      "key": "0x0048d110",
+      "callee_frequency": 5,
+      "functions": 5,
+      "indexed_bytes": 2792,
+      "members": [
+        {
+          "address": "0x48ac00",
+          "name": "CustomerGroups_DrawProductSalesGrid",
+          "length": 751
+        },
+        {
+          "address": "0x48aef0",
+          "name": "CustomerGroups_DrawTrafficGrid",
+          "length": 695
+        },
+        {
+          "address": "0x48a970",
+          "name": "Chart_DrawCustomerPortraits",
+          "length": 643
+        },
+        {
+          "address": "0x48b1b0",
+          "name": "CustomerGroups_DrawCountRow",
+          "length": 518
+        },
+        {
+          "address": "0x4d50a0",
+          "name": "City_CreateBranchObject",
+          "length": 185
+        }
+      ]
+    },
+    {
+      "key": "0x004eacb0",
+      "callee_frequency": 6,
+      "functions": 4,
+      "indexed_bytes": 2744,
+      "members": [
+        {
+          "address": "0x5053d0",
+          "name": "PersonList_Save",
+          "length": 1333
+        },
+        {
+          "address": "0x4d7090",
+          "name": "MapObjectList_Save",
+          "length": 809
+        },
+        {
+          "address": "0x4d1fe0",
+          "name": "MapObject_Save",
+          "length": 533
+        },
+        {
+          "address": "0x4d3490",
+          "name": "CarList_Save",
+          "length": 69
+        }
+      ]
+    },
+    {
+      "key": "imp:EnterCriticalSection",
+      "callee_frequency": 59,
+      "functions": 13,
+      "indexed_bytes": 2738,
+      "members": [
+        {
+          "address": "0x546090",
+          "name": "Sound_CreateAndEnqueueBuffer",
+          "length": 400
+        },
+        {
+          "address": "0x545100",
+          "name": "Sound_CreateVoice",
+          "length": 385
+        },
+        {
+          "address": "0x540040",
+          "name": "SoundPakManager_OpenStream",
+          "length": 354
+        },
+        {
+          "address": "0x542f10",
+          "name": "Sound_SetSampleFormat",
+          "length": 333
+        },
+        {
+          "address": "0x541fc0",
+          "name": "Sound_GetStreamRefillSize",
+          "length": 261
+        },
+        {
+          "address": "0x544760",
+          "name": "Sound_GetPlayPosition",
+          "length": 223
+        },
+        {
+          "address": "0x5448c0",
+          "name": "Sound_QueryStatusLocked",
+          "length": 210
+        },
+        {
+          "address": "0x544af0",
+          "name": "List_RemoveNodeLocked",
+          "length": 166
+        },
+        {
+          "address": "0x544840",
+          "name": "SoundBuffer_GetFrequency",
+          "length": 127
+        },
+        {
+          "address": "0x543300",
+          "name": "SoundBuffer_SetFrequency",
+          "length": 99
+        },
+        {
+          "address": "0x543370",
+          "name": "SoundBuffer_SetLevel88",
+          "length": 99
+        },
+        {
+          "address": "0x5433e0",
+          "name": "Media_SetValue94",
+          "length": 70
+        },
+        {
+          "address": "0x54d35c",
+          "name": "CS_EnterRaw",
+          "length": 11
+        }
+      ]
+    },
+    {
+      "key": "0x00540a30",
+      "callee_frequency": 3,
+      "functions": 3,
+      "indexed_bytes": 2699,
+      "members": [
+        {
+          "address": "0x545290",
+          "name": "Sound_LoadSample3D",
+          "length": 948
+        },
+        {
+          "address": "0x5456a0",
+          "name": "Sound_LoadSample3DEx",
+          "length": 876
+        },
+        {
+          "address": "0x544d90",
+          "name": "Sound_LoadSample2D",
+          "length": 875
+        }
+      ]
+    },
+    {
+      "key": "0x00482820",
+      "callee_frequency": 189,
+      "functions": 13,
+      "indexed_bytes": 2513,
+      "members": [
+        {
+          "address": "0x47acf0",
+          "name": "Product_ComputeFreshness",
+          "length": 784
+        },
+        {
+          "address": "0x5024f0",
+          "name": "AI_SelectRandomAction",
+          "length": 285
+        },
+        {
+          "address": "0x4ba340",
+          "name": "Game_SelectPreviousBuilding",
+          "length": 246
+        },
+        {
+          "address": "0x4ba250",
+          "name": "Game_AdvanceCurrentRecord",
+          "length": 236
+        },
+        {
+          "address": "0x48e1a0",
+          "name": "Game_CheckPlayerControlFlags",
+          "length": 194
+        },
+        {
+          "address": "0x483eb0",
+          "name": "UI_GetActionDuration",
+          "length": 182
+        },
+        {
+          "address": "0x5136c0",
+          "name": "Game_ComputeCompanyRatings",
+          "length": 147
+        },
+        {
+          "address": "0x5023b0",
+          "name": "Game_GetPlayerTierFromC20",
+          "length": 88
+        },
+        {
+          "address": "0x502eb0",
+          "name": "Game_HasBuildingForPlayer",
+          "length": 86
+        },
+        {
+          "address": "0x486ec0",
+          "name": "Game_GetPreviousPlayerSlot",
+          "length": 84
+        },
+        {
+          "address": "0x4a4190",
+          "name": "Game_GetPlayerSlotByOrdinal",
+          "length": 80
+        },
+        {
+          "address": "0x4d8090",
+          "name": "Game_GetMostAdvancedCompany",
+          "length": 73
+        },
+        {
+          "address": "0x47fd70",
+          "name": "Game_IsCurrentPlayer",
+          "length": 28
+        }
+      ]
+    },
+    {
+      "key": "0x0054dd83",
+      "callee_frequency": 403,
+      "functions": 13,
+      "indexed_bytes": 2371,
+      "members": [
+        {
+          "address": "0x49ad30",
+          "name": "AdvertisingScreen_UpdateGroupPrices",
+          "length": 490
+        },
+        {
+          "address": "0x5478c0",
+          "name": "Sound_LoadSpeechSet",
+          "length": 242
+        },
+        {
+          "address": "0x4cb6e0",
+          "name": "FreePlaySetup_FillCityTable",
+          "length": 189
+        },
+        {
+          "address": "0x47e5e0",
+          "name": "Game_GetSizeName",
+          "length": 184
+        },
+        {
+          "address": "0x4c6f90",
+          "name": "CharacterSelect_FillAttributes",
+          "length": 176
+        },
+        {
+          "address": "0x401040",
+          "name": "Stats_Report_Construct",
+          "length": 175
+        },
+        {
+          "address": "0x4a8030",
+          "name": "StringTable_SortIndexArray",
+          "length": 173
+        },
+        {
+          "address": "0x547810",
+          "name": "Sound_LoadEffectBuffers",
+          "length": 170
+        },
+        {
+          "address": "0x404460",
+          "name": "ResourceManager_OpenArchivePath",
+          "length": 156
+        },
+        {
+          "address": "0x52a3a0",
+          "name": "UI_SetClampedValue",
+          "length": 152
+        },
+        {
+          "address": "0x4cb7e0",
+          "name": "FreePlaySetup_FillGameLengthText",
+          "length": 113
+        },
+        {
+          "address": "0x4010f0",
+          "name": "Stats_Report_ConstructEmpty",
+          "length": 94
+        },
+        {
+          "address": "0x4cb7a0",
+          "name": "FreePlaySetup_FillStartCapitalText",
+          "length": 57
+        }
+      ]
+    },
+    {
+      "key": "0x004034d0",
+      "callee_frequency": 195,
+      "functions": 12,
+      "indexed_bytes": 2364,
+      "members": [
+        {
+          "address": "0x504a90",
+          "name": "Game_GetTimeByMode",
+          "length": 622
+        },
+        {
+          "address": "0x502ce0",
+          "name": "AI_InitActionPlan",
+          "length": 460
+        },
+        {
+          "address": "0x406a90",
+          "name": "Settings_InitDefaults",
+          "length": 280
+        },
+        {
+          "address": "0x4dc330",
+          "name": "City_ResetPoliceDistrictSlot",
+          "length": 235
+        },
+        {
+          "address": "0x4dcb70",
+          "name": "Random_SwapOneOfFour",
+          "length": 159
+        },
+        {
+          "address": "0x4db1d0",
+          "name": "Game_SelectRandomPlayerCompany",
+          "length": 140
+        },
+        {
+          "address": "0x4db260",
+          "name": "Array_MoveActiveSlotToRandom",
+          "length": 126
+        },
+        {
+          "address": "0x4dce00",
+          "name": "Game_InitCompanyAIStrategy",
+          "length": 106
+        },
+        {
+          "address": "0x4e4810",
+          "name": "Map_PickRandomExitDirection",
+          "length": 71
+        },
+        {
+          "address": "0x4f3a90",
+          "name": "Grid_GetRandomRecord28",
+          "length": 63
+        },
+        {
+          "address": "0x4f3ad0",
+          "name": "Array_GetRandomRecord28",
+          "length": 63
+        },
+        {
+          "address": "0x502cb0",
+          "name": "Game_PickRandomTableValue",
+          "length": 39
+        }
+      ]
+    },
+    {
+      "key": "0x00403850",
+      "callee_frequency": 26,
+      "functions": 6,
+      "indexed_bytes": 2301,
+      "members": [
+        {
+          "address": "0x47a000",
+          "name": "Rating_ComputeBuildingScore",
+          "length": 940
+        },
+        {
+          "address": "0x513100",
+          "name": "Stats_ComputeWeightedAverages",
+          "length": 358
+        },
+        {
+          "address": "0x479db0",
+          "name": "Stats_ComputeAverageGroupScore",
+          "length": 319
+        },
+        {
+          "address": "0x47c8a0",
+          "name": "Game_ComputeAverageProductQuality",
+          "length": 256
+        },
+        {
+          "address": "0x479960",
+          "name": "Map_ComputeBuildableAverage",
+          "length": 217
+        },
+        {
+          "address": "0x4e4060",
+          "name": "Game_ComputePrice",
+          "length": 211
+        }
+      ]
+    },
+    {
+      "key": "0x0054ede0",
+      "callee_frequency": 9,
+      "functions": 3,
+      "indexed_bytes": 2275,
+      "members": [
+        {
+          "address": "0x536350",
+          "name": "FullscreenImage_LoadTGA",
+          "length": 1875
+        },
+        {
+          "address": "0x402750",
+          "name": "Resource_Read",
+          "length": 227
+        },
+        {
+          "address": "0x5401b0",
+          "name": "SoundPakStream_Read",
+          "length": 173
+        }
+      ]
+    },
+    {
+      "key": "0x00535150",
+      "callee_frequency": 3,
+      "functions": 3,
+      "indexed_bytes": 2266,
+      "members": [
+        {
+          "address": "0x53c130",
+          "name": "Gfx_BlitRLEScaled",
+          "length": 1427
+        },
+        {
+          "address": "0x53bf00",
+          "name": "Surface_BlitRLESkipToRGB",
+          "length": 555
+        },
+        {
+          "address": "0x5376b0",
+          "name": "Sprite_Blit24BitClipped",
+          "length": 284
+        }
+      ]
+    },
+    {
+      "key": "0x00401320",
+      "callee_frequency": 120,
+      "functions": 16,
+      "indexed_bytes": 2193,
+      "members": [
+        {
+          "address": "0x4893a0",
+          "name": "Input_HandleMapClickAtCell",
+          "length": 297
+        },
+        {
+          "address": "0x525bc0",
+          "name": "UI_QueueCommand",
+          "length": 297
+        },
+        {
+          "address": "0x4015b0",
+          "name": "IDMap_InsertGrow",
+          "length": 256
+        },
+        {
+          "address": "0x4014b0",
+          "name": "List_Add",
+          "length": 251
+        },
+        {
+          "address": "0x488c00",
+          "name": "Game_RunSimulationFrame",
+          "length": 183
+        },
+        {
+          "address": "0x522f40",
+          "name": "Array_InsertGrow",
+          "length": 155
+        },
+        {
+          "address": "0x403ac0",
+          "name": "Timer_AddEntry",
+          "length": 146
+        },
+        {
+          "address": "0x5334d0",
+          "name": "List_ReleaseSharedBuffers",
+          "length": 108
+        },
+        {
+          "address": "0x403be0",
+          "name": "Timer_RemoveEntry",
+          "length": 99
+        },
+        {
+          "address": "0x549170",
+          "name": "Sound_StopMusic",
+          "length": 74
+        },
+        {
+          "address": "0x4eeef0",
+          "name": "Buffer_FreeLockedGlobal",
+          "length": 68
+        },
+        {
+          "address": "0x548db0",
+          "name": "Sound_StopCurrentBuffer",
+          "length": 68
+        },
+        {
+          "address": "0x5238c0",
+          "name": "Movie_ReleasePlayer",
+          "length": 63
+        },
+        {
+          "address": "0x50e850",
+          "name": "Object_SetFieldA4Locked",
+          "length": 50
+        },
+        {
+          "address": "0x4858a0",
+          "name": "Game_SetLockedField2FC",
+          "length": 39
+        },
+        {
+          "address": "0x528160",
+          "name": "UI_ResetScrollPosition",
+          "length": 39
+        }
+      ]
+    },
+    {
+      "key": "0x0050fe50",
+      "callee_frequency": 8,
+      "functions": 4,
+      "indexed_bytes": 2180,
+      "members": [
+        {
+          "address": "0x49e270",
+          "name": "CompanyRecipeIngredients_Update",
+          "length": 825
+        },
+        {
+          "address": "0x49e940",
+          "name": "RecipeEditorIngredients_Update",
+          "length": 815
+        },
+        {
+          "address": "0x49e160",
+          "name": "RecipeInfo_FillNutritionRows",
+          "length": 270
+        },
+        {
+          "address": "0x49e830",
+          "name": "RecipePreview_FillNutritionRows",
+          "length": 270
+        }
+      ]
+    },
+    {
+      "key": "0x004c70b0",
+      "callee_frequency": 4,
+      "functions": 4,
+      "indexed_bytes": 2126,
+      "members": [
+        {
+          "address": "0x4cc230",
+          "name": "UI_ShowDialogTemplate",
+          "length": 1027
+        },
+        {
+          "address": "0x4c7320",
+          "name": "UI_ShowMessageTemplate",
+          "length": 637
+        },
+        {
+          "address": "0x4c89b0",
+          "name": "UI_ShowDialog",
+          "length": 248
+        },
+        {
+          "address": "0x4caca0",
+          "name": "UI_ShowPanel",
+          "length": 214
+        }
+      ]
+    },
+    {
+      "key": "0x00539840",
+      "callee_frequency": 18,
+      "functions": 3,
+      "indexed_bytes": 2118,
+      "members": [
+        {
+          "address": "0x53b8f0",
+          "name": "Sprite_BlitRLEOpaque",
+          "length": 1530
+        },
+        {
+          "address": "0x52d1c0",
+          "name": "Surface_DrawFilledCircle",
+          "length": 409
+        },
+        {
+          "address": "0x5395a0",
+          "name": "Surface_FillClippedRect",
+          "length": 179
+        }
+      ]
+    },
+    {
+      "key": "0x00401440",
+      "callee_frequency": 45,
+      "functions": 14,
+      "indexed_bytes": 2094,
+      "members": [
+        {
+          "address": "0x4e1990",
+          "name": "Company_Destroy",
+          "length": 482
+        },
+        {
+          "address": "0x54c630",
+          "name": "ResourceCache_FreeEntryMaps",
+          "length": 405
+        },
+        {
+          "address": "0x4d73c0",
+          "name": "City_Destroy",
+          "length": 255
+        },
+        {
+          "address": "0x507b90",
+          "name": "Map_PickRandomLinkedCellInSteps",
+          "length": 246
+        },
+        {
+          "address": "0x54a8e0",
+          "name": "UI_BriefingList_Destroy",
+          "length": 123
+        },
+        {
+          "address": "0x495500",
+          "name": "Game_RebuildObjectTypeLists",
+          "length": 86
+        },
+        {
+          "address": "0x54c830",
+          "name": "List_FreeContainerValues",
+          "length": 75
+        },
+        {
+          "address": "0x54ca80",
+          "name": "Thread_ReleaseNodeValues",
+          "length": 68
+        },
+        {
+          "address": "0x510600",
+          "name": "Stats_FreeRecordMap",
+          "length": 64
+        },
+        {
+          "address": "0x54ad80",
+          "name": "UI_DestroyBriefingList",
+          "length": 62
+        },
+        {
+          "address": "0x5105c0",
+          "name": "Object_DeleteAllInMap",
+          "length": 58
+        },
+        {
+          "address": "0x47ec30",
+          "name": "IDMap_FreeValuesAndReset",
+          "length": 57
+        },
+        {
+          "address": "0x4da650",
+          "name": "Game_CollectAllOwnedObjects",
+          "length": 57
+        },
+        {
+          "address": "0x54b930",
+          "name": "IDMap_DeleteContents",
+          "length": 56
+        }
+      ]
+    },
+    {
+      "key": "0x004e4140",
+      "callee_frequency": 3,
+      "functions": 3,
+      "indexed_bytes": 2020,
+      "members": [
+        {
+          "address": "0x4fbae0",
+          "name": "Map_BuildObjectGrid",
+          "length": 1017
+        },
+        {
+          "address": "0x4f96e0",
+          "name": "Map_BuildTerrainGrid",
+          "length": 821
+        },
+        {
+          "address": "0x4f9c90",
+          "name": "City_FindListContainingValue",
+          "length": 182
+        }
+      ]
+    },
+    {
+      "key": "0x0050dbd0",
+      "callee_frequency": 31,
+      "functions": 14,
+      "indexed_bytes": 1950,
+      "members": [
+        {
+          "address": "0x48a2d0",
+          "name": "Game_FindPreviousFreeObjectOfType",
+          "length": 223
+        },
+        {
+          "address": "0x48a3b0",
+          "name": "Game_FindNextFreeObjectOfType",
+          "length": 222
+        },
+        {
+          "address": "0x48a130",
+          "name": "Game_CountFilteredObjects",
+          "length": 201
+        },
+        {
+          "address": "0x4dca80",
+          "name": "City_ApplyCrimeWave",
+          "length": 173
+        },
+        {
+          "address": "0x48a090",
+          "name": "Game_CountFilteredObjects2",
+          "length": 153
+        },
+        {
+          "address": "0x4e1e40",
+          "name": "Game_FindFreeStaffRecord",
+          "length": 151
+        },
+        {
+          "address": "0x4e1db0",
+          "name": "AI_CountActiveTargetsByState",
+          "length": 143
+        },
+        {
+          "address": "0x483c90",
+          "name": "Game_FindFreeObjectByOwner",
+          "length": 126
+        },
+        {
+          "address": "0x4e1d40",
+          "name": "Game_CountActiveObjectsByType",
+          "length": 106
+        },
+        {
+          "address": "0x48a200",
+          "name": "Game_CountFreeSlots",
+          "length": 99
+        },
+        {
+          "address": "0x486b80",
+          "name": "Game_CountUnassignedObjectsByClass",
+          "length": 95
+        },
+        {
+          "address": "0x48a270",
+          "name": "Game_FindFreeObjectByType",
+          "length": 94
+        },
+        {
+          "address": "0x4d2ae0",
+          "name": "Game_CountFreeBuildingsByType",
+          "length": 85
+        },
+        {
+          "address": "0x509240",
+          "name": "UI_SetChildHeightFromValue",
+          "length": 79
+        }
+      ]
+    },
+    {
+      "key": "0x00547340",
+      "callee_frequency": 6,
+      "functions": 5,
+      "indexed_bytes": 1913,
+      "members": [
+        {
+          "address": "0x5499f0",
+          "name": "Sound_ProcessEvent",
+          "length": 1013
+        },
+        {
+          "address": "0x54a2a0",
+          "name": "Sound_PlayMenuSfxByIndex",
+          "length": 404
+        },
+        {
+          "address": "0x5480c0",
+          "name": "Sound_PlaySfxByIndex",
+          "length": 310
+        },
+        {
+          "address": "0x549e80",
+          "name": "Sound_PlayBuildingSpecialSfx",
+          "length": 156
+        },
+        {
+          "address": "0x548d90",
+          "name": "Sound_PlayPoliceSfx",
+          "length": 30
+        }
+      ]
+    },
+    {
+      "key": "0x004ed500",
+      "callee_frequency": 3,
+      "functions": 3,
+      "indexed_bytes": 1900,
+      "members": [
+        {
+          "address": "0x4f1750",
+          "name": "AI_ComputeWeightedPath",
+          "length": 863
+        },
+        {
+          "address": "0x4f14a0",
+          "name": "Map_FindShortestPath",
+          "length": 674
+        },
+        {
+          "address": "0x50b7c0",
+          "name": "Object_FindNearbyCustomer",
+          "length": 363
+        }
+      ]
+    },
+    {
+      "key": "0x004eacd0",
+      "callee_frequency": 5,
+      "functions": 3,
+      "indexed_bytes": 1894,
+      "members": [
+        {
+          "address": "0x505910",
+          "name": "PersonAction_LoadState",
+          "length": 1259
+        },
+        {
+          "address": "0x4d1da0",
+          "name": "MapObject_Load",
+          "length": 568
+        },
+        {
+          "address": "0x4d34e0",
+          "name": "Car_LoadFromStream",
+          "length": 67
+        }
+      ]
+    },
+    {
+      "key": "0x0054cbc1",
+      "callee_frequency": 597,
+      "functions": 23,
+      "indexed_bytes": 1788,
+      "members": [
+        {
+          "address": "0x4d3a50",
+          "name": "Character_Load",
+          "length": 333
+        },
+        {
+          "address": "0x4dd590",
+          "name": "GameCalendar_Load",
+          "length": 190
+        },
+        {
+          "address": "0x50f750",
+          "name": "GamePlan_LoadRecord",
+          "length": 156
+        },
+        {
+          "address": "0x4f5e50",
+          "name": "Player_MissionState_Load",
+          "length": 138
+        },
+        {
+          "address": "0x4e5eb0",
+          "name": "ConstructionOrder_Load",
+          "length": 130
+        },
+        {
+          "address": "0x4d1c20",
+          "name": "RecipeTopping_Load",
+          "length": 117
+        },
+        {
+          "address": "0x401190",
+          "name": "StatsPeriodReport_Load",
+          "length": 97
+        },
+        {
+          "address": "0x4e4440",
+          "name": "BuildingValue_Load",
+          "length": 78
+        },
+        {
+          "address": "0x4eab00",
+          "name": "World_LoadNameIndexTable",
+          "length": 74
+        },
+        {
+          "address": "0x4f6dd0",
+          "name": "AI_CompanySlots_Load",
+          "length": 68
+        },
+        {
+          "address": "0x4aa6c0",
+          "name": "StatisticsBalance_Load",
+          "length": 63
+        },
+        {
+          "address": "0x4ac3c0",
+          "name": "StatisticsBranchBalance_Load",
+          "length": 49
+        },
+        {
+          "address": "0x4b3ca0",
+          "name": "CompanyOverview_Load",
+          "length": 49
+        },
+        {
+          "address": "0x501a70",
+          "name": "Player_Event_Load",
+          "length": 39
+        },
+        {
+          "address": "0x498100",
+          "name": "CityCompanyList_Load",
+          "length": 35
+        },
+        {
+          "address": "0x49acd0",
+          "name": "AdvertisingPanel_Load",
+          "length": 35
+        },
+        {
+          "address": "0x49b460",
+          "name": "CompanyMarketShare_Load",
+          "length": 35
+        },
+        {
+          "address": "0x4900a0",
+          "name": "BranchMenu_Category_Load",
+          "length": 17
+        },
+        {
+          "address": "0x4919b0",
+          "name": "BranchStats_SeriesFlags_Load",
+          "length": 17
+        },
+        {
+          "address": "0x492230",
+          "name": "BranchDesign_ColorIndex_Load",
+          "length": 17
+        },
+        {
+          "address": "0x499570",
+          "name": "IngredientPanel_Load",
+          "length": 17
+        },
+        {
+          "address": "0x4b0d40",
+          "name": "Personnel_Load",
+          "length": 17
+        },
+        {
+          "address": "0x4c0d40",
+          "name": "WarehouseProduct_Load",
+          "length": 17
+        }
+      ]
+    },
+    {
+      "key": "0x004d8090",
+      "callee_frequency": 7,
+      "functions": 3,
+      "indexed_bytes": 1723,
+      "members": [
+        {
+          "address": "0x4bb120",
+          "name": "StarAward_Fill",
+          "length": 946
+        },
+        {
+          "address": "0x4defd0",
+          "name": "Company_FillStatisticsBlock",
+          "length": 550
+        },
+        {
+          "address": "0x4da390",
+          "name": "Game_AdjustPlayerRankingScores",
+          "length": 227
+        }
+      ]
+    },
+    {
+      "key": "0x0053f0a0",
+      "callee_frequency": 7,
+      "functions": 4,
+      "indexed_bytes": 1711,
+      "members": [
+        {
+          "address": "0x542b50",
+          "name": "Sound_CreatePrimaryBuffer",
+          "length": 726
+        },
+        {
+          "address": "0x5406a0",
+          "name": "SoundBuffer_CreateDSBuffer",
+          "length": 488
+        },
+        {
+          "address": "0x540b50",
+          "name": "SoundBuffer_UnlockSample",
+          "length": 291
+        },
+        {
+          "address": "0x540a80",
+          "name": "SoundBuffer_LockSample",
+          "length": 206
+        }
+      ]
+    },
+    {
+      "key": "0x0053cea0",
+      "callee_frequency": 21,
+      "functions": 4,
+      "indexed_bytes": 1620,
+      "members": [
+        {
+          "address": "0x53d840",
+          "name": "Sprite_Rotate",
+          "length": 1285
+        },
+        {
+          "address": "0x53d720",
+          "name": "Sprite_TestCollision",
+          "length": 284
+        },
+        {
+          "address": "0x53d460",
+          "name": "Sprite_GetPixelData",
+          "length": 31
+        },
+        {
+          "address": "0x53d480",
+          "name": "Sprite_GetPixelBuffer",
+          "length": 20
+        }
+      ]
+    },
+    {
+      "key": "0x00477100",
+      "callee_frequency": 19,
+      "functions": 6,
+      "indexed_bytes": 1593,
+      "members": [
+        {
+          "address": "0x478f60",
+          "name": "Rating_ComputeBranchScores",
+          "length": 444
+        },
+        {
+          "address": "0x479620",
+          "name": "Game_ComputeCityScore",
+          "length": 298
+        },
+        {
+          "address": "0x479290",
+          "name": "Game_ComputeCategoryDominance",
+          "length": 281
+        },
+        {
+          "address": "0x479ef0",
+          "name": "Game_InitStatBaselines",
+          "length": 266
+        },
+        {
+          "address": "0x4793b0",
+          "name": "Stats_ComputeOccupancyPercent",
+          "length": 161
+        },
+        {
+          "address": "0x4787f0",
+          "name": "Stats_GetAverage8",
+          "length": 143
+        }
+      ]
+    }
+  ]
+}

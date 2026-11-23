@@ -241,6 +241,31 @@ Current scoreboard: **1/5 strict, 223/1,072 bytes**. `0x544760` is strict;
 bytes away; `0x5449a0` is 86 bytes away and 6 bytes short. A warm run reuses
 all five objects without invoking VC6.
 
+### Family registry
+
+`reconstructed/match/investigations/family-registry/README.md` joins two
+independent family lenses: 20 VC6 cleanup families from the unwind maps and
+147 call-target families from `tools/mine_feature_families.py`. After
+joining with tracked sources and matcher metadata there are **60 families**
+and **31 runnable batch specs**.
+
+Measured scoreboards:
+
+```text
+call:0x4017f0   72/78 strict   5,002/5,898 bytes   5 near misses, 1 blocked
+call:0x54cc2b   22/23 strict   1,418/1,546 bytes   1 blocked
+call:0x54cbc1   20/21 strict   1,135/1,265 bytes   1 blocked
+call:0x488be0   12/13 strict     817/919 bytes     1 blocked
+call:0x54f140   13/14 strict   1,512/1,671 bytes   1 mismatch
+list pilot        6/7 strict     466/632 bytes     1 near miss (1 byte)
+small guard       1/5 strict     223/1,072 bytes   EH sections exact
+```
+
+The largest unmeasured opportunity is the UI call-target group
+(`0x523bb0`, 79 functions / 259,523 bytes and `0x531c60`, 26 functions /
+138,825 bytes), which is already covered by the existing UI builder
+generator rather than the tracked-source join.
+
 ### List family pilot
 
 `reconstructed/match/investigations/list-family/README.md` applies the same

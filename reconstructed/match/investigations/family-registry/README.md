@@ -1,0 +1,99 @@
+# Family registry
+
+The project now has two independent family lenses plus a join with tracked
+sources and matcher metadata.
+
+## Inventory
+
+1. **VC6 cleanup families** — group functions by the cleanup target in their
+   unwind map (`tools/map_vc6_cleanup_families.py`). `cleanup-families.json`
+   holds 20 families. The largest are:
+
+   ```text
+   0x54dd78 Mem_Free                 131 functions   92,535 bytes
+   0x401480 List_Node_Destroy         43 functions   36,931 bytes
+   0x53ff80 CS_LeavePtr               24 functions    9,730 bytes
+   0x520b10 UI_Child_Destroy          14 functions    6,785 bytes
+   0x53efd0 SoundBuffer_SetBaseVTable 17 functions    6,052 bytes
+   0x522f20 Array_Destroy              9 functions    4,008 bytes
+   ```
+
+2. **Call-target families** — group functions by the rarest common direct or
+   imported call (`tools/mine_feature_families.py`). The miner found **147
+   families**; the top 40 are in `call-families.json`. The largest are:
+
+   ```text
+   0x523bb0   79 functions  259,523 bytes  UI screen/page builders
+   0x531c60   26 functions  138,825 bytes  UI branch/furnishing pages
+   0x523c90    7 functions   27,616 bytes  screen builders
+   0x4017f0  112 functions   12,633 bytes  stats/object utilities
+   0x54dd78  611 functions   10,100 bytes  Mem_Free callers
+   0x488be0   28 functions    8,728 bytes  end-results pages
+   0x531a50    5 functions    5,897 bytes  view/window creators
+   ```
+
+The UI-heavy families are already covered by the existing
+`generate_ui_builder.py` / `verify_ui_builder_batch.py` path; their generated
+sources live in scratch output, so the tracked-source join does not count
+them.
+
+## Joined registry
+
+`tools/build_family_registry.py` joins both inventories with tracked
+`0x<address>.c/.cpp` sources and matcher metadata:
+
+```sh
+python3 tools/map_vc6_cleanup_families.py \
+  --out /tmp/pc2-cleanup.json
+python3 tools/mine_feature_families.py \
+  --out /tmp/pc2-call-families.json --report /tmp/pc2-call-families.md
+python3 tools/build_family_registry.py \
+  --inventory /tmp/pc2-cleanup.json \
+  --features /tmp/pc2-call-families.json \
+  --audit /tmp/pc2-audit \
+  --out /tmp/pc2-family-registry/registry.json \
+  --report /tmp/pc2-family-registry/report.md \
+  --specs-out /tmp/pc2-family-specs
+```
+
+`registry.md` is the checked-in snapshot: **60 joined families** and **31
+families with runnable batch specs**. Each spec can be fed directly to
+`tools/run_family_batch.py`:
+
+```sh
+python3 tools/run_family_batch.py \
+  --config /tmp/pc2-family-specs/family-call-004017f0.json \
+  --out /tmp/pc2-family-4017f0 --cache /tmp/pc2-family-cache --jobs 8
+```
+
+## Measured family scoreboards
+
+```text
+call:0x4017f0   72/78 strict   5,002/5,898 bytes   5 near misses, 1 blocked
+call:0x54cc2b   22/23 strict   1,418/1,546 bytes   1 blocked
+call:0x54cbc1   20/21 strict   1,135/1,265 bytes   1 blocked
+call:0x488be0   12/13 strict     817/919 bytes     1 blocked
+call:0x54f140   13/14 strict   1,512/1,671 bytes   1 mismatch
+list pilot        6/7 strict     466/632 bytes     1 near miss (1 byte)
+small guard       1/5 strict     223/1,072 bytes   EH sections exact
+```
+
+The `0x4017f0` family is the stats/object utility group. Its five near misses
+are the known `Stats_SumFilteredFloats`, `Stats_SumFilteredFloats2`,
+`Stats_ComputeWeightedTotals`, and the two one-byte register walls. The
+`0x54cc2b` family is the save/stream group; 22 members match and the remaining
+one is a blocked secondary section.
+
+## What to do next
+
+- Populate the **UI families** (`0x523bb0`, `0x531c60`, `0x523c90`) from the
+  existing UI builder generator output, then add them to the registry with
+  generated-source paths.
+- Run the remaining **31 runnable specs** and rank by strict bytes; this is a
+  batch job, not 31 hand matches.
+- Add two more lenses: vtable-reference families (constructors/destructors)
+  and string-reference families (UI text/game tables).
+- For each family with more than ~30% missing members, extract the shared
+  source shape and write a generator; do not hand-match individual members.
+- Route one-byte/register walls to the permuter lane and keep them out of the
+  human queue.
