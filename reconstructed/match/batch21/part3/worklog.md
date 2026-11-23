@@ -35,7 +35,7 @@ sh reconstructed/match/batch21/part3/verify_strict.sh
 
 * `67806859` — Match 2 of 8 batch21 part3 functions strictly
 * `cafb7784` — Match 7 of 8 batch21 part3 functions strictly
-* final commit — Match the last function (0x50f590) and finish the worklog
+* `9eda0cd5` — Match the last function (0x50f590) and finish the worklog
 
 ## Toolchain / compiler findings
 
