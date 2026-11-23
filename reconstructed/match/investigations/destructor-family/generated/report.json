@@ -58,6 +58,25 @@
           "transfers": 1
         }
       }
+    },
+    {
+      "address": "0x53fcc0",
+      "class": "SoundPakManager",
+      "strict_match": true,
+      "match": true,
+      "length": 207,
+      "candidate_length": 207,
+      "difference_count": 0,
+      "first_difference": null,
+      "strict_issues": [],
+      "relocation_issues": [],
+      "unwind": {
+        "original_states": 2,
+        "candidate_states": 2,
+        "differences": {
+          "transfers": 2
+        }
+      }
     }
   ]
 }

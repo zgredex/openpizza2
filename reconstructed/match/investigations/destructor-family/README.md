@@ -9,13 +9,14 @@ and writes a `family.json` for `tools/run_family_batch.py`.
 ## Result
 
 ```text
-sound-destructors: 3/3 strict, 316/316 bytes
-  0x53f020   91  SoundBuffer    (vtable 0x55c830, deleting 0x53f000)
-  0x53f5d0  126  SoundSample    (vtable 0x55c850, deleting 0x53f5b0)
-  0x546750   99  SoundBuffer2   (vtable 0x55cb14, deleting 0x546730)
+sound-destructors: 4/4 strict, 523/523 bytes
+  0x53f020   91  SoundBuffer      (vtable 0x55c830, deleting 0x53f000)
+  0x53f5d0  126  SoundSample      (vtable 0x55c850, deleting 0x53f5b0)
+  0x546750   99  SoundBuffer2     (vtable 0x55cb14, deleting 0x546730)
+  0x53fcc0  207  SoundPakManager  (vtable 0x55c864, deleting 0x53fca0)
 ```
 
-Both candidates reproduce the primary body, `.text$x`, `.xdata$x`, the
+All four candidates reproduce the primary body, `.text$x`, `.xdata$x`, the
 `0x53efd0` cleanup thunk, the derived/base vtables, and the shared
 AddRef/Release/QueryInterface method targets.
 
@@ -51,7 +52,7 @@ base deleting destructor = 0x53efe0
 
 ```sh
 sh reconstructed/match/investigations/destructor-family/verify_strict.sh
-# 2/2 strict
+# 4/4 strict
 
 python3 tools/generate_destructor_family.py \
   --spec reconstructed/match/investigations/destructor-family/destructors.json \
@@ -180,12 +181,50 @@ original `0x541f30`/`0x5408b0` state store may come from a different C2/EH
 codegen revision or a non-obvious local scope, not a missing member shape.
 SoundTrack is parked as a 29-byte near miss; `0x5408b0` has the same wall.
 
+## SoundPakManager body and call linkage
+
+`0x53fcc0` adds two requirements that the earlier members did not exercise:
+
+1. A member subobject at `+0x23c` whose inline destructor calls
+   `DeleteCriticalSection`. The compiler emits the normal-path call inline and
+   the unwind action `mov ecx,[ebp-0x10]; add ecx,0x23c; jmp 0x53fd90`, i.e.
+   the same cleanup shape as the shared member class.
+2. C++-linkage declarations for `Mem_Free` and `CRT_Fclose`:
+
+```cpp
+void Mem_Free(void *);
+int CRT_Fclose(void *);
+extern "C" __declspec(dllimport) void __stdcall DeleteCriticalSection(void *);
+```
+
+The linkage matters. With `extern "C"` calls, VC6 does not create a try region
+for the destructor body, so the whole `fs:[0]` frame disappears (candidate
+160 bytes, original 207). Declaring the two CRT calls as C++ makes them
+potential throw sites and reproduces the two-state unwind frame.
+
+The list loop must free before it stores the next head, otherwise VC6 keeps
+`head` updated across the call and adds four bytes:
+
+```cpp
+while (head != 0) {
+    Node *next = head->next;
+    Mem_Free(head);
+    head = next;
+}
+```
+
+`head = next; Mem_Free(node);` produced a 52-byte mismatch; the free-first
+order reproduces `mov edi,[eax+0x50]; push eax; call; mov [esi+0x628],edi;
+test edi,edi; jne ...` exactly.
+
+The array loop uses a 20-entry array at `+8` (stride `0x1c`, fields at
+`+0/+4/+0x18`), a count at `+0x238`, and a list head at `+0x628`.
+
 ## Next destructor targets
 
 ```text
 0x5408b0 SoundBuffer_DestructDerived   169 bytes  vtable 0x55c874
 0x541790 SoundStreamBuffer_Destruct    225 bytes  vtables 0x55c8b0/0x55c8c8/0x55c874
-0x53fcc0 SoundPakManager_Destruct      207 bytes  vtable 0x55c864
 0x546750 SoundBuffer_Destructor         99 bytes  experimental above
 0x541f30 SoundTrack_Destruct           138 bytes  experimental above
 ```

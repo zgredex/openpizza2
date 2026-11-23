@@ -1,7 +1,7 @@
 {
   "family": "sound-destructors",
-  "prelude": "extern \"C\" void __cdecl Mem_Free(void *);\nextern \"C\" __declspec(dllimport) void __stdcall CoUninitialize(void);",
-  "common": "struct Child {\n    virtual void slot0();\n    virtual void slot1();\n    virtual void __stdcall Destroy();\n};\n\nstruct SoundStream {\n    virtual void slot0();\n    virtual void __stdcall Release();\n    void Close(int length);\n};\n\nstruct ComObject {\n    virtual void slot0();\n    virtual void __stdcall Release();\n    virtual void __stdcall Release2();\n};",
+  "prelude": "extern \"C\" void __cdecl Mem_Free(void *);\nextern \"C\" __declspec(dllimport) void __stdcall CoUninitialize(void);\nextern \"C\" __declspec(dllimport) void __stdcall DeleteCriticalSection(void *);",
+  "common": "struct Child {\n    virtual void slot0();\n    virtual void slot1();\n    virtual void __stdcall Destroy();\n};\n\nstruct SoundStream {\n    virtual void slot0();\n    virtual void __stdcall Release();\n    void Close(int length);\n};\n\nstruct ComObject {\n    virtual void slot0();\n    virtual void __stdcall Release();\n    virtual void __stdcall Release2();\n};\n\nstruct Entry {\n    void *stream;\n    void *buffer;\n    char pad8[0x10];\n    int flag;\n};\n\nstruct Node {\n    char pad0[0x50];\n    Node *next;\n};",
   "base": {
     "class": "SoundBufferBase",
     "vtable": "0x55c840",
@@ -102,6 +102,65 @@
         "    field8->Release();",
         "    break;",
         "}"
+      ]
+    },
+    {
+      "class": "SoundPakManager",
+      "address": "0x53fcc0",
+      "length": 207,
+      "vtable": "0x55c864",
+      "deleting": "0x53fca0",
+      "prelude": "void Mem_Free(void *);\nint CRT_Fclose(void *);\nextern \"C\" __declspec(dllimport) void __stdcall DeleteCriticalSection(void *);",
+      "fields": [
+        {
+          "decl": "Entry entries[20];",
+          "offset": 8,
+          "size": 560
+        },
+        {
+          "decl": "int count;",
+          "offset": 568
+        },
+        {
+          "decl": "CriticalSection criticalSection;",
+          "offset": 572,
+          "size": 24
+        },
+        {
+          "decl": "Node *head;",
+          "offset": 1576
+        }
+      ],
+      "body": [
+        "while (count > 0) {",
+        "    count = count - 1;",
+        "    if (entries[count].flag != 0) {",
+        "        CRT_Fclose(entries[count].stream);",
+        "    }",
+        "    Mem_Free(entries[count].buffer);",
+        "}",
+        "while (head != 0) {",
+        "    Node *next = head->next;",
+        "    Mem_Free(head);",
+        "    head = next;",
+        "}"
+      ]
+    }
+  ],
+  "members": [
+    {
+      "class": "CriticalSection",
+      "address": "0x53fd90",
+      "inline": true,
+      "fields": [
+        {
+          "decl": "char raw[0x18];",
+          "offset": 0,
+          "size": 24
+        }
+      ],
+      "body": [
+        "DeleteCriticalSection(raw);"
       ]
     }
   ]

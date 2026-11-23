@@ -61,7 +61,8 @@ def source_for(spec, item):
     fields = field_block(item.get("fields", []))
     common = spec.get("common", "")
     members = "\n\n".join(member_source(member) for member in spec.get("members", []))
-    return f"""{spec.get('prelude', '')}
+    prelude = item.get("prelude", spec.get("prelude", ""))
+    return f"""{prelude}
 {common}
 {members}
 struct {base} {{
