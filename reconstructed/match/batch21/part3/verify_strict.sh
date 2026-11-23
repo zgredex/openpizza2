@@ -29,6 +29,14 @@ check() {
 
 check 0x54b070 156 '?FindFreeSlot@MessageList@@QAEHPAH@Z' --flags '/O2 /TP'
 check 0x4dd4f0 157 '?Save@GameCalendar@@QAEXPAVOStream@@@Z' --flags '/O2 /TP'
+check 0x4e9d90 157 '?ReleaseConstructionSpriteLists@Game@@QAEXXZ' --flags '/O2 /TP'
+check 0x501f90 157 '_Game_GetBestBuildingRatingBand' --flags '/O2 /TP'
+check 0x527ee0 157 '?BringWindowToFront@UI@@QAEXH@Z' --flags '/O2 /TP'
+check 0x403200 158 '?ReadValue@RegistryKey@@QAEPAEPBDPAK@Z' --flags '/O2 /TP'
+check 0x406cd0 158 '?Config_SaveOptionsToRegistry@@YAXXZ' --flags '/O2 /TP /GX' \
+    --symbol '??1RegistryKey@@QAE@XZ=0x4031a0' \
+    --symbol '$L268=0x557d78' --symbol '$T267=0x55d740' \
+    --symbol '$T270=0x55d760' --symbol '$L260=0x557d70'
 
 echo "strict matches: $pass/$((pass + fail))"
 [ "$fail" -eq 0 ]
