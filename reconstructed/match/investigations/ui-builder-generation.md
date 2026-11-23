@@ -44,9 +44,10 @@ for another 5,606 bytes. A final parser fix accepts whitespace before a
 call's closing semicolon; this added `Screen_MissionGoals` (`0x42d990`,
 1,105 bytes). The parser also learned local `char[64]` buffers,
 `IDMap_Lookup`, `String_Format`, and the `DAT_0057c670` pointer global;
-that added `OfficeView_CreateWindow` (`0x4275a0`, 902 bytes). The batch now
-links **119 strict builders covering 436,776 code bytes** into a
-byte-identical scratch PE.
+that added `OfficeView_CreateWindow` (`0x4275a0`, 902 bytes). A final
+if/else format-selection shape added `Screen_MissionBriefing` (`0x474df0`,
+691 bytes). The batch now links **120 strict builders covering 437,467 code
+bytes** into a byte-identical scratch PE.
 
 The broader scan reports three unsupported exports at `0x4275a0`,
 `0x42d990`, and `0x474df0`. The tool saves its report and linked image

@@ -40,8 +40,13 @@ METHODS = {
     "Window_GadgetNotify_Slider_SetGradientColors": (0x52fcc0, "void", "int, int *"),
 }
 GLOBALS = {"DAT_0057c5e0": "UI *"}
-RECEIVERS = {"(void *)(DAT_0057c670 + 4)": "((IDMap *)((char *)DAT_0057c670 + 4))"}
-LOCAL_GRADIENT = {"local_10": 0, "local_c": 1, "local_8": 2, "local_4": 3}
+RECEIVERS = {
+    "(void *)(DAT_0057c670 + 4)": ("((IDMap *)((char *)DAT_0057c670 + 4))",
+                                   ("DAT_0057c670", "void *DAT_0057c670")),
+    "&DAT_0057c590": ("((IDMap *)&DAT_0057c590)", ("DAT_0057c590", "char DAT_0057c590")),
+}
+LOCAL_GRADIENT = {"local_10": 0, "local_c": 1, "local_8": 2, "local_4": 3,
+                  "local_50": 0, "local_4c": 1, "local_48": 2, "local_44": 3}
 NUMBER = r"-?(?:0x[0-9a-f]+|[0-9]+)"
 CALL = re.compile(r"(?:(iVar1|this)\s*=\s*(?:\(void \*\))?)?(\w+)\s*\((.*)\)\s*;")
 
@@ -73,6 +78,10 @@ def extract(address, pseudocode, methods, *, null_return="window"):
     if not signature:
         raise ValueError("unsupported decompiled UI builder signature")
     name, body = signature.groups()
+    body = re.sub(
+        r"if \(iVar1 == 0\) \{\s*iVar1 = 0;\s*pcVar2 = (s_\w+);\s*\}\s*else \{\s*pcVar2 = (s_\w+);\s*\}\s*String_Format\(local_40,\s*\(byte \*\)pcVar2,\s*iVar1\);",
+        r"if (iVar1 != 0) { String_Format(local_40, \2, iVar1); } else { String_Format(local_40, \1, iVar1); }",
+        body)
     statements = [re.sub(r"\s+", " ", token.strip()) for token in re.findall(r"[^;{}]+[;{]|}", body)]
     if re.sub(r"[^;{}]+[;{]|}", "", body).strip():
         raise ValueError("unparsed pseudocode")
@@ -95,10 +104,13 @@ def extract(address, pseudocode, methods, *, null_return="window"):
             return value
         if value == "local_40" and parameter == "char *":
             return value
+        if value == "DAT_0057bb40" and parameter == "int":
+            externs["DAT_0057bb40"] = "int DAT_0057bb40"
+            return "DAT_0057bb40"
         if re.fullmatch(r"\*\(int \*\)\(DAT_0057c670 \+ 0x2f4\)", value):
             externs["DAT_0057c670"] = "void *DAT_0057c670"
             return "*(int *)((char *)DAT_0057c670 + 0x2f4)"
-        if value == "&local_10" and "gradient" in declarations:
+        if re.fullmatch(r"&local_[0-9a-f]+", value) and value[1:] in LOCAL_GRADIENT and "gradient" in declarations:
             return "gradient"
         ptr = re.fullmatch(r"(?:s_\w+_|&DAT_)([0-9a-f]{8})", value)
         load = re.fullmatch(r"(DAT_[0-9a-f]{8})", value)
@@ -121,6 +133,10 @@ def extract(address, pseudocode, methods, *, null_return="window"):
     for statement in statements:
         call = CALL.fullmatch(statement)
         assignment = re.fullmatch(rf"(local_[0-9a-f]+) = ({NUMBER});", statement)
+        pointer_local = re.fullmatch(r"char \*(\w+);", statement)
+        if pointer_local:
+            declarations[pointer_local[1]] = f"char *{pointer_local[1]};"
+            continue
         if statement in {"int iVar1;", "void *this;"}:
             symbol, declaration = ("iVar1", "int iVar1;") if statement[0] == "i" else ("window", "UI *window;")
             declarations[symbol] = declaration
@@ -136,13 +152,19 @@ def extract(address, pseudocode, methods, *, null_return="window"):
         if format_call:
             values = [value.strip() for value in format_call[1].split(",")]
             if len(values) == 3 and values[0] in declarations:
-                ptr = re.fullmatch(r"\(byte \*\)s_\w+_([0-9a-f]{8})", values[1])
-                if not ptr:
-                    raise ValueError(f"unsupported format label {values[1]!r}")
+                ptr = re.fullmatch(r"(?:\(byte \*\))?s_\w+_([0-9a-f]{8})", values[1])
+                variable = re.fullmatch(r"\(byte \*\)(\w+)", values[1])
                 externs["String_Format"] = "int String_Format(char *, const char *, ...)"
-                externs[f"STR_{ptr[1]}"] = f"char STR_{ptr[1]}[]"
-                calls.append(0x54dd83)
-                statement = f"String_Format({values[0]}, STR_{ptr[1]}, {values[2]});"
+                if ptr:
+                    externs[f"STR_{ptr[1]}"] = f"char STR_{ptr[1]}[]"
+                    source_arg = f"STR_{ptr[1]}"
+                elif variable and variable[1] in declarations:
+                    source_arg = variable[1]
+                else:
+                    raise ValueError(f"unsupported format label {values[1]!r}")
+                if 0x54dd83 not in calls:
+                    calls.append(0x54dd83)
+                statement = f"String_Format({values[0]}, {source_arg}, {values[2]});"
             else:
                 raise ValueError(f"unsupported String_Format call {statement!r}")
         elif call and call[2] in methods:
@@ -154,8 +176,8 @@ def extract(address, pseudocode, methods, *, null_return="window"):
             elif receiver in GLOBALS:
                 externs[receiver] = f"{GLOBALS[receiver]}{receiver}"
             elif receiver in RECEIVERS:
-                externs["DAT_0057c670"] = "void *DAT_0057c670"
-                receiver = RECEIVERS[receiver]
+                receiver, (symbol, declaration) = RECEIVERS[receiver]
+                externs[symbol] = declaration
             else:
                 raise ValueError(f"unsupported receiver {receiver!r}")
             types = [parameter.strip() for parameter in parameters.split(",")]
@@ -177,9 +199,18 @@ def extract(address, pseudocode, methods, *, null_return="window"):
             statement = f"return {null_return if blocks[-1] == 'if (window == 0) {' else '0'};"
         elif statement == "return this;":
             statement = "return window;"
+        elif re.fullmatch(r"pcVar2 = iVar1 == 0 \? (s_\w+) : (s_\w+);", statement):
+            ternary = re.fullmatch(r"pcVar2 = iVar1 == 0 \? (s_\w+) : (s_\w+);", statement)
+            left = re.fullmatch(r"s_\w+_([0-9a-f]{8})", ternary[1])
+            right = re.fullmatch(r"s_\w+_([0-9a-f]{8})", ternary[2])
+            if not left or not right or "pcVar2" not in declarations:
+                raise ValueError(f"unsupported ternary label {statement!r}")
+            externs[f"STR_{left[1]}"] = f"char STR_{left[1]}[]"
+            externs[f"STR_{right[1]}"] = f"char STR_{right[1]}[]"
+            statement = f"pcVar2 = iVar1 == 0 ? STR_{left[1]} : STR_{right[1]};"
         elif assignment and assignment[1] in LOCAL_GRADIENT and "gradient" in declarations:
             statement = f"gradient[{LOCAL_GRADIENT[assignment[1]]}] = {assignment[2]};"
-        elif statement not in {"if (iVar1 != 0) {", "*param_1 = iVar1;", "}"}:
+        elif statement not in {"if (iVar1 != 0) {", "else {", "*param_1 = iVar1;", "}"}:
             raise ValueError(f"unsupported UI builder statement {statement!r}")
         if statement == "}":
             if len(blocks) == 1:
