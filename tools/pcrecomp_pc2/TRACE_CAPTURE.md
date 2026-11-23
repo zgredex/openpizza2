@@ -24,6 +24,38 @@ python3 tools/pcrecomp_pc2/capture.py run \
 
 The runner uses Python 3.11 or later on Linux. `--work` defaults to `PC2_WORK` or `/tmp/opencode/pcrecomp-pc2`. Use `--skip-build` when the instrumented host is already current. `--timeout` gives the guest a wall-clock limit in seconds after the build. The default is 120 seconds. The default capture limit is 2,000,000 runtime records, about 88 MB of binary data. `--max-events 0` allows unlimited recording within the time limit. Use short named phases around the action of interest. A scenario whose first step is `begin` starts recording after PE mapping and before the guest CRT entry.
 
+## Capture a Vulkan-presented frame
+
+`capture.py` still runs the headless dummy-video host. To verify the native
+presentation path, run the normal host with a real display and ask it to read
+back the first presented menu frame together with the exact guest RGB565 frame
+that produced it. The Vulkan host now owns its SDL window and input pump; this
+is separate from the instrumented headless capture build.
+
+```sh
+cd game
+LD_LIBRARY_PATH=/tmp/opencode/pcrecomp-pc2/sysroot32/lib DISPLAY=:0 \
+PC2_VULKAN_WINDOW=800x600 \
+PC2_VULKAN_CAPTURE=/tmp/opencode/vk-menu.ppm \
+PC2_VULKAN_SOURCE=/tmp/opencode/src-menu.ppm \
+  timeout 30 /tmp/opencode/pcrecomp-pc2/pc2-native/pc2 fastfood2.exe
+```
+
+Both files are P6 PPM. At 800x600 the pixel payloads must be identical; the
+presented frame's pixel SHA-256 is the same verified menu digest:
+
+```text
+1abdbb3fffaa31003b9d17fbbea7d92a0d306762095ad7fb0d45b3bcea0a6e2b
+```
+
+With another `PC2_VULKAN_WINDOW` size the output is nearest-scaled into a 4:3
+viewport centered with black bars. Add `PC2_VULKAN_STATS=1` to log every 300
+presented frames and the current swapchain size while resizing the window.
+`PC2_TRACE_INPUT=1` records the `WM_MOUSE*` messages, and
+`PC2_TEST_CLICK=x,y` injects one deterministic SDL click in guest coordinates
+for an input smoke test. `PC2_RENDERER=sdl` selects the old SDL-renderer
+fallback explicitly; Vulkan failures do not fall back silently.
+
 ## Replay a scratch image
 
 Use `--image` to map a [verified scratch PE](../../reconstructed/match/README.md#scratch-pe-verification)

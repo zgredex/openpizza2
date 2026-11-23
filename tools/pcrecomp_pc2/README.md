@@ -2,7 +2,8 @@
 
 Pinned, reproducible native-Linux bring-up for the static recompilation of
 Pizza Connection 2. It runs the **shipped** `fastfood2.exe` as lifted C on a
-32-bit Linux host through `pcrecomp` and `win32hle`; no Wine, no JIT.
+32-bit Linux host through `pcrecomp` and `win32hle`; no Wine, no JIT. The
+guest's 800x600 RGB565 framebuffer is presented by a native Vulkan swapchain.
 
 ## Pinned inputs
 
@@ -40,6 +41,94 @@ The script:
 6. runs it headlessly from the PE entry `0x0054FCD4` with the permissive import
    binder, `SDL_VIDEODRIVER=dummy`, and `HLE_FILETRACE=1`;
 7. checks for entry into WinMain and the archive/string assets.
+
+## Native Vulkan presentation
+
+The normal non-headless host presents through Vulkan, not SDL's renderer and
+not OpenGL. `pc2_vulkan.c` owns the SDL window, the SDL-to-Win32 input pump,
+the Vulkan instance/surface, the physical device and queue, the FIFO
+swapchain, the render pass, the nearest-sampled pipeline, and the staging
+upload. The guest's completed RGB565 framebuffer still comes from win32hle's
+DirectDraw/GDI implementation, but the Vulkan path has no win32hle window,
+SDL renderer, `hle_screen_gl` mode, frame-hook presenter, or GL bridge.
+
+Build requirements beyond the pinned recipe are `glslangValidator` and a
+32-bit Vulkan ICD (for example `lib32-vulkan-icd-loader` plus
+`lib32-vulkan-radeon`). `build.sh` downloads the pinned Vulkan-Headers
+(`vulkan-sdk-1.4.363.0`) and enables SDL's Vulkan support. The host logs the
+chosen device, surface format and swapchain:
+
+```text
+[vulkan] window 800x600 driver=x11
+[vulkan] device 0: AMD Radeon Graphics (RADV RENOIR) type=1 ...
+[vulkan] surface format 44 colour-space 0
+[vulkan] swapchain 800x600 format=44 present=FIFO images=4
+[vulkan] ready (native Vulkan presentation, nearest filtering, FIFO)
+```
+
+Run it from `game` as usual, without `PC2_HEADLESS`:
+
+```bash
+cd game
+LD_LIBRARY_PATH=/tmp/opencode/pcrecomp-pc2/sysroot32/lib DISPLAY=:0 \
+  /tmp/opencode/pcrecomp-pc2/pc2-native/pc2 fastfood2.exe
+```
+
+The format is 8-bit UNORM; an sRGB surface is rejected rather than silently
+changing the game's colours. The RGB565 expansion is byte-identical to the PPM
+dump formula. The frame is uploaded as RGBA8, sampled with nearest filtering
+through a fullscreen triangle, and fitted to a 4:3 viewport with black bars.
+The swapchain is recreated when the drawable changes; F11 or Alt+Enter toggles
+fullscreen, and a minimized window keeps its swapchain and drops frames until
+restored. Input is translated by the same native module, so there is one
+window for display, mouse and keyboard.
+
+Verified presentation evidence (the 1:1 readback was taken after the
+win32hle window/input bridge was removed):
+
+```text
+800x600 Vulkan readback == guest source pixels
+pixel sha256=1abdbb3fffaa31003b9d17fbbea7d92a0d306762095ad7fb0d45b3bcea0a6e2b
+
+1000x700: 933x700 picture at x=33, black bars, 0 differing samples
+          against nearest-neighbour with the GPU half-texel tie-down
+
+resize 800x600 -> 1100x650 -> 900x900 -> 1000x700:
+          swapchain recreated for each size, presented=300 continued
+
+physical mouse: pending=21 -> 28 -> 22 -> 23
+          (main menu -> character select -> mission briefing -> game session)
+```
+
+Capture the first presented menu frame and the exact guest source frame used
+for it. Both are P6 PPM and can be compared directly:
+
+```bash
+cd game
+LD_LIBRARY_PATH=/tmp/opencode/pcrecomp-pc2/sysroot32/lib DISPLAY=:0 \
+PC2_VULKAN_WINDOW=800x600 \
+PC2_VULKAN_CAPTURE=/tmp/opencode/vk-menu.ppm \
+PC2_VULKAN_SOURCE=/tmp/opencode/src-menu.ppm \
+  timeout 30 /tmp/opencode/pcrecomp-pc2/pc2-native/pc2 fastfood2.exe
+```
+
+`PC2_VULKAN_CAPTURE` sets an 800x600 window automatically when no
+`PC2_VULKAN_WINDOW` is given. Additional presentation and input switches:
+
+| Variable | Effect |
+|---|---|
+| `PC2_RENDERER=vulkan` | Explicit native Vulkan mode (default when not headless). |
+| `PC2_RENDERER=sdl` | Explicit SDL-renderer fallback; never used silently. |
+| `PC2_VULKAN_WINDOW=WxH` | Initial window size; the swapchain follows resizes. |
+| `PC2_VULKAN_CAPTURE=file.ppm` | Read back the first presented menu frame. |
+| `PC2_VULKAN_SOURCE=file.ppm` | Write the guest RGB565 frame used for that capture. |
+| `PC2_VULKAN_STATS=1` | Log every 300 presented frames and the swapchain size. |
+| `PC2_TRACE_INPUT=1` | Trace `WM_MOUSE*` messages delivered to the guest. |
+| `PC2_TEST_CLICK=x,y` | One deterministic SDL click in guest coordinates; input smoke test. |
+
+Wayland is the next display milestone. This SDL build uses X11 because the
+32-bit `libxkbcommon` package is not installed; under a Wayland session the
+Vulkan window currently runs through XWayland.
 
 ## Verified trace
 
@@ -96,6 +185,13 @@ They live in `pc2_shims.c`; the shared runtime is unmodified.
 - Native host: links 32-bit, runs from CRT entry `0x0054FCD4` through WinMain
   `0x00403D90`, both `Movie_Play` calls, `Map_LoadIsodata 0x004EA440` and into
   `GameMain 0x004043E0`.
+- **Native presentation:** the non-headless host opens a Vulkan window and
+  presents the guest RGB565 frame through `pc2_vulkan.c`; that module also owns
+  the SDL input pump and mouse mapping, so there is no win32hle window or
+  `hle_screen_gl` path. SDL's renderer is used only with
+  `PC2_RENDERER=sdl`. See [Native Vulkan
+  presentation](#native-vulkan-presentation) for the verified frame digest,
+  resize path and capture switches.
 - The four PC2 `.pak` archives, `language.ldf`, `sound.pak`, the loading image
   and the main-menu assets (`PE_STARTSCREEN.TGA`, `TIMESFONT.fnt`,
   `TEXTPBTRANSPGELB_*.spr`) open successfully through `Resource_Open`.
@@ -110,7 +206,7 @@ They live in `pc2_shims.c`; the shared runtime is unmodified.
   `UI_RenderScene`/`UI_ProcessChildEvent` draw. `Window_RenderFrame` still
   takes `Surface_BlitRectRetry 0x00538DA0` (the `Window+0x1BC` GDI branch is
   unchanged), and the tracked DirectDraw primary is still black.
-- The presenter bridge is host-side and does not alter the guest branch or
+- The framebuffer path is host-side and does not alter the guest branch or
   object layout: after `Screen_MainMenu`, `hle_dd_frame_hook` returns the
   completed 800x600 16bpp buffer at `renderer+0x28`. The first eight frames
   remain blank because the menu has not been built yet; the dump happens after
@@ -141,10 +237,9 @@ DDBLT post d=4106965568 primary=0 pitch=1600 bpp=16
   The post-copy destination is still blank, which is why the game's completed
   renderer buffer is presented instead of the tracked primary.
 - **Cursor:** PC2 installs `LoadCursorA(NULL, IDC_ARROW)` as its window-class
-  cursor and does not draw a software cursor into the picture. `win32hle`
-  hides the SDL cursor unless `hle_screen_cursor_hook` is set, so the running
-  window had no pointer. The host now sets the hook to `hle_cursor_shown()`;
-  the trace prints `[screen] cursor: the system arrow`.
+  cursor and does not draw a software cursor into the picture. The native
+  Vulkan pump hides the SDL cursor unless `hle_screen_cursor_hook` says the
+  guest shows its own; the trace prints `[vulkan] cursor: the system arrow`.
 - **Campaign path:** `PC2_CLICK_START=1` clicks `Start new game` at
   `(650,18)`. With `PC2_START_CAMPAIGN=1` the host also clicks
   `Start game` at `(700,566)` and `Start Mission` at `(680,560)`.
@@ -158,6 +253,7 @@ pending=21 Screen_MainMenu
 
   A late preview dump (`PC2_GAME_DUMP_DELAY=2000`) contains the London
   welcome dialog and the `Town aims` panel.
+
 - **Verified lease:** the replay below opens the `Rent buildings` panel,
   clicks the offer (`Lease` at `745,500`), confirms the `Do you want to lease
   this building for 2812$?` dialog (`O.K.` at `740,581`), and owns the branch.

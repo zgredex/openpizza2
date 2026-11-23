@@ -26,6 +26,11 @@ SDL2TTF_VERSION=2.22.0
 SDL2TTF_URL="https://github.com/libsdl-org/SDL_ttf/releases/download/release-${SDL2TTF_VERSION}/SDL2_ttf-${SDL2TTF_VERSION}.tar.gz"
 SDL2TTF_SHA256=d48cbd1ce475b9e178206bf3b72d56b66d84d44f64ac05803328396234d67723
 
+VULKAN_TAG=vulkan-sdk-1.4.363.0
+VULKAN_URL="https://github.com/KhronosGroup/Vulkan-Headers/archive/refs/tags/${VULKAN_TAG}.tar.gz"
+VULKAN_SHA256=4a078be12bef21cfebc09d878b77a63cff9d68f899254a0b00d0e37ef73e7f7e
+VULKAN="$WORK/vulkan-headers"
+
 need() {
     command -v "$1" >/dev/null 2>&1 || { echo "missing required tool: $1" >&2; exit 1; }
 }
@@ -39,6 +44,7 @@ need curl
 need sha256sum
 need tar
 need make
+need glslangValidator
 
 actual=$(sha256sum "$EXE" | cut -d' ' -f1)
 if [ "$actual" != "$EXE_SHA256" ]; then
@@ -47,6 +53,15 @@ if [ "$actual" != "$EXE_SHA256" ]; then
 fi
 
 mkdir -p "$WORK/src" "$WORK/sysroot32"
+
+if [ ! -f "$VULKAN/include/vulkan/vulkan.h" ]; then
+    if [ ! -f "$WORK/Vulkan-Headers-${VULKAN_TAG}.tar.gz" ]; then
+        curl -fL "$VULKAN_URL" -o "$WORK/Vulkan-Headers-${VULKAN_TAG}.tar.gz"
+    fi
+    echo "$VULKAN_SHA256  $WORK/Vulkan-Headers-${VULKAN_TAG}.tar.gz" | sha256sum -c -
+    mkdir -p "$VULKAN"
+    tar -C "$VULKAN" -xf "$WORK/Vulkan-Headers-${VULKAN_TAG}.tar.gz" --strip-components=1
+fi
 
 if [ ! -d "$PC/.git" ]; then
     git clone "$PCRECOMP_REPO" "$PC"
@@ -69,7 +84,11 @@ if ! "$VENV/bin/python" -c 'import capstone, pefile, unicorn' >/dev/null 2>&1; t
     "$VENV/bin/pip" -q install capstone==5.0.7 pefile==2024.8.26 unicorn==2.1.4
 fi
 
-if [ ! -f "$SYS/lib/libSDL2.a" ]; then
+SDL2_CONFIG="x11=on wayland=off vulkan=on alsa=off pulseaudio=off pipewire=off"
+SDL2_STAMP="$SYS/lib/.pc2-sdl2-config"
+if [ ! -f "$SYS/lib/libSDL2.a" ] || [ "$(cat "$SDL2_STAMP" 2>/dev/null || true)" != "$SDL2_CONFIG" ]; then
+    rm -rf "$WORK/src/SDL2-build32"
+    rm -f "$SYS/lib/libSDL2.a" "$SYS/lib/libSDL2main.a" "$SDL2_STAMP"
     if [ ! -f "$WORK/SDL2-${SDL2_VERSION}.tar.gz" ]; then
         curl -fL "$SDL2_URL" -o "$WORK/SDL2-${SDL2_VERSION}.tar.gz"
     fi
@@ -82,13 +101,15 @@ if [ ! -f "$SYS/lib/libSDL2.a" ]; then
         -DCMAKE_EXE_LINKER_FLAGS=-m32 -DCMAKE_SHARED_LINKER_FLAGS=-m32 \
         -DSDL_SHARED=OFF -DSDL_STATIC=ON -DSDL_TEST=OFF -DSDL_TESTS=OFF \
         -DSDL_X11=ON -DSDL_WAYLAND=OFF \
+        -DSDL_VULKAN=ON -DVulkan_INCLUDE_DIR="$VULKAN/include" -DVulkan_LIBRARY=/usr/lib32/libvulkan.so \
         -DSDL_ALSA=OFF -DSDL_PULSEAUDIO=OFF -DSDL_JACK=OFF -DSDL_ESD=OFF -DSDL_NAS=OFF \
         -DSDL_PIPEWIRE=OFF -DSDL_SNDIO=OFF -DSDL_DSP=OFF \
         -DSDL_DISKAUDIO=ON -DSDL_DUMMYAUDIO=ON \
         -DSDL_DBUS=OFF -DSDL_IBUS=OFF -DSDL_LIBUDEV=OFF \
-        -DSDL_OPENGL=OFF -DSDL_VULKAN=OFF -DSDL_RPATH=OFF > "$WORK/sdl2-configure.log" 2>&1
+        -DSDL_OPENGL=OFF -DSDL_RPATH=OFF > "$WORK/sdl2-configure.log" 2>&1
     cmake --build "$WORK/src/SDL2-build32" -j "${JOBS:-4}" > "$WORK/sdl2-build.log" 2>&1
     cmake --install "$WORK/src/SDL2-build32" > "$WORK/sdl2-install.log" 2>&1
+    echo "$SDL2_CONFIG" > "$SDL2_STAMP"
 fi
 
 if [ ! -f "$SYS/lib/libSDL2_ttf.so" ]; then
@@ -142,7 +163,7 @@ fi
 
 mkdir -p "$HOSTDIR"
 if ! make -C "$REPO_ROOT/tools/pcrecomp_pc2" \
-    PC="$PC" GEN="$GEN" SYS="$SYS" CAPTURE="$CAPTURE" \
+    PC="$PC" GEN="$GEN" SYS="$SYS" VULKAN="$VULKAN" CAPTURE="$CAPTURE" \
     OUT="$HOSTDIR/pc2" OBJ_DIR="$HOSTDIR/obj" \
     -j "${JOBS:-4}" > "$BUILD_LOG" 2>&1; then
     tail -40 "$BUILD_LOG" >&2

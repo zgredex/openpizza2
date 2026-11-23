@@ -2,10 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_vulkan.h>
 
 #include "host.h"
 #include "win32hle.h"
 #include "ddraw_int.h"
+#include "pc2_vulkan.h"
 #ifdef PC2_CAPTURE
 #include "capture.h"
 #endif
@@ -442,9 +445,66 @@ static int pc2_mission_clicked;
 static int pc2_lease_clicked;
 static int pc2_confirm_clicked;
 static int pc2_started;
+/* Deterministic native-input smoke test: push the same SDL events as a real
+ * click, mapped through the Vulkan viewport. Enabled only by PC2_TEST_CLICK. */
+static void pc2_test_click(void) {
+    static int done;
+    static int ready_frames;
+    const char *spec = getenv("PC2_TEST_CLICK");
+    if (!spec || done || !pc2_saw_menu || MEM32(0x0056386C) != 0) return;
+    if (++ready_frames < 30) return;
+    int gx = 650, gy = 18;
+    if (sscanf(spec, "%d,%d", &gx, &gy) != 2) return;
+    int vx, vy, vw, vh, ww, wh, dw, dh;
+    pc2_vulkan_viewport(&vx, &vy, &vw, &vh);
+    SDL_Window *win = pc2_vulkan_window();
+    if (!win) win = hle_screen_sdl_window();
+    if (!win || vw <= 0 || vh <= 0) return;
+    SDL_GetWindowSize(win, &ww, &wh);
+    SDL_Vulkan_GetDrawableSize(win, &dw, &dh);
+    if (ww <= 0 || wh <= 0 || dw <= 0 || dh <= 0) return;
+    int x = (vx + gx * vw / 800) * ww / dw;
+    int y = (vy + gy * vh / 600) * wh / dh;
+    Uint32 window_id = SDL_GetWindowID(win);
+    SDL_Event event;
+    SDL_zero(event);
+    event.type = SDL_MOUSEMOTION;
+    event.motion.windowID = window_id;
+    event.motion.x = x;
+    event.motion.y = y;
+    SDL_PushEvent(&event);
+    SDL_zero(event);
+    event.type = SDL_MOUSEBUTTONDOWN;
+    event.button.windowID = window_id;
+    event.button.button = SDL_BUTTON_LEFT;
+    event.button.state = SDL_PRESSED;
+    event.button.clicks = 1;
+    event.button.x = x;
+    event.button.y = y;
+    SDL_PushEvent(&event);
+    SDL_zero(event);
+    event.type = SDL_MOUSEBUTTONUP;
+    event.button.windowID = window_id;
+    event.button.button = SDL_BUTTON_LEFT;
+    event.button.state = SDL_RELEASED;
+    event.button.clicks = 1;
+    event.button.x = x;
+    event.button.y = y;
+    SDL_PushEvent(&event);
+    done = 1;
+    fprintf(stderr, "[trace] SDL test click guest=%d,%d window=%d,%d drawable=%dx%d\n",
+            gx, gy, x, y, dw, dh);
+}
+
 static void pc2_poll(void) {
     uint32_t pending = MEM32(0x0056386C);
+    static uint32_t last_pending = ~0u;
+    if (pending != last_pending) {
+        fprintf(stderr, "[trace] pending=%u\n", pending);
+        last_pending = pending;
+    }
     if (pending == 21) pc2_saw_menu = 1;
+    pc2_test_click();
     if (pending == 28) pc2_char_seen = 1;
     if (pending == 22) pc2_mission_seen = 1;
     pc2_save_loaded_checkpoint();
@@ -642,6 +702,45 @@ static void pc2_frame_hook(const uint8_t *px, int w, int h, int pitch, int bpp) 
     }
 }
 
+/* Input trace for checking win32hle's SDL-to-WM mapping (PC2_TRACE_INPUT). */
+static void pc2_proc_hook(uint32_t hwnd, uint32_t msg, uint32_t wparam, uint32_t lparam) {
+    if (msg >= 0x0200 && msg <= 0x0209)
+        fprintf(stderr, "[trace] proc msg=%03X w=%X l=%X\n", msg, wparam, lparam);
+}
+
+/* The guest's DirectDraw/GDI frame, presented directly by the native Vulkan
+ * module. The sequence keeps a static frame from being uploaded repeatedly;
+ * a flip or primary change advances it. */
+static unsigned pc2_present_seq;
+static int pc2_present_have_seq;
+static void pc2_native_present(void) {
+    const uint8_t *px = NULL;
+    int w = 0, h = 0, pitch = 0, bpp = 0;
+    const uint32_t *palette = NULL;
+    unsigned seq = 0;
+    if (!hle_dd_frame(&px, &w, &h, &pitch, &bpp, &palette, &seq) &&
+        !hle_gdi_window_frame(&px, &w, &h, &pitch, &bpp, &seq))
+        return;
+    (void)palette;
+    if (pc2_present_have_seq && seq == pc2_present_seq) return;
+    pc2_present_seq = seq;
+    pc2_present_have_seq = 1;
+    if (bpp != 16) {
+        static int logged;
+        if (!logged) {
+            fprintf(stderr, "[vulkan] unsupported frame bpp=%d (presentation skipped)\n", bpp);
+            logged = 1;
+        }
+        return;
+    }
+    if (getenv("PC2_TRACE_FRAMES")) pc2_frame_hook(px, w, h, pitch, bpp);
+    if (pc2_vulkan_present(px, w, h, pitch, bpp,
+                           pc2_saw_menu && MEM32(0x0056386C) == 0) < 0) {
+        static int reported;
+        if (!reported) { fprintf(stderr, "[vulkan] presentation failed\n"); reported = 1; }
+    }
+}
+
 int main(int argc, char **argv) {
     if (argc < 2) {
         fprintf(stderr, "usage: %s <image.exe>\n", argv[0]);
@@ -684,11 +783,19 @@ int main(int argc, char **argv) {
     hle_screen_cursor_hook = pc2_cursor_hook;
 
     int headless = getenv("PC2_HEADLESS") != NULL;
-    if (getenv("PC2_TRACE_FRAMES")) hle_screen_frame_hook = pc2_frame_hook;
-    if (hle_screen_open("Pizza Connection 2", 0, headless) != 0) {
-        return 2;
+    const char *renderer = getenv("PC2_RENDERER");
+    int use_vulkan = !headless && (!renderer || !*renderer ||
+                                   !strcmp(renderer, "vulkan") || !strcmp(renderer, "auto"));
+    if (use_vulkan) {
+        if (pc2_vulkan_open("Pizza Connection 2", pc2_poll, pc2_native_present) != 0) return 3;
+        hle_dd_primary_hook = pc2_native_present;
+        hle_gdi_window_hook = pc2_native_present;
+    } else {
+        if (hle_screen_open("Pizza Connection 2", 0, headless) != 0) return 2;
+        if (getenv("PC2_TRACE_FRAMES")) hle_screen_frame_hook = pc2_frame_hook;
     }
     hle_screen_poll_hook = pc2_poll;
+    if (getenv("PC2_TRACE_INPUT")) hle_proc_hook = pc2_proc_hook;
 
 #ifdef PC2_CAPTURE
     pc2_capture_boot_ready();
@@ -697,5 +804,6 @@ int main(int argc, char **argv) {
 #ifdef PC2_CAPTURE
     pc2_capture_guest_exit(status);
 #endif
+    pc2_vulkan_shutdown();
     return status;
 }
