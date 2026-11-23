@@ -15,11 +15,12 @@ volatile/asm steering just to force bytes):
 |---|---|---:|---|
 | `0x544620` | SoundBuffer_StopPlaybackLocked | 211 | `?StopPlaybackLocked@SoundBuffer@@QAEHXZ`; `__thiscall`, ECX=`this`, `ret 0` |
 | `0x5448c0` | Sound_QueryStatusLocked | 210 | free/COM-style `__stdcall`, args `(SoundBuffer *self, void *buffer, int *status)`, `ret 0xc`; **the manifest's `?QueryStatusLocked@SoundBuffer@@QAE...` name is wrong** |
-| `0x544760` | Sound_GetPlayPosition | 223 | free/COM-style `__stdcall`, args `(SoundBuffer *self, int *buffer, unsigned int *status)`, `ret 0xc` |
+| `0x544760` | Sound_GetPlayPosition | 223 | **STRICT MATCH**; free/COM-style `__stdcall`, args `(SoundBuffer *self, int *buffer, unsigned int *status)`, `ret 0xc` |
 | `0x5449a0` | Media_QueryFlagLocked (optional third sibling) | 262 | free/COM-style `__stdcall`, three stack args, has nested lock guards, 2 unwind states |
 
-The immediate goal is the first three. `0x544760` is the closest: only 33
-differing bytes, and every EH/secondary section is already byte-identical.
+`0x544760` is now a strict byte match. The immediate goal is the remaining
+three; `0x5448c0` is closest at 51 differing bytes, and every EH/secondary
+section is already byte-identical for all candidates.
 
 ## Repository state at handoff
 
@@ -176,7 +177,8 @@ The files in this directory are copied under their historical names:
 
 - `0x544620-guard.cpp` — best `0x544620` candidate (diff 124/211)
 - `0x5448c0-virtual-char.cpp` — best `0x5448c0` candidate (diff 51/210)
-- `0x544760-virtual.cpp` — best `0x544760` candidate (diff 33/223)
+- `0x544760-final.cpp` — winning `0x544760` source (strict match)
+- `0x544760-virtual.cpp` — historical pre-match candidate (diff 33/223)
 - `0x*-original.asm`, `0x*-candidate.asm` — objdump evidence
 - `0x*.json` — non-strict matcher receipts
 - `0x*-strict.json` — strict receipts showing the EH sections are located and
@@ -323,11 +325,27 @@ bytes and a different branch layout.
 Note: the original does **not** check `view->vtable[0] != 0`; that was an
 artifact in the old candidate. Do not reintroduce it.
 
-### `0x544760` — `0x544760-virtual.cpp`
+### `0x544760` — STRICT MATCH (`0x544760-final.cpp`)
 
-Length 223, exact. First difference at offset 151 (`0x5447f6`). The prologue
-and all code through `0x5447f5` match exactly. Only the null-view zero
-materialization differs.
+Length 223, zero differing bytes. The winning source shape is:
+
+```cpp
+unsigned int result;
+if (view == 0) {
+    result = 0;
+} else {
+    int value;
+    int other;
+    result = (view->getStatus(&value, &other) >= 0)
+                 ? (unsigned int)value : 0;
+}
+*status = result / object->divisor;
+```
+
+The null-first branch plus the ternary makes VC6 reuse EAX=0 from the tested
+view pointer on the null path, and fold the failed-HRESULT case into the
+`setl`/`dec`/`and` mask on the non-null path. The historical candidate below
+emitted an extra `xor eax,eax` and `jmp`.
 
 Original:
 
@@ -372,7 +390,7 @@ Compile one candidate (from this directory):
 ```sh
 VC=~/.local/share/pc2/vc6-sp3-toolchain/VC98
 WINEDEBUG=-all wine "$VC/BIN/CL.EXE" /nologo /c /O2 /GX /TP \
-  'Z:\home\patryk\pizzaconnection2\reconstructed\match\investigations\sound-lock-family\0x544760-virtual.cpp' \
+  'Z:\home\patryk\pizzaconnection2\reconstructed\match\investigations\sound-lock-family\0x544760-final.cpp' \
   '/FoZ:\tmp\sound-0x544760.obj'
 ```
 
@@ -380,7 +398,7 @@ Or let the matcher compile it (it writes the object to a temp directory):
 
 ```sh
 python3 tools/match_decomp.py 0x544760 \
-  reconstructed/match/investigations/sound-lock-family/0x544760-virtual.cpp \
+  reconstructed/match/investigations/sound-lock-family/0x544760-final.cpp \
   --length 223 --entry '?Sound_GetPlayPosition@@YGHPAUSoundBuffer@@PAHPAI@Z' \
   --flags '/O2 /GX /TP' --strict --auto-symbols \
   --json-out /tmp/0x544760-strict.json
@@ -444,13 +462,13 @@ Validated:
 
 ## Suggested next moves
 
-1. Use the `permute` skill on `0x544760-virtual.cpp` first (33 bytes, exact
-   length, exact EH). Vary only the null-view result shaping; keep the guard,
-   virtual call, and prologue untouched.
-2. Then permute `0x5448c0-virtual-char.cpp` (51 bytes). The prologue swap is
-   likely source-shape driven; try local aliases for `self`, declaration
-   order, and placing `value` initialization before the vtable load. Keep
-   `char result`.
+1. `0x544760` is strict. Move on to `0x5448c0-virtual-char.cpp` (51 bytes).
+   The prologue swap is likely source-shape driven; try local aliases for
+   `self`, declaration order, and placing `value` initialization before the
+   vtable load. Keep `char result`.
+2. Then `0x5449a0` (86 bytes, 256 vs 262). The winning structure is clear;
+   the residual is the missing duplicated inner `LeaveCriticalSection` on
+   the `field53 == 0` path. Try `goto`/`break`/`return` scope-exit shapes.
 3. Leave `0x544620` for last; it is a pure scheduler wall but 124 bytes and
    2 bytes of length. A permutation search over the early field-write block
    is the right tool.
@@ -463,6 +481,6 @@ Validated:
 ```text
 0x544620  211 bytes  diff 124  first 0x544649  EH sections match
 0x5448c0  210 bytes  diff  51  first 0x5448d7  EH sections match
-0x544760  223 bytes  diff  33  first 0x5447f6  EH sections match
-0x5449a0  not attempted in this pass; same guard pattern, nested guards
+0x544760  223 bytes  STRICT MATCH (0x544760-final.cpp)
+0x5449a0  262 bytes  diff  86  candidate 256 bytes; missing duplicated inner Leave on field53==0 path
 ```

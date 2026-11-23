@@ -9,10 +9,10 @@ entry symbol, and report `"strict_match": true` from
 ## Result
 
 ```text
-strict matches: 6 / 25
+strict matches: 7 / 25
 ```
 
-Matched: 0x4029e0, 0x4f7920, 0x501580, 0x5300e0, 0x5402a0, 0x547ac0.
+Matched: 0x4029e0, 0x4f7920, 0x501580, 0x5300e0, 0x5402a0, 0x547ac0, 0x544760.
 
 | address | length | entry symbol | notes |
 | --- | ---: | --- | --- |
@@ -22,6 +22,7 @@ Matched: 0x4029e0, 0x4f7920, 0x501580, 0x5300e0, 0x5402a0, 0x547ac0.
 | 0x5300e0 | 223 | `?HitTestChildAtPoint@UI@@QAEPAXPAH0@Z` | `Sprite_BlitClipped` must return `int` so `test eax,eax` and `*flags = eax` match |
 | 0x5402a0 | 225 | `?AddExtensionMapping@SoundPakManager@@QAEXPAD0@Z` | sibling of 0x4029e0; identical inline copy/`Strlwr`/`strcat` block |
 | 0x547ac0 | 224 | `?SetVolumeSetting@Sound@@QAEDHH@Z` | returns `char`; `goto done` keeps the shared `return changed` tail that emits `setne bl; mov al,bl` |
+| 0x544760 | 223 | `?Sound_GetPlayPosition@@YGHPAUSoundBuffer@@PAHPAI@Z` | RAII `LockGuard` + `__stdcall` free-function ABI; virtual COM call at vtable `+0x10`; null-view path first, `result = (call >= 0) ? value : 0` makes VC6 reuse EAX=0 instead of emitting `xor eax,eax; jmp` |
 
 ## Non-matching (kept under `nonmatching/`)
 
