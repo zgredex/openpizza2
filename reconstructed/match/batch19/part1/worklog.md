@@ -31,6 +31,7 @@ Matched: 0x4029e0, 0x4f7920, 0x501580, 0x5300e0, 0x5402a0, 0x547ac0.
 | 0x50b6d0 | 225 | 0x16 | 129 | only the duplicated `selected = param` case/default block (6 bytes) differs; MSVC merges the two loads in the candidate |
 | 0x54aec0 | 225 | 0x11 | 58 | original delays `push edi` and loads `x` right after `push esi`; candidate schedules the prologue differently |
 | 0x489070 | 225 | 0x3e | 63 | byte-identical with literal float constants, but those 4-byte `.rdata` COMDATs cannot pass the strict section locator; addressing the constants by label flips `fld value; fmul const` to `fld const; fmul value` |
+| 0x522bd0 | 222 | 0x00 | 190 | original pushes only esi/edi and reloads `x` from the argument slot; candidate keeps `x` in ebx, and the text pointer lands in eax instead of ecx |
 | 0x48a2d0 | 223 | 0x17 | 170 | original pushes all four callee-saved registers and keeps `type` in ebp; candidate spills `type` and hoists `&this->map` into ebp |
 
 ## Reproduction
