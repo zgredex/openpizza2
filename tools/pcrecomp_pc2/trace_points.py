@@ -130,9 +130,6 @@ def patch_sprite_format(text: str) -> str:
 
 def patch_sprite_fixture(text: str) -> str:
     pattern = r"(^void sub_0053A780\(void\) \{\n.*?^\}\n)"
-    if "pc2_capture_indexed_sprite_before(" in text:
-        return text
-
     def instrument(match: re.Match[str]) -> str:
         body = match[0]
         entry = "    RECOMP_ENTER(0x0053A780u);\n"
@@ -150,9 +147,18 @@ def patch_sprite_fixture(text: str) -> str:
             "    if (pc2_sprite_fixture) pc2_capture_indexed_sprite_after(pc2_sprite_fixture);\n"
             "#endif\n"
         )
-        body = body.replace(entry, entry + begin, 1)
-        return re.sub(r"(?m)^    RECOMP_FLAGS_OUT\(\);[^\n]* return;",
-                      lambda ret: end + ret[0], body)
+        if "pc2_capture_indexed_sprite_before(" not in body:
+            body = body.replace(entry, entry + begin, 1)
+            body = re.sub(r"(?m)^    RECOMP_FLAGS_OUT\(\);[^\n]* return;",
+                          lambda ret: end + ret[0], body)
+        store = r"(?m)^    MEM16\(.*? /\* 0x0053B2A8:.*$"
+        if "pc2_sprite_fixture & 4" not in body:
+            body = re.sub(store, lambda line: (
+                "#ifdef PC2_CAPTURE\n"
+                "    if (!(pc2_sprite_fixture & 4))\n"
+                "#endif\n" + line[0]
+            ), body)
+        return body
 
     return re.sub(pattern, instrument, text, count=1, flags=re.M | re.S)
 

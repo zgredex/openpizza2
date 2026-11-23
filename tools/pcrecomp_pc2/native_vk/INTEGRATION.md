@@ -101,14 +101,23 @@ absolute directory containing `quad.vert.spv` and `quad.frag.spv`. Build
 the capture host and run the existing menu-click replay. This enables a
 diagnostic Vulkan mirror for the first compatible 8-bit indexed surface.
 It seeds the initial target once from the legacy pixels, then preserves
-the Vulkan target across up to 32 live draws in game order. The original
+the Vulkan target across up to 64 live draws in game order. The original
 blitter supplies the reference after each draw. Check `host.log` for
 `[vk-live]` and require zero mismatches for every draw.
 
-The menu replay produced 32 zero-mismatch reads on its 400×15 target and
-reached character select with zero unresolved dispatches. The game still
-uses the legacy surface for final presentation. The mirror currently covers
-one target, optional bottom clipping, and RGB565 indexed RLE.
+Set `PC2_VK_LIVE_INDEXED_PUBLISH=1` alongside the shader path to test the
+compositor bridge. This copies opaque pixels from the Vulkan result into
+the legacy surface and suppresses the original indexed raster store after
+a successful readback. The lifted sprite traversal still runs and preserves
+the guest calling convention. Transparent pixels keep their existing values.
+Look for `[vk-live] published indexed draw` in `host.log`.
+
+The publication replay handled all 34 draws of the first 400×15 panel,
+including the right-clipped last tile. Its 800×600 menu capture matched the
+CPU control byte for byte, and both reached character select with zero
+unresolved dispatches. This capture-only mode still uses the legacy
+surface for final composition and presentation. Other surfaces and draw
+families continue through the CPU path.
 
 ### Indexed sprite target parity
 
