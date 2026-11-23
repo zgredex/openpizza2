@@ -18,7 +18,7 @@ LIBS := $(SDL_LIBS) -L$(FFMPEG32)/lib -lavformat -lavcodec -lswscale -lswresampl
 
 HLE_SRC := $(filter-out %_selftest.c %/screen.c %/bink.c,$(wildcard $(PC)/runtime/win32hle/*.c))
 GEN_SRC := $(wildcard $(GEN)/recomp_*.c)
-SRC := $(HLE_SRC) $(GEN_SRC) main.c pc2_shims.c pc2_vulkan.c pc2_native_movie.c native_vk/pc2_movie.c native_vk/pc2_vk.c trace_winmain.c
+SRC := $(HLE_SRC) $(GEN_SRC) main.c pc2_shims.c pc2_vulkan.c pc2_native_movie.c pc2_sprite_capture.c native_vk/pc2_movie.c native_vk/pc2_vk.c trace_winmain.c
 ifeq ($(CAPTURE),1)
 SRC := $(filter-out $(PC)/runtime/win32hle/host_lite.c,$(SRC)) $(GEN)/host_lite.c capture.c
 CFLAGS += -DPC2_CAPTURE -I. -MMD -MP

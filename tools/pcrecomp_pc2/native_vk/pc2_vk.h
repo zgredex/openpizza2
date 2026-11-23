@@ -1,6 +1,7 @@
 #ifndef PC2_NATIVE_VK_H
 #define PC2_NATIVE_VK_H
 /* Native 2D Vulkan drawing API. No DirectDraw objects, surfaces or framebuffer presents. */
+#include <stddef.h>
 #include <stdint.h>
 #include <SDL2/SDL.h>
 #ifdef __cplusplus
@@ -11,6 +12,8 @@ typedef struct pc2_vk pc2_vk;
 typedef struct pc2_vk_texture pc2_vk_texture;
 /* Caller owns an SDL_WINDOW_VULKAN window for the lifetime of the renderer. */
 pc2_vk *pc2_vk_create(SDL_Window *window, const char *spirv_directory);
+/* Create a graphics device for offscreen passes without an SDL window. */
+pc2_vk *pc2_vk_create_offscreen(const char *spirv_directory);
 void pc2_vk_destroy(pc2_vk *ctx);
 int pc2_vk_resize(pc2_vk *ctx);
 /* Upload a decoded resource, not the legacy 800x600 composed frame.
@@ -28,7 +31,15 @@ pc2_vk_texture *pc2_vk_texture_create_rgb565(pc2_vk *ctx, uint32_t width,
 int pc2_vk_texture_update_rgb565(pc2_vk *ctx, pc2_vk_texture *texture,
                                 const void *pixels, uint32_t pitch, int color_key);
 void pc2_vk_texture_destroy(pc2_vk *ctx, pc2_vk_texture *texture);
-/* Coordinates and clip are in the game's logical 800x600 space. */
+/* Offscreen targets can be sampled after pc2_vk_end. Each pass clears using
+ * a straight-alpha color. Target coordinates are physical pixels; window
+ * passes use the game's logical 800x600 space. */
+pc2_vk_texture *pc2_vk_target_create(pc2_vk *ctx, uint32_t width, uint32_t height);
+int pc2_vk_begin_target(pc2_vk *ctx, pc2_vk_texture *target, float r, float g, float b, float a);
+/* Read resulting premultiplied RGBA8 after end, with optional row padding.
+ * pitch == 0 means tightly packed. Do not call during an active pass. */
+int pc2_vk_target_read_rgba(pc2_vk *ctx, pc2_vk_texture *target,
+                           uint8_t *rgba, size_t size, uint32_t pitch);
 int pc2_vk_begin(pc2_vk *ctx, float r, float g, float b, float a);
 void pc2_vk_draw(pc2_vk *ctx, pc2_vk_texture *texture,
                  float x, float y, float w, float h,

@@ -128,6 +128,35 @@ def patch_sprite_format(text: str) -> str:
     return text.replace(needle, needle + hook, 1)
 
 
+def patch_sprite_fixture(text: str) -> str:
+    pattern = r"(^void sub_0053A780\(void\) \{\n.*?^\}\n)"
+    if "pc2_capture_indexed_sprite_before(" in text:
+        return text
+
+    def instrument(match: re.Match[str]) -> str:
+        body = match[0]
+        entry = "    RECOMP_ENTER(0x0053A780u);\n"
+        if entry not in body:
+            return body
+        begin = (
+            "#ifdef PC2_CAPTURE\n"
+            "    extern int pc2_capture_indexed_sprite_before(uint32_t, uint32_t);\n"
+            "    extern void pc2_capture_indexed_sprite_after(void);\n"
+            "    int pc2_sprite_fixture = pc2_capture_indexed_sprite_before(ecx, esp);\n"
+            "#endif\n"
+        )
+        end = (
+            "#ifdef PC2_CAPTURE\n"
+            "    if (pc2_sprite_fixture) pc2_capture_indexed_sprite_after();\n"
+            "#endif\n"
+        )
+        body = body.replace(entry, entry + begin, 1)
+        return re.sub(r"(?m)^    RECOMP_FLAGS_OUT\(\);[^\n]* return;",
+                      lambda ret: end + ret[0], body)
+
+    return re.sub(pattern, instrument, text, count=1, flags=re.M | re.S)
+
+
 def repair_broken_entries(text: str) -> str:
     """Repair trace strings written by an older non-idempotent patcher."""
     text = re.sub(r'(\[trace\] [A-Za-z0-9_]+ (?:enter|return))\n"\);',
@@ -262,7 +291,7 @@ def main() -> int:
         changed |= did
         text, did = patch_payment(text)
         changed |= did
-        patched = patch_sprite_format(patch_draw_entries(text))
+        patched = patch_sprite_fixture(patch_sprite_format(patch_draw_entries(text)))
         changed |= patched != text
         text = patched
         if changed or any(f"{name}(" in text for name in TRACE_DECLARATIONS):

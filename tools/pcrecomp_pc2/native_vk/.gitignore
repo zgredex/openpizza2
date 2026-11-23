@@ -2,3 +2,5 @@ smoke
 source-quad-smoke
 sprite-decode-test
 shaders/*.spv
+
+indexed-target-test

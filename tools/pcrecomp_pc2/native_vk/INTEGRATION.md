@@ -95,6 +95,25 @@ for that draw. The source-quad smoke covers decoding, upload, color-key
 transparency and GPU readback. Live dispatch still needs Vulkan render
 targets for the game-owned surfaces.
 
+### Indexed sprite target parity
+
+Add `"PC2_INDEXED_SPRITE_FIXTURE": "/tmp/pc2-menu-indexed.spr1"` to the
+`env` of a copy of the `menu-click.json` scenario, then run it with the
+capture host. The first compatible indexed draw writes its bounded encoded
+source, RGB565 palette, and target crop before and after the original blit.
+This currently covers 8-bit color-key RLE with an optional bottom clip.
+
+```sh
+make -C tools/pcrecomp_pc2/native_vk indexed-target-test
+tools/pcrecomp_pc2/native_vk/indexed-target-test /tmp/pc2-menu-indexed.spr1 \
+    tools/pcrecomp_pc2/native_vk/shaders
+```
+
+The check uses the before crop as a reference background, draws the decoded
+sprite into an offscreen Vulkan target, samples it into a second target and
+checks every pixel against the original after crop. It needs a Vulkan
+driver. It can run without SDL video or a compositor.
+
 ## Full game renderer acceptance
 
 Replay the menu through character select, then London through camera

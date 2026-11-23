@@ -14,13 +14,23 @@
 
 #define CANVAS_W 800.0f
 #define CANVAS_H 600.0f
+#define TEXTURE_FORMAT VK_FORMAT_R8G8B8A8_UNORM
+typedef struct {
+    VkRenderPass pass;
+    VkPipeline rgba;
+    VkPipeline premultiplied;
+} quad_pass;
+
 struct pc2_vk_texture {
+    pc2_vk *owner;
     VkImage image;
     VkDeviceMemory memory;
     VkImageView view;
     VkDescriptorSet set;
+    VkFramebuffer framebuffer;
     uint32_t width, height;
     int layout_initialized;
+    int retired;
     pc2_vk_texture *retired_next;
 };
 struct pc2_vk {
@@ -31,6 +41,8 @@ struct pc2_vk {
     VkDevice device;
     VkQueue queue;
     uint32_t family;
+    uint32_t max_image_size;
+    uint32_t max_target_width, max_target_height;
     VkCommandPool pool;
     VkCommandBuffer command;
     VkSwapchainKHR swapchain;
@@ -43,13 +55,15 @@ struct pc2_vk {
     uint32_t image_count;
     uint32_t current_image;
     VkSemaphore acquired;
-    VkRenderPass pass;
     VkPipelineLayout layout;
-    VkPipeline pipeline;
+    quad_pass swap_pass;
+    quad_pass target_pass;
     VkDescriptorSetLayout descriptor_layout;
     VkDescriptorPool descriptor_pool;
     VkSampler sampler;
     VkViewport viewport;
+    VkPipeline bound_pipeline;
+    pc2_vk_texture *active_target;
     pc2_vk_texture *retired_textures;
     int active;
     char error[256];
@@ -136,6 +150,14 @@ static void transition(VkCommandBuffer cmd, VkImage image, VkImageLayout old,
         .subresourceRange={VK_IMAGE_ASPECT_COLOR_BIT,0,1,0,1}};
     vkCmdPipelineBarrier(cmd,src_stage,dst_stage,0,0,NULL,0,NULL,1,&b);
 }
+
+static void quad_pass_destroy(pc2_vk *r, quad_pass *quad) {
+    if (quad->rgba) vkDestroyPipeline(r->device, quad->rgba, NULL);
+    if (quad->premultiplied) vkDestroyPipeline(r->device, quad->premultiplied, NULL);
+    if (quad->pass) vkDestroyRenderPass(r->device, quad->pass, NULL);
+    *quad = (quad_pass){0};
+}
+
 static void swap_destroy(pc2_vk *r) {
     if (!r->device) return;
     vkDeviceWaitIdle(r->device);
@@ -148,10 +170,9 @@ static void swap_destroy(pc2_vk *r) {
     free(r->framebuffers); free(r->views); free(r->render_done); free(r->images);
     r->framebuffers=NULL; r->views=NULL; r->render_done=NULL; r->images=NULL;
     r->image_count=0;
-    if (r->pipeline) vkDestroyPipeline(r->device,r->pipeline,NULL);
-    if (r->pass) vkDestroyRenderPass(r->device,r->pass,NULL);
+    quad_pass_destroy(r, &r->swap_pass);
     if (r->swapchain) vkDestroySwapchainKHR(r->device,r->swapchain,NULL);
-    r->pipeline=VK_NULL_HANDLE; r->pass=VK_NULL_HANDLE; r->swapchain=VK_NULL_HANDLE;
+    r->swapchain=VK_NULL_HANDLE;
 }
 static VkShaderModule shader_load(pc2_vk *r, const char *file) {
     char path[1024]; snprintf(path,sizeof path,"%s/%s",r->shader_dir,file);
@@ -172,26 +193,34 @@ static VkShaderModule shader_load(pc2_vk *r, const char *file) {
     }
     free(data);return mod;
 }
-static int pipeline_create(pc2_vk *r) {
-    VkAttachmentDescription att={.format=r->swap_format,.samples=VK_SAMPLE_COUNT_1_BIT,
+static int quad_pass_create(pc2_vk *r, quad_pass *quad, VkFormat format, int offscreen) {
+    VkAttachmentDescription att={.format=format,.samples=VK_SAMPLE_COUNT_1_BIT,
         .loadOp=VK_ATTACHMENT_LOAD_OP_CLEAR,.storeOp=VK_ATTACHMENT_STORE_OP_STORE,
-        .initialLayout=VK_IMAGE_LAYOUT_UNDEFINED,.finalLayout=VK_IMAGE_LAYOUT_PRESENT_SRC_KHR};
+        .initialLayout=VK_IMAGE_LAYOUT_UNDEFINED,
+        .finalLayout=offscreen ? VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
+                               : VK_IMAGE_LAYOUT_PRESENT_SRC_KHR};
     VkAttachmentReference ref={0,VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL};
     VkSubpassDescription sub={.pipelineBindPoint=VK_PIPELINE_BIND_POINT_GRAPHICS,
         .colorAttachmentCount=1,.pColorAttachments=&ref};
-    VkSubpassDependency dep={.srcSubpass=VK_SUBPASS_EXTERNAL,.dstSubpass=0,
+    VkSubpassDependency deps[2]={{.srcSubpass=VK_SUBPASS_EXTERNAL,.dstSubpass=0,
         .srcStageMask=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
         .dstStageMask=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-        .dstAccessMask=VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT};
+        .dstAccessMask=VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT},
+        {.srcSubpass=0,.dstSubpass=VK_SUBPASS_EXTERNAL,
+         .srcStageMask=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+         .dstStageMask=VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT|VK_PIPELINE_STAGE_TRANSFER_BIT,
+         .srcAccessMask=VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+         .dstAccessMask=VK_ACCESS_SHADER_READ_BIT|VK_ACCESS_TRANSFER_READ_BIT}};
     VkRenderPassCreateInfo rp={.sType=VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO,
         .attachmentCount=1,.pAttachments=&att,.subpassCount=1,.pSubpasses=&sub,
-        .dependencyCount=1,.pDependencies=&dep};
-    if (!gpu_ok(r,vkCreateRenderPass(r->device,&rp,NULL,&r->pass),"render pass")) return 0;
+        .dependencyCount=offscreen ? 2u : 1u,.pDependencies=deps};
+    if (!gpu_ok(r,vkCreateRenderPass(r->device,&rp,NULL,&quad->pass),"render pass")) return 0;
     VkShaderModule vert=shader_load(r,"quad.vert.spv");
     VkShaderModule frag=shader_load(r,"quad.frag.spv");
     if (!vert || !frag) {
         if (vert) vkDestroyShaderModule(r->device,vert,NULL);
         if (frag) vkDestroyShaderModule(r->device,frag,NULL);
+        quad_pass_destroy(r, quad);
         return 0;
     }
     VkPipelineShaderStageCreateInfo stages[2]={
@@ -225,11 +254,18 @@ static int pipeline_create(pc2_vk *r) {
         .stageCount=2,.pStages=stages,.pVertexInputState=&vi,.pInputAssemblyState=&ia,
         .pViewportState=&vp,.pRasterizationState=&rs,.pMultisampleState=&ms,
         .pColorBlendState=&blend,.pDynamicState=&dyn,.layout=r->layout,
-        .renderPass=r->pass,.subpass=0};
-    VkResult result=vkCreateGraphicsPipelines(r->device,VK_NULL_HANDLE,1,&ci,NULL,&r->pipeline);
+        .renderPass=quad->pass,.subpass=0};
+    int ok=gpu_ok(r,vkCreateGraphicsPipelines(r->device,VK_NULL_HANDLE,1,&ci,NULL,&quad->rgba),
+                  "sprite pipeline");
+    if (ok) {
+        ba.srcColorBlendFactor=VK_BLEND_FACTOR_ONE;
+        ok=gpu_ok(r,vkCreateGraphicsPipelines(r->device,VK_NULL_HANDLE,1,&ci,NULL,&quad->premultiplied),
+                  "premultiplied sprite pipeline");
+    }
     vkDestroyShaderModule(r->device,vert,NULL);
     vkDestroyShaderModule(r->device,frag,NULL);
-    return gpu_ok(r,result,"sprite pipeline");
+    if (!ok) quad_pass_destroy(r, quad);
+    return ok;
 }
 static int swap_create(pc2_vk *r) {
     int w=0,h=0;
@@ -276,7 +312,7 @@ static int swap_create(pc2_vk *r) {
     if (!r->images||!r->views||!r->framebuffers||!r->render_done)
         return fail(r,"swapchain array allocation failed");
     vkGetSwapchainImagesKHR(r->device,r->swapchain,&r->image_count,r->images);
-    if (!pipeline_create(r)) return 0;
+    if (!quad_pass_create(r,&r->swap_pass,r->swap_format,0)) return 0;
     VkSemaphoreCreateInfo semi={.sType=VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO};
     for (uint32_t i=0;i<r->image_count;++i) {
         VkImageViewCreateInfo vi={.sType=VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
@@ -284,7 +320,7 @@ static int swap_create(pc2_vk *r) {
             .subresourceRange={VK_IMAGE_ASPECT_COLOR_BIT,0,1,0,1}};
         if (!gpu_ok(r,vkCreateImageView(r->device,&vi,NULL,&r->views[i]),"swap image view")) return 0;
         VkFramebufferCreateInfo fi={.sType=VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
-            .renderPass=r->pass,.attachmentCount=1,.pAttachments=&r->views[i],
+            .renderPass=r->swap_pass.pass,.attachmentCount=1,.pAttachments=&r->views[i],
             .width=r->extent.width,.height=r->extent.height,.layers=1};
         if (!gpu_ok(r,vkCreateFramebuffer(r->device,&fi,NULL,&r->framebuffers[i]),"swap framebuffer")) return 0;
         if (!gpu_ok(r,vkCreateSemaphore(r->device,&semi,NULL,&r->render_done[i]),"present semaphore")) return 0;
@@ -296,23 +332,25 @@ static int swap_create(pc2_vk *r) {
     return 1;
 }
 int pc2_vk_resize(pc2_vk *r) {
-    if (!r || r->active) return 0;
+    if (!r || !r->window || r->active) return 0;
     swap_destroy(r);
     return swap_create(r);
 }
-pc2_vk *pc2_vk_create(SDL_Window *window, const char *shader_dir) {
-    if (!window || !(SDL_GetWindowFlags(window)&SDL_WINDOW_VULKAN)) {
-        fprintf(stderr,"[pc2-vulkan] SDL window must be created with SDL_WINDOW_VULKAN\n");return NULL;
-    }
+static pc2_vk *renderer_create(SDL_Window *window, const char *shader_dir) {
     pc2_vk *r=calloc(1,sizeof *r);
     if (!r) return NULL;
     r->window=window;
     snprintf(r->shader_dir,sizeof r->shader_dir,"%s",shader_dir?shader_dir:"native_vk/shaders");
     unsigned int ne=0;
-    if (!SDL_Vulkan_GetInstanceExtensions(window,&ne,NULL)) {fail(r,"SDL Vulkan instance extensions: %s",SDL_GetError());goto bad;}
-    const char **extensions=calloc(ne,sizeof *extensions);
-    if (!extensions) goto bad;
-    if (!SDL_Vulkan_GetInstanceExtensions(window,&ne,extensions)) {free(extensions);goto bad;}
+    const char **extensions=NULL;
+    if (window) {
+        if (!SDL_Vulkan_GetInstanceExtensions(window,&ne,NULL)) {
+            fail(r,"SDL Vulkan instance extensions: %s",SDL_GetError());goto bad;
+        }
+        extensions=calloc(ne,sizeof *extensions);
+        if (!extensions) goto bad;
+        if (!SDL_Vulkan_GetInstanceExtensions(window,&ne,extensions)) {free(extensions);goto bad;}
+    }
     VkApplicationInfo app={.sType=VK_STRUCTURE_TYPE_APPLICATION_INFO,
         .pApplicationName="OpenPizza2",.apiVersion=VK_API_VERSION_1_0};
     VkInstanceCreateInfo ii={.sType=VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
@@ -320,7 +358,9 @@ pc2_vk *pc2_vk_create(SDL_Window *window, const char *shader_dir) {
     VkResult result=vkCreateInstance(&ii,NULL,&r->instance);
     free(extensions);
     if (!gpu_ok(r,result,"vkCreateInstance")) goto bad;
-    if (!SDL_Vulkan_CreateSurface(window,r->instance,&r->surface)) {fail(r,"SDL Vulkan surface: %s",SDL_GetError());goto bad;}
+    if (window && !SDL_Vulkan_CreateSurface(window,r->instance,&r->surface)) {
+        fail(r,"SDL Vulkan surface: %s",SDL_GetError());goto bad;
+    }
     uint32_t count=0;
     vkEnumeratePhysicalDevices(r->instance,&count,NULL);
     if (!count) {fail(r,"no Vulkan physical devices");goto bad;}
@@ -334,9 +374,11 @@ pc2_vk *pc2_vk_create(SDL_Window *window, const char *shader_dir) {
         if (!families) continue;
         vkGetPhysicalDeviceQueueFamilyProperties(devices[i],&nf,families);
         for (uint32_t j=0;j<nf;++j) {
+            if (!(families[j].queueFlags&VK_QUEUE_GRAPHICS_BIT)) continue;
+            if (!window) {r->physical=devices[i];r->family=j;break;}
             VkBool32 present=VK_FALSE;
             vkGetPhysicalDeviceSurfaceSupportKHR(devices[i],j,r->surface,&present);
-            if (present && (families[j].queueFlags&VK_QUEUE_GRAPHICS_BIT)) {
+            if (present) {
                 uint32_t ext_count=0;
                 vkEnumerateDeviceExtensionProperties(devices[i],NULL,&ext_count,NULL);
                 VkExtensionProperties *exts=calloc(ext_count,sizeof *exts);
@@ -353,9 +395,12 @@ pc2_vk *pc2_vk_create(SDL_Window *window, const char *shader_dir) {
         free(families);
     }
     free(devices);
-    if (!r->physical) {fail(r,"no graphics/present Vulkan queue with swapchain support");goto bad;}
+    if (!r->physical) {fail(r,"no suitable Vulkan graphics queue");goto bad;}
     VkPhysicalDeviceProperties properties;
     vkGetPhysicalDeviceProperties(r->physical,&properties);
+    r->max_image_size=properties.limits.maxImageDimension2D;
+    r->max_target_width=properties.limits.maxFramebufferWidth;
+    r->max_target_height=properties.limits.maxFramebufferHeight;
     fprintf(stderr,"[pc2-vulkan] GPU: %s\n",properties.deviceName);
     float priority=1.0f;
     VkDeviceQueueCreateInfo qi={.sType=VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
@@ -363,7 +408,7 @@ pc2_vk *pc2_vk_create(SDL_Window *window, const char *shader_dir) {
     const char *ext=VK_KHR_SWAPCHAIN_EXTENSION_NAME;
     VkDeviceCreateInfo di={.sType=VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
         .queueCreateInfoCount=1,.pQueueCreateInfos=&qi,
-        .enabledExtensionCount=1,.ppEnabledExtensionNames=&ext};
+        .enabledExtensionCount=window ? 1u : 0u,.ppEnabledExtensionNames=window ? &ext : NULL};
     if (!gpu_ok(r,vkCreateDevice(r->physical,&di,NULL,&r->device),"vkCreateDevice")) goto bad;
     vkGetDeviceQueue(r->device,r->family,0,&r->queue);
     VkCommandPoolCreateInfo pi={.sType=VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
@@ -393,12 +438,25 @@ pc2_vk *pc2_vk_create(SDL_Window *window, const char *shader_dir) {
         .addressModeW=VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,.maxLod=0};
     if (!gpu_ok(r,vkCreateSampler(r->device,&si,NULL,&r->sampler),"sprite sampler")) goto bad;
     VkSemaphoreCreateInfo smi={.sType=VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO};
-    if (!gpu_ok(r,vkCreateSemaphore(r->device,&smi,NULL,&r->acquired),"acquire semaphore")) goto bad;
-    if (!swap_create(r)) goto bad;
+    if (window) {
+        if (!gpu_ok(r,vkCreateSemaphore(r->device,&smi,NULL,&r->acquired),"acquire semaphore")) goto bad;
+        if (!swap_create(r)) goto bad;
+    }
     return r;
 bad:
     pc2_vk_destroy(r);
     return NULL;
+}
+
+pc2_vk *pc2_vk_create(SDL_Window *window, const char *shader_dir) {
+    if (!window || !(SDL_GetWindowFlags(window)&SDL_WINDOW_VULKAN)) {
+        fprintf(stderr,"[pc2-vulkan] SDL window must be created with SDL_WINDOW_VULKAN\n");return NULL;
+    }
+    return renderer_create(window, shader_dir);
+}
+
+pc2_vk *pc2_vk_create_offscreen(const char *shader_dir) {
+    return renderer_create(NULL, shader_dir);
 }
 enum { PIXELS_RGBA8, PIXELS_RGB565 };
 
@@ -412,24 +470,24 @@ static int source_pitch(uint32_t w, uint32_t h, uint32_t *pitch, int format) {
 static int upload_texture(pc2_vk *r, pc2_vk_texture *t, const uint8_t *pixels,
                           uint32_t pitch, int format, int key);
 
-static pc2_vk_texture *texture_create(pc2_vk *r, uint32_t w, uint32_t h,
-                                     const void *pixels, uint32_t pitch, int format, int key) {
-    if (!r || !pixels || !source_pitch(w, h, &pitch, format)) return NULL;
+static pc2_vk_texture *texture_alloc(pc2_vk *r, uint32_t w, uint32_t h, VkImageUsageFlags usage) {
+    if (!w || !h || w > r->max_image_size || h > r->max_image_size) return NULL;
     pc2_vk_texture *t=calloc(1,sizeof *t);
     if (!t) return NULL;
+    t->owner=r;
     t->width=w;t->height=h;
     VkImageCreateInfo ii={.sType=VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
-        .imageType=VK_IMAGE_TYPE_2D,.format=VK_FORMAT_R8G8B8A8_UNORM,
+        .imageType=VK_IMAGE_TYPE_2D,.format=TEXTURE_FORMAT,
         .extent={w,h,1},.mipLevels=1,.arrayLayers=1,
         .samples=VK_SAMPLE_COUNT_1_BIT,.tiling=VK_IMAGE_TILING_OPTIMAL,
-        .usage=VK_IMAGE_USAGE_SAMPLED_BIT|VK_IMAGE_USAGE_TRANSFER_DST_BIT,
+        .usage=usage,
         .sharingMode=VK_SHARING_MODE_EXCLUSIVE,.initialLayout=VK_IMAGE_LAYOUT_UNDEFINED};
     if (!gpu_ok(r,vkCreateImage(r->device,&ii,NULL,&t->image),"sprite image")) goto bad;
     VkMemoryRequirements req; vkGetImageMemoryRequirements(r->device,t->image,&req);
     if (!alloc_memory(r,req,VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,&t->memory)) goto bad;
     if (!gpu_ok(r,vkBindImageMemory(r->device,t->image,t->memory,0),"bind sprite image")) goto bad;
     VkImageViewCreateInfo vi={.sType=VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
-        .image=t->image,.viewType=VK_IMAGE_VIEW_TYPE_2D,.format=VK_FORMAT_R8G8B8A8_UNORM,
+        .image=t->image,.viewType=VK_IMAGE_VIEW_TYPE_2D,.format=TEXTURE_FORMAT,
         .subresourceRange={VK_IMAGE_ASPECT_COLOR_BIT,0,1,0,1}};
     if (!gpu_ok(r,vkCreateImageView(r->device,&vi,NULL,&t->view),"sprite view")) goto bad;
     VkDescriptorSetAllocateInfo da={.sType=VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
@@ -441,9 +499,36 @@ static pc2_vk_texture *texture_create(pc2_vk *r, uint32_t w, uint32_t h,
         .dstSet=t->set,.dstBinding=0,.descriptorCount=1,
         .descriptorType=VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,.pImageInfo=&image};
     vkUpdateDescriptorSets(r->device,1,&write,0,NULL);
-    if (!upload_texture(r,t,pixels,pitch,format,key)) goto bad;
     return t;
 bad: pc2_vk_texture_destroy(r,t);return NULL;
+}
+
+static pc2_vk_texture *texture_create(pc2_vk *r, uint32_t w, uint32_t h,
+                                     const void *pixels, uint32_t pitch, int format, int key) {
+    if (!r || !pixels || !source_pitch(w, h, &pitch, format)) return NULL;
+    pc2_vk_texture *t=texture_alloc(r,w,h,VK_IMAGE_USAGE_SAMPLED_BIT|VK_IMAGE_USAGE_TRANSFER_DST_BIT);
+    if (!t) return NULL;
+    if (upload_texture(r,t,pixels,pitch,format,key)) return t;
+    pc2_vk_texture_destroy(r,t);
+    return NULL;
+}
+
+pc2_vk_texture *pc2_vk_target_create(pc2_vk *r, uint32_t w, uint32_t h) {
+    uint32_t pitch=0;
+    if (!r || w > r->max_target_width || h > r->max_target_height ||
+        !source_pitch(w,h,&pitch,PIXELS_RGBA8)) return NULL;
+    if (!r->target_pass.pass && !quad_pass_create(r,&r->target_pass,TEXTURE_FORMAT,1)) return NULL;
+    pc2_vk_texture *t=texture_alloc(r,w,h,VK_IMAGE_USAGE_SAMPLED_BIT|
+                                          VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT|
+                                          VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
+    if (!t) return NULL;
+    VkFramebufferCreateInfo framebuffer={.sType=VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
+        .renderPass=r->target_pass.pass,.attachmentCount=1,.pAttachments=&t->view,
+        .width=w,.height=h,.layers=1};
+    if (gpu_ok(r,vkCreateFramebuffer(r->device,&framebuffer,NULL,&t->framebuffer),
+               "texture framebuffer")) return t;
+    pc2_vk_texture_destroy(r,t);
+    return NULL;
 }
 
 pc2_vk_texture *pc2_vk_texture_create(pc2_vk *r, uint32_t w, uint32_t h,
@@ -458,14 +543,16 @@ pc2_vk_texture *pc2_vk_texture_create_rgb565(pc2_vk *r, uint32_t w, uint32_t h,
 }
 
 int pc2_vk_texture_update(pc2_vk *r, pc2_vk_texture *t, const uint8_t *rgba, uint32_t pitch) {
-    if (!r || !t || !rgba || r->active || !source_pitch(t->width, t->height, &pitch, PIXELS_RGBA8))
+    if (!r || !t || t->owner!=r || t->retired || t->framebuffer || !rgba || r->active ||
+        !source_pitch(t->width, t->height, &pitch, PIXELS_RGBA8))
         return 0;
     return upload_texture(r, t, rgba, pitch, PIXELS_RGBA8, -1);
 }
 
 int pc2_vk_texture_update_rgb565(pc2_vk *r, pc2_vk_texture *t,
                                 const void *pixels, uint32_t pitch, int key) {
-    if (!r || !t || !pixels || r->active || key < -1 || key > 0xffff ||
+    if (!r || !t || t->owner!=r || t->retired || t->framebuffer || !pixels || r->active ||
+        key < -1 || key > 0xffff ||
         !source_pitch(t->width, t->height, &pitch, PIXELS_RGB565))
         return 0;
     return upload_texture(r, t, pixels, pitch, PIXELS_RGB565, key);
@@ -525,6 +612,7 @@ bad:
 }
 static void release_texture(pc2_vk *r, pc2_vk_texture *t) {
     if (t->set) vkFreeDescriptorSets(r->device,r->descriptor_pool,1,&t->set);
+    if (t->framebuffer) vkDestroyFramebuffer(r->device,t->framebuffer,NULL);
     if (t->view) vkDestroyImageView(r->device,t->view,NULL);
     if (t->image) vkDestroyImage(r->device,t->image,NULL);
     if (t->memory) vkFreeMemory(r->device,t->memory,NULL);
@@ -540,60 +628,102 @@ static void release_retired_textures(pc2_vk *r) {
 }
 
 void pc2_vk_texture_destroy(pc2_vk *r,pc2_vk_texture *t) {
-    if (!r || !t) return;
-    if (!t->layout_initialized) {
+    if (!r || !t || t->owner!=r || t->retired) return;
+    if (!t->layout_initialized && t!=r->active_target) {
         release_texture(r, t);
         return;
     }
+    t->retired=1;
     t->retired_next = r->retired_textures;
     r->retired_textures = t;
 }
 
-int pc2_vk_begin(pc2_vk *r,float red,float green,float blue,float alpha) {
-    if (!r||r->active) return 0;
-    if (!gpu_ok(r, vkQueueWaitIdle(r->queue), "frame wait")) return 0;
+static int wait_frame(pc2_vk *r) {
+    if (!gpu_ok(r,vkQueueWaitIdle(r->queue),"frame wait")) return 0;
     release_retired_textures(r);
+    return 1;
+}
+
+static VkViewport target_viewport(pc2_vk_texture *target) {
+    return (VkViewport){.width=(float)target->width,.height=(float)target->height,.maxDepth=1};
+}
+
+static int begin_pass(pc2_vk *r, VkRenderPass pass, VkFramebuffer framebuffer, VkExtent2D extent,
+                      const VkViewport *viewport, const VkClearValue *clear) {
+    if (!gpu_ok(r,vkResetCommandBuffer(r->command,0),"command reset")) return 0;
+    VkCommandBufferBeginInfo cb={.sType=VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+                                 .flags=VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT};
+    if (!gpu_ok(r,vkBeginCommandBuffer(r->command,&cb),"command begin")) return 0;
+    VkRenderPassBeginInfo rp={.sType=VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
+        .renderPass=pass,.framebuffer=framebuffer,
+        .renderArea={{0,0},extent},.clearValueCount=1,.pClearValues=clear};
+    vkCmdBeginRenderPass(r->command,&rp,VK_SUBPASS_CONTENTS_INLINE);
+    vkCmdSetViewport(r->command,0,1,viewport);
+    r->bound_pipeline=VK_NULL_HANDLE;
+    r->active=1;
+    return 1;
+}
+
+int pc2_vk_begin(pc2_vk *r,float red,float green,float blue,float alpha) {
+    if (!r||!r->window||!r->swapchain||r->active||!wait_frame(r)) return 0;
     VkResult v=vkAcquireNextImageKHR(r->device,r->swapchain,UINT64_MAX,r->acquired,
                                       VK_NULL_HANDLE,&r->current_image);
     if (v==VK_ERROR_OUT_OF_DATE_KHR) {if (!pc2_vk_resize(r)) return 0;
         v=vkAcquireNextImageKHR(r->device,r->swapchain,UINT64_MAX,r->acquired,
                                VK_NULL_HANDLE,&r->current_image);}
     if (v!=VK_SUCCESS && v!=VK_SUBOPTIMAL_KHR) return gpu_ok(r,v,"acquire swap image");
-    vkResetCommandBuffer(r->command,0);
-    VkCommandBufferBeginInfo cb={.sType=VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO};
-    if (!gpu_ok(r,vkBeginCommandBuffer(r->command,&cb),"command begin")) return 0;
     VkClearValue clear={.color={{red,green,blue,alpha}}};
-    VkRenderPassBeginInfo rp={.sType=VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
-        .renderPass=r->pass,.framebuffer=r->framebuffers[r->current_image],
-        .renderArea={{0,0},r->extent},.clearValueCount=1,.pClearValues=&clear};
-    vkCmdBeginRenderPass(r->command,&rp,VK_SUBPASS_CONTENTS_INLINE);
-    vkCmdBindPipeline(r->command,VK_PIPELINE_BIND_POINT_GRAPHICS,r->pipeline);
-    vkCmdSetViewport(r->command,0,1,&r->viewport);
-    r->active=1;
+    return begin_pass(r,r->swap_pass.pass,r->framebuffers[r->current_image],r->extent,&r->viewport,&clear);
+}
+
+int pc2_vk_begin_target(pc2_vk *r, pc2_vk_texture *t, float red,float green,float blue,float alpha) {
+    if (!r||!t||t->owner!=r||t->retired||!t->framebuffer||r->active||!wait_frame(r)) return 0;
+    VkExtent2D extent={t->width,t->height};
+    VkViewport viewport=target_viewport(t);
+    VkClearValue clear={.color={{red*alpha,green*alpha,blue*alpha,alpha}}};
+    if (!begin_pass(r,r->target_pass.pass,t->framebuffer,extent,&viewport,&clear)) return 0;
+    r->active_target=t;
     return 1;
 }
+
 void pc2_vk_draw(pc2_vk *r,pc2_vk_texture *t,float x,float y,float w,float h,
                  float u0,float v0,float u1,float v1,int cx,int cy,int cw,int ch) {
-    if (!r||!r->active||!t||w<=0||h<=0||cw<=0||ch<=0) return;
-    float scale=r->viewport.width/CANVAS_W;
-    float left=r->viewport.x+cx*scale, top=r->viewport.y+cy*scale;
-    float right=r->viewport.x+((float)cx+cw)*scale,bottom=r->viewport.y+((float)cy+ch)*scale;
-    if (left<r->viewport.x) left=r->viewport.x;
-    if (top<r->viewport.y) top=r->viewport.y;
-    right=fminf(right,r->viewport.x+r->viewport.width);
-    bottom=fminf(bottom,r->viewport.y+r->viewport.height);
-    if (right>(float)r->extent.width)right=(float)r->extent.width;
-    if (bottom>(float)r->extent.height)bottom=(float)r->extent.height;
+    if (!r||!r->active||!t||t->owner!=r||t->retired||!t->layout_initialized||
+        t==r->active_target||w<=0||h<=0||cw<=0||ch<=0) return;
+    float canvas_w=CANVAS_W, canvas_h=CANVAS_H;
+    VkViewport viewport=r->viewport;
+    VkExtent2D extent=r->extent;
+    const quad_pass *pass=&r->swap_pass;
+    if (r->active_target) {
+        pc2_vk_texture *target=r->active_target;
+        canvas_w=(float)target->width;
+        canvas_h=(float)target->height;
+        viewport=target_viewport(target);
+        extent=(VkExtent2D){target->width,target->height};
+        pass=&r->target_pass;
+    }
+    float sx=viewport.width/canvas_w, sy=viewport.height/canvas_h;
+    float left=fmaxf(viewport.x+cx*sx,viewport.x);
+    float top=fmaxf(viewport.y+cy*sy,viewport.y);
+    float right=fminf(viewport.x+((float)cx+cw)*sx,viewport.x+viewport.width);
+    float bottom=fminf(viewport.y+((float)cy+ch)*sy,viewport.y+viewport.height);
+    right=fminf(right,(float)extent.width);
+    bottom=fminf(bottom,(float)extent.height);
     if (right<=left||bottom<=top) return;
     VkRect2D scissor={{(int32_t)floorf(left),(int32_t)floorf(top)},
         {(uint32_t)(ceilf(right)-floorf(left)),(uint32_t)(ceilf(bottom)-floorf(top))}};
-    if (scissor.offset.x+(int)scissor.extent.width>(int)r->extent.width)
-        scissor.extent.width=r->extent.width-scissor.offset.x;
-    if (scissor.offset.y+(int)scissor.extent.height>(int)r->extent.height)
-        scissor.extent.height=r->extent.height-scissor.offset.y;
+    if (scissor.offset.x+(int)scissor.extent.width>(int)extent.width)
+        scissor.extent.width=extent.width-scissor.offset.x;
+    if (scissor.offset.y+(int)scissor.extent.height>(int)extent.height)
+        scissor.extent.height=extent.height-scissor.offset.y;
+    VkPipeline pipeline=t->framebuffer ? pass->premultiplied : pass->rgba;
+    if (pipeline!=r->bound_pipeline) {
+        vkCmdBindPipeline(r->command,VK_PIPELINE_BIND_POINT_GRAPHICS,pipeline);
+        r->bound_pipeline=pipeline;
+    }
     vkCmdSetScissor(r->command,0,1,&scissor);
     struct {float rect[4];float uv[4];float canvas[2];float pad[2];} push={
-        {x,y,w,h},{u0,v0,u1,v1},{CANVAS_W,CANVAS_H},{0,0}};
+        {x,y,w,h},{u0,v0,u1,v1},{canvas_w,canvas_h},{0,0}};
     vkCmdPushConstants(r->command,r->layout,VK_SHADER_STAGE_VERTEX_BIT,0,sizeof push,&push);
     vkCmdBindDescriptorSets(r->command,VK_PIPELINE_BIND_POINT_GRAPHICS,r->layout,0,1,&t->set,0,NULL);
     vkCmdDraw(r->command,6,1,0,0);
@@ -628,14 +758,25 @@ void pc2_vk_draw_rect(pc2_vk *r, pc2_vk_texture *t,
 
 int pc2_vk_end(pc2_vk *r) {
     if (!r||!r->active) return 0;
+    pc2_vk_texture *target=r->active_target;
+    r->active_target=NULL;
     r->active=0;
     vkCmdEndRenderPass(r->command);
     if (!gpu_ok(r,vkEndCommandBuffer(r->command),"command end")) return 0;
-    VkPipelineStageFlags wait_stage=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
     VkSubmitInfo submit={.sType=VK_STRUCTURE_TYPE_SUBMIT_INFO,
-        .waitSemaphoreCount=1,.pWaitSemaphores=&r->acquired,.pWaitDstStageMask=&wait_stage,
-        .commandBufferCount=1,.pCommandBuffers=&r->command,
-        .signalSemaphoreCount=1,.pSignalSemaphores=&r->render_done[r->current_image]};
+                         .commandBufferCount=1,.pCommandBuffers=&r->command};
+    if (target) {
+        if (!gpu_ok(r,vkQueueSubmit(r->queue,1,&submit,VK_NULL_HANDLE),"texture render submit"))
+            return 0;
+        target->layout_initialized=1;
+        return 1;
+    }
+    VkPipelineStageFlags wait_stage=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    submit.waitSemaphoreCount=1;
+    submit.pWaitSemaphores=&r->acquired;
+    submit.pWaitDstStageMask=&wait_stage;
+    submit.signalSemaphoreCount=1;
+    submit.pSignalSemaphores=&r->render_done[r->current_image];
     if (!gpu_ok(r,vkQueueSubmit(r->queue,1,&submit,VK_NULL_HANDLE),"frame submit")) return 0;
     VkPresentInfoKHR present={.sType=VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
         .waitSemaphoreCount=1,.pWaitSemaphores=&r->render_done[r->current_image],
@@ -644,11 +785,56 @@ int pc2_vk_end(pc2_vk *r) {
     if (v==VK_ERROR_OUT_OF_DATE_KHR||v==VK_SUBOPTIMAL_KHR) return pc2_vk_resize(r);
     return gpu_ok(r,v,"present");
 }
+
+int pc2_vk_target_read_rgba(pc2_vk *r, pc2_vk_texture *t,
+                           uint8_t *rgba, size_t size, uint32_t pitch) {
+    if (!r||r->active||!t||t->owner!=r||t->retired||!t->framebuffer||
+        !t->layout_initialized||!rgba||!source_pitch(t->width,t->height,&pitch,PIXELS_RGBA8))
+        return 0;
+    uint32_t row_bytes=t->width*4;
+    if (size<(size_t)(t->height-1)*pitch+row_bytes) return 0;
+    VkDeviceSize bytes=(VkDeviceSize)row_bytes*t->height;
+    VkBuffer stage=VK_NULL_HANDLE;
+    VkDeviceMemory memory=VK_NULL_HANDLE;
+    if (!buffer_create(r,bytes,VK_BUFFER_USAGE_TRANSFER_DST_BIT,&stage,&memory)) return 0;
+    int ok=0;
+    VkCommandBuffer cmd;
+    if (!one_time_begin(r,&cmd)) goto done;
+    transition(cmd,t->image,VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+        VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,VK_ACCESS_SHADER_READ_BIT|VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+        VK_ACCESS_TRANSFER_READ_BIT,VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT|VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+        VK_PIPELINE_STAGE_TRANSFER_BIT);
+    VkBufferImageCopy region={.imageSubresource={VK_IMAGE_ASPECT_COLOR_BIT,0,0,1},
+                              .imageExtent={t->width,t->height,1}};
+    vkCmdCopyImageToBuffer(cmd,t->image,VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,stage,1,&region);
+    transition(cmd,t->image,VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,VK_ACCESS_TRANSFER_READ_BIT,VK_ACCESS_SHADER_READ_BIT,
+        VK_PIPELINE_STAGE_TRANSFER_BIT,VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
+    VkBufferMemoryBarrier host={.sType=VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER,
+        .srcAccessMask=VK_ACCESS_TRANSFER_WRITE_BIT,.dstAccessMask=VK_ACCESS_HOST_READ_BIT,
+        .srcQueueFamilyIndex=VK_QUEUE_FAMILY_IGNORED,.dstQueueFamilyIndex=VK_QUEUE_FAMILY_IGNORED,
+        .buffer=stage,.size=bytes};
+    vkCmdPipelineBarrier(cmd,VK_PIPELINE_STAGE_TRANSFER_BIT,VK_PIPELINE_STAGE_HOST_BIT,
+                         0,0,NULL,1,&host,0,NULL);
+    if (!one_time_end(r,cmd)) goto done;
+    void *mapped=NULL;
+    if (!gpu_ok(r,vkMapMemory(r->device,memory,0,bytes,0,&mapped),"map texture readback")) goto done;
+    for (uint32_t y=0; y<t->height; ++y)
+        memcpy(rgba+(size_t)y*pitch,(const uint8_t *)mapped+(size_t)y*row_bytes,row_bytes);
+    vkUnmapMemory(r->device,memory);
+    ok=1;
+done:
+    vkDestroyBuffer(r->device,stage,NULL);
+    vkFreeMemory(r->device,memory,NULL);
+    return ok;
+}
+
 void pc2_vk_destroy(pc2_vk *r) {
     if (!r) return;
     swap_destroy(r);
     if (r->device) {
         release_retired_textures(r);
+        quad_pass_destroy(r,&r->target_pass);
         if (r->acquired) vkDestroySemaphore(r->device,r->acquired,NULL);
         if (r->sampler) vkDestroySampler(r->device,r->sampler,NULL);
         if (r->descriptor_pool) vkDestroyDescriptorPool(r->device,r->descriptor_pool,NULL);

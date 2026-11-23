@@ -29,6 +29,12 @@ source-quad-smoke: source_quad_smoke.c pc2_vk.c pc2_vk.h pc2_sprite_decode.c pc2
 check-source-quads: source-quad-smoke
 	./source-quad-smoke
 
+TARGET_TEST_CFLAGS ?= $(shell $(PKG_CONFIG) --cflags sdl2 vulkan)
+TARGET_TEST_LIBS ?= $(shell $(PKG_CONFIG) --libs sdl2 vulkan) -lm
+indexed-target-test: indexed_target_test.c pc2_vk.c pc2_vk.h pc2_sprite_decode.c pc2_sprite_decode.h $(SHADERS)
+	$(CC) $(CPPFLAGS) -std=c11 -O2 -Wall -Wextra $(TARGET_TEST_CFLAGS) -o $@ \
+		indexed_target_test.c pc2_vk.c pc2_sprite_decode.c $(TARGET_TEST_LIBS)
+
 sprite-decode-test: sprite_decode_test.c pc2_sprite_decode.c pc2_sprite_decode.h
 	$(CC) $(CPPFLAGS) -std=c11 -O2 -Wall -Wextra -o $@ sprite_decode_test.c pc2_sprite_decode.c
 
@@ -36,5 +42,5 @@ check-sprite-decode: sprite-decode-test
 	./sprite-decode-test
 
 clean:
-	rm -f smoke source-quad-smoke sprite-decode-test $(SHADERS)
+	rm -f smoke source-quad-smoke sprite-decode-test indexed-target-test $(SHADERS)
 .PHONY: all clean check-source-quads check-sprite-decode
