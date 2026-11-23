@@ -36,9 +36,11 @@ METHODS = {
     "Window_GadgetNotify_Input_SetFocusColor": (0x52fb80, "void", "int, unsigned int"),
     "Window_GadgetNotify_Input_SetSelectionColor": (0x52fba0, "void", "int, unsigned int"),
     "UI_CreateSlider": (0x52fc00, "int", "int, int, int, int, char *, int, int"),
+    "IDMap_Lookup": (0x4017f0, "int", "int, int *"),
     "Window_GadgetNotify_Slider_SetGradientColors": (0x52fcc0, "void", "int, int *"),
 }
 GLOBALS = {"DAT_0057c5e0": "UI *"}
+RECEIVERS = {"(void *)(DAT_0057c670 + 4)": "((IDMap *)((char *)DAT_0057c670 + 4))"}
 LOCAL_GRADIENT = {"local_10": 0, "local_c": 1, "local_8": 2, "local_4": 3}
 NUMBER = r"-?(?:0x[0-9a-f]+|[0-9]+)"
 CALL = re.compile(r"(?:(iVar1|this)\s*=\s*(?:\(void \*\))?)?(\w+)\s*\((.*)\)\s*;")
@@ -76,6 +78,7 @@ def extract(address, pseudocode, methods, *, null_return="window"):
         raise ValueError("unparsed pseudocode")
     declarations = {}
     used = {}
+    other_used = {}
     calls = []
     externs = {}
     callbacks = {}
@@ -90,6 +93,11 @@ def extract(address, pseudocode, methods, *, null_return="window"):
             return value
         if value in {"iVar1", "(int *)0x0"}:
             return value
+        if value == "local_40" and parameter == "char *":
+            return value
+        if re.fullmatch(r"\*\(int \*\)\(DAT_0057c670 \+ 0x2f4\)", value):
+            externs["DAT_0057c670"] = "void *DAT_0057c670"
+            return "*(int *)((char *)DAT_0057c670 + 0x2f4)"
         if value == "&local_10" and "gradient" in declarations:
             return "gradient"
         ptr = re.fullmatch(r"(?:s_\w+_|&DAT_)([0-9a-f]{8})", value)
@@ -120,7 +128,24 @@ def extract(address, pseudocode, methods, *, null_return="window"):
         if statement.startswith("undefined4 ") and statement[11:-1] in LOCAL_GRADIENT:
             declarations["gradient"] = "int gradient[4];"
             continue
-        if call and call[2] in methods:
+        local_buffer = re.fullmatch(r"char (local_[0-9a-f]+) \[(\d+)\];", statement)
+        if local_buffer:
+            declarations[local_buffer[1]] = f"char {local_buffer[1]}[{local_buffer[2]}];"
+            continue
+        format_call = re.fullmatch(r"String_Format\((.*)\)\s*;", statement)
+        if format_call:
+            values = [value.strip() for value in format_call[1].split(",")]
+            if len(values) == 3 and values[0] in declarations:
+                ptr = re.fullmatch(r"\(byte \*\)s_\w+_([0-9a-f]{8})", values[1])
+                if not ptr:
+                    raise ValueError(f"unsupported format label {values[1]!r}")
+                externs["String_Format"] = "int String_Format(char *, const char *, ...)"
+                externs[f"STR_{ptr[1]}"] = f"char STR_{ptr[1]}[]"
+                calls.append(0x54dd83)
+                statement = f"String_Format({values[0]}, STR_{ptr[1]}, {values[2]});"
+            else:
+                raise ValueError(f"unsupported String_Format call {statement!r}")
+        elif call and call[2] in methods:
             destination, native, arguments = call.groups()
             method, target, result, parameters = methods[native]
             receiver, *values = [value.strip() for value in arguments.split(",")]
@@ -128,13 +153,20 @@ def extract(address, pseudocode, methods, *, null_return="window"):
                 receiver = "window"
             elif receiver in GLOBALS:
                 externs[receiver] = f"{GLOBALS[receiver]}{receiver}"
+            elif receiver in RECEIVERS:
+                externs["DAT_0057c670"] = "void *DAT_0057c670"
+                receiver = RECEIVERS[receiver]
             else:
                 raise ValueError(f"unsupported receiver {receiver!r}")
             types = [parameter.strip() for parameter in parameters.split(",")]
             if len(values) != len(types):
                 raise ValueError(f"wrong argument count for {native}")
             name_in_cpp = method.removeprefix("UI_").removeprefix("Window_Create")
-            used[name_in_cpp] = (target, result, parameters)
+            if native == "IDMap_Lookup":
+                name_in_cpp = "Lookup"
+                other_used[name_in_cpp] = (target, result, parameters)
+            else:
+                used[name_in_cpp] = (target, result, parameters)
             calls.append(target)
             prefix = f"{'window' if destination == 'this' else destination} = " if destination else ""
             rendered = ", ".join(argument(value, parameter) for value, parameter in zip(values, types))
@@ -161,6 +193,10 @@ def extract(address, pseudocode, methods, *, null_return="window"):
     forward = ["struct UI {"]
     forward.extend(f"    {result} {method}({parameters});" for method, (_, result, parameters) in used.items())
     forward.append("};")
+    if other_used:
+        forward.append("struct IDMap {")
+        forward.extend(f"    {result} {method}({parameters});" for method, (_, result, parameters) in other_used.items())
+        forward.append("};")
     forward.extend(f'extern "C" {value};' for value in externs.values())
     source = [f"/* Generated from checked-in UI builder pseudocode at {address:#x}. */", *forward, "",
               f'extern "C" UI *__cdecl {name}(int *param_1) {{',

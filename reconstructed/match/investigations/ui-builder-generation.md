@@ -42,8 +42,11 @@ load screens, and options panels. Recovering `UI_AddInputField` and its
 color setters added Character Select, AI Debug Status, and Request Dialog
 for another 5,606 bytes. A final parser fix accepts whitespace before a
 call's closing semicolon; this added `Screen_MissionGoals` (`0x42d990`,
-1,105 bytes). The batch now links **118 strict builders covering 435,874
-code bytes** into a byte-identical scratch PE.
+1,105 bytes). The parser also learned local `char[64]` buffers,
+`IDMap_Lookup`, `String_Format`, and the `DAT_0057c670` pointer global;
+that added `OfficeView_CreateWindow` (`0x4275a0`, 902 bytes). The batch now
+links **119 strict builders covering 436,776 code bytes** into a
+byte-identical scratch PE.
 
 The broader scan reports three unsupported exports at `0x4275a0`,
 `0x42d990`, and `0x474df0`. The tool saves its report and linked image

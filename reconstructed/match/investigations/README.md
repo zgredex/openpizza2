@@ -265,9 +265,11 @@ sound destructors 3/3 strict     316/316 bytes     generator emitted
 The UI call-target groups are already covered by the existing UI builder
 generator: `0x523bb0` is 79/79 generated (259,523 bytes), `0x531c60` is 26/26
 (138,825 bytes), and `0x523c90` is 6/7 (26,925 bytes). Across the five UI
-families the generator covers **435,874 bytes**. `Screen_MissionGoals` was
-added by accepting whitespace before a call's semicolon; only
-`Screen_MissionBriefing` and `OfficeView_CreateWindow` remain unsupported.
+families the generator covers **436,776 bytes**. `Screen_MissionGoals` was
+added by accepting whitespace before a call's semicolon; `OfficeView`
+needed local buffers, `IDMap_Lookup`, `String_Format`, and the
+`DAT_0057c670` pointer global. Only `Screen_MissionBriefing` remains
+unsupported.
 
 ### List family pilot
 
