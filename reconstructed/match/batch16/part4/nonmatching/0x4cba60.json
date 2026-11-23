@@ -1,0 +1,274 @@
+{
+  "address": "0x4cba60",
+  "entry": "?Config_WriteRegistryBlock@@YAIPBDPAE@Z",
+  "length": 166,
+  "candidate_length": 160,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [
+    "unverified .text$x section (18 bytes)",
+    "unverified .xdata$x section (40 bytes)",
+    "unverified .text section (16 bytes)",
+    ".text relocation at 0x3: unresolved symbol $L275"
+  ],
+  "relocation_issues": [
+    ".text relocation at 0x43 resolves to 0xfff376f9, original has 0xff0c2444",
+    ".text relocation at 0x50 resolves to 0x0, original has 0x244c8bc0",
+    ".text relocation at 0x6c resolves to 0xfff377d0, original has 0x8d515000",
+    ".text relocation at 0x75 resolves to 0xfff37807, original has 0x8dfff377",
+    ".text relocation at 0x7e resolves to 0xfff376be, original has 0x8dfff377",
+    ".text relocation at 0x8e resolves to 0x0, original has 0xfff376ae"
+  ],
+  "relocations": [
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4cba63",
+      "offset": "0x3",
+      "symbol": "$L275",
+      "target_section_index": 3,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x558bd8",
+      "expected": null,
+      "target": null,
+      "origin": null,
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4cba69",
+      "offset": "0x9",
+      "symbol": "__except_list",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x0",
+      "expected": "0x0",
+      "target": "0x0",
+      "origin": "vc6_eh_intrinsic",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4cba71",
+      "offset": "0x11",
+      "symbol": "__except_list",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x0",
+      "expected": "0x0",
+      "target": "0x0",
+      "origin": "vc6_eh_intrinsic",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4cba7b",
+      "offset": "0x1b",
+      "symbol": "@Clear_Ptr@4",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xfff37711",
+      "expected": "0xfff37711",
+      "target": "0x403190",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4cba80",
+      "offset": "0x20",
+      "symbol": "?DAT_00563c5c@@3PADA",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x563c5c",
+      "expected": "0x563c5c",
+      "target": "0x563c5c",
+      "origin": "address_label",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4cba96",
+      "offset": "0x36",
+      "symbol": "?OpenOrCreate@RegistryKey@@QAEPAXPAXPBD@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xfff37716",
+      "expected": "0xfff37716",
+      "target": "0x4031b0",
+      "origin": "decorated_alias",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4cbaa3",
+      "offset": "0x43",
+      "symbol": "@RegistryKey_CloseThunk@4",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xff0c2444",
+      "expected": "0xfff376f9",
+      "target": "0x4031a0",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4cbab0",
+      "offset": "0x50",
+      "symbol": "__except_list",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x244c8bc0",
+      "expected": "0x0",
+      "target": "0x0",
+      "origin": "vc6_eh_intrinsic",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4cbacc",
+      "offset": "0x6c",
+      "symbol": "?WriteValue@RegistryKey@@QAEHPBDPAEK@Z",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x8d515000",
+      "expected": "0xfff377d0",
+      "target": "0x4032a0",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4cbad5",
+      "offset": "0x75",
+      "symbol": "?Close@RegistryKey@@QAEXXZ",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x8dfff377",
+      "expected": "0xfff37807",
+      "target": "0x4032e0",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4cbade",
+      "offset": "0x7e",
+      "symbol": "@RegistryKey_CloseThunk@4",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x8dfff377",
+      "expected": "0xfff376be",
+      "target": "0x4031a0",
+      "origin": "decorated_alias",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x4cbaee",
+      "offset": "0x8e",
+      "symbol": "__except_list",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0xfff376ae",
+      "expected": "0x0",
+      "target": "0x0",
+      "origin": "vc6_eh_intrinsic",
+      "verified": false
+    }
+  ],
+  "object_sha256": "b4f55b1c17c6fc71b745b57339435d9b26c6ee50a1fe7b39ca910063dbbd4806",
+  "linked_spans": [],
+  "link_plan_issues": [],
+  "blocked_sections": [
+    {
+      "section": ".text$x",
+      "index": 3,
+      "symbols": [
+        "$L261",
+        "$L275",
+        ".text$x"
+      ],
+      "expected_addresses": []
+    },
+    {
+      "section": ".xdata$x",
+      "index": 4,
+      "symbols": [
+        "$T274",
+        "$T277",
+        ".xdata$x"
+      ],
+      "expected_addresses": []
+    },
+    {
+      "section": ".text",
+      "index": 6,
+      "symbols": [
+        ".text",
+        "??1RegistryKey@@QAE@XZ"
+      ],
+      "expected_addresses": []
+    }
+  ],
+  "linked_sections": [
+    {
+      "section": ".text",
+      "index": 2,
+      "address": "0x4cba60",
+      "origin": "candidate_entry"
+    }
+  ],
+  "first_difference": {
+    "offset": 61,
+    "original": 34,
+    "candidate": 26
+  },
+  "difference_count": 71,
+  "source": "reconstructed/match/batch16/part4/nonmatching/0x4cba60.c",
+  "source_sha256": "47a5420a1719746df6360689141c8def190359591bde7faac0396605e880e81d",
+  "executable_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd",
+  "compiler": {
+    "path": "/home/patryk/.local/share/pc2/vc6-sp3-toolchain/VC98",
+    "sha256": {
+      "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+      "C1.DLL": "d1b25d84da1d3d0d460996ea298488cb183b857e1b90628147983114ac4ab55f",
+      "C1XX.DLL": "28c355499c2f8090910624734faff31fe719a69a8aac7dd44b2ce64addf96ee2",
+      "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153"
+    }
+  },
+  "flags": [
+    "/O2",
+    "/TP",
+    "/GX"
+  ],
+  "strict_requested": true,
+  "strict_symbols": false,
+  "auto_symbols": true,
+  "symbol_registry_sha256": "e70a0a1124d4f83bd2fd48c4e28c535aacc6ecfdacef8ccf1f7b0bc357e618fe",
+  "symbol_overrides": {}
+}

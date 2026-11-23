@@ -56,8 +56,13 @@ The following are genuine C/C++ attempts. Sources and full
 | 0x4ffe00 | Game_RefreshObjectCategoryBins | 0x6b: 0x10 vs 0x0c | 45 |
 | 0x5219a0 | Sprite_FillRectColor | 0x28: 0x89 vs 0x8b | 111 |
 | 0x547810 | Sound_LoadEffectBuffers | 0x00: 0x81 vs 0xa1 | 129 |
+| 0x4cba60 | Config_WriteRegistryBlock | 0x3d: 0x22 vs 0x1a | 71 |
 
-`0x4fe370` and `0x47ec70` are the closest attempts: `0x4fe370` differs only in
+`0x4cba60` reaches the shipped EH prologue only when the candidate is given
+C++ linkage (`/O2 /TP /GX`); the attempt then differs in the first EH state
+store and leaves the `.text$x`/`.xdata$x` handler and an out-of-line
+`??1RegistryKey@@QAE@XZ` COMDAT unverified. `0x4fe370` and `0x47ec70` are the
+closest attempts: `0x4fe370` differs only in
 the register chosen for the `RemoveStaffMember` argument (2 bytes), and
 `0x47ec70` differs only in whether the first `CountObjectsByType` call sets
 ECX before or after pushing its literal argument (4 bytes). The remaining
@@ -70,7 +75,6 @@ No candidate was produced for these manifest entries:
 
 - `0x402ad0` ResourceManager_FindExtensionAlias
 - `0x480690` Game_UpdateObjectRatingScales
-- `0x4cba60` Config_WriteRegistryBlock
 - `0x4d6af0` Game_CollectObjectsByType
 - `0x4e5f40` Game_ComputeEventValue
 - `0x502220` Game_GetGlobalStatsBand
