@@ -35,7 +35,7 @@ matcher JSON beside them.
 
 ## Non-matching evidence
 
-Both; the matcher was run with
+Both are complete genuine C/C++ reconstructions; the matcher was run with
 the manifest length, the exact entry, `/O2 /TP`, `--strict --auto-symbols`.
 
 | address | function | first diff | differing bytes | diagnosis |
