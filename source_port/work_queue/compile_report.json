@@ -1,0 +1,316 @@
+{
+  "schema": "pc2.readable_port_compile.v1",
+  "total": 520,
+  "compiled": 443,
+  "failed": 77,
+  "failures": [
+    {
+      "file": "0x401270.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x401270.cpp:10:12: error: use of undeclared identifier 'PTR_StatsPeriodReport_Delete_0055c2e0'\n   10 |   *arg1 = &PTR_StatsPeriodReport_Delete_0055c2e0;\n      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x401300.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x401300.cpp:10:12: error: use of undeclared identifier 'PTR_NamedLockable_Delete_0055c2e8'; did you mean 'PTR_GamePlan_Delete_0055c688'?\n   10 |   *arg1 = &PTR_NamedLockable_Delete_0055c2e8;\n      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n      |            PTR_GamePlan_Delete_0055c688\n/home/patryk/pizzaconnection2/source_port/include/pc2_port.h:124:14: note: 'PTR_GamePlan_Delete_0055c688' declared here\n  124 | extern void *PTR_GamePlan_Delete_0055c688;\n      |              ^\n/home/patryk/pizzaconnection2/source_port/src/0x401300.cpp:10:11: error: incompatible pointer to integer conversion assigning to 'uint32_t' (aka 'unsigned int') from 'void **'\n   10 |   *arg1 = &PTR_NamedLockable_Delete_0055c2e8;\n      |           ^~~~~~~~~~~~~~~~~~~"
+    },
+    {
+      "file": "0x4031b0.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x4031b0.cpp:14:11: error: use of undeclared identifier 'RegOpenKeyExA'\n   14 |   LVar1 = RegOpenKeyExA(arg1,arg2,0,0x2001f,self);\n      |           ^~~~~~~~~~~~~\n/home/patryk/pizzaconnection2/source_port/src/0x4031b0.cpp:16:13: error: use of undeclared identifier 'RegCreateKeyA'\n   16 |     LVar1 = RegCreateKeyA(arg1,arg2,self);\n      |             ^~~~~~~~~~~~~\n2 errors generated.\n"
+    },
+    {
+      "file": "0x4032a0.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x4032a0.cpp:17:11: error: use of undeclared identifier 'RegSetValueExA'\n   17 |   LVar1 = RegSetValueExA(*(HKEY *)self,arg1,0,3,arg2,arg3);\n      |           ^~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x4034b0.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x4034b0.cpp:14:13: error: use of undeclared identifier '_rand'\n   14 |   uvalue1 = _rand();\n      |             ^~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x403d30.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x403d30.cpp:9:3: error: use of undeclared identifier 'CS_Enter'\n    9 |   CS_Enter(arg1 + 0x10);\n      |   ^~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x403d40.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x403d40.cpp:9:3: error: use of undeclared identifier 'CS_Leave'\n    9 |   CS_Leave(arg1 + 0x10);\n      |   ^~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x486f20.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x486f20.cpp:9:3: error: use of undeclared identifier 'Game_MarkAllObjectsDirty'\n    9 |   Game_MarkAllObjectsDirty(arg1,6);\n      |   ^~~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x48c000.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x48c000.cpp:9:3: error: use of undeclared identifier 'IDMap_FindByField34'\n    9 |   IDMap_FindByField34((void *)((intptr_t)self + 0x304),arg1);\n      |   ^~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x48c020.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x48c020.cpp:9:3: error: use of undeclared identifier 'Array_FindEntryByKeys'\n    9 |   Array_FindEntryByKeys((void *)((intptr_t)self + 0x304),arg1,arg2);\n      |   ^~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x49f1c0.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x49f1c0.cpp:9:3: error: use of undeclared identifier 'UI_RemoveObjectByKey'; did you mean 'UI_RemoveObjectByOffsetKey'?\n    9 |   UI_RemoveObjectByKey(arg1,arg2 + 100000);\n      |   ^~~~~~~~~~~~~~~~~~~~\n      |   UI_RemoveObjectByOffsetKey\n/home/patryk/pizzaconnection2/source_port/src/0x49f1c0.cpp:6:14: note: 'UI_RemoveObjectByOffsetKey' declared here\n    6 | void __cdecl UI_RemoveObjectByOffsetKey(void *arg1,int arg2)\n      |              ^\n1 error generated.\n"
+    },
+    {
+      "file": "0x49f1e0.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x49f1e0.cpp:10:3: error: use of undeclared identifier 'UI_ShowChildByID'\n   10 |   UI_ShowChildByID(arg1,arg2 + 100000);\n      |   ^~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x4aa690.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x4aa690.cpp:10:3: error: use of undeclared identifier 'Window_UpdatePolicePage'\n   10 |   Window_UpdatePolicePage(arg1);\n      |   ^~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x4b63f0.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x4b63f0.cpp:10:3: error: use of undeclared identifier 'AnnoyancesPage_FillCosts'\n   10 |   AnnoyancesPage_FillCosts(arg1);\n      |   ^~~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x4bb650.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x4bb650.cpp:10:3: error: use of undeclared identifier 'Window_UpdateBranchInfoPage'\n   10 |   Window_UpdateBranchInfoPage(arg1,'\\x01');\n      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x4d1ca0.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x4d1ca0.cpp:10:12: error: use of undeclared identifier 'PTR_RecipeTopping_Delete_0055c4e8'\n   10 |   *arg1 = &PTR_RecipeTopping_Delete_0055c4e8;\n      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x4d2a90.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x4d2a90.cpp:9:3: error: use of undeclared identifier 'IDMap_RemoveRecursive'\n    9 |   IDMap_RemoveRecursive((void *)((intptr_t)self + 0x78),arg1);\n      |   ^~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x4d3450.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x4d3450.cpp:9:3: error: use of undeclared identifier 'MapSprite_Save'\n    9 |   MapSprite_Save(arg1,*(int **)((intptr_t)self + 8));\n      |   ^~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x4d3930.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x4d3930.cpp:11:12: error: use of undeclared identifier 'Game_GetRecordByField814'; did you mean 'Game_GetRecordField814Value'?\n   11 |   value1 = Game_GetRecordByField814(arg1);\n      |            ^~~~~~~~~~~~~~~~~~~~~~~~\n      |            Game_GetRecordField814Value\n/home/patryk/pizzaconnection2/source_port/src/0x4d3930.cpp:6:16: note: 'Game_GetRecordField814Value' declared here\n    6 | int __fastcall Game_GetRecordField814Value(int arg1)\n      |                ^\n1 error generated.\n"
+    },
+    {
+      "file": "0x4d3f80.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x4d3f80.cpp:10:12: error: use of undeclared identifier 'PTR_Character_Delete_0055c4fc'\n   10 |   *arg1 = &PTR_Character_Delete_0055c4fc;\n      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x4d6c00.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x4d6c00.cpp:9:3: error: use of undeclared identifier 'City_RemovePersonAndMaintainPopulation'\n    9 |   City_RemovePersonAndMaintainPopulation(self,*arg1);\n      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x4dd670.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x4dd670.cpp:13:12: error: use of undeclared identifier 'PTR_GameClock_Delete_0055c564'; did you mean 'PTR_GamePlan_Delete_0055c688'?\n   13 |   *arg1 = &PTR_GameClock_Delete_0055c564;\n      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n      |            PTR_GamePlan_Delete_0055c688\n/home/patryk/pizzaconnection2/source_port/include/pc2_port.h:124:14: note: 'PTR_GamePlan_Delete_0055c688' declared here\n  124 | extern void *PTR_GamePlan_Delete_0055c688;\n      |              ^\n/home/patryk/pizzaconnection2/source_port/src/0x4dd670.cpp:13:11: error: incompatible pointer to integer conversion assigning to 'uint32_t' (aka 'unsigned int') from 'void **'\n   13 |   *arg1 = &PTR_GameClock_Delete_0055c564;\n      |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n2 er"
+    },
+    {
+      "file": "0x4ddca0.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x4ddca0.cpp:9:3: error: use of undeclared identifier 'IDMap_RemoveByKey'\n    9 |   IDMap_RemoveByKey((void *)((intptr_t)self + 0x180),arg1);\n      |   ^~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x4e4050.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x4e4050.cpp:10:12: error: use of undeclared identifier 'PTR_FurnitureType_Delete_0055c5a0'; did you mean 'PTR_SpriteBase_Delete_0055c828'?\n   10 |   *arg1 = &PTR_FurnitureType_Delete_0055c5a0;\n      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n      |            PTR_SpriteBase_Delete_0055c828\n/home/patryk/pizzaconnection2/source_port/include/pc2_port.h:125:14: note: 'PTR_SpriteBase_Delete_0055c828' declared here\n  125 | extern void *PTR_SpriteBase_Delete_0055c828;\n      |              ^\n/home/patryk/pizzaconnection2/source_port/src/0x4e4050.cpp:10:11: error: incompatible pointer to integer conversion assigning to 'uint32_t' (aka 'unsigned int') from 'void **'\n   10 |   *arg1 = &PTR_FurnitureType_Delete_0055c5a0;\n      |           ^~~~~~~~~~~"
+    },
+    {
+      "file": "0x4e4390.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x4e4390.cpp:10:12: error: use of undeclared identifier 'PTR_BuildingValue_Delete_0055c5a4'\n   10 |   *arg1 = &PTR_BuildingValue_Delete_0055c5a4;\n      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x4e4920.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x4e4920.cpp:10:12: error: use of undeclared identifier 'PTR_Ingredient_Delete_0055c5b8'; did you mean 'PTR_GamePlan_Delete_0055c688'?\n   10 |   *arg1 = &PTR_Ingredient_Delete_0055c5b8;\n      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n      |            PTR_GamePlan_Delete_0055c688\n/home/patryk/pizzaconnection2/source_port/include/pc2_port.h:124:14: note: 'PTR_GamePlan_Delete_0055c688' declared here\n  124 | extern void *PTR_GamePlan_Delete_0055c688;\n      |              ^\n/home/patryk/pizzaconnection2/source_port/src/0x4e4920.cpp:10:11: error: incompatible pointer to integer conversion assigning to 'uint32_t' (aka 'unsigned int') from 'void **'\n   10 |   *arg1 = &PTR_Ingredient_Delete_0055c5b8;\n      |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    },
+    {
+      "file": "0x4e5de0.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x4e5de0.cpp:10:12: error: use of undeclared identifier 'PTR_ConstructionOrder_Delete_0055c5bc'\n   10 |   *arg1 = &PTR_ConstructionOrder_Delete_0055c5bc;\n      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x4f12c0.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x4f12c0.cpp:12:14: error: use of undeclared identifier 'Array_GetRandomRecord28B'\n   12 |     value1 = Array_GetRandomRecord28B(self,arg1);\n      |              ^~~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x4f34f0.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x4f34f0.cpp:9:3: error: use of undeclared identifier 'UI_ComputeCenteredRect'\n    9 |   UI_ComputeCenteredRect(self,(int *)(*(int *)((intptr_t)self + 0x4c) + arg1 * 0xc),arg2,arg3);\n      |   ^~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x4f5e40.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x4f5e40.cpp:10:12: error: use of undeclared identifier 'PTR_Player_MissionState_Delete_0055c5e8'\n   10 |   *arg1 = &PTR_Player_MissionState_Delete_0055c5e8;\n      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x4f5f70.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x4f5f70.cpp:13:10: error: assigning to 'int *' from incompatible type 'void *'\n   13 |   ptr1 = self;\n      |          ^~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x4f5fa0.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x4f5fa0.cpp:14:10: error: assigning to 'int *' from incompatible type 'void *'\n   14 |   ptr2 = self;\n      |          ^~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x501a30.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x501a30.cpp:10:12: error: use of undeclared identifier 'PTR_AwardNode_Delete_0055c660'\n   10 |   *arg1 = &PTR_AwardNode_Delete_0055c660;\n      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x509bf0.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x509bf0.cpp:15:3: error: use of undeclared identifier 'Array_GetPtr4'\n   15 |   Array_GetPtr4((void *)(value1 + 0x14),*(int *)(value1 + 0x18) + -1);\n      |   ^~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x50f630.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x50f630.cpp:10:11: error: incompatible pointer to integer conversion assigning to 'uint32_t' (aka 'unsigned int') from 'void **'\n   10 |   *arg1 = &PTR_GamePlan_Delete_0055c688;\n      |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x50fb30.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x50fb30.cpp:10:11: error: incompatible pointer to integer conversion assigning to 'uint32_t' (aka 'unsigned int') from 'void **'\n   10 |   *arg1 = &PTR_GamePlan_Delete_0055c688;\n      |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x5104d0.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x5104d0.cpp:12:3: error: use of undeclared identifier 'Index_Map8To5'\n   12 |   Index_Map8To5(self,arg1);\n      |   ^~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x5140e0.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x5140e0.cpp:10:5: error: use of undeclared identifier 'Storage_DistributeCostToShops'\n   10 |     Storage_DistributeCostToShops(arg1,(float)*(int *)((intptr_t)arg1 + 0x40),'\\x01');\n      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x514220.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x514220.cpp:11:12: error: use of undeclared identifier 'Array_FindPair'\n   11 |   value1 = Array_FindPair(self,arg1);\n      |            ^~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x5144f0.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x5144f0.cpp:13:12: error: use of undeclared identifier 'Storage_GetCapacity'\n   13 |   value2 = Storage_GetCapacity(arg1);\n      |            ^~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x521380.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x521380.cpp:9:3: error: use of undeclared identifier 'Sprite_FillTransparentColor'\n    9 |   Sprite_FillTransparentColor(*(void **)(arg1 + 0x60),-1);\n      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x521ae0.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x521ae0.cpp:9:3: error: use of undeclared identifier 'Sprite_GetSize'\n    9 |   Sprite_GetSize(*(void **)((intptr_t)self + 0x60),arg1,arg2);\n      |   ^~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x521b30.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x521b30.cpp:9:3: error: use of undeclared identifier 'UI_ClipRect'\n    9 |   UI_ClipRect(*(void **)(arg1 + 8),(int *)(arg1 + 0x28),1);\n      |   ^~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x524970.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x524970.cpp:9:3: error: use of undeclared identifier 'Window_DispatchMouseEvent'\n    9 |   Window_DispatchMouseEvent\n      |   ^~~~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x5272a0.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x5272a0.cpp:10:3: error: use of undeclared identifier 'Tooltip_SetBackgroundImage'\n   10 |   Tooltip_SetBackgroundImage(*(void **)((intptr_t)self + 0x244),arg1);\n      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x5272c0.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x5272c0.cpp:9:3: error: use of undeclared identifier 'Renderer_GetTextObject'\n    9 |   Renderer_GetTextObject(*(int *)(arg1 + 0x244));\n      |   ^~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x527aa0.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x527aa0.cpp:9:3: error: use of undeclared identifier 'Object_GetByte36Max7'\n    9 |   Object_GetByte36Max7(*(int **)(arg1 + 0x8310));\n      |   ^~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x527c80.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x527c80.cpp:9:3: error: use of undeclared identifier 'Array_RemoveValueLocked'\n    9 |   Array_RemoveValueLocked((void *)((intptr_t)self + 0x8324),arg1);\n      |   ^~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x52ff20.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x52ff20.cpp:9:3: error: use of undeclared identifier 'Array_GetRecordByKey'; did you mean 'Array_GetRecordByKeyPtr'?\n    9 |   Array_GetRecordByKey(self,arg1);\n      |   ^~~~~~~~~~~~~~~~~~~~\n      |   Array_GetRecordByKeyPtr\n/home/patryk/pizzaconnection2/source_port/src/0x52ff20.cpp:6:17: note: 'Array_GetRecordByKeyPtr' declared here\n    6 | void __thiscall Array_GetRecordByKeyPtr(void *self,int arg1)\n      |                 ^\n1 error generated.\n"
+    },
+    {
+      "file": "0x538f90.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x538f90.cpp:9:3: error: use of undeclared identifier 'Surface_Lock'\n    9 |   Surface_Lock(arg1,0);\n      |   ^~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x539700.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x539700.cpp:11:3: error: unknown type name 'tagMSG'\n   11 |   tagMSG local_1c;\n      |   ^\n1 error generated.\n"
+    },
+    {
+      "file": "0x539840.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x539840.cpp:9:3: error: use of undeclared identifier 'Color_RGBTo16'\n    9 |   Color_RGBTo16(self,(uint8_t)arg1,(uint8_t)(arg1 >> 8),arg1 >> 0x10 & 0xff);\n      |   ^~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x53a1b0.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x53a1b0.cpp:9:3: error: use of undeclared identifier 'Gfx_BuildBlendTable'\n    9 |   Gfx_BuildBlendTable(0x584518);\n      |   ^~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x53a1e0.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x53a1e0.cpp:10:11: error: incompatible pointer to integer conversion assigning to 'uint32_t' (aka 'unsigned int') from 'void **'\n   10 |   *arg1 = &PTR_SpriteBase_Delete_0055c828;\n      |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x53a210.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x53a210.cpp:10:11: error: incompatible pointer to integer conversion assigning to 'uint32_t' (aka 'unsigned int') from 'void **'\n   10 |   *arg1 = &PTR_SpriteBase_Delete_0055c828;\n      |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x53d690.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x53d690.cpp:9:3: error: use of undeclared identifier 'Sprite_BlitRLEOpaque'\n    9 |   Sprite_BlitRLEOpaque(self,arg1,*(uint8_t **)((intptr_t)self + 0x2c),0,arg2,arg3,0xfffffffe,0);\n      |   ^~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x53efd0.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x53efd0.cpp:9:12: error: use of undeclared identifier 'PTR_LAB_0055c840'\n    9 |   *arg1 = &PTR_LAB_0055c840;\n      |            ^~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x548d90.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x548d90.cpp:10:28: error: use of undeclared identifier 's_Sfx_Sfx_City_Police_wav_00576168'\n   10 |     Sound_PlayChannel(arg1,s_Sfx_Sfx_City_Police_wav_00576168,1);\n      |                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x54a630.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x54a630.cpp:10:12: error: use of undeclared identifier 'PTR_DebugConsole_Delete_0055cb3c'\n   10 |   *arg1 = &PTR_DebugConsole_Delete_0055cb3c;\n      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n/home/patryk/pizzaconnection2/source_port/src/0x54a630.cpp:12:5: error: use of undeclared identifier 'DestroyWindow'\n   12 |     DestroyWindow((HWND)arg1[1]);\n      |     ^~~~~~~~~~~~~\n/home/patryk/pizzaconnection2/source_port/src/0x54a630.cpp:15:5: error: use of undeclared identifier 'FreeLibrary'\n   15 |     FreeLibrary((HMODULE)arg1[9]);\n      |     ^~~~~~~~~~~\n3 errors generated.\n"
+    },
+    {
+      "file": "0x54a820.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x54a820.cpp:17:12: error: use of undeclared identifier 'GetDesktopWindow'\n   17 |     hWnd = GetDesktopWindow();\n      |            ^~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x54cb80.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x54cb80.cpp:6:29: error: unknown type name 'LPOPENFILENAMEA'\n    6 | BOOL GetSaveFileNameA_Thunk(LPOPENFILENAMEA arg1)\n      |                             ^\n1 error generated.\n"
+    },
+    {
+      "file": "0x54cb86.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x54cb86.cpp:11:3: error: use of undeclared identifier 'DirectDrawCreate'\n   11 |   DirectDrawCreate();\n      |   ^~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x54d484.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x54d484.cpp:9:72: error: use of undeclared identifier 'PTR_LAB_0055cc94'\n    9 |   *(uint8_t ***)(*(int *)(*(int *)(arg1 + -0xc) + 4) + -0xc + arg1) = &PTR_LAB_0055cc94;\n      |                                                                        ^~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x54d84e.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x54d84e.cpp:9:68: error: use of undeclared identifier 'PTR_LAB_0055cca4'\n    9 |   *(uint8_t ***)(*(int *)(*(int *)(arg1 + -8) + 4) + -8 + arg1) = &PTR_LAB_0055cca4;\n      |                                                                    ^~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x54dd78.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x54dd78.cpp:9:3: error: use of undeclared identifier 'CRT_FreeInternal'\n    9 |   CRT_FreeInternal(arg1);\n      |   ^~~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x54dea3.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x54dea3.cpp:11:12: error: use of undeclared identifier 'CRT_Onexit'; did you mean 'CRT_Atexit'?\n   11 |   value1 = CRT_Onexit(arg1);\n      |            ^~~~~~~~~~\n      |            CRT_Atexit\n/home/patryk/pizzaconnection2/source_port/src/0x54dea3.cpp:6:13: note: 'CRT_Atexit' declared here\n    6 | int __cdecl CRT_Atexit(int arg1)\n      |             ^\n1 error generated.\n"
+    },
+    {
+      "file": "0x54dfe0.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x54dfe0.cpp:9:3: error: use of undeclared identifier 'CRT_Fsopen'\n    9 |   CRT_Fsopen(arg1,arg2,0x40);\n      |   ^~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x54e157.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x54e157.cpp:9:3: error: use of undeclared identifier 'CRT_Atoi'\n    9 |   CRT_Atoi(self,arg1);\n      |   ^~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x54f0d5.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x54f0d5.cpp:11:12: error: no matching function for call to 'CRT_GetThreadData'\n   11 |   pDVar1 = CRT_GetThreadData();\n      |            ^~~~~~~~~~~~~~~~~\n/home/patryk/pizzaconnection2/source_port/include/pc2_port.h:108:7: note: candidate function not viable: requires 2 arguments, but 0 were provided\n  108 | void *CRT_GetThreadData(void *module, int slot);\n      |       ^                 ~~~~~~~~~~~~~~~~~~~~~~\n/home/patryk/pizzaconnection2/source_port/src/0x54f0d5.cpp:11:12: error: assigning to 'DWORD *' (aka 'unsigned int *') from incompatible type 'void *'\n   11 |   pDVar1 = CRT_GetThreadData();\n      |            ^~~~~~~~~~~~~~~~~~~\n2 errors generated.\n"
+    },
+    {
+      "file": "0x54f3a4.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x54f3a4.cpp:9:3: error: use of undeclared identifier 'CRT_Lock'\n    9 |   CRT_Lock(0xd);\n      |   ^~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x54f3ad.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x54f3ad.cpp:9:3: error: use of undeclared identifier 'CS_LeaveIndexed'\n    9 |   CS_LeaveIndexed(0xd);\n      |   ^~~~~~~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x54f3b6.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x54f3b6.cpp:11:8: error: indirection not permitted on operand of type 'void *'\n   11 |       (*(void *)*arg1)();\n      |        ^~~~~~~~~~~~~~\n/home/patryk/pizzaconnection2/source_port/src/0x54f3b6.cpp:11:23: error: called object type 'void' is not a function or function pointer\n   11 |       (*(void *)*arg1)();\n      |       ~~~~~~~~~~~~~~~~^\n2 errors generated.\n"
+    },
+    {
+      "file": "0x54f613.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x54f613.cpp:9:3: error: use of undeclared identifier 'CRT_Unlink'\n    9 |   CRT_Unlink(arg1);\n      |   ^~~~~~~~~~\n1 error generated.\n"
+    },
+    {
+      "file": "0x553606.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x553606.cpp:11:12: error: no matching function for call to 'CRT_GetThreadData'\n   11 |   pDVar1 = CRT_GetThreadData();\n      |            ^~~~~~~~~~~~~~~~~\n/home/patryk/pizzaconnection2/source_port/include/pc2_port.h:108:7: note: candidate function not viable: requires 2 arguments, but 0 were provided\n  108 | void *CRT_GetThreadData(void *module, int slot);\n      |       ^                 ~~~~~~~~~~~~~~~~~~~~~~\n/home/patryk/pizzaconnection2/source_port/src/0x553606.cpp:11:12: error: assigning to 'DWORD *' (aka 'unsigned int *') from incompatible type 'void *'\n   11 |   pDVar1 = CRT_GetThreadData();\n      |            ^~~~~~~~~~~~~~~~~~~\n2 errors generated.\n"
+    },
+    {
+      "file": "0x55360f.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x55360f.cpp:11:12: error: no matching function for call to 'CRT_GetThreadData'\n   11 |   pDVar1 = CRT_GetThreadData();\n      |            ^~~~~~~~~~~~~~~~~\n/home/patryk/pizzaconnection2/source_port/include/pc2_port.h:108:7: note: candidate function not viable: requires 2 arguments, but 0 were provided\n  108 | void *CRT_GetThreadData(void *module, int slot);\n      |       ^                 ~~~~~~~~~~~~~~~~~~~~~~\n/home/patryk/pizzaconnection2/source_port/src/0x55360f.cpp:11:12: error: assigning to 'DWORD *' (aka 'unsigned int *') from incompatible type 'void *'\n   11 |   pDVar1 = CRT_GetThreadData();\n      |            ^~~~~~~~~~~~~~~~~~~\n2 errors generated.\n"
+    },
+    {
+      "file": "0x553934.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x553934.cpp:9:49: error: use of undeclared identifier 'PTR_DAT_00576eb4'\n    9 |   InitializeCriticalSection((LPCRITICAL_SECTION)PTR_DAT_00576eb4);\n      |                                                 ^~~~~~~~~~~~~~~~\n/home/patryk/pizzaconnection2/source_port/src/0x553934.cpp:10:49: error: use of undeclared identifier 'PTR_DAT_00576ea4'\n   10 |   InitializeCriticalSection((LPCRITICAL_SECTION)PTR_DAT_00576ea4);\n      |                                                 ^~~~~~~~~~~~~~~~\n/home/patryk/pizzaconnection2/source_port/src/0x553934.cpp:11:49: error: use of undeclared identifier 'PTR_DAT_00576e94'\n   11 |   InitializeCriticalSection((LPCRITICAL_SECTION)PTR_DAT_00576e94);\n      |                                                 ^~~~~~~~~~~"
+    },
+    {
+      "file": "0x553c9d.cpp",
+      "error": "/home/patryk/pizzaconnection2/source_port/src/0x553c9d.cpp:9:3: error: use of undeclared identifier '__local_unwind2'\n    9 |   __local_unwind2(*(int *)(arg1 + 0x18),*(int *)(arg1 + 0x1c));\n      |   ^~~~~~~~~~~~~~~\n1 error generated.\n"
+    }
+  ]
+}

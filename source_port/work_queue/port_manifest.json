@@ -1,0 +1,3551 @@
+{
+  "schema": "pc2.readable_port_manifest.v1",
+  "compiled": 443,
+  "note": "Compilation proves syntactic/structural integration, not behavioral equivalence.",
+  "functions": [
+    {
+      "address": "0x401150",
+      "name": "Record_SumFloatArray26",
+      "source": "source_port/src/0x401150.cpp",
+      "score": 1.08,
+      "source_lines": 16,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x401170",
+      "name": "Object_SumFloat25",
+      "source": "source_port/src/0x401170.cpp",
+      "score": 1.07,
+      "source_lines": 16,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x401320",
+      "name": "CS_Enter",
+      "source": "source_port/src/0x401320.cpp",
+      "score": 1.6,
+      "source_lines": 10,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x401340",
+      "name": "CS_Leave",
+      "source": "source_port/src/0x401340.cpp",
+      "score": 1.0,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x401380",
+      "name": "CRT_RegisterListLockCleanup",
+      "source": "source_port/src/0x401380.cpp",
+      "score": 2.74,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4018c0",
+      "name": "IDMap_Update",
+      "source": "source_port/src/0x4018c0.cpp",
+      "score": 1.17,
+      "source_lines": 14,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x401900",
+      "name": "Map_FindIndex",
+      "source": "source_port/src/0x401900.cpp",
+      "score": 1.22,
+      "source_lines": 18,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x401930",
+      "name": "Map_LookupLinear",
+      "source": "source_port/src/0x401930.cpp",
+      "score": 3.0,
+      "source_lines": 18,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x401f30",
+      "name": "Pak_DecodeIndex",
+      "source": "source_port/src/0x401f30.cpp",
+      "score": 0.92,
+      "source_lines": 13,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x402260",
+      "name": "ResourceHandle_Alloc",
+      "source": "source_port/src/0x402260.cpp",
+      "score": 2.02,
+      "source_lines": 18,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4029d0",
+      "name": "Resource_GetSize",
+      "source": "source_port/src/0x4029d0.cpp",
+      "score": 2.01,
+      "source_lines": 5,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x403190",
+      "name": "Clear_Ptr",
+      "source": "source_port/src/0x403190.cpp",
+      "score": 1.19,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4031a0",
+      "name": "RegistryKey_CloseThunk",
+      "source": "source_port/src/0x4031a0.cpp",
+      "score": 1.78,
+      "source_lines": 9,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4032e0",
+      "name": "RegistryKey_Close",
+      "source": "source_port/src/0x4032e0.cpp",
+      "score": 1.77,
+      "source_lines": 9,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x403850",
+      "name": "Math_RoundFloat",
+      "source": "source_port/src/0x403850.cpp",
+      "score": 3.0,
+      "source_lines": 11,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x403b90",
+      "name": "List_FindByKey",
+      "source": "source_port/src/0x403b90.cpp",
+      "score": 0.96,
+      "source_lines": 14,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x403d70",
+      "name": "CRT_RegisterMissionListCleanup",
+      "source": "source_port/src/0x403d70.cpp",
+      "score": 2.74,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x477100",
+      "name": "Clamp_0_100",
+      "source": "source_port/src/0x477100.cpp",
+      "score": 0.56,
+      "source_lines": 11,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4781b0",
+      "name": "Rating_GetInverse100",
+      "source": "source_port/src/0x4781b0.cpp",
+      "score": 0.66,
+      "source_lines": 10,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x47a4f0",
+      "name": "Game_SumStatGrid",
+      "source": "source_port/src/0x47a4f0.cpp",
+      "score": 1.85,
+      "source_lines": 28,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x47a540",
+      "name": "Game_SumStatGrid2",
+      "source": "source_port/src/0x47a540.cpp",
+      "score": 1.85,
+      "source_lines": 28,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x47a590",
+      "name": "Matrix_MaxByRow9x8",
+      "source": "source_port/src/0x47a590.cpp",
+      "score": 1.73,
+      "source_lines": 28,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x47a5d0",
+      "name": "Stats_SumFloatMatrix",
+      "source": "source_port/src/0x47a5d0.cpp",
+      "score": 1.96,
+      "source_lines": 28,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x47a620",
+      "name": "Grid_GetMaxValue",
+      "source": "source_port/src/0x47a620.cpp",
+      "score": 1.59,
+      "source_lines": 26,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x47a820",
+      "name": "Game_SumStatRow8",
+      "source": "source_port/src/0x47a820.cpp",
+      "score": 1.17,
+      "source_lines": 18,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x47a850",
+      "name": "Stats_GetMatrixVariantValue",
+      "source": "source_port/src/0x47a850.cpp",
+      "score": 2.33,
+      "source_lines": 16,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x47a8e0",
+      "name": "Matrix_Max4x9",
+      "source": "source_port/src/0x47a8e0.cpp",
+      "score": 1.6,
+      "source_lines": 27,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x47c590",
+      "name": "Array_ClearStride34",
+      "source": "source_port/src/0x47c590.cpp",
+      "score": 2.51,
+      "source_lines": 14,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x47db10",
+      "name": "Stats_Increment2D",
+      "source": "source_port/src/0x47db10.cpp",
+      "score": 0.73,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x47f400",
+      "name": "RecordMap_Lookup1998",
+      "source": "source_port/src/0x47f400.cpp",
+      "score": 2.92,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x47fd50",
+      "name": "Game_IncrementVisitCounter",
+      "source": "source_port/src/0x47fd50.cpp",
+      "score": 1.03,
+      "source_lines": 11,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x480050",
+      "name": "Get_Field19F4",
+      "source": "source_port/src/0x480050.cpp",
+      "score": 2.04,
+      "source_lines": 5,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x480060",
+      "name": "Game_UpdateFreeBuildingCount",
+      "source": "source_port/src/0x480060.cpp",
+      "score": 2.92,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4800c0",
+      "name": "Game_CountFreeBuildingsTypeD",
+      "source": "source_port/src/0x4800c0.cpp",
+      "score": 2.91,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x480740",
+      "name": "Object_AccumulateIncome",
+      "source": "source_port/src/0x480740.cpp",
+      "score": 0.61,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x480880",
+      "name": "City_IsIdle",
+      "source": "source_port/src/0x480880.cpp",
+      "score": 0.64,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4808a0",
+      "name": "Game_SetChildField94",
+      "source": "source_port/src/0x4808a0.cpp",
+      "score": 2.19,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x482720",
+      "name": "Game_GetPlayerCount",
+      "source": "source_port/src/0x482720.cpp",
+      "score": 1.05,
+      "source_lines": 18,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x482820",
+      "name": "Game_GetCurrentPlayerCompanyName",
+      "source": "source_port/src/0x482820.cpp",
+      "score": 2.45,
+      "source_lines": 10,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x482840",
+      "name": "Game_GetPlayerField8",
+      "source": "source_port/src/0x482840.cpp",
+      "score": 2.41,
+      "source_lines": 10,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x482910",
+      "name": "Game_GetActiveScreenOrFallback",
+      "source": "source_port/src/0x482910.cpp",
+      "score": 0.72,
+      "source_lines": 10,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x483110",
+      "name": "Object_SetField280",
+      "source": "source_port/src/0x483110.cpp",
+      "score": 2.13,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x485ac0",
+      "name": "Game_GetSpeedSetting",
+      "source": "source_port/src/0x485ac0.cpp",
+      "score": 2.37,
+      "source_lines": 9,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x488bc0",
+      "name": "Game_FindPlayerSlot",
+      "source": "source_port/src/0x488bc0.cpp",
+      "score": 1.0,
+      "source_lines": 16,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x488be0",
+      "name": "Game_GetPlayerBySlot",
+      "source": "source_port/src/0x488be0.cpp",
+      "score": 2.3,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x488d90",
+      "name": "Game_GetTimeSegment",
+      "source": "source_port/src/0x488d90.cpp",
+      "score": 0.47,
+      "source_lines": 5,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x489b10",
+      "name": "Game_GetDateField0C",
+      "source": "source_port/src/0x489b10.cpp",
+      "score": 2.1,
+      "source_lines": 5,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x48b3c0",
+      "name": "Game_GetDateFields",
+      "source": "source_port/src/0x48b3c0.cpp",
+      "score": 0.78,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x48b3f0",
+      "name": "Game_GetYearAndWeekday",
+      "source": "source_port/src/0x48b3f0.cpp",
+      "score": 0.79,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x48d020",
+      "name": "Building_GetAreaByLevel",
+      "source": "source_port/src/0x48d020.cpp",
+      "score": 1.73,
+      "source_lines": 16,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x48d070",
+      "name": "Stats_GetAmountByType",
+      "source": "source_port/src/0x48d070.cpp",
+      "score": 1.72,
+      "source_lines": 16,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x48e0a0",
+      "name": "NoOp_Stub",
+      "source": "source_port/src/0x48e0a0.cpp",
+      "score": 0.27,
+      "source_lines": 5,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4a14c0",
+      "name": "SaveGame_CompareTime",
+      "source": "source_port/src/0x4a14c0.cpp",
+      "score": 2.08,
+      "source_lines": 38,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4cb3a0",
+      "name": "MissionMap_RegisterCleanup",
+      "source": "source_port/src/0x4cb3a0.cpp",
+      "score": 2.73,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4d2e10",
+      "name": "TileDef_TestFlag",
+      "source": "source_port/src/0x4d2e10.cpp",
+      "score": 0.93,
+      "source_lines": 10,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4d2e40",
+      "name": "IsSpecialIdRange",
+      "source": "source_port/src/0x4d2e40.cpp",
+      "score": 1.45,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4d2e60",
+      "name": "Object_IsIdIn840Range",
+      "source": "source_port/src/0x4d2e60.cpp",
+      "score": 1.46,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4d3070",
+      "name": "Entity_SetTileId",
+      "source": "source_port/src/0x4d3070.cpp",
+      "score": 2.12,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4d3530",
+      "name": "Record_GetFlag3E48",
+      "source": "source_port/src/0x4d3530.cpp",
+      "score": 2.76,
+      "source_lines": 14,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4d3940",
+      "name": "Stats_GetOrSumSeries",
+      "source": "source_port/src/0x4d3940.cpp",
+      "score": 1.47,
+      "source_lines": 21,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4d3f90",
+      "name": "Rating_ClampAdjusted",
+      "source": "source_port/src/0x4d3f90.cpp",
+      "score": 1.15,
+      "source_lines": 19,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4d3fc0",
+      "name": "Rating_AdjustA",
+      "source": "source_port/src/0x4d3fc0.cpp",
+      "score": 0.89,
+      "source_lines": 13,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4d3fe0",
+      "name": "Rating_AdjustB",
+      "source": "source_port/src/0x4d3fe0.cpp",
+      "score": 0.9,
+      "source_lines": 13,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4d40d0",
+      "name": "Cost_ComputeQuantityPrice",
+      "source": "source_port/src/0x4d40d0.cpp",
+      "score": 0.54,
+      "source_lines": 5,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4d4330",
+      "name": "Game_GetCostForType",
+      "source": "source_port/src/0x4d4330.cpp",
+      "score": 1.91,
+      "source_lines": 16,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4d6ad0",
+      "name": "Game_LookupObjectByIndex",
+      "source": "source_port/src/0x4d6ad0.cpp",
+      "score": 2.92,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4d75b0",
+      "name": "SaveGame_LookupSavedId",
+      "source": "source_port/src/0x4d75b0.cpp",
+      "score": 2.9,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4d8120",
+      "name": "Game_GetOwnedObjectByIndex",
+      "source": "source_port/src/0x4d8120.cpp",
+      "score": 2.96,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4d8d30",
+      "name": "Player_SetSlotFlag18",
+      "source": "source_port/src/0x4d8d30.cpp",
+      "score": 1.35,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4da630",
+      "name": "Array_GetStride60",
+      "source": "source_port/src/0x4da630.cpp",
+      "score": 0.58,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4da690",
+      "name": "Array_FindIndexStride60",
+      "source": "source_port/src/0x4da690.cpp",
+      "score": 0.95,
+      "source_lines": 16,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4da810",
+      "name": "Player_TrackRecentEntry",
+      "source": "source_port/src/0x4da810.cpp",
+      "score": 2.01,
+      "source_lines": 28,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4db2e0",
+      "name": "String_SkipDelimiters",
+      "source": "source_port/src/0x4db2e0.cpp",
+      "score": 0.9,
+      "source_lines": 11,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4dbfc0",
+      "name": "Market_GetPriceModifier",
+      "source": "source_port/src/0x4dbfc0.cpp",
+      "score": 0.88,
+      "source_lines": 10,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4dbff0",
+      "name": "Game_GetPlayerQuarterStat",
+      "source": "source_port/src/0x4dbff0.cpp",
+      "score": 2.66,
+      "source_lines": 18,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4dc660",
+      "name": "Stats_SumSixSlotValues",
+      "source": "source_port/src/0x4dc660.cpp",
+      "score": 1.47,
+      "source_lines": 24,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4dd4d0",
+      "name": "ThreadSync_Signal",
+      "source": "source_port/src/0x4dd4d0.cpp",
+      "score": 1.25,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4dd4e0",
+      "name": "ThreadSync_Clear",
+      "source": "source_port/src/0x4dd4e0.cpp",
+      "score": 1.25,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4e3be0",
+      "name": "Player_ResetDebtHours",
+      "source": "source_port/src/0x4e3be0.cpp",
+      "score": 1.41,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4e4180",
+      "name": "Array_FindEmptySlot8",
+      "source": "source_port/src/0x4e4180.cpp",
+      "score": 0.94,
+      "source_lines": 16,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4e41a0",
+      "name": "Game_CountGroupSlots",
+      "source": "source_port/src/0x4e41a0.cpp",
+      "score": 1.03,
+      "source_lines": 16,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4e42c0",
+      "name": "Game_FindGroupSlot",
+      "source": "source_port/src/0x4e42c0.cpp",
+      "score": 1.1,
+      "source_lines": 16,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4e4760",
+      "name": "Object_SetField0C",
+      "source": "source_port/src/0x4e4760.cpp",
+      "score": 2.12,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4eaa10",
+      "name": "Game_GetMapValue",
+      "source": "source_port/src/0x4eaa10.cpp",
+      "score": 0.94,
+      "source_lines": 11,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4eac00",
+      "name": "Game_GetRecordChild14",
+      "source": "source_port/src/0x4eac00.cpp",
+      "score": 2.51,
+      "source_lines": 13,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4eacb0",
+      "name": "Game_RemoveIDMapEntry",
+      "source": "source_port/src/0x4eacb0.cpp",
+      "score": 2.9,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4ed010",
+      "name": "Map_ComputeIsoOffsets",
+      "source": "source_port/src/0x4ed010.cpp",
+      "score": 1.05,
+      "source_lines": 11,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4ed310",
+      "name": "Array_SetField4Stride12",
+      "source": "source_port/src/0x4ed310.cpp",
+      "score": 2.22,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4ed360",
+      "name": "UI_ClampScrollY",
+      "source": "source_port/src/0x4ed360.cpp",
+      "score": 1.62,
+      "source_lines": 17,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4ed480",
+      "name": "Map_ComputeObjectDistance",
+      "source": "source_port/src/0x4ed480.cpp",
+      "score": 2.35,
+      "source_lines": 23,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4ed500",
+      "name": "Object_Compare",
+      "source": "source_port/src/0x4ed500.cpp",
+      "score": 1.88,
+      "source_lines": 20,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4ed570",
+      "name": "Distance_Manhattan3",
+      "source": "source_port/src/0x4ed570.cpp",
+      "score": 0.96,
+      "source_lines": 9,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4edbc0",
+      "name": "NoOp_2",
+      "source": "source_port/src/0x4edbc0.cpp",
+      "score": 0.26,
+      "source_lines": 5,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4edbd0",
+      "name": "Array_CountValid8",
+      "source": "source_port/src/0x4edbd0.cpp",
+      "score": 1.03,
+      "source_lines": 18,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4ef4b0",
+      "name": "Grid_GetCell",
+      "source": "source_port/src/0x4ef4b0.cpp",
+      "score": 1.09,
+      "source_lines": 10,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4f0cc0",
+      "name": "Array_GetRecord28",
+      "source": "source_port/src/0x4f0cc0.cpp",
+      "score": 0.88,
+      "source_lines": 11,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4f0e20",
+      "name": "Counter_IncrementShortBA",
+      "source": "source_port/src/0x4f0e20.cpp",
+      "score": 2.25,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4f1370",
+      "name": "List_AppendNode",
+      "source": "source_port/src/0x4f1370.cpp",
+      "score": 3.02,
+      "source_lines": 18,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4f1d90",
+      "name": "Enum_MapDirection",
+      "source": "source_port/src/0x4f1d90.cpp",
+      "score": 1.78,
+      "source_lines": 22,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4f29d0",
+      "name": "IsMenuIdRange",
+      "source": "source_port/src/0x4f29d0.cpp",
+      "score": 1.83,
+      "source_lines": 10,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4f2a20",
+      "name": "Object_IsKnownId",
+      "source": "source_port/src/0x4f2a20.cpp",
+      "score": 1.62,
+      "source_lines": 14,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4f2a60",
+      "name": "IsMenuId352",
+      "source": "source_port/src/0x4f2a60.cpp",
+      "score": 0.34,
+      "source_lines": 5,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4f2a80",
+      "name": "IsMenuId351Or355",
+      "source": "source_port/src/0x4f2a80.cpp",
+      "score": 1.32,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4f2aa0",
+      "name": "IsMenuId34EOr350",
+      "source": "source_port/src/0x4f2aa0.cpp",
+      "score": 1.32,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4f34c0",
+      "name": "UI_ComputeCenteredRect",
+      "source": "source_port/src/0x4f34c0.cpp",
+      "score": 1.01,
+      "source_lines": 11,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4f3b10",
+      "name": "Array_GetField4Stride12",
+      "source": "source_port/src/0x4f3b10.cpp",
+      "score": 2.15,
+      "source_lines": 5,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4f55e0",
+      "name": "Grid_CollectType351",
+      "source": "source_port/src/0x4f55e0.cpp",
+      "score": 2.98,
+      "source_lines": 40,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4f5770",
+      "name": "Record_SetField2D0C",
+      "source": "source_port/src/0x4f5770.cpp",
+      "score": 2.56,
+      "source_lines": 10,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4f5c20",
+      "name": "UI_GetViewRect",
+      "source": "source_port/src/0x4f5c20.cpp",
+      "score": 1.23,
+      "source_lines": 9,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4f5c70",
+      "name": "Object_SetShort28",
+      "source": "source_port/src/0x4f5c70.cpp",
+      "score": 2.13,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4f5fc0",
+      "name": "Object_ClearField28",
+      "source": "source_port/src/0x4f5fc0.cpp",
+      "score": 1.26,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4f7080",
+      "name": "Thread_Init",
+      "source": "source_port/src/0x4f7080.cpp",
+      "score": 2.11,
+      "source_lines": 9,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x4ff650",
+      "name": "Math_CompareRounded",
+      "source": "source_port/src/0x4ff650.cpp",
+      "score": 2.97,
+      "source_lines": 10,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x501a40",
+      "name": "Player_Event_Save",
+      "source": "source_port/src/0x501a40.cpp",
+      "score": 2.99,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x501a70",
+      "name": "Player_Event_Load",
+      "source": "source_port/src/0x501a70.cpp",
+      "score": 2.98,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5043f0",
+      "name": "UI_DecrementTimer",
+      "source": "source_port/src/0x5043f0.cpp",
+      "score": 1.43,
+      "source_lines": 19,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5078b0",
+      "name": "Object_SetChildShort8",
+      "source": "source_port/src/0x5078b0.cpp",
+      "score": 0.84,
+      "source_lines": 10,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x508d40",
+      "name": "Object_ApplyPendingType",
+      "source": "source_port/src/0x508d40.cpp",
+      "score": 2.29,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x509220",
+      "name": "Object_SetChildShort",
+      "source": "source_port/src/0x509220.cpp",
+      "score": 1.44,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x509fa0",
+      "name": "State_Is1A1B1C",
+      "source": "source_port/src/0x509fa0.cpp",
+      "score": 1.54,
+      "source_lines": 10,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x509fc0",
+      "name": "Building_IsSpecialType",
+      "source": "source_port/src/0x509fc0.cpp",
+      "score": 1.66,
+      "source_lines": 10,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x50d200",
+      "name": "Object_SetFrame5",
+      "source": "source_port/src/0x50d200.cpp",
+      "score": 1.55,
+      "source_lines": 10,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x50d750",
+      "name": "State_IsMenuState",
+      "source": "source_port/src/0x50d750.cpp",
+      "score": 2.32,
+      "source_lines": 13,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x50dbd0",
+      "name": "State_Is2DOr2E",
+      "source": "source_port/src/0x50dbd0.cpp",
+      "score": 1.44,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x50e200",
+      "name": "Object_CountMatchingSlots",
+      "source": "source_port/src/0x50e200.cpp",
+      "score": 1.12,
+      "source_lines": 18,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x50e4a0",
+      "name": "Object_GetChildField2C",
+      "source": "source_port/src/0x50e4a0.cpp",
+      "score": 2.27,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x50e4c0",
+      "name": "Object_SetChildField2C",
+      "source": "source_port/src/0x50e4c0.cpp",
+      "score": 2.32,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x50e540",
+      "name": "Object_IsState10",
+      "source": "source_port/src/0x50e540.cpp",
+      "score": 0.43,
+      "source_lines": 5,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x50e700",
+      "name": "Set_Field168",
+      "source": "source_port/src/0x50e700.cpp",
+      "score": 2.11,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x50e710",
+      "name": "Object_SetFlag104",
+      "source": "source_port/src/0x50e710.cpp",
+      "score": 2.13,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x50e720",
+      "name": "Object_SetFieldFC",
+      "source": "source_port/src/0x50e720.cpp",
+      "score": 2.13,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x50e840",
+      "name": "Object_Reset108",
+      "source": "source_port/src/0x50e840.cpp",
+      "score": 2.21,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x50efb0",
+      "name": "Object_SetField8",
+      "source": "source_port/src/0x50efb0.cpp",
+      "score": 2.11,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x50efc0",
+      "name": "Player_ResetAiState",
+      "source": "source_port/src/0x50efc0.cpp",
+      "score": 2.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x50f7f0",
+      "name": "Company_GetPercentModifier",
+      "source": "source_port/src/0x50f7f0.cpp",
+      "score": 1.05,
+      "source_lines": 14,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x50fbe0",
+      "name": "Math_PiecewiseLinear",
+      "source": "source_port/src/0x50fbe0.cpp",
+      "score": 0.61,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x50fe50",
+      "name": "Game_CountActiveStats",
+      "source": "source_port/src/0x50fe50.cpp",
+      "score": 1.06,
+      "source_lines": 18,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x510570",
+      "name": "Get_Float44",
+      "source": "source_port/src/0x510570.cpp",
+      "score": 0.43,
+      "source_lines": 5,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x511fa0",
+      "name": "Math_TruncateDouble",
+      "source": "source_port/src/0x511fa0.cpp",
+      "score": 2.79,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x512700",
+      "name": "Array_AreBothCountsPositive",
+      "source": "source_port/src/0x512700.cpp",
+      "score": 1.68,
+      "source_lines": 9,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x512730",
+      "name": "Product_HasStock",
+      "source": "source_port/src/0x512730.cpp",
+      "score": 0.52,
+      "source_lines": 5,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x513fc0",
+      "name": "Get_Subobject4",
+      "source": "source_port/src/0x513fc0.cpp",
+      "score": 0.36,
+      "source_lines": 5,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x513fd0",
+      "name": "Get_Field2C",
+      "source": "source_port/src/0x513fd0.cpp",
+      "score": 2.03,
+      "source_lines": 5,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5140b0",
+      "name": "Array_FindPair",
+      "source": "source_port/src/0x5140b0.cpp",
+      "score": 1.05,
+      "source_lines": 16,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x514240",
+      "name": "Array_CountNonZero20",
+      "source": "source_port/src/0x514240.cpp",
+      "score": 1.06,
+      "source_lines": 18,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x514320",
+      "name": "Storage_GetCapacity",
+      "source": "source_port/src/0x514320.cpp",
+      "score": 0.45,
+      "source_lines": 5,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x51ef60",
+      "name": "Object_GetByte36Max7",
+      "source": "source_port/src/0x51ef60.cpp",
+      "score": 0.69,
+      "source_lines": 9,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x520b40",
+      "name": "UI_SetAbsolutePosition",
+      "source": "source_port/src/0x520b40.cpp",
+      "score": 0.81,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x520e00",
+      "name": "Get_Field24",
+      "source": "source_port/src/0x520e00.cpp",
+      "score": 2.03,
+      "source_lines": 5,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x520e10",
+      "name": "Object_GetField10",
+      "source": "source_port/src/0x520e10.cpp",
+      "score": 2.05,
+      "source_lines": 5,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x520e20",
+      "name": "Object_GetField0C",
+      "source": "source_port/src/0x520e20.cpp",
+      "score": 2.05,
+      "source_lines": 5,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x521b10",
+      "name": "Object_GetActiveValue",
+      "source": "source_port/src/0x521b10.cpp",
+      "score": 0.78,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x522e60",
+      "name": "Atexit_RegisterListCritSectDtor",
+      "source": "source_port/src/0x522e60.cpp",
+      "score": 2.75,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5230b0",
+      "name": "Array_GetPtr",
+      "source": "source_port/src/0x5230b0.cpp",
+      "score": 2.36,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5230d0",
+      "name": "Array_IndexOfInt",
+      "source": "source_port/src/0x5230d0.cpp",
+      "score": 1.21,
+      "source_lines": 18,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x525b70",
+      "name": "EventQueue_SetEntryState22",
+      "source": "source_port/src/0x525b70.cpp",
+      "score": 2.2,
+      "source_lines": 15,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5260e0",
+      "name": "Object_GetId",
+      "source": "source_port/src/0x5260e0.cpp",
+      "score": 2.13,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x526590",
+      "name": "UI_GetTheme",
+      "source": "source_port/src/0x526590.cpp",
+      "score": 0.37,
+      "source_lines": 5,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x526850",
+      "name": "Dialog_SetResult",
+      "source": "source_port/src/0x526850.cpp",
+      "score": 3.05,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x526cf0",
+      "name": "Set_Field228",
+      "source": "source_port/src/0x526cf0.cpp",
+      "score": 2.11,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x526d00",
+      "name": "Clear_Field228",
+      "source": "source_port/src/0x526d00.cpp",
+      "score": 1.25,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x526d10",
+      "name": "UI_SetMenuToggle",
+      "source": "source_port/src/0x526d10.cpp",
+      "score": 3.03,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x526d30",
+      "name": "Rect_Union",
+      "source": "source_port/src/0x526d30.cpp",
+      "score": 2.86,
+      "source_lines": 30,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x526dc0",
+      "name": "Rect_Set1A4",
+      "source": "source_port/src/0x526dc0.cpp",
+      "score": 2.75,
+      "source_lines": 33,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x527940",
+      "name": "UI_SetWindowProc",
+      "source": "source_port/src/0x527940.cpp",
+      "score": 2.13,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x527ab0",
+      "name": "MapView_GetRotation",
+      "source": "source_port/src/0x527ab0.cpp",
+      "score": 2.28,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x527ca0",
+      "name": "UI_ClearField230",
+      "source": "source_port/src/0x527ca0.cpp",
+      "score": 1.44,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x527cf0",
+      "name": "UI_ClearScrollDrag",
+      "source": "source_port/src/0x527cf0.cpp",
+      "score": 3.09,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x528040",
+      "name": "UI_FindWindowByID",
+      "source": "source_port/src/0x528040.cpp",
+      "score": 1.9,
+      "source_lines": 27,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5281f0",
+      "name": "UI_SetEventCallback",
+      "source": "source_port/src/0x5281f0.cpp",
+      "score": 2.14,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x52cb70",
+      "name": "Text_SkipFieldSeparators",
+      "source": "source_port/src/0x52cb70.cpp",
+      "score": 0.94,
+      "source_lines": 11,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x52e830",
+      "name": "Renderer_ReleaseTarget",
+      "source": "source_port/src/0x52e830.cpp",
+      "score": 2.31,
+      "source_lines": 9,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x52e8e0",
+      "name": "Renderer_GetTextObject",
+      "source": "source_port/src/0x52e8e0.cpp",
+      "score": 2.06,
+      "source_lines": 5,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x52f0d0",
+      "name": "Gadget_GetSpriteFrames",
+      "source": "source_port/src/0x52f0d0.cpp",
+      "score": 2.87,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x52f800",
+      "name": "Gadget_SetButtonState",
+      "source": "source_port/src/0x52f800.cpp",
+      "score": 3.14,
+      "source_lines": 10,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x52f930",
+      "name": "Window_GadgetNotify_Text_GetFont",
+      "source": "source_port/src/0x52f930.cpp",
+      "score": 2.9,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x52f950",
+      "name": "Window_GadgetNotify_Text_GetLineCount",
+      "source": "source_port/src/0x52f950.cpp",
+      "score": 2.92,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x52f970",
+      "name": "Window_GadgetNotify_Text_GetHeight",
+      "source": "source_port/src/0x52f970.cpp",
+      "score": 2.91,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x52fb20",
+      "name": "Window_GadgetNotify_Input_GetFilter",
+      "source": "source_port/src/0x52fb20.cpp",
+      "score": 2.91,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x52fbe0",
+      "name": "Window_GadgetNotify_Input_GetText",
+      "source": "source_port/src/0x52fbe0.cpp",
+      "score": 2.9,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x52ff80",
+      "name": "UI_DisableButton",
+      "source": "source_port/src/0x52ff80.cpp",
+      "score": 2.85,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x52ffa0",
+      "name": "Rect_ContainsPoint",
+      "source": "source_port/src/0x52ffa0.cpp",
+      "score": 1.79,
+      "source_lines": 9,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5312e0",
+      "name": "Get_FieldF0",
+      "source": "source_port/src/0x5312e0.cpp",
+      "score": 2.03,
+      "source_lines": 5,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x531330",
+      "name": "BinarySearch8",
+      "source": "source_port/src/0x531330.cpp",
+      "score": 2.84,
+      "source_lines": 43,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5319a0",
+      "name": "UI_GetButtonSpriteRecord",
+      "source": "source_port/src/0x5319a0.cpp",
+      "score": 2.88,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x531b50",
+      "name": "UI_ClearButtonRecordAnimation",
+      "source": "source_port/src/0x531b50.cpp",
+      "score": 2.9,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x531cf0",
+      "name": "UI_GetWindowObject",
+      "source": "source_port/src/0x531cf0.cpp",
+      "score": 2.86,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x531dd0",
+      "name": "UI_OffsetPoint",
+      "source": "source_port/src/0x531dd0.cpp",
+      "score": 0.7,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x531df0",
+      "name": "UI_SubtractOrigin",
+      "source": "source_port/src/0x531df0.cpp",
+      "score": 0.71,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5322a0",
+      "name": "UI_GetWindowRect",
+      "source": "source_port/src/0x5322a0.cpp",
+      "score": 2.24,
+      "source_lines": 20,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x532bc0",
+      "name": "Atexit_RegisterAnimSwapCritSectDtor",
+      "source": "source_port/src/0x532bc0.cpp",
+      "score": 2.76,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x532c00",
+      "name": "Atexit_RegisterAnimCritSectDtor",
+      "source": "source_port/src/0x532c00.cpp",
+      "score": 2.75,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x533540",
+      "name": "Get_WidthHeight",
+      "source": "source_port/src/0x533540.cpp",
+      "score": 0.7,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x533a50",
+      "name": "Record_Clear48",
+      "source": "source_port/src/0x533a50.cpp",
+      "score": 1.59,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x533a70",
+      "name": "Record_ClearFlags48",
+      "source": "source_port/src/0x533a70.cpp",
+      "score": 2.87,
+      "source_lines": 13,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x533c60",
+      "name": "Record_ClearActive48",
+      "source": "source_port/src/0x533c60.cpp",
+      "score": 2.62,
+      "source_lines": 9,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x534060",
+      "name": "Record_GetBounds48",
+      "source": "source_port/src/0x534060.cpp",
+      "score": 2.4,
+      "source_lines": 18,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5342e0",
+      "name": "Record_SetDoubles48",
+      "source": "source_port/src/0x5342e0.cpp",
+      "score": 2.24,
+      "source_lines": 14,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x534960",
+      "name": "Record_GetValue48",
+      "source": "source_port/src/0x534960.cpp",
+      "score": 1.02,
+      "source_lines": 10,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x534990",
+      "name": "Record_SetIndex48",
+      "source": "source_port/src/0x534990.cpp",
+      "score": 1.26,
+      "source_lines": 11,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5349d0",
+      "name": "RecordList_GetCount",
+      "source": "source_port/src/0x5349d0.cpp",
+      "score": 2.05,
+      "source_lines": 5,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x534a80",
+      "name": "Record_GetTypeIndex48",
+      "source": "source_port/src/0x534a80.cpp",
+      "score": 1.11,
+      "source_lines": 11,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5354e0",
+      "name": "Image_FreePixelData",
+      "source": "source_port/src/0x5354e0.cpp",
+      "score": 2.98,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x535500",
+      "name": "Set_Field9B8",
+      "source": "source_port/src/0x535500.cpp",
+      "score": 2.11,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x535510",
+      "name": "Text_GetLineHeight",
+      "source": "source_port/src/0x535510.cpp",
+      "score": 2.05,
+      "source_lines": 5,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5355f0",
+      "name": "Font_MeasureText",
+      "source": "source_port/src/0x5355f0.cpp",
+      "score": 1.73,
+      "source_lines": 24,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x535650",
+      "name": "Font_GetCharWidth",
+      "source": "source_port/src/0x535650.cpp",
+      "score": 2.6,
+      "source_lines": 10,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x535690",
+      "name": "UI_GetFirstEnabledIndex",
+      "source": "source_port/src/0x535690.cpp",
+      "score": 2.69,
+      "source_lines": 16,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5356c0",
+      "name": "Font_MeasureRange",
+      "source": "source_port/src/0x5356c0.cpp",
+      "score": 2.08,
+      "source_lines": 24,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x535d50",
+      "name": "Array_GetPtrChecked",
+      "source": "source_port/src/0x535d50.cpp",
+      "score": 2.35,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x535e50",
+      "name": "Palette_Convert256",
+      "source": "source_port/src/0x535e50.cpp",
+      "score": 3.13,
+      "source_lines": 36,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x539340",
+      "name": "Color_Convert555To565",
+      "source": "source_port/src/0x539340.cpp",
+      "score": 1.07,
+      "source_lines": 12,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x539660",
+      "name": "Surface_SetBounds",
+      "source": "source_port/src/0x539660.cpp",
+      "score": 2.23,
+      "source_lines": 26,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5396e0",
+      "name": "Surface_Reset",
+      "source": "source_port/src/0x5396e0.cpp",
+      "score": 2.5,
+      "source_lines": 9,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5397e0",
+      "name": "Color_RGBTo16",
+      "source": "source_port/src/0x5397e0.cpp",
+      "score": 1.01,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x539930",
+      "name": "Rect_ScaleAndOffset",
+      "source": "source_port/src/0x539930.cpp",
+      "score": 1.63,
+      "source_lines": 11,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x539e90",
+      "name": "Object_ClearField54",
+      "source": "source_port/src/0x539e90.cpp",
+      "score": 1.26,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x539f00",
+      "name": "Object_GetRootType",
+      "source": "source_port/src/0x539f00.cpp",
+      "score": 2.5,
+      "source_lines": 11,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x53a1c0",
+      "name": "Gfx_BlendTable_RegisterAtexit",
+      "source": "source_port/src/0x53a1c0.cpp",
+      "score": 2.74,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x53c6f0",
+      "name": "Sprite_CriticalSection_RegisterAtexit",
+      "source": "source_port/src/0x53c6f0.cpp",
+      "score": 2.76,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x53d040",
+      "name": "Sprite_GetRenderSize",
+      "source": "source_port/src/0x53d040.cpp",
+      "score": 1.29,
+      "source_lines": 12,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x53d090",
+      "name": "Sprite_GetSize",
+      "source": "source_port/src/0x53d090.cpp",
+      "score": 2.35,
+      "source_lines": 30,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x53d100",
+      "name": "Sprite_GetHotspot",
+      "source": "source_port/src/0x53d100.cpp",
+      "score": 0.95,
+      "source_lines": 12,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x53d420",
+      "name": "Sprite_GetFormat",
+      "source": "source_port/src/0x53d420.cpp",
+      "score": 2.04,
+      "source_lines": 5,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x53d430",
+      "name": "Sprite_GetColorKey",
+      "source": "source_port/src/0x53d430.cpp",
+      "score": 2.23,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x53d440",
+      "name": "Sprite_SetColorKey",
+      "source": "source_port/src/0x53d440.cpp",
+      "score": 2.3,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x53d4a0",
+      "name": "Sprite_GetPalette",
+      "source": "source_port/src/0x53d4a0.cpp",
+      "score": 2.05,
+      "source_lines": 5,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x53e140",
+      "name": "Surface_SetPixel",
+      "source": "source_port/src/0x53e140.cpp",
+      "score": 2.85,
+      "source_lines": 10,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x53f820",
+      "name": "StreamBuffer_Reset",
+      "source": "source_port/src/0x53f820.cpp",
+      "score": 2.2,
+      "source_lines": 10,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x53f840",
+      "name": "SoundFormat_Init",
+      "source": "source_port/src/0x53f840.cpp",
+      "score": 1.61,
+      "source_lines": 10,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x53fd90",
+      "name": "CS_Delete",
+      "source": "source_port/src/0x53fd90.cpp",
+      "score": 0.81,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x53ff80",
+      "name": "CS_LeavePtr",
+      "source": "source_port/src/0x53ff80.cpp",
+      "score": 1.65,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5405b0",
+      "name": "Sound_AllocVoice",
+      "source": "source_port/src/0x5405b0.cpp",
+      "score": 2.0,
+      "source_lines": 18,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x541f00",
+      "name": "Buffer_ReleaseField8",
+      "source": "source_port/src/0x541f00.cpp",
+      "score": 2.96,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x543300",
+      "name": "SoundBuffer_SetFrequency",
+      "source": "source_port/src/0x543300.cpp",
+      "score": 2.44,
+      "source_lines": 20,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x543370",
+      "name": "SoundBuffer_SetLevel88",
+      "source": "source_port/src/0x543370.cpp",
+      "score": 2.44,
+      "source_lines": 20,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x545650",
+      "name": "Rect_Zero",
+      "source": "source_port/src/0x545650.cpp",
+      "score": 1.34,
+      "source_lines": 9,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x548d70",
+      "name": "Sound_SetTimeout",
+      "source": "source_port/src/0x548d70.cpp",
+      "score": 1.4,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x54a770",
+      "name": "Window_SetVisible",
+      "source": "source_port/src/0x54a770.cpp",
+      "score": 3.08,
+      "source_lines": 16,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x54a7f0",
+      "name": "Window_MoveToRect",
+      "source": "source_port/src/0x54a7f0.cpp",
+      "score": 1.23,
+      "source_lines": 9,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x54b3c0",
+      "name": "Object_ClearField4",
+      "source": "source_port/src/0x54b3c0.cpp",
+      "score": 1.25,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x54b440",
+      "name": "Array_GetPtr4",
+      "source": "source_port/src/0x54b440.cpp",
+      "score": 2.33,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x54bcf0",
+      "name": "Window_ClearState",
+      "source": "source_port/src/0x54bcf0.cpp",
+      "score": 2.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x54c7e0",
+      "name": "CRT_FreeBufferNode",
+      "source": "source_port/src/0x54c7e0.cpp",
+      "score": 3.1,
+      "source_lines": 10,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x54cb70",
+      "name": "NoOp_ReturnArg",
+      "source": "source_port/src/0x54cb70.cpp",
+      "score": 1.96,
+      "source_lines": 5,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x54cf82",
+      "name": "Stream_GetAvailable",
+      "source": "source_port/src/0x54cf82.cpp",
+      "score": 0.73,
+      "source_lines": 8,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x54d346",
+      "name": "CS_Initialize",
+      "source": "source_port/src/0x54d346.cpp",
+      "score": 0.82,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x54d351",
+      "name": "CS_DeleteRaw",
+      "source": "source_port/src/0x54d351.cpp",
+      "score": 0.81,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x54d35c",
+      "name": "CS_EnterRaw",
+      "source": "source_port/src/0x54d35c.cpp",
+      "score": 0.8,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x54d367",
+      "name": "CS_LeaveRaw",
+      "source": "source_port/src/0x54d367.cpp",
+      "score": 0.8,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x54dc72",
+      "name": "Stream_ValidateRange",
+      "source": "source_port/src/0x54dc72.cpp",
+      "score": 1.62,
+      "source_lines": 9,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x54ddec",
+      "name": "NoOp_Empty",
+      "source": "source_port/src/0x54ddec.cpp",
+      "score": 0.27,
+      "source_lines": 5,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x54e940",
+      "name": "_strncmp",
+      "source": "source_port/src/0x54e940.cpp",
+      "score": 3.1,
+      "source_lines": 47,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x54efd0",
+      "name": "_strrchr",
+      "source": "source_port/src/0x54efd0.cpp",
+      "score": 2.28,
+      "source_lines": 35,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x54f2dd",
+      "name": "CRT_Exit",
+      "source": "source_port/src/0x54f2dd.cpp",
+      "score": 2.74,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x54f2ee",
+      "name": "__exit",
+      "source": "source_port/src/0x54f2ee.cpp",
+      "score": 2.98,
+      "source_lines": 9,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x551944",
+      "name": "CRT_GetVaArg",
+      "source": "source_port/src/0x551944.cpp",
+      "score": 2.1,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x551951",
+      "name": "CRT_ReadArg64",
+      "source": "source_port/src/0x551951.cpp",
+      "score": 2.11,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x551981",
+      "name": "Stub_ReturnZero",
+      "source": "source_port/src/0x551981.cpp",
+      "score": 1.63,
+      "source_lines": 6,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x553468",
+      "name": "CRT_ResolveCatchObject",
+      "source": "source_port/src/0x553468.cpp",
+      "score": 0.92,
+      "source_lines": 12,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x557c40",
+      "name": "Unwind@00557c40",
+      "source": "source_port/src/0x557c40.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x557c4b",
+      "name": "Unwind@00557c4b",
+      "source": "source_port/src/0x557c4b.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x557c60",
+      "name": "Unwind@00557c60",
+      "source": "source_port/src/0x557c60.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x557c6e",
+      "name": "Unwind@00557c6e",
+      "source": "source_port/src/0x557c6e.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x557c7c",
+      "name": "Unwind@00557c7c",
+      "source": "source_port/src/0x557c7c.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x557c8a",
+      "name": "Unwind@00557c8a",
+      "source": "source_port/src/0x557c8a.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x557c98",
+      "name": "Unwind@00557c98",
+      "source": "source_port/src/0x557c98.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x557cb0",
+      "name": "Unwind@00557cb0",
+      "source": "source_port/src/0x557cb0.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x557cbe",
+      "name": "Unwind@00557cbe",
+      "source": "source_port/src/0x557cbe.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x557ce0",
+      "name": "Unwind@00557ce0",
+      "source": "source_port/src/0x557ce0.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x557cee",
+      "name": "Unwind@00557cee",
+      "source": "source_port/src/0x557cee.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x557d10",
+      "name": "Unwind@00557d10",
+      "source": "source_port/src/0x557d10.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x557d30",
+      "name": "Unwind@00557d30",
+      "source": "source_port/src/0x557d30.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x557e2e",
+      "name": "Unwind@00557e2e",
+      "source": "source_port/src/0x557e2e.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x557e39",
+      "name": "Unwind@00557e39",
+      "source": "source_port/src/0x557e39.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x557e44",
+      "name": "Unwind@00557e44",
+      "source": "source_port/src/0x557e44.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x557e4f",
+      "name": "Unwind@00557e4f",
+      "source": "source_port/src/0x557e4f.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x557f00",
+      "name": "Unwind@00557f00",
+      "source": "source_port/src/0x557f00.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x557f20",
+      "name": "Unwind@00557f20",
+      "source": "source_port/src/0x557f20.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x557f40",
+      "name": "Unwind@00557f40",
+      "source": "source_port/src/0x557f40.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x557f4b",
+      "name": "Unwind@00557f4b",
+      "source": "source_port/src/0x557f4b.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x557f56",
+      "name": "Unwind@00557f56",
+      "source": "source_port/src/0x557f56.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x557f61",
+      "name": "Unwind@00557f61",
+      "source": "source_port/src/0x557f61.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x557f80",
+      "name": "Unwind@00557f80",
+      "source": "source_port/src/0x557f80.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x557fa0",
+      "name": "Unwind@00557fa0",
+      "source": "source_port/src/0x557fa0.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x557fc0",
+      "name": "Unwind@00557fc0",
+      "source": "source_port/src/0x557fc0.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558070",
+      "name": "Unwind@00558070",
+      "source": "source_port/src/0x558070.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558090",
+      "name": "Unwind@00558090",
+      "source": "source_port/src/0x558090.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55809b",
+      "name": "Unwind@0055809b",
+      "source": "source_port/src/0x55809b.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558143",
+      "name": "Unwind@00558143",
+      "source": "source_port/src/0x558143.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55814e",
+      "name": "Unwind@0055814e",
+      "source": "source_port/src/0x55814e.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558159",
+      "name": "Unwind@00558159",
+      "source": "source_port/src/0x558159.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558164",
+      "name": "Unwind@00558164",
+      "source": "source_port/src/0x558164.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55816f",
+      "name": "Unwind@0055816f",
+      "source": "source_port/src/0x55816f.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55817a",
+      "name": "Unwind@0055817a",
+      "source": "source_port/src/0x55817a.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558185",
+      "name": "Unwind@00558185",
+      "source": "source_port/src/0x558185.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558190",
+      "name": "Unwind@00558190",
+      "source": "source_port/src/0x558190.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55819b",
+      "name": "Unwind@0055819b",
+      "source": "source_port/src/0x55819b.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5581b0",
+      "name": "Unwind@005581b0",
+      "source": "source_port/src/0x5581b0.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5581bb",
+      "name": "Unwind@005581bb",
+      "source": "source_port/src/0x5581bb.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5581c6",
+      "name": "Unwind@005581c6",
+      "source": "source_port/src/0x5581c6.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5581d1",
+      "name": "Unwind@005581d1",
+      "source": "source_port/src/0x5581d1.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5581f0",
+      "name": "Unwind@005581f0",
+      "source": "source_port/src/0x5581f0.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558210",
+      "name": "Unwind@00558210",
+      "source": "source_port/src/0x558210.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558230",
+      "name": "Unwind@00558230",
+      "source": "source_port/src/0x558230.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55823e",
+      "name": "Unwind@0055823e",
+      "source": "source_port/src/0x55823e.cpp",
+      "score": 3.17,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558260",
+      "name": "Unwind@00558260",
+      "source": "source_port/src/0x558260.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55826b",
+      "name": "Unwind@0055826b",
+      "source": "source_port/src/0x55826b.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558276",
+      "name": "Unwind@00558276",
+      "source": "source_port/src/0x558276.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558281",
+      "name": "Unwind@00558281",
+      "source": "source_port/src/0x558281.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55828c",
+      "name": "Unwind@0055828c",
+      "source": "source_port/src/0x55828c.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558297",
+      "name": "Unwind@00558297",
+      "source": "source_port/src/0x558297.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5582a2",
+      "name": "Unwind@005582a2",
+      "source": "source_port/src/0x5582a2.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558450",
+      "name": "Unwind@00558450",
+      "source": "source_port/src/0x558450.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55845b",
+      "name": "Unwind@0055845b",
+      "source": "source_port/src/0x55845b.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558466",
+      "name": "Unwind@00558466",
+      "source": "source_port/src/0x558466.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558471",
+      "name": "Unwind@00558471",
+      "source": "source_port/src/0x558471.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55847c",
+      "name": "Unwind@0055847c",
+      "source": "source_port/src/0x55847c.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5584a0",
+      "name": "Unwind@005584a0",
+      "source": "source_port/src/0x5584a0.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5584ab",
+      "name": "Unwind@005584ab",
+      "source": "source_port/src/0x5584ab.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5584b6",
+      "name": "Unwind@005584b6",
+      "source": "source_port/src/0x5584b6.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5584c1",
+      "name": "Unwind@005584c1",
+      "source": "source_port/src/0x5584c1.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5584cc",
+      "name": "Unwind@005584cc",
+      "source": "source_port/src/0x5584cc.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5584d7",
+      "name": "Unwind@005584d7",
+      "source": "source_port/src/0x5584d7.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558550",
+      "name": "Unwind@00558550",
+      "source": "source_port/src/0x558550.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55855b",
+      "name": "Unwind@0055855b",
+      "source": "source_port/src/0x55855b.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558566",
+      "name": "Unwind@00558566",
+      "source": "source_port/src/0x558566.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558571",
+      "name": "Unwind@00558571",
+      "source": "source_port/src/0x558571.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55857c",
+      "name": "Unwind@0055857c",
+      "source": "source_port/src/0x55857c.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558587",
+      "name": "Unwind@00558587",
+      "source": "source_port/src/0x558587.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558592",
+      "name": "Unwind@00558592",
+      "source": "source_port/src/0x558592.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55859d",
+      "name": "Unwind@0055859d",
+      "source": "source_port/src/0x55859d.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558800",
+      "name": "Unwind@00558800",
+      "source": "source_port/src/0x558800.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558870",
+      "name": "Unwind@00558870",
+      "source": "source_port/src/0x558870.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558890",
+      "name": "Unwind@00558890",
+      "source": "source_port/src/0x558890.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5588b0",
+      "name": "Unwind@005588b0",
+      "source": "source_port/src/0x5588b0.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5588bb",
+      "name": "Unwind@005588bb",
+      "source": "source_port/src/0x5588bb.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5588c6",
+      "name": "Unwind@005588c6",
+      "source": "source_port/src/0x5588c6.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5588d1",
+      "name": "Unwind@005588d1",
+      "source": "source_port/src/0x5588d1.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5588dc",
+      "name": "Unwind@005588dc",
+      "source": "source_port/src/0x5588dc.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5588e7",
+      "name": "Unwind@005588e7",
+      "source": "source_port/src/0x5588e7.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5588f2",
+      "name": "Unwind@005588f2",
+      "source": "source_port/src/0x5588f2.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5588fd",
+      "name": "Unwind@005588fd",
+      "source": "source_port/src/0x5588fd.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558920",
+      "name": "Unwind@00558920",
+      "source": "source_port/src/0x558920.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55892b",
+      "name": "Unwind@0055892b",
+      "source": "source_port/src/0x55892b.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558940",
+      "name": "Unwind@00558940",
+      "source": "source_port/src/0x558940.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55894b",
+      "name": "Unwind@0055894b",
+      "source": "source_port/src/0x55894b.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558956",
+      "name": "Unwind@00558956",
+      "source": "source_port/src/0x558956.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558961",
+      "name": "Unwind@00558961",
+      "source": "source_port/src/0x558961.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5589d0",
+      "name": "Unwind@005589d0",
+      "source": "source_port/src/0x5589d0.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5589db",
+      "name": "Unwind@005589db",
+      "source": "source_port/src/0x5589db.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5589e6",
+      "name": "Unwind@005589e6",
+      "source": "source_port/src/0x5589e6.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558a00",
+      "name": "Unwind@00558a00",
+      "source": "source_port/src/0x558a00.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558a0b",
+      "name": "Unwind@00558a0b",
+      "source": "source_port/src/0x558a0b.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558a20",
+      "name": "Unwind@00558a20",
+      "source": "source_port/src/0x558a20.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558a2b",
+      "name": "Unwind@00558a2b",
+      "source": "source_port/src/0x558a2b.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558a40",
+      "name": "Unwind@00558a40",
+      "source": "source_port/src/0x558a40.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558a4b",
+      "name": "Unwind@00558a4b",
+      "source": "source_port/src/0x558a4b.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558a60",
+      "name": "Unwind@00558a60",
+      "source": "source_port/src/0x558a60.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558a6b",
+      "name": "Unwind@00558a6b",
+      "source": "source_port/src/0x558a6b.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558a76",
+      "name": "Unwind@00558a76",
+      "source": "source_port/src/0x558a76.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558a81",
+      "name": "Unwind@00558a81",
+      "source": "source_port/src/0x558a81.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558a8c",
+      "name": "Unwind@00558a8c",
+      "source": "source_port/src/0x558a8c.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558ab0",
+      "name": "Unwind@00558ab0",
+      "source": "source_port/src/0x558ab0.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558abb",
+      "name": "Unwind@00558abb",
+      "source": "source_port/src/0x558abb.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558ad0",
+      "name": "Unwind@00558ad0",
+      "source": "source_port/src/0x558ad0.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558adb",
+      "name": "Unwind@00558adb",
+      "source": "source_port/src/0x558adb.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558af0",
+      "name": "Unwind@00558af0",
+      "source": "source_port/src/0x558af0.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558b10",
+      "name": "Unwind@00558b10",
+      "source": "source_port/src/0x558b10.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558b1b",
+      "name": "Unwind@00558b1b",
+      "source": "source_port/src/0x558b1b.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558b26",
+      "name": "Unwind@00558b26",
+      "source": "source_port/src/0x558b26.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558b31",
+      "name": "Unwind@00558b31",
+      "source": "source_port/src/0x558b31.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558b3c",
+      "name": "Unwind@00558b3c",
+      "source": "source_port/src/0x558b3c.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558b47",
+      "name": "Unwind@00558b47",
+      "source": "source_port/src/0x558b47.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558b52",
+      "name": "Unwind@00558b52",
+      "source": "source_port/src/0x558b52.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558b5d",
+      "name": "Unwind@00558b5d",
+      "source": "source_port/src/0x558b5d.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558b68",
+      "name": "Unwind@00558b68",
+      "source": "source_port/src/0x558b68.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558b73",
+      "name": "Unwind@00558b73",
+      "source": "source_port/src/0x558b73.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558c10",
+      "name": "Unwind@00558c10",
+      "source": "source_port/src/0x558c10.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558c1b",
+      "name": "Unwind@00558c1b",
+      "source": "source_port/src/0x558c1b.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558c26",
+      "name": "Unwind@00558c26",
+      "source": "source_port/src/0x558c26.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558c31",
+      "name": "Unwind@00558c31",
+      "source": "source_port/src/0x558c31.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558c3c",
+      "name": "Unwind@00558c3c",
+      "source": "source_port/src/0x558c3c.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558c47",
+      "name": "Unwind@00558c47",
+      "source": "source_port/src/0x558c47.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558c52",
+      "name": "Unwind@00558c52",
+      "source": "source_port/src/0x558c52.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558c5d",
+      "name": "Unwind@00558c5d",
+      "source": "source_port/src/0x558c5d.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558c68",
+      "name": "Unwind@00558c68",
+      "source": "source_port/src/0x558c68.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558c73",
+      "name": "Unwind@00558c73",
+      "source": "source_port/src/0x558c73.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558c7e",
+      "name": "Unwind@00558c7e",
+      "source": "source_port/src/0x558c7e.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558ca0",
+      "name": "Unwind@00558ca0",
+      "source": "source_port/src/0x558ca0.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558cab",
+      "name": "Unwind@00558cab",
+      "source": "source_port/src/0x558cab.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558cc0",
+      "name": "Unwind@00558cc0",
+      "source": "source_port/src/0x558cc0.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558ccb",
+      "name": "Unwind@00558ccb",
+      "source": "source_port/src/0x558ccb.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558da0",
+      "name": "Unwind@00558da0",
+      "source": "source_port/src/0x558da0.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558dab",
+      "name": "Unwind@00558dab",
+      "source": "source_port/src/0x558dab.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558e60",
+      "name": "Unwind@00558e60",
+      "source": "source_port/src/0x558e60.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558e8b",
+      "name": "Unwind@00558e8b",
+      "source": "source_port/src/0x558e8b.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558e96",
+      "name": "Unwind@00558e96",
+      "source": "source_port/src/0x558e96.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558eac",
+      "name": "Unwind@00558eac",
+      "source": "source_port/src/0x558eac.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558eb7",
+      "name": "Unwind@00558eb7",
+      "source": "source_port/src/0x558eb7.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558ec2",
+      "name": "Unwind@00558ec2",
+      "source": "source_port/src/0x558ec2.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558ecd",
+      "name": "Unwind@00558ecd",
+      "source": "source_port/src/0x558ecd.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558ed8",
+      "name": "Unwind@00558ed8",
+      "source": "source_port/src/0x558ed8.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558ee3",
+      "name": "Unwind@00558ee3",
+      "source": "source_port/src/0x558ee3.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558eee",
+      "name": "Unwind@00558eee",
+      "source": "source_port/src/0x558eee.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x558ef9",
+      "name": "Unwind@00558ef9",
+      "source": "source_port/src/0x558ef9.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x559180",
+      "name": "Unwind@00559180",
+      "source": "source_port/src/0x559180.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5591a0",
+      "name": "Unwind@005591a0",
+      "source": "source_port/src/0x5591a0.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5591ab",
+      "name": "Unwind@005591ab",
+      "source": "source_port/src/0x5591ab.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5591b6",
+      "name": "Unwind@005591b6",
+      "source": "source_port/src/0x5591b6.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5591c1",
+      "name": "Unwind@005591c1",
+      "source": "source_port/src/0x5591c1.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5592e2",
+      "name": "Unwind@005592e2",
+      "source": "source_port/src/0x5592e2.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5592ed",
+      "name": "Unwind@005592ed",
+      "source": "source_port/src/0x5592ed.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5593b0",
+      "name": "Unwind@005593b0",
+      "source": "source_port/src/0x5593b0.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x5593d0",
+      "name": "Unwind@005593d0",
+      "source": "source_port/src/0x5593d0.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55a0e0",
+      "name": "Unwind@0055a0e0",
+      "source": "source_port/src/0x55a0e0.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55a160",
+      "name": "Unwind@0055a160",
+      "source": "source_port/src/0x55a160.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55a16b",
+      "name": "Unwind@0055a16b",
+      "source": "source_port/src/0x55a16b.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55a180",
+      "name": "Unwind@0055a180",
+      "source": "source_port/src/0x55a180.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55a1c0",
+      "name": "Unwind@0055a1c0",
+      "source": "source_port/src/0x55a1c0.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55a290",
+      "name": "Unwind@0055a290",
+      "source": "source_port/src/0x55a290.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55a3fb",
+      "name": "Unwind@0055a3fb",
+      "source": "source_port/src/0x55a3fb.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55a430",
+      "name": "Unwind@0055a430",
+      "source": "source_port/src/0x55a430.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55a510",
+      "name": "Unwind@0055a510",
+      "source": "source_port/src/0x55a510.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55a5a6",
+      "name": "Unwind@0055a5a6",
+      "source": "source_port/src/0x55a5a6.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55a5e0",
+      "name": "Unwind@0055a5e0",
+      "source": "source_port/src/0x55a5e0.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55a65c",
+      "name": "Unwind@0055a65c",
+      "source": "source_port/src/0x55a65c.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55a667",
+      "name": "Unwind@0055a667",
+      "source": "source_port/src/0x55a667.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55a672",
+      "name": "Unwind@0055a672",
+      "source": "source_port/src/0x55a672.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55a67d",
+      "name": "Unwind@0055a67d",
+      "source": "source_port/src/0x55a67d.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55a888",
+      "name": "Unwind@0055a888",
+      "source": "source_port/src/0x55a888.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55a940",
+      "name": "Unwind@0055a940",
+      "source": "source_port/src/0x55a940.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55aa0c",
+      "name": "Unwind@0055aa0c",
+      "source": "source_port/src/0x55aa0c.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55ab60",
+      "name": "Unwind@0055ab60",
+      "source": "source_port/src/0x55ab60.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55ab80",
+      "name": "Unwind@0055ab80",
+      "source": "source_port/src/0x55ab80.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55abcb",
+      "name": "Unwind@0055abcb",
+      "source": "source_port/src/0x55abcb.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55b548",
+      "name": "Unwind@0055b548",
+      "source": "source_port/src/0x55b548.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55b5b8",
+      "name": "Unwind@0055b5b8",
+      "source": "source_port/src/0x55b5b8.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55b608",
+      "name": "Unwind@0055b608",
+      "source": "source_port/src/0x55b608.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55b698",
+      "name": "Unwind@0055b698",
+      "source": "source_port/src/0x55b698.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55b6e8",
+      "name": "Unwind@0055b6e8",
+      "source": "source_port/src/0x55b6e8.cpp",
+      "score": 3.15,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55ba02",
+      "name": "Unwind@0055ba02",
+      "source": "source_port/src/0x55ba02.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    },
+    {
+      "address": "0x55ba52",
+      "name": "Unwind@0055ba52",
+      "source": "source_port/src/0x55ba52.cpp",
+      "score": 3.16,
+      "source_lines": 7,
+      "status": "compiled_not_verified"
+    }
+  ]
+}
