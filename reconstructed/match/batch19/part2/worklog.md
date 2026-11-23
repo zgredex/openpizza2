@@ -30,6 +30,7 @@ Matched: 0x402750, 0x4bf4d0, 0x4da390, 0x4fc470.
 | 0x533310 | 226 | 0x89 | 82 | byte-identical effect, but the loop cursor is based at record+0x14 in the original and record+0x18 in the candidate, changing every displacement |
 | 0x4e2e40 | 231 | 0x00 | 194 | original saves `-1` in ebx and spills `this`; candidate keeps `this` in ebp and uses immediates |
 | 0x48d2b0 | 230 | 0x06 | 191 | original pushes all four callee-saved registers up front; candidate pushes ebp/esi only inside the loop |
+| 0x527850 | 231 | 0x02 | 215 | candidate keeps the base pointer, loop index, saved offset and removed count in a 0x14-byte frame; the original uses a 0x0c-byte frame and reloads the base/count from `this` |
 | 0x4d59c0 | 228 | 0x19 | 169 | `new List(0)` EH frame matches; candidate keeps the returned list in esi instead of spilling it and loading `this` for the map |
 
 ## Reproduction
