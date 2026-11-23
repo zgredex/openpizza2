@@ -1,0 +1,315 @@
+{
+  "address": "0x544620",
+  "entry": "?StopPlaybackLocked@SoundBuffer@@QAEHXZ",
+  "length": 211,
+  "candidate_length": 211,
+  "match": false,
+  "strict_match": false,
+  "strict_issues": [
+    ".text relocation at 0x9c: unresolved symbol ?DestroyObjects@ListObject@@QAEXXZ",
+    "candidate extent 224 bytes, expected 211 (extra=13 bytes does not match the original table/padding)"
+  ],
+  "relocation_issues": [
+    ".text relocation at 0xbd resolves to 0x55c1a0, original has 0x4c8b0055",
+    ".text relocation at 0xcd resolves to 0x0, original has 0xc4830000"
+  ],
+  "relocations": [
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x544623",
+      "offset": "0x3",
+      "symbol": "$L331",
+      "target_section_index": 3,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x55b378",
+      "expected": "0x55b378",
+      "target": "0x55b378",
+      "origin": "derived_section_anchor",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x544629",
+      "offset": "0x9",
+      "symbol": "__except_list",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x0",
+      "expected": "0x0",
+      "target": "0x0",
+      "origin": "vc6_eh_intrinsic",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x544631",
+      "offset": "0x11",
+      "symbol": "__except_list",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x0",
+      "expected": "0x0",
+      "target": "0x0",
+      "origin": "vc6_eh_intrinsic",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x544645",
+      "offset": "0x25",
+      "symbol": "__imp__EnterCriticalSection@4",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x55c1b8",
+      "expected": "0x55c1b8",
+      "target": "0x55c1b8",
+      "origin": "pe_iat",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x54465c",
+      "offset": "0x3c",
+      "symbol": "__imp__LeaveCriticalSection@4",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x55c1a0",
+      "expected": "0x55c1a0",
+      "target": "0x55c1a0",
+      "origin": "pe_iat",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x54466f",
+      "offset": "0x4f",
+      "symbol": "__except_list",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x0",
+      "expected": "0x0",
+      "target": "0x0",
+      "origin": "vc6_eh_intrinsic",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x5446bc",
+      "offset": "0x9c",
+      "symbol": "?DestroyObjects@ListObject@@QAEXXZ",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0x768bffff",
+      "expected": null,
+      "target": null,
+      "origin": null,
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x5446dd",
+      "offset": "0xbd",
+      "symbol": "__imp__LeaveCriticalSection@4",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x4c8b0055",
+      "expected": "0x55c1a0",
+      "target": "0x55c1a0",
+      "origin": "pe_iat",
+      "verified": false
+    },
+    {
+      "section": ".text",
+      "section_index": 2,
+      "site": "0x5446ed",
+      "offset": "0xcd",
+      "symbol": "__except_list",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0xc4830000",
+      "expected": "0x0",
+      "target": "0x0",
+      "origin": "vc6_eh_intrinsic",
+      "verified": false
+    },
+    {
+      "section": ".text$x",
+      "section_index": 3,
+      "site": "0x55b374",
+      "offset": "0x4",
+      "symbol": "??1LockGuard@@QAE@XZ",
+      "target_section_index": 6,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xfffe4c08",
+      "expected": "0xfffe4c08",
+      "target": "0x53ff80",
+      "origin": "derived_section_anchor",
+      "verified": true
+    },
+    {
+      "section": ".text$x",
+      "section_index": 3,
+      "site": "0x55b379",
+      "offset": "0x9",
+      "symbol": "$T330",
+      "target_section_index": 4,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x560f98",
+      "expected": "0x560f98",
+      "target": "0x560f98",
+      "origin": "derived_section_anchor",
+      "verified": true
+    },
+    {
+      "section": ".text$x",
+      "section_index": 3,
+      "site": "0x55b37e",
+      "offset": "0xe",
+      "symbol": "___CxxFrameHandler",
+      "target_section_index": null,
+      "kind": "REL32",
+      "addend": 0,
+      "original": "0xffff3274",
+      "expected": "0xffff3274",
+      "target": "0x54e5f6",
+      "origin": "symbol_registry",
+      "verified": true,
+      "evidence": [
+        {
+          "path": "reconstructed/match/batch01/part1/0x401a20.c",
+          "locator": "0x401a20 EH handler"
+        },
+        {
+          "path": "decompiled_fastfood2_named_v2/full_game_symbols.json",
+          "locator": "0x54e5f6"
+        },
+        {
+          "path": "reconstructed/match/README.md",
+          "locator": "stock CRT archive identification"
+        }
+      ]
+    },
+    {
+      "section": ".xdata$x",
+      "section_index": 4,
+      "site": "0x560fa0",
+      "offset": "0x8",
+      "symbol": "$T333",
+      "target_section_index": 4,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x560fb8",
+      "expected": "0x560fb8",
+      "target": "0x560fb8",
+      "origin": "derived_section_anchor",
+      "verified": true
+    },
+    {
+      "section": ".xdata$x",
+      "section_index": 4,
+      "site": "0x560fbc",
+      "offset": "0x24",
+      "symbol": "$L313",
+      "target_section_index": 3,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x55b370",
+      "expected": "0x55b370",
+      "target": "0x55b370",
+      "origin": "derived_section_anchor",
+      "verified": true
+    },
+    {
+      "section": ".text",
+      "section_index": 6,
+      "site": "0x53ff85",
+      "offset": "0x5",
+      "symbol": "__imp__LeaveCriticalSection@4",
+      "target_section_index": null,
+      "kind": "DIR32",
+      "addend": 0,
+      "original": "0x55c1a0",
+      "expected": "0x55c1a0",
+      "target": "0x55c1a0",
+      "origin": "pe_iat",
+      "verified": true
+    }
+  ],
+  "object_sha256": "30ed67c0d84145496d08d9f3a3e2ca29cd078af532e9b8cd9d7e295b6951b7e0",
+  "linked_spans": [],
+  "link_plan_issues": [],
+  "blocked_sections": [],
+  "linked_sections": [
+    {
+      "section": ".text",
+      "index": 2,
+      "address": "0x544620",
+      "origin": "candidate_entry"
+    },
+    {
+      "section": ".text$x",
+      "index": 3,
+      "address": "0x55b370",
+      "origin": "derived_section_anchor"
+    },
+    {
+      "section": ".xdata$x",
+      "index": 4,
+      "address": "0x560f98",
+      "origin": "derived_section_anchor"
+    },
+    {
+      "section": ".text",
+      "index": 6,
+      "address": "0x53ff80",
+      "origin": "derived_section_anchor"
+    }
+  ],
+  "first_difference": {
+    "offset": 41,
+    "original": 51,
+    "candidate": 138
+  },
+  "difference_count": 124,
+  "source": "reconstructed/match/investigations/sound-lock-family/0x544620-guard.cpp",
+  "source_sha256": "7f1fe6cc39209f85f5eb34786b631d8b03ef95de16b2440ae259683bc79047e8",
+  "executable_sha256": "18cfd32e0ac5d6d98162ec016e058a2b51808d9ca49ebee933ce3166ff9922fd",
+  "compiler": {
+    "path": "/home/patryk/.local/share/pc2/vc6-sp3-toolchain/VC98",
+    "sha256": {
+      "CL.EXE": "d9220fdfaf355c81f26e7b03c5dc628ec72ff81c99dc38ed98b1ad4bdbbb309c",
+      "C1.DLL": "d1b25d84da1d3d0d460996ea298488cb183b857e1b90628147983114ac4ab55f",
+      "C1XX.DLL": "28c355499c2f8090910624734faff31fe719a69a8aac7dd44b2ce64addf96ee2",
+      "C2.DLL": "a0cc45f83fd0ed009aa4f43df5598105a1049ad9675de0b1089be7cce7d3c153"
+    }
+  },
+  "flags": [
+    "/O2",
+    "/GX",
+    "/TP"
+  ],
+  "strict_requested": true,
+  "strict_symbols": false,
+  "auto_symbols": true,
+  "symbol_registry_sha256": "e70a0a1124d4f83bd2fd48c4e28c535aacc6ecfdacef8ccf1f7b0bc357e618fe",
+  "symbol_overrides": {}
+}

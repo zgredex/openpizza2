@@ -360,6 +360,41 @@ def locate_linked_section(image, section, relocations, coff_symbols, known_bases
     return (found, "unique_section_signature") if found is not None else None
 
 
+def derived_section_anchors(image, target_index, section_bases, sections_by_index,
+                            relocations, coff_symbols):
+    """Derive a section's address from original bytes that point into it.
+
+    A compiler-generated EH section pair (`.text$x`/`.xdata$x`) refers to its
+    own `$L`/`$T` labels through COFF relocations. Once one section of the
+    pair is located, the original linked field at each relocation site gives
+    the address of the referenced label. That is independent PE evidence and
+    removes the need to bind every per-object label number by hand.
+    """
+    pairs = []
+    for other_index, (other_base, _origin) in section_bases.items():
+        other = sections_by_index.get(other_index)
+        if other is None or other_index not in relocations:
+            continue
+        for offset, symbol_index, kind in relocations[other_index]:
+            if kind not in (0x06, 0x14):
+                continue
+            symbol = coff_symbols[symbol_index]
+            if symbol["section"] != target_index or offset + 4 > len(other["raw"]):
+                continue
+            site = other_base + offset
+            try:
+                linked_field = struct.unpack("<I", read_va(image, site, 4))[0]
+            except ValueError:
+                continue
+            addend = struct.unpack_from("<i", other["raw"], offset)[0]
+            if kind == 0x06:
+                target = (linked_field - addend) & 0xFFFFFFFF
+            else:
+                target = (linked_field - addend + site + 4) & 0xFFFFFFFF
+            pairs.append((symbol["value"], target))
+    return tuple(pairs)
+
+
 def compile_candidate(source: Path, vc6: Path, obj: Path, flags: list[str], *, environment=None):
     cl = vc6 / "BIN" / "CL.EXE"
     if not cl.is_file():
@@ -464,13 +499,25 @@ def match_object(address: int, obj: Path, symbols: dict[str, int],
                 anchors.setdefault(index, []).append((symbol["value"], int(registered[name]["address"], 16)))
                 registry_anchors.setdefault(index, []).append(name)
         remaining = dict(pending)
+        sections_by_index = {section["index"]: section for section in sections}
         while remaining:
             located = []
             for index, section in remaining.items():
+                derived = derived_section_anchors(
+                    image, index, section_bases, sections_by_index,
+                    relocations, coff_symbols)
+                if index in registry_anchors:
+                    origin = "registry_section_anchor"
+                elif index in anchors:
+                    origin = "explicit_section_anchor"
+                elif derived:
+                    origin = "derived_section_anchor"
+                else:
+                    origin = "explicit_section_anchor"
                 found = locate_linked_section(
                     image, section, relocations[index], coff_symbols, section_bases,
-                    symbols, auto_symbols, anchors.get(index, ()),
-                    "registry_section_anchor" if index in registry_anchors else "explicit_section_anchor")
+                    symbols, auto_symbols, tuple(anchors.get(index, ())) + derived,
+                    origin)
                 if found is not None:
                     section_bases[index] = found
                     located.append(index)
@@ -482,11 +529,14 @@ def match_object(address: int, obj: Path, symbols: dict[str, int],
             strict_issues.append(
                 f"unverified {section['name']} section ({len(section['raw'])} bytes)")
             index = section["index"]
+            evidence = (tuple(anchors.get(index, ())) + derived_section_anchors(
+                image, index, section_bases, sections_by_index,
+                relocations, coff_symbols))
             blocked_sections.append({"section": section["name"], "index": index,
                                      "symbols": sorted(symbol["name"] for symbol in coff_symbols
                                                        if symbol and symbol["section"] == index),
                                      "expected_addresses": sorted(hex(target - value)
-                                                                  for value, target in anchors.get(index, ()))})
+                                                                  for value, target in evidence)})
 
     def check_relocations(section, candidate, independently_linked, linked, base, skip_prefix=0):
         name = section["name"]

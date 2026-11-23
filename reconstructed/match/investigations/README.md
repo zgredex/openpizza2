@@ -177,6 +177,18 @@ the matcher selecting `.text` instead of the section containing the entry
 symbol; the checker now selects the entry symbol's section, so 128 is the
 correct result.
 
+### Sound lock-guard family
+
+`reconstructed/match/investigations/sound-lock-family/README.md` records the
+shared RAII `LockGuard` recipe for `0x544620`, `0x5448c0`, `0x544760`, and
+`0x5449a0`. The candidates reproduce the EH sections, the out-of-line
+destructor at `0x53ff80`, and (for `0x5448c0`/`0x544760`) the exact function
+extent. Remaining differences are primary-code scheduling and register
+allocation: `0x544760` has 33 differing bytes, `0x5448c0` 51, and `0x544620`
+124. Two ABI corrections are important: the free functions are `__stdcall`
+with `self` on the stack (not `__thiscall`), and the `view` calls are virtual
+COM calls (`mov ecx,(%eax); call *slot(%ecx)`), not function-pointer members.
+
 ## Next experiments
 
 - `0x4ecd70`: the nine-byte prologue difference is unchanged by `/Oy`,
