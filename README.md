@@ -1,8 +1,12 @@
-# Pizza Connection 2 — decompilation and headless engine workspace
+# OpenPizza2 — Pizza Connection 2 decompilation and native engine
 
 This repository contains the reverse-engineering record, data parsers, and
 headless economy model for **Pizza Connection 2 / Fast Food Tycoon II v1.004
 (GOG)**.
+
+Contributions are welcome. Start with
+[`CONTRIBUTING.md`](CONTRIBUTING.md); it explains how to pick a family,
+reconstruct a function, run the strict matcher, and submit a verifier.
 
 ## Target
 

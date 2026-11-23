@@ -29,7 +29,8 @@ check() {
 
 check 0x548510 91 '?UpdatePositionCountdown@Sound@@QAEXXZ' --flags "/O2 /TP"
 check 0x47cc10 92 '?CountPlayersByByte@Game@@QAEHI@Z' --flags "/O2 /TP"
-check 0x47ccd0 92 '?CountRecordsByByteC@Game@@QAEHI@Z' --flags "/O2 /TP"
+check 0x47ccd0 92 '?CountRecordsByByteC@Game@@QAEHI@Z' --flags "/O2 /TP" \
+    --symbol '?GetRecordByteC@Record@@QAEHXZ=0x4e5e10'
 check 0x48c160 92 '?SelectPlayer@Game@@QAEXH@Z' --flags "/O2 /TP"
 check 0x4dd270 92 '?Construct@GameClock@@QAEPAU1@PAX@Z' --flags "/O2 /TP"
 check 0x4e2c40 92 '?GetMaxPlanSteps@AI@@QAEHH@Z' --flags "/O2 /TP"
