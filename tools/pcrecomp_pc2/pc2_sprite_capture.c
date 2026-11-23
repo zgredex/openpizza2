@@ -37,6 +37,9 @@ struct word_fill {
 static _Thread_local struct word_fill recent_fills[16];
 static _Thread_local unsigned fill_cursor;
 enum { INDEXED_LIVE = 1, INDEXED_FIXTURE = 2, INDEXED_PUBLISH = 4 };
+enum { MENU_ALPHA = 8 };
+static int menu_alpha_before(uint32_t sprite, uint32_t stack);
+static void menu_alpha_after(void);
 
 void pc2_capture_word_fill(uint32_t pixels, uint32_t color, uint32_t words)
 {
@@ -242,6 +245,7 @@ static int write_crop(void)
 int pc2_capture_indexed_sprite_before(uint32_t sprite, uint32_t stack)
 {
     if (!sprite) return 0;
+    if (menu_alpha_before(sprite, stack)) return MENU_ALPHA;
     const char *output = getenv("PC2_INDEXED_SPRITE_FIXTURE");
     const char *shaders = getenv("PC2_VK_LIVE_INDEXED_SHADERS");
     if ((!output || !*output || atomic_load_explicit(&captured, memory_order_relaxed)) &&
@@ -307,6 +311,7 @@ int pc2_capture_indexed_sprite_before(uint32_t sprite, uint32_t stack)
 
 void pc2_capture_indexed_sprite_after(int actions)
 {
+    if (actions & MENU_ALPHA) menu_alpha_after();
     if (actions & INDEXED_LIVE) check_live_draw();
     if (!(actions & INDEXED_FIXTURE)) return;
     int ok = write_crop();
@@ -320,7 +325,12 @@ static atomic_int menu_bitmap_claimed;
 static pc2_vk *menu_vk;
 static pc2_vk_texture *menu_target;
 static uint32_t menu_pixels;
+static uint32_t menu_renderer;
+static _Thread_local int menu_owner;
 static uint8_t menu_readback[800 * 600 * 4];
+static uint8_t menu_alpha_source[800 * 600 * 4];
+static int alpha_draws, alpha_x, alpha_y, alpha_w, alpha_h;
+static int alpha_left, alpha_top, alpha_right, alpha_bottom;
 
 static void close_menu_target(void)
 {
@@ -359,6 +369,10 @@ int pc2_menu_bitmap_before(uint32_t bitmap, uint32_t stack)
     }
     pc2_vk_texture_destroy(menu_vk, image);
     menu_pixels = MEM32(target + 0x28);
+    if (ok) {
+        menu_renderer = target;
+        menu_owner = 1;
+    }
     return ok;
 }
 
@@ -377,5 +391,82 @@ void pc2_menu_bitmap_after(void)
                       rgba[2] != (pixel & 31) * 255 / 31 || rgba[3] != 255;
     }
     fprintf(stderr, "[vk-menu] bitmap mismatches=%u/480000\n", mismatches);
+}
+
+static int menu_alpha_before(uint32_t sprite, uint32_t stack)
+{
+    if (!menu_owner || alpha_draws >= 32 || MEM32(0x0057C5B8u) != 21 ||
+        MEM32(0x0056386Cu) || MEM32(stack + 4) != menu_renderer ||
+        MEM32(menu_renderer + 0x28) != menu_pixels ||
+        MEM8(sprite + 4) != 0x17 || MEM8(sprite + 5) != 8 ||
+        MEM32(stack + 24) != UINT32_MAX || MEM32(stack + 28) != UINT32_MAX)
+        return 0;
+    uint32_t source = MEM32(stack + 8), palette = MEM32(stack + 12);
+    uint32_t size = MEM32(sprite + 0x18);
+    int w = (int16_t)MEM16(sprite + 6), h = (int16_t)MEM16(sprite + 8);
+    int32_t x = MEM32(stack + 16), y = MEM32(stack + 20);
+    if (!source || !palette || w <= 0 || w > 800 || h <= 0 || h > 600 ||
+        !size || size > (uint32_t)(w * h * 2) ||
+        x < -1600 || x > 1600 || y < -1200 || y > 1200)
+        return 0;
+    x += (int16_t)MEM16(sprite + 10);
+    y += (int16_t)MEM16(sprite + 12);
+    int32_t left = MEM32(menu_renderer + 4), right = MEM32(menu_renderer + 8);
+    int32_t top = MEM32(menu_renderer + 0x0c), bottom = MEM32(menu_renderer + 0x10);
+    if (left < 0 || top < 0 || right > 800 || bottom > 600 ||
+        left >= right || top >= bottom || x >= right || y >= bottom ||
+        x + w <= left || y + h <= top)
+        return 0;
+    if (!pc2_sprite_decode_alpha_rle((const void *)ADDR(source), size, w, h, 8,
+                                     (const void *)ADDR(palette), 512, 1,
+                                     menu_alpha_source, sizeof menu_alpha_source))
+        return 0;
+    pc2_vk_texture *texture = pc2_vk_texture_create(menu_vk, w, h, menu_alpha_source, 0);
+    if (!texture) return 0;
+    int ok = pc2_vk_begin_target_load(menu_vk, menu_target);
+    if (ok) {
+        pc2_vk_draw(menu_vk, texture, x, y, w, h, 0, 0, 1, 1,
+                    left, top, right - left, bottom - top);
+        ok = pc2_vk_end(menu_vk);
+    }
+    pc2_vk_texture_destroy(menu_vk, texture);
+    if (!ok) return 0;
+    alpha_x = x; alpha_y = y; alpha_w = w; alpha_h = h;
+    alpha_left = left > x ? left : x;
+    alpha_top = top > y ? top : y;
+    alpha_right = right < x + w ? right : x + w;
+    alpha_bottom = bottom < y + h ? bottom : y + h;
+    ++alpha_draws;
+    return 1;
+}
+
+static void menu_alpha_after(void)
+{
+    if (!pc2_vk_target_read_rgba(menu_vk, menu_target, menu_readback, sizeof menu_readback, 0)) {
+        fprintf(stderr, "[vk-menu] alpha readback failed: %s\n", pc2_vk_error(menu_vk));
+        return;
+    }
+    unsigned compared = 0, mismatches = 0, packed_mismatches = 0, partial = 0;
+    for (int y = alpha_top; y < alpha_bottom; ++y) {
+        for (int x = alpha_left; x < alpha_right; ++x) {
+            unsigned offset = ((y - alpha_y) * alpha_w + x - alpha_x) * 4;
+            unsigned opacity = menu_alpha_source[offset + 3];
+            if (!opacity) continue;
+            unsigned index = y * 800 + x;
+            uint16_t pixel = MEM16(menu_pixels + index * 2);
+            const uint8_t *rgba = menu_readback + index * 4;
+            ++compared;
+            partial += opacity != 255;
+            unsigned r = (rgba[0] * 31 + 127) / 255;
+            unsigned g = (rgba[1] * 63 + 127) / 255;
+            unsigned b = (rgba[2] * 31 + 127) / 255;
+            packed_mismatches += ((r << 11) | (g << 5) | b) != pixel;
+            mismatches += rgba[0] != ((pixel >> 11) & 31) * 255 / 31 ||
+                          rgba[1] != ((pixel >> 5) & 63) * 255 / 63 ||
+                          rgba[2] != (pixel & 31) * 255 / 31 || rgba[3] != 255;
+        }
+    }
+    fprintf(stderr, "[vk-menu] alpha draw %d %dx%d mismatches=%u/%u rgb565=%u partial=%u\n",
+            alpha_draws, alpha_w, alpha_h, mismatches, compared, packed_mismatches, partial);
 }
 #endif

@@ -171,6 +171,15 @@ the legacy bitmap draw, before the sprites and glyphs are added. The
 screen-21 replay matched all 480,000 pixels on 32-bit RADV and reached
 character select with zero unresolved dispatches.
 
+The same capture option mirrors up to 32 menu alpha draws into that target
+while the guest renderer and pixel buffer still match the background
+draw. It checks pixels touched by the sprite, including a second comparison
+after converting the Vulkan result back to RGB565. On the first draw,
+ordinary Vulkan blending differed at 367 of 418 touched pixels and 359
+still differed after RGB565 conversion. The legacy path uses per-channel
+integer lookup-table blending. The GPU target is diagnostic and still
+needs that blend rule and the missing glyph commands before publication.
+
 Replay the menu through character select, then London through camera
 scrolling and opening a branch panel. At each checkpoint record actual
 Vulkan submissions by draw family and compare the GPU frame against the
