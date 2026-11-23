@@ -85,6 +85,18 @@ special syntax. `if (state < 3)` produced a single `cmp/jge` block and a
 41-byte mismatch; the three-case switch reproduces the shipped
 `sub/dec/dec` chain and two release tails.
 
+## Shared helper matched by Gemma
+
+The local Gemma worker matched the 7-byte base-vtable cleanup at `0x53efd0`:
+
+```text
+0x53efd0  SoundBuffer_SetBaseVTable  strict  7/7 bytes
+```
+
+It is verified by `verify_helpers.sh` and `helpers.json`. This is a small
+but useful audit win: the same bytes are the cleanup thunk referenced by the
+destructor unwind maps.
+
 ## Member subobjects and unwind checks
 
 The generator now supports a `members` list. Each member emits a real class

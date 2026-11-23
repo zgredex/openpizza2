@@ -1,0 +1,14 @@
+{
+  "schema": "pc2.family_batch.v1",
+  "family": "destructor-helpers",
+  "recipes": [
+    {
+      "address": "0x53efd0",
+      "name": "SoundBuffer_SetBaseVTable",
+      "length": 7,
+      "entry": "@SoundBuffer_SetBaseVTable@4",
+      "source": "reconstructed/match/investigations/destructor-family/gemma-53efd0/0x53efd0.c",
+      "flags": ["/O2", "/TP"]
+    }
+  ]
+}

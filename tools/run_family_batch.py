@@ -77,7 +77,7 @@ def main():
             raise ValueError("original PE does not match the pinned hash")
         family, recipes, names = load_config(args.config)
         out = args.out.resolve()
-        out.mkdir(parents=True)
+        out.mkdir(parents=True, exist_ok=True)
         objects = out / "objects"
         objects.mkdir()
         cache_dir = None
