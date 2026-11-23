@@ -128,6 +128,32 @@ def patch_sprite_format(text: str) -> str:
     return text.replace(needle, needle + hook, 1)
 
 
+def patch_menu_bitmap(text: str) -> str:
+    pattern = r"(^void sub_005374E0\(void\) \{\n.*?^\}\n)"
+    if "pc2_menu_bitmap_before(" in text:
+        return text
+
+    def instrument(match: re.Match[str]) -> str:
+        entry = "    RECOMP_ENTER(0x005374E0u);\n"
+        begin = (
+            "#ifdef PC2_CAPTURE\n"
+            "    extern int pc2_menu_bitmap_before(uint32_t, uint32_t);\n"
+            "    extern void pc2_menu_bitmap_after(void);\n"
+            "    int pc2_bitmap_check = pc2_menu_bitmap_before(ecx, esp);\n"
+            "#endif\n"
+        )
+        end = (
+            "#ifdef PC2_CAPTURE\n"
+            "    if (pc2_bitmap_check) pc2_menu_bitmap_after();\n"
+            "#endif\n"
+        )
+        body = match[0].replace(entry, entry + begin, 1)
+        return re.sub(r"(?m)^    RECOMP_FLAGS_OUT\(\);[^\n]* return;",
+                      lambda ret: end + ret[0], body)
+
+    return re.sub(pattern, instrument, text, count=1, flags=re.M | re.S)
+
+
 def patch_menu_composition(text: str) -> str:
     """Identify the pixel buffer shared by source draws and presentation."""
     entries = (
@@ -337,8 +363,8 @@ def main() -> int:
         changed |= did
         text, did = patch_payment(text)
         changed |= did
-        patched = patch_menu_composition(patch_word_fill(
-            patch_sprite_fixture(patch_sprite_format(patch_draw_entries(text)))))
+        patched = patch_menu_bitmap(patch_menu_composition(patch_word_fill(
+            patch_sprite_fixture(patch_sprite_format(patch_draw_entries(text))))))
         changed |= patched != text
         text = patched
         if changed or any(f"{name}(" in text for name in TRACE_DECLARATIONS):

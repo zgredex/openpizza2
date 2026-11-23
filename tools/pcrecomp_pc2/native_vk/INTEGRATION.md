@@ -163,6 +163,14 @@ across the sampled presents while the backing pointer changed. A native
 menu frame needs all three source-draw paths in order and a GPU-owned
 replacement for that backbuffer and present operation.
 
+Set `PC2_VK_MENU_BITMAP_SHADERS` in the same capture scenario to the
+absolute shader directory to verify the background path. The capture host
+uploads the original 16-bit bitmap from `Sprite_Blit24Bit` and draws it
+into an 800×600 Vulkan target. It compares the result immediately after
+the legacy bitmap draw, before the sprites and glyphs are added. The
+screen-21 replay matched all 480,000 pixels on 32-bit RADV and reached
+character select with zero unresolved dispatches.
+
 Replay the menu through character select, then London through camera
 scrolling and opening a branch panel. At each checkpoint record actual
 Vulkan submissions by draw family and compare the GPU frame against the

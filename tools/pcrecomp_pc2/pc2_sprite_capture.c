@@ -315,4 +315,67 @@ void pc2_capture_indexed_sprite_after(int actions)
     if (!ok) remove(path);
     else fprintf(stderr, "[draw-source] saved indexed sprite fixture %s\n", path);
 }
+
+static atomic_int menu_bitmap_claimed;
+static pc2_vk *menu_vk;
+static pc2_vk_texture *menu_target;
+static uint32_t menu_pixels;
+static uint8_t menu_readback[800 * 600 * 4];
+
+static void close_menu_target(void)
+{
+    pc2_vk_texture_destroy(menu_vk, menu_target);
+    pc2_vk_destroy(menu_vk);
+}
+
+int pc2_menu_bitmap_before(uint32_t bitmap, uint32_t stack)
+{
+    const char *shaders = getenv("PC2_VK_MENU_BITMAP_SHADERS");
+    if (!shaders || !*shaders || atomic_load(&menu_bitmap_claimed) ||
+        MEM32(0x0057C5B8u) != 21 || MEM32(0x0056386Cu) || !bitmap ||
+        MEM8(bitmap + 0x10) != 16)
+        return 0;
+
+    uint32_t target = MEM32(stack + 4), source = MEM32(bitmap + 0x18);
+    if (!target || !source || MEM32(bitmap + 4) != 800 || MEM32(bitmap + 8) != 600 ||
+        MEM32(stack + 8) || MEM32(stack + 12) || (int32_t)MEM32(stack + 16) >= 0 ||
+        MEM32(stack + 24) || MEM32(stack + 28) ||
+        MEM32(target + 4) || MEM32(target + 8) != 800 || MEM32(target + 0x0c) ||
+        MEM32(target + 0x10) != 600 || MEM32(target + 0x20) != 800 ||
+        !MEM32(target + 0x28))
+        return 0;
+
+    if (atomic_exchange(&menu_bitmap_claimed, 1)) return 0;
+    menu_vk = pc2_vk_create_offscreen(shaders);
+    if (!menu_vk) return 0;
+    atexit(close_menu_target);
+    menu_target = pc2_vk_target_create(menu_vk, 800, 600);
+    pc2_vk_texture *image = pc2_vk_texture_create_rgb565(
+        menu_vk, 800, 600, (const void *)ADDR(source), 0, -1);
+    int ok = image && menu_target && pc2_vk_begin_target(menu_vk, menu_target, 0, 0, 0, 1);
+    if (ok) {
+        pc2_vk_draw(menu_vk, image, 0, 0, 800, 600, 0, 0, 1, 1, 0, 0, 800, 600);
+        ok = pc2_vk_end(menu_vk);
+    }
+    pc2_vk_texture_destroy(menu_vk, image);
+    menu_pixels = MEM32(target + 0x28);
+    return ok;
+}
+
+void pc2_menu_bitmap_after(void)
+{
+    if (!pc2_vk_target_read_rgba(menu_vk, menu_target, menu_readback, sizeof menu_readback, 0)) {
+        fprintf(stderr, "[vk-menu] bitmap readback failed: %s\n", pc2_vk_error(menu_vk));
+        return;
+    }
+    unsigned mismatches = 0;
+    for (unsigned i = 0; i < 800 * 600; ++i) {
+        uint16_t pixel = MEM16(menu_pixels + i * 2);
+        const uint8_t *rgba = menu_readback + i * 4;
+        mismatches += rgba[0] != ((pixel >> 11) & 31) * 255 / 31 ||
+                      rgba[1] != ((pixel >> 5) & 63) * 255 / 63 ||
+                      rgba[2] != (pixel & 31) * 255 / 31 || rgba[3] != 255;
+    }
+    fprintf(stderr, "[vk-menu] bitmap mismatches=%u/480000\n", mismatches);
+}
 #endif
