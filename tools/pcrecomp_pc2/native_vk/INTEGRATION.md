@@ -99,9 +99,9 @@ transparency and GPU readback.
 Set `PC2_VK_LIVE_INDEXED_SHADERS` in the capture scenario's `env` to the
 absolute directory containing `quad.vert.spv` and `quad.frag.spv`. Build
 the capture host and run the existing menu-click replay. This enables a
-diagnostic Vulkan mirror for the first compatible 8-bit indexed surface.
-It seeds the initial target once from the legacy pixels, then preserves
-the Vulkan target across up to 64 live draws in game order. The original
+diagnostic Vulkan mirror for up to 16 compatible 8-bit indexed surfaces.
+It seeds each target once from the legacy pixels, then preserves
+the Vulkan target across up to 64 live draws per surface in game order. The original
 blitter supplies the reference after each draw. Check `host.log` for
 `[vk-live]` and require zero mismatches for every draw.
 
@@ -112,12 +112,14 @@ a successful readback. The lifted sprite traversal still runs and preserves
 the guest calling convention. Transparent pixels keep their existing values.
 Look for `[vk-live] published indexed draw` in `host.log`.
 
-The publication replay handled all 34 draws of the first 400×15 panel,
-including the right-clipped last tile. Its 800×600 menu capture matched the
-CPU control byte for byte, and both reached character select with zero
-unresolved dispatches. This capture-only mode still uses the legacy
-surface for final composition and presentation. Other surfaces and draw
-families continue through the CPU path.
+The publication replay handled 68 draws across two 400×15 panels, including
+the right-clipped last tiles. Its 800×600 menu capture matched the CPU
+control byte for byte, and both reached character select with zero
+unresolved dispatches. Publication is limited to the verified panel shape.
+Mirror mode also found a 175×8 target with its first divergence on draw
+16, at 632 of 1,400 pixels. Trace other writes and surface reuse on that
+target before enabling publication. This capture-only mode still uses the
+legacy surface for final composition and presentation.
 
 ### Indexed sprite target parity
 

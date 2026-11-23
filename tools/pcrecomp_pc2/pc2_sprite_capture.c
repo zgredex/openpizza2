@@ -18,17 +18,54 @@ static atomic_int captured;
 static atomic_int live_claimed;
 static _Thread_local int live_owner;
 static pc2_vk *live_vk;
-static pc2_vk_texture *live_surface;
-static uint32_t live_target, live_pixels;
-static int live_width, live_height, live_count, live_pending;
+struct indexed_target {
+    pc2_vk_texture *texture;
+    uint32_t guest_target, pixels;
+    int width, height, draw_count;
+};
+static struct indexed_target live_targets[16];
+static struct indexed_target *live_active;
+static int live_pending;
 static uint8_t live_readback[512 * 32 * 4];
 static uint8_t live_source_rgba[32 * 32 * 4];
 enum { INDEXED_LIVE = 1, INDEXED_FIXTURE = 2, INDEXED_PUBLISH = 4 };
 
 static void close_live_surface(void)
 {
-    pc2_vk_texture_destroy(live_vk, live_surface);
+    for (size_t i = 0; i < sizeof live_targets / sizeof live_targets[0]; ++i)
+        pc2_vk_texture_destroy(live_vk, live_targets[i].texture);
     pc2_vk_destroy(live_vk);
+}
+
+static struct indexed_target *live_target_for(uint32_t target, uint32_t pixels,
+                                               int pitch, int bottom)
+{
+    for (size_t i = 0; i < sizeof live_targets / sizeof live_targets[0]; ++i) {
+        struct indexed_target *slot = &live_targets[i];
+        if (slot->texture) {
+            if (slot->guest_target == target && slot->pixels == pixels &&
+                slot->width == pitch && slot->height >= bottom)
+                return slot;
+            continue;
+        }
+
+        pc2_vk_texture *texture = pc2_vk_target_create(live_vk, pitch, bottom);
+        pc2_vk_texture *base = pc2_vk_texture_create_rgb565(
+            live_vk, pitch, bottom, (const void *)ADDR(pixels), pitch * 2, -1);
+        int ok = base && texture && pc2_vk_begin_target(live_vk, texture, 0, 0, 0, 1);
+        if (ok) {
+            pc2_vk_draw(live_vk, base, 0, 0, pitch, bottom, 0, 0, 1, 1, 0, 0, pitch, bottom);
+            ok = pc2_vk_end(live_vk);
+        }
+        pc2_vk_texture_destroy(live_vk, base);
+        if (!ok) {
+            pc2_vk_texture_destroy(live_vk, texture);
+            return NULL;
+        }
+        *slot = (struct indexed_target){texture, target, pixels, pitch, bottom, 0};
+        return slot;
+    }
+    return NULL;
 }
 
 static int live_draw(const char *shaders, uint32_t target, uint32_t pixels, int pitch,
@@ -39,40 +76,28 @@ static int live_draw(const char *shaders, uint32_t target, uint32_t pixels, int 
     if (!live_owner) {
         if (atomic_exchange_explicit(&live_claimed, 1, memory_order_relaxed)) return 0;
         live_owner = 1;
-        live_target = target;
-        live_pixels = pixels;
-        live_width = pitch;
-        live_height = bottom;
         live_vk = pc2_vk_create_offscreen(shaders);
         if (!live_vk) return 0;
         atexit(close_live_surface);
-        live_surface = pc2_vk_target_create(live_vk, pitch, bottom);
-        pc2_vk_texture *base = pc2_vk_texture_create_rgb565(
-            live_vk, pitch, bottom, (const void *)ADDR(pixels), pitch * 2, -1);
-        if (!base || !live_surface || !pc2_vk_begin_target(live_vk, live_surface, 0, 0, 0, 1)) {
-            pc2_vk_texture_destroy(live_vk, base);
-            return 0;
-        }
-        pc2_vk_draw(live_vk, base, 0, 0, pitch, bottom, 0, 0, 1, 1, 0, 0, pitch, bottom);
-        pc2_vk_texture_destroy(live_vk, base);
-        if (!pc2_vk_end(live_vk)) return 0;
     }
-    if (live_pending || live_count >= 64 || !live_surface || target != live_target ||
-        pixels != live_pixels || pitch != live_width || bottom > live_height) return 0;
+    if (!live_vk || live_pending) return 0;
+    struct indexed_target *surface = live_target_for(target, pixels, pitch, bottom);
+    if (!surface || surface->draw_count >= 64) return 0;
     if (!pc2_sprite_decode_indexed_rle((const void *)ADDR(source), size, w, h, key,
                                       (const void *)ADDR(palette), 512, 1,
                                       live_source_rgba, sizeof live_source_rgba))
         return 0;
     pc2_vk_texture *sprite = pc2_vk_texture_create(live_vk, w, h, live_source_rgba, 0);
     if (!sprite) return 0;
-    int ok = pc2_vk_begin_target_load(live_vk, live_surface);
+    int ok = pc2_vk_begin_target_load(live_vk, surface->texture);
     if (ok) {
         pc2_vk_draw(live_vk, sprite, x, y, w, h, 0, 0, 1, 1, x, y, right - x, bottom - y);
         ok = pc2_vk_end(live_vk);
     }
     pc2_vk_texture_destroy(live_vk, sprite);
     if (ok) {
-        ++live_count;
+        ++surface->draw_count;
+        live_active = surface;
         live_pending = 1;
     }
     return ok;
@@ -81,21 +106,21 @@ static int live_draw(const char *shaders, uint32_t target, uint32_t pixels, int 
 static void check_live_draw(void)
 {
     live_pending = 0;
-    if (!pc2_vk_target_read_rgba(live_vk, live_surface, live_readback, sizeof live_readback, 0)) {
+    if (!pc2_vk_target_read_rgba(live_vk, live_active->texture, live_readback, sizeof live_readback, 0)) {
         fprintf(stderr, "[vk-live] readback failed: %s\n", pc2_vk_error(live_vk));
         return;
     }
-    int count = live_width * live_height;
+    int count = live_active->width * live_active->height;
     int mismatches = 0;
     for (int i = 0; i < count; ++i) {
-        uint16_t pixel = MEM16(live_pixels + i * 2);
+        uint16_t pixel = MEM16(live_active->pixels + i * 2);
         const uint8_t *rgba = live_readback + i * 4;
         mismatches += rgba[0] != ((pixel >> 11) & 31) * 255 / 31 ||
                       rgba[1] != ((pixel >> 5) & 63) * 255 / 63 ||
                       rgba[2] != (pixel & 31) * 255 / 31 || rgba[3] != 255;
     }
-    fprintf(stderr, "[vk-live] indexed draw %d target %dx%d mismatches=%d/%d\n",
-            live_count, live_width, live_height, mismatches, count);
+    fprintf(stderr, "[vk-live] indexed draw %d target %dx%d mismatches=%d/%d surface=%08X\n",
+            live_active->draw_count, live_active->width, live_active->height, mismatches, count, live_active->guest_target);
 }
 
 /* Publish only the owned draw rectangle before the lifted traversal runs.
@@ -104,7 +129,7 @@ static void check_live_draw(void)
 static int publish_live_draw(int x, int y, int source_width, int right, int bottom)
 {
     live_pending = 0;
-    if (!pc2_vk_target_read_rgba(live_vk, live_surface, live_readback, sizeof live_readback, 0)) {
+    if (!pc2_vk_target_read_rgba(live_vk, live_active->texture, live_readback, sizeof live_readback, 0)) {
         fprintf(stderr, "[vk-live] panel publication failed: %s\n", pc2_vk_error(live_vk));
         return 0;
     }
@@ -112,16 +137,16 @@ static int publish_live_draw(int x, int y, int source_width, int right, int bott
         for (int col = x; col < right; ++col) {
             unsigned source_index = (row - y) * source_width + col - x;
             if (!live_source_rgba[source_index * 4 + 3]) continue;
-            unsigned index = row * live_width + col;
+            unsigned index = row * live_active->width + col;
             const uint8_t *rgba = live_readback + index * 4;
             unsigned r = (rgba[0] * 31 + 127) / 255;
             unsigned g = (rgba[1] * 63 + 127) / 255;
             unsigned b = (rgba[2] * 31 + 127) / 255;
-            MEM16(live_pixels + index * 2) = (r << 11) | (g << 5) | b;
+            MEM16(live_active->pixels + index * 2) = (r << 11) | (g << 5) | b;
         }
     }
-    fprintf(stderr, "[vk-live] published indexed draw %d at %d,%d %dx%d\n",
-            live_count, x, y, right - x, bottom - y);
+    fprintf(stderr, "[vk-live] published indexed draw %d at %d,%d %dx%d surface=%08X\n",
+            live_active->draw_count, x, y, right - x, bottom - y, live_active->guest_target);
     return INDEXED_PUBLISH;
 }
 
@@ -165,10 +190,13 @@ int pc2_capture_indexed_sprite_before(uint32_t sprite, uint32_t stack)
     int32_t top = MEM32(target + 0x0c), bottom = MEM32(target + 0x10);
     if (x < left || x >= right || y < top || y >= bottom || right > target_stride)
         return 0;
-    int live = live_draw(shaders, target, pixels, target_stride, source, size, palette, key,
-                         x, y, source_width, source_height, right, bottom) ? INDEXED_LIVE : 0;
     const char *publish = getenv("PC2_VK_LIVE_INDEXED_PUBLISH");
-    if (live && publish && !strcmp(publish, "1"))
+    int publishing = publish && !strcmp(publish, "1");
+    /* Other surfaces may be modified by legacy draw families between calls. */
+    int live = (!publishing || (target_stride == 400 && bottom == 15)) &&
+               live_draw(shaders, target, pixels, target_stride, source, size, palette, key,
+                         x, y, source_width, source_height, right, bottom) ? INDEXED_LIVE : 0;
+    if (live && publishing)
         return publish_live_draw(x, y, source_width, x + source_width < right
                                  ? x + source_width : right, y + source_height < bottom
                                  ? y + source_height : bottom);
